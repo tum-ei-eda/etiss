@@ -48,6 +48,7 @@ endif
 
 
 RISCVCC=PATH=$(TOOLBIN):$(PATH) $(TOOLBIN)/riscv32-unknown-elf-gcc -march=rv32imfd -nostartfiles  -fno-builtin  -ffreestanding
+RISCVCPP=PATH=$(TOOLBIN):$(PATH) $(TOOLBIN)/riscv32-unknown-elf-g++ -march=rv32imfd -nostartfiles  -fno-builtin  -ffreestanding
 RISCVOBJCPY=PATH=$(TOOLBIN):$(PATH) $(TOOLBIN)/riscv32-unknown-elf-objcopy
 RISCVOBJDMP=PATH=$(TOOLBIN):$(PATH) $(TOOLBIN)/riscv32-unknown-elf-objdump
 RISCVRDELF=PATH=$(TOOLBIN):$(PATH) $(TOOLBIN)/riscv32-unknown-elf-readelf
@@ -118,7 +119,7 @@ LIBS_OBJ = \
 	#${OBJECT_DIR}/string_lib.o
 
 ${BUILD_DIR}/code.elf: mkdirs main.cpp ${BOOT_ENTRY} ${TEST_OBJ} ${LIBS_OBJ}
-	$(RISCVCC) $(CFLAGS) ${BOOT_ENTRY} main.cpp -o ${BUILD_DIR}/code.elf ${TEST_OBJ} ${LIBS_OBJ}
+	$(RISCVCPP) $(CFLAGS) ${BOOT_ENTRY} main.cpp -o ${BUILD_DIR}/code.elf ${TEST_OBJ} ${LIBS_OBJ}
 
 ${BUILD_DIR}/code.bin: ${BUILD_DIR}/code.elf
 	$(RISCVOBJCPY) ${BUILD_DIR}/code.elf --output-target=binary ${BUILD_DIR}/code.bin

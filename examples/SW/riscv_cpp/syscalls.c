@@ -73,7 +73,7 @@ ssize_t _write(int file, const void *ptr, size_t len)
 
 
 // EXIT
-void _exit(int exit_status)
+void _exit_(int exit_status)
 {
   asm("ebreak");
   while (1);
@@ -114,7 +114,7 @@ int default_exception_handler_c(unsigned int a0, unsigned int a1, unsigned int a
       ecall_result = _write(a0, a1, a2);
       break;
     case SYS_exit:
-      _exit(a0);
+      _exit_(a0);
       break;
     default:
       custom_print_string(ETISS_LOGGER_ADDR,"unhandled syscall!\n");
