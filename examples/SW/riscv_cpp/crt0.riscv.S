@@ -179,6 +179,13 @@ ecall_insn_handler:
   la x1, end_except
   jal x0, ecall_insn_handler_c
 
+exception_handler:
+  addi x2, x2, -EXCEPTION_STACK_SIZE
+  sw x1, 0x5C(x2)
+  jal x1, store_regs
+  la x1, end_except_ecall
+  jal x0, default_exception_handler_c
+
 // saves all caller-saved registers (except return address)
 store_regs:
   sw  x3, 0x00(x2)  // gp
@@ -214,6 +221,8 @@ store_regs:
 
 // load back registers from stack
 end_except:
+  lw x10, 0x18(x2)  // only restore a0 for general exception handler
+end_except_ecall:
   lw x28, 0x50(x2)  // lpstart[1]
   lw x29, 0x54(x2)  // lpend[1]
   lw x30, 0x58(x2)  // lpcount[1]
@@ -231,7 +240,6 @@ end_except:
   lw  x5, 0x08(x2)
   lw  x6, 0x0c(x2)
   lw  x7, 0x10(x2)
-  lw x10, 0x14(x2)
   lw x11, 0x18(x2)
   lw x12, 0x1c(x2)
   lw x13, 0x20(x2)
@@ -263,7 +271,8 @@ _fini:
   // external interrupts are handled by the same callback
   // until compiler supports IRQ routines
   .org 0x00
-  .rept 23
+  jal x0, exception_handler // 0: exception handler
+  .rept 22
   nop                       // unused
   .endr
 
