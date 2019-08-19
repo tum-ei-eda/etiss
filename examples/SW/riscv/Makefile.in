@@ -112,7 +112,10 @@ TEST_OBJ = \
   ${OBJECT_DIR}/jdct_.o \
   ${OBJECT_DIR}/test_.o  \
 
-LIBS_OBJ = ${OBJECT_DIR}/sys_lib.o #${OBJECT_DIR}/string_lib.o
+LIBS_OBJ = \
+	${OBJECT_DIR}/sys_lib.o \
+	${OBJECT_DIR}/syscalls.o \
+	#${OBJECT_DIR}/string_lib.o
 
 ${BUILD_DIR}/code.elf: mkdirs main.c ${BOOT_ENTRY} ${TEST_OBJ} ${LIBS_OBJ}
 	$(RISCVCC) $(CFLAGS) ${BOOT_ENTRY} main.c -o ${BUILD_DIR}/code.elf ${TEST_OBJ} ${LIBS_OBJ}
@@ -164,6 +167,9 @@ ${OBJECT_DIR}/pi_.o: ${SW_DIR}/pi/pi.c ${OBJECT_DIR}/print_.o
 	$(RISCVCC) $(CFLAGS) -c $< -o $@
 
 ${OBJECT_DIR}/test_.o: ${SW_DIR}/simple_tests/test.c ${OBJECT_DIR}/print_.o
+	$(RISCVCC) $(CFLAGS) -c $< -o $@
+
+${OBJECT_DIR}/syscalls.o: syscalls.c
 	$(RISCVCC) $(CFLAGS) -c $< -o $@
 
 ${SW_DIR_RISCV}/sys_lib/src/%.o: ${SW_DIR_RISCV}/sys_lib/src/%.c
