@@ -80,6 +80,17 @@ void _exit_(int exit_status)
 }
 
 
+// CLOSE
+int _close(int file)
+{
+  if (file == 1) {
+    return 0;
+  }
+  errno = ENOSYS;
+  return -1;
+}
+
+
 
 // Overrides weak definition from pulpino sys_lib.
 int default_exception_handler_c(unsigned int a0, unsigned int a1, unsigned int a2, unsigned int a3, unsigned int a4, unsigned int a5, unsigned int a6, unsigned int a7)
@@ -116,6 +127,9 @@ int default_exception_handler_c(unsigned int a0, unsigned int a1, unsigned int a
     case SYS_exit:
       _exit_(a0);
       break;
+    case SYS_close:
+      ecall_result = _close(a0);
+      break;
     default:
       custom_print_string(ETISS_LOGGER_ADDR,"unhandled syscall!\n");
       break;
@@ -125,10 +139,19 @@ int default_exception_handler_c(unsigned int a0, unsigned int a1, unsigned int a
     // Store result in a0. Need this explicitly or GCC will optimize it out.
     asm volatile("mv a0,%0" : : "r"(ecall_result));
     break;
+  case 0x2: // Illegal instruction
+    custom_print_string(ETISS_LOGGER_ADDR,"illegal instruction at\n");
+    custom_print_hex_int32(ETISS_LOGGER_ADDR, mepc);
+    while (1);
   default:
     custom_print_string(ETISS_LOGGER_ADDR,"unhandled cause\n");
+    custom_print_hex_int32(ETISS_LOGGER_ADDR, mcause);
     while (1);
   }
 
   return ecall_result;
 }
+
+// Required by iostream
+// https://lists.debian.org/debian-gcc/2003/07/msg00057.html
+void *__dso_handle = (void*)&__dso_handle;

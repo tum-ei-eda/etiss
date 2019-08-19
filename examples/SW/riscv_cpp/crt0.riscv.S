@@ -73,7 +73,7 @@ zero_loop:
 zero_loop_end:
 
   /* Run global initialization functions */
-  //call    __libc_init_array
+  call    __libc_init_array
 
 main_entry:
   /*addi   x10, x0, 0
