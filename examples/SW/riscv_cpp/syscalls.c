@@ -72,6 +72,14 @@ ssize_t _write(int file, const void *ptr, size_t len)
 }
 
 
+// EXIT
+void _exit(int exit_status)
+{
+  asm("ebreak");
+  while (1);
+}
+
+
 
 // Overrides weak definition from pulpino sys_lib.
 int default_exception_handler_c(unsigned int a0, unsigned int a1, unsigned int a2, unsigned int a3, unsigned int a4, unsigned int a5, unsigned int a6, unsigned int a7)
@@ -105,6 +113,9 @@ int default_exception_handler_c(unsigned int a0, unsigned int a1, unsigned int a
     case SYS_write:
       ecall_result = _write(a0, a1, a2);
       break;
+    case SYS_exit:
+      _exit(a0);
+      break;
     default:
       custom_print_string(ETISS_LOGGER_ADDR,"unhandled syscall!\n");
       break;
@@ -116,7 +127,7 @@ int default_exception_handler_c(unsigned int a0, unsigned int a1, unsigned int a
     break;
   default:
     custom_print_string(ETISS_LOGGER_ADDR,"unhandled cause\n");
-    for (;;);
+    while (1);
   }
 
   return ecall_result;
