@@ -80,7 +80,7 @@ OBJECT_DIR = ./obj
 CFLAGS = $(DBGPARAM) $(OPTLEVEL)  -T ${SW_DIR_RISCV}/link.ld -I ${SW_DIR} -I ${SW_DIR_RISCV}/sys_lib/inc -I ${SW_DIR_RISCV}/string_lib/inc -std=gnu99
 
 
-all: mkdirs ${BUILD_DIR}/code.elf ${BUILD_DIR}/code.bin ${BUILD_DIR}/code.txt ${BUILD_DIR}/code.disasm romram
+all: mkdirs ${BUILD_DIR}/code.elf ${BUILD_DIR}/code.bin ${BUILD_DIR}/code.txt romram
 
 #This is to download sys_lib , string_lib , and additional instruction tests from Pulpino
 getlib:
