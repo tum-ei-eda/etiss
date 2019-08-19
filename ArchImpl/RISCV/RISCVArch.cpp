@@ -8300,86 +8300,115 @@ static InstructionDefinition c_jal_imm(
     },
     0, nullptr);
 //-------------------------------------------------------------------------------------------------------------------
-static InstructionDefinition c_lui_rd_imm(ISA16, "c.lui", (uint16_t)0x6001, (uint16_t)0xe003,
-                                          [](BitArray &ba, etiss::CodeSet &cs, InstructionContext &ic) {
-                                              etiss_uint32 rd = 0;
-                                              static BitArrayRange R_rd_0(11, 7);
-                                              etiss_uint32 rd_0 = R_rd_0.read(ba);
-                                              rd += rd_0;
-                                              etiss_uint32 imm2 = 0;
-                                              static BitArrayRange R_imm2_0(12, 12);
-                                              etiss_uint32 imm2_0 = R_imm2_0.read(ba);
-                                              imm2 += imm2_0;
-                                              etiss_uint32 imm1 = 0;
-                                              static BitArrayRange R_imm1_0(6, 2);
-                                              etiss_uint32 imm1_0 = R_imm1_0.read(ba);
-                                              imm1 += imm1_0;
-                                              CodePart &partInit = cs.append(CodePart::INITIALREQUIRED);
-                                              partInit.getAffectedRegisters().add(reg_name[rd], 32);
-                                              partInit.getAffectedRegisters().add("instructionPointer", 32);
-                                              partInit.code() =
-                                                  std::string("//c.lui\n") +
-                                                  "etiss_uint32 exception = 0;\n"
-                                                  "etiss_uint32 temp = 0;\n"
-                                                  "etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
-                                                  "etiss_uint8 _i_imm1 = 0;\n"
-                                                  "etiss_uint8 _i_imm2 = 0;\n"
-                                                  "etiss_int32 sign_extended_imm = 0;\n"
-                                                  "etiss_int32 sign_extender = 0;\n"
-
-                                                  "_i_imm1 = " +
-                                                  toString(imm1) +
-                                                  ";\n"
-#if RISCV_DEBUG_CALL
-                                                  "printf(\"_i_imm1 = %#x\\n\",_i_imm1); \n"
-#endif
-                                                  "_i_imm2 = " +
-                                                  toString(imm2) +
-                                                  ";\n"
-#if RISCV_DEBUG_CALL
-                                                  "printf(\"_i_imm2 = %#x\\n\",_i_imm2); \n"
-#endif
-                                                  "if(_i_imm2 == 1)\n"
-                                                  "{\n"
-                                                  "sign_extender = 4294836224;\n"
-#if RISCV_DEBUG_CALL
-                                                  "printf(\"sign_extender = %#x\\n\",sign_extender); \n"
-#endif
-                                                  "}\n"
-
-                                                  "else\n"
-                                                  "{\n"
-                                                  "sign_extender = 0;\n"
-#if RISCV_DEBUG_CALL
-                                                  "printf(\"sign_extender = %#x\\n\",sign_extender); \n"
-#endif
-                                                  "}\n"
-                                                  "sign_extended_imm = sign_extender + (_i_imm1 << 12);\n"
-#if RISCV_DEBUG_CALL
-                                                  "printf(\"sign_extended_imm = %#x\\n\",sign_extended_imm); \n"
-#endif
-                                                  "if((" +
-                                                  toString(rd) + " != 0) && (" + toString(rd) +
-                                                  " != 2))\n"
-                                                  "{\n"
-                                                  "*((RISCV*)cpu)->R[" +
-                                                  toString(rd) +
-                                                  "] = sign_extended_imm;\n"
-#if RISCV_DEBUG_CALL
-                                                  "printf(\"*((RISCV*)cpu)->R[" +
-                                                  toString(rd) + "] = %#x\\n\",*((RISCV*)cpu)->R[" + toString(rd) +
-                                                  "]); \n"
-#endif
-                                                  "}\n"
-
-                                                  "cpu->instructionPointer = " +
-                                                  toString((uint32_t)(ic.current_address_ + 2)) +
-                                                  "ULL; \n"
-
-                                                  "return exception; \n";
-                                              return true;
-                                          },
-                                          0, nullptr);
+static InstructionDefinition c_lui_rd_imm(
+ 		ISA16,
+ 		"c.lui",
+ 		(uint16_t)0x6001,
+ 		(uint16_t) 0xe003,
+ 		[] (BitArray & ba,etiss::CodeSet & cs,InstructionContext & ic)
+ 		{
+ 		etiss_uint32 rd = 0;
+ 		static BitArrayRange R_rd_0 (11,7);
+ 		etiss_uint32 rd_0 = R_rd_0.read(ba);
+ 		rd += rd_0;
+ 		etiss_uint32 imm2 = 0;
+ 		static BitArrayRange R_imm2_0 (12,12);
+ 		etiss_uint32 imm2_0 = R_imm2_0.read(ba);
+ 		imm2 += imm2_0;
+ 		etiss_uint32 imm1 = 0;
+ 		static BitArrayRange R_imm1_0 (6,2);
+ 		etiss_uint32 imm1_0 = R_imm1_0.read(ba);
+ 		imm1 += imm1_0;
+ 		CodePart & partInit = cs.append(CodePart::INITIALREQUIRED);
+ 		partInit.getRegisterDependencies().add(reg_name[2],32);
+ 		partInit.getAffectedRegisters().add(reg_name[2],32);
+ 		partInit.getAffectedRegisters().add(reg_name[rd],32);
+		partInit.getAffectedRegisters().add("instructionPointer",32);
+ 	partInit.code() = std::string("//c.lui\n")+
+ 			"etiss_uint32 exception = 0;\n"
+ 			"etiss_uint32 temp = 0;\n"
+ 			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
+ 			"etiss_int32 sign_extended_imm_16sp = 0;\n"
+ 			"etiss_int32 sign_extender_16sp = 0;\n"
+ 			"etiss_uint8 _i_imm1 = 0;\n"
+ 			"etiss_uint8 _i_imm2 = 0;\n"
+ 			"etiss_int32 sign_extended_imm = 0;\n"
+ 			"etiss_int32 sign_extender = 0;\n"
+ 			
+			"_i_imm1 = " + toString(imm1) + ";\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"_i_imm1 = %#x\\n\",_i_imm1); \n"
+			#endif	
+			"_i_imm2 = " + toString(imm2) + ";\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"_i_imm2 = %#x\\n\",_i_imm2); \n"
+			#endif	
+			"if(" + toString(rd) + " == 2)\n"
+			"{\n"
+				"if(_i_imm2 == 1)\n"
+				"{\n"
+					"sign_extender_16sp = 4294966784;\n"
+					#if RISCV_DEBUG_CALL
+					"printf(\"sign_extender_16sp = %#x\\n\",sign_extender_16sp); \n"
+					#endif	
+				"}\n"
+				
+				"else\n"
+				"{\n"
+					"sign_extender_16sp = 0;\n"
+					#if RISCV_DEBUG_CALL
+					"printf(\"sign_extender_16sp = %#x\\n\",sign_extender_16sp); \n"
+					#endif	
+				"}\n"
+				"sign_extended_imm_16sp = sign_extender_16sp + ((_i_imm1 & 0x1) << 5) + ((_i_imm1 & 0x6)>>1 << 7) + ((_i_imm1 & 0x8)>>3 << 6) + ((_i_imm1 & 0x10)>>4 << 4);\n"
+				#if RISCV_DEBUG_CALL
+				"printf(\"sign_extended_imm_16sp = %#x\\n\",sign_extended_imm_16sp); \n"
+				#endif	
+				"*((RISCV*)cpu)->R[2] = sign_extended_imm_16sp + *((RISCV*)cpu)->R[2];\n"
+				#if RISCV_DEBUG_CALL
+				"printf(\"*((RISCV*)cpu)->R[2] = %#x\\n\",*((RISCV*)cpu)->R[2]); \n"
+				#endif	
+			"}\n"
+			
+			"else\n"
+			"{\n"
+				"if(" + toString(rd) + " != 0)\n"
+				"{\n"
+					"if(_i_imm2 == 1)\n"
+					"{\n"
+						"sign_extender = 4294836224;\n"
+						#if RISCV_DEBUG_CALL
+						"printf(\"sign_extender = %#x\\n\",sign_extender); \n"
+						#endif	
+					"}\n"
+					
+					"else\n"
+					"{\n"
+						"sign_extender = 0;\n"
+						#if RISCV_DEBUG_CALL
+						"printf(\"sign_extender = %#x\\n\",sign_extender); \n"
+						#endif	
+					"}\n"
+					"sign_extended_imm = sign_extender + (_i_imm1 << 12);\n"
+					#if RISCV_DEBUG_CALL
+					"printf(\"sign_extended_imm = %#x\\n\",sign_extended_imm); \n"
+					#endif	
+					"*((RISCV*)cpu)->R[" + toString(rd) + "] = sign_extended_imm;\n"
+					#if RISCV_DEBUG_CALL
+					"printf(\"*((RISCV*)cpu)->R[" + toString(rd) + "] = %#x\\n\",*((RISCV*)cpu)->R[" + toString(rd) + "]); \n"
+					#endif	
+				"}\n"
+				
+			"}\n"
+		"cpu->instructionPointer = " +toString((uint32_t)(ic.current_address_+ 2 ))+"ULL; \n"
+		
+		"return exception; \n"
+; 
+return true;
+},
+0,
+nullptr
+);
 //-------------------------------------------------------------------------------------------------------------------
 static InstructionDefinition c_srli_rd_shamt(ISA16, "c.srli", (uint16_t)0x8001, (uint16_t)0xec03,
                                              [](BitArray &ba, etiss::CodeSet &cs, InstructionContext &ic) {
