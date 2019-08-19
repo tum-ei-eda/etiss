@@ -53,6 +53,7 @@
 #include "../test_cases/pi/pi.h"
 #include "../test_cases/simple_tests/test.h"
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "../test_cases/cust_print/cust_print.h"
 
@@ -108,6 +109,9 @@ int main(int arcg,char * argv[])
   }
   free(mem2);
   free(mem3);
+
+
+  puts("hello world\n");
 
 
   custom_print_string(ETISS_LOGGER_ADDR,"main end!\n");

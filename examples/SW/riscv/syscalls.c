@@ -1,3 +1,7 @@
+#include <stddef.h>
+#include <stdio.h>
+#include <errno.h>
+#include <sys/stat.h>
 #define __riscv__
 #include "utils.h"
 #include "machine/syscall.h"
@@ -11,7 +15,6 @@
 extern char _heap_start;
 extern char _heap_end;
 static char *brk = &_heap_start;
-typedef unsigned int ptrdiff_t;
 
 // This is not the correct implementation according to linux, because:
 // - It returns the current brk value instead of 0 on success.
@@ -39,9 +42,39 @@ static int _brk(void *addr)
 }
 
 
+// FSTAT
+int _fstat(int file, struct stat *st)
+{
+  if(file == 1) {
+    st->st_mode = S_IFCHR;
+    st->st_blksize = 0;
+    return 0;
+  }
+
+  errno = -ENOSYS;
+  return -1;
+}
+
+
+// WRITE
+ssize_t _write(int file, const void *ptr, size_t len)
+{
+  if (file != 1) {
+    errno = ENOSYS;
+    return -1;
+  }
+
+  const char *bptr = ptr;
+  for (size_t i = 0; i < len; ++i) {
+    *(volatile char *)(ETISS_LOGGER_ADDR) = bptr[i];
+  }
+  return 0;
+}
+
+
 
 // Overrides weak definition from pulpino sys_lib.
-void default_exception_handler_c(unsigned int a0, unsigned int a1, unsigned int a2, unsigned int a3, unsigned int a4, unsigned int a5, unsigned int a6, unsigned int a7)
+int default_exception_handler_c(unsigned int a0, unsigned int a1, unsigned int a2, unsigned int a3, unsigned int a4, unsigned int a5, unsigned int a6, unsigned int a7)
 {
   custom_print_string(ETISS_LOGGER_ADDR,"got exception!\n");
   unsigned int mcause = 0;
@@ -66,6 +99,12 @@ void default_exception_handler_c(unsigned int a0, unsigned int a1, unsigned int 
       custom_print_string(ETISS_LOGGER_ADDR,"SYS_brk!\n");
       ecall_result = (unsigned int)_brk(a0);
       break;
+    case SYS_fstat:
+      ecall_result = _fstat(a0, a1);
+      break;
+    case SYS_write:
+      ecall_result = _write(a0, a1, a2);
+      break;
     default:
       custom_print_string(ETISS_LOGGER_ADDR,"unhandled syscall!\n");
       break;
@@ -77,7 +116,7 @@ void default_exception_handler_c(unsigned int a0, unsigned int a1, unsigned int 
     break;
   default:
     custom_print_string(ETISS_LOGGER_ADDR,"unhandled cause\n");
-    while (1);
+    for (;;);
   }
 
   return ecall_result;
