@@ -115,10 +115,7 @@ etiss::int32 RISCVArch::handleException(etiss::int32 cause, ETISS_CPU *cpu)
                 ((RISCV *)cpu)->SEPC = cpu->instructionPointer - 4;
                 ((RISCV *)cpu)->SSTATUS ^= (((RISCV *)cpu)->PRIVLV << 8) ^ (((RISCV *)cpu)->SSTATUS & MSTATUS_SPP);
                 ((RISCV *)cpu)->PRIVLV = PRV_S;
-                if (((RISCV *)cpu)->STVEC & 0x1)
-                    cpu->instructionPointer = (((RISCV *)cpu)->STVEC & 0x4) + causeCode * 4;
-                else
-                    cpu->instructionPointer = ((RISCV *)cpu)->STVEC;
+                cpu->instructionPointer = ((RISCV *)cpu)->STVEC & ~0x3;
             }
             else
             {
@@ -134,10 +131,7 @@ etiss::int32 RISCVArch::handleException(etiss::int32 cause, ETISS_CPU *cpu)
                     cpu->instructionPointer = addr;
                     break;
                 }
-                if (((RISCV *)cpu)->MTVEC & 0x1)
-                    cpu->instructionPointer = (((RISCV *)cpu)->MTVEC & 0x4) + causeCode * 4;
-                else
-                    cpu->instructionPointer = ((RISCV *)cpu)->MTVEC;
+                cpu->instructionPointer = ((RISCV *)cpu)->MTVEC & ~0x3;
             }
             break;
 
@@ -156,9 +150,9 @@ etiss::int32 RISCVArch::handleException(etiss::int32 cause, ETISS_CPU *cpu)
                 ((RISCV *)cpu)->SSTATUS ^= (((RISCV *)cpu)->PRIVLV << 8) ^ (((RISCV *)cpu)->SSTATUS & MSTATUS_SPP);
                 ((RISCV *)cpu)->PRIVLV = PRV_S;
                 if (((RISCV *)cpu)->STVEC & 0x1)
-                    cpu->instructionPointer = (((RISCV *)cpu)->STVEC & 0x4) + causeCode * 4;
+                    cpu->instructionPointer = (((RISCV *)cpu)->STVEC & ~0x3) + causeCode * 4;
                 else
-                    cpu->instructionPointer = ((RISCV *)cpu)->STVEC;
+                    cpu->instructionPointer = ((RISCV *)cpu)->STVEC & ~0x3;
             }
             else
             {
@@ -174,11 +168,10 @@ etiss::int32 RISCVArch::handleException(etiss::int32 cause, ETISS_CPU *cpu)
                     cpu->instructionPointer = addr;
                     break;
                 }
-                /*                    if (((RISCV *)cpu)->MTVEC & 0x1)*/
-                /*                        cpu->instructionPointer = (((RISCV *)cpu)->MTVEC & 0x4) + causeCode*4;*/
-                /*                    else*/
-                /*                        cpu->instructionPointer = ((RISCV *)cpu)->MTVEC;*/
-                cpu->instructionPointer = ((RISCV *)cpu)->MTVEC + 4 * causeCode;
+                if (((RISCV *)cpu)->MTVEC & 0x1)
+                    cpu->instructionPointer = (((RISCV *)cpu)->MTVEC & ~0x3) + causeCode * 4;
+                else
+                    cpu->instructionPointer = ((RISCV *)cpu)->MTVEC & ~0x3;
             }
             break;
         }
