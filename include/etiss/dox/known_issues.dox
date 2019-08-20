@@ -1,0 +1,9 @@
+/*! \page known_issues Known Issues
+
+\section ki_llvm_systemc clang/LLVM 3.4/3.4.2 and SystemC 2.2.0
+	
+	Clang/LLVM version 3.4 or 3.4.2 have created segmentation faults in combination with systemC 2.2.0.<br>
+	This issue can be resolved by using systemC version 2.3.0.
+	
+
+ */

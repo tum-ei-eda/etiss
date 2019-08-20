@@ -1,0 +1,123 @@
+INSTALL Notes For ETISS Release 0.4.3
+*************************************
+
+Contents
+========
+
+  1. System Requirements
+
+  2. Basic ETISS Installation
+
+  3. CMake Build Configuration Switches
+
+  4. Compiling and Running the Examples
+
+
+System Requirements
+===================
+
+  o Linux:
+    * Architectures:
+      - x86 (32bit)
+      - x86_64 (64bit)
+    * Compilier:
+      - GNU C++ Compilier
+    * Build Environment:
+      - Cmake
+
+Dependencies
+============
+0. Make sure that libstdc++ is updated to latest version
+1. gcc-multilib; g++-multilib
+2. ubuntu/deb packages: zlib1g-dev; libtinfo-dev;
+   for documentation purposes also install ubuntu/deb: graphviz; doxygen
+3. If you want to use LLVM-JIT compiler then you have to setup <LLVM + Clang>
+   toolchain somewhere on hostPC and source it (in a specific layout as provided
+   in pre-build binaries on the download page of LLVM-Releases)
+   Please have a look at <root/JITImpl/LLVM/Makefile> file for clarification
+   Currently the ETISS source is compatible with <= LLVM3.4.2v API
+4. Boost library (libboost-all-dev)
+
+
+Basic ETISS Installation
+========================
+
+To install ETISS on a Linux system do the following steps:
+
+1. Change to the top level directory
+
+2. If you want to use the verilator plugin init the relevant submodule
+
+  > git submodule init
+  > git submodule update
+
+    or via single command
+  > git submodule update --init
+
+    Info: Allways when you want to get the changes in this submodule you have to call
+  > git submodule update
+
+2.1. If you want to use LLVM-JIT compiler, then
+     also update the LLVM related variables in <root/JITImpl/LLVM/Makefile>
+     accordingly
+
+3. Create a temporary build directory, e.g.,
+    !Attention: Don't name it "build", this will cause errors!
+
+  > mkdir build_dir
+
+4. Change to the created directory, e.g.,
+
+  > cd build_dir
+
+5. Configure the build system, e.g., (Minimum Version is cmake 3.13! check with cmake --version)
+Path to local cmake:  `/usr/local/research/projects/SystemDesign/tools/cmake/3.13.3/bin/cmake`
+
+  > cmake -DCMAKE_BUILD_TYPE=Debug -DETISS_BUILD_MANUAL_DOC=ON \
+          -DETISS_USE_PYTHON=OFF -DCMAKE_INSTALL_PREFIX:PATH=`pwd`/installed \
+          --graphviz=test.dot -G "CodeBlocks - Unix Makefiles" ../
+
+6. Compile the package
+
+  > make
+
+7. Build the documentation (optional)
+
+  > make doc
+
+8. Install the package
+
+  > make install
+
+9. Set the environment variable ETISS_HOME to contain the path of the
+   installation Folder.
+
+  > export ETISS_HOME <etiss_path>/build_dir/installed/
+
+10. If you wish to edit and debug the examples in CodeBlocks you can use the
+    python script to add them to the codeBlocks project.
+
+  > cd ..
+  > python append_codeBlocks_with_examples.py build_dir/ETISS.cbp
+
+  INFO: for "run", the environment variables have to be set right. Under
+        Settings -> Environment... -> Environment variables you can add
+        ETISS_HOME=<etiss>/build_dir/installed/ and
+        LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/usr/local/research/projects/SystemDesign/tools/systemc/systemc-2.3.1/lib-linux64:${ETISS_HOME}/lib
+
+  ATTENTION: Everytimes the cmake is reused the ETISS.cbp will be new created.
+             Thus the script must rerun.
+
+  NOTE: When debbugging you have to set under settings->Debugger Settings->
+        GDB/CDB debugger->Default in Debugger initialization commands
+        set auto-solib-add off
+        to not load the library symbols automatically, cause varilator.lib
+        causes an error. You then can manually load needed libs.
+
+
+CMake Build Configuration Switches
+==================================
+
+
+Compiling and Running the Examples
+==================================

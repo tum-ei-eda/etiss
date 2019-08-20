@@ -1,0 +1,203 @@
+# -------------------  ETISS CI flow  --------------------------
+# Build process is written in shell
+# Testers are written in python for easily plugging in new tester
+# All script is located in ./ci directory
+# --------------------------------------------------------------
+
+image: gitlab.lrz.de:5005/de-tum-ei-eda-esl/etiss:latest
+
+stages:
+  - build
+  - test
+  - gdbtest
+  - deploy
+
+#before_script:
+
+
+Build:
+  stage: build
+  script:
+    - whoami
+    - echo $HOME
+    - sh ./ci/build.sh
+  cache:
+    key: build_cache
+    paths:
+      - "build_dir"
+      - "ci/tester.log"
+
+# Manually re-build project in GitLab GUI
+ReBuild:
+  stage: build
+  script:
+    - rm -rf build_dir
+    - sh ./ci/build.sh
+  cache:
+    key: build_cache
+    paths:
+      - "build_dir"
+  when: manual
+
+FailuerHandling:
+  stage: test
+  script:
+    - rm -rf build_dir
+  when: manual
+
+Or1kTester:
+  stage: test
+  script:
+    - cd ci
+    - python3 Tester.py -arch Or1k
+    - cd ..
+#  only:
+#    - master
+#    - '/.*[oO][rR]1[kK].*/'
+  cache:
+    key: build_cache
+    paths:
+      - "build_dir"
+      - "ci/tester.log"
+
+  dependencies:
+    - Build
+  artifacts:
+    paths:
+        - "ci/tester.log"
+    expire_in: 2 weeks
+
+RiscvTester:
+  stage: test
+  script:
+    - cd ci
+    - python3 Tester.py -arch RISCV
+    - cd ..
+#  only:
+#    - master
+#    - '/.*[rR][iI][sS][cC]-?_?[vV].*/'
+  cache:
+    key: build_cache
+    paths:
+      - "build_dir"
+      - "ci/tester.log"
+  dependencies:
+    - Build
+  artifacts:
+    paths:
+        - "ci/tester.log"
+    expire_in: 2 weeks
+    
+# Testers in the following are architecture specific testers.
+# Note: Use the following part for testing ARM if available
+#Armv6MTester:
+#  stage: test
+#  script:
+#    - cd ci
+#    - python3 Tester.py -arch Armv6M
+#    - cd ..
+#  only:
+#    - master
+#    - '/.*[aA][rR][mM][vV]?6?[mM]?.*/'
+#  cache:
+#    key: build_cache
+#    paths:
+#      - "build_dir"
+#      - "ci/tester.log"
+#  dependencies:
+#    - Build
+#  artifacts:
+#    paths:
+#        - "ci/tester.log"
+#    expire_in: 2 weeks
+
+Or1kGDBTester:
+  stage: gdbtest
+  script:
+    - cd ci
+    - python3 Tester.py -arch Or1k -gdb
+    - cd ..
+  cache:
+    key: build_cache
+    paths:
+      - "build_dir"
+      - "ci/tester.log"
+#  only:
+#    - master
+#    - '/.*[oO][rR]1[kK].*/'
+  dependencies:
+    - Or1kTester
+    
+RiscvGDBTester:
+  stage: gdbtest
+  script:
+    - cd ci
+    - python3 Tester.py -arch RISCV -gdb
+  cache:
+    key: build_cache
+    paths:
+      - "build_dir"
+      - "ci/tester.log"
+#  only:
+#    - master
+#    - '/.*[rR][iI][sS][cC]-?_?[vV].*/'
+  dependencies:
+    - RiscvTester
+
+# Note: use this part for testing ARM if available.
+#Armv6MGDBTester:
+#  stage: gdbtest
+#  script:
+#    - cd ci
+#    - python3 Tester.py -arch Armv6M -gdb
+#    - cd ..
+#  cache:
+#    key: build_cache
+#    paths:
+#      - "build_dir"
+#      - "ci/tester.log"
+#  only:
+#    - master
+#    - '/.*[aA][rR][mM][vV]?6?[mM]?.*/'
+#  dependencies:
+#    - Armv6MTester
+
+CITester:
+  stage: test
+  script:
+    - cd ci
+    - python3 Tester.py
+    - cd ..
+  only:
+    - CI_dev
+  cache:
+    key: build_cache
+    paths:
+      - "build_dir"
+      - "ci/tester.log"
+  dependencies:
+    - Build
+  artifacts:
+    paths:
+        - "ci/tester.log"
+    expire_in: 2 weeks
+
+Deploy:
+  stage: deploy
+  script:
+    -  echo "Not implemented"
+  cache:
+    key: build_cache
+    paths:
+      - "build_dir"
+      - "ci/tester.log"
+  when: manual
+
+deploy docker container:
+  stage: build
+  when: manual
+  script:
+    - cd ci
+    - docker build -t gitlab.lrz.de:5005/de-tum-ei-eda-esl/etiss .
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN gitlab.lrz.de:5005/de-tum-ei-eda-esl/etiss
+    - docker push gitlab.lrz.de:5005/de-tum-ei-eda-esl/etiss

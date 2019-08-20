@@ -1,0 +1,182 @@
+/*! \page howto_plugin How to implement a plugin for ETISS
+
+	ETISS uses plugins to provide functionality beyond the simple simulation of instructions. The etiss::plugin::gdb::Server plugin for example allows to debug simulated software and usually etiss::CPUArch implementations provide a plugin that implements timer functionality (see \ref howto_cpuarch_step4 "How to implement a cpu architecture for ETISS: Step 4")
+	
+	The plugin interface has been split into different classes for performance reasons.The base class of all plugins is etiss::Plugin. Plugin subclasses inherit etiss::Plugin virtual, thus allowing to combine multiple plugin sub classes. A plugin should only inherit the plugin sub classes it needs.
+		
+	\section howto_plugin_step1 Step 1: Decide which plugin sub classes to implement
+	
+	The plugin base class (etiss::Plugin) defines an init and cleanup function which are called at the start and end of a simulation (NOTE: therefore a plugin may only be added to one running cpu core)
+	Furthermore etiss::Plugin has 3 protected fields (etiss::Plugin::plugin_cpu_,etiss::Plugin::plugin_arch_,etiss::Plugin::plugin_system_) which hold the current ETISS_CPU,etiss::CPUArch and ETISS_System pointer. Those fields become valid just before the etiss::Plugin::init call and become invalid right after the etiss::Plugin::cleanup() call.
+	
+	The following plugin classes are available:
+	
+	 <table border="1" style="width:100%">
+	  <tr>
+	    <th><b>Class</b></th>
+	    <th><b>Function(s)</b></th>
+	    <th><b>Description</b></th>
+	  </tr>
+	  <tr>
+	    <td>etiss::TranslationPlugin</td>
+	    <td><pre>
+	    
+void initInstrSet(etiss::instr::ModedInstructionSet & ) const;
+
+void finalizeInstrSet(etiss::instr::ModedInstructionSet & ) const;
+
+void initCodeBlock(etiss::CodeBlock & ) const;
+
+void finalizeCodeBlock(etiss::CodeBlock & ) const;
+
+void * getPluginHandle()
+            </pre></td>
+	    <td>Allows to add code generation callbacks to the Instruction tree (etiss::instr::ModedInstructionSet,etiss::instr::VariableInstructionSet,etiss::instr::InstructionSet,etiss::instr::Instruction). etiss::TranslationPlugin::process also allows to edit a whole block of translated instructions. The pointer from etiss::TranslatorPlugin::getPluginHandle will be available in the translated code. The returned pointer can be read in the generated code by using the code snippet returned by getPointerCode() (e.g. std::string code = std::string("void * mypointer = ") + getPointerCode() + ";";).NOTE: these functions will only be called by ETISS while plugin_cpu_, plugin_arch_ and plugin_system_ are valid.</td>
+	  </tr>
+	  <tr>
+	    <td>etiss::CoroutinePlugin</td>
+	    <td><pre>etiss::int32 execute()</pre></td>
+	    <td>etiss::Coroutine::execute will be called before a block of translated code gets executed. The returned code will be handled in the same way return codes from a translated Block are handled. See etiss/jit/ReturnCodes.h for global return codes. This function is usefull e.g. for periodical interrupt checks and signaling. The execute function may also read/manipulate the cpu structure since it is required to be consistent after a block. NOTE: this function will only be called by ETISS while plugin_cpu_, plugin_arch_ and plugin_system_ are valid.</td>
+	  </tr>
+	  <tr>
+	    <td>etiss::SystemWrapperPlugin</td>
+	    <td><pre>
+ETISS_System * wrap(ETISS_CPU * cpu,ETISS_System * system)
+
+ETISS_System * unwrap(ETISS_CPU * cpu,ETISS_System * system)
+	    </pre></td>
+	    <td>The wrap function allows to replace the ETISS_System structure.This is for example useful to wrap the original system in a logger system to view accesses or enforce breakpoints (see etiss::plugin::gdb::Server). IMPORTANT: etiss::SystemWrapperPlugin::wrap/etiss::SystemWrapperPlugin::unwrap functions are called BEFORE/AFTER plugin_cpu_, plugin_arch_ and plugin_system_ are valid and BEFORE/AFTER the init/cleanup calls.</td>
+	  </tr>
+	  <tr>
+	    <td>etiss::RegisterDevicePlugin</td>
+	    <td><pre>void changedRegister (const char *name)</pre></td>
+	    <td>This plugin is notified about changes to a register. etiss::CPUArch::getListenerSupportedRegisters defines registers that trigger this call.NOTE: this function will only be called by ETISS while plugin_cpu_, plugin_arch_ and plugin_system_ are valid.</td>
+	  </tr>
+	</table> 
+	
+	\section howto_plugin_step2 Step 2: Implement your plugin
+	
+	For examples please have a look at the example \ref howto_cpuarch_step4 "Timer implementation" for a etiss::CPUArch and at other plugins located in include/etiss/IntegratedLibrary and src/IntegratedLibrary
+	
+	\section howto_plugin_step3 Step 3: Implement the loading interface
+	
+	ETISS preferably loads plugins as a shared library at runtime. To do this it is necessary to implement some functions to find the plugin implementation(s).
+	
+	<b>X</b>PluginLib.cpp:
+	
+	\code{.cpp}
+		// define a name for this library. this will be used to avoid name clashes with other libraries. in this example the library is named "X".
+		// IMPORTANT this name MUST match the library name: e.g. X -> libX.so
+		#define ETISS_LIBNAME X
+		
+		#include "etiss/helper/PluginLibrary.h" // defines the following functions
+		
+
+                
+        #include "" // include your plugin implementation header files
+                                
+        extern "C"{
+		
+			unsigned X_etissversion(){
+                		return ETISS_LIBRARYIF_VERSION;
+                	}
+		
+			unsigned X_countPlugin(){
+				//TODO
+				return 1; // number of plugins provided
+			}
+			const char * X_namePlugin(unsigned index){
+				//TODO
+				switch (index){
+				case 0:
+					return "YOURPLUGIN";
+				default:
+					return "";
+				}
+			}
+			etiss::Plugin* X_createPlugin(unsigned index,std::map<std::string,std::string> options){
+				//TODO
+				switch (index){
+				case 0:
+					// parse arguments?
+					return new YOURPLUGIN();
+				default:
+					return 0;
+				}
+			}
+			void X_deletePlugin(etiss::Plugin* arch){
+				delete arch;
+			}
+		
+		}
+	
+	\endcode	
+	
+	\section howto_plugin_step4 Step 4: Build and run the Library
+	
+	Finally a makefile is needed to build the new library as a shared library
+	
+	Makefile
+	
+	\code
+	
+DEBUG?=1
+
+CC=gcc
+
+ifeq ($(DEBUG),0)
+	DBGPARAM =
+	OPTLEVEL?=-O3
+else
+	DBGPARAM =-g
+	OPTLEVEL?=
+endif
+
+ETISS_FOLDER=../..
+
+CFLAGS=-std=c++0x -c -MMD -Wall -Werror -fPIC $(OPTLEVEL) $(DBGPARAM) -DDEBUG=$(DEBUG) -I$(ETISS_FOLDER)/include -I$(ETISS_FOLDER)/include_c
+
+
+all : libX.so
+
+YOURPLUGIN.o : YOURPLUGIN.cpp
+	$(CC) $(CFLAGS) YOURPLUGIN.cpp
+
+XPluginLib.o: XPluginLib.cpp
+	$(CC) $(CFLAGS) XPluginLib.cpp
+
+-include ./*.d
+
+libX.so : YOURPLUGIN.o XPluginLib.o 
+	$(CC) -std=c++0x -shared -g -L$(ETISS_FOLDER) -dl -o libX.so YOURPLUGIN.o XPluginLib.o 
+
+clean :
+	rm -f *o
+	rm -f libX.so
+	
+	\endcode
+	
+	Once the shared library was build it is available in ETISS by default if placed in PluginImpl/X/ or can be loaded with void etiss::loadLibrary(std::string path,std::string name). Use etiss::listLibraries() and etiss::listPlugins() to view the status of loaded libraries.
+	
+	Refer to  \ref misc_striplibrary "Removing symbols from a shared library" once the api of the new library is out of it's testing state or runtime linkage errors arise.
+	
+*/
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

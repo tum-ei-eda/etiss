@@ -1,0 +1,11 @@
+#!/bin/bash
+
+INIFILE=${1:-ETISS.ini}
+
+# build virtual prototype
+mkdir -p build
+(cd build; cmake -DCMAKE_BUILD_TYPE=Debug ..; make)
+
+export ETISS_HOME=@CMAKE_INSTALL_PREFIX@/
+export LD_LIBRARY_PATH_EXTENTIONS=${ETISS_HOME}/lib
+./build/main -i${INIFILE}

@@ -1,0 +1,27 @@
+/*! \page makefile_main Overview of the main make file
+
+	The main makefile is rather simple and can build ETISS itself and ETISS with sub projects. <br>
+	The example/test file main.cpp is also build/run by this file.
+	
+	<pre>
+	Important options:
+		
+		DEBUG:		use to configure compilation for a debug/release build (DEBUG=1/0)
+		
+	Important targets:
+	
+		all		default targert. depends on target libs
+		libs		builds libETISS.so and sub projects located in \ref folder_ArchImpl "ArchImpl/", \ref folder_JITImpl "JITImpl/", \ref folder_PluginImpl "PluginImpl/",\ref folder_SW "SW/"
+		main 		builds main.cpp
+		run 		executes compiled main.cpp
+		profile		runs compiled main.cpp with valgrind's callgrind tool
+		memcheck	runs compiled main.cpp with valgrind's memcheck (tests for memory leaks) tool
+		clean		delete object files + library + main
+		cleanall	same as clean with additional execution of "$ make clean" in sub project folders (ArchImpl/?/,JITImpl/?/,SW)
+		
+		project		creates an new project using etiss with an example main.cpp and a makefile. the creation will be guided.
+		
+	</pre>
+
+*/
+

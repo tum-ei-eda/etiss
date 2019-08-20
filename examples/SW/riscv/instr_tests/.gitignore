@@ -1,0 +1,7 @@
+*.bin
+*.Spp
+*.o
+*.tcl
+*.wdb
+*.pb
+*.elf

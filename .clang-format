@@ -1,0 +1,22 @@
+# see http://clang.llvm.org/docs/ClangFormatStyleOptions.html
+# BasedOnStyle:  LLVM
+
+AccessModifierOffset: -2
+AlignEscapedNewlines: Left
+AllowShortFunctionsOnASingleLine: Inline
+AllowShortIfStatementsOnASingleLine: false
+AlwaysBreakTemplateDeclarations: true
+BreakBeforeBraces: Allman
+BreakConstructorInitializersBeforeComma: true
+ColumnLimit: 120
+ConstructorInitializerAllOnOneLineOrOnePerLine: true
+Cpp11BracedListStyle: false
+IndentCaseLabels: false
+IndentWidth: 4
+KeepEmptyLinesAtTheStartOfBlocks: true
+MaxEmptyLinesToKeep: 1
+PenaltyReturnTypeOnItsOwnLine: 10000
+PointerBindsToType: false
+SortIncludes: false
+UseTab: Never
+

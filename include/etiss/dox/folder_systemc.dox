@@ -1,0 +1,13 @@
+/*! \page folder_systemc Overview of systemc/
+
+	This folder contains an example use of ETISS together with systemc.
+	
+	systemc/main.cpp initializes ETISS,creates a cpu core and neccessary SystemC modules.
+	
+	systemc/SystemCInterface.h defines a general cpu interface using SystemC/TLM
+	
+	systemc/SystemCBridge.h	is an implementation of systemc/SystemCInterface.h for ETISS
+	
+	systemc/SimpleMemory.h is a simple memory implementation that can be connected to a SystemCInterface
+
+ */

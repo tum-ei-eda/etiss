@@ -1,0 +1,7 @@
+/*! \page folder_include_c_etiss Overview of include_c/etiss/
+
+	This folder contains C header files for ETISS and translated code. In oder to compile translated code this path must either be located by ./include_c/etiss/ relative to the working directory of the simulation or ETISS must be configured for other paths. This configuration is either done by passing "-oetiss_path" "/SOME/PATH/" with the list of arguments to etiss::initialize(2)/etiss::initialize(1) or by calling etiss::cfg.set("etiss_path","/SOME/PATH/"). NOTE: expected file location is e.g.: /SOME/PATH/include_c/etiss/CPU.h
+
+	
+
+ */

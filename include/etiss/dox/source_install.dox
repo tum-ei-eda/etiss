@@ -1,0 +1,41 @@
+/*! \page source_install Install ETISS uncompiled with Sources
+
+On some systems there may be problems with the use of Standard Template Library objects due to ABI (aplication binary interface) changes resulting from different compilers, compiler options or defines.
+For those cases a secondary build system has been integrated into the cmake files that allows to install the headers and source code (ETISS+some plugins). This requires only minimal support from plugin projects.
+This source installation is the default option on Windows due to a more complicated linking and symbol export/import functionality.
+
+\section source_install_build Build/Install ETISS 
+ETISS is not really build in case of the source install option. The build step mainly consists of generation of some files. 
+The INSTALL target will copy all necessary files and invoke any needed build command (e.g. make install or build the INSTALL project in Visual Studio).
+By default the install path under Windows is "C:\Program Files\ETISS" or "C:\Program Files (x86)\ETISS" and requires e.g. Visual Studio to run with administrator rights.
+Although the installation mainly consists of source files it is necessary to match target platform to the projects that will use ETISS (e.g. Win32,Win64). The lib folder of the ETISS source installation needs to be added to the search path of applications that use ETISS.
+A side by side installation of ETISS for different platforms is not recommended nor tested.
+
+\section source_install_use Use ETISS's source installation
+
+Once ETISS is installed it is very simple to use it in other cmake projects. E.g.:
+\code{CMakeLists.txt}
+
+cmake_minimum_required(VERSION 2.8)
+project(main)
+
+find_package(ETISS 0.4) #find ETISS and set some variables
+
+include_directories(${ETISS_INCLUDE_DIRS}) #include ETISS include directory
+
+add_executable(main main.cpp ${ETISS_SOURCES}) # add example program "main"
+
+set_target_properties(main PROPERTIES LINK_FLAGS "/STACK:104857600") #WINDOWS ONLY: increase stack size (in some cases the default 1MB stack of windows was not enough)
+
+set_target_properties(main PROPERTIES COMPILE_DEFINITIONS "ETISS_EXPORTS;ETISS_PLUGIN_EXPORTS") #since ETISS and plugins will be compiled into the program it is necessary to define the *EXPORTS macros
+
+target_link_libraries(main "${ETISS_LIBRARIES}") # link libraries needed by ETISS or plugins
+
+\endcode
+
+\section source_install_info Additional information
+
+Due to the use of one build environment for all source files of ETISS and plugins it is important that ETISS and plugins don't use the same file names (including relative paths) for header files.
+Source files may have the same name. In case of duplicated source file name or if the source file is not located in a * /src/*.cpp path the full file path will be used to generate a new file name. The new file name is easily distinguishable by is form (e.g. 4c7c6a766da4ba28229bc2e5d6751b6e185bafd9.cpp)
+
+*/

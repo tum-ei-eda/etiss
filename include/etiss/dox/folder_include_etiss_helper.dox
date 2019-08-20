@@ -1,0 +1,13 @@
+/*! \page folder_include_etiss_helper Overview of include/etiss/helper
+
+	This folder contains header files that define the necessary functions to implement a library for ETISS.
+	Please note that these functions must be declared and implemented in a extern "C" {...} section since they are loaded via dlsym.
+	
+	The defined functions provide 4 functionalities for each of the classes that will be used by ETISS (etiss::CPUArch,etiss::JIT,etiss::Plugin).
+	These 4 functions return the number of implementations provided, a name of each implementation and create/delete functionality.
+	
+	src/IntegratedLibrary.cpp provides an example of how to implement those functions.
+	
+	For an explanation of the functionality of etiss::CPUArch, etiss::JIT and etiss::Plugin please refer to the linked documentation and to provided implementations (ArchImpl/OR1K/,JITImpl/GCC,etiss/IntegratedLibrary/*)
+
+*/

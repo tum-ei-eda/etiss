@@ -1,0 +1,17 @@
+/*! \page systemcinterface SystemC Interface
+
+A CPUCore of ETISS basically has two interfaces: one for data/instruction read/writes and one for interrupts. 
+To allow easy use of ETISS and interchangeability with other ISSs in a systemC simulation a special interface for CPUs is provided in the systemc folder. 
+
+systemc/SystemCInterface.h defines a general interface providing 2 TLM sockets for data/instruction access, interrupt ports that are allocated as needed and that are mapped to a function call and a reset port (also allocated as needed).
+Upon change of and interrupt line the virtual function void updateIRQState(unsigned index,bool state) gets called. In case of a reset signal change the virtual function void reset(bool state) is called. Both functions need to be implemented.
+The allocate/open functions for interrupt line and reset may be overridden if needed (always override allocate and open together).
+
+systemc/SystemCBridge.h defines the implementation of SystemCInterface for ETISS. The CPUCore instance needs be be created manually and passed to the constructor. Interrupts are handled with a private instance of etiss::InterruptHandler.
+
+If performance is extremely critical then this interface implementations for ETISS should not be used. Instead struct ETISS_System should be implemented to save one additional function call per read/write/sync call.
+
+
+
+
+*/

@@ -1,0 +1,114 @@
+/*! \page howto_etiss How to use ETISS
+
+\tableofcontents
+
+For the following section ETISS and its libraries are required to be present.
+If this is not the case refer to \ref install  to build ETISS.
+
+\section howto_etiss_frontendfunctions Frontend API
+
+ETISS provies a simple abstraction layer that allows the frontend to be very
+simple.
+
+\subsection howto_etiss_frontendfunctions_init Initialize ETISS
+
+Before the use of other functions etiss::Initializer should be instantiated.
+The instantiated initializer must exist while ETISS is used
+(-> do not use temporaries).
+
+E.g.
+
+\code{main.cpp}
+int main( int argc, char ** argv){
+
+	etiss::Initializer etiss_initializer(argc,argv);
+	
+	// do something with ETISS
+
+}
+\endcode
+
+This will fail:
+
+\code{WRONG_main.cpp}
+int main( int argc, char ** argv){
+
+	etiss::Initializer(argc,argv);
+	
+	// do something with ETISS
+
+}
+\endcode
+
+Alternatively the functions etiss::initialize and etiss::shutdown can be used
+manually.
+
+
+\subsection howto_etiss_frontendfunctions_lib Loading libraries
+
+Shared (and integrated) libraries are used to provide the actual simulation
+behavior. 
+ETISS automatically loads libraries it finds in ArchImple/ * / , JITImpl/ * /
+and PluginImpl/ * / relative to itself and to paths in the PATH variable. A
+shared library can be loaded manually with etiss::loadLibrary. 
+
+
+\subsection howto_etiss_frontendfunctions_cpucore Instantiating a processor
+
+etiss::CPUCore represents one processor core. It can be instantiated with
+etiss::CPUCore::create (e.g. std::shared_ptr<CPUCore> core0 =
+etiss::CPUCore::create("or1k","core0")). etiss::CPUCore::create takes an
+optional map of options that are passed to the cpu architecture instance
+(in this example to the architecture "or1k"). Refer to the documentation of the
+respective architecture implementation for a list of options
+(e.g. \ref status_implementation_or1k ).
+
+The etiss::CPUCore instance can already be used to execute a simulation without
+further configuration given that at least one library was loaded that provides a
+just in time compiler. If the selected cpu architecture implementation supplies
+a timer implementation it will be enabled by default.
+
+
+\subsection howto_etiss_frontendfunctions_cpucore_cfg Configure a processor
+
+To specify which just in time compiler should be used
+etiss::CPUCore::set(std::shared_ptr<etiss::JIT> jit) can be called. etiss::JIT
+instances can be acquired with etiss::getJIT(). Available etiss::JIT
+implementations can be listed with etiss::listJITs().
+
+Usage of the default timer can be enabled/disabled with
+etiss::CPUCore::setTimer.
+
+Use etiss::CPUCore::addPlugin to add plugins. Plugin instances may not be shared
+between etiss::CPUCore instances. For a list of integrated plugins refer to
+\ref status_implementation_integratedlibrary
+
+If interrupts are supported and should be used then the Interrupt vector wrapper
+etiss::InterruptVector returned by etiss::CPUCore::getInterruptVector() can be
+used. Since time synchronization between ETISS and the rest of a simulation only
+happens periodically an etiss::InterruptHandler should be used to ensure
+deterministic behavior even in threaded simulations. If the systemC wrapper
+class (SystemCBridge defined in systemc/SystemCBridge.h) is used then that
+wrapper will handle the InterruptVector with the help of InterruptHandler and
+provides simple sc_core::sc_in<bool> ports to use for interrupt lines.
+
+
+\subsection howto_etiss_frontendfunctions_cpucore_exec Execute a processor
+
+To start the simulation of a etiss::CPUCore instance call
+etiss::CPUCore::execute. A ETISS_System or etiss::System implementation needs to
+be passed to this function. A ETISS_System implementation is preferred since
+etiss::System needs to be wrapped in a ETISS_System structure thus adding an
+additional function call per access. The System handles instruction/data
+reads/writes and synchronizes times. For a simple example implementation refer
+to etiss::DebugSystem.
+
+Alternatively a systemC wrapper class called SystemCBridge
+(defined in systemc/SystemCBridge.h) can handle ETISSs interrupt and system
+interface internally and provides two tlm sockets for instruction/data
+read/writes and sc_core::sc_in<bool> ports for interrupt and reset lines. Please
+note that this wrapper most likely will let your simulation run a bit longer
+than specified to allow etiss::CPUCore::execute to exit cleanly and delete
+shared pointers.
+
+*/
