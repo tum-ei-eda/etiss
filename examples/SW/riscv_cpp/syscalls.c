@@ -45,7 +45,7 @@ static int _brk(void *addr)
 // FSTAT
 int _fstat(int file, struct stat *st)
 {
-  if(file == 1) {
+  if(file == 1 || file == 2) {
     st->st_mode = S_IFCHR;
     st->st_blksize = 0;
     return 0;
@@ -59,7 +59,7 @@ int _fstat(int file, struct stat *st)
 // WRITE
 ssize_t _write(int file, const void *ptr, size_t len)
 {
-  if (file != 1) {
+  if (file != 1 && file != 2) {
     errno = ENOSYS;
     return -1;
   }
@@ -83,11 +83,24 @@ void _exit_(int exit_status)
 // CLOSE
 int _close(int file)
 {
-  if (file == 1) {
+  if (file == 1 || file == 2) {
     return 0;
   }
   errno = ENOSYS;
   return -1;
+}
+
+
+// GETTIMEOFDAY
+int _gettimeofday(struct timeval *tp, void *tzp)
+{
+  // Not implemented by ETISS?
+  unsigned int cycle = 0;
+  csrr(cycle, cycle);
+  unsigned long long timebase = 100000000;
+  tp->tv_sec = cycle / timebase;
+  tp->tv_usec = cycle % timebase * 1000000 / timebase;
+  return 0;
 }
 
 
@@ -130,6 +143,9 @@ int default_exception_handler_c(unsigned int a0, unsigned int a1, unsigned int a
     case SYS_close:
       ecall_result = _close(a0);
       break;
+    case SYS_gettimeofday:
+      ecall_result = _gettimeofday(a0, a1);
+      break;
     default:
       custom_print_string(ETISS_LOGGER_ADDR,"unhandled syscall!\n");
       break;
@@ -155,3 +171,29 @@ int default_exception_handler_c(unsigned int a0, unsigned int a1, unsigned int a
 // Required by iostream
 // https://lists.debian.org/debian-gcc/2003/07/msg00057.html
 void *__dso_handle = (void*)&__dso_handle;
+
+// Support for <atomic>. Trivial since single threaded without scheduler.
+// Add as required.
+// https://gcc.gnu.org/wiki/Atomic/GCCMM?action=AttachFile&do=view&target=libatomic.c
+typedef uint8_t ATOMICINT1;
+typedef uint16_t ATOMICINT2;
+typedef uint32_t ATOMICINT4;
+typedef uint64_t ATOMICINT8;
+int __atomic_compare_exchange(size_t size, void *mem, void *expect, void *desired, int success, int failure)
+{
+  if (memcmp(mem, expect, size) == 0) {
+    memcpy(mem, desired, size);
+    return 1;
+  }
+  memcpy(expect, mem, size);
+  return 0;
+}
+#define ATOMIC_COMPARE_EXCHANGE(sz) \
+  int __atomic_compare_exchange_##sz (void *mem, void *expect, ATOMICINT##sz desired, int success, int failure) \
+  { \
+    return __atomic_compare_exchange(sz, mem, expect, &desired, success, failure); \
+  }
+ATOMIC_COMPARE_EXCHANGE(1);
+ATOMIC_COMPARE_EXCHANGE(2);
+ATOMIC_COMPARE_EXCHANGE(4);
+ATOMIC_COMPARE_EXCHANGE(8);
