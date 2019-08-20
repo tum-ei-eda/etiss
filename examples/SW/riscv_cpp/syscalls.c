@@ -6,7 +6,6 @@
 #include "utils.h"
 #include "machine/syscall.h"
 
-#include "../test_cases/cust_print/cust_print.h"
 #define ETISS_LOGGER_ADDR (void*)0x80000000
 
 
@@ -108,17 +107,10 @@ int _gettimeofday(struct timeval *tp, void *tzp)
 // Overrides weak definition from pulpino sys_lib.
 int default_exception_handler_c(unsigned int a0, unsigned int a1, unsigned int a2, unsigned int a3, unsigned int a4, unsigned int a5, unsigned int a6, unsigned int a7)
 {
-  custom_print_string(ETISS_LOGGER_ADDR,"got exception!\n");
   unsigned int mcause = 0;
   csrr(mcause, mcause);
-  custom_print_hex_int32(ETISS_LOGGER_ADDR, mcause);
-  custom_print_string(ETISS_LOGGER_ADDR,"\n");
   unsigned int mepc = 0;
   csrr(mepc, mepc);
-  custom_print_hex_int32(ETISS_LOGGER_ADDR, mepc);
-  custom_print_string(ETISS_LOGGER_ADDR,"\n");
-  custom_print_hex_int32(ETISS_LOGGER_ADDR, a7);
-  custom_print_string(ETISS_LOGGER_ADDR,"\n");
 
   long ecall_result;
 
@@ -128,7 +120,6 @@ int default_exception_handler_c(unsigned int a0, unsigned int a1, unsigned int a
     switch (a7)
     {
     case SYS_brk:
-      custom_print_string(ETISS_LOGGER_ADDR,"SYS_brk!\n");
       ecall_result = (unsigned int)_brk(a0);
       break;
     case SYS_fstat:
@@ -147,21 +138,17 @@ int default_exception_handler_c(unsigned int a0, unsigned int a1, unsigned int a
       ecall_result = _gettimeofday(a0, a1);
       break;
     default:
-      custom_print_string(ETISS_LOGGER_ADDR,"unhandled syscall!\n");
-      break;
+      // Unhandled syscall!
+      while (1);
     }
     // Advance to instruction after ECALL.
     csrw(mepc, mepc + 4);
-    // Store result in a0. Need this explicitly or GCC will optimize it out.
-    asm volatile("mv a0,%0" : : "r"(ecall_result));
     break;
   case 0x2: // Illegal instruction
-    custom_print_string(ETISS_LOGGER_ADDR,"illegal instruction at\n");
-    custom_print_hex_int32(ETISS_LOGGER_ADDR, mepc);
+    // The instruction is located at mepc.
     while (1);
   default:
-    custom_print_string(ETISS_LOGGER_ADDR,"unhandled cause\n");
-    custom_print_hex_int32(ETISS_LOGGER_ADDR, mcause);
+    // Unhandled cause code!
     while (1);
   }
 
