@@ -6,7 +6,6 @@
 #include "utils.h"
 #include "machine/syscall.h"
 
-#include "../test_cases/cust_print/cust_print.h"
 #define ETISS_LOGGER_ADDR (void*)0x80000000
 
 
@@ -45,7 +44,7 @@ static int _brk(void *addr)
 // FSTAT
 int _fstat(int file, struct stat *st)
 {
-  if(file == 1) {
+  if(file == 1 || file == 2) {
     st->st_mode = S_IFCHR;
     st->st_blksize = 0;
     return 0;
@@ -59,7 +58,7 @@ int _fstat(int file, struct stat *st)
 // WRITE
 ssize_t _write(int file, const void *ptr, size_t len)
 {
-  if (file != 1) {
+  if (file != 1 && file != 2) {
     errno = ENOSYS;
     return -1;
   }
@@ -72,21 +71,46 @@ ssize_t _write(int file, const void *ptr, size_t len)
 }
 
 
+// EXIT
+void _exit_(int exit_status)
+{
+  asm("ebreak");
+  while (1);
+}
+
+
+// CLOSE
+int _close(int file)
+{
+  if (file == 1 || file == 2) {
+    return 0;
+  }
+  errno = ENOSYS;
+  return -1;
+}
+
+
+// GETTIMEOFDAY
+int _gettimeofday(struct timeval *tp, void *tzp)
+{
+  // Not implemented by ETISS?
+  unsigned int cycle = 0;
+  csrr(cycle, cycle);
+  unsigned long long timebase = 100000000;
+  tp->tv_sec = cycle / timebase;
+  tp->tv_usec = cycle % timebase * 1000000 / timebase;
+  return 0;
+}
+
+
 
 // Overrides weak definition from pulpino sys_lib.
 int default_exception_handler_c(unsigned int a0, unsigned int a1, unsigned int a2, unsigned int a3, unsigned int a4, unsigned int a5, unsigned int a6, unsigned int a7)
 {
-  custom_print_string(ETISS_LOGGER_ADDR,"got exception!\n");
   unsigned int mcause = 0;
   csrr(mcause, mcause);
-  custom_print_hex_int32(ETISS_LOGGER_ADDR, mcause);
-  custom_print_string(ETISS_LOGGER_ADDR,"\n");
   unsigned int mepc = 0;
   csrr(mepc, mepc);
-  custom_print_hex_int32(ETISS_LOGGER_ADDR, mepc);
-  custom_print_string(ETISS_LOGGER_ADDR,"\n");
-  custom_print_hex_int32(ETISS_LOGGER_ADDR, a7);
-  custom_print_string(ETISS_LOGGER_ADDR,"\n");
 
   long ecall_result;
 
@@ -96,7 +120,6 @@ int default_exception_handler_c(unsigned int a0, unsigned int a1, unsigned int a
     switch (a7)
     {
     case SYS_brk:
-      custom_print_string(ETISS_LOGGER_ADDR,"SYS_brk!\n");
       ecall_result = (unsigned int)_brk(a0);
       break;
     case SYS_fstat:
@@ -105,19 +128,59 @@ int default_exception_handler_c(unsigned int a0, unsigned int a1, unsigned int a
     case SYS_write:
       ecall_result = _write(a0, a1, a2);
       break;
-    default:
-      custom_print_string(ETISS_LOGGER_ADDR,"unhandled syscall!\n");
+    case SYS_exit:
+      _exit_(a0);
       break;
+    case SYS_close:
+      ecall_result = _close(a0);
+      break;
+    case SYS_gettimeofday:
+      ecall_result = _gettimeofday(a0, a1);
+      break;
+    default:
+      // Unhandled syscall!
+      while (1);
     }
     // Advance to instruction after ECALL.
     csrw(mepc, mepc + 4);
-    // Store result in a0. Need this explicitly or GCC will optimize it out.
-    asm volatile("mv a0,%0" : : "r"(ecall_result));
     break;
+  case 0x2: // Illegal instruction
+    // The instruction is located at mepc.
+    while (1);
   default:
-    custom_print_string(ETISS_LOGGER_ADDR,"unhandled cause\n");
-    for (;;);
+    // Unhandled cause code!
+    while (1);
   }
 
   return ecall_result;
 }
+
+// Required by iostream
+// https://lists.debian.org/debian-gcc/2003/07/msg00057.html
+void *__dso_handle = (void*)&__dso_handle;
+
+// Support for <atomic>. Trivial since single threaded without scheduler.
+// Add as required.
+// https://gcc.gnu.org/wiki/Atomic/GCCMM?action=AttachFile&do=view&target=libatomic.c
+typedef uint8_t ATOMICINT1;
+typedef uint16_t ATOMICINT2;
+typedef uint32_t ATOMICINT4;
+typedef uint64_t ATOMICINT8;
+int __atomic_compare_exchange(size_t size, void *mem, void *expect, void *desired, int success, int failure)
+{
+  if (memcmp(mem, expect, size) == 0) {
+    memcpy(mem, desired, size);
+    return 1;
+  }
+  memcpy(expect, mem, size);
+  return 0;
+}
+#define ATOMIC_COMPARE_EXCHANGE(sz) \
+  int __atomic_compare_exchange_##sz (void *mem, void *expect, ATOMICINT##sz desired, int success, int failure) \
+  { \
+    return __atomic_compare_exchange(sz, mem, expect, &desired, success, failure); \
+  }
+ATOMIC_COMPARE_EXCHANGE(1);
+ATOMIC_COMPARE_EXCHANGE(2);
+ATOMIC_COMPARE_EXCHANGE(4);
+ATOMIC_COMPARE_EXCHANGE(8);
