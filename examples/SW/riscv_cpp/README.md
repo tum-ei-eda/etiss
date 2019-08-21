@@ -1,7 +1,7 @@
-# RISC-V Software Compilation
+# RISC-V Software Compilation for C++
 
 This file contains ctr0, linker script, Makefile (originally from plupino
-project) for simple RISC-V software compilation
+project) for simple RISC-V software compilation using C++
 
 ## Build
 ### Prerequisites
@@ -16,35 +16,14 @@ met:
 
 	$ make gitlib
 
-### RISC-V test cases
+### RISC-V target software
 
-By default, benchmark provisioned with ETIS in `../test_cases`will be
-compiled. Binary code and elf file will be located at `./build`. Minimal
+The target software runs some basic C++ specific tests. Binary code and elf file will be located at `./build`. Minimal
 dependent source code in `./sys_lib` is linked against final executable,
-such as default interrupt handlers and exception handlers. Both of interrupt
-handlers and exception handlers are for now just endless loop and they
+such as default interrupt handlers and headers. Interrupt
+handlers are for now just endless loop and they
 could be overridden by user-defined handlers.
 
 To compile the SW:
 
 	$ make
-
-### Instruction test software
-
-In the folder `./instr_tests`, there are the test SWs which could be used
-to test ISA model instruction by instruction. These SWs originates from
-UCB and they cover integer, multiplication and compressed instructions.
-
- To compile instruction tests:
-
-	$ (cd instr_tests; make all)
-
-## More software in github
-
-Softwares provided by pulpino project is also compatible with our model.
-
-	$ git clone https://github.com/pulp-platform/pulpino.git
-
-The software is located in ./pulpino/SW and they have their own cmake
-compilation script (which does not work for now, modify it if in need.
-Comment date: 15, Mar., 2018)
