@@ -444,10 +444,16 @@ void Server::handlePacket(bool block)
             {
                 unsigned off = 1;
                 etiss::uint64 regIndex = 0;
+                std::string valToWrite;
                 if (command.length() > 1)
                 {
                     for (size_t i = 1; i < command.length(); ++i)
                     {
+                        if (command[i] == '=' && command.length() > i + 1)
+                        {
+                            valToWrite = command.substr(i + 1);
+                            break;
+                        }
                         regIndex = (regIndex << 4) | hex::fromHex(command[i]);
                     }
                 }
@@ -462,19 +468,19 @@ void Server::handlePacket(bool block)
                 switch (f->width_)
                 {
                 case 8:
-                    f->write(hex::toInt<uint8_t>(command, arch_->getGDBCore().isLittleEndian(), off));
+                    f->write(hex::toInt<uint8_t>(valToWrite, arch_->getGDBCore().isLittleEndian(), off));
                     off += 8 >> 2;
                     break;
                 case 16:
-                    f->write(hex::toInt<uint16_t>(command, arch_->getGDBCore().isLittleEndian(), off));
+                    f->write(hex::toInt<uint16_t>(valToWrite, arch_->getGDBCore().isLittleEndian(), off));
                     off += 16 >> 2;
                     break;
                 case 32:
-                    f->write(hex::toInt<uint32_t>(command, arch_->getGDBCore().isLittleEndian(), off));
+                    f->write(hex::toInt<uint32_t>(valToWrite, arch_->getGDBCore().isLittleEndian(), off));
                     off += 32 >> 2;
                     break;
                 case 64:
-                    f->write(hex::toInt<uint64_t>(command, arch_->getGDBCore().isLittleEndian(), off));
+                    f->write(hex::toInt<uint64_t>(valToWrite, arch_->getGDBCore().isLittleEndian(), off));
                     off += 64 >> 2;
                     break;
                 }
