@@ -98,7 +98,7 @@ class RISCVGDBCore : public etiss::plugin::gdb::GDBCore
     unsigned mappedRegisterCount()
     {
         // Modify according to sent register number
-        return 33;
+        return 32;
     }
     etiss::uint64 getInstructionPointer(ETISS_CPU *cpu) { return cpu->instructionPointer; }
 
