@@ -567,7 +567,7 @@ class RegField : public etiss::VirtualStruct::Field
 class pcField : public etiss::VirtualStruct::Field
 {
   public:
-    pcField(etiss::VirtualStruct &parent) : Field(parent, "PC", "instructionPointer", R | W, 8) {}
+    pcField(etiss::VirtualStruct &parent) : Field(parent, "instructionPointer", "instructionPointer", R | W, 8) {}
 
     virtual ~pcField() {}
 
