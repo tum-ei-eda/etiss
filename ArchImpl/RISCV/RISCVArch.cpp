@@ -9002,6 +9002,9 @@ static InstructionDefinition c_add_rd_rs2(
                           toString(rs2) +
                           " == 0)\n"
                           "{\n"
+                          "if(" + toString(rd) + " == 0){\n"
+                          "return ETISS_RETURNCODE_CPUFINISHED;\n"
+                          "} else {\n"
                           "*((RISCV*)cpu)->R[1] = " +
                           toString((uint32_t)ic.current_address_) +
                           "ULL  + 2;\n"
@@ -9014,7 +9017,7 @@ static InstructionDefinition c_add_rd_rs2(
 #if RISCV_DEBUG_CALL
                           "printf(\"cpu->instructionPointer = %#lx\\n\",cpu->instructionPointer); \n"
 #endif
-                          "}\n"
+                          "}}\n"
 
                           "else\n"
                           "{\n"
