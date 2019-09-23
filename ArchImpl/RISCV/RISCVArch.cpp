@@ -7929,7 +7929,7 @@ static InstructionDefinition c_sw_rs1_rs2_imm(
 #endif
 
                 // FIXME: Manual edit.
-                "temp = (*((RISCV*)cpu)->R[" + toString(rs2) + "]);\n"
+                "temp = (*((RISCV*)cpu)->R[" + toString(rs2) + " + 8]);\n"
                 "exception = (*(system->dwrite))(system->handle, cpu, mem_addr, tmpbuf, 4);\n"
 
                           "cpu->instructionPointer = " +
