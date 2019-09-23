@@ -7664,31 +7664,11 @@ static InstructionDefinition c_lw_rd_rs1_imm(
 #if RISCV_DEBUG_CALL
                           "printf(\"mem_addr = %#x\\n\",mem_addr); \n"
 #endif
-                          " etiss_uint8 M_mem_addr_3;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_3;\n"
-                          "exception = (*(system->dread))(system->handle,cpu,mem_addr + 3,tmpbuf,1);\n"
-                          "o_data^=((etiss_uint32)(M_mem_addr_3)<<24) ^ (o_data & 0xff000000);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"o_data = %#x\\n\",o_data); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_2;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_2;\n"
-                          "exception = (*(system->dread))(system->handle,cpu,mem_addr + 2,tmpbuf,1);\n"
-                          "o_data^=((etiss_uint32)(M_mem_addr_2)<<16) ^ (o_data & 0xff0000);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"o_data = %#x\\n\",o_data); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_1;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_1;\n"
-                          "exception = (*(system->dread))(system->handle,cpu,mem_addr + 1,tmpbuf,1);\n"
-                          "o_data^=((etiss_uint16)(M_mem_addr_1)<<8) ^ (o_data & 0xff00);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"o_data = %#x\\n\",o_data); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_0;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_0;\n"
-                          "exception = (*(system->dread))(system->handle,cpu,mem_addr + 0,tmpbuf,1);\n"
-                          "o_data^=((etiss_uint8)(M_mem_addr_0)) ^ (o_data & 0xff);\n"
+
+                // FIXME: Manual edit.
+                "exception = (*(system->dread))(system->handle, cpu, mem_addr, tmpbuf, 4);\n"
+                "o_data = temp;\n"
+
 #if RISCV_DEBUG_CALL
                           "printf(\"o_data = %#x\\n\",o_data); \n"
 #endif
@@ -7947,42 +7927,11 @@ static InstructionDefinition c_sw_rs1_rs2_imm(
 #if RISCV_DEBUG_CALL
                           "printf(\"mem_addr = %#x\\n\",mem_addr); \n"
 #endif
-                          " etiss_uint8 M_mem_addr_3;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_3;\n"
-                          "M_mem_addr_3 = (*((RISCV*)cpu)->R[" +
-                          toString(rs2) +
-                          " + 8] & 0xff000000)>>24;\n"
-                          "exception = (*(system->dwrite))(system->handle,cpu,mem_addr + 3,tmpbuf,1);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"M_mem_addr_3 = %#x\\n\",M_mem_addr_3); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_2;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_2;\n"
-                          "M_mem_addr_2 = (*((RISCV*)cpu)->R[" +
-                          toString(rs2) +
-                          " + 8] & 0xff0000)>>16;\n"
-                          "exception = (*(system->dwrite))(system->handle,cpu,mem_addr + 2,tmpbuf,1);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"M_mem_addr_2 = %#x\\n\",M_mem_addr_2); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_1;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_1;\n"
-                          "M_mem_addr_1 = (*((RISCV*)cpu)->R[" +
-                          toString(rs2) +
-                          " + 8] & 0xff00)>>8;\n"
-                          "exception = (*(system->dwrite))(system->handle,cpu,mem_addr + 1,tmpbuf,1);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"M_mem_addr_1 = %#x\\n\",M_mem_addr_1); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_0;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_0;\n"
-                          "M_mem_addr_0 = (*((RISCV*)cpu)->R[" +
-                          toString(rs2) +
-                          " + 8] & 0xff);\n"
-                          "exception = (*(system->dwrite))(system->handle,cpu,mem_addr + 0,tmpbuf,1);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"M_mem_addr_0 = %#x\\n\",M_mem_addr_0); \n"
-#endif
+
+                // FIXME: Manual edit.
+                "temp = (*((RISCV*)cpu)->R[" + toString(rs2) + "]);\n"
+                "exception = (*(system->dwrite))(system->handle, cpu, mem_addr, tmpbuf, 4);\n"
+
                           "cpu->instructionPointer = " +
                           toString((uint32_t)(ic.current_address_ + 2)) +
                           "ULL; \n"
