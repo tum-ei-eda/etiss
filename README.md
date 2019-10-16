@@ -44,7 +44,8 @@ ETISS currently could only be built on Linux OS.
   -  zlib1g-dev
   -  libtinfo-dev
   -  graphviz; doxygen (For documentation generation)
-  -  LLVM + Clang  <= LLVM3.4.2v API
+  - cmake
+  -  LLVM + Clang  <= LLVM7.0.1
   (If you want to use LLVM-JIT compiler then you have to setup <LLVM + Clang>
    toolchain somewhere on hostPC and source it (in a specific layout as provided
    in pre-build binaries on the download page of LLVM-Releases)
@@ -87,6 +88,9 @@ Install the package :
 
 	$ make install
 
+	## Setting up the RISC toolchain
+	
+	
 ## Example project to run etiss
 
 Go into `<etiss_install_path>/examples`

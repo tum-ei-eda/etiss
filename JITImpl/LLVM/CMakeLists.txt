@@ -37,7 +37,7 @@
 PROJECT(LLVMJIT)
 
 IF(NOT ENV{LLVM_DIR})
-    SET(ENV{LLVM_DIR} "/usr/local/research/projects/SystemDesign/tools/llvm/current")
+    SET(ENV{LLVM_DIR} "/opt/clang+llvm-7.0.1-x86_64-linux-gnu-ubuntu-18.04")
 ENDIF()
 
 FIND_PACKAGE(LLVM 7 CONFIG)

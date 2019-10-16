@@ -36,7 +36,7 @@
 # This Makefile is used by the ETISS SW-example and the systemC example,
 # which has its own software.
 
-TOOLBIN=/usr/local/research/projects/SystemDesign/tools/riscv/riscv32-unknown-elf/bin
+TOOLBIN=/opt/riscv/bin
 
 SOFTFLOAT?=0
 
