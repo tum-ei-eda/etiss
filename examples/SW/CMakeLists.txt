@@ -84,3 +84,6 @@ configure_file(
 install(FILES "${PROJECT_BINARY_DIR}/tobeinstalled/riscv_cpp/Makefile"
 		DESTINATION examples/SW/riscv_cpp
 )
+install(FILES riscv_cpp/link.ld.templ
+		DESTINATION examples/SW/riscv_cpp
+)
