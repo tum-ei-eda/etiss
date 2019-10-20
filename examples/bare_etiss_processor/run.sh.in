@@ -1,5 +1,5 @@
 #!/bin/bash
-
+export ETISS_HOME=@CMAKE_INSTALL_PREFIX@
 INIFILE=${1:-ETISS.ini}
 export CC=`which gcc`
 export CXX=`which g++`
@@ -9,6 +9,5 @@ export CXX=`which g++`
 mkdir -p build
 (cd build; cmake -DCMAKE_BUILD_TYPE=Debug ..; make VERBOSE=1)
 export LD_LIBRARY_PATH=/opt/gcc_8.2.0/linux70_64/lib64:"$LD_LIBRARY_PATH" 
-export ETISS_HOME=@CMAKE_INSTALL_PREFIX@/
 export LD_LIBRARY_PATH_EXTENTIONS=${ETISS_HOME}/lib
 ./build/main -i${INIFILE}
