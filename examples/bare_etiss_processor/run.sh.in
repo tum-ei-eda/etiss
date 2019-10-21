@@ -1,13 +1,26 @@
 #!/bin/bash
 export ETISS_HOME=@CMAKE_INSTALL_PREFIX@
-INIFILE=${1:-ETISS.ini}
+if [ -z "$1" ]
+then
+	INIFILE=-iETISS.ini}
+	shift
+fi
 export CC=`which gcc`
 export CXX=`which g++`
 
-
+if [ -n "$CAMINO" ]
+	GCC_PATH=`echo $PATH | grep /opt/gcc_8.2.0`
+	if [ -z "$GCC_PATH" ]
+		module switch gcc/8.2.0
+	fi
+	LD_LIB_PATH=`echo $LD_LIBRARY_PATH | grep /opt/gcc_8.2.0/linux70_64/lib64`
+	if [ -z "$LD_LIB_PATH" ]
+		export LD_LIBRARY_PATH=/opt/gcc_8.2.0/linux70_64/lib64:"$LD_LIBRARY_PATH" 
+	fi
+fi
 # build virtual prototype
 mkdir -p build
 (cd build; cmake -DCMAKE_BUILD_TYPE=Debug ..; make VERBOSE=1)
-export LD_LIBRARY_PATH=/opt/gcc_8.2.0/linux70_64/lib64:"$LD_LIBRARY_PATH" 
+
 export LD_LIBRARY_PATH_EXTENTIONS=${ETISS_HOME}/lib
-./build/main -i${INIFILE}
+./build/main ${INIFILE} "$@"
