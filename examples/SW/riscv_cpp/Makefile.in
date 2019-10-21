@@ -160,7 +160,7 @@ $(BOOT_ENTRY_OBJ): $(BOOT_ENTRY_SRC)
 	$(call path_prefix_call, $(RISCVCC) $(C_CXX_FLAGS) -c ${BOOT_ENTRY_SRC} -o $@) 
 
 ${BUILD_DIR}/code.elf: $(BARE_METAL_OBJS) $(MAIN_OBJ) $(BARE_METAL_LIBS) Makefile
-	sed -e'1,$$s/@RAM_SIZE_KB@/$(RAM_SIZE_KB)/g' -e'1,$$s/@ROM_SIZE_KB@/$(ROM_SIZE_KB)/g' -e'1,$$s/@STACK_SIZE_KB@/$(STACK_SIZE_KB)/g' link.ld.in > link.ld
+	sed -e'1,$$s/%%RAM_SIZE_KB%%/$(RAM_SIZE_KB)/g' -e'1,$$s/%%ROM_SIZE_KB%%/$(ROM_SIZE_KB)/g' -e'1,$$s/%%STACK_SIZE_KB%%/$(STACK_SIZE_KB)/g' link.ld.templ > link.ld
 	$(call path_prefix_call, $(RISCVCPP) -g $(LDFLAGS)  ${BARE_METAL_OBJS} $(MAIN_OBJ) ${BARE_METAL_LIBS} -o ${BUILD_DIR}/code.elf)
 	$(RISCVSIZE) ${BUILD_DIR}/code.elf
 
