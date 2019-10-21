@@ -30,7 +30,7 @@
 #
 #	Author: Marc Greim <marc.greim@mytum.de>, Chair of Electronic Design Automation, TUM
 #
-#	Version 0.1
+#	Version 0.2
 #
 
 # This Makefile is used by the ETISS SW-example and the systemC example,
@@ -38,7 +38,6 @@
 
 TOOLBUILD ?= rvtc-ilp32-multlib-1.0.0.0
 ifeq ($(TOOLBIN),)
-
 ifeq ($(shell uname),Linux)
    ifeq ($(shell lsb_release -is),RedHatEnterpriseServer)
        TOOL_INSTALL_ROOT=/home/aifordes.work/share
@@ -51,26 +50,38 @@ endif
 TOOLBIN:=$(TOOL_INSTALL_ROOT)/$(TOOLBUILD)/bin
 endif
 
+
 RAM_SIZE_KB ?= 1024
 ROM_SIZE_KB ?= 4096
 STACK_SIZE_KB ?= 128
+GCC_BUILD_VARIANT=riscv32-unknown-elf
+TARGET_ABI ?= ilp32
+TARGET_ARCH ?= rv32im
+TARGET_ELF_FMT=elf32-littleriscv
+LD_EMULATION=elf32lriscv
 
-SOFTFLOAT?=0
+define path_prefix_call =
+@echo $(1)
+@$(SET_PATH) $(1)
+endef
 
-ifeq ($(SOFTFLOAT),1)
-	FLOATTYPE= -mhard-float
-else
-	FLOATTYPE= -msoft-float
-endif
-
-SET_PATH=PATH="$(TOOLBIN):$(PATH)"
+BARE_METAL_FLAGS= -fno-builtin  -ffreestanding
+BARE_METAL_LIBS=$(LIBS_OBJ) 
+BARE_METAL_LDFLAGS=-T ${SW_DIR_RISCV}/link.ld -nostartfiles  
+BARE_METAL_OBJS=$(BOOT_ENTRY_OBJ)
+SET_PATH=PATH='$(TOOLBIN):$(PATH)'
 
 
-RISCVCC= $(TOOLBIN)/riscv32-unknown-elf-gcc -march=rv32imfd -nostartfiles  -fno-builtin  -ffreestanding
-RISCVOBJCPY= $(TOOLBIN)/riscv32-unknown-elf-objcopy
-RISCVOBJDMP= $(TOOLBIN)/riscv32-unknown-elf-objdump
-RISCVRDELF= $(TOOLBIN)/riscv32-unknown-elf-readelf
-RISCVLD= $(TOOLBIN)/riscv32-unknown-elf-ld
+PATHED_RISCVCC=$(SET_PATH) $(RISCVCC)
+RISCVCC=$(TOOLBIN)/$(GCC_BUILD_VARIANT)-gcc -mabi=$(TARGET_ABI) -march=$(TARGET_ARCH)  $(BARE_METAL_FLAGS)
+RISCVCPP=$(TOOLBIN)/$(GCC_BUILD_VARIANT)-g++  -march=$(TARGET_ARCH) -mabi=$(TARGET_ABI)  $(BARE_METAL_FLAGS)
+PATHED_RISCVCPP=$(SET_PATH) $(RISCVCPP)
+RISCVOBJCPY=$(TOOLBIN)/$(GCC_BUILD_VARIANT)-objcopy
+RISCVOBJDMP= $(TOOLBIN)/$(GCC_BUILD_VARIANT)-objdump
+RISCVRDELF=$(TOOLBIN)/$(GCC_BUILD_VARIANT)-readelf
+RISCVSIZE=$(TOOLBIN)/$(GCC_BUILD_VARIANT)-size
+RISCVLD=$(TOOLBIN)/$(GCC_BUILD_VARIANT)-ld
+PATHED_RISCVLD=$(SET_PATH) $(RISCVLD)
 
 
 DEBUG?=1
@@ -96,10 +107,12 @@ SW_DIR_RISCV = $(SW_DIR)/riscv_cpp/
 
 BUILD_DIR = ./build
 OBJECT_DIR = ./obj
-CFLAGS = $(DBGPARAM) $(OPTLEVEL)  -T ${SW_DIR_RISCV}/link.ld -I ${SW_DIR} -I ${SW_DIR}/sys_lib/inc -I ${SW_DIR}/string_lib/inc -std=gnu99
+C_CXX_FLAGS =  $(OPTLEVEL)  -I ${SW_DIR} -I ${SW_DIR}/sys_lib/inc -I ${SW_DIR}/string_lib/inc 
+CFLAGS = $(DBGPARAM) $(C_CXX_FLAGS) -std=gnu99
+CXXFLAGS = $(DBGPARAM) $(C_CXX_FLAGS)
+LDFLAGS = $(BARE_METAL_LDFLAGS)  -Wl,--no-relax  $(C_CXX_FLAGS)
 
-
-all: mkdirs ${BUILD_DIR}/code.elf ${BUILD_DIR}/code.bin ${BUILD_DIR}/code.txt ${BUILD_DIR}/code.disasm romram
+all: mkdirs romram
 
 #This is to download sys_lib , string_lib , and additional instruction tests from Pulpino
 getlib:
@@ -114,36 +127,46 @@ mkdirs:
 #Note: Add other source files here.
 SYSLIB_SRC = ${SW_DIR}/sys_lib/src/int.c \
 	     ${SW_DIR}/sys_lib/src/uart.c \
-	     ${SW_DIR}/sys_lib/src/exceptions.c# $(wildcard ${SW_DIR}/sys_lib/src/*.c)
+	     ${SW_DIR}/sys_lib/src/exceptions.c# $(wildcard ${SW_DIR_RISCV}/sys_lib/src/*.c)
 
 SYSLIB_OBJ = ${SYSLIB_SRC:.c=.o}
 
-BOOT_ENTRY = ${SW_DIR_RISCV}/crt0.riscv.S
+BOOT_ENTRY = crt0.riscv
+BOOT_ENTRY_SRC = ${SW_DIR_RISCV}/$(BOOT_ENTRY).S
+
 
 TEST_OBJ = \
-  ${OBJECT_DIR}/print_.o \
-  ${OBJECT_DIR}/aes_.o \
-  ${OBJECT_DIR}/edge_.o \
-  ${OBJECT_DIR}/fir_.o \
-  ${OBJECT_DIR}/iir_.o \
-  ${OBJECT_DIR}/pi_.o \
-  ${OBJECT_DIR}/heap_.o \
-  ${OBJECT_DIR}/isort_.o \
-  ${OBJECT_DIR}/jdct_.o \
-  ${OBJECT_DIR}/test_.o  \
+  $(OBJECT_DIR)/print_.o \
+  $(OBJECT_DIR)/aes_.o \
+  $(OBJECT_DIR)/edge_.o \
+  $(OBJECT_DIR)/fir_.o \
+  $(OBJECT_DIR)/iir_.o \
+  $(OBJECT_DIR)/pi_.o \
+  $(OBJECT_DIR)/heap_.o \
+  $(OBJECT_DIR)/isort_.o \
+  $(OBJECT_DIR)/jdct_.o \
+  $(OBJECT_DIR)/test_.o  \
 
 LIBS_OBJ = \
-	${OBJECT_DIR}/sys_lib.o \
-	${OBJECT_DIR}/syscalls.o \
-	#${OBJECT_DIR}/string_lib.o
+	$(OBJECT_DIR)/sys_lib.o \
+	$(OBJECT_DIR)/syscalls.o \
+	#$(OBJECT_DIR)/atomic.o  \
+	#$(OBJECT_DIR)/string_lib.o
 
-define path_prefix_call =
-@echo $(1)
-@$(SET_PATH) $(1)
-endef
+BOOT_ENTRY_OBJ = $(OBJECT_DIR)/$(BOOT_ENTRY).o
+MAIN_OBJ = $(OBJECT_DIR)/main.o
 
-${BUILD_DIR}/code.elf: mkdirs main.c ${BOOT_ENTRY} ${TEST_OBJ} ${LIBS_OBJ}
-	$(call path_prefix_call, $(RISCVCC) $(CFLAGS) ${BOOT_ENTRY} main.c -o ${BUILD_DIR}/code.elf ${TEST_OBJ} ${LIBS_OBJ})
+$(BOOT_ENTRY_OBJ): $(BOOT_ENTRY_SRC)
+	$(call path_prefix_call, $(RISCVCC) $(C_CXX_FLAGS) -c ${BOOT_ENTRY_SRC} -o $@) 
+
+${BUILD_DIR}/code.elf: $(BARE_METAL_OBJS) $(MAIN_OBJ) $(BARE_METAL_LIBS) Makefile
+	sed -e'1,$$s/@RAM_SIZE_KB@/$(RAM_SIZE_KB)/g' -e'1,$$s/@ROM_SIZE_KB@/$(ROM_SIZE_KB)/g' -e'1,$$s/@STACK_SIZE_KB@/$(STACK_SIZE_KB)/g' link.ld.in > link.ld
+	$(call path_prefix_call, $(RISCVCPP) -g $(LDFLAGS)  ${BARE_METAL_OBJS} $(MAIN_OBJ) ${BARE_METAL_LIBS} -o ${BUILD_DIR}/code.elf)
+	$(RISCVSIZE) ${BUILD_DIR}/code.elf
+
+
+#@echo $(RISCVCPP) $(CFLAGS) ${BOOT_ENTRY} main.cpp -o ${BUILD_DIR}/code.elf ${TEST_OBJ} ${LIBS_OBJ}
+#@$(PATHED_RISCVCPP) $(CFLAGS) ${BOOT_ENTRY} main.cpp -o ${BUILD_DIR}/code.elf ${TEST_OBJ} ${LIBS_OBJ}
 
 ${BUILD_DIR}/code.bin: ${BUILD_DIR}/code.elf
 	$(call path_prefix_call, $(RISCVOBJCPY) ${BUILD_DIR}/code.elf --output-target=binary ${BUILD_DIR}/code.bin)
@@ -152,64 +175,48 @@ ${BUILD_DIR}/code.disasm: ${BUILD_DIR}/code.elf
 	$(call path_prefix_call, $(RISCVOBJDMP) -S -D ${BUILD_DIR}/code.elf > ${BUILD_DIR}/code.disasm)
 
 ${BUILD_DIR}/code.txt: ${BUILD_DIR}/code.elf
+	@echo CODE
 	$(call path_prefix_call, $(RISCVRDELF) -a ${BUILD_DIR}/code.elf > ${BUILD_DIR}/code.txt)
 
 # This generates a seperate file to go into rom and ram memory
 # The offsets must corespond to the offsets in the linker script converted to decimal
 # Example: linker script rom size 0x0080000 = count=524288 (copies beginning of hex file for rom)
 # 	   linker script ram begins at 0x18000000 = skip=402653184 (copies everything starting from 0x18000000)
-romram: ${BUILD_DIR}/code.bin
+romram: $(BUILD_DIR)/code.ram $(BUILD_DIR)/code.rom
+
+$(BUILD_DIR)/code.rom: ${BUILD_DIR}/code.bin 
 	dd bs=1024 count=$(ROM_SIZE_KB) if=$(BUILD_DIR)/code.bin of=$(BUILD_DIR)/code.rom
+	
+$(BUILD_DIR)/code.ram:  ${BUILD_DIR}/code.bin
 	dd bs=1024 skip=$(ROM_SIZE_KB) if=$(BUILD_DIR)/code.bin of=$(BUILD_DIR)/code.ram
 
 
 
-${OBJECT_DIR}/print_.o: ${SW_DIR_TCS}/cust_print/cust_print.c
-	$(call path_prefix_call, $(RISCVCC) $(CFLAGS) -c $< -o $@)
+$(OBJECT_DIR)/syscalls.o: syscalls.c
+	@echo $(RISCVCC) $(CFLAGS) -c $< -o $@
+	@$(PATHED_RISCVCC) $(CFLAGS) -c $< -o $@
+	
+$(OBJECT_DIR)/atomic.o: atomic.c
+	@echo $(RISCVCC) $(CFLAGS) -c $< -o $@
+	@$(PATHED_RISCVCC) $(CFLAGS) -c $< -o $@
 
-${OBJECT_DIR}/aes_.o: ${SW_DIR_TCS}/aes/aes.c ${OBJECT_DIR}/print_.o
-	$(call path_prefix_call, $(RISCVCC) $(CFLAGS) -c $< -o $@)
-
-${OBJECT_DIR}/edge_.o: ${SW_DIR_TCS}/edge/edge.c ${OBJECT_DIR}/print_.o
-	$(call path_prefix_call, $(RISCVCC) $(CFLAGS) -c $< -o $@)
-
-${OBJECT_DIR}/fir_.o: ${SW_DIR_TCS}/fir/fir.c ${OBJECT_DIR}/print_.o
-	$(call path_prefix_call, $(RISCVCC) $(CFLAGS) -c $< -o $@)
-
-${OBJECT_DIR}/iir_.o: ${SW_DIR_TCS}/iir/iir.c ${OBJECT_DIR}/print_.o
-	$(call path_prefix_call, $(RISCVCC) $(CFLAGS) -c $< -o $@)
-
-${OBJECT_DIR}/heap_.o: ${SW_DIR_TCS}/heap/heap.c ${OBJECT_DIR}/print_.o
-	$(call path_prefix_call, $(RISCVCC) $(CFLAGS) -c $< -o $@)
-
-${OBJECT_DIR}/isort_.o: ${SW_DIR_TCS}/isort/isort.c ${OBJECT_DIR}/print_.o
-	$(call path_prefix_call, $(RISCVCC) $(CFLAGS) -c $< -o $@)
-
-${OBJECT_DIR}/jdct_.o: ${SW_DIR_TCS}/jdct/jdct.c ${OBJECT_DIR}/print_.o
-	$(call path_prefix_call, $(RISCVCC) $(CFLAGS) -c $< -o $@)
-
-${OBJECT_DIR}/pi_.o: ${SW_DIR_TCS}/pi/pi.c ${OBJECT_DIR}/print_.o
-	$(call path_prefix_call, $(RISCVCC) $(CFLAGS) -c $< -o $@)
-
-${OBJECT_DIR}/test_.o: ${SW_DIR_TCS}/simple_tests/test.c ${OBJECT_DIR}/print_.o
-	$(call path_prefix_call, $(RISCVCC) $(CFLAGS) -c $< -o $@)
-
-${OBJECT_DIR}/syscalls.o: syscalls.c
-	$(call path_prefix_call, $(RISCVCC) $(CFLAGS) -c $< -o $@)
-
+$(MAIN_OBJ): main.cpp
+	$(call path_prefix_call, $(RISCVCPP) -g $(C_CXX_FLAGS) -c $< -o $@)
+	
 ${SW_DIR}/sys_lib/src/%.o: ${SW_DIR}/sys_lib/src/%.c
+	@echo $(RISCVCC) $(CFLAGS) -c $< -o $@
 	rm -f $@
-	$(call path_prefix_call, $(RISCVCC) $(CFLAGS) -o $@ -c $<)
+	@$(PATHED_RISCVCC) $(CFLAGS) -o $@ -c $<
 
-${OBJECT_DIR}/sys_lib.o: ${SYSLIB_OBJ}
-	$(call path_prefix_call, $(RISCVLD) -r $^ -o $@)
-	rm -f ${SYSLIB_OBJ}
+$(OBJECT_DIR)/sys_lib.o: ${SYSLIB_OBJ}
+	@echo $(RISCVLD) $^ -o $@
+	@$(PATHED_RISCVLD) $^ -o $@
 
 
-#${OBJECT_DIR}/string_lib.o: ${STRINGLIB_SRC} ${OBJECT_DIR}/sys_lib.o
-#	$(RISCVCC) $(CFLAGS) -o $@ -c $^
+#$(OBJECT_DIR)/string_lib.o: ${STRINGLIB_SRC} $(OBJECT_DIR)/sys_lib.o
+#	$(PATHED_RISCVCC) $(CFLAGS) -o $@ -c $^
 
 clean:
-	rm -rf ${OBJECT_DIR}
+	rm -rf $(OBJECT_DIR)
 	rm -rf ${BUILD_DIR}
 	rm -f ${SYSLIB_OBJ}
