@@ -1,7 +1,43 @@
+#
+#	Copyright 2018 Infineon Technologies AG
+#
+#	This file is part of ETISS tool, see <https://gitlab.lrz.de/de-tum-ei-eda-open/etiss>
+#
+#	The initial version of this software has been created with the funding support by the German Federal
+#	Ministry of Education and Research(BMBF) in the project EffektiV under grant 01IS13022.
+#
+#	Redistribution and use in source and binary forms, with or without modification, are permitted
+#	provided that the following conditions are met:
+#
+#	1. Redistributions of source code must retain the above copyright notice, this list of conditions and
+#	the following disclaimer.
+#
+# 	2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions
+#	and the following disclaimer in the documentation and / or other materials provided with the distribution.
+#
+# 	3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse
+# 	or promote products derived from this software without specific prior written permission.
+#
+#	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
+#	WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+#	PARTICULAR PURPOSE ARE DISCLAIMED.IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY
+#	DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES(INCLUDING, BUT NOT LIMITED TO,
+#	PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+#	HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT(INCLUDING
+#	NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+#	POSSIBILITY OF SUCH DAMAGE.
+#
+#
+#	Author: Marc Greim <marc.greim@mytum.de>, Chair of Electronic Design Automation, TUM
+#
+#	Version 0.1
+#
+
+# This Makefile is used by the ETISS SW-example and the systemC example,
+# which has its own software.
 
 TOOLBUILD ?= rvtc-ilp32-multlib-1.0.0.0
 ifeq ($(TOOLBIN),)
-
 ifeq ($(shell uname),Linux)
    ifeq ($(shell lsb_release -is),RedHatEnterpriseServer)
        TOOL_INSTALL_ROOT=/home/aifordes.work/share
@@ -29,7 +65,7 @@ endif
 SET_PATH=PATH="$(TOOLBIN):$(PATH)"
 
 
-RISCVCC= $(TOOLBIN)/riscv32-unknown-elf-gcc -march=rv32imfd -nostartfiles  -fno-builtin  -ffreestanding
+RISCVCC= $(TOOLBIN)/riscv32-unknown-elf-gcc -march=rv32imac -nostartfiles  -fno-builtin  -ffreestanding
 RISCVOBJCPY= $(TOOLBIN)/riscv32-unknown-elf-objcopy
 RISCVOBJDMP= $(TOOLBIN)/riscv32-unknown-elf-objdump
 RISCVRDELF= $(TOOLBIN)/riscv32-unknown-elf-readelf
@@ -55,7 +91,7 @@ endif
 
 SW_DIR = $(dir $(CURDIR))
 SW_DIR_TCS = $(SW_DIR)/test_cases/
-SW_DIR_RISCV = $(SW_DIR)/riscv_cpp/
+SW_DIR_RISCV = $(SW_DIR)/riscv/
 
 BUILD_DIR = ./build
 OBJECT_DIR = ./obj
@@ -64,22 +100,15 @@ CFLAGS = $(DBGPARAM) $(OPTLEVEL)  -T ${SW_DIR_RISCV}/link.ld -I ${SW_DIR} -I ${S
 
 all: mkdirs ${BUILD_DIR}/code.elf ${BUILD_DIR}/code.bin ${BUILD_DIR}/code.txt ${BUILD_DIR}/code.disasm romram
 
-#This is to download sys_lib , string_lib , and additional instruction tests from Pulpino
-getlib:
-	svn checkout https://github.com/pulp-platform/pulpino/trunk/sw/libs/sys_lib
-	svn checkout https://github.com/pulp-platform/pulpino/trunk/sw/libs/string_lib
-	svn checkout https://github.com/cliffordwolf/picorv32/trunk/tests instr_tests
 
 mkdirs:
 	mkdir -p $(BUILD_DIR)
 	mkdir -p $(OBJECT_DIR)
 
-#Note: Add other source files here.
-SYSLIB_SRC = ${SW_DIR}/sys_lib/src/int.c \
-	     ${SW_DIR}/sys_lib/src/uart.c \
-	     ${SW_DIR}/sys_lib/src/exceptions.c# $(wildcard ${SW_DIR}/sys_lib/src/*.c)
 
-SYSLIB_OBJ = ${SYSLIB_SRC:.c=.o}
+
+SYS_LIB_FILES = int.c uart.c exceptions.c
+SYSLIB_OBJ = ${SYS_LIB_FILES:%.c=$(OBJECT_DIR)/%.o}
 
 BOOT_ENTRY = ${SW_DIR_RISCV}/crt0.riscv.S
 
@@ -106,6 +135,7 @@ define path_prefix_call =
 endef
 
 ${BUILD_DIR}/code.elf: mkdirs main.c ${BOOT_ENTRY} ${TEST_OBJ} ${LIBS_OBJ}
+	sed -e'1,$$s/%%RAM_SIZE_KB%%/$(RAM_SIZE_KB)/g' -e'1,$$s/%%ROM_SIZE_KB%%/$(ROM_SIZE_KB)/g' -e'1,$$s/%%STACK_SIZE_KB%%/$(STACK_SIZE_KB)/g' link.ld.templ > link.ld
 	$(call path_prefix_call, $(RISCVCC) $(CFLAGS) ${BOOT_ENTRY} main.c -o ${BUILD_DIR}/code.elf ${TEST_OBJ} ${LIBS_OBJ})
 
 ${BUILD_DIR}/code.bin: ${BUILD_DIR}/code.elf
@@ -160,19 +190,19 @@ ${OBJECT_DIR}/test_.o: ${SW_DIR_TCS}/simple_tests/test.c ${OBJECT_DIR}/print_.o
 ${OBJECT_DIR}/syscalls.o: syscalls.c
 	$(call path_prefix_call, $(RISCVCC) $(CFLAGS) -c $< -o $@)
 
-${SW_DIR}/sys_lib/src/%.o: ${SW_DIR}/sys_lib/src/%.c
-	rm -f $@
-	$(call path_prefix_call, $(RISCVCC) $(CFLAGS) -o $@ -c $<)
 
-${OBJECT_DIR}/sys_lib.o: ${SYSLIB_OBJ}
+$(OBJECT_DIR)/%.o: ${SW_DIR}/sys_lib/src/%.c
+	$(call path_prefix_call, $(RISCVCC) $(CFLAGS) -c $< -o $@)
+
+
+$(OBJECT_DIR)/sys_lib.o: $(SYSLIB_OBJ)
 	$(call path_prefix_call, $(RISCVLD) -r $^ -o $@)
-	rm -f ${SYSLIB_OBJ}
 
 
-#${OBJECT_DIR}/string_lib.o: ${STRINGLIB_SRC} ${OBJECT_DIR}/sys_lib.o
+
+#${OBJECT_DIR}/string_lib.o: ${STRINGLIB_SRC} $(OBJECT_DIR)/sys_lib.o
 #	$(RISCVCC) $(CFLAGS) -o $@ -c $^
 
 clean:
-	rm -rf ${OBJECT_DIR}
+	rm -rf $(OBJECT_DIR)
 	rm -rf ${BUILD_DIR}
-	rm -f ${SYSLIB_OBJ}

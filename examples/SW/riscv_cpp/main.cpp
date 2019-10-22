@@ -3,7 +3,11 @@
 #include <iostream>
 #include <memory>
 #include <chrono>
+#ifdef CHECK_ATOMIC
 #include <atomic>
+#endif
+
+
 
 class Foo
 {
@@ -69,12 +73,13 @@ int main()
     auto diff = std::chrono::duration_cast<std::chrono::nanoseconds>(t - Clock::now());
     printf("time elapsed: %llu\n", diff.count());
 
+#ifdef CHECK_ATOMIC
     std::atomic_int ai;
     ai = 5;
     int expected = 5;
     if (ai.compare_exchange_strong(expected, 6))
         printf("got expected atomic\n");
-
+#endif
     // Correctly terminates with pure virtual call error.
     //VooDoo vd;
 

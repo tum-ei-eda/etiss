@@ -30,7 +30,7 @@
 #
 #	Author: Marc Greim <marc.greim@mytum.de>, Chair of Electronic Design Automation, TUM
 #
-#	Version 0.2
+#	Version 0.3
 #
 
 # This Makefile is used by the ETISS SW-example and the systemC example,
@@ -51,12 +51,12 @@ TOOLBIN:=$(TOOL_INSTALL_ROOT)/$(TOOLBUILD)/bin
 endif
 
 
-RAM_SIZE_KB ?= 1024
 ROM_SIZE_KB ?= 4096
+RAM_SIZE_KB ?= 1024
 STACK_SIZE_KB ?= 128
 GCC_BUILD_VARIANT=riscv32-unknown-elf
 TARGET_ABI ?= ilp32
-TARGET_ARCH ?= rv32im
+TARGET_ARCH ?= rv32imac
 TARGET_ELF_FMT=elf32-littleriscv
 LD_EMULATION=elf32lriscv
 
@@ -67,7 +67,7 @@ endef
 
 BARE_METAL_FLAGS= -fno-builtin  -ffreestanding
 BARE_METAL_LIBS=$(LIBS_OBJ) 
-BARE_METAL_LDFLAGS=-T ${SW_DIR_RISCV}/link.ld -nostartfiles  
+BARE_METAL_LDFLAGS=-nostartfiles  -T ${SW_DIR_RISCV}/link.ld 
 BARE_METAL_OBJS=$(BOOT_ENTRY_OBJ)
 SET_PATH=PATH='$(TOOLBIN):$(PATH)'
 
@@ -91,7 +91,7 @@ ifeq ($(DEBUG),0)
 	OPTLEVEL?=-O3
 else
 	DBGPARAM =-g
-	OPTLEVEL?=-O3
+	OPTLEVEL?=-O0
 endif
 
 # The following paths will be inserted by CMake while installing ETISS.
@@ -110,42 +110,26 @@ OBJECT_DIR = ./obj
 C_CXX_FLAGS =  $(OPTLEVEL)  -I ${SW_DIR} -I ${SW_DIR}/sys_lib/inc -I ${SW_DIR}/string_lib/inc 
 CFLAGS = $(DBGPARAM) $(C_CXX_FLAGS) -std=gnu99
 CXXFLAGS = $(DBGPARAM) $(C_CXX_FLAGS)
-LDFLAGS = $(BARE_METAL_LDFLAGS)  -Wl,--no-relax  $(C_CXX_FLAGS)
+LDFLAGS = $(BARE_METAL_LDFLAGS)  -Wl,--no-relax $(DBGPARAM) $(C_CXX_FLAGS)
 
 all: mkdirs romram
 
-#This is to download sys_lib , string_lib , and additional instruction tests from Pulpino
-getlib:
-	svn checkout https://github.com/pulp-platform/pulpino/trunk/sw/libs/sys_lib
-	svn checkout https://github.com/pulp-platform/pulpino/trunk/sw/libs/string_lib
-	svn checkout https://github.com/cliffordwolf/picorv32/trunk/tests instr_tests
 
 mkdirs:
 	mkdir -p $(BUILD_DIR)
 	mkdir -p $(OBJECT_DIR)
 
 #Note: Add other source files here.
-SYSLIB_SRC = ${SW_DIR}/sys_lib/src/int.c \
-	     ${SW_DIR}/sys_lib/src/uart.c \
-	     ${SW_DIR}/sys_lib/src/exceptions.c# $(wildcard ${SW_DIR_RISCV}/sys_lib/src/*.c)
 
-SYSLIB_OBJ = ${SYSLIB_SRC:.c=.o}
+
+
+SYS_LIB_FILES = int.c uart.c exceptions.c
+SYSLIB_OBJ = ${SYS_LIB_FILES:%.c=$(OBJECT_DIR)/%.o}
 
 BOOT_ENTRY = crt0.riscv
 BOOT_ENTRY_SRC = ${SW_DIR_RISCV}/$(BOOT_ENTRY).S
 
 
-TEST_OBJ = \
-  $(OBJECT_DIR)/print_.o \
-  $(OBJECT_DIR)/aes_.o \
-  $(OBJECT_DIR)/edge_.o \
-  $(OBJECT_DIR)/fir_.o \
-  $(OBJECT_DIR)/iir_.o \
-  $(OBJECT_DIR)/pi_.o \
-  $(OBJECT_DIR)/heap_.o \
-  $(OBJECT_DIR)/isort_.o \
-  $(OBJECT_DIR)/jdct_.o \
-  $(OBJECT_DIR)/test_.o  \
 
 LIBS_OBJ = \
 	$(OBJECT_DIR)/sys_lib.o \
@@ -161,12 +145,10 @@ $(BOOT_ENTRY_OBJ): $(BOOT_ENTRY_SRC)
 
 ${BUILD_DIR}/code.elf: $(BARE_METAL_OBJS) $(MAIN_OBJ) $(BARE_METAL_LIBS) Makefile
 	sed -e'1,$$s/%%RAM_SIZE_KB%%/$(RAM_SIZE_KB)/g' -e'1,$$s/%%ROM_SIZE_KB%%/$(ROM_SIZE_KB)/g' -e'1,$$s/%%STACK_SIZE_KB%%/$(STACK_SIZE_KB)/g' link.ld.templ > link.ld
-	$(call path_prefix_call, $(RISCVCPP) -g $(LDFLAGS)  ${BARE_METAL_OBJS} $(MAIN_OBJ) ${BARE_METAL_LIBS} -o ${BUILD_DIR}/code.elf)
+	$(call path_prefix_call, $(RISCVCPP) $(LDFLAGS) ${BARE_METAL_OBJS} $(MAIN_OBJ) ${BARE_METAL_LIBS} -o ${BUILD_DIR}/code.elf)
 	$(RISCVSIZE) ${BUILD_DIR}/code.elf
 
 
-#@echo $(RISCVCPP) $(CFLAGS) ${BOOT_ENTRY} main.cpp -o ${BUILD_DIR}/code.elf ${TEST_OBJ} ${LIBS_OBJ}
-#@$(PATHED_RISCVCPP) $(CFLAGS) ${BOOT_ENTRY} main.cpp -o ${BUILD_DIR}/code.elf ${TEST_OBJ} ${LIBS_OBJ}
 
 ${BUILD_DIR}/code.bin: ${BUILD_DIR}/code.elf
 	$(call path_prefix_call, $(RISCVOBJCPY) ${BUILD_DIR}/code.elf --output-target=binary ${BUILD_DIR}/code.bin)
@@ -202,15 +184,15 @@ $(OBJECT_DIR)/atomic.o: atomic.c
 
 $(MAIN_OBJ): main.cpp
 	$(call path_prefix_call, $(RISCVCPP) -g $(C_CXX_FLAGS) -c $< -o $@)
-	
-${SW_DIR}/sys_lib/src/%.o: ${SW_DIR}/sys_lib/src/%.c
-	@echo $(RISCVCC) $(CFLAGS) -c $< -o $@
-	rm -f $@
-	@$(PATHED_RISCVCC) $(CFLAGS) -o $@ -c $<
+
+
+$(OBJECT_DIR)/%.o: ${SW_DIR}/sys_lib/src/%.c
+	$(call path_prefix_call, $(RISCVCC) $(CFLAGS) -c $< -o $@)
+
+
 
 $(OBJECT_DIR)/sys_lib.o: ${SYSLIB_OBJ}
-	@echo $(RISCVLD) $^ -o $@
-	@$(PATHED_RISCVLD) $^ -o $@
+	$(call path_prefix_call,$(RISCVLD) -r $^ -o $@)
 
 
 #$(OBJECT_DIR)/string_lib.o: ${STRINGLIB_SRC} $(OBJECT_DIR)/sys_lib.o
@@ -219,4 +201,3 @@ $(OBJECT_DIR)/sys_lib.o: ${SYSLIB_OBJ}
 clean:
 	rm -rf $(OBJECT_DIR)
 	rm -rf ${BUILD_DIR}
-	rm -f ${SYSLIB_OBJ}

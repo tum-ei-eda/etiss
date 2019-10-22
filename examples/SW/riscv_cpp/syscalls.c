@@ -19,25 +19,25 @@ static char *brk = &_heap_start;
 // - It returns the current brk value instead of 0 on success.
 // - It returns the current brk value if the given addr is 0.
 // It is expected like this from: https://github.com/riscv/riscv-newlib/blob/riscv-newlib-3.0.0/libgloss/riscv/sys_sbrk.c
-static int _brk(void *addr)
+static unsigned int _brk(void *addr)
 {
   /* If __heap_size == 0, we can't allocate memory on the heap */
   if(&_heap_start == &_heap_end) {
     return -1;
   }
   if(addr == 0) {
-    return brk;
+    return (unsigned int)brk;
   }
-  if(addr < &_heap_start) {
+  if((char *)addr < &_heap_start) {
     return -1;
   }
   /* Don't move the break past the end of the heap */
-  if(addr < &_heap_end) {
+  if((char*)addr < &_heap_end) {
     brk = addr;
   } else {
     brk = &_heap_end;
   }
-  return brk;
+  return (unsigned int)brk;
 }
 
 
@@ -112,7 +112,7 @@ int default_exception_handler_c(unsigned int a0, unsigned int a1, unsigned int a
   unsigned int mepc = 0;
   csrr(mepc, mepc);
 
-  long ecall_result;
+  int ecall_result;
 
   switch (mcause)
   {
@@ -120,13 +120,13 @@ int default_exception_handler_c(unsigned int a0, unsigned int a1, unsigned int a
     switch (a7)
     {
     case SYS_brk:
-      ecall_result = (unsigned int)_brk(a0);
+      ecall_result = (unsigned int)_brk( (void *)a0);
       break;
     case SYS_fstat:
-      ecall_result = _fstat(a0, a1);
+      ecall_result = _fstat(a0, (struct stat *)a1);
       break;
     case SYS_write:
-      ecall_result = _write(a0, a1, a2);
+      ecall_result = _write(a0, (void *)a1, a2);
       break;
     case SYS_exit:
       _exit_(a0);
@@ -135,7 +135,7 @@ int default_exception_handler_c(unsigned int a0, unsigned int a1, unsigned int a
       ecall_result = _close(a0);
       break;
     case SYS_gettimeofday:
-      ecall_result = _gettimeofday(a0, a1);
+      ecall_result = _gettimeofday((struct timeval *)a0, (void *)a1);
       break;
     default:
       // Unhandled syscall!
@@ -158,29 +158,3 @@ int default_exception_handler_c(unsigned int a0, unsigned int a1, unsigned int a
 // Required by iostream
 // https://lists.debian.org/debian-gcc/2003/07/msg00057.html
 void *__dso_handle = (void*)&__dso_handle;
-
-// Support for <atomic>. Trivial since single threaded without scheduler.
-// Add as required.
-// https://gcc.gnu.org/wiki/Atomic/GCCMM?action=AttachFile&do=view&target=libatomic.c
-typedef uint8_t ATOMICINT1;
-typedef uint16_t ATOMICINT2;
-typedef uint32_t ATOMICINT4;
-typedef uint64_t ATOMICINT8;
-int __atomic_compare_exchange(size_t size, void *mem, void *expect, void *desired, int success, int failure)
-{
-  if (memcmp(mem, expect, size) == 0) {
-    memcpy(mem, desired, size);
-    return 1;
-  }
-  memcpy(expect, mem, size);
-  return 0;
-}
-#define ATOMIC_COMPARE_EXCHANGE(sz) \
-  int __atomic_compare_exchange_##sz (void *mem, void *expect, ATOMICINT##sz desired, int success, int failure) \
-  { \
-    return __atomic_compare_exchange(sz, mem, expect, &desired, success, failure); \
-  }
-ATOMIC_COMPARE_EXCHANGE(1);
-ATOMIC_COMPARE_EXCHANGE(2);
-ATOMIC_COMPARE_EXCHANGE(4);
-ATOMIC_COMPARE_EXCHANGE(8);

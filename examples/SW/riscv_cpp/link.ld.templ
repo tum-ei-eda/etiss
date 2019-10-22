@@ -1,6 +1,11 @@
+
+OUTPUT_FORMAT("elf32-littleriscv", "elf32-littleriscv",
+	      "elf32-littleriscv")
+OUTPUT_ARCH(riscv)
+/* ENTRY(_start) */
+SEARCH_DIR("/opt/rvtc-ilp32-multlib-1.0.0.0/riscv32-unknown-elf/lib");
 SEARCH_DIR(.)
 __DYNAMIC  =  0;
-
 MEMORY
 {
     instrram    : ORIGIN = 0x000000000, LENGTH = %%ROM_SIZE_KB%%*1024
@@ -131,4 +136,5 @@ SECTIONS
         . = ALIGN(4);
         _end = .;
     } > dataram
+
 }
