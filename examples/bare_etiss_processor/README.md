@@ -88,6 +88,32 @@ could be used to debug target SW.
   for read/write all registers, are invisible for gdb user. These commands
   cannot be recognized by gdb.
 
+#### Using an IDE for debugging
+
+As long as the IDE supports remote debugging with GDB, it will be able to connect to the GDBServer of ETISS.
+
+For example use the following steps to debug with Eclipse (https://stackoverflow.com/a/45608937):
+
+Setup:
+
+- Get "Eclipse IDE for C/C++ Developers"
+- Open Eclipse
+- Menu: Run -> Debug Configurations...
+- Select: C/C++ Remote Application
+- Press "New Configuration" button on top
+- At the bottom click on "Select other..."
+- Check: Use configuration specific settings
+- Select: GDB (DSF) Manual Remote Debugging Launcher
+- Main tab: Enter C/C++ Application path
+- Debugger tab -> Main sub-tab: Enter toolchain GDB path into "GDB debugger"
+- Debugger tab -> Connection sub-tab: TCP, localhost, 2222
+- Click Apply, Close
+
+Usage:
+
+- Run ETISS with GDBServer enabled
+- Menu: Run -> Debug
+
 ## Snapshot
 
 the output during execution should look similar to this:
