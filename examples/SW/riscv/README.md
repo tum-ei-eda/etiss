@@ -15,7 +15,7 @@ met:
   instruction tests, either install Apache Subversion 
   (https://subversion.apache.org/) and run:
 
-	$ make gitlib
+	$ make getlib
     
   - Or get the libraries manually:
   1) Copy files from 
