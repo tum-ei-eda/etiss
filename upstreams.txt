@@ -1,1 +1,1 @@
-upstream etiss/upstreams.txt
+upstream https://gitlab.lrz.de/de-tum-ei-eda-open/etiss
