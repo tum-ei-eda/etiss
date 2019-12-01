@@ -60,3 +60,14 @@ Softwares provided by pulpino project is also compatible with our model.
 The software is located in ./pulpino/SW and they have their own cmake
 compilation script (which does not work for now, modify it if in need.
 Comment date: 15, Mar., 2018)
+
+# Building on Windows
+
+Get a RISC-V toolchain. Recommended: https://www.sifive.com/boards (scroll down to toolchain downloads)
+
+Get GNU Make for Windows: http://gnuwin32.sourceforge.net/packages/make.htm
+
+    mkdir build
+    cd build
+    cmake -G "Unix Makefiles" -DCMAKE_MAKE_PROGRAM=X:\path\to\gmake\bin\make.exe ..
+    cmake --build .

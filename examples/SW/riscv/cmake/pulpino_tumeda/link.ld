@@ -1,17 +1,19 @@
 SEARCH_DIR(.)
 __DYNAMIC  =  0;
 
+VAR_ram_start = DEFINED(PULPINO_RAM_START) ? PULPINO_RAM_START : 0x80000;
+VAR_ram_size = DEFINED(PULPINO_RAM_SIZE) ? PULPINO_RAM_SIZE : 0x80000;
+
 MEMORY
 {
     instrram    : ORIGIN = 0x00000000, LENGTH = 0x80000
-    dataram     : ORIGIN = 0x00080000, LENGTH = 0x7c000
-    stack       : ORIGIN = 0x000fc000, LENGTH = 0x4000
+    dataram     : ORIGIN = VAR_ram_start, LENGTH = VAR_ram_size
 }
 
 /* Stack information variables */
 _min_stack      = 0x1000;   /* 4K - minimum stack space to reserve */
-_stack_len     = LENGTH(stack);
-_stack_start   = ORIGIN(stack) + LENGTH(stack);
+_stack_len     = 0x4000;
+_stack_start   = ORIGIN(dataram) + LENGTH(dataram);
 _heap_start    = _stack_start - _stack_len;
 _heap_end      = _stack_start;
 
@@ -114,7 +116,7 @@ SECTIONS
         . = ALIGN(4);
         stack = . ;
         _stack = . ;
-    } > stack
+    } > dataram
 
     .stab  0 (NOLOAD) :
     {

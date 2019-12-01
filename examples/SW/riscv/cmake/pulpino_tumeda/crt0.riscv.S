@@ -18,8 +18,9 @@
 
 reset_handler:
 
-  /* set 0 in mtvec (base for IVT) */
-  csrrw x0, mtvec, x0
+  /* set 1 in mtvec (base for IVT) -> vectored handling with base 0 */
+  li x1,1
+  csrw mtvec, x1
 
   /* set all registers to zero */
   mv  x1, x0
@@ -76,16 +77,20 @@ zero_loop_end:
   call    __libc_init_array
 
 main_entry:
-  /*addi   x10, x0, 0
+#ifndef PULPINO_NO_GPIO
+  addi   x10, x0, 0
   addi   x11, x0, 0x1
-  jal  uart_set_cfg;*/
+  jal  uart_set_cfg;
+#endif
 
   /* jump to main program entry point (argc = argv = 0) */
   addi x10, x0, 0
   addi x11, x0, 0
   jal x1, main
   mv s0, a0
-  //jal  uart_wait_tx_done;
+#ifndef PULPINO_NO_GPIO
+  jal  uart_wait_tx_done;
+#endif
   mv a0, s0
   /* if program exits call exit routine from library */
   jal  x1, exit
