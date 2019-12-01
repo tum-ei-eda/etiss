@@ -179,5 +179,6 @@ void SimpleSystem::syncTime(ETISS_CPU *cpu)
 etiss::int32 dbg_print(etiss::uint32 reg)
 {
     // NOP
+    return 0;
 }
 } // namespace etiss

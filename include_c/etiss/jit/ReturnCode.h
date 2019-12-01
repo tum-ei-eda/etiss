@@ -154,6 +154,11 @@ extern int32_t etiss_returncode_setTemporary(const char *msg);
 #define defineReturnCode(NAME, VALUE, MSG) static const etiss_int32 ETISS_RETURNCODE_##NAME = VALUE;
 #endif
 
+// winerror.h defines this.
+#ifdef NOERROR
+#undef NOERROR
+#endif
+
 //////////////////// definition of global (cpu architecture independent) return codes
 
 defineReturnCode(NOERROR, 0, "No error.") defineReturnCode(GENERALERROR, -1, "General error.")

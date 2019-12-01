@@ -71,6 +71,7 @@ IF(WIN32)
     ADD_DEFINITIONS(-D_CRT_SECURE_NO_WARNINGS)  # disable some microsoft warnings
     ADD_DEFINITIONS(-D_SCL_SECURE_NO_WARNINGS)  # disable some microsoft warnings
     ADD_DEFINITIONS(-DNOMINMAX)  # disable bad min and max macros
+    ADD_DEFINITIONS(-DNOGDI)  # disable ERROR define
 ELSE()
     # Define _DEBUG for debug builds like MSVC does.
     SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG")
@@ -125,6 +126,8 @@ IF(CMAKE_BUILD_TYPE STREQUAL "Debug")
     ADD_DEFINITIONS(-DETISS_DEBUG=1)
 ENDIF()
 
+LINK_DIRECTORIES("${Boost_LIBRARY_DIRS}")
+
 
 # Check build requirements.
 IF(WIN32)
@@ -178,7 +181,7 @@ ENDIF()
 
 CHECK_CXX_SOURCE_COMPILES(
 "constexpr int x() {return 1;} main(int,char**){ return x();}"
-C_ETISS_USE_CONSTEXPR
+ETISS_USE_CONSTEXPR
 )
 
 TEST_BIG_ENDIAN(ETISS_ENDIANNESS)
@@ -260,12 +263,7 @@ FILES_MATCHING
     PATTERN "*")
 
 # copy cmake files
-if(WIN32)
-    set(DEF_INSTALL_CMAKE_DIR CMake)
-else()
-    set(DEF_INSTALL_CMAKE_DIR lib/CMake/ETISS)
-endif()
-set(INSTALL_CMAKE_DIR ${DEF_INSTALL_CMAKE_DIR} CACHE PATH "Installation directory for CMake files")
+set(INSTALL_CMAKE_DIR lib/CMake/ETISS CACHE PATH "Installation directory for CMake files")
 
 
 ############# TARGETS ##############
@@ -293,6 +291,7 @@ LIST(APPEND ETISS_JITFILES "etiss/pluginexport.h,${PROJECT_BINARY_DIR}/include/e
 RegisterJITFiles("${ETISS_JITFILES}")
 
 
+SET(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
 ADD_LIBRARY(ETISS SHARED
     ${ETISS_SOURCE} ${ETISS_HEADER}
 )

@@ -302,9 +302,9 @@ bool etiss::loadLibrary(std::string path, std::string name)
     return false;
 }
 
-void etiss::addLibrary(std::shared_ptr<etiss::LibraryInterface> interface)
+void etiss::addLibrary(std::shared_ptr<etiss::LibraryInterface> libInterface)
 {
-    etiss::LibraryInterface *lif = interface.get();
+    etiss::LibraryInterface *lif = libInterface.get();
 
     if (lif == 0)
     {
@@ -315,12 +315,12 @@ void etiss::addLibrary(std::shared_ptr<etiss::LibraryInterface> interface)
 
     {
         std::lock_guard<std::recursive_mutex> lock(etiss_libraries_mu_);
-        etiss_libraries_.push_back(interface);
+        etiss_libraries_.push_back(libInterface);
     }
     // if no default jit is present, try to use one from this library
-    for (unsigned i = 0; (etiss_defaultjit_.size() <= 0) && (i < interface->countJITs()); i++)
+    for (unsigned i = 0; (etiss_defaultjit_.size() <= 0) && (i < libInterface->countJITs()); i++)
     {
-        etiss_defaultjit_ = interface->nameJIT(i);
+        etiss_defaultjit_ = libInterface->nameJIT(i);
     }
 }
 std::set<std::string> etiss::listLibraries()
@@ -435,7 +435,7 @@ void etiss_loadIniConfigs()
     std::cout << "  Load Configs from .ini files:" << std::endl;
 
     // preload loglevel
-    etiss::cfg().set<int>("loglevel", po_simpleIni->GetLongValue("IntConfigurations", "loglevel"));
+    etiss::cfg().set<int>("loglevel", po_simpleIni->GetLongValue("IntConfigurations", "loglevel", etiss::WARNING));
     {
         int ll = cfg().get<int>("loglevel", etiss::WARNING);
         if (ll >= 0 && ll <= etiss::VERBOSE)

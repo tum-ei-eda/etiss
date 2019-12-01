@@ -47,9 +47,9 @@
 #include "libtcc.h"
 #if ETISS_USE_GETPROC
 #include "etiss/ETISS.h"
+#include <windows.h>
 #include <dbghelp.h>
 #include <iostream>
-#include <windows.h>
 
 BOOL CALLBACK etiss_tcc_allsym(PSYMBOL_INFO pSymInfo, ULONG SymbolSize, PVOID UserContext)
 {

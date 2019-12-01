@@ -172,7 +172,7 @@ static void *ETISS_dlsym(void *handle, std::string name, std::string symbol, boo
     }
     else
     {
-        return GetProcAddress(*((HMODULE *)handle), TEXT(fullsymbol.c_str()));
+        return GetProcAddress((HMODULE)handle, TEXT(fullsymbol.c_str()));
     }
 #endif
     return nullptr;
@@ -208,9 +208,7 @@ static void *ETISS_dlopen(const std::string &path, const std::string &name)
     }
     return ret;
 #elif ETISS_USE_GETPROC
-    void *ret = new HMODULE();
-    *((HMODULE *)ret) = LoadLibrary(TEXT((path + name).c_str()));
-    return ret;
+    return LoadLibrary(TEXT((path + name).c_str()));
 #endif
     return nullptr;
 }
@@ -219,8 +217,7 @@ static void ETISS_dlclose(void *handle)
 #if ETISS_USE_DLSYM
     dlclose(handle);
 #elif ETISS_USE_GETPROC
-    FreeLibrary(*(HMODULE *)handle);
-    delete (HMODULE *)handle;
+    FreeLibrary((HMODULE)handle);
 #endif
 }
 

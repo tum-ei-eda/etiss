@@ -60,13 +60,15 @@ PAGE_FAULT(4, TLBISFULL)
 PAGE_FAULT(5, PROTECTIONVIALATION)
 
 std::string PAGE_FAULT_MSG[MAX_PAGE_FAULT_NUM] = {
-    ADD_PAGE_FAULT_MSG(NOERROR, "no error occurs") ADD_PAGE_FAULT_MSG(PTEOVERLAP, "page table entry already existed")
-        ADD_PAGE_FAULT_MSG(TLBMISS, "TLB miss") ADD_PAGE_FAULT_MSG(PTENOTEXISTED, "evict a non-existed PTE")
-            ADD_PAGE_FAULT_MSG(TLBISFULL, "TLB is already full")
-                ADD_PAGE_FAULT_MSG(PROTECTIONVIALATION, "TLB is already full")
+    "no error occurs",
+    "page table entry already existed",
+    "TLB miss",
+    "evict a non-existed PTE",
+    "TLB is already full",
+    "TLB is already full"
 };
 
-int32_t page_fault_ni_(int32_t fault, MMU *mmu, uint64_t, MM_ACCESS)
+static int32_t page_fault_ni_(int32_t fault, MMU *mmu, uint64_t, MM_ACCESS)
 {
     if (fault)
     {
