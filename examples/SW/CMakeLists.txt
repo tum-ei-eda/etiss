@@ -46,6 +46,7 @@ install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/
 		PATTERN "*.s"
 		PATTERN "README*"
     	PATTERN "Makefile"
+        PATTERN "*.cmake"
 		PATTERN "*.ld"
     	PATTERN ".svn" EXCLUDE
 		PATTERN "*.in" EXCLUDE
@@ -63,26 +64,11 @@ install(FILES "${PROJECT_BINARY_DIR}/tobeinstalled/or1k/Makefile"
 		DESTINATION examples/SW/or1k
 )
 
-# Setup RISC-V Makefile
-configure_file(
-  riscv/Makefile.in
-  "${PROJECT_BINARY_DIR}/tobeinstalled/riscv/Makefile"
-  @ONLY
- )
-
-install(FILES "${PROJECT_BINARY_DIR}/tobeinstalled/riscv/Makefile"
-		DESTINATION examples/SW/riscv
+install(FILES riscv/CMakeLists.txt
+    DESTINATION examples/SW/riscv
 )
-
-# Setup RISC-V C++ Makefile
-configure_file(
-  riscv_cpp/Makefile.in
-  "${PROJECT_BINARY_DIR}/tobeinstalled/riscv_cpp/Makefile"
-  @ONLY
- )
-
-install(FILES "${PROJECT_BINARY_DIR}/tobeinstalled/riscv_cpp/Makefile"
-		DESTINATION examples/SW/riscv_cpp
+install(FILES riscv_cpp/CMakeLists.txt
+    DESTINATION examples/SW/riscv_cpp
 )
 install(FILES riscv_cpp/link.ld.templ
 		DESTINATION examples/SW/riscv_cpp

@@ -77,10 +77,6 @@ typedef int32_t (*handler_ptr)(int32_t fault, MMU *mmu, uint64_t vma, MM_ACCESS 
 #define PAGE_FAULT(val, fault) const int32_t fault = val;
 #endif
 
-#ifndef ADD_PAGE_FAULT_MSG
-#define ADD_PAGE_FAULT_MSG(fault, msg) [fault] = msg,
-#endif
-
 #ifndef REGISTER_PAGE_FAULT_HANDLER
 #define REGISTER_PAGE_FAULT_HANDLER(fault, handler) page_fault_handler[fault] = handler
 #endif
@@ -89,15 +85,21 @@ typedef int32_t (*handler_ptr)(int32_t fault, MMU *mmu, uint64_t vma, MM_ACCESS 
 #define HANDLE_PAGE_FAULT(fault, mmu, vma, access) (*page_fault_handler[fault])(fault, mmu, vma, access)
 #endif
 
-extern const int32_t NOERROR;
-extern const int32_t PTEOVERLAP;
-extern const int32_t TLBMISS;
-extern const int32_t PTENOTEXISTED;
-extern const int32_t TLBISFULL;
-extern const int32_t PROTECTIONVIALATION;
+#ifdef ETISS_PLUGIN_IMPORTS
+#define MM_EXPORT __declspec(dllimport)
+#else
+#define MM_EXPORT __declspec(dllexport)
+#endif
 
-extern std::string PAGE_FAULT_MSG[];
-extern handler_ptr page_fault_handler[];
+extern MM_EXPORT const int32_t NOERROR;
+extern MM_EXPORT const int32_t PTEOVERLAP;
+extern MM_EXPORT const int32_t TLBMISS;
+extern MM_EXPORT const int32_t PTENOTEXISTED;
+extern MM_EXPORT const int32_t TLBISFULL;
+extern MM_EXPORT const int32_t PROTECTIONVIALATION;
+
+extern MM_EXPORT std::string PAGE_FAULT_MSG[];
+extern MM_EXPORT handler_ptr page_fault_handler[];
 
 } // namespace mm
 } // namespace etiss

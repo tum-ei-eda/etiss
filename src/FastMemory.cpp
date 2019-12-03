@@ -83,9 +83,7 @@ static void system_call_syncTime(void *handle, ETISS_CPU *cpu) {}
 
 std::shared_ptr<ETISS_System> etiss::createFastMemory(size_t size)
 {
-
-    ETISS_System *ret = new ETISS_System();
-    memset(ret, 0, sizeof(ETISS_System));
+    auto ret = std::make_shared<ETISS_System>();
 
     ret->iread = &system_call_iread;
     ret->iwrite = &system_call_iwrite;
@@ -99,4 +97,6 @@ std::shared_ptr<ETISS_System> etiss::createFastMemory(size_t size)
     ret->syncTime = &system_call_syncTime;
 
     ret->handle = new uint8_t[size];
+
+    return ret;
 }

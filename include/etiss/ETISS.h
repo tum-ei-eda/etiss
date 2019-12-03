@@ -179,7 +179,7 @@ bool loadLibrary(std::string path, std::string name);
  *
  * @see LibraryInteface.h
  */
-void addLibrary(std::shared_ptr<etiss::LibraryInterface> interface);
+void addLibrary(std::shared_ptr<etiss::LibraryInterface> libInterface);
 
 /**
  * @brief Create a set with strings of the library names and some information

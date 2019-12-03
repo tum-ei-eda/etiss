@@ -106,43 +106,43 @@ if(${TCCJIT_ARCH} STREQUAL unix)
     list(APPEND TCC_H_FILES "tcc/lib/libtcc1.a,${TCC_H_PATH}/build/libtcc1.a")
     list(APPEND TCC_H_FILES "tcc/libtcc1.a,${TCC_H_PATH}/build/libtcc1.a")
 elseif(${TCCJIT_ARCH} STREQUAL win64)
+    LIST(APPEND TCCJIT_ADDITIONAL_LIBRARIES "${PROJECT_BINARY_DIR}/tcc_win64/libtcc.lib" "Dbghelp.lib")
     include_directories("${PROJECT_BINARY_DIR}/tcc_win64/libtcc")
     set(TCC_H_PATH "${PROJECT_BINARY_DIR}/tcc_win64")
     add_custom_command(OUTPUT "${PROJECT_BINARY_DIR}/tcc_win64/libtcc.lib"
-            COMMAND lib "/DEF:\"${PROJECT_BINARY_DIR}/tcc_win64/libtcc/libtcc.def\"" /MACHINE:X64 /OUT:\"${PROJECT_BINARY_DIR}/tcc_win64/libtcc.lib\"
-            WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
-            )
+        COMMAND lib "/DEF:\"${PROJECT_BINARY_DIR}/tcc_win64/libtcc/libtcc.def\"" /MACHINE:X64 /OUT:\"${PROJECT_BINARY_DIR}/tcc_win64/libtcc.lib\"
+        WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
+    )
+    add_custom_target(gen_tcclib DEPENDS "${PROJECT_BINARY_DIR}/tcc_win64/libtcc.lib")
     install(FILES "${PROJECT_BINARY_DIR}/tcc_win64/libtcc/libtcc.h"
             DESTINATION include)
     install(FILES "${PROJECT_BINARY_DIR}/tcc_win64/libtcc.lib"
             DESTINATION lib)
     install(FILES "${PROJECT_BINARY_DIR}/tcc_win64/libtcc.dll"
             DESTINATION lib)
-    list(APPEND ETISS_FILES_LNK "${CMAKE_INSTALL_PREFIX}/lib/libtcc.lib")
     set(${ETISS_PROJECT_NAME}_ADDITIONAL_LIBRARIES ${${ETISS_PROJECT_NAME}_ADDITIONAL_LIBRARIES} ${PROJECT_BINARY_DIR}/tcc_win64/libtcc.lib)
     set(${ETISS_PROJECT_NAME}_ADDITIONAL_PROJECT_FILES ${${ETISS_PROJECT_NAME}_ADDITIONAL_PROJECT_FILES} ${PROJECT_BINARY_DIR}/tcc_win64/libtcc/libtcc.def ${PROJECT_BINARY_DIR}/tcc_win64/libtcc.dll ${PROJECT_BINARY_DIR}/tcc_win64/libtcc.lib)
     list(APPEND TCC_H_FILES "tcc/lib/libtcc1.a,${TCC_H_PATH}/lib/libtcc1.a")
     list(APPEND TCC_H_FILES "tcc/libtcc1.a,${TCC_H_PATH}/lib/libtcc1.a")
-    list(APPEND ETISS_FILES_LNK "Dbghelp.lib")
 elseif(${TCCJIT_ARCH} STREQUAL win32)
+    LIST(APPEND TCCJIT_ADDITIONAL_LIBRARIES "${PROJECT_BINARY_DIR}/tcc_win32/libtcc.lib" "Dbghelp.lib")
     include_directories("${PROJECT_BINARY_DIR}/tcc_win32/libtcc")
     set(TCC_H_PATH ${PROJECT_BINARY_DIR}/tcc_win32)
     add_custom_command(OUTPUT "${PROJECT_BINARY_DIR}/tcc_win32/libtcc.lib"
             COMMAND lib "/DEF:\"${PROJECT_BINARY_DIR}/tcc_win32/libtcc/libtcc.def\"" /MACHINE:X86 /OUT:\"${PROJECT_BINARY_DIR}/tcc_win32/libtcc.lib\"
             WORKING_DIRECTORY "${PROJECT_BINARY_DIR}"
             )
+    add_custom_target(gen_tcclib DEPENDS "${PROJECT_BINARY_DIR}/tcc_win32/libtcc.lib")
     install(FILES "${PROJECT_BINARY_DIR}/tcc_win32/libtcc/libtcc.h"
             DESTINATION include)
     install(FILES "${PROJECT_BINARY_DIR}/tcc_win32/libtcc.lib"
             DESTINATION lib)
     install(FILES "${PROJECT_BINARY_DIR}/tcc_win32/libtcc.dll"
             DESTINATION lib)
-    list(APPEND ETISS_FILES_LNK "${CMAKE_INSTALL_PREFIX}/lib/libtcc.lib")
     set(${ETISS_PROJECT_NAME}_ADDITIONAL_LIBRARIES ${${ETISS_PROJECT_NAME}_ADDITIONAL_LIBRARIES} "${PROJECT_BINARY_DIR}/tcc_win32/libtcc.lib")
     set(${ETISS_PROJECT_NAME}_ADDITIONAL_PROJECT_FILES ${${ETISS_PROJECT_NAME}_ADDITIONAL_PROJECT_FILES} "${PROJECT_BINARY_DIR}/tcc_win32/libtcc/libtcc.def" "${PROJECT_BINARY_DIR}/tcc_win32/libtcc.dll" "${PROJECT_BINARY_DIR}/tcc_win32/libtcc.lib")
     list(APPEND TCC_H_FILES "tcc/lib/libtcc1.a,${TCC_H_PATH}/lib/libtcc1.a")
     list(APPEND TCC_H_FILES "tcc/libtcc1.a,${TCC_H_PATH}/lib/libtcc1.a")
-    list(APPEND ETISS_FILES_LNK "Dbghelp.lib")
 else()
     message(ERROR "Unknown TCCJIT_ARCH value")
 endif()
@@ -153,7 +153,7 @@ file(GLOB_RECURSE TCC_H_FILES_TMP RELATIVE "${TCC_H_PATH}" "${TCC_H_PATH}/includ
 foreach(tccfile ${TCC_H_FILES_TMP})
     set(pp1 "tcc/${tccfile}")
     string(REGEX REPLACE ".*include/(.*)" "tcc_stdlib/\\1" pp1 ${pp1})
-    file(TO_NATIVE_PATH "${TCC_H_PATH}/${tccfile}" pp2)
+    set(pp2 "${TCC_H_PATH}/${tccfile}")
     list(APPEND TCC_H_FILES "${pp1},${pp2}")
 endforeach()
 #string(REPLACE "winapi/winre.h" "winapi/winreg.h" TCC_H_FILES "${TCC_H_FILES}")
@@ -165,4 +165,8 @@ ADD_LIBRARY(${PROJECT_NAME} SHARED
     TCCJITLib.cpp
 )
 ETISSPlugin(${PROJECT_NAME})
-TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC ${TCCJIT_ADDITIONAL_LIBRARIES} ${ETISS_FILES_LNK})
+TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC ${TCCJIT_ADDITIONAL_LIBRARIES})
+
+if(${TCCJIT_ARCH} STREQUAL win64)
+    add_dependencies(${PROJECT_NAME} gen_tcclib)
+endif()

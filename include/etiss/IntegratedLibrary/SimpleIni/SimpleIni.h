@@ -3172,7 +3172,11 @@ class SI_ConvertW
 #endif
 #endif
 
-#include <windows.h>
+//#include <windows.h>
+#ifndef _AMD64_
+#define _AMD64_
+#endif
+#include <stringapiset.h>
 #ifdef SI_NO_MBCS
 #define SI_NoCase SI_GenericNoCase
 #else // !SI_NO_MBCS
