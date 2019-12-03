@@ -67,7 +67,9 @@ SET(CMAKE_CXX_STANDARD_REQUIRED ON)
 SET(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 IF(WIN32)
-    ADD_DEFINITIONS(/MP)  # parallel compilation
+    IF(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+        ADD_COMPILE_OPTIONS(/MP)  # parallel compilation
+    ENDIF()
     ADD_DEFINITIONS(-D_CRT_SECURE_NO_WARNINGS)  # disable some microsoft warnings
     ADD_DEFINITIONS(-D_SCL_SECURE_NO_WARNINGS)  # disable some microsoft warnings
     ADD_DEFINITIONS(-DNOMINMAX)  # disable bad min and max macros
@@ -90,6 +92,7 @@ ELSE()
 ENDIF()
 
 # Support colored output for ninja generator.
+IF(CMAKE_COLOR_MAKEFILE)
 IF("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fdiagnostics-color=always")
 ELSEIF("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
@@ -98,6 +101,7 @@ ENDIF()
 
 IF(ETISS_USE_PROFILEFLAGS)
     SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pg")
+ENDIF()
 ENDIF()
 
 # Include modules.
@@ -115,9 +119,11 @@ INCLUDE(ETISSPlugin)
 
 # Find packages
 FIND_PACKAGE(Threads REQUIRED)
-FIND_PACKAGE(Boost 1.48 COMPONENTS filesystem system REQUIRED)
+FIND_PACKAGE(Boost COMPONENTS filesystem system REQUIRED)
 FIND_PACKAGE(Doxygen)
 IF(ETISS_USE_PYTHON)
+    SET(Boost_VERBOSE ON)
+    SET(Boost_DEBUG ON)
     FIND_PACKAGE(Python COMPONENTS Interpreter Development REQUIRED)
 ENDIF()
 
@@ -298,7 +304,12 @@ ADD_LIBRARY(ETISS SHARED
 set_target_properties(ETISS PROPERTIES COMPILE_DEFINITIONS "ETISS_LIB_SHARED=1;ETISS_EXPORTS;ETISS_PLUGIN_EXPORTS")
 TARGET_LINK_LIBRARIES(ETISS PUBLIC ${Boost_LIBRARIES} Threads::Threads)
 IF(WIN32)
-    # TODO
+     # Sadly CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS does not set -Wl,--export-all-symbols if gcc is sued
+	 IF(NOT CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+       	TARGET_LINK_OPTIONS(ETISS PRIVATE -Wl,--export-all-symbols)
+    ENDIF()
+
+
 ELSE()
     TARGET_LINK_LIBRARIES(ETISS PUBLIC dl)
 ENDIF()
