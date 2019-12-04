@@ -92,6 +92,8 @@ could be used to debug target SW.
 
 As long as the IDE supports remote debugging with GDB, it will be able to connect to the GDBServer of ETISS.
 
+##### Eclipse
+
 For example use the following steps to debug with Eclipse (https://stackoverflow.com/a/45608937):
 
 Setup:
@@ -113,6 +115,40 @@ Usage:
 
 - Run ETISS with GDBServer enabled
 - Menu: Run -> Debug
+
+##### Visual Studio Code
+
+Create a new debugging configuration for your project by going to the debug side-view on the left. Click on the drop-down, select "Add Config (your project name)", select environment "C++ (GDB/LLDB)". Adjust the file that opens like the following:
+
+	{
+		// Use IntelliSense to learn about possible attributes.
+		// Hover to view descriptions of existing attributes.
+		// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+		"version": "0.2.0",
+		"configurations": [
+			{
+				"name": "ETISS Debug",
+				"type": "cppdbg",
+				"request": "launch",
+				"program": "${workspaceFolder}/target_sw/bin/target_binary.elf",
+				"miDebuggerServerAddress": "localhost:2222",
+				"args": [],
+				"stopAtEntry": false,
+				"cwd": "${workspaceFolder}",
+				"environment": [],
+				"externalConsole": false,
+				"MIMode": "gdb",
+				"setupCommands": [
+					{
+						"description": "Enable pretty-printing for gdb",
+						"text": "-enable-pretty-printing",
+						"ignoreFailures": true
+					}
+				],
+				"miDebuggerPath": "/usr/local/research/projects/SystemDesign/tools/riscv/current/bin/riscv32-unknown-elf-gdb"
+			}
+		]
+	}
 
 ## Snapshot
 
