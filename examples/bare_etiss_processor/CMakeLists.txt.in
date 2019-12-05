@@ -1,5 +1,5 @@
 
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.14)
 project(bare_etiss_processor)
 
 # may not be needed if ETISS was installed into the default directory (e.g. /usr/... for linux or "C:\Program Files\..." for windows)
