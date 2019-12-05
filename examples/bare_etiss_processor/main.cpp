@@ -71,13 +71,9 @@ int main(int argc, const char *argv[])
     // = std::shared_ptr<etiss::LibraryInterface>(new MyLib());
     // etiss::addLibrary(mylib);
 
-	uint32_t ROM_START = 0x0;
-	uint32_t ROM_SIZE = 4096*1024;
-	uint32_t RAM_SIZE = 1024*1024;
-	
     std::cout << "=== Setting up test system ===" << std::endl;
     std::cout << "  Setting up Memory" << std::endl;
-    etiss::DebugSystem dsys(ROM_START, ROM_SIZE, ROM_START+ROM_SIZE, RAM_SIZE);
+    etiss::DebugSystem dsys(0x0, 0x80000, 0x80000, 0x80000);
     // load image to memory
     //  if(!dsys.load(0,etiss::cfg().get<std::string>("sw_binary","").c_str())){
     //    etiss::log(etiss::FATALERROR,"Could not load image file "
