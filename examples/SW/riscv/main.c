@@ -52,6 +52,8 @@
 //#include "../test_cases/rabbit/rabbit.h"
 #include "../test_cases/pi/pi.h"
 #include "../test_cases/simple_tests/test.h"
+#include <stdlib.h>
+#include <stdio.h>
 
 #include "../test_cases/cust_print/cust_print.h"
 
@@ -75,6 +77,41 @@ int main(int arcg,char * argv[])
   //pi(ETISS_LOGGER_ADDR);
   /****************************************************************************/
 
+  int *mem = malloc(4*sizeof(int));
+  custom_print_string(ETISS_LOGGER_ADDR,"malloc returned!\n");
+  custom_print_hex_int32(ETISS_LOGGER_ADDR, (unsigned int)mem);
+  custom_print_string(ETISS_LOGGER_ADDR,"\n");
+  free(mem);
+  int *mem2 = malloc(4*sizeof(int));
+  custom_print_string(ETISS_LOGGER_ADDR,"malloc returned!\n");
+  custom_print_hex_int32(ETISS_LOGGER_ADDR, (unsigned int)mem2);
+  custom_print_string(ETISS_LOGGER_ADDR,"\n");
+  if (mem != mem2)
+  {
+    custom_print_string(ETISS_LOGGER_ADDR,"unexpected malloc return!\n");
+  }
+  int *mem3 = malloc(2*sizeof(int));
+  custom_print_string(ETISS_LOGGER_ADDR,"malloc returned!\n");
+  custom_print_hex_int32(ETISS_LOGGER_ADDR, (unsigned int)mem3);
+  custom_print_string(ETISS_LOGGER_ADDR,"\n");
+  if (mem2 == mem3)
+  {
+    custom_print_string(ETISS_LOGGER_ADDR,"invalid malloc return!\n");
+  }
+  int *oldmem2 = mem2;
+  mem2 = realloc(mem2, 8*sizeof(int));
+  custom_print_string(ETISS_LOGGER_ADDR,"realloc returned!\n");
+  custom_print_hex_int32(ETISS_LOGGER_ADDR, (unsigned int)mem2);
+  custom_print_string(ETISS_LOGGER_ADDR,"\n");
+  if (mem2 == oldmem2)
+  {
+    custom_print_string(ETISS_LOGGER_ADDR,"unexpected realloc return!\n");
+  }
+  free(mem2);
+  free(mem3);
+
+
+  puts("hello world\n");
 
 
   custom_print_string(ETISS_LOGGER_ADDR,"main end!\n");

@@ -398,7 +398,7 @@ void Server::handlePacket(bool block)
                     }
                     treglen += f->width_;
                 }
-                if (command.length() == (treglen >> 2) + 1)
+                if (command.length() == (treglen * 2) + 1)
                 {
                     answer = "OK";
                     unsigned off = 1;
@@ -415,23 +415,23 @@ void Server::handlePacket(bool block)
                         }
                         switch (f->width_)
                         {
-                        case 8:
+                        case 1:
                             f->write(hex::toInt<uint8_t>(command, arch_->getGDBCore().isLittleEndian(), off));
-                            off += 8 >> 2;
                             break;
-                        case 16:
+                        case 2:
                             f->write(hex::toInt<uint16_t>(command, arch_->getGDBCore().isLittleEndian(), off));
-                            off += 16 >> 2;
                             break;
-                        case 32:
+                        case 4:
                             f->write(hex::toInt<uint32_t>(command, arch_->getGDBCore().isLittleEndian(), off));
-                            off += 32 >> 2;
                             break;
-                        case 64:
+                        case 8:
                             f->write(hex::toInt<uint64_t>(command, arch_->getGDBCore().isLittleEndian(), off));
-                            off += 64 >> 2;
                             break;
+                        default:
+                            answer = "EFF";
+                            etiss::log(etiss::ERROR, "GDB G: Invalid write length");
                         }
+                        off += f->width_ * 2;
                     }
                 }
                 else
@@ -444,10 +444,16 @@ void Server::handlePacket(bool block)
             {
                 unsigned off = 1;
                 etiss::uint64 regIndex = 0;
+                std::string valToWrite;
                 if (command.length() > 1)
                 {
                     for (size_t i = 1; i < command.length(); ++i)
                     {
+                        if (command[i] == '=' && command.length() > i + 1)
+                        {
+                            valToWrite = command.substr(i + 1);
+                            break;
+                        }
                         regIndex = (regIndex << 4) | hex::fromHex(command[i]);
                     }
                 }
@@ -461,23 +467,23 @@ void Server::handlePacket(bool block)
                 }
                 switch (f->width_)
                 {
+                case 1:
+                    f->write(hex::toInt<uint8_t>(valToWrite, arch_->getGDBCore().isLittleEndian(), off));
+                    break;
+                case 2:
+                    f->write(hex::toInt<uint16_t>(valToWrite, arch_->getGDBCore().isLittleEndian(), off));
+                    break;
+                case 4:
+                    f->write(hex::toInt<uint32_t>(valToWrite, arch_->getGDBCore().isLittleEndian(), off));
+                    break;
                 case 8:
-                    f->write(hex::toInt<uint8_t>(command, arch_->getGDBCore().isLittleEndian(), off));
-                    off += 8 >> 2;
+                    f->write(hex::toInt<uint64_t>(valToWrite, arch_->getGDBCore().isLittleEndian(), off));
                     break;
-                case 16:
-                    f->write(hex::toInt<uint16_t>(command, arch_->getGDBCore().isLittleEndian(), off));
-                    off += 16 >> 2;
-                    break;
-                case 32:
-                    f->write(hex::toInt<uint32_t>(command, arch_->getGDBCore().isLittleEndian(), off));
-                    off += 32 >> 2;
-                    break;
-                case 64:
-                    f->write(hex::toInt<uint64_t>(command, arch_->getGDBCore().isLittleEndian(), off));
-                    off += 64 >> 2;
-                    break;
+                default:
+                    answer = "EFF";
+                    etiss::log(etiss::ERROR, "GDB P: Invalid write length");
                 }
+                off += f->width_ * 2;
             }
             break;
             case 'p': // read a register
@@ -535,6 +541,25 @@ void Server::handlePacket(bool block)
                 delete[] buf;
             }
             break;
+            case 'M': // writes memory
+            {
+                unsigned pos = 1;
+                etiss::uint64 addr = hex::tryInt<etiss::uint64>(command, pos);
+                pos++;
+                etiss::uint32 length = hex::tryInt<etiss::uint32>(command, pos);
+                std::vector<etiss::uint8> buf(length);
+                etiss::int32 exception = (*system_->dbg_write)(system_->handle, addr, buf.data(), length);
+                if (exception != RETURNCODE::NOERROR)
+                {
+                    answer = "EFF";
+                }
+                else
+                {
+                    answer = "OK";
+                }
+                nodbgaction = true;
+            }
+            break;
             case 'c': // continue
             {
                 if (command.length() > 1)
@@ -577,6 +602,8 @@ void Server::handlePacket(bool block)
                 answer = "T";
                 hex::fromByte(answer, 5);
             }
+            break;
+            case 'v':
             break;
             case 'W': // custom break message; might be changed in future if W is used (apply changes also to
                       // Connection::BREAKMESSAGE)

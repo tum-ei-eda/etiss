@@ -6778,31 +6778,37 @@ static InstructionDefinition sub_rd_rs1_rs2(ISA32, "sub", (uint32_t)0x40000033, 
                                             },
                                             0, nullptr);
 //-------------------------------------------------------------------------------------------------------------------
-static InstructionDefinition _imm(ISA32, ",", (uint32_t)0xf, (uint32_t)0xf00fffff,
-                                  [](BitArray &ba, etiss::CodeSet &cs, InstructionContext &ic) {
-                                      etiss_uint32 successor = 0;
-                                      static BitArrayRange R_successor_0(23, 20);
-                                      etiss_uint32 successor_0 = R_successor_0.read(ba);
-                                      successor += successor_0;
-                                      etiss_uint32 predecessor = 0;
-                                      static BitArrayRange R_predecessor_0(27, 24);
-                                      etiss_uint32 predecessor_0 = R_predecessor_0.read(ba);
-                                      predecessor += predecessor_0;
-                                      CodePart &partInit = cs.append(CodePart::INITIALREQUIRED);
-                                      partInit.getAffectedRegisters().add("instructionPointer", 32);
-                                      partInit.code() = std::string("//,\n") +
-                                                        "etiss_uint32 exception = 0;\n"
-                                                        "etiss_uint32 temp = 0;\n"
-                                                        "etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
-
-                                                        "cpu->instructionPointer = " +
-                                                        toString((uint32_t)(ic.current_address_ + 4)) +
-                                                        "ULL; \n"
-
-                                                        "return exception; \n";
-                                      return true;
-                                  },
-                                  0, nullptr);
+static InstructionDefinition fence_predecessor_successor_imm(
+ 		ISA32,
+ 		"fence",
+ 		(uint32_t)0xf,
+ 		(uint32_t) 0xf00fffff,
+ 		[] (BitArray & ba,etiss::CodeSet & cs,InstructionContext & ic)
+ 		{
+ 		etiss_uint32 successor = 0;
+ 		static BitArrayRange R_successor_0 (23,20);
+ 		etiss_uint32 successor_0 = R_successor_0.read(ba);
+ 		successor += successor_0;
+ 		etiss_uint32 predecessor = 0;
+ 		static BitArrayRange R_predecessor_0 (27,24);
+ 		etiss_uint32 predecessor_0 = R_predecessor_0.read(ba);
+ 		predecessor += predecessor_0;
+ 		CodePart & partInit = cs.append(CodePart::INITIALREQUIRED);
+		partInit.getAffectedRegisters().add("instructionPointer",32);
+ 	partInit.code() = std::string("//fence\n")+
+ 			"etiss_uint32 exception = 0;\n"
+ 			"etiss_uint32 temp = 0;\n"
+ 			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
+ 			
+		"cpu->instructionPointer = " +toString((uint32_t)(ic.current_address_+ 4 ))+"ULL; \n"
+		
+		"return exception; \n"
+; 
+return true;
+},
+0,
+nullptr
+);
 //-------------------------------------------------------------------------------------------------------------------
 static InstructionDefinition fence_i_predecessor_successor(
     ISA32, "fence.i", (uint32_t)0x100f, (uint32_t)0xf00fffff,
@@ -7658,31 +7664,11 @@ static InstructionDefinition c_lw_rd_rs1_imm(
 #if RISCV_DEBUG_CALL
                           "printf(\"mem_addr = %#x\\n\",mem_addr); \n"
 #endif
-                          " etiss_uint8 M_mem_addr_3;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_3;\n"
-                          "exception = (*(system->dread))(system->handle,cpu,mem_addr + 3,tmpbuf,1);\n"
-                          "o_data^=((etiss_uint32)(M_mem_addr_3)<<24) ^ (o_data & 0xff000000);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"o_data = %#x\\n\",o_data); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_2;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_2;\n"
-                          "exception = (*(system->dread))(system->handle,cpu,mem_addr + 2,tmpbuf,1);\n"
-                          "o_data^=((etiss_uint32)(M_mem_addr_2)<<16) ^ (o_data & 0xff0000);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"o_data = %#x\\n\",o_data); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_1;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_1;\n"
-                          "exception = (*(system->dread))(system->handle,cpu,mem_addr + 1,tmpbuf,1);\n"
-                          "o_data^=((etiss_uint16)(M_mem_addr_1)<<8) ^ (o_data & 0xff00);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"o_data = %#x\\n\",o_data); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_0;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_0;\n"
-                          "exception = (*(system->dread))(system->handle,cpu,mem_addr + 0,tmpbuf,1);\n"
-                          "o_data^=((etiss_uint8)(M_mem_addr_0)) ^ (o_data & 0xff);\n"
+
+                // FIXME: Manual edit.
+                "exception = (*(system->dread))(system->handle, cpu, mem_addr, tmpbuf, 4);\n"
+                "o_data = temp;\n"
+
 #if RISCV_DEBUG_CALL
                           "printf(\"o_data = %#x\\n\",o_data); \n"
 #endif
@@ -7941,42 +7927,11 @@ static InstructionDefinition c_sw_rs1_rs2_imm(
 #if RISCV_DEBUG_CALL
                           "printf(\"mem_addr = %#x\\n\",mem_addr); \n"
 #endif
-                          " etiss_uint8 M_mem_addr_3;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_3;\n"
-                          "M_mem_addr_3 = (*((RISCV*)cpu)->R[" +
-                          toString(rs2) +
-                          " + 8] & 0xff000000)>>24;\n"
-                          "exception = (*(system->dwrite))(system->handle,cpu,mem_addr + 3,tmpbuf,1);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"M_mem_addr_3 = %#x\\n\",M_mem_addr_3); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_2;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_2;\n"
-                          "M_mem_addr_2 = (*((RISCV*)cpu)->R[" +
-                          toString(rs2) +
-                          " + 8] & 0xff0000)>>16;\n"
-                          "exception = (*(system->dwrite))(system->handle,cpu,mem_addr + 2,tmpbuf,1);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"M_mem_addr_2 = %#x\\n\",M_mem_addr_2); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_1;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_1;\n"
-                          "M_mem_addr_1 = (*((RISCV*)cpu)->R[" +
-                          toString(rs2) +
-                          " + 8] & 0xff00)>>8;\n"
-                          "exception = (*(system->dwrite))(system->handle,cpu,mem_addr + 1,tmpbuf,1);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"M_mem_addr_1 = %#x\\n\",M_mem_addr_1); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_0;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_0;\n"
-                          "M_mem_addr_0 = (*((RISCV*)cpu)->R[" +
-                          toString(rs2) +
-                          " + 8] & 0xff);\n"
-                          "exception = (*(system->dwrite))(system->handle,cpu,mem_addr + 0,tmpbuf,1);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"M_mem_addr_0 = %#x\\n\",M_mem_addr_0); \n"
-#endif
+
+                // FIXME: Manual edit.
+                "temp = (*((RISCV*)cpu)->R[" + toString(rs2) + " + 8]);\n"
+                "exception = (*(system->dwrite))(system->handle, cpu, mem_addr, tmpbuf, 4);\n"
+
                           "cpu->instructionPointer = " +
                           toString((uint32_t)(ic.current_address_ + 2)) +
                           "ULL; \n"
@@ -8300,86 +8255,115 @@ static InstructionDefinition c_jal_imm(
     },
     0, nullptr);
 //-------------------------------------------------------------------------------------------------------------------
-static InstructionDefinition c_lui_rd_imm(ISA16, "c.lui", (uint16_t)0x6001, (uint16_t)0xe003,
-                                          [](BitArray &ba, etiss::CodeSet &cs, InstructionContext &ic) {
-                                              etiss_uint32 rd = 0;
-                                              static BitArrayRange R_rd_0(11, 7);
-                                              etiss_uint32 rd_0 = R_rd_0.read(ba);
-                                              rd += rd_0;
-                                              etiss_uint32 imm2 = 0;
-                                              static BitArrayRange R_imm2_0(12, 12);
-                                              etiss_uint32 imm2_0 = R_imm2_0.read(ba);
-                                              imm2 += imm2_0;
-                                              etiss_uint32 imm1 = 0;
-                                              static BitArrayRange R_imm1_0(6, 2);
-                                              etiss_uint32 imm1_0 = R_imm1_0.read(ba);
-                                              imm1 += imm1_0;
-                                              CodePart &partInit = cs.append(CodePart::INITIALREQUIRED);
-                                              partInit.getAffectedRegisters().add(reg_name[rd], 32);
-                                              partInit.getAffectedRegisters().add("instructionPointer", 32);
-                                              partInit.code() =
-                                                  std::string("//c.lui\n") +
-                                                  "etiss_uint32 exception = 0;\n"
-                                                  "etiss_uint32 temp = 0;\n"
-                                                  "etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
-                                                  "etiss_uint8 _i_imm1 = 0;\n"
-                                                  "etiss_uint8 _i_imm2 = 0;\n"
-                                                  "etiss_int32 sign_extended_imm = 0;\n"
-                                                  "etiss_int32 sign_extender = 0;\n"
-
-                                                  "_i_imm1 = " +
-                                                  toString(imm1) +
-                                                  ";\n"
-#if RISCV_DEBUG_CALL
-                                                  "printf(\"_i_imm1 = %#x\\n\",_i_imm1); \n"
-#endif
-                                                  "_i_imm2 = " +
-                                                  toString(imm2) +
-                                                  ";\n"
-#if RISCV_DEBUG_CALL
-                                                  "printf(\"_i_imm2 = %#x\\n\",_i_imm2); \n"
-#endif
-                                                  "if(_i_imm2 == 1)\n"
-                                                  "{\n"
-                                                  "sign_extender = 4294836224;\n"
-#if RISCV_DEBUG_CALL
-                                                  "printf(\"sign_extender = %#x\\n\",sign_extender); \n"
-#endif
-                                                  "}\n"
-
-                                                  "else\n"
-                                                  "{\n"
-                                                  "sign_extender = 0;\n"
-#if RISCV_DEBUG_CALL
-                                                  "printf(\"sign_extender = %#x\\n\",sign_extender); \n"
-#endif
-                                                  "}\n"
-                                                  "sign_extended_imm = sign_extender + (_i_imm1 << 12);\n"
-#if RISCV_DEBUG_CALL
-                                                  "printf(\"sign_extended_imm = %#x\\n\",sign_extended_imm); \n"
-#endif
-                                                  "if((" +
-                                                  toString(rd) + " != 0) && (" + toString(rd) +
-                                                  " != 2))\n"
-                                                  "{\n"
-                                                  "*((RISCV*)cpu)->R[" +
-                                                  toString(rd) +
-                                                  "] = sign_extended_imm;\n"
-#if RISCV_DEBUG_CALL
-                                                  "printf(\"*((RISCV*)cpu)->R[" +
-                                                  toString(rd) + "] = %#x\\n\",*((RISCV*)cpu)->R[" + toString(rd) +
-                                                  "]); \n"
-#endif
-                                                  "}\n"
-
-                                                  "cpu->instructionPointer = " +
-                                                  toString((uint32_t)(ic.current_address_ + 2)) +
-                                                  "ULL; \n"
-
-                                                  "return exception; \n";
-                                              return true;
-                                          },
-                                          0, nullptr);
+static InstructionDefinition c_lui_rd_imm(
+ 		ISA16,
+ 		"c.lui",
+ 		(uint16_t)0x6001,
+ 		(uint16_t) 0xe003,
+ 		[] (BitArray & ba,etiss::CodeSet & cs,InstructionContext & ic)
+ 		{
+ 		etiss_uint32 rd = 0;
+ 		static BitArrayRange R_rd_0 (11,7);
+ 		etiss_uint32 rd_0 = R_rd_0.read(ba);
+ 		rd += rd_0;
+ 		etiss_uint32 imm2 = 0;
+ 		static BitArrayRange R_imm2_0 (12,12);
+ 		etiss_uint32 imm2_0 = R_imm2_0.read(ba);
+ 		imm2 += imm2_0;
+ 		etiss_uint32 imm1 = 0;
+ 		static BitArrayRange R_imm1_0 (6,2);
+ 		etiss_uint32 imm1_0 = R_imm1_0.read(ba);
+ 		imm1 += imm1_0;
+ 		CodePart & partInit = cs.append(CodePart::INITIALREQUIRED);
+ 		partInit.getRegisterDependencies().add(reg_name[2],32);
+ 		partInit.getAffectedRegisters().add(reg_name[2],32);
+ 		partInit.getAffectedRegisters().add(reg_name[rd],32);
+		partInit.getAffectedRegisters().add("instructionPointer",32);
+ 	partInit.code() = std::string("//c.lui\n")+
+ 			"etiss_uint32 exception = 0;\n"
+ 			"etiss_uint32 temp = 0;\n"
+ 			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
+ 			"etiss_int32 sign_extended_imm_16sp = 0;\n"
+ 			"etiss_int32 sign_extender_16sp = 0;\n"
+ 			"etiss_uint8 _i_imm1 = 0;\n"
+ 			"etiss_uint8 _i_imm2 = 0;\n"
+ 			"etiss_int32 sign_extended_imm = 0;\n"
+ 			"etiss_int32 sign_extender = 0;\n"
+ 			
+			"_i_imm1 = " + toString(imm1) + ";\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"_i_imm1 = %#x\\n\",_i_imm1); \n"
+			#endif	
+			"_i_imm2 = " + toString(imm2) + ";\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"_i_imm2 = %#x\\n\",_i_imm2); \n"
+			#endif	
+			"if(" + toString(rd) + " == 2)\n"
+			"{\n"
+				"if(_i_imm2 == 1)\n"
+				"{\n"
+					"sign_extender_16sp = 4294966784;\n"
+					#if RISCV_DEBUG_CALL
+					"printf(\"sign_extender_16sp = %#x\\n\",sign_extender_16sp); \n"
+					#endif	
+				"}\n"
+				
+				"else\n"
+				"{\n"
+					"sign_extender_16sp = 0;\n"
+					#if RISCV_DEBUG_CALL
+					"printf(\"sign_extender_16sp = %#x\\n\",sign_extender_16sp); \n"
+					#endif	
+				"}\n"
+				"sign_extended_imm_16sp = sign_extender_16sp + ((_i_imm1 & 0x1) << 5) + ((_i_imm1 & 0x6)>>1 << 7) + ((_i_imm1 & 0x8)>>3 << 6) + ((_i_imm1 & 0x10)>>4 << 4);\n"
+				#if RISCV_DEBUG_CALL
+				"printf(\"sign_extended_imm_16sp = %#x\\n\",sign_extended_imm_16sp); \n"
+				#endif	
+				"*((RISCV*)cpu)->R[2] = sign_extended_imm_16sp + *((RISCV*)cpu)->R[2];\n"
+				#if RISCV_DEBUG_CALL
+				"printf(\"*((RISCV*)cpu)->R[2] = %#x\\n\",*((RISCV*)cpu)->R[2]); \n"
+				#endif	
+			"}\n"
+			
+			"else\n"
+			"{\n"
+				"if(" + toString(rd) + " != 0)\n"
+				"{\n"
+					"if(_i_imm2 == 1)\n"
+					"{\n"
+						"sign_extender = 4294836224;\n"
+						#if RISCV_DEBUG_CALL
+						"printf(\"sign_extender = %#x\\n\",sign_extender); \n"
+						#endif	
+					"}\n"
+					
+					"else\n"
+					"{\n"
+						"sign_extender = 0;\n"
+						#if RISCV_DEBUG_CALL
+						"printf(\"sign_extender = %#x\\n\",sign_extender); \n"
+						#endif	
+					"}\n"
+					"sign_extended_imm = sign_extender + (_i_imm1 << 12);\n"
+					#if RISCV_DEBUG_CALL
+					"printf(\"sign_extended_imm = %#x\\n\",sign_extended_imm); \n"
+					#endif	
+					"*((RISCV*)cpu)->R[" + toString(rd) + "] = sign_extended_imm;\n"
+					#if RISCV_DEBUG_CALL
+					"printf(\"*((RISCV*)cpu)->R[" + toString(rd) + "] = %#x\\n\",*((RISCV*)cpu)->R[" + toString(rd) + "]); \n"
+					#endif	
+				"}\n"
+				
+			"}\n"
+		"cpu->instructionPointer = " +toString((uint32_t)(ic.current_address_+ 2 ))+"ULL; \n"
+		
+		"return exception; \n"
+; 
+return true;
+},
+0,
+nullptr
+);
 //-------------------------------------------------------------------------------------------------------------------
 static InstructionDefinition c_srli_rd_shamt(ISA16, "c.srli", (uint16_t)0x8001, (uint16_t)0xec03,
                                              [](BitArray &ba, etiss::CodeSet &cs, InstructionContext &ic) {
@@ -8967,6 +8951,9 @@ static InstructionDefinition c_add_rd_rs2(
                           toString(rs2) +
                           " == 0)\n"
                           "{\n"
+                          "if(" + toString(rd) + " == 0){\n"
+                          "return ETISS_RETURNCODE_CPUFINISHED;\n"
+                          "} else {\n"
                           "*((RISCV*)cpu)->R[1] = " +
                           toString((uint32_t)ic.current_address_) +
                           "ULL  + 2;\n"
@@ -8979,7 +8966,7 @@ static InstructionDefinition c_add_rd_rs2(
 #if RISCV_DEBUG_CALL
                           "printf(\"cpu->instructionPointer = %#lx\\n\",cpu->instructionPointer); \n"
 #endif
-                          "}\n"
+                          "}}\n"
 
                           "else\n"
                           "{\n"
@@ -9194,1244 +9181,1226 @@ static InstructionDefinition sc_w_rd_rs1_rs2(
     0, nullptr);
 //-------------------------------------------------------------------------------------------------------------------
 static InstructionDefinition amoswap_w_rd_rs1_rs2(
-    ISA32, "amoswap.w", (uint32_t)0x800202f, (uint32_t)0xf800707f,
-    [](BitArray &ba, etiss::CodeSet &cs, InstructionContext &ic) {
-        etiss_uint32 aq = 0;
-        static BitArrayRange R_aq_0(26, 26);
-        etiss_uint32 aq_0 = R_aq_0.read(ba);
-        aq += aq_0;
-        etiss_uint32 rs2 = 0;
-        static BitArrayRange R_rs2_0(24, 20);
-        etiss_uint32 rs2_0 = R_rs2_0.read(ba);
-        rs2 += rs2_0;
-        etiss_uint32 rs1 = 0;
-        static BitArrayRange R_rs1_0(19, 15);
-        etiss_uint32 rs1_0 = R_rs1_0.read(ba);
-        rs1 += rs1_0;
-        etiss_uint32 rd = 0;
-        static BitArrayRange R_rd_0(11, 7);
-        etiss_uint32 rd_0 = R_rd_0.read(ba);
-        rd += rd_0;
-        etiss_uint32 rl = 0;
-        static BitArrayRange R_rl_0(25, 25);
-        etiss_uint32 rl_0 = R_rl_0.read(ba);
-        rl += rl_0;
-        CodePart &partInit = cs.append(CodePart::INITIALREQUIRED);
-        partInit.getRegisterDependencies().add(reg_name[rs2], 32);
-        partInit.getRegisterDependencies().add(reg_name[rs1], 32);
-        partInit.getAffectedRegisters().add(reg_name[rd], 32);
-        partInit.getAffectedRegisters().add(reg_name[rs2], 32);
-        partInit.getAffectedRegisters().add("instructionPointer", 32);
-        partInit.code() = std::string("//amoswap.w\n") +
-                          "etiss_uint32 exception = 0;\n"
-                          "etiss_uint32 temp = 0;\n"
-                          "etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
-                          "etiss_uint32 mem_addr = 0;\n"
-                          "etiss_uint32 o_data = 0;\n"
-
-                          "mem_addr = *((RISCV*)cpu)->R[" +
-                          toString(rs1) +
-                          "];\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"mem_addr = %#x\\n\",mem_addr); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_3;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_3;\n"
-                          "exception = (*(system->dread))(system->handle,cpu,mem_addr + 3,tmpbuf,1);\n"
-                          "o_data^=((etiss_uint32)(M_mem_addr_3)<<24) ^ (o_data & 0xff000000);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"o_data = %#x\\n\",o_data); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_2;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_2;\n"
-                          "exception = (*(system->dread))(system->handle,cpu,mem_addr + 2,tmpbuf,1);\n"
-                          "o_data^=((etiss_uint32)(M_mem_addr_2)<<16) ^ (o_data & 0xff0000);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"o_data = %#x\\n\",o_data); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_1;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_1;\n"
-                          "exception = (*(system->dread))(system->handle,cpu,mem_addr + 1,tmpbuf,1);\n"
-                          "o_data^=((etiss_uint16)(M_mem_addr_1)<<8) ^ (o_data & 0xff00);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"o_data = %#x\\n\",o_data); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_0;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_0;\n"
-                          "exception = (*(system->dread))(system->handle,cpu,mem_addr + 0,tmpbuf,1);\n"
-                          "o_data^=((etiss_uint8)(M_mem_addr_0)) ^ (o_data & 0xff);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"o_data = %#x\\n\",o_data); \n"
-#endif
-                          "if(" +
-                          toString(rd) +
-                          " != 0)\n"
-                          "{\n"
-                          "*((RISCV*)cpu)->R[" +
-                          toString(rd) +
-                          "] = o_data;\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"*((RISCV*)cpu)->R[" +
-                          toString(rd) + "] = %#x\\n\",*((RISCV*)cpu)->R[" + toString(rd) +
-                          "]); \n"
-#endif
-                          "}\n"
-
-                          "else\n"
-                          "{\n"
-                          "}\n"
-                          " etiss_uint8 M_mem_addr_3;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_3;\n"
-                          "M_mem_addr_3 = (*((RISCV*)cpu)->R[" +
-                          toString(rs2) +
-                          "] & 0xff000000)>>24;\n"
-                          "exception = (*(system->dwrite))(system->handle,cpu,mem_addr + 3,tmpbuf,1);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"M_mem_addr_3 = %#x\\n\",M_mem_addr_3); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_2;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_2;\n"
-                          "M_mem_addr_2 = (*((RISCV*)cpu)->R[" +
-                          toString(rs2) +
-                          "] & 0xff0000)>>16;\n"
-                          "exception = (*(system->dwrite))(system->handle,cpu,mem_addr + 2,tmpbuf,1);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"M_mem_addr_2 = %#x\\n\",M_mem_addr_2); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_1;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_1;\n"
-                          "M_mem_addr_1 = (*((RISCV*)cpu)->R[" +
-                          toString(rs2) +
-                          "] & 0xff00)>>8;\n"
-                          "exception = (*(system->dwrite))(system->handle,cpu,mem_addr + 1,tmpbuf,1);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"M_mem_addr_1 = %#x\\n\",M_mem_addr_1); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_0;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_0;\n"
-                          "M_mem_addr_0 = (*((RISCV*)cpu)->R[" +
-                          toString(rs2) +
-                          "] & 0xff);\n"
-                          "exception = (*(system->dwrite))(system->handle,cpu,mem_addr + 0,tmpbuf,1);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"M_mem_addr_0 = %#x\\n\",M_mem_addr_0); \n"
-#endif
-                          "*((RISCV*)cpu)->R[" +
-                          toString(rs2) +
-                          "] = o_data;\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"*((RISCV*)cpu)->R[" +
-                          toString(rs2) + "] = %#x\\n\",*((RISCV*)cpu)->R[" + toString(rs2) +
-                          "]); \n"
-#endif
-                          "cpu->instructionPointer = " +
-                          toString((uint32_t)(ic.current_address_ + 4)) +
-                          "ULL; \n"
-
-                          "return exception; \n";
-        return true;
-    },
-    0, nullptr);
+ 		ISA32,
+ 		"amoswap.w",
+ 		(uint32_t)0x800202f,
+ 		(uint32_t) 0xf800707f,
+ 		[] (BitArray & ba,etiss::CodeSet & cs,InstructionContext & ic)
+ 		{
+ 		etiss_uint32 aq = 0;
+ 		static BitArrayRange R_aq_0 (26,26);
+ 		etiss_uint32 aq_0 = R_aq_0.read(ba);
+ 		aq += aq_0;
+ 		etiss_uint32 rs2 = 0;
+ 		static BitArrayRange R_rs2_0 (24,20);
+ 		etiss_uint32 rs2_0 = R_rs2_0.read(ba);
+ 		rs2 += rs2_0;
+ 		etiss_uint32 rs1 = 0;
+ 		static BitArrayRange R_rs1_0 (19,15);
+ 		etiss_uint32 rs1_0 = R_rs1_0.read(ba);
+ 		rs1 += rs1_0;
+ 		etiss_uint32 rd = 0;
+ 		static BitArrayRange R_rd_0 (11,7);
+ 		etiss_uint32 rd_0 = R_rd_0.read(ba);
+ 		rd += rd_0;
+ 		etiss_uint32 rl = 0;
+ 		static BitArrayRange R_rl_0 (25,25);
+ 		etiss_uint32 rl_0 = R_rl_0.read(ba);
+ 		rl += rl_0;
+ 		CodePart & partInit = cs.append(CodePart::INITIALREQUIRED);
+ 		partInit.getRegisterDependencies().add(reg_name[rs2],32);
+ 		partInit.getRegisterDependencies().add(reg_name[rs1],32);
+ 		partInit.getAffectedRegisters().add(reg_name[rd],32);
+ 		partInit.getAffectedRegisters().add(reg_name[rs2],32);
+		partInit.getAffectedRegisters().add("instructionPointer",32);
+ 	partInit.code() = std::string("//amoswap.w\n")+
+ 			"etiss_uint32 exception = 0;\n"
+ 			"etiss_uint32 temp = 0;\n"
+ 			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
+ 			"etiss_uint32 mem_addr = 0;\n"
+ 			"etiss_uint32 mem_addr_ = 0;\n"
+ 			"etiss_uint32 o_data = 0;\n"
+ 			
+			"mem_addr = *((RISCV*)cpu)->R[" + toString(rs1) + "];\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"mem_addr = %#x\\n\",mem_addr); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr_3;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr_3;\n"
+			"exception = (*(system->dread))(system->handle,cpu,mem_addr + 3,tmpbuf,1);\n"
+			"o_data^=((etiss_uint32)(M_mem_addr_3)<<24) ^ (o_data & 0xff000000);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"o_data = %#x\\n\",o_data); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr_2;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr_2;\n"
+			"exception = (*(system->dread))(system->handle,cpu,mem_addr + 2,tmpbuf,1);\n"
+			"o_data^=((etiss_uint32)(M_mem_addr_2)<<16) ^ (o_data & 0xff0000);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"o_data = %#x\\n\",o_data); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr_1;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr_1;\n"
+			"exception = (*(system->dread))(system->handle,cpu,mem_addr + 1,tmpbuf,1);\n"
+			"o_data^=((etiss_uint16)(M_mem_addr_1)<<8) ^ (o_data & 0xff00);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"o_data = %#x\\n\",o_data); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr_0;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr_0;\n"
+			"exception = (*(system->dread))(system->handle,cpu,mem_addr + 0,tmpbuf,1);\n"
+			"o_data^=((etiss_uint8)(M_mem_addr_0)) ^ (o_data & 0xff);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"o_data = %#x\\n\",o_data); \n"
+			#endif	
+			"if(" + toString(rd) + " != 0)\n"
+			"{\n"
+				"*((RISCV*)cpu)->R[" + toString(rd) + "] = o_data;\n"
+				#if RISCV_DEBUG_CALL
+				"printf(\"*((RISCV*)cpu)->R[" + toString(rd) + "] = %#x\\n\",*((RISCV*)cpu)->R[" + toString(rd) + "]); \n"
+				#endif	
+			"}\n"
+			
+			"else\n"
+			"{\n"
+			"}\n"
+			"mem_addr_ = *((RISCV*)cpu)->R[" + toString(rs1) + "];\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"mem_addr_ = %#x\\n\",mem_addr_); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr__3;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr__3;\n"
+			"M_mem_addr__3 = (*((RISCV*)cpu)->R[" + toString(rs2) + "] & 0xff000000)>>24;\n"
+			"exception = (*(system->dwrite))(system->handle,cpu,mem_addr_ + 3,tmpbuf,1);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"M_mem_addr__3 = %#x\\n\",M_mem_addr__3); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr__2;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr__2;\n"
+			"M_mem_addr__2 = (*((RISCV*)cpu)->R[" + toString(rs2) + "] & 0xff0000)>>16;\n"
+			"exception = (*(system->dwrite))(system->handle,cpu,mem_addr_ + 2,tmpbuf,1);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"M_mem_addr__2 = %#x\\n\",M_mem_addr__2); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr__1;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr__1;\n"
+			"M_mem_addr__1 = (*((RISCV*)cpu)->R[" + toString(rs2) + "] & 0xff00)>>8;\n"
+			"exception = (*(system->dwrite))(system->handle,cpu,mem_addr_ + 1,tmpbuf,1);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"M_mem_addr__1 = %#x\\n\",M_mem_addr__1); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr__0;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr__0;\n"
+			"M_mem_addr__0 = (*((RISCV*)cpu)->R[" + toString(rs2) + "] & 0xff);\n"
+			"exception = (*(system->dwrite))(system->handle,cpu,mem_addr_ + 0,tmpbuf,1);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"M_mem_addr__0 = %#x\\n\",M_mem_addr__0); \n"
+			#endif	
+			"*((RISCV*)cpu)->R[" + toString(rs2) + "] = o_data;\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"*((RISCV*)cpu)->R[" + toString(rs2) + "] = %#x\\n\",*((RISCV*)cpu)->R[" + toString(rs2) + "]); \n"
+			#endif	
+		"cpu->instructionPointer = " +toString((uint32_t)(ic.current_address_+ 4 ))+"ULL; \n"
+		
+		"return exception; \n"
+; 
+return true;
+},
+0,
+nullptr
+);
 //-------------------------------------------------------------------------------------------------------------------
 static InstructionDefinition amoadd_w_rd_rs1_rs2(
-    ISA32, "amoadd.w", (uint32_t)0x202f, (uint32_t)0xf800707f,
-    [](BitArray &ba, etiss::CodeSet &cs, InstructionContext &ic) {
-        etiss_uint32 aq = 0;
-        static BitArrayRange R_aq_0(26, 26);
-        etiss_uint32 aq_0 = R_aq_0.read(ba);
-        aq += aq_0;
-        etiss_uint32 rs2 = 0;
-        static BitArrayRange R_rs2_0(24, 20);
-        etiss_uint32 rs2_0 = R_rs2_0.read(ba);
-        rs2 += rs2_0;
-        etiss_uint32 rs1 = 0;
-        static BitArrayRange R_rs1_0(19, 15);
-        etiss_uint32 rs1_0 = R_rs1_0.read(ba);
-        rs1 += rs1_0;
-        etiss_uint32 rd = 0;
-        static BitArrayRange R_rd_0(11, 7);
-        etiss_uint32 rd_0 = R_rd_0.read(ba);
-        rd += rd_0;
-        etiss_uint32 rl = 0;
-        static BitArrayRange R_rl_0(25, 25);
-        etiss_uint32 rl_0 = R_rl_0.read(ba);
-        rl += rl_0;
-        CodePart &partInit = cs.append(CodePart::INITIALREQUIRED);
-        partInit.getRegisterDependencies().add(reg_name[rs2], 32);
-        partInit.getRegisterDependencies().add(reg_name[rs1], 32);
-        partInit.getAffectedRegisters().add(reg_name[rd], 32);
-        partInit.getAffectedRegisters().add("instructionPointer", 32);
-        partInit.code() = std::string("//amoadd.w\n") +
-                          "etiss_uint32 exception = 0;\n"
-                          "etiss_uint32 temp = 0;\n"
-                          "etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
-                          "etiss_uint32 result = 0;\n"
-                          "etiss_uint32 mem_addr = 0;\n"
-                          "etiss_uint32 o_data = 0;\n"
-
-                          "mem_addr = *((RISCV*)cpu)->R[" +
-                          toString(rs1) +
-                          "];\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"mem_addr = %#x\\n\",mem_addr); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_3;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_3;\n"
-                          "exception = (*(system->dread))(system->handle,cpu,mem_addr + 3,tmpbuf,1);\n"
-                          "o_data^=((etiss_uint32)(M_mem_addr_3)<<24) ^ (o_data & 0xff000000);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"o_data = %#x\\n\",o_data); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_2;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_2;\n"
-                          "exception = (*(system->dread))(system->handle,cpu,mem_addr + 2,tmpbuf,1);\n"
-                          "o_data^=((etiss_uint32)(M_mem_addr_2)<<16) ^ (o_data & 0xff0000);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"o_data = %#x\\n\",o_data); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_1;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_1;\n"
-                          "exception = (*(system->dread))(system->handle,cpu,mem_addr + 1,tmpbuf,1);\n"
-                          "o_data^=((etiss_uint16)(M_mem_addr_1)<<8) ^ (o_data & 0xff00);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"o_data = %#x\\n\",o_data); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_0;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_0;\n"
-                          "exception = (*(system->dread))(system->handle,cpu,mem_addr + 0,tmpbuf,1);\n"
-                          "o_data^=((etiss_uint8)(M_mem_addr_0)) ^ (o_data & 0xff);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"o_data = %#x\\n\",o_data); \n"
-#endif
-                          "if(" +
-                          toString(rd) +
-                          " != 0)\n"
-                          "{\n"
-                          "*((RISCV*)cpu)->R[" +
-                          toString(rd) +
-                          "] = o_data;\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"*((RISCV*)cpu)->R[" +
-                          toString(rd) + "] = %#x\\n\",*((RISCV*)cpu)->R[" + toString(rd) +
-                          "]); \n"
-#endif
-                          "}\n"
-
-                          "else\n"
-                          "{\n"
-                          "}\n"
-                          "result = o_data + *((RISCV*)cpu)->R[" +
-                          toString(rs2) +
-                          "];\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"result = %#x\\n\",result); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_3;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_3;\n"
-                          "M_mem_addr_3 = (result & 0xff000000)>>24;\n"
-                          "exception = (*(system->dwrite))(system->handle,cpu,mem_addr + 3,tmpbuf,1);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"M_mem_addr_3 = %#x\\n\",M_mem_addr_3); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_2;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_2;\n"
-                          "M_mem_addr_2 = (result & 0xff0000)>>16;\n"
-                          "exception = (*(system->dwrite))(system->handle,cpu,mem_addr + 2,tmpbuf,1);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"M_mem_addr_2 = %#x\\n\",M_mem_addr_2); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_1;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_1;\n"
-                          "M_mem_addr_1 = (result & 0xff00)>>8;\n"
-                          "exception = (*(system->dwrite))(system->handle,cpu,mem_addr + 1,tmpbuf,1);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"M_mem_addr_1 = %#x\\n\",M_mem_addr_1); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_0;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_0;\n"
-                          "M_mem_addr_0 = (result & 0xff);\n"
-                          "exception = (*(system->dwrite))(system->handle,cpu,mem_addr + 0,tmpbuf,1);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"M_mem_addr_0 = %#x\\n\",M_mem_addr_0); \n"
-#endif
-                          "cpu->instructionPointer = " +
-                          toString((uint32_t)(ic.current_address_ + 4)) +
-                          "ULL; \n"
-
-                          "return exception; \n";
-        return true;
-    },
-    0, nullptr);
+ 		ISA32,
+ 		"amoadd.w",
+ 		(uint32_t)0x202f,
+ 		(uint32_t) 0xf800707f,
+ 		[] (BitArray & ba,etiss::CodeSet & cs,InstructionContext & ic)
+ 		{
+ 		etiss_uint32 aq = 0;
+ 		static BitArrayRange R_aq_0 (26,26);
+ 		etiss_uint32 aq_0 = R_aq_0.read(ba);
+ 		aq += aq_0;
+ 		etiss_uint32 rs2 = 0;
+ 		static BitArrayRange R_rs2_0 (24,20);
+ 		etiss_uint32 rs2_0 = R_rs2_0.read(ba);
+ 		rs2 += rs2_0;
+ 		etiss_uint32 rs1 = 0;
+ 		static BitArrayRange R_rs1_0 (19,15);
+ 		etiss_uint32 rs1_0 = R_rs1_0.read(ba);
+ 		rs1 += rs1_0;
+ 		etiss_uint32 rd = 0;
+ 		static BitArrayRange R_rd_0 (11,7);
+ 		etiss_uint32 rd_0 = R_rd_0.read(ba);
+ 		rd += rd_0;
+ 		etiss_uint32 rl = 0;
+ 		static BitArrayRange R_rl_0 (25,25);
+ 		etiss_uint32 rl_0 = R_rl_0.read(ba);
+ 		rl += rl_0;
+ 		CodePart & partInit = cs.append(CodePart::INITIALREQUIRED);
+ 		partInit.getRegisterDependencies().add(reg_name[rs2],32);
+ 		partInit.getRegisterDependencies().add(reg_name[rs1],32);
+ 		partInit.getAffectedRegisters().add(reg_name[rd],32);
+		partInit.getAffectedRegisters().add("instructionPointer",32);
+ 	partInit.code() = std::string("//amoadd.w\n")+
+ 			"etiss_uint32 exception = 0;\n"
+ 			"etiss_uint32 temp = 0;\n"
+ 			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
+ 			"etiss_uint32 result = 0;\n"
+ 			"etiss_uint32 mem_addr = 0;\n"
+ 			"etiss_uint32 mem_addr_ = 0;\n"
+ 			"etiss_uint32 o_data = 0;\n"
+ 			
+			"mem_addr = *((RISCV*)cpu)->R[" + toString(rs1) + "];\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"mem_addr = %#x\\n\",mem_addr); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr_3;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr_3;\n"
+			"exception = (*(system->dread))(system->handle,cpu,mem_addr + 3,tmpbuf,1);\n"
+			"o_data^=((etiss_uint32)(M_mem_addr_3)<<24) ^ (o_data & 0xff000000);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"o_data = %#x\\n\",o_data); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr_2;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr_2;\n"
+			"exception = (*(system->dread))(system->handle,cpu,mem_addr + 2,tmpbuf,1);\n"
+			"o_data^=((etiss_uint32)(M_mem_addr_2)<<16) ^ (o_data & 0xff0000);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"o_data = %#x\\n\",o_data); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr_1;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr_1;\n"
+			"exception = (*(system->dread))(system->handle,cpu,mem_addr + 1,tmpbuf,1);\n"
+			"o_data^=((etiss_uint16)(M_mem_addr_1)<<8) ^ (o_data & 0xff00);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"o_data = %#x\\n\",o_data); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr_0;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr_0;\n"
+			"exception = (*(system->dread))(system->handle,cpu,mem_addr + 0,tmpbuf,1);\n"
+			"o_data^=((etiss_uint8)(M_mem_addr_0)) ^ (o_data & 0xff);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"o_data = %#x\\n\",o_data); \n"
+			#endif	
+			"if(" + toString(rd) + " != 0)\n"
+			"{\n"
+				"*((RISCV*)cpu)->R[" + toString(rd) + "] = o_data;\n"
+				#if RISCV_DEBUG_CALL
+				"printf(\"*((RISCV*)cpu)->R[" + toString(rd) + "] = %#x\\n\",*((RISCV*)cpu)->R[" + toString(rd) + "]); \n"
+				#endif	
+			"}\n"
+			
+			"else\n"
+			"{\n"
+			"}\n"
+			"result = o_data + *((RISCV*)cpu)->R[" + toString(rs2) + "];\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"result = %#x\\n\",result); \n"
+			#endif	
+			"mem_addr_ = *((RISCV*)cpu)->R[" + toString(rs1) + "];\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"mem_addr_ = %#x\\n\",mem_addr_); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr__3;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr__3;\n"
+			"M_mem_addr__3 = (result & 0xff000000)>>24;\n"
+			"exception = (*(system->dwrite))(system->handle,cpu,mem_addr_ + 3,tmpbuf,1);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"M_mem_addr__3 = %#x\\n\",M_mem_addr__3); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr__2;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr__2;\n"
+			"M_mem_addr__2 = (result & 0xff0000)>>16;\n"
+			"exception = (*(system->dwrite))(system->handle,cpu,mem_addr_ + 2,tmpbuf,1);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"M_mem_addr__2 = %#x\\n\",M_mem_addr__2); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr__1;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr__1;\n"
+			"M_mem_addr__1 = (result & 0xff00)>>8;\n"
+			"exception = (*(system->dwrite))(system->handle,cpu,mem_addr_ + 1,tmpbuf,1);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"M_mem_addr__1 = %#x\\n\",M_mem_addr__1); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr__0;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr__0;\n"
+			"M_mem_addr__0 = (result & 0xff);\n"
+			"exception = (*(system->dwrite))(system->handle,cpu,mem_addr_ + 0,tmpbuf,1);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"M_mem_addr__0 = %#x\\n\",M_mem_addr__0); \n"
+			#endif	
+		"cpu->instructionPointer = " +toString((uint32_t)(ic.current_address_+ 4 ))+"ULL; \n"
+		
+		"return exception; \n"
+; 
+return true;
+},
+0,
+nullptr
+);
 //-------------------------------------------------------------------------------------------------------------------
 static InstructionDefinition amoxor_w_rd_rs1_rs2(
-    ISA32, "amoxor.w", (uint32_t)0x2000202f, (uint32_t)0xf800707f,
-    [](BitArray &ba, etiss::CodeSet &cs, InstructionContext &ic) {
-        etiss_uint32 aq = 0;
-        static BitArrayRange R_aq_0(26, 26);
-        etiss_uint32 aq_0 = R_aq_0.read(ba);
-        aq += aq_0;
-        etiss_uint32 rs2 = 0;
-        static BitArrayRange R_rs2_0(24, 20);
-        etiss_uint32 rs2_0 = R_rs2_0.read(ba);
-        rs2 += rs2_0;
-        etiss_uint32 rs1 = 0;
-        static BitArrayRange R_rs1_0(19, 15);
-        etiss_uint32 rs1_0 = R_rs1_0.read(ba);
-        rs1 += rs1_0;
-        etiss_uint32 rd = 0;
-        static BitArrayRange R_rd_0(11, 7);
-        etiss_uint32 rd_0 = R_rd_0.read(ba);
-        rd += rd_0;
-        etiss_uint32 rl = 0;
-        static BitArrayRange R_rl_0(25, 25);
-        etiss_uint32 rl_0 = R_rl_0.read(ba);
-        rl += rl_0;
-        CodePart &partInit = cs.append(CodePart::INITIALREQUIRED);
-        partInit.getRegisterDependencies().add(reg_name[rs2], 32);
-        partInit.getRegisterDependencies().add(reg_name[rs1], 32);
-        partInit.getAffectedRegisters().add(reg_name[rd], 32);
-        partInit.getAffectedRegisters().add("instructionPointer", 32);
-        partInit.code() = std::string("//amoxor.w\n") +
-                          "etiss_uint32 exception = 0;\n"
-                          "etiss_uint32 temp = 0;\n"
-                          "etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
-                          "etiss_uint32 result = 0;\n"
-                          "etiss_uint32 mem_addr = 0;\n"
-                          "etiss_uint32 o_data = 0;\n"
-
-                          "mem_addr = *((RISCV*)cpu)->R[" +
-                          toString(rs1) +
-                          "];\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"mem_addr = %#x\\n\",mem_addr); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_3;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_3;\n"
-                          "exception = (*(system->dread))(system->handle,cpu,mem_addr + 3,tmpbuf,1);\n"
-                          "o_data^=((etiss_uint32)(M_mem_addr_3)<<24) ^ (o_data & 0xff000000);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"o_data = %#x\\n\",o_data); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_2;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_2;\n"
-                          "exception = (*(system->dread))(system->handle,cpu,mem_addr + 2,tmpbuf,1);\n"
-                          "o_data^=((etiss_uint32)(M_mem_addr_2)<<16) ^ (o_data & 0xff0000);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"o_data = %#x\\n\",o_data); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_1;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_1;\n"
-                          "exception = (*(system->dread))(system->handle,cpu,mem_addr + 1,tmpbuf,1);\n"
-                          "o_data^=((etiss_uint16)(M_mem_addr_1)<<8) ^ (o_data & 0xff00);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"o_data = %#x\\n\",o_data); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_0;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_0;\n"
-                          "exception = (*(system->dread))(system->handle,cpu,mem_addr + 0,tmpbuf,1);\n"
-                          "o_data^=((etiss_uint8)(M_mem_addr_0)) ^ (o_data & 0xff);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"o_data = %#x\\n\",o_data); \n"
-#endif
-                          "if(" +
-                          toString(rd) +
-                          " != 0)\n"
-                          "{\n"
-                          "*((RISCV*)cpu)->R[" +
-                          toString(rd) +
-                          "] = o_data;\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"*((RISCV*)cpu)->R[" +
-                          toString(rd) + "] = %#x\\n\",*((RISCV*)cpu)->R[" + toString(rd) +
-                          "]); \n"
-#endif
-                          "}\n"
-
-                          "else\n"
-                          "{\n"
-                          "}\n"
-                          "result = (o_data ^ *((RISCV*)cpu)->R[" +
-                          toString(rs2) +
-                          "]);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"result = %#x\\n\",result); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_3;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_3;\n"
-                          "M_mem_addr_3 = (result & 0xff000000)>>24;\n"
-                          "exception = (*(system->dwrite))(system->handle,cpu,mem_addr + 3,tmpbuf,1);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"M_mem_addr_3 = %#x\\n\",M_mem_addr_3); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_2;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_2;\n"
-                          "M_mem_addr_2 = (result & 0xff0000)>>16;\n"
-                          "exception = (*(system->dwrite))(system->handle,cpu,mem_addr + 2,tmpbuf,1);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"M_mem_addr_2 = %#x\\n\",M_mem_addr_2); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_1;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_1;\n"
-                          "M_mem_addr_1 = (result & 0xff00)>>8;\n"
-                          "exception = (*(system->dwrite))(system->handle,cpu,mem_addr + 1,tmpbuf,1);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"M_mem_addr_1 = %#x\\n\",M_mem_addr_1); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_0;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_0;\n"
-                          "M_mem_addr_0 = (result & 0xff);\n"
-                          "exception = (*(system->dwrite))(system->handle,cpu,mem_addr + 0,tmpbuf,1);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"M_mem_addr_0 = %#x\\n\",M_mem_addr_0); \n"
-#endif
-                          "cpu->instructionPointer = " +
-                          toString((uint32_t)(ic.current_address_ + 4)) +
-                          "ULL; \n"
-
-                          "return exception; \n";
-        return true;
-    },
-    0, nullptr);
+ 		ISA32,
+ 		"amoxor.w",
+ 		(uint32_t)0x2000202f,
+ 		(uint32_t) 0xf800707f,
+ 		[] (BitArray & ba,etiss::CodeSet & cs,InstructionContext & ic)
+ 		{
+ 		etiss_uint32 aq = 0;
+ 		static BitArrayRange R_aq_0 (26,26);
+ 		etiss_uint32 aq_0 = R_aq_0.read(ba);
+ 		aq += aq_0;
+ 		etiss_uint32 rs2 = 0;
+ 		static BitArrayRange R_rs2_0 (24,20);
+ 		etiss_uint32 rs2_0 = R_rs2_0.read(ba);
+ 		rs2 += rs2_0;
+ 		etiss_uint32 rs1 = 0;
+ 		static BitArrayRange R_rs1_0 (19,15);
+ 		etiss_uint32 rs1_0 = R_rs1_0.read(ba);
+ 		rs1 += rs1_0;
+ 		etiss_uint32 rd = 0;
+ 		static BitArrayRange R_rd_0 (11,7);
+ 		etiss_uint32 rd_0 = R_rd_0.read(ba);
+ 		rd += rd_0;
+ 		etiss_uint32 rl = 0;
+ 		static BitArrayRange R_rl_0 (25,25);
+ 		etiss_uint32 rl_0 = R_rl_0.read(ba);
+ 		rl += rl_0;
+ 		CodePart & partInit = cs.append(CodePart::INITIALREQUIRED);
+ 		partInit.getRegisterDependencies().add(reg_name[rs2],32);
+ 		partInit.getRegisterDependencies().add(reg_name[rs1],32);
+ 		partInit.getAffectedRegisters().add(reg_name[rd],32);
+		partInit.getAffectedRegisters().add("instructionPointer",32);
+ 	partInit.code() = std::string("//amoxor.w\n")+
+ 			"etiss_uint32 exception = 0;\n"
+ 			"etiss_uint32 temp = 0;\n"
+ 			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
+ 			"etiss_uint32 result = 0;\n"
+ 			"etiss_uint32 mem_addr = 0;\n"
+ 			"etiss_uint32 mem_addr_ = 0;\n"
+ 			"etiss_uint32 o_data = 0;\n"
+ 			
+			"mem_addr = *((RISCV*)cpu)->R[" + toString(rs1) + "];\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"mem_addr = %#x\\n\",mem_addr); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr_3;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr_3;\n"
+			"exception = (*(system->dread))(system->handle,cpu,mem_addr + 3,tmpbuf,1);\n"
+			"o_data^=((etiss_uint32)(M_mem_addr_3)<<24) ^ (o_data & 0xff000000);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"o_data = %#x\\n\",o_data); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr_2;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr_2;\n"
+			"exception = (*(system->dread))(system->handle,cpu,mem_addr + 2,tmpbuf,1);\n"
+			"o_data^=((etiss_uint32)(M_mem_addr_2)<<16) ^ (o_data & 0xff0000);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"o_data = %#x\\n\",o_data); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr_1;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr_1;\n"
+			"exception = (*(system->dread))(system->handle,cpu,mem_addr + 1,tmpbuf,1);\n"
+			"o_data^=((etiss_uint16)(M_mem_addr_1)<<8) ^ (o_data & 0xff00);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"o_data = %#x\\n\",o_data); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr_0;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr_0;\n"
+			"exception = (*(system->dread))(system->handle,cpu,mem_addr + 0,tmpbuf,1);\n"
+			"o_data^=((etiss_uint8)(M_mem_addr_0)) ^ (o_data & 0xff);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"o_data = %#x\\n\",o_data); \n"
+			#endif	
+			"if(" + toString(rd) + " != 0)\n"
+			"{\n"
+				"*((RISCV*)cpu)->R[" + toString(rd) + "] = o_data;\n"
+				#if RISCV_DEBUG_CALL
+				"printf(\"*((RISCV*)cpu)->R[" + toString(rd) + "] = %#x\\n\",*((RISCV*)cpu)->R[" + toString(rd) + "]); \n"
+				#endif	
+			"}\n"
+			
+			"else\n"
+			"{\n"
+			"}\n"
+			"result = (o_data ^ *((RISCV*)cpu)->R[" + toString(rs2) + "]);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"result = %#x\\n\",result); \n"
+			#endif	
+			"mem_addr_ = *((RISCV*)cpu)->R[" + toString(rs1) + "];\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"mem_addr_ = %#x\\n\",mem_addr_); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr__3;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr__3;\n"
+			"M_mem_addr__3 = (result & 0xff000000)>>24;\n"
+			"exception = (*(system->dwrite))(system->handle,cpu,mem_addr_ + 3,tmpbuf,1);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"M_mem_addr__3 = %#x\\n\",M_mem_addr__3); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr__2;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr__2;\n"
+			"M_mem_addr__2 = (result & 0xff0000)>>16;\n"
+			"exception = (*(system->dwrite))(system->handle,cpu,mem_addr_ + 2,tmpbuf,1);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"M_mem_addr__2 = %#x\\n\",M_mem_addr__2); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr__1;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr__1;\n"
+			"M_mem_addr__1 = (result & 0xff00)>>8;\n"
+			"exception = (*(system->dwrite))(system->handle,cpu,mem_addr_ + 1,tmpbuf,1);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"M_mem_addr__1 = %#x\\n\",M_mem_addr__1); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr__0;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr__0;\n"
+			"M_mem_addr__0 = (result & 0xff);\n"
+			"exception = (*(system->dwrite))(system->handle,cpu,mem_addr_ + 0,tmpbuf,1);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"M_mem_addr__0 = %#x\\n\",M_mem_addr__0); \n"
+			#endif	
+		"cpu->instructionPointer = " +toString((uint32_t)(ic.current_address_+ 4 ))+"ULL; \n"
+		
+		"return exception; \n"
+; 
+return true;
+},
+0,
+nullptr
+);
 //-------------------------------------------------------------------------------------------------------------------
 static InstructionDefinition amoand_w_rd_rs1_rs2(
-    ISA32, "amoand.w", (uint32_t)0x6000202f, (uint32_t)0xf800707f,
-    [](BitArray &ba, etiss::CodeSet &cs, InstructionContext &ic) {
-        etiss_uint32 aq = 0;
-        static BitArrayRange R_aq_0(26, 26);
-        etiss_uint32 aq_0 = R_aq_0.read(ba);
-        aq += aq_0;
-        etiss_uint32 rs2 = 0;
-        static BitArrayRange R_rs2_0(24, 20);
-        etiss_uint32 rs2_0 = R_rs2_0.read(ba);
-        rs2 += rs2_0;
-        etiss_uint32 rs1 = 0;
-        static BitArrayRange R_rs1_0(19, 15);
-        etiss_uint32 rs1_0 = R_rs1_0.read(ba);
-        rs1 += rs1_0;
-        etiss_uint32 rd = 0;
-        static BitArrayRange R_rd_0(11, 7);
-        etiss_uint32 rd_0 = R_rd_0.read(ba);
-        rd += rd_0;
-        etiss_uint32 rl = 0;
-        static BitArrayRange R_rl_0(25, 25);
-        etiss_uint32 rl_0 = R_rl_0.read(ba);
-        rl += rl_0;
-        CodePart &partInit = cs.append(CodePart::INITIALREQUIRED);
-        partInit.getRegisterDependencies().add(reg_name[rs2], 32);
-        partInit.getRegisterDependencies().add(reg_name[rs1], 32);
-        partInit.getAffectedRegisters().add(reg_name[rd], 32);
-        partInit.getAffectedRegisters().add("instructionPointer", 32);
-        partInit.code() = std::string("//amoand.w\n") +
-                          "etiss_uint32 exception = 0;\n"
-                          "etiss_uint32 temp = 0;\n"
-                          "etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
-                          "etiss_uint32 result = 0;\n"
-                          "etiss_uint32 mem_addr = 0;\n"
-                          "etiss_uint32 o_data = 0;\n"
-
-                          "mem_addr = *((RISCV*)cpu)->R[" +
-                          toString(rs1) +
-                          "];\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"mem_addr = %#x\\n\",mem_addr); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_3;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_3;\n"
-                          "exception = (*(system->dread))(system->handle,cpu,mem_addr + 3,tmpbuf,1);\n"
-                          "o_data^=((etiss_uint32)(M_mem_addr_3)<<24) ^ (o_data & 0xff000000);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"o_data = %#x\\n\",o_data); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_2;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_2;\n"
-                          "exception = (*(system->dread))(system->handle,cpu,mem_addr + 2,tmpbuf,1);\n"
-                          "o_data^=((etiss_uint32)(M_mem_addr_2)<<16) ^ (o_data & 0xff0000);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"o_data = %#x\\n\",o_data); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_1;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_1;\n"
-                          "exception = (*(system->dread))(system->handle,cpu,mem_addr + 1,tmpbuf,1);\n"
-                          "o_data^=((etiss_uint16)(M_mem_addr_1)<<8) ^ (o_data & 0xff00);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"o_data = %#x\\n\",o_data); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_0;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_0;\n"
-                          "exception = (*(system->dread))(system->handle,cpu,mem_addr + 0,tmpbuf,1);\n"
-                          "o_data^=((etiss_uint8)(M_mem_addr_0)) ^ (o_data & 0xff);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"o_data = %#x\\n\",o_data); \n"
-#endif
-                          "if(" +
-                          toString(rd) +
-                          " != 0)\n"
-                          "{\n"
-                          "*((RISCV*)cpu)->R[" +
-                          toString(rd) +
-                          "] = o_data;\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"*((RISCV*)cpu)->R[" +
-                          toString(rd) + "] = %#x\\n\",*((RISCV*)cpu)->R[" + toString(rd) +
-                          "]); \n"
-#endif
-                          "}\n"
-
-                          "else\n"
-                          "{\n"
-                          "}\n"
-                          "result = (o_data & *((RISCV*)cpu)->R[" +
-                          toString(rs2) +
-                          "]);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"result = %#x\\n\",result); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_3;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_3;\n"
-                          "M_mem_addr_3 = (result & 0xff000000)>>24;\n"
-                          "exception = (*(system->dwrite))(system->handle,cpu,mem_addr + 3,tmpbuf,1);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"M_mem_addr_3 = %#x\\n\",M_mem_addr_3); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_2;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_2;\n"
-                          "M_mem_addr_2 = (result & 0xff0000)>>16;\n"
-                          "exception = (*(system->dwrite))(system->handle,cpu,mem_addr + 2,tmpbuf,1);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"M_mem_addr_2 = %#x\\n\",M_mem_addr_2); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_1;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_1;\n"
-                          "M_mem_addr_1 = (result & 0xff00)>>8;\n"
-                          "exception = (*(system->dwrite))(system->handle,cpu,mem_addr + 1,tmpbuf,1);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"M_mem_addr_1 = %#x\\n\",M_mem_addr_1); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_0;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_0;\n"
-                          "M_mem_addr_0 = (result & 0xff);\n"
-                          "exception = (*(system->dwrite))(system->handle,cpu,mem_addr + 0,tmpbuf,1);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"M_mem_addr_0 = %#x\\n\",M_mem_addr_0); \n"
-#endif
-                          "cpu->instructionPointer = " +
-                          toString((uint32_t)(ic.current_address_ + 4)) +
-                          "ULL; \n"
-
-                          "return exception; \n";
-        return true;
-    },
-    0, nullptr);
+ 		ISA32,
+ 		"amoand.w",
+ 		(uint32_t)0x6000202f,
+ 		(uint32_t) 0xf800707f,
+ 		[] (BitArray & ba,etiss::CodeSet & cs,InstructionContext & ic)
+ 		{
+ 		etiss_uint32 aq = 0;
+ 		static BitArrayRange R_aq_0 (26,26);
+ 		etiss_uint32 aq_0 = R_aq_0.read(ba);
+ 		aq += aq_0;
+ 		etiss_uint32 rs2 = 0;
+ 		static BitArrayRange R_rs2_0 (24,20);
+ 		etiss_uint32 rs2_0 = R_rs2_0.read(ba);
+ 		rs2 += rs2_0;
+ 		etiss_uint32 rs1 = 0;
+ 		static BitArrayRange R_rs1_0 (19,15);
+ 		etiss_uint32 rs1_0 = R_rs1_0.read(ba);
+ 		rs1 += rs1_0;
+ 		etiss_uint32 rd = 0;
+ 		static BitArrayRange R_rd_0 (11,7);
+ 		etiss_uint32 rd_0 = R_rd_0.read(ba);
+ 		rd += rd_0;
+ 		etiss_uint32 rl = 0;
+ 		static BitArrayRange R_rl_0 (25,25);
+ 		etiss_uint32 rl_0 = R_rl_0.read(ba);
+ 		rl += rl_0;
+ 		CodePart & partInit = cs.append(CodePart::INITIALREQUIRED);
+ 		partInit.getRegisterDependencies().add(reg_name[rs2],32);
+ 		partInit.getRegisterDependencies().add(reg_name[rs1],32);
+ 		partInit.getAffectedRegisters().add(reg_name[rd],32);
+		partInit.getAffectedRegisters().add("instructionPointer",32);
+ 	partInit.code() = std::string("//amoand.w\n")+
+ 			"etiss_uint32 exception = 0;\n"
+ 			"etiss_uint32 temp = 0;\n"
+ 			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
+ 			"etiss_uint32 result = 0;\n"
+ 			"etiss_uint32 mem_addr = 0;\n"
+ 			"etiss_uint32 mem_addr_ = 0;\n"
+ 			"etiss_uint32 o_data = 0;\n"
+ 			
+			"mem_addr = *((RISCV*)cpu)->R[" + toString(rs1) + "];\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"mem_addr = %#x\\n\",mem_addr); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr_3;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr_3;\n"
+			"exception = (*(system->dread))(system->handle,cpu,mem_addr + 3,tmpbuf,1);\n"
+			"o_data^=((etiss_uint32)(M_mem_addr_3)<<24) ^ (o_data & 0xff000000);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"o_data = %#x\\n\",o_data); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr_2;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr_2;\n"
+			"exception = (*(system->dread))(system->handle,cpu,mem_addr + 2,tmpbuf,1);\n"
+			"o_data^=((etiss_uint32)(M_mem_addr_2)<<16) ^ (o_data & 0xff0000);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"o_data = %#x\\n\",o_data); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr_1;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr_1;\n"
+			"exception = (*(system->dread))(system->handle,cpu,mem_addr + 1,tmpbuf,1);\n"
+			"o_data^=((etiss_uint16)(M_mem_addr_1)<<8) ^ (o_data & 0xff00);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"o_data = %#x\\n\",o_data); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr_0;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr_0;\n"
+			"exception = (*(system->dread))(system->handle,cpu,mem_addr + 0,tmpbuf,1);\n"
+			"o_data^=((etiss_uint8)(M_mem_addr_0)) ^ (o_data & 0xff);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"o_data = %#x\\n\",o_data); \n"
+			#endif	
+			"if(" + toString(rd) + " != 0)\n"
+			"{\n"
+				"*((RISCV*)cpu)->R[" + toString(rd) + "] = o_data;\n"
+				#if RISCV_DEBUG_CALL
+				"printf(\"*((RISCV*)cpu)->R[" + toString(rd) + "] = %#x\\n\",*((RISCV*)cpu)->R[" + toString(rd) + "]); \n"
+				#endif	
+			"}\n"
+			
+			"else\n"
+			"{\n"
+			"}\n"
+			"result = (o_data & *((RISCV*)cpu)->R[" + toString(rs2) + "]);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"result = %#x\\n\",result); \n"
+			#endif	
+			"mem_addr_ = *((RISCV*)cpu)->R[" + toString(rs1) + "];\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"mem_addr_ = %#x\\n\",mem_addr_); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr__3;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr__3;\n"
+			"M_mem_addr__3 = (result & 0xff000000)>>24;\n"
+			"exception = (*(system->dwrite))(system->handle,cpu,mem_addr_ + 3,tmpbuf,1);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"M_mem_addr__3 = %#x\\n\",M_mem_addr__3); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr__2;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr__2;\n"
+			"M_mem_addr__2 = (result & 0xff0000)>>16;\n"
+			"exception = (*(system->dwrite))(system->handle,cpu,mem_addr_ + 2,tmpbuf,1);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"M_mem_addr__2 = %#x\\n\",M_mem_addr__2); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr__1;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr__1;\n"
+			"M_mem_addr__1 = (result & 0xff00)>>8;\n"
+			"exception = (*(system->dwrite))(system->handle,cpu,mem_addr_ + 1,tmpbuf,1);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"M_mem_addr__1 = %#x\\n\",M_mem_addr__1); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr__0;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr__0;\n"
+			"M_mem_addr__0 = (result & 0xff);\n"
+			"exception = (*(system->dwrite))(system->handle,cpu,mem_addr_ + 0,tmpbuf,1);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"M_mem_addr__0 = %#x\\n\",M_mem_addr__0); \n"
+			#endif	
+		"cpu->instructionPointer = " +toString((uint32_t)(ic.current_address_+ 4 ))+"ULL; \n"
+		
+		"return exception; \n"
+; 
+return true;
+},
+0,
+nullptr
+);
 //-------------------------------------------------------------------------------------------------------------------
 static InstructionDefinition amoor_w_rd_rs1_rs2(
-    ISA32, "amoor.w", (uint32_t)0x4000202f, (uint32_t)0xf800707f,
-    [](BitArray &ba, etiss::CodeSet &cs, InstructionContext &ic) {
-        etiss_uint32 aq = 0;
-        static BitArrayRange R_aq_0(26, 26);
-        etiss_uint32 aq_0 = R_aq_0.read(ba);
-        aq += aq_0;
-        etiss_uint32 rs2 = 0;
-        static BitArrayRange R_rs2_0(24, 20);
-        etiss_uint32 rs2_0 = R_rs2_0.read(ba);
-        rs2 += rs2_0;
-        etiss_uint32 rs1 = 0;
-        static BitArrayRange R_rs1_0(19, 15);
-        etiss_uint32 rs1_0 = R_rs1_0.read(ba);
-        rs1 += rs1_0;
-        etiss_uint32 rd = 0;
-        static BitArrayRange R_rd_0(11, 7);
-        etiss_uint32 rd_0 = R_rd_0.read(ba);
-        rd += rd_0;
-        etiss_uint32 rl = 0;
-        static BitArrayRange R_rl_0(25, 25);
-        etiss_uint32 rl_0 = R_rl_0.read(ba);
-        rl += rl_0;
-        CodePart &partInit = cs.append(CodePart::INITIALREQUIRED);
-        partInit.getRegisterDependencies().add(reg_name[rs2], 32);
-        partInit.getRegisterDependencies().add(reg_name[rs1], 32);
-        partInit.getAffectedRegisters().add(reg_name[rd], 32);
-        partInit.getAffectedRegisters().add("instructionPointer", 32);
-        partInit.code() = std::string("//amoor.w\n") +
-                          "etiss_uint32 exception = 0;\n"
-                          "etiss_uint32 temp = 0;\n"
-                          "etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
-                          "etiss_uint32 result = 0;\n"
-                          "etiss_uint32 mem_addr = 0;\n"
-                          "etiss_uint32 o_data = 0;\n"
-
-                          "mem_addr = *((RISCV*)cpu)->R[" +
-                          toString(rs1) +
-                          "];\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"mem_addr = %#x\\n\",mem_addr); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_3;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_3;\n"
-                          "exception = (*(system->dread))(system->handle,cpu,mem_addr + 3,tmpbuf,1);\n"
-                          "o_data^=((etiss_uint32)(M_mem_addr_3)<<24) ^ (o_data & 0xff000000);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"o_data = %#x\\n\",o_data); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_2;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_2;\n"
-                          "exception = (*(system->dread))(system->handle,cpu,mem_addr + 2,tmpbuf,1);\n"
-                          "o_data^=((etiss_uint32)(M_mem_addr_2)<<16) ^ (o_data & 0xff0000);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"o_data = %#x\\n\",o_data); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_1;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_1;\n"
-                          "exception = (*(system->dread))(system->handle,cpu,mem_addr + 1,tmpbuf,1);\n"
-                          "o_data^=((etiss_uint16)(M_mem_addr_1)<<8) ^ (o_data & 0xff00);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"o_data = %#x\\n\",o_data); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_0;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_0;\n"
-                          "exception = (*(system->dread))(system->handle,cpu,mem_addr + 0,tmpbuf,1);\n"
-                          "o_data^=((etiss_uint8)(M_mem_addr_0)) ^ (o_data & 0xff);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"o_data = %#x\\n\",o_data); \n"
-#endif
-                          "if(" +
-                          toString(rd) +
-                          " != 0)\n"
-                          "{\n"
-                          "*((RISCV*)cpu)->R[" +
-                          toString(rd) +
-                          "] = o_data;\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"*((RISCV*)cpu)->R[" +
-                          toString(rd) + "] = %#x\\n\",*((RISCV*)cpu)->R[" + toString(rd) +
-                          "]); \n"
-#endif
-                          "}\n"
-
-                          "else\n"
-                          "{\n"
-                          "}\n"
-                          "result = (o_data | *((RISCV*)cpu)->R[" +
-                          toString(rs2) +
-                          "]);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"result = %#x\\n\",result); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_3;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_3;\n"
-                          "M_mem_addr_3 = (result & 0xff000000)>>24;\n"
-                          "exception = (*(system->dwrite))(system->handle,cpu,mem_addr + 3,tmpbuf,1);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"M_mem_addr_3 = %#x\\n\",M_mem_addr_3); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_2;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_2;\n"
-                          "M_mem_addr_2 = (result & 0xff0000)>>16;\n"
-                          "exception = (*(system->dwrite))(system->handle,cpu,mem_addr + 2,tmpbuf,1);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"M_mem_addr_2 = %#x\\n\",M_mem_addr_2); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_1;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_1;\n"
-                          "M_mem_addr_1 = (result & 0xff00)>>8;\n"
-                          "exception = (*(system->dwrite))(system->handle,cpu,mem_addr + 1,tmpbuf,1);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"M_mem_addr_1 = %#x\\n\",M_mem_addr_1); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_0;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_0;\n"
-                          "M_mem_addr_0 = (result & 0xff);\n"
-                          "exception = (*(system->dwrite))(system->handle,cpu,mem_addr + 0,tmpbuf,1);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"M_mem_addr_0 = %#x\\n\",M_mem_addr_0); \n"
-#endif
-                          "cpu->instructionPointer = " +
-                          toString((uint32_t)(ic.current_address_ + 4)) +
-                          "ULL; \n"
-
-                          "return exception; \n";
-        return true;
-    },
-    0, nullptr);
+ 		ISA32,
+ 		"amoor.w",
+ 		(uint32_t)0x4000202f,
+ 		(uint32_t) 0xf800707f,
+ 		[] (BitArray & ba,etiss::CodeSet & cs,InstructionContext & ic)
+ 		{
+ 		etiss_uint32 aq = 0;
+ 		static BitArrayRange R_aq_0 (26,26);
+ 		etiss_uint32 aq_0 = R_aq_0.read(ba);
+ 		aq += aq_0;
+ 		etiss_uint32 rs2 = 0;
+ 		static BitArrayRange R_rs2_0 (24,20);
+ 		etiss_uint32 rs2_0 = R_rs2_0.read(ba);
+ 		rs2 += rs2_0;
+ 		etiss_uint32 rs1 = 0;
+ 		static BitArrayRange R_rs1_0 (19,15);
+ 		etiss_uint32 rs1_0 = R_rs1_0.read(ba);
+ 		rs1 += rs1_0;
+ 		etiss_uint32 rd = 0;
+ 		static BitArrayRange R_rd_0 (11,7);
+ 		etiss_uint32 rd_0 = R_rd_0.read(ba);
+ 		rd += rd_0;
+ 		etiss_uint32 rl = 0;
+ 		static BitArrayRange R_rl_0 (25,25);
+ 		etiss_uint32 rl_0 = R_rl_0.read(ba);
+ 		rl += rl_0;
+ 		CodePart & partInit = cs.append(CodePart::INITIALREQUIRED);
+ 		partInit.getRegisterDependencies().add(reg_name[rs2],32);
+ 		partInit.getRegisterDependencies().add(reg_name[rs1],32);
+ 		partInit.getAffectedRegisters().add(reg_name[rd],32);
+		partInit.getAffectedRegisters().add("instructionPointer",32);
+ 	partInit.code() = std::string("//amoor.w\n")+
+ 			"etiss_uint32 exception = 0;\n"
+ 			"etiss_uint32 temp = 0;\n"
+ 			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
+ 			"etiss_uint32 result = 0;\n"
+ 			"etiss_uint32 mem_addr = 0;\n"
+ 			"etiss_uint32 mem_addr_ = 0;\n"
+ 			"etiss_uint32 o_data = 0;\n"
+ 			
+			"mem_addr = *((RISCV*)cpu)->R[" + toString(rs1) + "];\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"mem_addr = %#x\\n\",mem_addr); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr_3;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr_3;\n"
+			"exception = (*(system->dread))(system->handle,cpu,mem_addr + 3,tmpbuf,1);\n"
+			"o_data^=((etiss_uint32)(M_mem_addr_3)<<24) ^ (o_data & 0xff000000);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"o_data = %#x\\n\",o_data); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr_2;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr_2;\n"
+			"exception = (*(system->dread))(system->handle,cpu,mem_addr + 2,tmpbuf,1);\n"
+			"o_data^=((etiss_uint32)(M_mem_addr_2)<<16) ^ (o_data & 0xff0000);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"o_data = %#x\\n\",o_data); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr_1;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr_1;\n"
+			"exception = (*(system->dread))(system->handle,cpu,mem_addr + 1,tmpbuf,1);\n"
+			"o_data^=((etiss_uint16)(M_mem_addr_1)<<8) ^ (o_data & 0xff00);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"o_data = %#x\\n\",o_data); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr_0;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr_0;\n"
+			"exception = (*(system->dread))(system->handle,cpu,mem_addr + 0,tmpbuf,1);\n"
+			"o_data^=((etiss_uint8)(M_mem_addr_0)) ^ (o_data & 0xff);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"o_data = %#x\\n\",o_data); \n"
+			#endif	
+			"if(" + toString(rd) + " != 0)\n"
+			"{\n"
+				"*((RISCV*)cpu)->R[" + toString(rd) + "] = o_data;\n"
+				#if RISCV_DEBUG_CALL
+				"printf(\"*((RISCV*)cpu)->R[" + toString(rd) + "] = %#x\\n\",*((RISCV*)cpu)->R[" + toString(rd) + "]); \n"
+				#endif	
+			"}\n"
+			
+			"else\n"
+			"{\n"
+			"}\n"
+			"result = (o_data | *((RISCV*)cpu)->R[" + toString(rs2) + "]);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"result = %#x\\n\",result); \n"
+			#endif	
+			"mem_addr_ = *((RISCV*)cpu)->R[" + toString(rs1) + "];\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"mem_addr_ = %#x\\n\",mem_addr_); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr__3;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr__3;\n"
+			"M_mem_addr__3 = (result & 0xff000000)>>24;\n"
+			"exception = (*(system->dwrite))(system->handle,cpu,mem_addr_ + 3,tmpbuf,1);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"M_mem_addr__3 = %#x\\n\",M_mem_addr__3); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr__2;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr__2;\n"
+			"M_mem_addr__2 = (result & 0xff0000)>>16;\n"
+			"exception = (*(system->dwrite))(system->handle,cpu,mem_addr_ + 2,tmpbuf,1);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"M_mem_addr__2 = %#x\\n\",M_mem_addr__2); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr__1;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr__1;\n"
+			"M_mem_addr__1 = (result & 0xff00)>>8;\n"
+			"exception = (*(system->dwrite))(system->handle,cpu,mem_addr_ + 1,tmpbuf,1);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"M_mem_addr__1 = %#x\\n\",M_mem_addr__1); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr__0;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr__0;\n"
+			"M_mem_addr__0 = (result & 0xff);\n"
+			"exception = (*(system->dwrite))(system->handle,cpu,mem_addr_ + 0,tmpbuf,1);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"M_mem_addr__0 = %#x\\n\",M_mem_addr__0); \n"
+			#endif	
+		"cpu->instructionPointer = " +toString((uint32_t)(ic.current_address_+ 4 ))+"ULL; \n"
+		
+		"return exception; \n"
+; 
+return true;
+},
+0,
+nullptr
+);
 //-------------------------------------------------------------------------------------------------------------------
 static InstructionDefinition amomin_w_rd_rs1_rs2(
-    ISA32, "amomin.w", (uint32_t)0x8000202f, (uint32_t)0xf800707f,
-    [](BitArray &ba, etiss::CodeSet &cs, InstructionContext &ic) {
-        etiss_uint32 aq = 0;
-        static BitArrayRange R_aq_0(26, 26);
-        etiss_uint32 aq_0 = R_aq_0.read(ba);
-        aq += aq_0;
-        etiss_uint32 rs2 = 0;
-        static BitArrayRange R_rs2_0(24, 20);
-        etiss_uint32 rs2_0 = R_rs2_0.read(ba);
-        rs2 += rs2_0;
-        etiss_uint32 rs1 = 0;
-        static BitArrayRange R_rs1_0(19, 15);
-        etiss_uint32 rs1_0 = R_rs1_0.read(ba);
-        rs1 += rs1_0;
-        etiss_uint32 rd = 0;
-        static BitArrayRange R_rd_0(11, 7);
-        etiss_uint32 rd_0 = R_rd_0.read(ba);
-        rd += rd_0;
-        etiss_uint32 rl = 0;
-        static BitArrayRange R_rl_0(25, 25);
-        etiss_uint32 rl_0 = R_rl_0.read(ba);
-        rl += rl_0;
-        CodePart &partInit = cs.append(CodePart::INITIALREQUIRED);
-        partInit.getRegisterDependencies().add(reg_name[rs2], 32);
-        partInit.getRegisterDependencies().add(reg_name[rs1], 32);
-        partInit.getAffectedRegisters().add(reg_name[rd], 32);
-        partInit.getAffectedRegisters().add("instructionPointer", 32);
-        partInit.code() = std::string("//amomin.w\n") +
-                          "etiss_uint32 exception = 0;\n"
-                          "etiss_uint32 temp = 0;\n"
-                          "etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
-                          "etiss_uint32 result = 0;\n"
-                          "etiss_uint32 mem_addr = 0;\n"
-                          "etiss_uint32 o_data = 0;\n"
-
-                          "mem_addr = *((RISCV*)cpu)->R[" +
-                          toString(rs1) +
-                          "];\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"mem_addr = %#x\\n\",mem_addr); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_3;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_3;\n"
-                          "exception = (*(system->dread))(system->handle,cpu,mem_addr + 3,tmpbuf,1);\n"
-                          "o_data^=((etiss_uint32)(M_mem_addr_3)<<24) ^ (o_data & 0xff000000);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"o_data = %#x\\n\",o_data); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_2;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_2;\n"
-                          "exception = (*(system->dread))(system->handle,cpu,mem_addr + 2,tmpbuf,1);\n"
-                          "o_data^=((etiss_uint32)(M_mem_addr_2)<<16) ^ (o_data & 0xff0000);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"o_data = %#x\\n\",o_data); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_1;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_1;\n"
-                          "exception = (*(system->dread))(system->handle,cpu,mem_addr + 1,tmpbuf,1);\n"
-                          "o_data^=((etiss_uint16)(M_mem_addr_1)<<8) ^ (o_data & 0xff00);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"o_data = %#x\\n\",o_data); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_0;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_0;\n"
-                          "exception = (*(system->dread))(system->handle,cpu,mem_addr + 0,tmpbuf,1);\n"
-                          "o_data^=((etiss_uint8)(M_mem_addr_0)) ^ (o_data & 0xff);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"o_data = %#x\\n\",o_data); \n"
-#endif
-                          "if(" +
-                          toString(rd) +
-                          " != 0)\n"
-                          "{\n"
-                          "*((RISCV*)cpu)->R[" +
-                          toString(rd) +
-                          "] = o_data;\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"*((RISCV*)cpu)->R[" +
-                          toString(rd) + "] = %#x\\n\",*((RISCV*)cpu)->R[" + toString(rd) +
-                          "]); \n"
-#endif
-                          "}\n"
-
-                          "else\n"
-                          "{\n"
-                          "}\n"
-                          "result = o_data;\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"result = %#x\\n\",result); \n"
-#endif
-                          "etiss_int32 cast_0 = *((RISCV*)cpu)->R[" +
-                          toString(rs2) +
-                          "]; \n"
-                          "if((etiss_int32)((etiss_uint32)cast_0 - 0x80000000) > 0x0)\n"
-                          "{\n"
-                          "cast_0 =0x0 + (etiss_uint32)cast_0 ;\n"
-                          "}\n"
-                          "etiss_int32 cast_1 = o_data; \n"
-                          "if((etiss_int32)((etiss_uint32)cast_1 - 0x80000000) > 0x0)\n"
-                          "{\n"
-                          "cast_1 =0x0 + (etiss_uint32)cast_1 ;\n"
-                          "}\n"
-                          "if((etiss_int32)cast_1 > (etiss_int32)cast_0)\n"
-                          "{\n"
-                          "result = *((RISCV*)cpu)->R[" +
-                          toString(rs2) +
-                          "];\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"result = %#x\\n\",result); \n"
-#endif
-                          "}\n"
-
-                          " etiss_uint8 M_mem_addr_3;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_3;\n"
-                          "M_mem_addr_3 = (result & 0xff000000)>>24;\n"
-                          "exception = (*(system->dwrite))(system->handle,cpu,mem_addr + 3,tmpbuf,1);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"M_mem_addr_3 = %#x\\n\",M_mem_addr_3); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_2;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_2;\n"
-                          "M_mem_addr_2 = (result & 0xff0000)>>16;\n"
-                          "exception = (*(system->dwrite))(system->handle,cpu,mem_addr + 2,tmpbuf,1);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"M_mem_addr_2 = %#x\\n\",M_mem_addr_2); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_1;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_1;\n"
-                          "M_mem_addr_1 = (result & 0xff00)>>8;\n"
-                          "exception = (*(system->dwrite))(system->handle,cpu,mem_addr + 1,tmpbuf,1);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"M_mem_addr_1 = %#x\\n\",M_mem_addr_1); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_0;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_0;\n"
-                          "M_mem_addr_0 = (result & 0xff);\n"
-                          "exception = (*(system->dwrite))(system->handle,cpu,mem_addr + 0,tmpbuf,1);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"M_mem_addr_0 = %#x\\n\",M_mem_addr_0); \n"
-#endif
-                          "cpu->instructionPointer = " +
-                          toString((uint32_t)(ic.current_address_ + 4)) +
-                          "ULL; \n"
-
-                          "return exception; \n";
-        return true;
-    },
-    0, nullptr);
+ 		ISA32,
+ 		"amomin.w",
+ 		(uint32_t)0x8000202f,
+ 		(uint32_t) 0xf800707f,
+ 		[] (BitArray & ba,etiss::CodeSet & cs,InstructionContext & ic)
+ 		{
+ 		etiss_uint32 aq = 0;
+ 		static BitArrayRange R_aq_0 (26,26);
+ 		etiss_uint32 aq_0 = R_aq_0.read(ba);
+ 		aq += aq_0;
+ 		etiss_uint32 rs2 = 0;
+ 		static BitArrayRange R_rs2_0 (24,20);
+ 		etiss_uint32 rs2_0 = R_rs2_0.read(ba);
+ 		rs2 += rs2_0;
+ 		etiss_uint32 rs1 = 0;
+ 		static BitArrayRange R_rs1_0 (19,15);
+ 		etiss_uint32 rs1_0 = R_rs1_0.read(ba);
+ 		rs1 += rs1_0;
+ 		etiss_uint32 rd = 0;
+ 		static BitArrayRange R_rd_0 (11,7);
+ 		etiss_uint32 rd_0 = R_rd_0.read(ba);
+ 		rd += rd_0;
+ 		etiss_uint32 rl = 0;
+ 		static BitArrayRange R_rl_0 (25,25);
+ 		etiss_uint32 rl_0 = R_rl_0.read(ba);
+ 		rl += rl_0;
+ 		CodePart & partInit = cs.append(CodePart::INITIALREQUIRED);
+ 		partInit.getRegisterDependencies().add(reg_name[rs2],32);
+ 		partInit.getRegisterDependencies().add(reg_name[rs1],32);
+ 		partInit.getAffectedRegisters().add(reg_name[rd],32);
+		partInit.getAffectedRegisters().add("instructionPointer",32);
+ 	partInit.code() = std::string("//amomin.w\n")+
+ 			"etiss_uint32 exception = 0;\n"
+ 			"etiss_uint32 temp = 0;\n"
+ 			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
+ 			"etiss_uint32 result = 0;\n"
+ 			"etiss_uint32 mem_addr = 0;\n"
+ 			"etiss_uint32 mem_addr_ = 0;\n"
+ 			"etiss_uint32 o_data = 0;\n"
+ 			
+			"mem_addr = *((RISCV*)cpu)->R[" + toString(rs1) + "];\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"mem_addr = %#x\\n\",mem_addr); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr_3;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr_3;\n"
+			"exception = (*(system->dread))(system->handle,cpu,mem_addr + 3,tmpbuf,1);\n"
+			"o_data^=((etiss_uint32)(M_mem_addr_3)<<24) ^ (o_data & 0xff000000);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"o_data = %#x\\n\",o_data); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr_2;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr_2;\n"
+			"exception = (*(system->dread))(system->handle,cpu,mem_addr + 2,tmpbuf,1);\n"
+			"o_data^=((etiss_uint32)(M_mem_addr_2)<<16) ^ (o_data & 0xff0000);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"o_data = %#x\\n\",o_data); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr_1;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr_1;\n"
+			"exception = (*(system->dread))(system->handle,cpu,mem_addr + 1,tmpbuf,1);\n"
+			"o_data^=((etiss_uint16)(M_mem_addr_1)<<8) ^ (o_data & 0xff00);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"o_data = %#x\\n\",o_data); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr_0;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr_0;\n"
+			"exception = (*(system->dread))(system->handle,cpu,mem_addr + 0,tmpbuf,1);\n"
+			"o_data^=((etiss_uint8)(M_mem_addr_0)) ^ (o_data & 0xff);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"o_data = %#x\\n\",o_data); \n"
+			#endif	
+			"if(" + toString(rd) + " != 0)\n"
+			"{\n"
+				"*((RISCV*)cpu)->R[" + toString(rd) + "] = o_data;\n"
+				#if RISCV_DEBUG_CALL
+				"printf(\"*((RISCV*)cpu)->R[" + toString(rd) + "] = %#x\\n\",*((RISCV*)cpu)->R[" + toString(rd) + "]); \n"
+				#endif	
+			"}\n"
+			
+			"else\n"
+			"{\n"
+			"}\n"
+			"result = o_data;\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"result = %#x\\n\",result); \n"
+			#endif	
+			"etiss_int32 cast_0 = *((RISCV*)cpu)->R[" + toString(rs2) + "]; \n"
+			"if((etiss_int32)((etiss_uint32)cast_0 - 0x80000000) > 0x0)\n"
+			"{\n"
+				"cast_0 =0x0 + (etiss_uint32)cast_0 ;\n"
+			"}\n"
+			"etiss_int32 cast_1 = o_data; \n"
+			"if((etiss_int32)((etiss_uint32)cast_1 - 0x80000000) > 0x0)\n"
+			"{\n"
+				"cast_1 =0x0 + (etiss_uint32)cast_1 ;\n"
+			"}\n"
+			"if((etiss_int32)cast_1 > (etiss_int32)cast_0)\n"
+			"{\n"
+				"result = *((RISCV*)cpu)->R[" + toString(rs2) + "];\n"
+				#if RISCV_DEBUG_CALL
+				"printf(\"result = %#x\\n\",result); \n"
+				#endif	
+			"}\n"
+			
+			"mem_addr_ = *((RISCV*)cpu)->R[" + toString(rs1) + "];\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"mem_addr_ = %#x\\n\",mem_addr_); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr__3;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr__3;\n"
+			"M_mem_addr__3 = (result & 0xff000000)>>24;\n"
+			"exception = (*(system->dwrite))(system->handle,cpu,mem_addr_ + 3,tmpbuf,1);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"M_mem_addr__3 = %#x\\n\",M_mem_addr__3); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr__2;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr__2;\n"
+			"M_mem_addr__2 = (result & 0xff0000)>>16;\n"
+			"exception = (*(system->dwrite))(system->handle,cpu,mem_addr_ + 2,tmpbuf,1);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"M_mem_addr__2 = %#x\\n\",M_mem_addr__2); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr__1;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr__1;\n"
+			"M_mem_addr__1 = (result & 0xff00)>>8;\n"
+			"exception = (*(system->dwrite))(system->handle,cpu,mem_addr_ + 1,tmpbuf,1);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"M_mem_addr__1 = %#x\\n\",M_mem_addr__1); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr__0;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr__0;\n"
+			"M_mem_addr__0 = (result & 0xff);\n"
+			"exception = (*(system->dwrite))(system->handle,cpu,mem_addr_ + 0,tmpbuf,1);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"M_mem_addr__0 = %#x\\n\",M_mem_addr__0); \n"
+			#endif	
+		"cpu->instructionPointer = " +toString((uint32_t)(ic.current_address_+ 4 ))+"ULL; \n"
+		
+		"return exception; \n"
+; 
+return true;
+},
+0,
+nullptr
+);
 //-------------------------------------------------------------------------------------------------------------------
 static InstructionDefinition amomax_w_rd_rs1_rs2(
-    ISA32, "amomax.w", (uint32_t)0xa000202f, (uint32_t)0xf800707f,
-    [](BitArray &ba, etiss::CodeSet &cs, InstructionContext &ic) {
-        etiss_uint32 aq = 0;
-        static BitArrayRange R_aq_0(26, 26);
-        etiss_uint32 aq_0 = R_aq_0.read(ba);
-        aq += aq_0;
-        etiss_uint32 rs2 = 0;
-        static BitArrayRange R_rs2_0(24, 20);
-        etiss_uint32 rs2_0 = R_rs2_0.read(ba);
-        rs2 += rs2_0;
-        etiss_uint32 rs1 = 0;
-        static BitArrayRange R_rs1_0(19, 15);
-        etiss_uint32 rs1_0 = R_rs1_0.read(ba);
-        rs1 += rs1_0;
-        etiss_uint32 rd = 0;
-        static BitArrayRange R_rd_0(11, 7);
-        etiss_uint32 rd_0 = R_rd_0.read(ba);
-        rd += rd_0;
-        etiss_uint32 rl = 0;
-        static BitArrayRange R_rl_0(25, 25);
-        etiss_uint32 rl_0 = R_rl_0.read(ba);
-        rl += rl_0;
-        CodePart &partInit = cs.append(CodePart::INITIALREQUIRED);
-        partInit.getRegisterDependencies().add(reg_name[rs2], 32);
-        partInit.getRegisterDependencies().add(reg_name[rs1], 32);
-        partInit.getAffectedRegisters().add(reg_name[rd], 32);
-        partInit.getAffectedRegisters().add("instructionPointer", 32);
-        partInit.code() = std::string("//amomax.w\n") +
-                          "etiss_uint32 exception = 0;\n"
-                          "etiss_uint32 temp = 0;\n"
-                          "etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
-                          "etiss_uint32 result = 0;\n"
-                          "etiss_uint32 mem_addr = 0;\n"
-                          "etiss_uint32 o_data = 0;\n"
-
-                          "mem_addr = *((RISCV*)cpu)->R[" +
-                          toString(rs1) +
-                          "];\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"mem_addr = %#x\\n\",mem_addr); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_3;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_3;\n"
-                          "exception = (*(system->dread))(system->handle,cpu,mem_addr + 3,tmpbuf,1);\n"
-                          "o_data^=((etiss_uint32)(M_mem_addr_3)<<24) ^ (o_data & 0xff000000);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"o_data = %#x\\n\",o_data); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_2;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_2;\n"
-                          "exception = (*(system->dread))(system->handle,cpu,mem_addr + 2,tmpbuf,1);\n"
-                          "o_data^=((etiss_uint32)(M_mem_addr_2)<<16) ^ (o_data & 0xff0000);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"o_data = %#x\\n\",o_data); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_1;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_1;\n"
-                          "exception = (*(system->dread))(system->handle,cpu,mem_addr + 1,tmpbuf,1);\n"
-                          "o_data^=((etiss_uint16)(M_mem_addr_1)<<8) ^ (o_data & 0xff00);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"o_data = %#x\\n\",o_data); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_0;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_0;\n"
-                          "exception = (*(system->dread))(system->handle,cpu,mem_addr + 0,tmpbuf,1);\n"
-                          "o_data^=((etiss_uint8)(M_mem_addr_0)) ^ (o_data & 0xff);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"o_data = %#x\\n\",o_data); \n"
-#endif
-                          "if(" +
-                          toString(rd) +
-                          " != 0)\n"
-                          "{\n"
-                          "*((RISCV*)cpu)->R[" +
-                          toString(rd) +
-                          "] = o_data;\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"*((RISCV*)cpu)->R[" +
-                          toString(rd) + "] = %#x\\n\",*((RISCV*)cpu)->R[" + toString(rd) +
-                          "]); \n"
-#endif
-                          "}\n"
-
-                          "else\n"
-                          "{\n"
-                          "}\n"
-                          "result = o_data;\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"result = %#x\\n\",result); \n"
-#endif
-                          "etiss_int32 cast_0 = *((RISCV*)cpu)->R[" +
-                          toString(rs2) +
-                          "]; \n"
-                          "if((etiss_int32)((etiss_uint32)cast_0 - 0x80000000) > 0x0)\n"
-                          "{\n"
-                          "cast_0 =0x0 + (etiss_uint32)cast_0 ;\n"
-                          "}\n"
-                          "etiss_int32 cast_1 = o_data; \n"
-                          "if((etiss_int32)((etiss_uint32)cast_1 - 0x80000000) > 0x0)\n"
-                          "{\n"
-                          "cast_1 =0x0 + (etiss_uint32)cast_1 ;\n"
-                          "}\n"
-                          "if((etiss_int32)cast_1 < (etiss_int32)cast_0)\n"
-                          "{\n"
-                          "result = *((RISCV*)cpu)->R[" +
-                          toString(rs2) +
-                          "];\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"result = %#x\\n\",result); \n"
-#endif
-                          "}\n"
-
-                          " etiss_uint8 M_mem_addr_3;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_3;\n"
-                          "M_mem_addr_3 = (result & 0xff000000)>>24;\n"
-                          "exception = (*(system->dwrite))(system->handle,cpu,mem_addr + 3,tmpbuf,1);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"M_mem_addr_3 = %#x\\n\",M_mem_addr_3); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_2;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_2;\n"
-                          "M_mem_addr_2 = (result & 0xff0000)>>16;\n"
-                          "exception = (*(system->dwrite))(system->handle,cpu,mem_addr + 2,tmpbuf,1);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"M_mem_addr_2 = %#x\\n\",M_mem_addr_2); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_1;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_1;\n"
-                          "M_mem_addr_1 = (result & 0xff00)>>8;\n"
-                          "exception = (*(system->dwrite))(system->handle,cpu,mem_addr + 1,tmpbuf,1);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"M_mem_addr_1 = %#x\\n\",M_mem_addr_1); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_0;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_0;\n"
-                          "M_mem_addr_0 = (result & 0xff);\n"
-                          "exception = (*(system->dwrite))(system->handle,cpu,mem_addr + 0,tmpbuf,1);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"M_mem_addr_0 = %#x\\n\",M_mem_addr_0); \n"
-#endif
-                          "cpu->instructionPointer = " +
-                          toString((uint32_t)(ic.current_address_ + 4)) +
-                          "ULL; \n"
-
-                          "return exception; \n";
-        return true;
-    },
-    0, nullptr);
+ 		ISA32,
+ 		"amomax.w",
+ 		(uint32_t)0xa000202f,
+ 		(uint32_t) 0xf800707f,
+ 		[] (BitArray & ba,etiss::CodeSet & cs,InstructionContext & ic)
+ 		{
+ 		etiss_uint32 aq = 0;
+ 		static BitArrayRange R_aq_0 (26,26);
+ 		etiss_uint32 aq_0 = R_aq_0.read(ba);
+ 		aq += aq_0;
+ 		etiss_uint32 rs2 = 0;
+ 		static BitArrayRange R_rs2_0 (24,20);
+ 		etiss_uint32 rs2_0 = R_rs2_0.read(ba);
+ 		rs2 += rs2_0;
+ 		etiss_uint32 rs1 = 0;
+ 		static BitArrayRange R_rs1_0 (19,15);
+ 		etiss_uint32 rs1_0 = R_rs1_0.read(ba);
+ 		rs1 += rs1_0;
+ 		etiss_uint32 rd = 0;
+ 		static BitArrayRange R_rd_0 (11,7);
+ 		etiss_uint32 rd_0 = R_rd_0.read(ba);
+ 		rd += rd_0;
+ 		etiss_uint32 rl = 0;
+ 		static BitArrayRange R_rl_0 (25,25);
+ 		etiss_uint32 rl_0 = R_rl_0.read(ba);
+ 		rl += rl_0;
+ 		CodePart & partInit = cs.append(CodePart::INITIALREQUIRED);
+ 		partInit.getRegisterDependencies().add(reg_name[rs2],32);
+ 		partInit.getRegisterDependencies().add(reg_name[rs1],32);
+ 		partInit.getAffectedRegisters().add(reg_name[rd],32);
+		partInit.getAffectedRegisters().add("instructionPointer",32);
+ 	partInit.code() = std::string("//amomax.w\n")+
+ 			"etiss_uint32 exception = 0;\n"
+ 			"etiss_uint32 temp = 0;\n"
+ 			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
+ 			"etiss_uint32 result = 0;\n"
+ 			"etiss_uint32 mem_addr = 0;\n"
+ 			"etiss_uint32 mem_addr_ = 0;\n"
+ 			"etiss_uint32 o_data = 0;\n"
+ 			
+			"mem_addr = *((RISCV*)cpu)->R[" + toString(rs1) + "];\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"mem_addr = %#x\\n\",mem_addr); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr_3;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr_3;\n"
+			"exception = (*(system->dread))(system->handle,cpu,mem_addr + 3,tmpbuf,1);\n"
+			"o_data^=((etiss_uint32)(M_mem_addr_3)<<24) ^ (o_data & 0xff000000);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"o_data = %#x\\n\",o_data); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr_2;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr_2;\n"
+			"exception = (*(system->dread))(system->handle,cpu,mem_addr + 2,tmpbuf,1);\n"
+			"o_data^=((etiss_uint32)(M_mem_addr_2)<<16) ^ (o_data & 0xff0000);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"o_data = %#x\\n\",o_data); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr_1;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr_1;\n"
+			"exception = (*(system->dread))(system->handle,cpu,mem_addr + 1,tmpbuf,1);\n"
+			"o_data^=((etiss_uint16)(M_mem_addr_1)<<8) ^ (o_data & 0xff00);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"o_data = %#x\\n\",o_data); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr_0;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr_0;\n"
+			"exception = (*(system->dread))(system->handle,cpu,mem_addr + 0,tmpbuf,1);\n"
+			"o_data^=((etiss_uint8)(M_mem_addr_0)) ^ (o_data & 0xff);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"o_data = %#x\\n\",o_data); \n"
+			#endif	
+			"if(" + toString(rd) + " != 0)\n"
+			"{\n"
+				"*((RISCV*)cpu)->R[" + toString(rd) + "] = o_data;\n"
+				#if RISCV_DEBUG_CALL
+				"printf(\"*((RISCV*)cpu)->R[" + toString(rd) + "] = %#x\\n\",*((RISCV*)cpu)->R[" + toString(rd) + "]); \n"
+				#endif	
+			"}\n"
+			
+			"else\n"
+			"{\n"
+			"}\n"
+			"result = o_data;\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"result = %#x\\n\",result); \n"
+			#endif	
+			"etiss_int32 cast_0 = *((RISCV*)cpu)->R[" + toString(rs2) + "]; \n"
+			"if((etiss_int32)((etiss_uint32)cast_0 - 0x80000000) > 0x0)\n"
+			"{\n"
+				"cast_0 =0x0 + (etiss_uint32)cast_0 ;\n"
+			"}\n"
+			"etiss_int32 cast_1 = o_data; \n"
+			"if((etiss_int32)((etiss_uint32)cast_1 - 0x80000000) > 0x0)\n"
+			"{\n"
+				"cast_1 =0x0 + (etiss_uint32)cast_1 ;\n"
+			"}\n"
+			"if((etiss_int32)cast_1 < (etiss_int32)cast_0)\n"
+			"{\n"
+				"result = *((RISCV*)cpu)->R[" + toString(rs2) + "];\n"
+				#if RISCV_DEBUG_CALL
+				"printf(\"result = %#x\\n\",result); \n"
+				#endif	
+			"}\n"
+			
+			"mem_addr_ = *((RISCV*)cpu)->R[" + toString(rs1) + "];\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"mem_addr_ = %#x\\n\",mem_addr_); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr__3;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr__3;\n"
+			"M_mem_addr__3 = (result & 0xff000000)>>24;\n"
+			"exception = (*(system->dwrite))(system->handle,cpu,mem_addr_ + 3,tmpbuf,1);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"M_mem_addr__3 = %#x\\n\",M_mem_addr__3); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr__2;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr__2;\n"
+			"M_mem_addr__2 = (result & 0xff0000)>>16;\n"
+			"exception = (*(system->dwrite))(system->handle,cpu,mem_addr_ + 2,tmpbuf,1);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"M_mem_addr__2 = %#x\\n\",M_mem_addr__2); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr__1;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr__1;\n"
+			"M_mem_addr__1 = (result & 0xff00)>>8;\n"
+			"exception = (*(system->dwrite))(system->handle,cpu,mem_addr_ + 1,tmpbuf,1);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"M_mem_addr__1 = %#x\\n\",M_mem_addr__1); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr__0;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr__0;\n"
+			"M_mem_addr__0 = (result & 0xff);\n"
+			"exception = (*(system->dwrite))(system->handle,cpu,mem_addr_ + 0,tmpbuf,1);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"M_mem_addr__0 = %#x\\n\",M_mem_addr__0); \n"
+			#endif	
+		"cpu->instructionPointer = " +toString((uint32_t)(ic.current_address_+ 4 ))+"ULL; \n"
+		
+		"return exception; \n"
+; 
+return true;
+},
+0,
+nullptr
+);
 //-------------------------------------------------------------------------------------------------------------------
 static InstructionDefinition amominu_w_rd_rs1_rs2(
-    ISA32, "amominu.w", (uint32_t)0xc000202f, (uint32_t)0xf800707f,
-    [](BitArray &ba, etiss::CodeSet &cs, InstructionContext &ic) {
-        etiss_uint32 aq = 0;
-        static BitArrayRange R_aq_0(26, 26);
-        etiss_uint32 aq_0 = R_aq_0.read(ba);
-        aq += aq_0;
-        etiss_uint32 rs2 = 0;
-        static BitArrayRange R_rs2_0(24, 20);
-        etiss_uint32 rs2_0 = R_rs2_0.read(ba);
-        rs2 += rs2_0;
-        etiss_uint32 rs1 = 0;
-        static BitArrayRange R_rs1_0(19, 15);
-        etiss_uint32 rs1_0 = R_rs1_0.read(ba);
-        rs1 += rs1_0;
-        etiss_uint32 rd = 0;
-        static BitArrayRange R_rd_0(11, 7);
-        etiss_uint32 rd_0 = R_rd_0.read(ba);
-        rd += rd_0;
-        etiss_uint32 rl = 0;
-        static BitArrayRange R_rl_0(25, 25);
-        etiss_uint32 rl_0 = R_rl_0.read(ba);
-        rl += rl_0;
-        CodePart &partInit = cs.append(CodePart::INITIALREQUIRED);
-        partInit.getRegisterDependencies().add(reg_name[rs2], 32);
-        partInit.getRegisterDependencies().add(reg_name[rs1], 32);
-        partInit.getAffectedRegisters().add(reg_name[rd], 32);
-        partInit.getAffectedRegisters().add("instructionPointer", 32);
-        partInit.code() = std::string("//amominu.w\n") +
-                          "etiss_uint32 exception = 0;\n"
-                          "etiss_uint32 temp = 0;\n"
-                          "etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
-                          "etiss_uint32 result = 0;\n"
-                          "etiss_uint32 mem_addr = 0;\n"
-                          "etiss_uint32 o_data = 0;\n"
-
-                          "mem_addr = *((RISCV*)cpu)->R[" +
-                          toString(rs1) +
-                          "];\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"mem_addr = %#x\\n\",mem_addr); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_3;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_3;\n"
-                          "exception = (*(system->dread))(system->handle,cpu,mem_addr + 3,tmpbuf,1);\n"
-                          "o_data^=((etiss_uint32)(M_mem_addr_3)<<24) ^ (o_data & 0xff000000);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"o_data = %#x\\n\",o_data); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_2;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_2;\n"
-                          "exception = (*(system->dread))(system->handle,cpu,mem_addr + 2,tmpbuf,1);\n"
-                          "o_data^=((etiss_uint32)(M_mem_addr_2)<<16) ^ (o_data & 0xff0000);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"o_data = %#x\\n\",o_data); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_1;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_1;\n"
-                          "exception = (*(system->dread))(system->handle,cpu,mem_addr + 1,tmpbuf,1);\n"
-                          "o_data^=((etiss_uint16)(M_mem_addr_1)<<8) ^ (o_data & 0xff00);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"o_data = %#x\\n\",o_data); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_0;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_0;\n"
-                          "exception = (*(system->dread))(system->handle,cpu,mem_addr + 0,tmpbuf,1);\n"
-                          "o_data^=((etiss_uint8)(M_mem_addr_0)) ^ (o_data & 0xff);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"o_data = %#x\\n\",o_data); \n"
-#endif
-                          "if(" +
-                          toString(rd) +
-                          " != 0)\n"
-                          "{\n"
-                          "*((RISCV*)cpu)->R[" +
-                          toString(rd) +
-                          "] = o_data;\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"*((RISCV*)cpu)->R[" +
-                          toString(rd) + "] = %#x\\n\",*((RISCV*)cpu)->R[" + toString(rd) +
-                          "]); \n"
-#endif
-                          "}\n"
-
-                          "else\n"
-                          "{\n"
-                          "}\n"
-                          "result = o_data;\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"result = %#x\\n\",result); \n"
-#endif
-                          "if((etiss_uint32)o_data > (etiss_uint32)*((RISCV*)cpu)->R[" +
-                          toString(rs2) +
-                          "])\n"
-                          "{\n"
-                          "result = *((RISCV*)cpu)->R[" +
-                          toString(rs2) +
-                          "];\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"result = %#x\\n\",result); \n"
-#endif
-                          "}\n"
-
-                          " etiss_uint8 M_mem_addr_3;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_3;\n"
-                          "M_mem_addr_3 = (result & 0xff000000)>>24;\n"
-                          "exception = (*(system->dwrite))(system->handle,cpu,mem_addr + 3,tmpbuf,1);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"M_mem_addr_3 = %#x\\n\",M_mem_addr_3); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_2;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_2;\n"
-                          "M_mem_addr_2 = (result & 0xff0000)>>16;\n"
-                          "exception = (*(system->dwrite))(system->handle,cpu,mem_addr + 2,tmpbuf,1);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"M_mem_addr_2 = %#x\\n\",M_mem_addr_2); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_1;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_1;\n"
-                          "M_mem_addr_1 = (result & 0xff00)>>8;\n"
-                          "exception = (*(system->dwrite))(system->handle,cpu,mem_addr + 1,tmpbuf,1);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"M_mem_addr_1 = %#x\\n\",M_mem_addr_1); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_0;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_0;\n"
-                          "M_mem_addr_0 = (result & 0xff);\n"
-                          "exception = (*(system->dwrite))(system->handle,cpu,mem_addr + 0,tmpbuf,1);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"M_mem_addr_0 = %#x\\n\",M_mem_addr_0); \n"
-#endif
-                          "cpu->instructionPointer = " +
-                          toString((uint32_t)(ic.current_address_ + 4)) +
-                          "ULL; \n"
-
-                          "return exception; \n";
-        return true;
-    },
-    0, nullptr);
+ 		ISA32,
+ 		"amominu.w",
+ 		(uint32_t)0xc000202f,
+ 		(uint32_t) 0xf800707f,
+ 		[] (BitArray & ba,etiss::CodeSet & cs,InstructionContext & ic)
+ 		{
+ 		etiss_uint32 aq = 0;
+ 		static BitArrayRange R_aq_0 (26,26);
+ 		etiss_uint32 aq_0 = R_aq_0.read(ba);
+ 		aq += aq_0;
+ 		etiss_uint32 rs2 = 0;
+ 		static BitArrayRange R_rs2_0 (24,20);
+ 		etiss_uint32 rs2_0 = R_rs2_0.read(ba);
+ 		rs2 += rs2_0;
+ 		etiss_uint32 rs1 = 0;
+ 		static BitArrayRange R_rs1_0 (19,15);
+ 		etiss_uint32 rs1_0 = R_rs1_0.read(ba);
+ 		rs1 += rs1_0;
+ 		etiss_uint32 rd = 0;
+ 		static BitArrayRange R_rd_0 (11,7);
+ 		etiss_uint32 rd_0 = R_rd_0.read(ba);
+ 		rd += rd_0;
+ 		etiss_uint32 rl = 0;
+ 		static BitArrayRange R_rl_0 (25,25);
+ 		etiss_uint32 rl_0 = R_rl_0.read(ba);
+ 		rl += rl_0;
+ 		CodePart & partInit = cs.append(CodePart::INITIALREQUIRED);
+ 		partInit.getRegisterDependencies().add(reg_name[rs2],32);
+ 		partInit.getRegisterDependencies().add(reg_name[rs1],32);
+ 		partInit.getAffectedRegisters().add(reg_name[rd],32);
+		partInit.getAffectedRegisters().add("instructionPointer",32);
+ 	partInit.code() = std::string("//amominu.w\n")+
+ 			"etiss_uint32 exception = 0;\n"
+ 			"etiss_uint32 temp = 0;\n"
+ 			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
+ 			"etiss_uint32 result = 0;\n"
+ 			"etiss_uint32 mem_addr = 0;\n"
+ 			"etiss_uint32 mem_addr_ = 0;\n"
+ 			"etiss_uint32 o_data = 0;\n"
+ 			
+			"mem_addr = *((RISCV*)cpu)->R[" + toString(rs1) + "];\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"mem_addr = %#x\\n\",mem_addr); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr_3;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr_3;\n"
+			"exception = (*(system->dread))(system->handle,cpu,mem_addr + 3,tmpbuf,1);\n"
+			"o_data^=((etiss_uint32)(M_mem_addr_3)<<24) ^ (o_data & 0xff000000);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"o_data = %#x\\n\",o_data); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr_2;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr_2;\n"
+			"exception = (*(system->dread))(system->handle,cpu,mem_addr + 2,tmpbuf,1);\n"
+			"o_data^=((etiss_uint32)(M_mem_addr_2)<<16) ^ (o_data & 0xff0000);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"o_data = %#x\\n\",o_data); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr_1;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr_1;\n"
+			"exception = (*(system->dread))(system->handle,cpu,mem_addr + 1,tmpbuf,1);\n"
+			"o_data^=((etiss_uint16)(M_mem_addr_1)<<8) ^ (o_data & 0xff00);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"o_data = %#x\\n\",o_data); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr_0;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr_0;\n"
+			"exception = (*(system->dread))(system->handle,cpu,mem_addr + 0,tmpbuf,1);\n"
+			"o_data^=((etiss_uint8)(M_mem_addr_0)) ^ (o_data & 0xff);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"o_data = %#x\\n\",o_data); \n"
+			#endif	
+			"if(" + toString(rd) + " != 0)\n"
+			"{\n"
+				"*((RISCV*)cpu)->R[" + toString(rd) + "] = o_data;\n"
+				#if RISCV_DEBUG_CALL
+				"printf(\"*((RISCV*)cpu)->R[" + toString(rd) + "] = %#x\\n\",*((RISCV*)cpu)->R[" + toString(rd) + "]); \n"
+				#endif	
+			"}\n"
+			
+			"else\n"
+			"{\n"
+			"}\n"
+			"result = o_data;\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"result = %#x\\n\",result); \n"
+			#endif	
+			"if((etiss_uint32)o_data > (etiss_uint32)*((RISCV*)cpu)->R[" + toString(rs2) + "])\n"
+			"{\n"
+				"result = *((RISCV*)cpu)->R[" + toString(rs2) + "];\n"
+				#if RISCV_DEBUG_CALL
+				"printf(\"result = %#x\\n\",result); \n"
+				#endif	
+			"}\n"
+			
+			"mem_addr_ = *((RISCV*)cpu)->R[" + toString(rs1) + "];\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"mem_addr_ = %#x\\n\",mem_addr_); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr__3;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr__3;\n"
+			"M_mem_addr__3 = (result & 0xff000000)>>24;\n"
+			"exception = (*(system->dwrite))(system->handle,cpu,mem_addr_ + 3,tmpbuf,1);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"M_mem_addr__3 = %#x\\n\",M_mem_addr__3); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr__2;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr__2;\n"
+			"M_mem_addr__2 = (result & 0xff0000)>>16;\n"
+			"exception = (*(system->dwrite))(system->handle,cpu,mem_addr_ + 2,tmpbuf,1);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"M_mem_addr__2 = %#x\\n\",M_mem_addr__2); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr__1;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr__1;\n"
+			"M_mem_addr__1 = (result & 0xff00)>>8;\n"
+			"exception = (*(system->dwrite))(system->handle,cpu,mem_addr_ + 1,tmpbuf,1);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"M_mem_addr__1 = %#x\\n\",M_mem_addr__1); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr__0;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr__0;\n"
+			"M_mem_addr__0 = (result & 0xff);\n"
+			"exception = (*(system->dwrite))(system->handle,cpu,mem_addr_ + 0,tmpbuf,1);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"M_mem_addr__0 = %#x\\n\",M_mem_addr__0); \n"
+			#endif	
+		"cpu->instructionPointer = " +toString((uint32_t)(ic.current_address_+ 4 ))+"ULL; \n"
+		
+		"return exception; \n"
+; 
+return true;
+},
+0,
+nullptr
+);
 //-------------------------------------------------------------------------------------------------------------------
 static InstructionDefinition amomaxu_w_rd_rs1_rs2(
-    ISA32, "amomaxu.w", (uint32_t)0xe000202f, (uint32_t)0xf800707f,
-    [](BitArray &ba, etiss::CodeSet &cs, InstructionContext &ic) {
-        etiss_uint32 aq = 0;
-        static BitArrayRange R_aq_0(26, 26);
-        etiss_uint32 aq_0 = R_aq_0.read(ba);
-        aq += aq_0;
-        etiss_uint32 rs2 = 0;
-        static BitArrayRange R_rs2_0(24, 20);
-        etiss_uint32 rs2_0 = R_rs2_0.read(ba);
-        rs2 += rs2_0;
-        etiss_uint32 rs1 = 0;
-        static BitArrayRange R_rs1_0(19, 15);
-        etiss_uint32 rs1_0 = R_rs1_0.read(ba);
-        rs1 += rs1_0;
-        etiss_uint32 rd = 0;
-        static BitArrayRange R_rd_0(11, 7);
-        etiss_uint32 rd_0 = R_rd_0.read(ba);
-        rd += rd_0;
-        etiss_uint32 rl = 0;
-        static BitArrayRange R_rl_0(25, 25);
-        etiss_uint32 rl_0 = R_rl_0.read(ba);
-        rl += rl_0;
-        CodePart &partInit = cs.append(CodePart::INITIALREQUIRED);
-        partInit.getRegisterDependencies().add(reg_name[rs2], 32);
-        partInit.getRegisterDependencies().add(reg_name[rs1], 32);
-        partInit.getAffectedRegisters().add(reg_name[rd], 32);
-        partInit.getAffectedRegisters().add("instructionPointer", 32);
-        partInit.code() = std::string("//amomaxu.w\n") +
-                          "etiss_uint32 exception = 0;\n"
-                          "etiss_uint32 temp = 0;\n"
-                          "etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
-                          "etiss_uint32 result = 0;\n"
-                          "etiss_uint32 mem_addr = 0;\n"
-                          "etiss_uint32 o_data = 0;\n"
-
-                          "mem_addr = *((RISCV*)cpu)->R[" +
-                          toString(rs1) +
-                          "];\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"mem_addr = %#x\\n\",mem_addr); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_3;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_3;\n"
-                          "exception = (*(system->dread))(system->handle,cpu,mem_addr + 3,tmpbuf,1);\n"
-                          "o_data^=((etiss_uint32)(M_mem_addr_3)<<24) ^ (o_data & 0xff000000);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"o_data = %#x\\n\",o_data); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_2;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_2;\n"
-                          "exception = (*(system->dread))(system->handle,cpu,mem_addr + 2,tmpbuf,1);\n"
-                          "o_data^=((etiss_uint32)(M_mem_addr_2)<<16) ^ (o_data & 0xff0000);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"o_data = %#x\\n\",o_data); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_1;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_1;\n"
-                          "exception = (*(system->dread))(system->handle,cpu,mem_addr + 1,tmpbuf,1);\n"
-                          "o_data^=((etiss_uint16)(M_mem_addr_1)<<8) ^ (o_data & 0xff00);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"o_data = %#x\\n\",o_data); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_0;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_0;\n"
-                          "exception = (*(system->dread))(system->handle,cpu,mem_addr + 0,tmpbuf,1);\n"
-                          "o_data^=((etiss_uint8)(M_mem_addr_0)) ^ (o_data & 0xff);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"o_data = %#x\\n\",o_data); \n"
-#endif
-                          "if(" +
-                          toString(rd) +
-                          " != 0)\n"
-                          "{\n"
-                          "*((RISCV*)cpu)->R[" +
-                          toString(rd) +
-                          "] = o_data;\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"*((RISCV*)cpu)->R[" +
-                          toString(rd) + "] = %#x\\n\",*((RISCV*)cpu)->R[" + toString(rd) +
-                          "]); \n"
-#endif
-                          "}\n"
-
-                          "else\n"
-                          "{\n"
-                          "}\n"
-                          "result = o_data;\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"result = %#x\\n\",result); \n"
-#endif
-                          "if((etiss_uint32)o_data < (etiss_uint32)*((RISCV*)cpu)->R[" +
-                          toString(rs2) +
-                          "])\n"
-                          "{\n"
-                          "result = *((RISCV*)cpu)->R[" +
-                          toString(rs2) +
-                          "];\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"result = %#x\\n\",result); \n"
-#endif
-                          "}\n"
-
-                          " etiss_uint8 M_mem_addr_3;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_3;\n"
-                          "M_mem_addr_3 = (result & 0xff000000)>>24;\n"
-                          "exception = (*(system->dwrite))(system->handle,cpu,mem_addr + 3,tmpbuf,1);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"M_mem_addr_3 = %#x\\n\",M_mem_addr_3); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_2;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_2;\n"
-                          "M_mem_addr_2 = (result & 0xff0000)>>16;\n"
-                          "exception = (*(system->dwrite))(system->handle,cpu,mem_addr + 2,tmpbuf,1);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"M_mem_addr_2 = %#x\\n\",M_mem_addr_2); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_1;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_1;\n"
-                          "M_mem_addr_1 = (result & 0xff00)>>8;\n"
-                          "exception = (*(system->dwrite))(system->handle,cpu,mem_addr + 1,tmpbuf,1);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"M_mem_addr_1 = %#x\\n\",M_mem_addr_1); \n"
-#endif
-                          " etiss_uint8 M_mem_addr_0;\n"
-                          " tmpbuf = (etiss_uint8 *)&M_mem_addr_0;\n"
-                          "M_mem_addr_0 = (result & 0xff);\n"
-                          "exception = (*(system->dwrite))(system->handle,cpu,mem_addr + 0,tmpbuf,1);\n"
-#if RISCV_DEBUG_CALL
-                          "printf(\"M_mem_addr_0 = %#x\\n\",M_mem_addr_0); \n"
-#endif
-                          "cpu->instructionPointer = " +
-                          toString((uint32_t)(ic.current_address_ + 4)) +
-                          "ULL; \n"
-
-                          "return exception; \n";
-        return true;
-    },
-    0, nullptr);
+ 		ISA32,
+ 		"amomaxu.w",
+ 		(uint32_t)0xe000202f,
+ 		(uint32_t) 0xf800707f,
+ 		[] (BitArray & ba,etiss::CodeSet & cs,InstructionContext & ic)
+ 		{
+ 		etiss_uint32 aq = 0;
+ 		static BitArrayRange R_aq_0 (26,26);
+ 		etiss_uint32 aq_0 = R_aq_0.read(ba);
+ 		aq += aq_0;
+ 		etiss_uint32 rs2 = 0;
+ 		static BitArrayRange R_rs2_0 (24,20);
+ 		etiss_uint32 rs2_0 = R_rs2_0.read(ba);
+ 		rs2 += rs2_0;
+ 		etiss_uint32 rs1 = 0;
+ 		static BitArrayRange R_rs1_0 (19,15);
+ 		etiss_uint32 rs1_0 = R_rs1_0.read(ba);
+ 		rs1 += rs1_0;
+ 		etiss_uint32 rd = 0;
+ 		static BitArrayRange R_rd_0 (11,7);
+ 		etiss_uint32 rd_0 = R_rd_0.read(ba);
+ 		rd += rd_0;
+ 		etiss_uint32 rl = 0;
+ 		static BitArrayRange R_rl_0 (25,25);
+ 		etiss_uint32 rl_0 = R_rl_0.read(ba);
+ 		rl += rl_0;
+ 		CodePart & partInit = cs.append(CodePart::INITIALREQUIRED);
+ 		partInit.getRegisterDependencies().add(reg_name[rs2],32);
+ 		partInit.getRegisterDependencies().add(reg_name[rs1],32);
+ 		partInit.getAffectedRegisters().add(reg_name[rd],32);
+		partInit.getAffectedRegisters().add("instructionPointer",32);
+ 	partInit.code() = std::string("//amomaxu.w\n")+
+ 			"etiss_uint32 exception = 0;\n"
+ 			"etiss_uint32 temp = 0;\n"
+ 			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
+ 			"etiss_uint32 result = 0;\n"
+ 			"etiss_uint32 mem_addr = 0;\n"
+ 			"etiss_uint32 mem_addr_ = 0;\n"
+ 			"etiss_uint32 o_data = 0;\n"
+ 			
+			"mem_addr = *((RISCV*)cpu)->R[" + toString(rs1) + "];\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"mem_addr = %#x\\n\",mem_addr); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr_3;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr_3;\n"
+			"exception = (*(system->dread))(system->handle,cpu,mem_addr + 3,tmpbuf,1);\n"
+			"o_data^=((etiss_uint32)(M_mem_addr_3)<<24) ^ (o_data & 0xff000000);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"o_data = %#x\\n\",o_data); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr_2;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr_2;\n"
+			"exception = (*(system->dread))(system->handle,cpu,mem_addr + 2,tmpbuf,1);\n"
+			"o_data^=((etiss_uint32)(M_mem_addr_2)<<16) ^ (o_data & 0xff0000);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"o_data = %#x\\n\",o_data); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr_1;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr_1;\n"
+			"exception = (*(system->dread))(system->handle,cpu,mem_addr + 1,tmpbuf,1);\n"
+			"o_data^=((etiss_uint16)(M_mem_addr_1)<<8) ^ (o_data & 0xff00);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"o_data = %#x\\n\",o_data); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr_0;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr_0;\n"
+			"exception = (*(system->dread))(system->handle,cpu,mem_addr + 0,tmpbuf,1);\n"
+			"o_data^=((etiss_uint8)(M_mem_addr_0)) ^ (o_data & 0xff);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"o_data = %#x\\n\",o_data); \n"
+			#endif	
+			"if(" + toString(rd) + " != 0)\n"
+			"{\n"
+				"*((RISCV*)cpu)->R[" + toString(rd) + "] = o_data;\n"
+				#if RISCV_DEBUG_CALL
+				"printf(\"*((RISCV*)cpu)->R[" + toString(rd) + "] = %#x\\n\",*((RISCV*)cpu)->R[" + toString(rd) + "]); \n"
+				#endif	
+			"}\n"
+			
+			"else\n"
+			"{\n"
+			"}\n"
+			"result = o_data;\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"result = %#x\\n\",result); \n"
+			#endif	
+			"if((etiss_uint32)o_data < (etiss_uint32)*((RISCV*)cpu)->R[" + toString(rs2) + "])\n"
+			"{\n"
+				"result = *((RISCV*)cpu)->R[" + toString(rs2) + "];\n"
+				#if RISCV_DEBUG_CALL
+				"printf(\"result = %#x\\n\",result); \n"
+				#endif	
+			"}\n"
+			
+			"mem_addr_ = *((RISCV*)cpu)->R[" + toString(rs1) + "];\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"mem_addr_ = %#x\\n\",mem_addr_); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr__3;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr__3;\n"
+			"M_mem_addr__3 = (result & 0xff000000)>>24;\n"
+			"exception = (*(system->dwrite))(system->handle,cpu,mem_addr_ + 3,tmpbuf,1);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"M_mem_addr__3 = %#x\\n\",M_mem_addr__3); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr__2;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr__2;\n"
+			"M_mem_addr__2 = (result & 0xff0000)>>16;\n"
+			"exception = (*(system->dwrite))(system->handle,cpu,mem_addr_ + 2,tmpbuf,1);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"M_mem_addr__2 = %#x\\n\",M_mem_addr__2); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr__1;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr__1;\n"
+			"M_mem_addr__1 = (result & 0xff00)>>8;\n"
+			"exception = (*(system->dwrite))(system->handle,cpu,mem_addr_ + 1,tmpbuf,1);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"M_mem_addr__1 = %#x\\n\",M_mem_addr__1); \n"
+			#endif	
+			" etiss_uint8 M_mem_addr__0;\n"
+			" tmpbuf = (etiss_uint8 *)&M_mem_addr__0;\n"
+			"M_mem_addr__0 = (result & 0xff);\n"
+			"exception = (*(system->dwrite))(system->handle,cpu,mem_addr_ + 0,tmpbuf,1);\n"
+			#if RISCV_DEBUG_CALL
+			"printf(\"M_mem_addr__0 = %#x\\n\",M_mem_addr__0); \n"
+			#endif	
+		"cpu->instructionPointer = " +toString((uint32_t)(ic.current_address_+ 4 ))+"ULL; \n"
+		
+		"return exception; \n"
+; 
+return true;
+},
+0,
+nullptr
+);
 //-------------------------------------------------------------------------------------------------------------------
 static InstructionDefinition ecall_(ISA32, "ecall", (uint32_t)0x73, (uint32_t)0xffffffff,
                                     [](BitArray &ba, etiss::CodeSet &cs, InstructionContext &ic) {

@@ -73,3 +73,14 @@ configure_file(
 install(FILES "${PROJECT_BINARY_DIR}/tobeinstalled/riscv/Makefile"
 		DESTINATION examples/SW/riscv
 )
+
+# Setup RISC-V C++ Makefile
+configure_file(
+  riscv_cpp/Makefile.in
+  "${PROJECT_BINARY_DIR}/tobeinstalled/riscv_cpp/Makefile"
+  @ONLY
+ )
+
+install(FILES "${PROJECT_BINARY_DIR}/tobeinstalled/riscv_cpp/Makefile"
+		DESTINATION examples/SW/riscv_cpp
+)

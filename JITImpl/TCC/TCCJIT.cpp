@@ -132,7 +132,8 @@ void *TCCJIT::translate(std::string code, std::set<std::string> headerpaths, std
 
     if (tcc_compile_string(s, code.c_str()) == -1)
     { // compile
-        error = "Failed to compile code";
+        error = "Failed to compile code: \n";
+        error += code;
         return 0;
     }
 
