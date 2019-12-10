@@ -85,10 +85,14 @@ typedef int32_t (*handler_ptr)(int32_t fault, MMU *mmu, uint64_t vma, MM_ACCESS 
 #define HANDLE_PAGE_FAULT(fault, mmu, vma, access) (*page_fault_handler[fault])(fault, mmu, vma, access)
 #endif
 
-#ifdef ETISS_PLUGIN_IMPORTS
-#define MM_EXPORT __declspec(dllimport)
+#ifdef _WIN32
+    #ifdef ETISS_PLUGIN_IMPORTS
+    #define MM_EXPORT __declspec(dllimport)
+    #else
+    #define MM_EXPORT __declspec(dllexport)
+    #endif
 #else
-#define MM_EXPORT __declspec(dllexport)
+    #define MM_EXPORT  
 #endif
 
 extern MM_EXPORT const int32_t NOERROR;
