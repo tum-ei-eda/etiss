@@ -171,11 +171,12 @@ static void *ETISS_dlsym(void *handle, std::string name, std::string symbol, boo
                             reinterpret_cast<LPCTSTR>(&ETISS_dlsym), &hmodule);
         if (!hmodule)
             return nullptr;
-        return reinterpret_cast<void *>(reinterpret_cast<intptr_t >(GetProcAddress(hmodule, TEXT(fullsymbol.c_str()))));
+        return reinterpret_cast<void *>(reinterpret_cast<intptr_t>(GetProcAddress(hmodule, TEXT(fullsymbol.c_str()))));
     }
     else
     {
-        return reinterpret_cast<void *>(reinterpret_cast<intptr_t >(GetProcAddress((HMODULE)handle, TEXT(fullsymbol.c_str()))));
+        return reinterpret_cast<void *>(
+            reinterpret_cast<intptr_t>(GetProcAddress((HMODULE)handle, TEXT(fullsymbol.c_str()))));
     }
 #endif
     return nullptr;
