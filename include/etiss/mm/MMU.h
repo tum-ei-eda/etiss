@@ -160,7 +160,7 @@ class MMU
 
     bool IsProcessIdEnabled() { return pid_enabled_; }
 
-    void UpdatePid(uint64_t new_pid)
+    void UpdatePid(uint32_t new_pid)
     {
         if (pid_enabled_)
             pid_ = new_pid;

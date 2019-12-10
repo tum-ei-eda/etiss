@@ -385,7 +385,7 @@ void Server::handlePacket(bool block)
             break;
             case 'G': // write registers
             {
-                unsigned treglen = 0;
+                size_t treglen = 0;
                 for (unsigned i = 0; i < arch_->getGDBCore().mappedRegisterCount(); i++)
                 {
                     auto f = plugin_core_->getStruct()->findName(arch_->getGDBCore().mapRegister(i));
@@ -401,7 +401,7 @@ void Server::handlePacket(bool block)
                 if (command.length() == (treglen * 2) + 1)
                 {
                     answer = "OK";
-                    unsigned off = 1;
+                    size_t off = 1;
                     for (unsigned i = 0; i < arch_->getGDBCore().mappedRegisterCount(); i++)
                     {
                         std::string regname = arch_->getGDBCore().mapRegister(i);
@@ -442,8 +442,8 @@ void Server::handlePacket(bool block)
             break;
             case 'P': // write a register
             {
-                unsigned off = 1;
-                etiss::uint64 regIndex = 0;
+                size_t off = 1;
+                unsigned regIndex = 0;
                 std::string valToWrite;
                 if (command.length() > 1)
                 {
@@ -488,7 +488,7 @@ void Server::handlePacket(bool block)
             break;
             case 'p': // read a register
             {
-                etiss::uint64 regIndex = 0;
+                unsigned regIndex = 0;
                 if (command.length() > 1)
                 {
                     for (size_t i = 1; i < command.length(); ++i)

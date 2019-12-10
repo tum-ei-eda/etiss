@@ -351,7 +351,7 @@ unsigned Configuration::get<unsigned>(const std::string &key, unsigned default_,
     std::string val = get<std::string>(key, toString(default_), default_used);
     try
     {
-        return std::stoull(val, 0, 0); // see doc of std::stoull for last 0 parameter
+        return static_cast<unsigned>(std::stoull(val, 0, 0)); // see doc of std::stoull for last 0 parameter
     }
     catch (...)
     {

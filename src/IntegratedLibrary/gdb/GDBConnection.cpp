@@ -91,7 +91,7 @@ size_t PacketProtocol_findUE(std::string &buffer, char c)
 }
 int PacketProtocol_findResponse(std::string &buffer)
 {
-    unsigned pos = 0;
+    size_t pos = 0;
     while (buffer.length() > pos)
     {
         if (buffer[pos] == '+' || buffer[pos] == '-')

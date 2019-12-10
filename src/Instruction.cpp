@@ -567,9 +567,10 @@ void Node::compile(const std::map<const OPCode *, Instruction *, etiss::instr::l
         if (bsc > 0)
         {
             reader_ = new BitArrayRange(i + bsc - 1, i);
-            subs_ = new Node *[((I)1) << bsc]; // allocate array
+			size_t size = static_cast<size_t>(1) << bsc;
+            subs_ = new Node *[size]; // allocate array
             std::map<const OPCode *, Instruction *, etiss::instr::less> **sub_maps =
-                new std::map<const OPCode *, Instruction *, etiss::instr::less> *[((I)1) << bsc];
+                new std::map<const OPCode *, Instruction *, etiss::instr::less> *[size];
             for (I j = 0; j < ((I)1) << bsc; j++)
             {
                 subs_[j] = nullptr;

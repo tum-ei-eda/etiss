@@ -72,7 +72,7 @@ VirtualStructMemory::VirtualStructMemory(
         if (endaddr_ < (addr + f->width_))
             endaddr_ = addr + f->width_;
 
-        for (unsigned i = 0; i < f->width_; ++i)
+        for (size_t i = 0; i < f->width_; ++i)
         {
             // auto m =
             memmap_.insert(std::make_pair(addr + i, std::make_pair(f, (littleendian ? i : (f->width_ - 1 - i)))));
@@ -95,7 +95,7 @@ bool VirtualStructMemory::read(bool debug, ETISS_CPU *cpu, etiss::uint64 addr, e
         if (find != memmap_.end())
         {
             etiss::VirtualStruct::Field *f = find->second.first;
-            unsigned off = find->second.second << 3;
+            size_t off = find->second.second << 3;
             uint64_t fval = f->read();
             fval = fval >> off;
             buf[i] = (uint8_t)(fval & 0xFF);
@@ -117,7 +117,7 @@ bool VirtualStructMemory::write(bool debug, ETISS_CPU *cpu, etiss::uint64 addr, 
         if (find != memmap_.end())
         {
             etiss::VirtualStruct::Field *f = find->second.first;
-            unsigned off = find->second.second << 3;
+            size_t off = find->second.second << 3;
             uint64_t fval = f->read();
             uint64_t mask = 0xFF;
             mask = mask << off;

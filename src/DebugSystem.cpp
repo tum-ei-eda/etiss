@@ -62,7 +62,7 @@
 using namespace etiss;
 
 std::unordered_map<std::string, uint32_t> map_messageCounter;
-uint32_t printMessage(std::string key, std::string message, int maxCount)
+uint32_t printMessage(std::string key, std::string message, uint32_t maxCount)
 {
     uint32_t count = map_messageCounter[key]++;
     if (count < maxCount) // print only the first X messages of this type
