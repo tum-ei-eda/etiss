@@ -69,6 +69,8 @@ namespace etiss
         @brief abstract description of needed or affected register bits.
         due to special behaviour of this class when used in a set (RegisterSet) not all const functions have const
    character. use with caution.
+
+	@TODO For consitency width's should really be size_t
 */
 class RegisterPart
 {

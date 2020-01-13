@@ -236,6 +236,8 @@ int32_t tlb_miss_handler(int32_t fault, MMU *mmu, uint64_t vma, MM_ACCESS access
         return etiss::RETURNCODE::STORE_PAGEFAULT;
     case X_ACCESS:
         return etiss::RETURNCODE::INSTR_PAGEFAULT;
+    default:
+        abort();
     }
 }
 

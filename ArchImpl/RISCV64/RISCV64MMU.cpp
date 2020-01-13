@@ -186,6 +186,8 @@ RETURN_PAGEFAULT:
         return etiss::RETURNCODE::STORE_PAGEFAULT;
     case X_ACCESS:
         return etiss::RETURNCODE::INSTR_PAGEFAULT;
+    default:
+        abort();
     }
 }
 

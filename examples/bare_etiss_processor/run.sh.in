@@ -1,11 +1,31 @@
 #!/bin/bash
 
+
+if [[ -n "$1" ]]
+then
+  BUILD="$1"
+  shift
+fi
+
 INIFILE=${1:-ETISS.ini}
 
 # build virtual prototype
-mkdir -p build
-(cd build; cmake -DCMAKE_BUILD_TYPE=Debug ..; make)
+if [[ ! -f ./${BUILD}/main ]]
+then
+    echo "Doesn't seem to be a ${BUILD}/main executable - you probably need to build it!"
+    echo "E.g. cmake -B ${BUILD} -S . -DCMAKE_BUILD_TYPE=Debug ; cmake --build ${BUILD}"
+fi
 
 export ETISS_HOME=@CMAKE_INSTALL_PREFIX@/
-export LD_LIBRARY_PATH_EXTENTIONS=${ETISS_HOME}/lib
-./build/main -i${INIFILE}
+case `uname` in
+
+    MINGW*)
+        export PATH=`cygpath --unix "$ETISS_HOME"`"/lib:$PATH"
+    ;;
+    
+    *)
+        export LD_LIBRARY_PATH_EXTENTIONS=${ETISS_HOME}/lib
+    ;;
+esac
+
+./${BUILD}/main -i${INIFILE}

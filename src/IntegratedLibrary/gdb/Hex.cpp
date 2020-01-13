@@ -88,7 +88,7 @@ char etiss::plugin::gdb::hex::toHex(uint8_t l)
     }
 }
 
-uint8_t etiss::plugin::gdb::hex::toByte(std::string hex, unsigned pos)
+uint8_t etiss::plugin::gdb::hex::toByte(std::string hex, size_t pos)
 {
     return toByte(hex[pos], hex[pos + 1]);
 }
@@ -111,7 +111,7 @@ void etiss::plugin::gdb::hex::fromByte(std::string &append, uint8_t byte)
     append.push_back(toHex(byte & 0x0F));
 }
 
-std::string etiss::plugin::gdb::hex::fromBytes(uint8_t *buf, unsigned length)
+std::string etiss::plugin::gdb::hex::fromBytes(uint8_t *buf, size_t length)
 {
     std::string ret;
     ret.resize(length * 2);

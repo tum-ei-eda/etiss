@@ -104,7 +104,7 @@
 #define LEVELS 3
 #define VPN_OFFSET 9
 #define PTESIZE 8
-#define SATP_PPN_MASK ((0x1UL << 44UL) - 1UL)
+#define SATP_PPN_MASK ((0x1ULL << 44ULL) - 1ULL)
 
 #define SATP32_MODE 0x80000000
 #define SATP32_ASID 0x7FC00000

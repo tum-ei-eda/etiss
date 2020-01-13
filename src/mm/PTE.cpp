@@ -115,7 +115,7 @@ void PTE::SetFlagByName(std::string name, uint64_t val)
     uint32_t i = 0;
     do
     {
-        if (val & (1 << i))
+        if (val & (static_cast<uint64_t>(1) << i))
             SetBit(i + bit_field.second);
         ++i;
     } while (i <= bit_field.first);

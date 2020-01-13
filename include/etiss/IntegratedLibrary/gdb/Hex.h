@@ -98,7 +98,7 @@ extern uint8_t toByte(char h, char l);
         @param hex string representing a hex value. must be longer than pos+1
         @param pos start position of the hex representation
 */
-extern uint8_t toByte(std::string hex, unsigned pos = 0);
+extern uint8_t toByte(std::string hex, size_t pos = 0);
 
 /**
         @brief converts a byte to a hex string (without "0x" prefix);
@@ -119,7 +119,7 @@ extern void fromByte(std::string &append, uint8_t byte);
         @param length
         @return hex representation of the passed byte sequence
 */
-extern std::string fromBytes(uint8_t *buf, unsigned length);
+extern std::string fromBytes(uint8_t *buf, size_t length);
 
 template <typename INT>
 /**
@@ -141,10 +141,10 @@ template <typename INT>
         @brief convert a string of length (pos + sizeof(INT)) or larger to the represented value. no error checking will
    be performed
 */
-INT toInt(const std::string &string, bool isLittleEndian, unsigned pos = 0)
+INT toInt(const std::string &string, bool isLittleEndian, size_t pos = 0)
 {
     INT ret = 0;
-    for (size_t i = 0; i < sizeof(INT); i++)
+    for (unsigned i = 0; i < static_cast<unsigned>(sizeof(INT)); i++)
     {
         ret |= ((((INT)toByte(string, pos + i * 2)) & ((INT)0xFF))
                 << (isLittleEndian ? (i * 8) : ((sizeof(INT) - i - 1) * 8)));
@@ -160,7 +160,7 @@ template <typename INT>
    the returned value
         @param maxlength maximum parse length in characters (may be uneven)
 */
-INT tryInt(std::string &string, unsigned &pos, unsigned maxlength = sizeof(INT) * 2)
+INT tryInt(std::string &string, unsigned &pos, size_t maxlength = sizeof(INT) * 2)
 {
     INT ret = 0;
     unsigned opos = pos;

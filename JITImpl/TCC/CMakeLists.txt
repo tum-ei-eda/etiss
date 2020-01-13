@@ -50,46 +50,66 @@ else()
     message(ERROR "cannot build TCCJIT on this unknown system")
 endif()
 
+SET( PREBUILT_TOOL_PKGS_DIR "${PROJECT_SOURCE_DIR}/../toolpkgs")
+
+SET(TCC_PKG tcc-0.9.27)
 #download and extract tcc (if neccessary)
 if (NOT EXISTS ${PROJECT_BINARY_DIR}/tcc_${TCCJIT_ARCH})
     if(${TCCJIT_ARCH} STREQUAL unix)
-        if (EXISTS ${PROJECT_SOURCE_DIR}/tcc-0.9.26.tar.bz2)
-            execute_process(COMMAND ${CMAKE_COMMAND} -E tar xzf ${PROJECT_SOURCE_DIR}/tcc-0.9.26.tar.bz2
+        if (EXISTS ${PROJECT_SOURCE_DIR}/${TCC_PKG}.tar.bz2)
+            execute_process(COMMAND ${CMAKE_COMMAND} -E tar xzf ${PROJECT_SOURCE_DIR}/${TCC_PKG}.tar.bz2
                     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
         else()
-            file(DOWNLOAD http://download-mirror.savannah.gnu.org/releases/tinycc/tcc-0.9.26.tar.bz2 ${PROJECT_BINARY_DIR}/tcc-0.9.26.tar.bz2 SHOW_PROGRESS)
-            execute_process(COMMAND ${CMAKE_COMMAND} -E tar xzf ${PROJECT_BINARY_DIR}/tcc-0.9.26.tar.bz2
+            file(DOWNLOAD http://download-mirror.savannah.gnu.org/releases/tinycc/${TCC_PKG}.tar.bz2 ${PROJECT_BINARY_DIR}/${TCC_PKG}.tar.bz2 SHOW_PROGRESS)
+            execute_process(COMMAND ${CMAKE_COMMAND} -E tar xzf ${PROJECT_BINARY_DIR}/${TCC_PKG}.tar.bz2
                     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
         endif()
-        file(RENAME ${PROJECT_BINARY_DIR}/tcc-0.9.26 ${PROJECT_BINARY_DIR}/tcc_unix)
-        file(REMOVE ${PROJECT_BINARY_DIR}/tcc-0.9.26.tar.bz2)
+        file(RENAME ${PROJECT_BINARY_DIR}/${TCC_PKG} ${PROJECT_BINARY_DIR}/tcc_unix)
+        file(REMOVE ${PROJECT_BINARY_DIR}/${TCC_PKG}.tar.bz2)
         file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/tcc_unix/build)
         execute_process(COMMAND ${PROJECT_BINARY_DIR}/tcc_unix/configure --extra-cflags=-fPIC
                 WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/tcc_unix/build)
         execute_process(COMMAND make
                 WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/tcc_unix/build)
     elseif(${TCCJIT_ARCH} STREQUAL win64)
-        if (EXISTS ${PROJECT_SOURCE_DIR}/tcc-0.9.26.tar.bz2)
-            execute_process(COMMAND ${CMAKE_COMMAND} -E tar xzf ${PROJECT_SOURCE_DIR}/tcc-0.9.26-win64-bin.zip
+        if (EXISTS ${PROJECT_SOURCE_DIR}/${TCC_PKG}-win64-bin.tar.bz2)
+            execute_process(COMMAND ${CMAKE_COMMAND} -E tar xzf ${PROJECT_SOURCE_DIR}/${TCC_PKG}-win64-bin.zip
+                    WORKING_DIRECTORY ${PROJECT_BINARY_DIR})      
+			file(RENAME ${PROJECT_BINARY_DIR}/tcc ${PROJECT_BINARY_DIR}/tcc_win32)
+			file(REMOVE ${PROJECT_BINARY_DIR}/${TCC_PKG}-win32-bin.zip)
+		elseif(EXISTS ${PREBUILT_TOOL_PKGS_DIR}/${TCC_PKG}-win64-bin-with-import-lib.tar.bz2)
+			# tarball created from ${PROJECT_BINARY_DIR} contents below
+			message(STATUS "Using pre-prepared {TCC_PKG}-win64 package JITImpl/toolpkgs/${TCC_PKG}-win64-bin-with-import-lib.tar.bz2 for TCC JIT")
+            execute_process(COMMAND ${CMAKE_COMMAND} -E tar xzf ${PREBUILT_TOOL_PKGS_DIR}/${TCC_PKG}-win64-bin-with-import-lib.tar.bz2
                     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
         else()
-            file(DOWNLOAD http://download.savannah.gnu.org/releases/tinycc/tcc-0.9.26-win64-bin.zip ${PROJECT_BINARY_DIR}/tcc-0.9.26-win64-bin.zip SHOW_PROGRESS)
-            execute_process(COMMAND ${CMAKE_COMMAND} -E tar xzf ${PROJECT_BINARY_DIR}/tcc-0.9.26-win64-bin.zip
+            file(DOWNLOAD http://download.savannah.gnu.org/releases/tinycc/${TCC_PKG}-win64-bin.zip ${PROJECT_BINARY_DIR}/${TCC_PKG}-win64-bin.zip SHOW_PROGRESS)
+            execute_process(COMMAND ${CMAKE_COMMAND} -E tar xzf ${PROJECT_BINARY_DIR}/${TCC_PKG}-win64-bin.zip
                     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
+			file(RENAME ${PROJECT_BINARY_DIR}/tcc ${PROJECT_BINARY_DIR}/tcc_win64)
+			file(REMOVE ${PROJECT_BINARY_DIR}/${TCC_PKG}-win64-bin.zip)
         endif()
-        file(RENAME ${PROJECT_BINARY_DIR}/tcc ${PROJECT_BINARY_DIR}/tcc_win64)
-        file(REMOVE ${PROJECT_BINARY_DIR}/tcc-0.9.26-win64-bin.zip)
+
+
     elseif(${TCCJIT_ARCH} STREQUAL win32)
-        if (EXISTS ${PROJECT_SOURCE_DIR}/tcc-0.9.26.tar.bz2)
-            execute_process(COMMAND ${CMAKE_COMMAND} -E tar xzf ${PROJECT_SOURCE_DIR}/tcc-0.9.26-win32-bin.zip
+        if (EXISTS ${PROJECT_SOURCE_DIR}/${TCC_PKG}.tar.bz2)
+            execute_process(COMMAND ${CMAKE_COMMAND} -E tar xzf ${PROJECT_SOURCE_DIR}/${TCC_PKG}-win32-bin.zip
+                    WORKING_DIRECTORY ${PROJECT_BINARY_DIR})      
+			file(RENAME ${PROJECT_BINARY_DIR}/tcc ${PROJECT_BINARY_DIR}/tcc_win32)
+			file(REMOVE ${PROJECT_BINARY_DIR}/${TCC_PKG}-win32-bin.zip)
+		elseif(EXISTS ${PREBUILT_TOOL_PKGS_DIR}/${TCC_PKG}-win32-bin-with-import-lib.tar.bz2)
+			# tarball created from ${PROJECT_BINARY_DIR} contents below
+			message(STATUS "Using pre-prepared {TCC_PKG}-win64 package JITImpl/toolpkgs/${TCC_PKG}-win32-bin-with-import-lib.tar.bz2 for TCC JIT")
+            execute_process(COMMAND ${CMAKE_COMMAND} -E tar xzf ${PREBUILT_TOOL_PKGS_DIR}/${TCC_PKG}-win32-bin-with-import-lib.tar.bz2
                     WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
         else()
-            file(DOWNLOAD http://download.savannah.gnu.org/releases/tinycc/tcc-0.9.26-win32-bin.zip ${PROJECT_BINARY_DIR}/tcc-0.9.26-win32-bin.zip SHOW_PROGRESS)
-            execute_process(COMMAND ${CMAKE_COMMAND} -E tar xzf ${PROJECT_BINARY_DIR}/tcc-0.9.26-win32-bin.zip
-                    WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
+            file(DOWNLOAD http://download.savannah.gnu.org/releases/tinycc/${TCC_PKG}-win32-bin.zip ${PROJECT_BINARY_DIR}/${TCC_PKG}-win32-bin.zip SHOW_PROGRESS)
+            execute_process(COMMAND ${CMAKE_COMMAND} -E tar xzf ${PROJECT_BINARY_DIR}/${TCC_PKG}-win32-bin.zip
+                    WORKING_DIRECTORY ${PROJECT_BINARY_DIR})       
+			file(RENAME ${PROJECT_BINARY_DIR}/tcc ${PROJECT_BINARY_DIR}/tcc_win32)
+			file(REMOVE ${PROJECT_BINARY_DIR}/${TCC_PKG}-win32-bin.zip)
         endif()
-        file(RENAME ${PROJECT_BINARY_DIR}/tcc ${PROJECT_BINARY_DIR}/tcc_win32)
-        file(REMOVE ${PROJECT_BINARY_DIR}/tcc-0.9.26-win32-bin.zip)
+
     else()
         message(ERROR "Unknown TCCJIT_ARCH value")
     endif()
@@ -109,10 +129,12 @@ elseif(${TCCJIT_ARCH} STREQUAL win64)
     LIST(APPEND TCCJIT_ADDITIONAL_LIBRARIES "${PROJECT_BINARY_DIR}/tcc_win64/libtcc.lib" "Dbghelp.lib")
     include_directories("${PROJECT_BINARY_DIR}/tcc_win64/libtcc")
     set(TCC_H_PATH "${PROJECT_BINARY_DIR}/tcc_win64")
-    add_custom_command(OUTPUT "${PROJECT_BINARY_DIR}/tcc_win64/libtcc.lib"
-        COMMAND lib "/DEF:\"${PROJECT_BINARY_DIR}/tcc_win64/libtcc/libtcc.def\"" /MACHINE:X64 /OUT:\"${PROJECT_BINARY_DIR}/tcc_win64/libtcc.lib\"
-        WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
-    )
+	if(NOT EXISTS "${PROJECT_BINARY_DIR}/tcc_win64/libtcc.lib")
+		add_custom_command(OUTPUT "${PROJECT_BINARY_DIR}/tcc_win64/libtcc.lib"
+			COMMAND lib "/DEF:\"${PROJECT_BINARY_DIR}/tcc_win64/libtcc/libtcc.def\"" /MACHINE:X64 /OUT:\"${PROJECT_BINARY_DIR}/tcc_win64/libtcc.lib\"
+			WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
+		)
+	endif()
     add_custom_target(gen_tcclib DEPENDS "${PROJECT_BINARY_DIR}/tcc_win64/libtcc.lib")
     install(FILES "${PROJECT_BINARY_DIR}/tcc_win64/libtcc/libtcc.h"
             DESTINATION include)
@@ -122,8 +144,11 @@ elseif(${TCCJIT_ARCH} STREQUAL win64)
             DESTINATION lib)
     set(${ETISS_PROJECT_NAME}_ADDITIONAL_LIBRARIES ${${ETISS_PROJECT_NAME}_ADDITIONAL_LIBRARIES} ${PROJECT_BINARY_DIR}/tcc_win64/libtcc.lib)
     set(${ETISS_PROJECT_NAME}_ADDITIONAL_PROJECT_FILES ${${ETISS_PROJECT_NAME}_ADDITIONAL_PROJECT_FILES} ${PROJECT_BINARY_DIR}/tcc_win64/libtcc/libtcc.def ${PROJECT_BINARY_DIR}/tcc_win64/libtcc.dll ${PROJECT_BINARY_DIR}/tcc_win64/libtcc.lib)
-    list(APPEND TCC_H_FILES "tcc/lib/libtcc1.a,${TCC_H_PATH}/lib/libtcc1.a")
-    list(APPEND TCC_H_FILES "tcc/libtcc1.a,${TCC_H_PATH}/lib/libtcc1.a")
+    list(APPEND TCC_H_FILES "tcc/lib/libtcc1-64.a,${TCC_H_PATH}/lib/libtcc1-64.a")
+    list(APPEND TCC_H_FILES "tcc/lib/gdi32.def,${TCC_H_PATH}/lib/gdi32.def")
+    list(APPEND TCC_H_FILES "tcc/lib/kernel32.def,${TCC_H_PATH}/lib/kernel32.def")
+    list(APPEND TCC_H_FILES "tcc/lib/msvcrt.def,${TCC_H_PATH}/lib/msvcrt.def")
+    list(APPEND TCC_H_FILES "tcc/lib/user32.def,${TCC_H_PATH}/lib/user32.def")
 elseif(${TCCJIT_ARCH} STREQUAL win32)
     LIST(APPEND TCCJIT_ADDITIONAL_LIBRARIES "${PROJECT_BINARY_DIR}/tcc_win32/libtcc.lib" "Dbghelp.lib")
     include_directories("${PROJECT_BINARY_DIR}/tcc_win32/libtcc")
@@ -141,8 +166,11 @@ elseif(${TCCJIT_ARCH} STREQUAL win32)
             DESTINATION lib)
     set(${ETISS_PROJECT_NAME}_ADDITIONAL_LIBRARIES ${${ETISS_PROJECT_NAME}_ADDITIONAL_LIBRARIES} "${PROJECT_BINARY_DIR}/tcc_win32/libtcc.lib")
     set(${ETISS_PROJECT_NAME}_ADDITIONAL_PROJECT_FILES ${${ETISS_PROJECT_NAME}_ADDITIONAL_PROJECT_FILES} "${PROJECT_BINARY_DIR}/tcc_win32/libtcc/libtcc.def" "${PROJECT_BINARY_DIR}/tcc_win32/libtcc.dll" "${PROJECT_BINARY_DIR}/tcc_win32/libtcc.lib")
-    list(APPEND TCC_H_FILES "tcc/lib/libtcc1.a,${TCC_H_PATH}/lib/libtcc1.a")
-    list(APPEND TCC_H_FILES "tcc/libtcc1.a,${TCC_H_PATH}/lib/libtcc1.a")
+    list(APPEND TCC_H_FILES "tcc/lib/libtcc1-32.a,${TCC_H_PATH}/lib/libtcc1-32.a")
+    list(APPEND TCC_H_FILES "tcc/lib/gdi32.def,${TCC_H_PATH}/lib/gdi32.def")
+    list(APPEND TCC_H_FILES "tcc/lib/kernel32.def,${TCC_H_PATH}/lib/kernel32.def")
+    list(APPEND TCC_H_FILES "tcc/lib/msvcrt.def,${TCC_H_PATH}/lib/msvcrt.def")
+    list(APPEND TCC_H_FILES "tcc/lib/user32.def,${TCC_H_PATH}/lib/user32.def")
 else()
     message(ERROR "Unknown TCCJIT_ARCH value")
 endif()

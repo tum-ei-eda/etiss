@@ -125,7 +125,7 @@ class ETISS_PLUGIN_EXPORT OR1KTimer : public etiss::CoroutinePlugin, public etis
                     return false;    // not handled in switch"
                 case TIMER_AUTORESTART:
                     *((OR1K *)plugin_cpu_)->TTCR =
-                        (plugin_cpu_->cpuTime_ps - next_timer_match_ps_) / plugin_cpu_->cpuCycleTime_ps;
+                        static_cast<etiss_uint32>((plugin_cpu_->cpuTime_ps - next_timer_match_ps_) / plugin_cpu_->cpuCycleTime_ps);
                     return true;
                 case TIMER_ONESHOT: // change TTCR to meet the exact value: like in hardware
                     *((OR1K *)plugin_cpu_)->TTCR = (getTTCR() & 0xf0000000) | getTTMR_TP();

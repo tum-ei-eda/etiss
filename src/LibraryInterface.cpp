@@ -161,6 +161,9 @@ static void *ETISS_dlsym(void *handle, std::string name, std::string symbol, boo
     return ret;
 #elif ETISS_USE_GETPROC
     std::string fullsymbol = (name + "_" + symbol);
+    // Technically there is no guarnatee that a function pointer type in C++ can be
+    // Uniquely represented as a void *.   Of course on any common general-purpose platform
+    // this is the case...
     if (!handle)
     {
         HMODULE hmodule = NULL;
@@ -168,11 +171,12 @@ static void *ETISS_dlsym(void *handle, std::string name, std::string symbol, boo
                             reinterpret_cast<LPCTSTR>(&ETISS_dlsym), &hmodule);
         if (!hmodule)
             return nullptr;
-        return GetProcAddress(hmodule, TEXT(fullsymbol.c_str()));
+        return reinterpret_cast<void *>(reinterpret_cast<intptr_t>(GetProcAddress(hmodule, TEXT(fullsymbol.c_str()))));
     }
     else
     {
-        return GetProcAddress((HMODULE)handle, TEXT(fullsymbol.c_str()));
+        return reinterpret_cast<void *>(
+            reinterpret_cast<intptr_t>(GetProcAddress((HMODULE)handle, TEXT(fullsymbol.c_str()))));
     }
 #endif
     return nullptr;

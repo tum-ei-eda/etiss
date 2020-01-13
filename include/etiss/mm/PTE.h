@@ -131,11 +131,11 @@ class PTE
         return mask;
     }
 
-    void SetBit(uint32_t pos) { pte_val_ |= (1 << pos); }
+    void SetBit(uint32_t pos) { pte_val_ |= (static_cast <uint64_t>(1) << pos); }
 
-    void ClearBit(uint32_t pos) { pte_val_ &= (~(1 << pos)); }
+    void ClearBit(uint32_t pos) { pte_val_ &= (~(static_cast < uint64_t > (1) << pos)); }
 
-    bool CheckBit(uint32_t pos) const { return pte_val_ & (1 << pos) ? true : false; }
+    bool CheckBit(uint32_t pos) const { return pte_val_ & (static_cast<uint64_t>(1) << pos) ? true : false; }
 
     uint64_t ppn_val_;
     uint64_t pte_val_;

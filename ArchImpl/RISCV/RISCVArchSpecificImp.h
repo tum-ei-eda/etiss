@@ -112,7 +112,7 @@ etiss::int32 RISCVArch::handleException(etiss::int32 cause, ETISS_CPU *cpu)
                     ((*(((RISCV *)cpu)->MSTATUS) & MSTATUS_MPIE) >> 4) ^ (*(((RISCV *)cpu)->MSTATUS) & MSTATUS_MIE);
                 ((RISCV *)cpu)->SCAUSE = causeCode;
                 // Redo the instruction encoutered exception after handling
-                ((RISCV *)cpu)->SEPC = cpu->instructionPointer - 4;
+                ((RISCV *)cpu)->SEPC = static_cast<etiss_uint32>(cpu->instructionPointer - 4);
                 ((RISCV *)cpu)->SSTATUS ^= (((RISCV *)cpu)->PRIVLV << 8) ^ (((RISCV *)cpu)->SSTATUS & MSTATUS_SPP);
                 ((RISCV *)cpu)->PRIVLV = PRV_S;
                 cpu->instructionPointer = ((RISCV *)cpu)->STVEC & ~0x3;
@@ -121,7 +121,7 @@ etiss::int32 RISCVArch::handleException(etiss::int32 cause, ETISS_CPU *cpu)
             {
                 ((RISCV *)cpu)->MCAUSE = causeCode;
                 // Redo the instruction encoutered exception after handling
-                ((RISCV *)cpu)->MEPC = cpu->instructionPointer - 4;
+                ((RISCV *)cpu)->MEPC = static_cast<etiss_uint32>(cpu->instructionPointer - 4);
                 *(((RISCV *)cpu)->MSTATUS) ^=
                     (((RISCV *)cpu)->PRIVLV << 11) ^ (*(((RISCV *)cpu)->MSTATUS) & MSTATUS_MPP);
                 ((RISCV *)cpu)->PRIVLV = PRV_M;
@@ -146,7 +146,7 @@ etiss::int32 RISCVArch::handleException(etiss::int32 cause, ETISS_CPU *cpu)
                     ((*(((RISCV *)cpu)->MSTATUS) & MSTATUS_MPIE) >> 4) ^ (*(((RISCV *)cpu)->MSTATUS) & MSTATUS_MIE);
                 ((RISCV *)cpu)->SCAUSE = causeCode;
                 // Return to instruction next interrupted one
-                ((RISCV *)cpu)->SEPC = cpu->instructionPointer;
+                ((RISCV *)cpu)->SEPC = static_cast<etiss_uint32>(cpu->instructionPointer);
                 ((RISCV *)cpu)->SSTATUS ^= (((RISCV *)cpu)->PRIVLV << 8) ^ (((RISCV *)cpu)->SSTATUS & MSTATUS_SPP);
                 ((RISCV *)cpu)->PRIVLV = PRV_S;
                 if (((RISCV *)cpu)->STVEC & 0x1)
@@ -158,7 +158,7 @@ etiss::int32 RISCVArch::handleException(etiss::int32 cause, ETISS_CPU *cpu)
             {
                 ((RISCV *)cpu)->MCAUSE = causeCode;
                 // Return to instruction next interrupted one
-                ((RISCV *)cpu)->MEPC = cpu->instructionPointer;
+                ((RISCV *)cpu)->MEPC = static_cast<etiss_uint32>(cpu->instructionPointer);
                 *(((RISCV *)cpu)->MSTATUS) ^=
                     (((RISCV *)cpu)->PRIVLV << 11) ^ (*(((RISCV *)cpu)->MSTATUS) & MSTATUS_MPP);
                 ((RISCV *)cpu)->PRIVLV = PRV_M;
@@ -249,7 +249,7 @@ etiss::int32 RISCVArch::handleException(etiss::int32 cause, ETISS_CPU *cpu)
         disableItr();
         std::stringstream msg;
         msg << "Illegal instruction at address: 0x" << std::hex << cpu->instructionPointer << std::endl;
-        ((RISCV *)cpu)->MTVAL = cpu->instructionPointer;
+        ((RISCV *)cpu)->MTVAL = static_cast<etiss_uint32>(cpu->instructionPointer);
         // Point to next instruction
         cpu->instructionPointer += 4;
         etiss::log(etiss::WARNING, msg.str());
@@ -312,7 +312,7 @@ etiss::int32 RISCVArch::handleException(etiss::int32 cause, ETISS_CPU *cpu)
         disableItr();
         std::stringstream msg;
         msg << "Illegal instruction access at address: 0x" << std::hex << cpu->instructionPointer << std::endl;
-        ((RISCV *)cpu)->MTVAL = cpu->instructionPointer;
+        ((RISCV *)cpu)->MTVAL = static_cast<etiss_uint32>(cpu->instructionPointer);
         // Point to next instruction
         cpu->instructionPointer += 4;
         etiss::log(etiss::WARNING, msg.str());

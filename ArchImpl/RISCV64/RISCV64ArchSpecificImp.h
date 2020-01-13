@@ -114,7 +114,7 @@ etiss::int32 RISCV64Arch::handleException(etiss::int32 cause, ETISS_CPU *cpu)
         // Exception
         case 0x0:
             // Check exception delegation
-            if (((RISCV64 *)cpu)->MEDELEG & (1 << (causeCode & 0x1f)))
+            if (((RISCV64 *)cpu)->MEDELEG & (static_cast<etiss_uint64>(1) << (causeCode & 0x1f)))
             {
                 etiss::log(etiss::VERBOSE, "Exception is delegated to supervisor mode");
                 // Pop MPIE to MIE
@@ -160,7 +160,7 @@ etiss::int32 RISCV64Arch::handleException(etiss::int32 cause, ETISS_CPU *cpu)
         // Interrupt
         case 0x80000000:
             // Check exception delegation
-            if (((RISCV64 *)cpu)->MIDELEG & (1 << (causeCode & 0x1f)))
+            if (((RISCV64 *)cpu)->MIDELEG & (static_cast<etiss_uint64>(1) << (causeCode & 0x1f)))
             {
                 etiss::log(etiss::VERBOSE, "Interrupt is delegated to supervisor mode");
                 // Pop MPIE to MIE
@@ -235,7 +235,7 @@ etiss::int32 RISCV64Arch::handleException(etiss::int32 cause, ETISS_CPU *cpu)
                     irqLine = i;
             }
 
-            if (!(*((((RISCV64 *)cpu))->MIE) & (1 << irqLine)))
+            if (!(*((((RISCV64 *)cpu))->MIE) & (static_cast<etiss_uint64>(1) << irqLine)))
             {
                 std::stringstream msg;
                 handledCause = etiss::RETURNCODE::NOERROR;

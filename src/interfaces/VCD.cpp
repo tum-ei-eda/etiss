@@ -178,6 +178,7 @@ bool VCD::declare(void *variable, const std::string &name, unsigned width, uint6
         etiss::log(etiss::ERROR, "etiss::interfaces::VCD::declare called for more than supported variables.", *this);
         return false;
     }
+    int checked_sig_size = static_cast<int>(sigs_.size());
     sigs_.emplace_back();
     Signal &sig = sigs_.back();
 
@@ -185,7 +186,7 @@ bool VCD::declare(void *variable, const std::string &name, unsigned width, uint6
     sig.name = name;
     sig.value = initialvalue;
     sig.width = width;
-    sig.ident = index2str(sigs_.size() - 1);
+    sig.ident = index2str(checked_sig_size - 1);
     sig.undefined = undefined;
 
     // declare signal
@@ -214,7 +215,7 @@ bool VCD::declare(void *variable, const std::string &name, unsigned width, uint6
 
     dumpvar = dumpvar + val2str(initialvalue, width, undefined) + sig.ident + "\n";
 
-    ptr2index_.insert(std::make_pair(variable, (sigs_.size() - 1)));
+    ptr2index_.insert(std::make_pair(variable, (checked_sig_size - 1)));
 
     out_.flush();
 
