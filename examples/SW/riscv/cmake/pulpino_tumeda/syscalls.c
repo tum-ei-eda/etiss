@@ -1,3 +1,5 @@
+// License: https://github.com/tum-ei-eda/etiss/blob/master/LICENSE
+
 #include <stddef.h>
 #include <stdio.h>
 #include <errno.h>
