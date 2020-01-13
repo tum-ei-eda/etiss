@@ -11,11 +11,6 @@ met:
   - Toolchain path in Makefile has to point to correct cross-compile
   `toolchain`
 
-  - Get these libraries manually for running instruction tests:
-  1) Copy files from
-  https://github.com/cliffordwolf/picorv32/tree/master/tests
-  to folder instr_tests
-
 ### RISC-V test cases
 
 By default, benchmark provisioned with ETISS in `../test_cases` will be
