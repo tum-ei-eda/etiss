@@ -21,17 +21,21 @@ After checking all prerequisites, execute the following commands to build
 the example software:
 
 	$ cd ../SW/<or1k>|<riscv>/
+	$ mkdir build && cd build
+	$ cmake ..
 	$ make
 
 Finally we can build and run the simulation with the following script:
 
-	$ ./run.sh
+	$ mkdir build && cd build
+	$ cmake ..
+	$ make
+	$ cd ..
+	$ ./run.sh build
 
-  > NOTE: This script simply adds environment variables, creates the build
-  subdirectory, executes cmake, then make and starts the main executable
+
+  > NOTE: This script simply adds environment variables and starts the main executable
   with ETISS.ini as parameter.
-  > Note: To allow the execution of run.sh, you might need to run the following command first:
-  chmod +x run.sh
 
 ## Debugging
 

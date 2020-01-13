@@ -11,26 +11,14 @@ met:
   - Toolchain path in Makefile has to point to correct cross-compile
   `toolchain`
 
-  - To get the required libraries from pulpino project and additional
-  instruction tests, either install Apache Subversion 
-  (https://subversion.apache.org/) and run:
-
-	$ make gitlib
-    
-  - Or get the libraries manually:
-  1) Copy files from 
-  https://github.com/pulp-platform/pulpino/tree/master/sw/libs/sys_lib
-  to folder sys_lib
-  2) Copy files from 
-  https://github.com/pulp-platform/pulpino/tree/master/sw/libs/string_lib
-  to folder string_lib
-  3) Copy files from 
+  - Get these libraries manually for running instruction tests:
+  1) Copy files from
   https://github.com/cliffordwolf/picorv32/tree/master/tests
   to folder instr_tests
 
 ### RISC-V test cases
 
-By default, benchmark provisioned with ETIS in `../test_cases`will be
+By default, benchmark provisioned with ETISS in `../test_cases` will be
 compiled. Binary code and elf file will be located at `./build`. Minimal
 dependent source code in `./sys_lib` is linked against final executable,
 such as default interrupt handlers and exception handlers. Both of interrupt
@@ -39,6 +27,8 @@ could be overridden by user-defined handlers.
 
 To compile the SW:
 
+	$ mkdir build && cd build
+	$ cmake ..
 	$ make
 
 ### Instruction test software
