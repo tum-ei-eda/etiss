@@ -1,5 +1,10 @@
 sudo: false
 
+dist: bionic
+
+language:
+    - c++
+
 # Blacklist
 branches:
   only:
@@ -12,6 +17,7 @@ addons:
       - doxygen
       - graphviz
       - cmake
+      - libboost-dev
 
 # Build your code e.g. by calling make
 script:
