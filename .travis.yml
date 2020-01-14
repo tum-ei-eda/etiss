@@ -1,0 +1,29 @@
+sudo: false
+
+# Blacklist
+branches:
+  only:
+    - master
+
+# Install dependencies
+addons:
+  apt:
+    packages:
+      - doxygen
+      - graphviz
+      - cmake
+
+# Build your code e.g. by calling make
+script:
+  - mkdir build && cd build
+  - cmake -DETISS_BUILD_MANUAL_DOC=ON ..
+  - make doc
+
+# Generate and deploy documentation
+deploy:
+  provider: pages
+  skip_cleanup: true
+  local_dir: build/doc/html
+  github_token: $GH_REPO_TOKEN
+  on:
+    branch: master
