@@ -16,7 +16,7 @@ addons:
     packages:
       - doxygen
       - graphviz
-      - libboost-dev
+      - libboost-filesystem-dev
 
 install:
   - mkdir -p ${TRAVIS_BUILD_DIR}/deps/cmake
