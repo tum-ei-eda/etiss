@@ -18,10 +18,13 @@ addons:
       - graphviz
       - libboost-dev
 
+install:
+  - wget https://cmake.org/files/v3.16/cmake-3.16.2-Linux-x86_64.sh
+  - sudo sh cmake-3.16.2-Linux-x86_64.sh --prefix=${TRAVIS_BUILD_DIR}/deps/cmake --exclude-subdir
+  - PATH=${TRAVIS_BUILD_DIR}/deps/cmake:${TRAVIS_BUILD_DIR}/deps/cmake/bin:$PATH
+
 # Build your code e.g. by calling make
 script:
-  - wget https://cmake.org/files/v3.16/cmake-3.16.2-Linux-x86_64.sh
-  - sudo sh cmake-3.16.2-Linux-x86_64.sh --prefix=/usr/local --exclude-subdir
   - mkdir build && cd build
   - cmake -DETISS_BUILD_MANUAL_DOC=ON ..
   - make doc
