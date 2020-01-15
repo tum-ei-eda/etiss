@@ -1,11 +1,13 @@
 /*! \page source_install Install ETISS uncompiled with Sources
 
+*This method has been replaced with an export-all-symbols approach on Windows*
+
 On some systems there may be problems with the use of Standard Template Library objects due to ABI (aplication binary interface) changes resulting from different compilers, compiler options or defines.
 For those cases a secondary build system has been integrated into the cmake files that allows to install the headers and source code (ETISS+some plugins). This requires only minimal support from plugin projects.
 This source installation is the default option on Windows due to a more complicated linking and symbol export/import functionality.
 
-\section source_install_build Build/Install ETISS 
-ETISS is not really build in case of the source install option. The build step mainly consists of generation of some files. 
+\section source_install_build Build/Install ETISS
+ETISS is not really build in case of the source install option. The build step mainly consists of generation of some files.
 The INSTALL target will copy all necessary files and invoke any needed build command (e.g. make install or build the INSTALL project in Visual Studio).
 By default the install path under Windows is "C:\Program Files\ETISS" or "C:\Program Files (x86)\ETISS" and requires e.g. Visual Studio to run with administrator rights.
 Although the installation mainly consists of source files it is necessary to match target platform to the projects that will use ETISS (e.g. Win32,Win64). The lib folder of the ETISS source installation needs to be added to the search path of applications that use ETISS.

@@ -1,4 +1,4 @@
-/*! 
+/*!
 \mainpage Extendable Translating Instruction Set Simulator (ETISS)
 \anchor etiss_main
 
@@ -19,13 +19,8 @@ manages these objects and executes a processor model.
 \section install Installation
 
 This section assumes that ETISS is not precompiled. The described methods assume
-a common linux system and have been tested on ubuntu 12.04 with gcc 4.6.3.
+a common linux system and have been tested on Ubuntu 18.04 with gcc 7.4.
 Used paths are usually relative.
-
-Due to the restrictions of gcc 4.6.3 not all features of c++11 are used and the
-makefiles (\ref makefile_main "Makefile", systemc/Makefile, SW/Makefile,
-ArchImpl/OR1K/Makefile, JITImpl/GCC/Makefile, JITImpl/LLVM/Makefile) use the
-"-std=c++0x" compiler flag.
 
 
 \subsection install1 Required Files and Folder Structure
@@ -33,97 +28,36 @@ ArchImpl/OR1K/Makefile, JITImpl/GCC/Makefile, JITImpl/LLVM/Makefile) use the
 The toplevel folder of ETISS (e.g. ./ETISS/trunk) (in the following refered to as "path/to/ETISS" ) should contain the following file/folders:
 
 <pre>
-    \ref folder_include_etiss "include/etiss/"    C++ header files of ETISS 
-    \ref folder_include_c_etiss "include_c/etiss/"    C compatible header files for ETISS and translation 
-    \ref folder_src "src/"    C++ source files of ETISS 
-    \ref folder_systemc "systemc/"    systemc example using ETISS and TLM 
-    \ref folder_ArchImpl "ArchImpl/"    etiss::CPUArch implementations should be located here (included: \ref folder_ArchImpl_OR1K "OR1K" ) 
-    \ref folder_JITImpl "JITImpl/"    etiss::JIT implementations should be located here (included: \ref folder_JITImpl_GCC "GCC", \ref folder_JITImpl_LLVM "LLVM" )
-    \ref folder_JITImpl "PluginImpl/"    etiss::Plugin implementations should be located here 
-    
+    \ref folder_include_etiss "include/etiss/"    C++ header files of ETISS
+    \ref folder_include_c_etiss "include_c/etiss/"    C compatible header files for ETISS and translation
+    \ref folder_src "src/"    C++ source files of ETISS
+    \ref folder_ArchImpl "ArchImpl/"    etiss::CPUArch implementations (included: \ref folder_ArchImpl_OR1K "OR1K", \ref folder_ArchImpl_RISCV "RISCV", \ref folder_ArchImpl_RISCV64 "RISCV64" )
+    \ref folder_JITImpl "JITImpl/"    etiss::JIT implementations should be located here (included: \ref folder_JITImpl_GCC "GCC", \ref folder_JITImpl_LLVM "LLVM", \ref folder_JITImpl_TCC "TCC" )
+    \ref folder_JITImpl "PluginImpl/"    etiss::Plugin implementations should be located here
+
     CMakeLists.txt    main CMakeLists file. It builds ETISS and any project located in the ArchImpl,JITImpl,PluginImpl,projects sub folders if they also have a CMakeLists.txt.
-    
-    Deprecated:
-        \ref makefile_main "Makefile"    main makefile
 </pre>
 
 \subsection install2 Compile ETISS with ArchImpl and JITImpl sub projects
 
 ETISS itself has only standard depencencies like <stdint.h> or <dlsym.h> and
-dosn't require external tools beyond those of a default c++ environment.
+dosn't require external tools beyond those of a default C++ environment.
 
-Therefore ETISS is supposed to compile out of the box.
+Therefore ETISS is supposed to compile out of the box. Just make sure that the Boost filesystem library is installed (libboost-filesystem-dev on Ubuntu).
 
-The provided CPUArch implementation for the OR1K architecture and the JIT
-implementation that uses GCC (assuming gcc is installed) should also need no
-adaption.
-
-The Clang/LLVM based jit implementation located in JITImpl/LLVM requires a
-prebuild version of Clang/LLVM (tested with version 3.4). It uses a Makefile
-that is run by a CMakeLists.txt. If Clang/LLVM is installed on your system then
-change the variable LLVMINSTALLED to 1 in the JITImpl/LLVM/Makefile. Otherwise
-the path variables in JITImpl/LLVM/Makefile need to be edited:
-
-<pre>
-    LLVMINSTALLED?=0
-    
-    ifeq (\$(LLVMINSTALLED),0)
-        <b>
-        LLVMTOOLDIR?=/usr/local/research/projects/SystemDesign/tools/llvm
-        LLVMVERSION?=3.4.2
-        LLVMPATH=\$(LLVMTOOLDIR)/\$(LLVMVERSION)
-        LLVMPATH_BIN=\$(LLVMPATH)/bin
-        LLVMPATH_LIB=\$(LLVMPATH)/lib
-        LLVMPATH_INCLUDE=\$(LLVMPATH)/include
-        CLANG_HEADERS=\$(realpath \$(LLVMPATH_LIB)/clang/\$(LLVMVERSION)/include)
-        </b>
-    else
-        LLVMVERSION?=\$(shell llvm-config --version)
-        LLVMPATH_BIN=\$(shell llvm-config --bindir)
-        LLVMPATH_LIB=\$(shell llvm-config --libdir)
-        LLVMPATH_INCLUDE=\$(shell llvm-config --includedir)
-        CLANG_HEADERS=\$(realpath \$(LLVMPATH_LIB)/clang/\$(LLVMVERSION)/include)
-    endif
-    
-    [...]
-</pre>
+The provided CPUArch implementations and the default JIT
+implementation that uses TCC should also need no
+adaption. The GCC JIT requires GCC to be installed and the LLVM JIT requires the LLVM and Clang development libraries and headers. Set the environment variable LLVM_DIR to the LLVM installation path to use it.
 
 The provided example software located in SW/ requires a gnu tool chain for the
-or1k architecture. SW/Makefile may need to be edited to match the location and
-tool names:
-
-<pre>
-    <b>
-    TOOLBIN=/usr/local/research/projects/SystemDesign/tools/openrisc/gcc-or1k-elf-4.8.1-x86_64/bin
-    </b>
-    [...] 
-    <b>
-    OR32CC=PATH=\$(TOOLBIN):\$(PATH) LD_LIBRARY_PATH=\$(TOOLBIN)/../x86_64-unknown-linux-gnu/or1k-elf/lib:\$(LD_LIBRARY_PATH) \$(TOOLBIN)/or1k-elf-gcc -std=c99 \$(FLOATTYPE)
-    OR32OBJCPY=PATH=\$(TOOLBIN):\$(PATH) LD_LIBRARY_PATH=\$(TOOLBIN)/../x86_64-unknown-linux-gnu/or1k-elf/lib:\$(LD_LIBRARY_PATH) \$(TOOLBIN)/or1k-elf-objcopy
-    OR32OBJDMP=PATH=\$(TOOLBIN):\$(PATH) LD_LIBRARY_PATH=\$(TOOLBIN)/../x86_64-unknown-linux-gnu/or1k-elf/lib:\$(LD_LIBRARY_PATH) \$(TOOLBIN)/or1k-elf-objdump
-    OR32RDELF=PATH=\$(TOOLBIN):\$(PATH) LD_LIBRARY_PATH=\$(TOOLBIN)/../x86_64-unknown-linux-gnu/or1k-elf/lib:\$(LD_LIBRARY_PATH) \$(TOOLBIN)/or1k-elf-readelf
-    OR32GDB=PATH=\$(TOOLBIN):\$(PATH) LD_LIBRARY_PATH=\$(TOOLBIN)/../x86_64-unknown-linux-gnu/or1k-elf/lib:\$(LD_LIBRARY_PATH) \$(TOOLBIN)/or1k-elf-gdb
-    </b>
-    [...]
-    
-</pre>
-
-The software is not build by ETISS cmake base build system. \$make has to be run
-in the SW/ folder and the path to the image file has to be edited e.g. in
-main.cpp of ETISS's example program.
-
-The SystemC example project also relies on a Makefile and is not build by the
-cmake build system
+respective architectures. Set the appropriate CMake option variables to specify the toolchain path.
 
 To build ETISS create a new directory (e.g. install) and open a terminal in that
-folder. Please not that due to the legacy makefile based build system it is not
-recommended to use folders called "build" or "tmp" within the ETISS folders. 
-To install ETISS into standard folders, run the following commands in opened
+folder. To install ETISS into standard folders, run the following commands in opened
 terminal:
 
 <pre>
-    \$ mkdir install
-    \$ cd install
+    \$ mkdir build && cd build
     \$ cmake ..
     \$ make
     \$ make install
@@ -138,35 +72,25 @@ programs is used. This will likely require administrator rights for \$ make
 install. A possible and recommended cmake command with additional options is:
 
 <pre>
-    \$ mkdir install
-    \$ cd install
-    \$ cmake -DCMAKE_BUILD_TYPE=Debug -DETISS_BUILD_MANUAL_DOC=ON -DETISS_USE_PYTHON=OFF -DCMAKE_INSTALL_PREFIX:PATH=`pwd`/installed --graphviz=test.dot -G "CodeBlocks - Unix Makefiles" ../
+    \$ mkdir build && cd build
+    \$ cmake -DCMAKE_BUILD_TYPE=Debug -DETISS_BUILD_MANUAL_DOC=ON -DCMAKE_INSTALL_PREFIX:PATH=`pwd`/installed ..
     \$ make
     \$ make doc
     \$ make install
 </pre>
 
-That command will configure ETISS to build in debug mode.It will prevent the
+That command will configure ETISS to build in debug mode. It will prevent the
 documentation to be created upon running the "all" target of the generated
 makefile (requires building of the target doc to get and install the
-documentation). Python support is disabled (if enabled, a python console can be
-opened after loading of etiss by passing -fpyconsole) and the target folder for
-installation (makefile target install) is set to the folder "installed" located
-in the current directory. "--graphviz=test.dot" creates a dot file that shows
-dependencies and targets of the ETISS cmake project. 
-"-G 'CodeBlocks - Unix Makefiles'" generates makefiles and a project file for
-the codeblocks IDE. The make command will then build ETISS and plugins. \$ make
+documentation). The make command will then build ETISS and plugins. \$ make
 install installs etiss into the target folder.
-
-Please refer to \ref source_install "Install ETISS uncompiled with Sources" for
-and alternative build system targeted at Windows hosts.
 
 
 \section create1 Create a project
 
 This documentation is targeted at projects that use ETISS, not projects that
 primarily aiming to extend ETISS. Refer to \ref howto_etiss "How to use ETISS"
-for a guide to the frontend api and use of ETISS. 
+for a guide to the frontend api and use of ETISS.
 \ref hstructure "Highlevel structure of ETISS" shows the general structure of
 ETISS including the frontend api.
 
@@ -175,7 +99,7 @@ ETISS including the frontend api.
 
 ETISS can be extended with plugins. The tree classes etiss::CPUArch, etiss::JIT
 and etiss::Plugin are the main classes for extension. etiss::CPUArch implements
-instruction translation, etiss::JIT handles compiling/linking of genereated 
+instruction translation, etiss::JIT handles compiling/linking of genereated
 C-code and etiss::Plugin is the base plugin class that is inherited by the 5
 plug-in types etiss::InterruptListenerPlugin, etiss::TranslationPlugin,
 etiss::CoroutinePlugin,etiss::SystemWrapperPlugin and
@@ -190,7 +114,7 @@ etiss::Plugin refer to the respective guides:
   \li \ref howto_cpuarch
   \li \ref howto_jit
   \li \ref howto_plugin
-    
+
 To create a library for ETISS that provides etiss::CPUArch, etiss::JIT or
 etiss::Plugin implementations also refer to \ref folder_include_etiss_helper
 "include/etiss/helper/"
@@ -207,7 +131,7 @@ etiss::CPUCore::execute() together with plugins.
 Flow chart of the translation phase. An etiss::CPUArch implementation is
 responsible for handeling of endiannes and determining of instruction length.
 
-\image html "instruction_read.png" 
+\image html "instruction_read.png"
 
 
 \section hstructure Highlevel structure of ETISS
@@ -220,5 +144,5 @@ responsible for handeling of endiannes and determining of instruction length.
 ETISS version 0.1 doesn't provide a MMU with its example OR1K implementation.
 For further information please refer to the \ref mmu_concepts "MMU Concepts"
 page.
- 
+
  */

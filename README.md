@@ -83,3 +83,5 @@ for using ETISS.
 ## User Documentation
 
 The documentation is optionally built with ETISS and can be found in `<etiss_install_path>/doc/html/index.html`
+
+It is also hosted at https://tum-ei-eda.github.io/etiss/
