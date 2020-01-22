@@ -10,7 +10,9 @@
 #include "utils.h"
 #include "machine/syscall.h"
 
+#ifndef ETISS_LOGGER_ADDR
 #define ETISS_LOGGER_ADDR (void *)0x80000000
+#endif
 
 // BRK
 extern char _heap_start;

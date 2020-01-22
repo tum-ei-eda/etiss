@@ -15,20 +15,22 @@
 SEARCH_DIR(.)
 __DYNAMIC  =  0;
 
+VAR_rom_start = DEFINED(PULPINO_ROM_START) ? PULPINO_ROM_START : 0x0;
+VAR_rom_size = DEFINED(PULPINO_ROM_SIZE) ? PULPINO_ROM_SIZE : 0x80000;
 VAR_ram_start = DEFINED(PULPINO_RAM_START) ? PULPINO_RAM_START : 0x80000;
 VAR_ram_size = DEFINED(PULPINO_RAM_SIZE) ? PULPINO_RAM_SIZE : 0x80000;
+VAR_stack_size = DEFINED(PULPINO_STACK_SIZE) ? PULPINO_STACK_SIZE : 0x1000;
 
 MEMORY
 {
-    instrram    : ORIGIN = 0x00000000, LENGTH = 0x80000
+    instrram    : ORIGIN = VAR_rom_start, LENGTH = VAR_rom_size
     dataram     : ORIGIN = VAR_ram_start, LENGTH = VAR_ram_size
 }
 
 /* Stack information variables */
-_min_stack      = 0x1000;   /* 4K - minimum stack space to reserve */
-_stack_len     = 0x4000;
+_min_stack     = VAR_stack_size;   /* minimum stack space to reserve */
 _stack_start   = ORIGIN(dataram) + LENGTH(dataram);
-_heap_start    = _stack_start - _stack_len;
+_heap_start    = _bss_end;
 _heap_end      = _stack_start;
 
 /* We have to align each sector to word boundaries as our current s19->slm
@@ -93,7 +95,7 @@ SECTIONS
         . = ALIGN(4);
         *(.rodata);
         *(.rodata.*)
-    } > dataram
+    } > instrram
 
     .shbss :
     {
@@ -122,6 +124,8 @@ SECTIONS
         *(COMMON)
         _bss_end = .;
     } > dataram
+
+    /* do not place anything after this address, because the heap starts here! */
 
     /* ensure there is enough room for stack */
     .stack (NOLOAD): {
