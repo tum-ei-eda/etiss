@@ -36,7 +36,7 @@
 
 PROJECT(LLVMJIT)
 
-IF(NOT ENV{LLVM_DIR})
+IF(NOT DEFINED ENV{LLVM_DIR})
     SET(ENV{LLVM_DIR} "/opt/clang+llvm-7.0.1-x86_64-linux-gnu-ubuntu-18.04")
 ENDIF()
 
