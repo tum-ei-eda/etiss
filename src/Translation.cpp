@@ -264,9 +264,6 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
 
     std::string error;
 
-    // try to find next block from previous block links
-    // MOVED to getBlockFast
-
     if (prev != 0 && !prev->valid)
     {
         prev = 0;
@@ -352,7 +349,6 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
     std::set<std::string> libloc;
     libloc.insert(arch_->getIncludePath());
     libloc.insert(etiss::cfg().get<std::string>("etiss_path", "./"));
-    // libloc.insert(etiss::cfg().get<std::string>("etiss_wd","./"));
     libloc.insert(etiss::jitFiles());
     std::set<std::string> libs;
     libs.insert("ETISS");
@@ -428,7 +424,6 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
 /// done in getBlock()
 etiss::int32 Translation::translateBlock(CodeBlock &cb)
 {
-
     cb.endaddress_ = cb.startindex_;
 
     etiss::instr::InstructionContext context;
@@ -437,7 +432,7 @@ etiss::int32 Translation::translateBlock(CodeBlock &cb)
     context.force_block_end_ = false;
 
     unsigned count = 0;
-    const unsigned maxcount = etiss::cfg().get<unsigned>("Translation::MaxBlockSize", 100); // CHANGED,original 100
+    const unsigned maxcount = etiss::cfg().get<unsigned>("Translation::MaxBlockSize", 100);
 
     etiss::instr::VariableInstructionSet *const vis_ = mis_->get(cpu_.mode);
 
@@ -518,11 +513,19 @@ etiss::int32 Translation::translateBlock(CodeBlock &cb)
                 vis_->length_updater_(*vis_, context, *secba);
             } while (!context.instr_width_fully_evaluated_);
 
+            etiss::instr::Instruction *instr;
             etiss::instr::InstructionSet *instrSet = vis_->get(secba->width());
-            etiss::instr::Instruction *instr = instrSet->resolve(*secba);
-            if (unlikely(instr == 0))
+            if (unlikely(!instrSet))
             {
-                instr = &instrSet->getInvalid();
+                instr = &vis_->getMain()->getInvalid();
+            }
+            else
+            {
+                instr = instrSet->resolve(*secba);
+                if (unlikely(!instr))
+                {
+                    instr = &instrSet->getInvalid();
+                }
             }
             CodeBlock::Line &line = cb.append(cb.endaddress_); // allocate codeset for instruction
             bool ok = instr->translate(*secba, line.getCodeSet(), context);
