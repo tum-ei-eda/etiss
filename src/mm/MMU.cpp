@@ -131,7 +131,7 @@ int32_t MMU::Translate(const uint64_t vma, uint64_t *const pma_buf, MM_ACCESS ac
         }
     }
 
-    if (fault = CheckProtection(pte_buf, access))
+    if ((fault = CheckProtection(pte_buf, access)))
         return fault;
 
     uint64_t offset_mask = (1 << (page_offset_msb_pos + 1)) - 1;

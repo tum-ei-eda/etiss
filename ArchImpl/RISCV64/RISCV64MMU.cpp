@@ -103,7 +103,7 @@ int32_t RISCV64MMU::WalkPageTable(uint64_t vma, MM_ACCESS access)
             addr_offset = vma_pte.GetByName(vpn_name.str());
             addr = (addr_ppn << PAGE_OFFSET) + addr_offset * PTESIZE;
 
-            if (fault = system_->dread(system_->handle, cpu_, addr, buffer, PTESIZE))
+            if ((fault = system_->dread(system_->handle, cpu_, addr, buffer, PTESIZE)))
                 return fault;
             // A new leaf pte value is read from page directory
             leaf_pte.Update(leaf_pte_val);
@@ -134,7 +134,7 @@ int32_t RISCV64MMU::WalkPageTable(uint64_t vma, MM_ACCESS access)
         {
             leaf_pte_val |= PTE_A;
             leaf_pte.Update(leaf_pte_val);
-            if (fault = system_->dwrite(system_->handle, cpu_, addr, buffer, PTESIZE))
+            if ((fault = system_->dwrite(system_->handle, cpu_, addr, buffer, PTESIZE)))
                 return fault;
         }
 
@@ -142,7 +142,7 @@ int32_t RISCV64MMU::WalkPageTable(uint64_t vma, MM_ACCESS access)
         {
             leaf_pte_val |= PTE_D;
             leaf_pte.Update(leaf_pte_val);
-            if (fault = system_->dwrite(system_->handle, cpu_, addr, buffer, PTESIZE))
+            if ((fault = system_->dwrite(system_->handle, cpu_, addr, buffer, PTESIZE)))
                 return fault;
         }
 

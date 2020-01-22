@@ -54,7 +54,7 @@ VirtualStruct::Field::Field(VirtualStruct &parent, const std::string &name, cons
     , prettyname_(prettyname)
     , flags_(flags)
     , width_(width)
-    , bitwidth_((bitwidth == 0) ? width * 8 : bitwidth_)
+    , bitwidth_(bitwidth ? bitwidth : width * 8)
     , accessMode_(VirtualStruct::Field::VIRTUAL)
 {
 }
@@ -67,7 +67,7 @@ VirtualStruct::Field::Field(VirtualStruct &parent, const std::string &name, cons
     , prettyname_(prettyname)
     , flags_(flags)
     , width_(width)
-    , bitwidth_((bitwidth == 0) ? width * 8 : bitwidth_)
+    , bitwidth_(bitwidth ? bitwidth : width * 8)
     , accessMode_(virtual_enabled ? VirtualStruct::Field::PREFER_LAMBDA : VirtualStruct::Field::LAMBDA)
     , lread(lread)
     , lwrite(lwrite)
@@ -516,8 +516,9 @@ bool VirtualStruct::applyAction(const etiss::fault::Fault &fault, const etiss::f
         }
     }
         return false;
+    default:
+        return false;
     }
-    return false;
 }
 
 VSSync::VSSync()

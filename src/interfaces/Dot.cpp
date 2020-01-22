@@ -324,7 +324,7 @@ void ValueOperationTraceGraphStreamer::Link::attrToString(std::ostream &ss)
     std::vector<std::string> al;
     if (color && color[0])
         ss << " color=" << color;
-    if (label && label[0])
+    if (label[0])
         ss << " label=\"" << label << "\"";
 }
 

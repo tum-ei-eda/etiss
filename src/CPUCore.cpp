@@ -798,7 +798,7 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
                     while ((exception = mmu_->Translate(cpu->instructionPointer, &pma, etiss::mm::X_ACCESS)))
                     {
                         //	translation.unloadBlocks();
-                        if (exception = arch->handleException(exception, cpu))
+                        if ((exception = arch->handleException(exception, cpu)))
                             goto loopexit;
                         // Update pma, in case pc is redirected to physical address space
                         pma = cpu->instructionPointer;
