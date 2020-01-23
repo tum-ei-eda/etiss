@@ -219,31 +219,6 @@ std::vector<std::string> etiss::parseCommands(const std::string &cmdline)
     return ret;
 }
 
-static std::string etiss_getenv_home()
-{
-    // unix
-    {
-        const char *ptr = getenv("HOME");
-        if (ptr && (strlen(ptr) > 0))
-            return ptr;
-    }
-    // windows
-    {
-        const char *ptr1 = getenv("HOMEDRIVE");
-        const char *ptr2 = getenv("HOMEPATH");
-        if (ptr1 && ptr2)
-        {
-            std::string ret(ptr1);
-            ret = ret + ptr2;
-            if (ret.size() > 0)
-                return ret;
-        }
-    }
-    etiss::log(etiss::ERROR, "Failed to get HOME environment variable. please set this "
-                             "variable to a read/write/(execute) enabled home folder.");
-    return "";
-}
-
 etiss::Configuration::Configuration() {}
 etiss::Configuration::Configuration(std::string args)
 {

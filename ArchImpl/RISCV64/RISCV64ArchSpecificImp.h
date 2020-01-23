@@ -228,7 +228,7 @@ etiss::int32 RISCV64Arch::handleException(etiss::int32 cause, ETISS_CPU *cpu)
                 break;
             }
             etiss_uint32 irqLine = 0;
-            for (int i = 0; i < sizeof(mip_tmp) * 8; ++i)
+            for (size_t i = 0; i < sizeof(mip_tmp) * 8; ++i)
             {
                 // Highest interrupt line with highest priority
                 if (unlikely((mip_tmp >> i) & 0x1))

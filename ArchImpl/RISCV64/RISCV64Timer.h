@@ -88,9 +88,6 @@ class RISCV64Timer : public etiss::CoroutinePlugin, public etiss::SystemWrapperP
   private:
     RISCV64 *riscv64cpu;
 
-    etiss::uint64 mtime_addr_;
-    etiss::uint64 mtimecmp_addr_;
-
     bool timer_enabled_;
     bool mtimecmp_overflow_clear_;
     bool mtimecmp_overflow_;

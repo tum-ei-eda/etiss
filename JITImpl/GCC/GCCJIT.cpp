@@ -62,18 +62,11 @@ GCCJIT::GCCJIT(bool cleanup) : etiss::JIT("gcc"), cleanup_(cleanup)
     path_ = "./tmp/XXXXXX";
     // create unique folder (mkdtemp)
     {
-        char tmp[strlen(path_.c_str()) + 1];
-        memcpy(tmp, path_.c_str(), strlen(path_.c_str()) + 1);
-        if (mkdtemp(tmp) == 0)
+        if (mkdtemp(&path_[0]) == 0)
         {
             std::cerr << "ERROR: GCCJIT failed to get unique working folder. Resulting compilations my be unrelyable"
                       << std::endl;
         }
-        else
-        {
-            // std::cout << tmp << std::endl;
-        }
-        path_ = tmp;
 
         if (system(std::string("mkdir -p \"" + path_ + "\"").c_str())) // make folder if not present
             std::cerr << "ERROR: GCCJIT failed to create compilation path. this may lead to a failure to compile code."

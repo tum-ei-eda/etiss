@@ -186,7 +186,7 @@ bool Trigger::fired(uint64_t time_ps, etiss::fault::Injector *target_injector)
                 return false;
             }
         }
-        uint64_t val;
+        uint64_t val = 0;
         std::string errmsg;
         if (inj_.getInjector())
         {

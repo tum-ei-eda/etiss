@@ -763,8 +763,8 @@ class VariableInstructionSet
     template <typename T>
     Instruction &open(unsigned bits, T code, T mask, const char *name)
     {
-        unsigned bytes = bits >> 3;
 #if DEBUG
+        unsigned bytes = bits >> 3;
         if (bytes * 8 != bits)
         {
             etiss_log(ERROR, "Invalid bit count");

@@ -104,7 +104,7 @@ class Dot
         std::string color_;
 
       public:
-        virtual void print(std::ostream &out, const std::string &appendedattr);
+        void print(std::ostream &out, const std::string &appendedattr);
     };
     class Link;
     class Graph;
@@ -177,7 +177,7 @@ class Dot
         Node *const dst_;
 
       public:
-        virtual void print(std::ostream &out);
+        void print(std::ostream &out);
     };
     class Graph : public Node
     {
@@ -202,7 +202,7 @@ class Dot
         }
 
       public:
-        virtual inline Graph *asGraph() { return this; }
+        inline Graph *asGraph() override { return this; }
 
       private:
         std::unordered_set<Node *> nodes_;
@@ -211,7 +211,7 @@ class Dot
         inline const std::unordered_set<Node *> &nodes() { return nodes_; }
 
       public:
-        virtual void print(std::ostream &out, std::unordered_set<Link *> &icl);
+        void print(std::ostream &out, std::unordered_set<Link *> &icl) override;
     };
 
   private:
@@ -377,7 +377,6 @@ class ValueOperationTraceGraphStreamer
 
     uint64_t nnodeid_;
     etiss::FixedSizeHashMap<Node *, uint64_t, etiss::pointerHash<const void>> nodeToTmpId_;
-    uint64_t curdstnodeid_;
     etiss::FixedSizeHashMap<const void *, Node *, etiss::pointerHash<const void>> currentnodes_;
     // std::unordered_map<const void*,Node*,std::hash<const void*>, std::equal_to<const
     // void*>,etiss::ObjectPool<std::pair<const void * const,Node*> > > currentnodes_;

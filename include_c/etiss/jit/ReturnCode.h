@@ -125,7 +125,7 @@ extern int32_t etiss_returncode_setTemporary(const char *msg);
             etiss::RETURNCODE::getErrorMessages()[VALUE] = MSG;                                                  \
             etiss::RETURNCODE::getErrorNames()[VALUE] = etiss_toString(NAME);                                    \
         }                                                                                                        \
-    } returnCodeRegistration_##UNIQUENUMBER;
+    } returnCodeRegistration_##UNIQUENUMBER
 
 #define defineReturnCodeClass(UNIQUENUMBER, NAME, VALUE, MSG) defineReturnCodeClass_(UNIQUENUMBER, NAME, VALUE, MSG)
 
@@ -141,17 +141,17 @@ extern int32_t etiss_returncode_setTemporary(const char *msg);
     defineReturnCodeClass(__COUNTER__, NAME, VALUE, MSG)
 #else
 #define defineReturnCode(NAME, VALUE, MSG)                    \
-    static const etiss_int32 ETISS_RETURNCODE_##NAME = VALUE; \
     namespace etiss                                           \
     {                                                         \
     namespace RETURNCODE                                      \
     {                                                         \
     static const etiss::int32 NAME = VALUE;                   \
     }                                                         \
-    }
+    }                                                         \
+    static const etiss_int32 ETISS_RETURNCODE_##NAME = VALUE
 #endif
 #else
-#define defineReturnCode(NAME, VALUE, MSG) static const etiss_int32 ETISS_RETURNCODE_##NAME = VALUE;
+#define defineReturnCode(NAME, VALUE, MSG) static const etiss_int32 ETISS_RETURNCODE_##NAME = VALUE
 #endif
 
 // winerror.h defines this.

@@ -95,36 +95,20 @@ etiss::int32 Delegate::read(bool ibus, uint64_t &time_ps, uint64_t addr, uint8_t
 #endif
 
     cpu.cpuTime_ps = time_ps;
-
-    bool ok = false;
     int32_t code = etiss::RETURNCODE::NOERROR;
+
     if (ibus)
     {
         code = system.iread(system.handle, &cpu, addr, len); // simulate read
 
         if ((code == etiss::RETURNCODE::NOERROR) || (code == etiss::RETURNCODE::GDBNOERROR)) // check return code
         {
-            ok = true;
-        }
-
-        if (ok)
-        {
             code = system.dbg_read(system.handle, addr, buf, len); // read data
-
-            if ((code != etiss::RETURNCODE::NOERROR) && (code != etiss::RETURNCODE::GDBNOERROR)) // check return code
-            {
-                ok = false;
-            }
         }
     }
     else
     {
         code = system.dread(system.handle, &cpu, addr, buf, len); // read data
-
-        if ((code == etiss::RETURNCODE::NOERROR) || (code == etiss::RETURNCODE::GDBNOERROR)) // check return code
-        {
-            ok = true;
-        }
     }
 
     time_ps = cpu.cpuTime_ps;
@@ -134,7 +118,6 @@ etiss::int32 Delegate::read(bool ibus, uint64_t &time_ps, uint64_t addr, uint8_t
         snoopRead(false, time_ps, addr, buf, len);
     }
 
-    // return ok;
     return code;
 }
 
@@ -163,31 +146,19 @@ etiss::int32 Delegate::write(bool ibus, uint64_t &time_ps, uint64_t addr, uint8_
 #endif
 
     cpu.cpuTime_ps = time_ps;
-    bool ok = false;
     int32_t code = etiss::RETURNCODE::NOERROR;
 
     if (ibus)
     {
         code = system.iwrite(system.handle, &cpu, addr, buf, len); // read data
-
-        if ((code == etiss::RETURNCODE::NOERROR) || (code == etiss::RETURNCODE::GDBNOERROR)) // check return code
-        {
-            ok = true;
-        }
     }
     else
     {
         code = system.dwrite(system.handle, &cpu, addr, buf, len); // read data
-
-        if ((code == etiss::RETURNCODE::NOERROR) || (code == etiss::RETURNCODE::GDBNOERROR)) // check return code
-        {
-            ok = true;
-        }
     }
 
     time_ps = cpu.cpuTime_ps;
 
-    // return ok;
     return code;
 }
 

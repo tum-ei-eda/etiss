@@ -612,8 +612,6 @@ void etiss::Initializer::loadIniJIT(std::shared_ptr<etiss::CPUCore> cpu)
         return;
     }
 
-    uint8_t cntJIT = 0;
-
     // get all sections
     CSimpleIniA::TNamesDepend sections;
     po_simpleIni->GetAllSections(sections);

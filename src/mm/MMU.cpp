@@ -66,12 +66,12 @@ namespace mm
 {
 
 MMU::MMU(bool hw_ptw, std::string name, bool pid_enabled)
-    : mmu_control_reg_val_(0)
+    : mmu_enabled_(false)
+    , mmu_control_reg_val_(0)
     , pid_(0)
     , name_(name)
     , pid_enabled_(pid_enabled)
     , hw_page_table_walker_(hw_ptw)
-    , mmu_enabled_(false)
 {
     tlb_ = std::shared_ptr<etiss::mm::TLB<0>>(new TLB<0>());
 

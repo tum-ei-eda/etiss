@@ -148,12 +148,10 @@ static void syncTime(void *handle, ETISS_CPU *cpu)
 RISCV64Timer::RISCV64Timer()
     : mtime_(0)
     , mtimecmp_(0)
-    , mtime_overflow_(false)
-    , mtimecmp_overflow_(false)
-    , mtimecmp_overflow_clear_(false)
     , timer_enabled_(false)
-    , mtime_addr_(MTIME_ADDR)
-    , mtimecmp_addr_(0)
+    , mtimecmp_overflow_clear_(false)
+    , mtimecmp_overflow_(false)
+    , mtime_overflow_(false)
 {
 
     memset(mtimecmp_buf_, 0, 8);

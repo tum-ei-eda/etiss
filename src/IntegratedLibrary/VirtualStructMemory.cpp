@@ -122,7 +122,7 @@ bool VirtualStructMemory::write(bool debug, ETISS_CPU *cpu, etiss::uint64 addr, 
             uint64_t mask = 0xFF;
             mask = mask << off;
             fval = fval & ~mask;
-            uint64_t fvaltest = (((uint64_t)(uint8_t)buf[i]) << off); // DNM DEBUG
+            // uint64_t fvaltest = (((uint64_t)(uint8_t)buf[i]) << off); // DNM DEBUG
             fval = fval | (((uint64_t)(uint8_t)buf[i]) << off);
             f->write(fval);
             {

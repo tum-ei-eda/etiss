@@ -427,7 +427,7 @@ etiss::int32 OR1KArch::handleException(etiss::int32 code, ETISS_CPU *cpu)
 
     // code>>16 translate OR1K exception code to jump address
     // EVBAR is the exception vector base address register which contains an offset to the exception vector
-    uint32 vec = (code >> 16) & 0x0000FFFF + (*((OR1K *)cpu)->EVBAR >> 12); // TODO: should be shifted by 13?
+    uint32 vec = ((code >> 16) & 0x0000FFFF) + (*((OR1K *)cpu)->EVBAR >> 12); // TODO: should be shifted by 13?
 
     /* Here only the following exceptions are performed:
        0x100 Reset,
