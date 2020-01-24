@@ -68,6 +68,7 @@ void OR1KArch_apply_fpu_flags(OR1K *cpu, unsigned flags)
     {
         val |= OR1K_FPCSR_IXF;
     }
+    *(cpu->FPCSR) = val;
 }
 
 void fpu_append_exceptioncode(etiss::CodeSet &ret)

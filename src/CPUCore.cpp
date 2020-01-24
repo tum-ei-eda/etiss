@@ -519,7 +519,6 @@ class LegacyRegisterDevicePluginListener : public etiss::VirtualStruct::Field::L
 
 etiss::int32 CPUCore::execute(ETISS_System &_system)
 {
-
     ETISS_System *system = &_system; // change to pointer for reassignments
 
     if (!ETISS_System_isvalid(system))
@@ -529,39 +528,33 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
 
     std::lock_guard<std::mutex> lock(mu_); // lock class fields from modification
 
-    CPUArch *arch = arch_.get(); // get cpu arch
-
-    if (arch == 0)
+    if (!arch_)
     {
         etiss::log(etiss::ERROR, "Could not find architecture!");
         return RETURNCODE::GENERALERROR;
     }
 
-    ETISS_CPU *cpu = cpu_; // get cpu structure
-
-    if (cpu == 0)
+    if (!cpu_)
     {
         etiss::log(etiss::ERROR, "Could not find CPU struct!");
         return RETURNCODE::GENERALERROR;
     }
 
-    cpu->_etiss_private_handle_ =
+    cpu_->_etiss_private_handle_ =
         (void *)this; // init pointer to execute RegisterDevicePlugins. the value of tis pointer may be invalid/subject
                       // to change and may not be used by external code
 
     // get JIT instance
     std::shared_ptr<JIT> jiti = jit_; // copy jit because it may change
-
-    if (jiti.get() == 0) // if not present fall back to first loaded jit implementation
+    if (!jiti) // if not present fall back to first loaded jit implementation
     {
         etiss::log(etiss::WARNING, std::string("Using default jit instance for CPUCore: ") + name_);
         jiti = etiss::getDefaultJIT();
-    }
-
-    if (jiti.get() == 0) // jit must be present
-    {
-        etiss::log(etiss::ERROR, std::string("No JIT available to ") + name_);
-        return RETURNCODE::JITERROR;
+        if (!jiti)
+        {
+            etiss::log(etiss::ERROR, std::string("No JIT available to ") + name_);
+            return RETURNCODE::JITERROR;
+        }
     }
 
     // verify jit
@@ -585,8 +578,8 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
     // add default timer plugin from arch
     if (timer_enabled_)
     {
-        Plugin *timerInstance = arch->newTimer(cpu);
-        if (timerInstance == 0)
+        Plugin *timerInstance = arch_->newTimer(cpu_);
+        if (!timerInstance)
         {
             etiss::log(etiss::ERROR, "ERROR: default timer requested but not supported by architecture");
             return RETURNCODE::GENERALERROR;
@@ -604,7 +597,7 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
 
     // add MMU module from the arch
     {
-        etiss::mm::MMU *new_mmu = arch->newMMU(cpu);
+        etiss::mm::MMU *new_mmu = arch_->newMMU(cpu_);
         if (new_mmu)
         {
             mmu_enabled_ = true;
@@ -615,46 +608,42 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
 
     if (mmu_enabled_)
     {
-        Plugin *mmu_wrapper = new etiss::mm::DMMUWrapper(mmu_);
-        plugins.push_back(std::shared_ptr<Plugin>(mmu_wrapper));
+        plugins.push_back(std::make_shared<etiss::mm::DMMUWrapper>(mmu_));
     }
 
     // copy system wrapper plugins to list and update system (pre plugin init)
     std::list<SystemWrapperPlugin *> syswrappers;
+    for (auto &plugin : plugins)
     {
-        for (auto iter = plugins.begin(); iter != plugins.end(); iter++)
+        auto c = plugin->getSystemWrapperPlugin();
+        if (c)
         {
-            SystemWrapperPlugin *c = iter->get()->getSystemWrapperPlugin();
-            if (c != 0)
+            ETISS_System *wsys = c->wrap(cpu_, system);
+            if (wsys)
             {
-                ETISS_System *wsys = c->wrap(cpu, system);
-                if (wsys != 0)
-                {
-                    syswrappers.push_front(c); // inverse order for easy iteration
-                    system = wsys;
-                }
-                else
-                {
-                    std::stringstream stream;
-                    stream << "SystemWrapperPlugin \"" << c->getPluginName()
-                           << "\" failed to wrap ETISS_System instance";
-                    etiss::log(etiss::WARNING, stream.str());
-                }
+                syswrappers.push_front(c); // inverse order for easy iteration
+                system = wsys;
+            }
+            else
+            {
+                std::stringstream stream;
+                stream << "SystemWrapperPlugin \"" << c->getPluginName()
+                        << "\" failed to wrap ETISS_System instance";
+                etiss::log(etiss::WARNING, stream.str());
             }
         }
     }
 
     // initialize plugins
-    for (auto iter = plugins.begin(); iter != plugins.end(); iter++)
+    for (auto &p : plugins)
     {
-        Plugin *p = iter->get();
-        if (p)
-        {
-            p->plugin_cpu_ = cpu;
-            p->plugin_system_ = system;
-            p->plugin_arch_ = arch;
-            p->init(cpu, system, arch);
-        }
+        if (!p)
+            etiss::log(etiss::FATALERROR, "Empty plugin");
+
+        p->plugin_cpu_ = cpu_;
+        p->plugin_system_ = system;
+        p->plugin_arch_ = arch_.get();
+        p->init(cpu_, system, arch_.get());
 
         std::stringstream m;
         m << "Init Plugin " << p->getPluginName();
@@ -662,38 +651,21 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
     }
 
     // copy coroutine plugins to array
-    bool cor_enabled = false;
-    unsigned cor_count = 0;
-    CoroutinePlugin **cor_array = 0;
+    std::vector<CoroutinePlugin*> cor_array;
+    for (const auto &plugin : plugins)
     {
-        std::list<CoroutinePlugin *> cl;
-        for (auto iter = plugins.begin(); iter != plugins.end(); iter++)
-        {
-            CoroutinePlugin *c = iter->get()->getCoroutinePlugin();
-            if (c != 0)
-            {
-                cl.push_back(c);
-            }
-        }
-        cor_count = (unsigned)cl.size();
-        if (cor_count > 0)
-            cor_array = new CoroutinePlugin *[cor_count];
-        unsigned i = 0;
-        for (std::list<CoroutinePlugin *>::iterator iter = cl.begin(); iter != cl.end(); iter++)
-        {
-            cor_array[i++] = *iter;
-        }
-        cor_enabled = cor_count > 0;
+        auto c = plugin->getCoroutinePlugin();
+        if (c)
+            cor_array.push_back(c);
     }
 
     // create translation object
-    Translation translation(arch_, jiti, plugins, *system, *cpu);
+    Translation translation(arch_, jiti, plugins, *system, *cpu_);
 
     // Translation init returns a list of pluigins, at position 0 this is the arch plugin followed by all translation
     // plugins
     void **plugins_handle_ = translation.init();
-
-    if (plugins_handle_ == nullptr)
+    if (!plugins_handle_)
     {
         return etiss::RETURNCODE::GENERALERROR;
     }
@@ -702,13 +674,11 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
     etiss::VirtualStruct::Field::Listener *listener = 0;
     {
         std::list<RegisterDevicePlugin *> regdevices;
-        for (auto iter = plugins.begin(); iter != plugins.end(); iter++)
+        for (auto &plugin : plugins)
         {
-            RegisterDevicePlugin *c = iter->get()->getRegisterDevicePlugin();
-            if (c != 0)
-            {
-                regdevices.push_back(c);
-            }
+            auto rdp = plugin->getRegisterDevicePlugin();
+            if (rdp)
+                regdevices.push_back(rdp);
         }
         if (!regdevices.empty())
         {
@@ -719,7 +689,6 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
 
             if (vcpu_)
             {
-
                 listener = new LegacyRegisterDevicePluginListener(regdevices);
 
                 vcpu_->foreachField([listener](std::shared_ptr<etiss::VirtualStruct::Field> f) {
@@ -746,7 +715,7 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
     etiss::int32 exception = RETURNCODE::NOERROR;
 
     // sync time at the beginning (e.g. SystemC processes running at time 0)
-    system->syncTime(system->handle, cpu);
+    system->syncTime(system->handle, cpu_);
 
     // execution loop
     {
@@ -759,14 +728,14 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
 #endif
 
             // execute coroutines
-            if (likely(cor_enabled))
+            if (likely(!cor_array.empty()))
             {
-                for (unsigned i = 0; i < cor_count; i++) // iterate over plugins
+                for (auto &cor_plugin : cor_array)
                 {
-                    exception = cor_array[i]->execute();            // execute plugin
+                    exception = cor_plugin->execute();
                     if (unlikely(exception != RETURNCODE::NOERROR)) // check exception
                     {
-                        etiss_CPUCore_handleException(cpu, exception, blptr, translation, arch); // handle exception
+                        etiss_CPUCore_handleException(cpu_, exception, blptr, translation, arch_.get()); // handle exception
                         if (unlikely(exception != RETURNCODE::NOERROR)) // check if exception handling failed
                         {
                             goto loopexit; // return exception; terminate cpu
@@ -782,7 +751,7 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
                 // if (!(blptr != 0 && blptr->valid && blptr->start<=cpu->instructionPointer && blptr->end >
                 // cpu->instructionPointer)){
                 // Transalte virtual address to physical address if MMU is enabled
-                uint64_t pma = cpu->instructionPointer;
+                uint64_t pma = cpu_->instructionPointer;
                 if (mmu_enabled_)
                 {
                     if (mmu_->cache_flush_pending)
@@ -795,20 +764,20 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
                     }
 
                     // If the exception could be handled by architecture, then continue translation
-                    while ((exception = mmu_->Translate(cpu->instructionPointer, &pma, etiss::mm::X_ACCESS)))
+                    while ((exception = mmu_->Translate(cpu_->instructionPointer, &pma, etiss::mm::X_ACCESS)))
                     {
                         //	translation.unloadBlocks();
-                        if ((exception = arch->handleException(exception, cpu)))
+                        if ((exception = arch_->handleException(exception, cpu_)))
                             goto loopexit;
                         // Update pma, in case pc is redirected to physical address space
-                        pma = cpu->instructionPointer;
+                        pma = cpu_->instructionPointer;
                     }
                 }
 
                 // FIXME: cpu->instructionPointer contains virtual address, getBlockFast should use physical address
                 // instead to realize physical cache.
                 blptr = translation.getBlockFast(
-                    blptr, cpu->instructionPointer); // IMPORTANT: no pointer reference is kept here. if the translator
+                    blptr, cpu_->instructionPointer); // IMPORTANT: no pointer reference is kept here. if the translator
                                                      // performs a cleanup then blptr must be set to 0
                 //}
 
@@ -824,7 +793,7 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
                     {
                         std::stringstream stream;
                         stream << "CPU execution stopped: Cannot execute from instruction index " << std::hex
-                               << cpu->instructionPointer << std::dec << ": no translated code available" << std::endl;
+                               << cpu_->instructionPointer << std::dec << ": no translated code available" << std::endl;
                         etiss::log(etiss::WARNING, stream.str());
                         exception = RETURNCODE::JITCOMPILATIONERROR;
                         goto loopexit;
@@ -834,12 +803,12 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
                 {
                     // etiss::log(etiss::FATALERROR,"disabled etiss iss");
 #if ETISS_CPUCORE_DBG_APPROXIMATE_INSTRUCTION_COUNTER
-                    uint64 oldinstrptr = cpu->instructionPointer; // TESTING
+                    uint64 oldinstrptr = cpu_->instructionPointer; // TESTING
 #endif
                     // plugins_handle_ has the pointer to all translation plugins,
                     // In the generated code these plugin handles are named "plugin_pointers" and can be used to access
                     // a variable of the plugin
-                    exception = (*(blptr->execBlock))(cpu, system, plugins_handle_);
+                    exception = (*(blptr->execBlock))(cpu_, system, plugins_handle_);
 
 #if ETISS_CPUCORE_DBG_APPROXIMATE_INSTRUCTION_COUNTER
                     instrcounter +=
@@ -852,7 +821,7 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
                 // check for exception in executed block
                 if (unlikely(exception != RETURNCODE::NOERROR))
                 {
-                    etiss_CPUCore_handleException(cpu, exception, blptr, translation, arch); // handle exception
+                    etiss_CPUCore_handleException(cpu_, exception, blptr, translation, arch_.get()); // handle exception
                     if (unlikely(exception != RETURNCODE::NOERROR)) // check if exception handling failed
                     {
                         goto loopexit; // exception; terminate cpu
@@ -861,7 +830,7 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
             }
 
             // sync time after block
-            system->syncTime(system->handle, cpu);
+            system->syncTime(system->handle, cpu_);
         }
     }
 
@@ -870,33 +839,32 @@ loopexit:
     float endTime = (float)clock() / CLOCKS_PER_SEC;
 
     // execute coroutines end
-    if (likely(cor_enabled))
+    if (likely(!cor_array.empty()))
     {
-        for (unsigned i = 0; i < cor_count; i++) // iterate over plugins
+        for (auto &cor_plugin : cor_array)
         {
-            cor_array[i]->executionEnd(exception); // execute plugin
+            cor_plugin->executionEnd(exception);
         }
     }
 
     // print some statistics
-    std::cout << "CPU Time: " << etiss::toString(cpu->cpuTime_ps / 1.0E12)
+    std::cout << "CPU Time: " << etiss::toString(cpu_->cpuTime_ps / 1.0E12)
               << "s    Simulation Time: " << etiss::toString(endTime - startTime) + "s" << std::endl;
     std::cout << std::string("CPU Cycles (estimated): ")
-              << etiss::toString(cpu->cpuTime_ps / (float)cpu->cpuCycleTime_ps) << std::endl;
+              << etiss::toString(cpu_->cpuTime_ps / (float)cpu_->cpuCycleTime_ps) << std::endl;
     std::cout << std::string("MIPS (estimated): ")
-              << etiss::toString(cpu->cpuTime_ps / (float)cpu->cpuCycleTime_ps / (endTime - startTime) / 1.0E6)
+              << etiss::toString(cpu_->cpuTime_ps / (float)cpu_->cpuCycleTime_ps / (endTime - startTime) / 1.0E6)
               << std::endl;
 #if ETISS_CPUCORE_DBG_APPROXIMATE_INSTRUCTION_COUNTER
     etiss::log(etiss::INFO, std::string("InstructionCounter: ") +
-                                etiss::toString(instrcounter / ((double)cpu->cpuTime_ps / 1000000.0)));
+                                etiss::toString(instrcounter / ((double)cpu_->cpuTime_ps / 1000000.0)));
     etiss::log(etiss::INFO, std::string("MIPS (good estimation): ") +
-                                etiss::toString(instrcounter / ((double)cpu->cpuTime_ps / 1000000.0)));
+                                etiss::toString(instrcounter / ((double)cpu_->cpuTime_ps / 1000000.0)));
 #endif
 
     // cleanup plugins
-    for (auto iter = plugins.begin(); iter != plugins.end(); iter++)
+    for (auto &p : plugins)
     {
-        Plugin *p = iter->get();
         if (p)
         {
             p->cleanup();
@@ -907,28 +875,25 @@ loopexit:
     }
 
     // undo system wrapping
-    for (std::list<SystemWrapperPlugin *>::iterator iter = syswrappers.begin(); iter != syswrappers.end(); iter++)
+    for (auto &syswrapper : syswrappers)
     {
-        ETISS_System *psys = (*iter)->unwrap(cpu, system);
-        if (psys != 0)
+        auto psys = syswrapper->unwrap(cpu_, system);
+        if (psys)
         {
             system = psys;
         }
         else
         {
             std::stringstream stream;
-            stream << "SERVE WARNING: SystemWrapperPlugin \"" << (*iter)->getPluginName()
+            stream << "SERVE WARNING: SystemWrapperPlugin \"" << syswrapper->getPluginName()
                    << "\" failed to unwrap ETISS_System instance. Most likely results in a memory leak.";
             etiss::log(etiss::WARNING, stream.str());
             break;
         }
     }
 
-    delete[] cor_array;
-
     if (listener)
     {
-
         vcpu_->foreachField(
             [listener](std::shared_ptr<etiss::VirtualStruct::Field> f) { f->removeListener(listener); });
 
