@@ -99,6 +99,7 @@ MACRO(ADD_EXECUTABLE_PULPINO_INTERNAL TARGET_NAME ADD_PLATFORM_FILES)
 
     PULPINO_SETTINGS_POST(${TARGET_NAME})
 
+    SET_TARGET_PROPERTIES(${TARGET_NAME} PROPERTIES LINK_DEPENDS ${PULPINO_LIB_TUMEDA}/link.ld)
     IF(NOT CMAKE_OBJCOPY)
         # CMake does not set this on first invocation, because the toolchain file is included
         # in the CMakeLists.txt when it should be given as cmdline argument.
