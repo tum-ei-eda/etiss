@@ -85,6 +85,7 @@ MACRO(ADD_EXECUTABLE_PULPINO_INTERNAL TARGET_NAME ADD_PLATFORM_FILES)
         LIST(APPEND SRC_FILES
             ${PULPINO_LIB_TUMEDA}/crt0.riscv.S
             ${PULPINO_LIB_TUMEDA}/syscalls.c
+            ${PULPINO_LIB_TUMEDA}/syscalls.cpp
             ${PULPINO_LIB}/libs/sys_lib/src/uart.c
             ${PULPINO_LIB}/libs/sys_lib/src/int.c
             ${PULPINO_LIB}/libs/sys_lib/src/exceptions.c
