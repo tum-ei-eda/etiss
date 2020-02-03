@@ -51,6 +51,7 @@
 #ifndef ETISS_INCLUDE_DEBUGSYSTEM_H_
 #define ETISS_INCLUDE_DEBUGSYSTEM_H_
 #include "etiss/System.h"
+#include <fstream>
 
 namespace etiss
 {
@@ -91,6 +92,8 @@ class DebugSystem : public System
     bool _print_dbgbus_access;
     bool _print_to_file;
     int message_max_cnt;
+
+    std::ofstream trace_file_dbus_;
 };
 
 } // namespace etiss

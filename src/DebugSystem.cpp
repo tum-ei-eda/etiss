@@ -54,7 +54,6 @@
 #include "etiss/CPUArch.h"
 #include "etiss/Misc.h"
 #include <cstring>
-#include <fstream>
 #include <iostream>
 #include <unordered_map>
 #define ARMv6M_DEBUG_PRINT 0
@@ -81,6 +80,12 @@ DebugSystem::DebugSystem(uint32_t rom_start, uint32_t rom_size, uint32_t ram_sta
     _print_dbgbus_access = etiss::cfg().get<bool>("DebugSystem::printDbgbusAccess", false);
     _print_to_file = etiss::cfg().get<bool>("DebugSystem::printToFile", false);
     message_max_cnt = etiss::cfg().get<int>("DebugSystem::message_max_cnt", 100);
+
+    if (_print_dbus_access)
+    {
+        trace_file_dbus_.open(etiss::cfg().get<std::string>("ETISS::outputPathPrefix", "") + "dBusAccess.csv",
+                              std::ios::binary);
+    }
 }
 
 etiss::int32 DebugSystem::iread(ETISS_CPU *, etiss::uint64 addr, etiss::uint32 len)
@@ -91,6 +96,19 @@ etiss::int32 DebugSystem::iwrite(ETISS_CPU *, etiss::uint64 addr, etiss::uint8 *
 {
     etiss::log(etiss::VERBOSE, "Blocked instruction write ");
     return RETURNCODE::IBUS_WRITE_ERROR;
+}
+static void Trace(etiss::uint64 addr, etiss::uint32 len, bool isWrite, bool toFile, std::ofstream &file)
+{
+    std::stringstream text;
+    text << "0"                                                   // time
+         << (isWrite ? ";w;" : ";r;")                             // type
+         << std::setw(8) << std::setfill('0') << std::hex << addr // addr
+         << ";" << len << std::endl;
+
+    if (toFile)
+        file << text.str();
+    else
+        std::cout << text.str();
 }
 etiss::int32 DebugSystem::dread(ETISS_CPU *, etiss::uint64 addr, etiss::uint8 *buf, etiss::uint32 len)
 {
@@ -113,33 +131,6 @@ etiss::int32 DebugSystem::dread(ETISS_CPU *, etiss::uint64 addr, etiss::uint8 *b
         // }
         //
         // memcpy(buf, mem + addr, len);
-        //
-        // if (_print_dbus_access) {
-        //   std::stringstream text;
-        //   text << "read data: 0x";
-        //   for (int i = 0; i < len; i++) {
-        //     text << std::setfill('0') << std::setw(2) << std::hex << (int)buf[i];
-        //   }
-        //   text << std::setfill(' ') << " from 0x" << addr << "-0x" << addr + len
-        //   - 1
-        //        << std::dec << std::endl;
-        //
-        //   if (_print_to_file) {
-        //     std::ofstream fout;
-        //     fout.open(etiss::cfg().get<std::string>("ETISS::outputPathPrefix",
-        //     "") +
-        //                   "dBusAccess.txt",
-        //               std::ios::binary | std::ios::out | std::ios::app);
-        //     fout << text.str();
-        //     fout.close();
-        //   } else
-        //     std::cout << text.str();
-        // }
-
-        if (_print_dbus_access)
-        {
-            std::cout << "dread: " << std::hex << addr << std::dec << ", len: " << len << std::endl;
-        }
 
         if (addr >= _rom_start && addr < _rom_start + rom_mem.size())
         {
@@ -150,13 +141,17 @@ etiss::int32 DebugSystem::dread(ETISS_CPU *, etiss::uint64 addr, etiss::uint8 *b
         {
             addr -= _ram_start;
             memcpy(buf, ram_mem.data() + addr, len);
+
+            if (_print_dbus_access)
+            {
+                Trace(addr, len, false, _print_to_file, trace_file_dbus_);
+            }
         }
         else
         {
             std::cout << std::hex << addr << std::dec << std::endl;
             etiss::log(etiss::FATALERROR, "wrong address issued in DebugSystem::dread\n");
         }
-        // TODO(sharif) _print_dbus_access, _print_to_file
     }
 #if ARMv6M_DEBUG_PRINT
     else
@@ -194,43 +189,22 @@ etiss::int32 DebugSystem::dwrite(ETISS_CPU *, etiss::uint64 addr, etiss::uint8 *
     //   printMessage("data write error", message.str(), message_max_cnt);
     //   return RETURNCODE::NOERROR;
     // }
-    // if (_print_dbus_access) {
-    //   std::stringstream text;
-    //   text << "write data:0x";
-    //   for (int i = 0; i < len; i++) {
-    //     text << std::setfill('0') << std::setw(2) << std::hex << (int)buf[i];
-    //   }
-    //   text << std::setfill(' ') << " to " << addr << "-" << addr + len - 1
-    //        << std::dec << std::endl;
-    //
-    //   if (_print_to_file) {
-    //     std::ofstream fout;
-    //     fout.open(etiss::cfg().get<std::string>("ETISS::outputPathPrefix", "")
-    //     +
-    //                   "dBusAccess.txt",
-    //               std::ios::binary | std::ios::out | std::ios::app);
-    //     fout << text.str();
-    //     fout.close();
-    //   } else
-    //     std::cout << text.str();
-    // }
-
-    if (_print_dbus_access)
-    {
-        std::cout << "dwrite: " << std::hex << addr << std::dec << ", len: " << len << std::endl;
-    }
 
     if (addr >= _ram_start && addr < _ram_start + ram_mem.size())
     {
         addr -= _ram_start;
         memcpy(ram_mem.data() + addr, buf, len);
+
+        if (_print_dbus_access)
+        {
+            Trace(addr, len, true, _print_to_file, trace_file_dbus_);
+        }
     }
     else
     {
         std::cout << std::hex << addr << std::dec << std::endl;
         etiss::log(etiss::FATALERROR, "wrong address issued in DebugSystem::dwrite\n");
     }
-    // TODO(sharif) _print_dbus_access, _print_to_file
     return RETURNCODE::NOERROR;
 }
 etiss::int32 DebugSystem::dbg_read(etiss::uint64 addr, etiss::uint8 *buf, etiss::uint32 len)
