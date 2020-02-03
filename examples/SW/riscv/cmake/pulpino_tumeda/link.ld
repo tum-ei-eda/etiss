@@ -95,6 +95,8 @@ SECTIONS
         . = ALIGN(4);
         *(.rodata);
         *(.rodata.*)
+        *(.srodata)
+        *(.srodata.*)
     } > instrram
 
     .shbss :
@@ -109,6 +111,7 @@ SECTIONS
         _sdata  =  .;
         *(.data);
         *(.data.*)
+        *(.sdata2.*)
         edata  =  .;
         _edata  =  .;
     } > dataram
