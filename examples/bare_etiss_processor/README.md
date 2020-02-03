@@ -31,7 +31,7 @@ Finally we can build and run the simulation with the following script:
 	$ cmake ..
 	$ make
 	$ cd ..
-	$ ./run.sh build
+	$ ./run_helper.sh path/to/target/binary
 
 
   > NOTE: This script simply adds environment variables and starts the main executable
@@ -40,14 +40,8 @@ Finally we can build and run the simulation with the following script:
 ## Debugging
 
 ### Debug ETISS
-`./run.sh` could be easily modified to use GDB. To replace following line:
 
-	./build/main -iETISS.ini
-
-with
-
-	gdb --args ./build/main -iETISS.ini
-then run it in terminal.
+	./run_helper.sh ELFFILE gdb
 
 ### Debug target software
 A **gdbserver** is integrated in ETISS, and it could be used to debug target
@@ -64,6 +58,15 @@ beginning of target SW, waiting for incoming command, if **gdbserver**
 is enabled.
 
 #### Use gdbserver
+
+Short version:
+
+	./run_helper.sh ELFFILE tgdb
+
+Requires KDE "Konsole", but add option "noattach" to attach to the gdbserver manually (see below).
+
+Long version:
+
 Run the ETISS (main) using aformentioned script, then invoke corresponding
 gdb in a new terminal. E.g. or1k-elf-gdb for or1k core. **Do not use system
 default gdb directly for target core.** The target SW executable should be
@@ -156,7 +159,7 @@ Create a new debugging configuration for your project by going to the debug side
 
 ## Snapshot
 
-the output during execution should look similar to this:
+The output during execution should look similar to this:
 
 ### GDB output in terminal
 When utilizing **gdbserver** to debug target software.
