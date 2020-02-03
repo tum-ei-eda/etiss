@@ -79,7 +79,7 @@ fi
 # Call
 export ETISS_HOME=${ETISS_HOME}
 VP_CMD="${ETISS_HOME}/examples/bare_etiss_processor/build/main"
-ARGS="-iini/base.ini -i${DYN_INI}"
+ARGS="-i${ETISS_HOME}/examples/bare_etiss_processor/base.ini -i${DYN_INI}"
 if [ "${USE_TGDB}" -eq 1 ]; then
     if [ "${DO_NOT_ATTACH}" -eq 0 ]; then
         konsole --workdir $(pwd) -e "bash -c '/usr/local/research/projects/SystemDesign/tools/riscv/current/bin/riscv32-unknown-elf-gdb -ex \"tar rem :2222\" $TARGETSW_PATH_ELF'" &
