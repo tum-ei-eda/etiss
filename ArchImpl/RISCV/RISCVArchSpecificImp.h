@@ -381,6 +381,7 @@ void RISCVArch::initInstrSet(etiss::instr::ModedInstructionSet &mis) const
         std::function<void(InstructionContext & ic, etiss_uint32 opRd)> updateRiscvInstrLength =
             [](InstructionContext &ic, etiss_uint32 opRd) {
                 ic.instr_width_fully_evaluated_ = true;
+                ic.is_not_default_width_ = true;
                 if (opRd == 0x3f)
                     ic.instr_width_ = 64;
                 else if ((opRd & 0x3f) == 0x1f)
@@ -390,10 +391,8 @@ void RISCVArch::initInstrSet(etiss::instr::ModedInstructionSet &mis) const
                 else if ((opRd & 0x3) != 0x3)
                     ic.instr_width_ = 16;
                 else
-                    etiss::log(
-                        etiss::FATALERROR,
-                        "Support for RISCV instruction longer than 64 bits or in odd number bytes is not implemented");
-                ic.is_not_default_width_ = true;
+                    // This might happen when code is followed by data.
+                    ic.is_not_default_width_ = false;
             };
 
         BitArrayRange op(6, 0);
@@ -455,8 +454,8 @@ void RISCVArch::initInstrSet(etiss::instr::ModedInstructionSet &mis) const
                 break;
             }
         default:
-            etiss::log(etiss::FATALERROR,
-                       "Support for RISCV instruction longer than 64 bits or in odd number bytes is not implemented");
+            // This might happen when code is followed by data.
+            ic.is_not_default_width_ = false;
         }
     };
 }
