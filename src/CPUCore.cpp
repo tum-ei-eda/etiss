@@ -728,18 +728,15 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
 #endif
 
             // execute coroutines
-            if (likely(!cor_array.empty()))
+            for (auto &cor_plugin : cor_array)
             {
-                for (auto &cor_plugin : cor_array)
+                exception = cor_plugin->execute();
+                if (unlikely(exception != RETURNCODE::NOERROR)) // check exception
                 {
-                    exception = cor_plugin->execute();
-                    if (unlikely(exception != RETURNCODE::NOERROR)) // check exception
+                    etiss_CPUCore_handleException(cpu_, exception, blptr, translation, arch_.get()); // handle exception
+                    if (unlikely(exception != RETURNCODE::NOERROR)) // check if exception handling failed
                     {
-                        etiss_CPUCore_handleException(cpu_, exception, blptr, translation, arch_.get()); // handle exception
-                        if (unlikely(exception != RETURNCODE::NOERROR)) // check if exception handling failed
-                        {
-                            goto loopexit; // return exception; terminate cpu
-                        }
+                        goto loopexit; // return exception; terminate cpu
                     }
                 }
             }
@@ -839,12 +836,9 @@ loopexit:
     float endTime = (float)clock() / CLOCKS_PER_SEC;
 
     // execute coroutines end
-    if (likely(!cor_array.empty()))
+    for (auto &cor_plugin : cor_array)
     {
-        for (auto &cor_plugin : cor_array)
-        {
-            cor_plugin->executionEnd(exception);
-        }
+        cor_plugin->executionEnd(exception);
     }
 
     // print some statistics

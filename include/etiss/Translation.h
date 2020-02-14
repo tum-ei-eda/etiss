@@ -49,6 +49,7 @@
 #include "etiss/JIT.h"
 
 #include <memory>
+#include <unordered_map>
 
 namespace etiss
 {
@@ -146,7 +147,7 @@ class Translation
 
     etiss::instr::ModedInstructionSet *mis_;
 
-    std::map<etiss::uint64, std::list<BlockLink *>> blockmap_;
+    std::unordered_map<etiss::uint64, std::list<BlockLink *>> blockmap_;
 #if ETISS_TRANSLATOR_STAT
     etiss::uint64 next_count_;
     etiss::uint64 branch_count_;
@@ -163,13 +164,13 @@ class Translation
     */
     inline BlockLink *getBlockFast(BlockLink *prev, const etiss::uint64 &instructionindex)
     {
-        if (likely(prev != 0))
+        if (prev != 0)
         {
             BlockLink *bl = prev->next;
             if (instructionindex >= prev->end && bl != 0 && bl->end > instructionindex)
             { // ->next MUST always start immediately after the current block since it is not checked here
                 // check if block is invalid
-                if (likely(bl->valid))
+                if (bl->valid)
                 {
 #if ETISS_TRANSLATOR_STAT
                     next_count_++;
@@ -185,7 +186,7 @@ class Translation
             if (bl != 0 && bl->start <= instructionindex && bl->end > instructionindex)
             {
                 // check if block is invalid
-                if (likely(bl->valid))
+                if (bl->valid)
                 { // check
 #if ETISS_TRANSLATOR_STAT
                     branch_count_++;

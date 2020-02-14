@@ -274,13 +274,13 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
     for (std::list<BlockLink *>::iterator iter = list.begin(); iter != list.end();) // iter++ moved into block
     {
         BlockLink *iterbl = (*iter);
-        if (likely(iterbl != 0))
+        if (iterbl != 0)
         {
-            if (likely(iterbl->valid)) // check for valid block
+            if (iterbl->valid) // check for valid block
             {
                 if (iterbl->start <= instructionindex && iterbl->end > instructionindex)
                 {
-                    if (likely(prev != 0))
+                    if (prev != 0)
                     {
                         if (prev->end == iterbl->start)
                         {
