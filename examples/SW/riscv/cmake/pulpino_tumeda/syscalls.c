@@ -14,6 +14,33 @@
 #define ETISS_LOGGER_ADDR (void *)0x80000000
 #endif
 
+#ifdef DEBUG_SYSTEM
+#include <stdarg.h>
+void vprintf_fromisr(const char *format, va_list valist)
+{
+    va_list valist_copy;
+    va_copy(valist_copy, valist);
+
+    char buf[512];
+    int size = vsnprintf(0, 0, format, valist);
+    vsnprintf(buf, size + 1, format, valist_copy);
+
+    for (size_t i = 0; i < size; ++i)
+    {
+        *(volatile char *)(ETISS_LOGGER_ADDR) = buf[i];
+    }
+
+    va_end(valist_copy);
+}
+void printf_fromisr(const char *format, ...)
+{
+    va_list vl;
+    va_start(vl, format);
+    vprintf_fromisr(format, vl);
+    va_end(vl);
+}
+#endif
+
 // BRK
 extern char _heap_start;
 extern char _heap_end;
@@ -85,6 +112,9 @@ ssize_t _write(int file, const void *ptr, size_t len)
 // EXIT
 void _exit_(int exit_status)
 {
+#ifdef DEBUG_SYSTEM
+    printf_fromisr("exit called with code: %i\n", exit_status);
+#endif
     asm("ebreak");
     while (1)
         ;
@@ -112,33 +142,6 @@ int _gettimeofday(struct timeval *tp, void *tzp)
     tp->tv_usec = cycle % timebase * 1000000 / timebase;
     return 0;
 }
-
-#ifdef DEBUG_SYSTEM
-#include <stdarg.h>
-void vprintf_fromisr(const char *format, va_list valist)
-{
-    va_list valist_copy;
-    va_copy(valist_copy, valist);
-
-    char buf[512];
-    int size = vsnprintf(0, 0, format, valist);
-    vsnprintf(buf, size + 1, format, valist_copy);
-
-    for (size_t i = 0; i < size; ++i)
-    {
-        *(volatile char *)(ETISS_LOGGER_ADDR) = buf[i];
-    }
-
-    va_end(valist_copy);
-}
-void printf_fromisr(const char *format, ...)
-{
-    va_list vl;
-    va_start(vl, format);
-    vprintf_fromisr(format, vl);
-    va_end(vl);
-}
-#endif
 
 // Overrides weak definition from pulpino sys_lib.
 int default_exception_handler_c(unsigned int a0, unsigned int a1, unsigned int a2, unsigned int a3, unsigned int a4,
