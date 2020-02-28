@@ -8,27 +8,27 @@ project) for simple RISC-V software compilation
 In order to compile riscv software, the following requirements has to be
 met:
 
-  - Toolchain path in Makefile has to point to correct cross-compile
-  `toolchain`
+  - A RISC-V toolchain is required for cross-compiling.
 
 ### RISC-V test cases
 
 By default, benchmark provisioned with ETISS in `../test_cases` will be
-compiled. Binary code and elf file will be located at `./build`. Minimal
-dependent source code in `./sys_lib` is linked against final executable,
-such as default interrupt handlers and exception handlers. Both of interrupt
-handlers and exception handlers are for now just endless loop and they
-could be overridden by user-defined handlers.
+compiled. Binary code and elf file will be located at `build/`. Minimal
+dependent source code in `cmake/` is linked against final executable,
+such as default interrupt handlers and exception handlers.
 
 To compile the SW:
 
 	$ mkdir build && cd build
+  # At EDA:
 	$ cmake ..
+  # Otherwise:
+  $ cmake -DRISCV_ELF_GCC_PREFIX=path/to/toolchain -DRISCV_ELF_GCC_BASENAME=riscv64-unknown-elf ..
 	$ make
 
 ### Instruction test software
 
-In the folder `./instr_tests`, there are the test SWs which could be used
+In the folder `instr_tests/`, there are the test SWs which could be used
 to test ISA model instruction by instruction. These SWs originates from
 UCB and they cover integer, multiplication and compressed instructions.
 
