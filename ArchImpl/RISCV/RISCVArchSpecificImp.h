@@ -54,14 +54,14 @@
 #include "RISCVArch.h"
 #include "etiss/CPUCore.h"
 
-etiss::instr::InstructionGroup ISA64("ISA64", 64);
-etiss::instr::InstructionGroup ISA16("ISA16", 16);
-etiss::instr::InstructionGroup ISA32("ISA32", 32);
-etiss::instr::InstructionClass ISA16Class(1, "ISA16", 16, ISA16);
-etiss::instr::InstructionClass ISA32Class(1, "ISA32", 32, ISA32);
-etiss::instr::InstructionClass ISA64Class(1, "ISA64", 64, ISA64);
+etiss::instr::InstructionGroup ISA64_RISCV("ISA64_RISCV", 64);
+etiss::instr::InstructionGroup ISA16_RISCV("ISA16_RISCV", 16);
+etiss::instr::InstructionGroup ISA32_RISCV("ISA32_RISCV", 32);
+etiss::instr::InstructionClass ISA16_RISCVClass(1, "ISA16_RISCV", 16, ISA16_RISCV);
+etiss::instr::InstructionClass ISA32_RISCVClass(1, "ISA32_RISCV", 32, ISA32_RISCV);
+etiss::instr::InstructionClass ISA64_RISCVClass(1, "ISA64_RISCV", 64, ISA64_RISCV);
 
-etiss::instr::InstructionCollection RISCVISA("RISCVISA", ISA16Class, ISA32Class, ISA64Class);
+etiss::instr::InstructionCollection RISCVISA("RISCVISA", ISA16_RISCVClass, ISA32_RISCVClass, ISA64_RISCVClass);
 
 /**
         @brief This function will be called automatically in order to handling exceptions such as interrupt, system
@@ -497,24 +497,24 @@ void RISCVArch::compensateEndianess(ETISS_CPU *cpu, etiss::instr::BitArray &ba) 
    of a core. Further fiels might be needed to enable gdbserver etc.
 
 */
-class RegField : public etiss::VirtualStruct::Field
+class RegField_RISCV : public etiss::VirtualStruct::Field
 {
   private:
     const unsigned gprid_;
 
   public:
-    RegField(etiss::VirtualStruct &parent, unsigned gprid)
+    RegField_RISCV(etiss::VirtualStruct &parent, unsigned gprid)
         : Field(parent, std::string("R") + etiss::toString(gprid), std::string("R") + etiss::toString(gprid), R | W, 4)
         , gprid_(gprid)
     {
     }
 
-    RegField(etiss::VirtualStruct &parent, std::string name, unsigned gprid)
+    RegField_RISCV(etiss::VirtualStruct &parent, std::string name, unsigned gprid)
         : Field(parent, name, name, R | W, 4), gprid_(gprid)
     {
     }
 
-    virtual ~RegField() {}
+    virtual ~RegField_RISCV() {}
 
   protected:
     virtual uint64_t _read() const { return (uint64_t) * ((RISCV *)parent_.structure_)->R[gprid_]; }
@@ -526,12 +526,12 @@ class RegField : public etiss::VirtualStruct::Field
     }
 };
 
-class PcField : public etiss::VirtualStruct::Field
+class pcField_RISCV : public etiss::VirtualStruct::Field
 {
   public:
-    PcField(etiss::VirtualStruct &parent) : Field(parent, "instructionPointer", "instructionPointer", R | W, 4) {}
+    pcField_RISCV(etiss::VirtualStruct &parent) : Field(parent, "instructionPointer", "instructionPointer", R | W, 4) {}
 
-    virtual ~PcField() {}
+    virtual ~pcField_RISCV() {}
 
   protected:
     virtual uint64_t _read() const { return (uint64_t)((ETISS_CPU *)parent_.structure_)->instructionPointer; }
@@ -578,9 +578,9 @@ std::shared_ptr<etiss::VirtualStruct> RISCVArch::getVirtualStruct(ETISS_CPU *cpu
     for (uint32_t i = 0; i < 32; ++i)
     {
 
-        ret->addField(new RegField(*ret, i));
+        ret->addField(new RegField_RISCV(*ret, i));
     }
-    ret->addField(new PcField(*ret));
+    ret->addField(new pcField_RISCV(*ret));
     ret->addField(new CSRField<etiss::uint32>(*ret, &((RISCV *)cpu)->MISA, 769));
     return ret;
 }

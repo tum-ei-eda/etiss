@@ -47,7 +47,6 @@
 #ifndef ETISS_RISCVArch_RISCV_H_
 #define ETISS_RISCVArch_RISCV_H_
 #include "etiss/jit/CPU.h"
-#include <stdio.h>
 
 #ifdef __cplusplus
 extern "C"
