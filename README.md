@@ -31,15 +31,17 @@ ETISS is supported on x86_64 Linux and Windows hosts. Tested compilers include G
 
 ### Dependencies
 
-  - gcc-multilib; g++-multilib
-  - zlib1g-dev
-  - libtinfo-dev
-  - graphviz; doxygen (For documentation generation)
+  - GCC Compiler >= 5.0
+  - Boost >= 1.54
+  - Graphviz + Doxygen (For documentation generation)
   - LLVM + Clang 7
   (If you want to use LLVM-JIT compiler then you have to setup LLVM and Clang
    libraries somewhere on the host PC and source it with the environment variable
    `LLVM_DIR`.)
-  - Boost 1.54
+
+Packages for Ubuntu 18:
+
+    sudo apt-get install g++ libboost-system-dev libboost-filesystem-dev graphviz doxygen
 
 
 ### Build and Installation
