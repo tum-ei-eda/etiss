@@ -329,24 +329,27 @@ CONSTEXPR I etiss_instr_generateMask()
 std::ostream &operator<<(std::ostream &os, const BitArray tf);
 
 /**
-    read/write a range of bits from/to a BitArray. the length of the range may
-   not be larger than sizeof(I). write will silently discard additional bits
-   outside the defined range length
-*/
+ * Acts as a view/filter to a BitArray. Reading through it will only return bits
+ * within the range. Writing through it will only set bits within the range.
+ *
+ * The length of the range may not be larger than sizeof(I)*8.
+ */
 class BitArrayRange
 {
   public:
     etiss_del_como(BitArrayRange)
 
-        private : unsigned si_;
-    unsigned ei_;
-    unsigned mms_;
-    I mmm_;
-    unsigned wi_;
-    unsigned length_;
-    bool fragmented_;
-    I fmmm_;
-    unsigned fmms_;
+        private : unsigned filterStart_;
+    unsigned filterEnd_;
+    unsigned filterLen_;
+    unsigned lowPartShift_ = 0;
+    I lowPartMask_ = 0;
+    unsigned dataArrayIndex_ = 0;
+    bool needsSplitAccess_ = false;
+    I highPartMask_ = 0;
+    unsigned highPartShift_ = 0;
+
+    static const size_t Ibits = sizeof(I) * 8;
 
   public:
     /**

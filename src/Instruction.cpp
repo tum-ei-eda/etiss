@@ -52,6 +52,7 @@
 #include "etiss/Instruction.h"
 
 #include <sstream>
+#include <cassert>
 
 #if ETISS_USE_BYTESWAP_H
 #include <byteswap.h>
@@ -385,86 +386,59 @@ std::ostream &operator<<(std::ostream &os, const BitArray tf)
     return os;
 }
 
-BitArrayRange::BitArrayRange(unsigned startindex_included, unsigned endindex_included) : mms_(0), mmm_(0)
+BitArrayRange::BitArrayRange(unsigned startindex_included, unsigned endindex_included)
+    : filterStart_(startindex_included), filterEnd_(endindex_included), filterLen_(filterStart_ + 1 - filterEnd_)
 {
-    if (startindex_included + 1 < endindex_included)
+    assert(filterStart_ + 1 >= filterEnd_ && "Invalid BitArrayRange constructor arguments");
+    assert(filterLen_ <= sizeof(I) * 8 && "Invalid BitArrayRange width");
+
+    lowPartShift_ = filterEnd_ % Ibits;
+    if (lowPartShift_ + filterLen_ <= Ibits)
     {
-        etiss::log(etiss::WARNING, "BitArrayRange should be called with the more significant bit first: e.g. "
-                                   "BitArrayRange(15,0) NOT BitArrayRange(0,15). The values will be swapped in this "
-                                   "case but ignoring that convention may lead to grave problems.");
-        unsigned tmp = startindex_included;
-        startindex_included = endindex_included;
-        endindex_included = tmp;
-    }
-    si_ = startindex_included;
-    ei_ = endindex_included;
-    length_ = startindex_included + 1 - endindex_included;
-    if (length_ <= sizeof(I) * 8)
-    {
-        mms_ = endindex_included % (sizeof(I) * 8);
-        if (mms_ + length_ <= (sizeof(I) * 8))
+        needsSplitAccess_ = false;
+        dataArrayIndex_ = (filterEnd_ - lowPartShift_) / Ibits;
+        for (unsigned i = 0; i < filterLen_; i++)
         {
-            fragmented_ = false;
-            wi_ = (endindex_included - mms_) / (sizeof(I) * 8);
-            mmm_ = 0;
-            for (unsigned i = 0; i < length_; i++)
-            {
-                mmm_ = (mmm_ << 1) | 1;
-            }
-        }
-        else
-        {
-            fragmented_ = true;
-            fmms_ = (sizeof(I) * 8) - mms_;
-            wi_ = (endindex_included - mms_) / (sizeof(I) * 8);
-            mmm_ = 0;
-            for (unsigned i = 0; i < fmms_; i++)
-            {
-                mmm_ = (mmm_ << 1) | 1;
-            }
-            fmmm_ = 0;
-            for (unsigned i = 0; i < ((mms_ + length_) % (sizeof(I) * 8)); i++)
-            {
-                fmmm_ = (fmmm_ << 1) | 1;
-            }
+            lowPartMask_ = (lowPartMask_ << 1) | 1;
         }
     }
     else
     {
-        etiss::log(etiss::ERROR, "BitArrayRange can only handle ranges with width <= sizeof(T)*8");
-        throw "";
+        needsSplitAccess_ = true;
+        highPartShift_ = Ibits - lowPartShift_;
+        dataArrayIndex_ = (filterEnd_ - lowPartShift_) / Ibits;
+        for (unsigned i = 0; i < highPartShift_; i++)
+        {
+            lowPartMask_ = (lowPartMask_ << 1) | 1;
+        }
+        for (unsigned i = 0; i < (lowPartShift_ + filterLen_) * Ibits; i++)
+        {
+            highPartMask_ = (highPartMask_ << 1) | 1;
+        }
     }
 }
 
 I BitArrayRange::read(const BitArray &ba)
 {
-#if DEBUG
-    if (unlikely(ba.w_ <= si_))
+    assert(ba.w_ > filterStart_ && "BitArrayRange outside of BitArray");
+
+    I ret = (ba.d_[dataArrayIndex_] >> lowPartShift_) & lowPartMask_;
+    if (needsSplitAccess_)
     {
-        etiss::log(etiss::ERROR, "BitArrayRange outside of BitArray");
-        return I(0);
-    }
-#endif
-    I ret = (ba.d_[wi_] >> mms_) & mmm_;
-    if (unlikely(fragmented_))
-    {
-        ret = ret | ((ba.d_[wi_ + 1] & fmmm_) << fmms_);
+        ret |= (ba.d_[dataArrayIndex_ + 1] & highPartMask_) << highPartShift_;
     }
     return ret;
 }
 void BitArrayRange::write(const BitArray &ba, I val)
 {
-#if DEBUG
-    if (unlikely(ba.w_ <= si_))
+    assert(ba.w_ > filterStart_ && "BitArrayRange outside of BitArray");
+
+    ba.d_[dataArrayIndex_] =
+        ((val & lowPartMask_) << lowPartShift_) | (ba.d_[dataArrayIndex_] & ~(lowPartMask_ << lowPartShift_));
+    if (needsSplitAccess_)
     {
-        etiss::log(etiss::ERROR, "BitArrayRange outside of BitArray");
-        return;
-    }
-#endif
-    ba.d_[wi_] = ((val & mmm_) << mms_) | (ba.d_[wi_] & ~(mmm_ << mms_));
-    if (unlikely(fragmented_))
-    {
-        ba.d_[wi_ + 1] = ((val >> fmms_) & fmmm_) | (ba.d_[wi_ + 1] & ~fmmm_);
+        ba.d_[dataArrayIndex_ + 1] =
+            ((val >> highPartShift_) & highPartMask_) | (ba.d_[dataArrayIndex_ + 1] & ~highPartMask_);
     }
 }
 
@@ -483,11 +457,11 @@ void BitArrayRange::setAll(const BitArray &ba, bool val)
 
 unsigned BitArrayRange::start()
 {
-    return si_;
+    return filterStart_;
 }
 unsigned BitArrayRange::end()
 {
-    return ei_;
+    return filterEnd_;
 }
 
 OPCode::OPCode(const BitArray &code, const BitArray &mask) : code_(code & mask), mask_(mask)
