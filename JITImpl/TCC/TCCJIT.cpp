@@ -65,7 +65,6 @@ static void addAllSymbols(std::map<std::string, void *> &ptrs)
 
     HANDLE hProcess = GetCurrentProcess();
     // DWORD64 BaseOfDll;
-    char *Mask = "*";
     BOOL status;
 
     status = SymInitialize(hProcess, NULL, TRUE);

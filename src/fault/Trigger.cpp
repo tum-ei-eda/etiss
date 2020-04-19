@@ -287,7 +287,7 @@ uint64_t Trigger::getTriggerTime() const
     {
         ensure(TIME);
     }
-    catch (char const *a)
+    catch (char const *)
     {
         ensure(TIMERELATIVE);
     }

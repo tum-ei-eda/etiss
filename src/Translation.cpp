@@ -384,7 +384,6 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
     // check function/library handle
     if (lib.get() != 0)
     {
-        std::string error;
         // std::cout<<"blockfunctionname:"<<blockfunctionname<<std::endl;
         ExecBlockCall execBlock = (ExecBlockCall)jit_->getFunction(lib.get(), blockfunctionname.c_str(), error);
         if (execBlock != 0)

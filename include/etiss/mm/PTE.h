@@ -123,12 +123,10 @@ class PTE
     {
         // In order to generate 64 bit mask, mask has to be declared
         // as 64 bit integer.
-        uint64_t mask = 1;
-        if (len == 64)
-            mask = -1;
+        if (len >= 64)
+            return static_cast<uint64_t>(-1);
         else
-            mask = (mask << len) - 1;
-        return mask;
+            return (static_cast<uint64_t>(1) << len) - 1;
     }
 
     void SetBit(uint32_t pos) { pte_val_ |= (static_cast <uint64_t>(1) << pos); }

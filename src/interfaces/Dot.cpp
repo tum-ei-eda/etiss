@@ -126,7 +126,7 @@ ValueOperationTraceGraph::Link *ValueOperationTraceGraph::link(const void *src, 
     return ret;
 }
 
-void ValueOperationTraceGraph::filterTmp(Node *start, Node *tmp, bool hideedge, const std::string &alabels,
+void ValueOperationTraceGraph::filterTmp(Node *start_, Node *tmp, bool hideedge, const std::string &alabels,
                                          std::ofstream &out, std::unordered_set<Node *> &nnl,
                                          std::unordered_set<std::pair<const void *, const void *>> &dependencies,
                                          std::unordered_set<Node *> &declared)
@@ -147,7 +147,7 @@ void ValueOperationTraceGraph::filterTmp(Node *start, Node *tmp, bool hideedge, 
         if (!hideedge)
         {
 
-            out << "\t" << ((size_t)start) << " -> " << ((size_t)tmp);
+            out << "\t" << ((size_t)start_) << " -> " << ((size_t)tmp);
 
             {
                 std::string attr;
@@ -162,8 +162,8 @@ void ValueOperationTraceGraph::filterTmp(Node *start, Node *tmp, bool hideedge, 
         if (!revisit)
             nnl.insert(tmp);
 
-        if (start->id != 0) // filter start node
-            dependencies.insert(std::make_pair(start->id, tmp->id));
+        if (start_->id != 0) // filter start node
+            dependencies.insert(std::make_pair(start_->id, tmp->id));
     }
     else
     {
@@ -176,7 +176,7 @@ void ValueOperationTraceGraph::filterTmp(Node *start, Node *tmp, bool hideedge, 
 
             std::string l = alabels + "," + (*iter)->label;
 
-            filterTmp(start, (*iter)->dst, hideedge, l, out, nnl, dependencies,
+            filterTmp(start_, (*iter)->dst, hideedge, l, out, nnl, dependencies,
                       declared); // hide link if this is not a direct link between a named node and the origin
 
             delete *iter;
@@ -430,12 +430,12 @@ ValueOperationTraceGraphStreamer::Node *ValueOperationTraceGraphStreamer::openDe
     return ret;
 }
 
-void ValueOperationTraceGraphStreamer::Link::setLabel(const char *src)
+void ValueOperationTraceGraphStreamer::Link::setLabel(const char *src_)
 {
     size_t pos = 0;
-    while ((src[pos] != 0) && (pos < (label_size - 1)))
+    while ((src_[pos] != 0) && (pos < (label_size - 1)))
     {
-        label[pos] = src[pos];
+        label[pos] = src_[pos];
         ++pos;
     }
     label[pos] = 0;

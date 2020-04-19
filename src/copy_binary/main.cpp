@@ -22,7 +22,7 @@ int StrToInt(const std::string &str)
     {
         return std::stoi(str);
     }
-    catch (const std::exception &e)
+    catch (const std::exception &)
     {
         return -1;
     }

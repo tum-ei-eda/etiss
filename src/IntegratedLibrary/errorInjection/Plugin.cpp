@@ -157,12 +157,8 @@ etiss::int32 BlockAccurateHandler::execute()
 
 void BlockAccurateHandler::parseFile(std::string filename, std::string reg)
 {
-
-    std::ifstream file;
-
-    file.open(filename.c_str());
-
-    if (!file.is_open())
+    std::ifstream file(filename);
+    if (!file)
     {
         std::cout << "failed to load error definition file " << filename << std::endl;
         return;
@@ -170,7 +166,6 @@ void BlockAccurateHandler::parseFile(std::string filename, std::string reg)
 
     while (file.good())
     {
-
         std::string line;
         std::getline(file, line);
         std::stringstream ls(line);
@@ -185,11 +180,6 @@ void BlockAccurateHandler::parseFile(std::string filename, std::string reg)
             continue;
 
         etiss::uint64 tmp_cf;
-        unsigned tmp_f;
-        unsigned errorid;
-
-        char semicolon;
-
         ls >> tmp_cf;           // get time in ns
         tmp_cf = tmp_cf * 1000; // ns to ps
         if (ls.fail())
@@ -197,13 +187,14 @@ void BlockAccurateHandler::parseFile(std::string filename, std::string reg)
             printf("Invalid line in error definition file\n");
             continue;
         }
+        char semicolon;
         ls >> semicolon;
         if (ls.fail() || semicolon != ';')
         {
             printf("Invalid line in error definition file\n");
             continue;
         }
-
+        unsigned tmp_f;
         ls >> tmp_f; // get flipped bit
         if (ls.fail())
         {
@@ -212,6 +203,7 @@ void BlockAccurateHandler::parseFile(std::string filename, std::string reg)
         }
         ls >> semicolon;
         bool eidv = false;
+        unsigned errorid = 0;
         if (!ls.fail() && semicolon == ';')
         { // parse errorid
             ls >> errorid;
@@ -223,16 +215,13 @@ void BlockAccurateHandler::parseFile(std::string filename, std::string reg)
         errors_.push_back(BlockAccurateHandler::Error(reg, eidv ? errorid : global_errorid_max++, tmp_cf,
                                                       ((etiss::uintMax)1) << tmp_f));
 
-        std::cout << reg << ": "
-                  << "Error ";
+        std::cout << reg << ": Error ";
         if (eidv)
         {
             std::cout << errorid << " ";
         }
         std::cout << "scheduled for time (ps)" << tmp_cf << "; bit " << tmp_f << std::endl;
     }
-
-    file.close();
 
     errors_.sort(etiss_BlockAccurateHandler_cmp);
 
@@ -242,7 +231,7 @@ void BlockAccurateHandler::parseFile(std::string filename, std::string reg)
     }
     else
     {
-        next_time_ps = (etiss::uint64)(etiss::int64)-1;
+        next_time_ps = static_cast<etiss::uint64>(-1);
     }
 }
 
@@ -251,11 +240,11 @@ std::string BlockAccurateHandler::_getPluginName() const
     return "BlockAccurateHandler";
 }
 
-void BlockAccurateHandler::init(ETISS_CPU *cpu, ETISS_System *system, etiss::CPUArch *arch)
+void BlockAccurateHandler::init(ETISS_CPU *cpu_, ETISS_System *system_, etiss::CPUArch *arch_)
 {
-    this->cpu = cpu;
-    this->system = system;
-    this->arch = arch;
+    cpu = cpu_;
+    system = system_;
+    arch = arch_;
 }
 void BlockAccurateHandler::cleanup()
 {

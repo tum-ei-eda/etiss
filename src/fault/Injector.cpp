@@ -141,21 +141,19 @@ bool operator==(const std::shared_ptr<T> &p1, const T *const &p2)
 
 std::string Injector::getInjectorPath()
 {
-
     std::string path;
     ptr iptr = getParentInjector();
-    ptr cur;
     if (!iptr)
         return path;
 
     // Get Injector name
-    std::list<std::string> si = iptr->listSubInjectors();
-    for (std::list<std::string>::const_iterator iter = si.begin(); iter != si.end(); ++iter)
+    ptr cur;
+    for (const auto &name : iptr->listSubInjectors())
     {
-        cur = iptr->getSubInjector(*iter);
+        cur = iptr->getSubInjector(name);
         if (cur == this)
         {
-            path = *iter;
+            path = name;
             break;
         }
     }
@@ -175,14 +173,13 @@ std::string Injector::getInjectorPath()
     iptr = iptr->getParentInjector();
     while (iptr)
     {
-        std::list<std::string> si = iptr->listSubInjectors();
         bool ok = false;
-        for (std::list<std::string>::const_iterator iter = si.begin(); iter != si.end(); ++iter)
+        for (const auto &name : iptr->listSubInjectors())
         {
-            ptr tmp = iptr->getSubInjector(*iter);
+            ptr tmp = iptr->getSubInjector(name);
             if (tmp == cur)
             {
-                path = *iter + "::" + path;
+                path = name + "::" + path;
                 ok = true;
                 break;
             }
