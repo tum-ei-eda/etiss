@@ -87,7 +87,7 @@ void VariableValueLogger::initCodeBlock(etiss::CodeBlock &block) const
 void VariableValueLogger::finalizeInstrSet(etiss::instr::ModedInstructionSet &mis) const
 {
     auto f = plugin_core_->getStruct()->findName(field_);
-    unsigned width = f ? f->width_ : 64;
+    unsigned width = f ? static_cast<unsigned>(f->width_) : 64;
     mis.foreach ([this, width](etiss::instr::VariableInstructionSet &vis) {
         vis.foreach ([this, width](etiss::instr::InstructionSet &is) {
             is.foreach ([this, width](etiss::instr::Instruction &i) {

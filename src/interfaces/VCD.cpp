@@ -77,44 +77,16 @@ static std::string val2str(uint64_t val, unsigned width, uint64_t udef)
 */
 static std::string index2str(int index)
 {
-    char buf[5];
-
-    if (index < 94)
+    std::string out;
+    while (true)
     {
-        buf[0] = index + 33;
-        buf[1] = 0;
-        return buf;
+        out += static_cast<char>(index % 94) + 33;
+        if (index < 94)
+            break;
+        index -= 94;
+        index /= 94;
     }
-    index = index - 94;
-    if (index < 94 * 94)
-    {
-        buf[0] = (index % 94) + 33;
-        buf[1] = (index / 94) + 33;
-        buf[2] = 0;
-        return buf;
-    }
-    index = index - (94 * 94);
-    if (index < 94 * 94 * 94)
-    {
-        buf[0] = (index % 94) + 33;
-        buf[1] = ((index / 94) % 94) + 33;
-        buf[2] = ((index / 94) / 94) + 33;
-        buf[3] = 0;
-        return buf;
-    }
-    index = index - (94 * 94 * 94);
-    if (index < 94 * 94 * 94 * 94)
-    {
-        buf[0] = (index % 94) + 33;
-        buf[1] = ((index / 94) % 94) + 33;
-        buf[2] = (((index / 94) / 94) % 94) + 33;
-        buf[3] = (((index / 94) / 94) / 94) + 33;
-        buf[4] = 0;
-        return buf;
-    }
-    /// ERROR
-    etiss::log(etiss::ERROR, "failed to generate string representation", ETISS_SRCLOC);
-    return "";
+    return out;
 }
 
 VCD::VCD(const std::string &file, const std::string &comment) : dumpstarted_(false), lasttime_ps(0), file(file)

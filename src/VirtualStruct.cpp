@@ -474,12 +474,8 @@ bool VirtualStruct::applyAction(const etiss::fault::Fault &fault, const etiss::f
                        ": VirtualStruct::applyCustomAction function not set. cannot handle custom actions.";
             return false;
         }
-        else
-        {
-            return applyCustomAction(fault, action, errormsg);
-        }
+        return applyCustomAction(fault, action, errormsg);
     }
-        return false;
     case etiss::fault::Action::BITFLIP: // handle bitflip
     {
         Field *f;

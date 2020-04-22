@@ -214,7 +214,6 @@ static void *ETISS_dlopen(const std::string &path, const std::string &name)
 #elif ETISS_USE_GETPROC
     return LoadLibrary(TEXT((path + name).c_str()));
 #endif
-    return nullptr;
 }
 static void ETISS_dlclose(void *handle)
 {
