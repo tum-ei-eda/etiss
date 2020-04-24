@@ -143,6 +143,24 @@ void *TCCJIT::translate(std::string code, std::set<std::string> headerpaths, std
     }
 #endif
 
+    // init libs
+    for (const auto &libpath : librarypaths)
+    {
+        if (tcc_add_library_path(s, libpath.c_str()))
+        {
+            error += "could not add library path: " + libpath;
+            return 0;
+        }
+    }
+    for (const auto &lib : libraries)
+    {
+        if (tcc_add_library(s, lib.c_str()))
+        {
+            error += "could not add library: " + lib;
+            return 0;
+        }
+    }
+
     /* relocate the code */
     if (tcc_relocate(s, TCC_RELOCATE_AUTO) < 0)
     { // link
