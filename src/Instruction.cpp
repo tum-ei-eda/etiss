@@ -524,106 +524,197 @@ Node::~Node()
         delete reader_;
     }
 }
+// Helper node to differentiate between instructions that have the same opcode
+// but a different mask. The more specific mask will match first, the delegate
+// to another node which may also be an OverlappedNode.
+class OverlappedNode : public Node, public etiss::ToString
+{
+public:
+    etiss_del_como(OverlappedNode)
+
+    OverlappedNode(Instruction *matchInstr, Node *delegateNode)
+        : m_matchInstr(matchInstr)
+        , m_delegateNode(delegateNode)
+    {
+    }
+
+    Instruction *resolve(BitArray &instr) override
+    {
+        auto &mask = m_matchInstr->opc_.mask_;
+        BitArrayRange reader(mask.width() - 1, 0);
+        if ((reader.read(instr) & reader.read(mask)) == reader.read(m_matchInstr->opc_.code_))
+        {
+            return m_matchInstr;
+        }
+        return m_delegateNode->resolve(instr);
+    }
+
+    Instruction *m_matchInstr;
+    Node *m_delegateNode;
+};
+static void AssertOnTrueCollision(Instruction *i1, Instruction *i2)
+{
+    if (i1->opc_ == i2->opc_)
+    {
+        etiss::log(etiss::FATALERROR, "ISA contains the same instruction multiple times!");
+    }
+}
+static void HandleCollision(Instruction *instr, Node *&node)
+{
+    auto otherInstr = dynamic_cast<Instruction*>(node);
+    if (otherInstr)
+    {
+        AssertOnTrueCollision(instr, otherInstr);
+        if ((instr->opc_.mask_ & otherInstr->opc_.mask_) == instr->opc_.mask_)
+        {
+            node = new OverlappedNode(otherInstr, instr);
+        } else {
+            node = new OverlappedNode(instr, node);
+        }
+    } else {
+        auto otherNode = dynamic_cast<OverlappedNode*>(node);
+        if (otherNode)
+        {
+            AssertOnTrueCollision(instr, otherNode->m_matchInstr);
+            if ((instr->opc_.mask_ & otherNode->m_matchInstr->opc_.mask_) == instr->opc_.mask_)
+            {
+                auto replacedNode = otherNode->m_delegateNode;
+                auto replInstr = dynamic_cast<Instruction*>(replacedNode);
+                BitArray replacedMask(instr->opc_.mask_.width());
+                if (replInstr)
+                {
+                    AssertOnTrueCollision(instr, replInstr);
+                    replacedMask = replInstr->opc_.mask_;
+                } else {
+                    auto replSpecNode = dynamic_cast<OverlappedNode*>(replacedNode);
+                    if (replSpecNode)
+                    {
+                        replacedMask = replSpecNode->m_matchInstr->opc_.mask_;
+                    } else {
+                        etiss::log(etiss::FATALERROR, "OverlappedNode delegate must not be a plain Node");
+                    }
+                }
+                if ((instr->opc_.mask_ & replacedMask) == instr->opc_.mask_)
+                {
+                    if (replInstr) {
+                        otherNode->m_delegateNode = new OverlappedNode(replInstr, instr);
+                    } else {
+                        etiss::log(etiss::FATALERROR, "OverlappedNode delegate must not be a plain Node");
+                    }
+                } else {
+                    otherNode->m_delegateNode = new OverlappedNode(instr, replacedNode);
+                }
+            } else {
+                node = new OverlappedNode(instr, otherNode);
+            }
+        } else {
+            etiss::log(etiss::FATALERROR, "OverlappedNode delegate must not be a plain Node");
+        }
+    }
+}
 void Node::compile(const std::map<const OPCode *, Instruction *, etiss::instr::less> &instrmap_, const BitArray &used,
                    bool &ok, std::list<std::string> &warnings, std::list<std::string> &errors)
 {
-    BitArray mask(~used); // only set bits that have not been used
-    for (auto iter = instrmap_.begin(); iter != instrmap_.end(); iter++)
+    using MapType = std::remove_const<std::remove_reference<decltype(instrmap_)>::type>::type;
+
+    // This masks bits that have already been compiled.
+    BitArray mask(~used);
+    // Build mask that has only the bits set that are present in all masks.
+    for (const auto &op2instr : instrmap_)
     {
-        mask = mask & iter->first->mask_; // only bits may remain that exist in all masks
+        mask = mask & op2instr.first->mask_;
     }
 
     for (unsigned i = 0; i < mask.width(); i++)
     {
         unsigned bsc = mask.getBitSetCount(i);
-        if (bsc >= ((sizeof(I) * 8) - 1)) // safeguard
-            bsc = ((sizeof(I) * 8) - 1);
-        if (bsc > 0)
-        {
-            reader_ = new BitArrayRange(i + bsc - 1, i);
-			size_t size = static_cast<size_t>(1) << bsc;
-            subs_ = new Node *[size]; // allocate array
-            std::map<const OPCode *, Instruction *, etiss::instr::less> **sub_maps =
-                new std::map<const OPCode *, Instruction *, etiss::instr::less> *[size];
-            for (I j = 0; j < ((I)1) << bsc; j++)
-            {
-                subs_[j] = nullptr;
-                sub_maps[j] = nullptr;
-            }
-            mask.setAll(false);
-            reader_->setAll(mask, true);
-            const BitArray newused(used | mask);
+        bsc = std::min(bsc, (unsigned)(sizeof(I) * 8) - 1);
+        if (bsc == 0)
+            continue;
 
-            for (auto iter = instrmap_.begin(); iter != instrmap_.end(); iter++)
+        reader_ = new BitArrayRange(i + bsc - 1, i);
+        size_t size = static_cast<size_t>(1) << bsc;
+        subs_ = new Node *[size]();
+        auto sub_maps = new MapType *[size]();
+
+        // Only set the bits from the current bit set being examined.
+        mask.setAll(false);
+        reader_->setAll(mask, true);
+        const BitArray newused(used | mask);
+
+        for (const auto &op2instr : instrmap_)
+        {
+            auto &op = op2instr.first;
+            auto &instr = op2instr.second;
+            auto &node = subs_[reader_->read(op->code_)];
+            auto &sub_map = sub_maps[reader_->read(op->code_)];
+
+            // Is this a finalized instruction?
+            if (op->mask_ == newused)
             {
-                Node *&nptr = subs_[reader_->read(iter->first->code_)];
-                std::map<const OPCode *, Instruction *, etiss::instr::less> *&smptr =
-                    sub_maps[reader_->read(iter->first->code_)];
-                if (iter->first->mask_ == newused) // final instruction
+                // Check if there was already a node.
+                if (node)
                 {
-                    if (nptr != nullptr) // collision
+                    // Try to convert existing node to overlap node.
+                    if (!sub_map || sub_map->empty())
                     {
-                        ok = false;
-                        std::stringstream ss;
-                        ss << "Collision detected: Instruction \"" << ((Instruction *)iter->second)->name_
-                           << "\" conflicts with :\n";
-                        if (nptr->isInstruction())
-                        {
-                            ss << "\tInstruction: " << ((Instruction *)nptr)->name_;
-                        }
-                        else
-                        {
-                            ss << nptr->print("\t", reader_->read(iter->first->code_), false);
-                        }
-                        errors.push_back(ss.str());
+                        etiss::log(etiss::FATALERROR, "Expecting non-empty sub_map for existing node");
                     }
                     else
                     {
-                        nptr = iter->second;
+                        Node *replaceNode = sub_map->begin()->second;
+                        for (const auto &subInstr : *sub_map)
+                        {
+                            HandleCollision(subInstr.second, replaceNode);
+                        }
+                        HandleCollision(instr, replaceNode);
+                        delete node;
+                        node = replaceNode;
                     }
                 }
                 else
                 {
-                    if (smptr == nullptr)
-                    {
-                        if (nptr != nullptr) // collision
-                        {
-                            ok = false;
-                            std::stringstream ss;
-                            ss << "Collision detected: Instruction \"" << iter->second->name_
-                               << "\" is in a subset of \"" << ((Instruction *)nptr)->name_ << "\"";
-                            errors.push_back(ss.str());
-                            continue;
-                        }
-                        else
-                        {
-                            nptr = new Node();
-                            smptr = new std::map<const OPCode *, Instruction *, etiss::instr::less>();
-                        }
-                    }
-                    if ((*smptr).insert(std::pair<const OPCode *, Instruction *>(iter->first, iter->second)).second ==
-                        false)
-                    {
-                        etiss_log(ERROR, "failed to stroe instruction in map");
-                    }
+                    node = instr;
                 }
             }
-
-            for (I j = 0; j < ((I)1) << bsc; j++)
+            else
             {
-                if (sub_maps[j] != nullptr)
+                if (!sub_map)
                 {
-                    subs_[j]->compile(*(sub_maps[j]), newused, ok, warnings, errors);
-                    delete sub_maps[j];
+                    if (node)
+                    {
+                        HandleCollision(instr, node);
+                    }
+                    else
+                    {
+                        node = new Node();
+                        sub_map = new MapType();
+                    }
+                }
+                if (sub_map)
+                {
+                    if (!sub_map->insert(op2instr).second)
+                    {
+                        etiss_log(ERROR, "failed to store instruction in map");
+                    }
                 }
             }
-            delete[] sub_maps;
-            return; // compile step done
         }
+
+        for (size_t j = 0; j < size; j++)
+        {
+            if (sub_maps[j])
+            {
+                subs_[j]->compile(*sub_maps[j], newused, ok, warnings, errors);
+                delete sub_maps[j];
+            }
+        }
+        delete[] sub_maps;
+        // Done with the given tree.
+        return;
     }
 
     ok = true;
-    // errors.push_back("cannot find bits that allow to select instructions");
 }
 Instruction *Node::resolve(BitArray &instr)
 {
