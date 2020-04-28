@@ -667,7 +667,7 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
     void **plugins_handle_ = translation.init();
     if (!plugins_handle_)
     {
-        return etiss::RETURNCODE::GENERALERROR;
+        etiss::log(etiss::FATALERROR, "Failed to initialize translation");
     }
 
     // enable RegisterDevicePlugin listeneing by adding a listener to all fields of the VirtualStruct

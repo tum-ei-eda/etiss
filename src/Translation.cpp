@@ -214,6 +214,7 @@ void **Translation::init()
 
     if (!mis_->compile())
     {
+        etiss::log(etiss::ERROR, "Failed to compile instruction set");
         delete[] plugins_array_;
         plugins_array_ = 0;
         delete[] plugins_handle_array_;

@@ -969,7 +969,7 @@ bool VariableInstructionSet::compile()
     }
     if (ismap_.begin() != ismap_.end())
         width_ = ismap_.begin()->first;
-    return true;
+    return ok;
 }
 
 InstructionSet *VariableInstructionSet::get(unsigned width)
