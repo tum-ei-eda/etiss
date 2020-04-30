@@ -456,6 +456,7 @@ static InstructionDefinition lb_rd_rs1_imm(
                           "etiss_uint32 offset = 0;\n"
                           "etiss_uint32 mem_addr = 0;\n"
                           "etiss_int32 _o_sign_extended_imm = 0;\n"
+                          "etiss_uint8 byte_data = 0;\n"
                           "etiss_uint32 o_data = 0;\n"
 
                           "_i_imm = " +
@@ -545,10 +546,14 @@ static InstructionDefinition lb_rd_rs1_imm(
                           toString(rd) +
                           " != 0)\n"
                           "{\n"
-                          "etiss_int32 cast_0 = o_data; \n"
-                          "if((etiss_int32)((etiss_uint32)cast_0 - 0x80000000) > 0x0)\n"
+                          "byte_data = (etiss_uint8)o_data;\n"
+#if RISCV_DEBUG_CALL
+                          "printf(\"byte_data = %#x\\n\",byte_data); \n"
+#endif
+                          "etiss_int8 cast_0 = byte_data; \n"
+                          "if((etiss_int8)((etiss_uint8)cast_0 - 0x80) > 0x0)\n"
                           "{\n"
-                          "cast_0 =0x0 + (etiss_uint32)cast_0 ;\n"
+                          "cast_0 =0x0 + (etiss_uint8)cast_0 ;\n"
                           "}\n"
                           "*((RISCV*)cpu)->R[" +
                           toString(rd) +
@@ -564,7 +569,7 @@ static InstructionDefinition lb_rd_rs1_imm(
                           toString((uint32_t)(ic.current_address_ + 4)) +
                           "ULL; \n"
 
-                          "return exception;\n";
+                          "return exception; \n";
         return true;
     },
     0, nullptr);
@@ -5276,6 +5281,7 @@ static InstructionDefinition lh_rd_rs1_imm(
                           "etiss_uint32 temp = 0;\n"
                           "etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
                           "etiss_int32 __imm_extension = 0;\n"
+                          "etiss_uint16 short_data = 0;\n"
                           "etiss_uint16 _i_imm = 0;\n"
                           "etiss_uint32 offset = 0;\n"
                           "etiss_uint32 mem_addr = 0;\n"
@@ -5382,10 +5388,14 @@ static InstructionDefinition lh_rd_rs1_imm(
                           toString(rd) +
                           " != 0)\n"
                           "{\n"
-                          "etiss_int32 cast_0 = o_data; \n"
-                          "if((etiss_int32)((etiss_uint32)cast_0 - 0x80000000) > 0x0)\n"
+                          "short_data = (etiss_uint16)o_data;\n"
+#if RISCV_DEBUG_CALL
+                          "printf(\"short_data = %#x\\n\",short_data); \n"
+#endif
+                          "etiss_int16 cast_0 = short_data; \n"
+                          "if((etiss_int16)((etiss_uint16)cast_0 - 0x8000) > 0x0)\n"
                           "{\n"
-                          "cast_0 =0x0 + (etiss_uint32)cast_0 ;\n"
+                          "cast_0 =0x0 + (etiss_uint16)cast_0 ;\n"
                           "}\n"
                           "*((RISCV*)cpu)->R[" +
                           toString(rd) +
@@ -5401,7 +5411,7 @@ static InstructionDefinition lh_rd_rs1_imm(
                           toString((uint32_t)(ic.current_address_ + 4)) +
                           "ULL; \n"
 
-                          "return exception;\n";
+                          "return exception; \n";
         return true;
     },
     0, nullptr);
