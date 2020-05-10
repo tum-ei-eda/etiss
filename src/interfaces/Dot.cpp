@@ -705,9 +705,7 @@ void ValueOperationTraceGraphStreamer::close()
     out << "}";
     depout << "}";
     closed_ = true;
-    depout.flush();
     depout.close();
-    out.flush();
     out.close();
 }
 
