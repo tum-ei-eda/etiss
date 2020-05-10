@@ -52,6 +52,7 @@
 #include "etiss/Instruction.h"
 
 #include <sstream>
+#include <cassert>
 
 #if ETISS_USE_BYTESWAP_H
 #include <byteswap.h>
@@ -385,86 +386,59 @@ std::ostream &operator<<(std::ostream &os, const BitArray tf)
     return os;
 }
 
-BitArrayRange::BitArrayRange(unsigned startindex_included, unsigned endindex_included) : mms_(0), mmm_(0)
+BitArrayRange::BitArrayRange(unsigned startindex_included, unsigned endindex_included)
+    : filterStart_(startindex_included), filterEnd_(endindex_included), filterLen_(filterStart_ + 1 - filterEnd_)
 {
-    if (startindex_included + 1 < endindex_included)
+    assert(filterStart_ + 1 >= filterEnd_ && "Invalid BitArrayRange constructor arguments");
+    assert(filterLen_ <= sizeof(I) * 8 && "Invalid BitArrayRange width");
+
+    lowPartShift_ = filterEnd_ % Ibits;
+    if (lowPartShift_ + filterLen_ <= Ibits)
     {
-        etiss::log(etiss::WARNING, "BitArrayRange should be called with the more significant bit first: e.g. "
-                                   "BitArrayRange(15,0) NOT BitArrayRange(0,15). The values will be swapped in this "
-                                   "case but ignoring that convention may lead to grave problems.");
-        unsigned tmp = startindex_included;
-        startindex_included = endindex_included;
-        endindex_included = tmp;
-    }
-    si_ = startindex_included;
-    ei_ = endindex_included;
-    length_ = startindex_included + 1 - endindex_included;
-    if (length_ <= sizeof(I) * 8)
-    {
-        mms_ = endindex_included % (sizeof(I) * 8);
-        if (mms_ + length_ <= (sizeof(I) * 8))
+        needsSplitAccess_ = false;
+        dataArrayIndex_ = (filterEnd_ - lowPartShift_) / Ibits;
+        for (unsigned i = 0; i < filterLen_; i++)
         {
-            fragmented_ = false;
-            wi_ = (endindex_included - mms_) / (sizeof(I) * 8);
-            mmm_ = 0;
-            for (unsigned i = 0; i < length_; i++)
-            {
-                mmm_ = (mmm_ << 1) | 1;
-            }
-        }
-        else
-        {
-            fragmented_ = true;
-            fmms_ = (sizeof(I) * 8) - mms_;
-            wi_ = (endindex_included - mms_) / (sizeof(I) * 8);
-            mmm_ = 0;
-            for (unsigned i = 0; i < fmms_; i++)
-            {
-                mmm_ = (mmm_ << 1) | 1;
-            }
-            fmmm_ = 0;
-            for (unsigned i = 0; i < ((mms_ + length_) % (sizeof(I) * 8)); i++)
-            {
-                fmmm_ = (fmmm_ << 1) | 1;
-            }
+            lowPartMask_ = (lowPartMask_ << 1) | 1;
         }
     }
     else
     {
-        etiss::log(etiss::ERROR, "BitArrayRange can only handle ranges with width <= sizeof(T)*8");
-        throw "";
+        needsSplitAccess_ = true;
+        highPartShift_ = Ibits - lowPartShift_;
+        dataArrayIndex_ = (filterEnd_ - lowPartShift_) / Ibits;
+        for (unsigned i = 0; i < highPartShift_; i++)
+        {
+            lowPartMask_ = (lowPartMask_ << 1) | 1;
+        }
+        for (unsigned i = 0; i < (lowPartShift_ + filterLen_) * Ibits; i++)
+        {
+            highPartMask_ = (highPartMask_ << 1) | 1;
+        }
     }
 }
 
 I BitArrayRange::read(const BitArray &ba)
 {
-#if DEBUG
-    if (unlikely(ba.w_ <= si_))
+    assert(ba.w_ > filterStart_ && "BitArrayRange outside of BitArray");
+
+    I ret = (ba.d_[dataArrayIndex_] >> lowPartShift_) & lowPartMask_;
+    if (needsSplitAccess_)
     {
-        etiss::log(etiss::ERROR, "BitArrayRange outside of BitArray");
-        return I(0);
-    }
-#endif
-    I ret = (ba.d_[wi_] >> mms_) & mmm_;
-    if (unlikely(fragmented_))
-    {
-        ret = ret | ((ba.d_[wi_ + 1] & fmmm_) << fmms_);
+        ret |= (ba.d_[dataArrayIndex_ + 1] & highPartMask_) << highPartShift_;
     }
     return ret;
 }
 void BitArrayRange::write(const BitArray &ba, I val)
 {
-#if DEBUG
-    if (unlikely(ba.w_ <= si_))
+    assert(ba.w_ > filterStart_ && "BitArrayRange outside of BitArray");
+
+    ba.d_[dataArrayIndex_] =
+        ((val & lowPartMask_) << lowPartShift_) | (ba.d_[dataArrayIndex_] & ~(lowPartMask_ << lowPartShift_));
+    if (needsSplitAccess_)
     {
-        etiss::log(etiss::ERROR, "BitArrayRange outside of BitArray");
-        return;
-    }
-#endif
-    ba.d_[wi_] = ((val & mmm_) << mms_) | (ba.d_[wi_] & ~(mmm_ << mms_));
-    if (unlikely(fragmented_))
-    {
-        ba.d_[wi_ + 1] = ((val >> fmms_) & fmmm_) | (ba.d_[wi_ + 1] & ~fmmm_);
+        ba.d_[dataArrayIndex_ + 1] =
+            ((val >> highPartShift_) & highPartMask_) | (ba.d_[dataArrayIndex_ + 1] & ~highPartMask_);
     }
 }
 
@@ -483,11 +457,11 @@ void BitArrayRange::setAll(const BitArray &ba, bool val)
 
 unsigned BitArrayRange::start()
 {
-    return si_;
+    return filterStart_;
 }
 unsigned BitArrayRange::end()
 {
-    return ei_;
+    return filterEnd_;
 }
 
 OPCode::OPCode(const BitArray &code, const BitArray &mask) : code_(code & mask), mask_(mask)
@@ -550,106 +524,197 @@ Node::~Node()
         delete reader_;
     }
 }
+// Helper node to differentiate between instructions that have the same opcode
+// but a different mask. The more specific mask will match first, the delegate
+// to another node which may also be an OverlappedNode.
+class OverlappedNode : public Node, public etiss::ToString
+{
+public:
+    etiss_del_como(OverlappedNode)
+
+    OverlappedNode(Instruction *matchInstr, Node *delegateNode)
+        : m_matchInstr(matchInstr)
+        , m_delegateNode(delegateNode)
+    {
+    }
+
+    Instruction *resolve(BitArray &instr) override
+    {
+        auto &mask = m_matchInstr->opc_.mask_;
+        BitArrayRange reader(mask.width() - 1, 0);
+        if ((reader.read(instr) & reader.read(mask)) == reader.read(m_matchInstr->opc_.code_))
+        {
+            return m_matchInstr;
+        }
+        return m_delegateNode->resolve(instr);
+    }
+
+    Instruction *m_matchInstr;
+    Node *m_delegateNode;
+};
+static void AssertOnTrueCollision(Instruction *i1, Instruction *i2)
+{
+    if (i1->opc_ == i2->opc_)
+    {
+        etiss::log(etiss::FATALERROR, "ISA contains the same instruction multiple times!");
+    }
+}
+static void HandleCollision(Instruction *instr, Node *&node)
+{
+    auto otherInstr = dynamic_cast<Instruction*>(node);
+    if (otherInstr)
+    {
+        AssertOnTrueCollision(instr, otherInstr);
+        if ((instr->opc_.mask_ & otherInstr->opc_.mask_) == instr->opc_.mask_)
+        {
+            node = new OverlappedNode(otherInstr, instr);
+        } else {
+            node = new OverlappedNode(instr, node);
+        }
+    } else {
+        auto otherNode = dynamic_cast<OverlappedNode*>(node);
+        if (otherNode)
+        {
+            AssertOnTrueCollision(instr, otherNode->m_matchInstr);
+            if ((instr->opc_.mask_ & otherNode->m_matchInstr->opc_.mask_) == instr->opc_.mask_)
+            {
+                auto replacedNode = otherNode->m_delegateNode;
+                auto replInstr = dynamic_cast<Instruction*>(replacedNode);
+                BitArray replacedMask(instr->opc_.mask_.width());
+                if (replInstr)
+                {
+                    AssertOnTrueCollision(instr, replInstr);
+                    replacedMask = replInstr->opc_.mask_;
+                } else {
+                    auto replSpecNode = dynamic_cast<OverlappedNode*>(replacedNode);
+                    if (replSpecNode)
+                    {
+                        replacedMask = replSpecNode->m_matchInstr->opc_.mask_;
+                    } else {
+                        etiss::log(etiss::FATALERROR, "OverlappedNode delegate must not be a plain Node");
+                    }
+                }
+                if ((instr->opc_.mask_ & replacedMask) == instr->opc_.mask_)
+                {
+                    if (replInstr) {
+                        otherNode->m_delegateNode = new OverlappedNode(replInstr, instr);
+                    } else {
+                        etiss::log(etiss::FATALERROR, "OverlappedNode delegate must not be a plain Node");
+                    }
+                } else {
+                    otherNode->m_delegateNode = new OverlappedNode(instr, replacedNode);
+                }
+            } else {
+                node = new OverlappedNode(instr, otherNode);
+            }
+        } else {
+            etiss::log(etiss::FATALERROR, "OverlappedNode delegate must not be a plain Node");
+        }
+    }
+}
 void Node::compile(const std::map<const OPCode *, Instruction *, etiss::instr::less> &instrmap_, const BitArray &used,
                    bool &ok, std::list<std::string> &warnings, std::list<std::string> &errors)
 {
-    BitArray mask(~used); // only set bits that have not been used
-    for (auto iter = instrmap_.begin(); iter != instrmap_.end(); iter++)
+    using MapType = std::remove_const<std::remove_reference<decltype(instrmap_)>::type>::type;
+
+    // This masks bits that have already been compiled.
+    BitArray mask(~used);
+    // Build mask that has only the bits set that are present in all masks.
+    for (const auto &op2instr : instrmap_)
     {
-        mask = mask & iter->first->mask_; // only bits may remain that exist in all masks
+        mask = mask & op2instr.first->mask_;
     }
 
     for (unsigned i = 0; i < mask.width(); i++)
     {
         unsigned bsc = mask.getBitSetCount(i);
-        if (bsc >= ((sizeof(I) * 8) - 1)) // safeguard
-            bsc = ((sizeof(I) * 8) - 1);
-        if (bsc > 0)
-        {
-            reader_ = new BitArrayRange(i + bsc - 1, i);
-			size_t size = static_cast<size_t>(1) << bsc;
-            subs_ = new Node *[size]; // allocate array
-            std::map<const OPCode *, Instruction *, etiss::instr::less> **sub_maps =
-                new std::map<const OPCode *, Instruction *, etiss::instr::less> *[size];
-            for (I j = 0; j < ((I)1) << bsc; j++)
-            {
-                subs_[j] = nullptr;
-                sub_maps[j] = nullptr;
-            }
-            mask.setAll(false);
-            reader_->setAll(mask, true);
-            const BitArray newused(used | mask);
+        bsc = std::min(bsc, (unsigned)(sizeof(I) * 8) - 1);
+        if (bsc == 0)
+            continue;
 
-            for (auto iter = instrmap_.begin(); iter != instrmap_.end(); iter++)
+        reader_ = new BitArrayRange(i + bsc - 1, i);
+        size_t size = static_cast<size_t>(1) << bsc;
+        subs_ = new Node *[size]();
+        auto sub_maps = new MapType *[size]();
+
+        // Only set the bits from the current bit set being examined.
+        mask.setAll(false);
+        reader_->setAll(mask, true);
+        const BitArray newused(used | mask);
+
+        for (const auto &op2instr : instrmap_)
+        {
+            auto &op = op2instr.first;
+            auto &instr = op2instr.second;
+            auto &node = subs_[reader_->read(op->code_)];
+            auto &sub_map = sub_maps[reader_->read(op->code_)];
+
+            // Is this a finalized instruction?
+            if (op->mask_ == newused)
             {
-                Node *&nptr = subs_[reader_->read(iter->first->code_)];
-                std::map<const OPCode *, Instruction *, etiss::instr::less> *&smptr =
-                    sub_maps[reader_->read(iter->first->code_)];
-                if (iter->first->mask_ == newused) // final instruction
+                // Check if there was already a node.
+                if (node)
                 {
-                    if (nptr != nullptr) // collision
+                    // Try to convert existing node to overlap node.
+                    if (!sub_map || sub_map->empty())
                     {
-                        ok = false;
-                        std::stringstream ss;
-                        ss << "Collision detected: Instruction \"" << ((Instruction *)iter->second)->name_
-                           << "\" conflicts with :\n";
-                        if (nptr->isInstruction())
-                        {
-                            ss << "\tInstruction: " << ((Instruction *)nptr)->name_;
-                        }
-                        else
-                        {
-                            ss << nptr->print("\t", reader_->read(iter->first->code_), false);
-                        }
-                        errors.push_back(ss.str());
+                        etiss::log(etiss::FATALERROR, "Expecting non-empty sub_map for existing node");
                     }
                     else
                     {
-                        nptr = iter->second;
+                        Node *replaceNode = sub_map->begin()->second;
+                        for (const auto &subInstr : *sub_map)
+                        {
+                            HandleCollision(subInstr.second, replaceNode);
+                        }
+                        HandleCollision(instr, replaceNode);
+                        delete node;
+                        node = replaceNode;
                     }
                 }
                 else
                 {
-                    if (smptr == nullptr)
-                    {
-                        if (nptr != nullptr) // collision
-                        {
-                            ok = false;
-                            std::stringstream ss;
-                            ss << "Collision detected: Instruction \"" << iter->second->name_
-                               << "\" is in a subset of \"" << ((Instruction *)nptr)->name_ << "\"";
-                            errors.push_back(ss.str());
-                            continue;
-                        }
-                        else
-                        {
-                            nptr = new Node();
-                            smptr = new std::map<const OPCode *, Instruction *, etiss::instr::less>();
-                        }
-                    }
-                    if ((*smptr).insert(std::pair<const OPCode *, Instruction *>(iter->first, iter->second)).second ==
-                        false)
-                    {
-                        etiss_log(ERROR, "failed to stroe instruction in map");
-                    }
+                    node = instr;
                 }
             }
-
-            for (I j = 0; j < ((I)1) << bsc; j++)
+            else
             {
-                if (sub_maps[j] != nullptr)
+                if (!sub_map)
                 {
-                    subs_[j]->compile(*(sub_maps[j]), newused, ok, warnings, errors);
-                    delete sub_maps[j];
+                    if (node)
+                    {
+                        HandleCollision(instr, node);
+                    }
+                    else
+                    {
+                        node = new Node();
+                        sub_map = new MapType();
+                    }
+                }
+                if (sub_map)
+                {
+                    if (!sub_map->insert(op2instr).second)
+                    {
+                        etiss_log(ERROR, "failed to store instruction in map");
+                    }
                 }
             }
-            delete[] sub_maps;
-            return; // compile step done
         }
+
+        for (size_t j = 0; j < size; j++)
+        {
+            if (sub_maps[j])
+            {
+                subs_[j]->compile(*sub_maps[j], newused, ok, warnings, errors);
+                delete sub_maps[j];
+            }
+        }
+        delete[] sub_maps;
+        // Done with the given tree.
+        return;
     }
 
     ok = true;
-    // errors.push_back("cannot find bits that allow to select instructions");
 }
 Instruction *Node::resolve(BitArray &instr)
 {
@@ -995,7 +1060,7 @@ bool VariableInstructionSet::compile()
     }
     if (ismap_.begin() != ismap_.end())
         width_ = ismap_.begin()->first;
-    return true;
+    return ok;
 }
 
 InstructionSet *VariableInstructionSet::get(unsigned width)

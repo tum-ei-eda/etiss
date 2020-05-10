@@ -214,6 +214,7 @@ void **Translation::init()
 
     if (!mis_->compile())
     {
+        etiss::log(etiss::ERROR, "Failed to compile instruction set");
         delete[] plugins_array_;
         plugins_array_ = 0;
         delete[] plugins_handle_array_;
@@ -351,7 +352,7 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
     libloc.insert(etiss::cfg().get<std::string>("etiss_path", "./"));
     libloc.insert(etiss::jitFiles());
     std::set<std::string> libs;
-    libs.insert("ETISS");
+    //libs.insert("ETISS");
     /* DEBUG HELPER: write code files to work directory
     {
             static unsigned count = 0;

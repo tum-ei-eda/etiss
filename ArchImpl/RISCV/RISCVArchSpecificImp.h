@@ -360,13 +360,13 @@ void RISCVArch::initInstrSet(etiss::instr::ModedInstructionSet &mis) const
 
     {
         // Pre-compilation of instruction set to view instruction tree. Could be disabled.
-        etiss::instr::ModedInstructionSet iset("RISCVISA");
+        /*etiss::instr::ModedInstructionSet iset("RISCVISA");
         bool ok = true;
         RISCVISA.addTo(iset, ok);
 
         iset.compile();
 
-        // std::cout << iset.print() << std::endl;
+        std::cout << iset.print() << std::endl;*/
     }
 
     bool ok = true;
