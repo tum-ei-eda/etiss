@@ -16,15 +16,15 @@ then
     echo "E.g. cmake -B ${BUILD} -S . -DCMAKE_BUILD_TYPE=Debug ; cmake --build ${BUILD}"
 fi
 
-export ETISS_HOME=@CMAKE_INSTALL_PREFIX@/
+export ETISS_DIR=@CMAKE_INSTALL_PREFIX@
 case `uname` in
 
     MINGW*)
-        export PATH=`cygpath --unix "$ETISS_HOME"`"/lib:$PATH"
+        export PATH=`cygpath --unix "$ETISS_DIR"`"/lib:$PATH"
     ;;
-    
+
     *)
-        export LD_LIBRARY_PATH_EXTENTIONS=${ETISS_HOME}/lib
+        export LD_LIBRARY_PATH_EXTENTIONS=${ETISS_DIR}/lib
     ;;
 esac
 
