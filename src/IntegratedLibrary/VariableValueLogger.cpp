@@ -73,11 +73,6 @@ VariableValueLogger::VariableValueLogger(
     out_.open(file.c_str(), std::ios::binary);
     writer_ = writer;
 }
-VariableValueLogger::~VariableValueLogger()
-{
-    out_.flush();
-    out_.close();
-}
 
 void VariableValueLogger::initCodeBlock(etiss::CodeBlock &block) const
 {

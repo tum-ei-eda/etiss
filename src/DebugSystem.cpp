@@ -237,7 +237,6 @@ etiss::int32 DebugSystem::dbg_read(etiss::uint64 addr, etiss::uint8 *buf, etiss:
     //                   "dbgBusAccess.txt",
     //               std::ios::binary | std::ios::out | std::ios::app);
     //     fout << text.str();
-    //     fout.close();
     //   } else
     //     std::cout << text.str();
     // }
@@ -294,7 +293,6 @@ etiss::int32 DebugSystem::dbg_write(etiss::uint64 addr, etiss::uint8 *buf, etiss
     //                   "dbgBusAccess.txt",
     //               std::ios::binary | std::ios::out | std::ios::app);
     //     fout << text.str();
-    //     fout.close();
     //   } else
     //     std::cout << text.str();
     // }
@@ -340,12 +338,11 @@ etiss::int32 DebugSystem::dbg_write(etiss::uint64 addr, etiss::uint8 *buf, etiss
                         } else {
                                 std::cout << "ERROR: failed to load data to
 debug system memory: invalid address (" << std::hex << addr << std::dec << ")"
-<< std::endl; in.close(); return false;
+<< std::endl; return false;
                         }
                         addr++;
                 }
         }
-        in.close();
         std::cout <<"binary loaded!"<< std::endl;
         return true;
 }*/
@@ -355,7 +352,7 @@ bool DebugSystem::loadRom(const char *file)
     std::ifstream in;
     in.open(file, std::ifstream::binary);
 
-    if (!in.is_open())
+    if (!in)
     {
         std::cout << "rom binary load failed! (" << *file << ") " << std::endl;
         return false;
@@ -377,13 +374,11 @@ bool DebugSystem::loadRom(const char *file)
                 std::cout << "ERROR: failed to load data to debug rom system memory: "
                              "invalid address ("
                           << std::hex << addr << std::dec << ")" << std::endl;
-                in.close();
                 return false;
             }
             addr++;
         }
     }
-    in.close();
     std::cout << "rom binary loaded!" << std::endl;
     return true;
 }
@@ -393,7 +388,7 @@ bool DebugSystem::loadRam(const char *file)
     std::ifstream in;
     in.open(file, std::ifstream::binary);
 
-    if (!in.is_open())
+    if (!in)
     {
         std::cout << "ram binary load failed! (" << *file << ") " << std::endl;
         return false;
@@ -421,7 +416,6 @@ bool DebugSystem::loadRam(const char *file)
             addr++;
         }
     }
-    in.close();
     std::cout << "ram binary loaded!" << std::endl;
     return true;
 }

@@ -361,7 +361,6 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
             std::ofstream out;
             out.open(ss.str().c_str());
             out << code;
-            out.close();
             std::cout << "Code file " << count << std::endl;
     }
     */

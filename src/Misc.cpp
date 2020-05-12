@@ -52,6 +52,7 @@
 #define _CRT_SECURE_NO_WARNINGS 1
 
 #include "etiss/Misc.h"
+#include "etiss/Memory.h"
 
 #include <cstring>
 #include <iterator>
@@ -519,12 +520,16 @@ etiss::Configuration &etiss::cfg()
 
 std::string etiss::installDir()
 {
-    return getenv("ETISS_HOME");
+    auto etissLib = GetCurrentModulePath();
+    auto libPathLoc = etissLib.find_last_of("/\\");
+    auto libPath = etissLib.substr(0, libPathLoc);
+    auto etissPathLoc = libPath.find_last_of("/\\");
+    return libPath.substr(0, etissPathLoc);
 }
 
 std::string etiss::jitFiles()
 {
-    return installDir() + "include/jit";
+    return installDir() + "/include/jit";
 }
 
 // IMPORTANT: check if fpu configuration matches endianness

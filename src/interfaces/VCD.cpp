@@ -127,7 +127,6 @@ void VCD::close()
         return;
     valid_ = false;
     flush();
-    out_.flush();
     out_.close();
 }
 

@@ -62,7 +62,6 @@ class VariableValueLogger : public etiss::TranslationPlugin
   public:
     VariableValueLogger(const std::string &field, const std::string &file,
                         std::function<void(std::ostream &out, const std::string &field, uint64_t value)> writer);
-    virtual ~VariableValueLogger();
     virtual void initCodeBlock(etiss::CodeBlock &block) const;
     virtual void finalizeInstrSet(etiss::instr::ModedInstructionSet &) const;
 

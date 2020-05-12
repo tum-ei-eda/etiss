@@ -113,52 +113,44 @@ std::vector<std::string> &split(const std::string &s, char delim, std::vector<st
  */
 static bool loadLibraryList(const std::string &path)
 {
-    bool ret = false; // TODO Give meaning to the return value.
-
-    std::string list_file_str = (path + "list.txt");
-    // Take care: return value of c_str only valid until destructor of string object
-    // Therefore this did nort work: const char* list_file = (path+"list.txt").c_str();
-    const char *list_file = list_file_str.c_str();
-
-    std::ifstream lcfg(list_file);
-
-    if (lcfg.is_open())
+    std::string list_file = (path + "/list.txt");
+    std::ifstream lcfg(list_file.c_str());
+    if (!lcfg)
     {
-        std::string line;
-        while (std::getline(lcfg, line))
-        {
-            if (line.find(',') == std::string::npos)
-            { // relative path
-                if (etiss::loadLibrary(path, line))
-                    ret = true;
-            }
-            else
-            { // absolute path
-                std::vector<std::string> def;
-                etiss::split(line, ',', def);
-                if (def.size() == 3)
+        etiss::log(etiss::ERROR, std::string("Failed to open library list file: ") + list_file);
+        return false;
+    }
+
+    bool ret = false;
+    std::string line;
+    while (std::getline(lcfg, line))
+    {
+        if (line.find(',') == std::string::npos)
+        { // relative path
+            if (etiss::loadLibrary(path, line))
+                ret = true;
+        }
+        else
+        { // absolute path
+            std::vector<std::string> def;
+            etiss::split(line, ',', def);
+            if (def.size() == 3)
+            {
+                if (def[0] == def[2] && def[1].length() > 0 && def[2].length() > 0)
                 {
-                    if (def[0] == def[2] && def[1].length() > 0 && def[2].length() > 0)
-                    {
-                        if (etiss::loadLibrary(def[1], def[2]))
-                            ret = true;
-                    }
-                    else
-                    {
-                        etiss::log(etiss::ERROR, "Invalid line in plugin list file", line);
-                    }
+                    if (etiss::loadLibrary(def[1], def[2]))
+                        ret = true;
                 }
                 else
                 {
                     etiss::log(etiss::ERROR, "Invalid line in plugin list file", line);
                 }
             }
+            else
+            {
+                etiss::log(etiss::ERROR, "Invalid line in plugin list file", line);
+            }
         }
-        lcfg.close();
-    }
-    else
-    {
-        etiss::log(etiss::ERROR, std::string("Failed to open library list file: ") + (path + "list.txt"));
     }
     return ret;
 }
@@ -210,16 +202,8 @@ void etiss::preloadLibraries()
         etiss_preload_libraries = true;
     }
 
-    // load libraries from ETISS_HOME
-    char *home = getenv("ETISS_HOME");
-    if (home == NULL)
-    {
-        etiss::log(etiss::FATALERROR, "Environment variable ETISS_HOME not set. Set to ETISS installation directory.");
-    }
-    else
-    {
-        loadLibraryList(std::string(home) + "lib/plugins/");
-    }
+    // load libraries
+    loadLibraryList(installDir() + "/lib/plugins");
 
     // load libraries from user folder
     std::string etiss_path = etiss::cfg().get<std::string>("etiss_wd", "");

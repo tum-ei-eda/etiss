@@ -745,21 +745,16 @@ void etiss_initialize(std::vector<std::string> args, bool forced = false)
         std::vector<std::string> requiredFiles;
 
         // required files
-        requiredFiles.push_back(path + "include/jit/etiss/jit/CPU.h");
+        requiredFiles.push_back(path + "/include/jit/etiss/jit/CPU.h");
 
         // check
         for (auto iter = requiredFiles.begin(); iter != requiredFiles.end(); iter++)
         {
             std::ifstream f(iter->c_str());
-            if (!f.is_open())
+            if (!f)
             {
                 etiss::log(etiss::WARNING, std::string("Could not find file: ") + *iter + "\n" +
-                                               "\t please specify etiss_path to point to the etiss "
-                                               "directory (e.g \"-oetiss_path /somepath/etiss/\")");
-            }
-            else
-            {
-                f.close();
+                                               "\t The installation seems broken");
             }
         }
     }
