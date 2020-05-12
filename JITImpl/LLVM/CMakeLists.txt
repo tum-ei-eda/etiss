@@ -48,7 +48,29 @@ IF(LLVM_FOUND)
 
     LINK_DIRECTORIES(${LLVM_LIBRARY_DIRS})
     ADD_DEFINITIONS(${LLVM_DEFINITIONS})
-    llvm_map_components_to_libnames(LLVM_LIBS option object profiledata support core mc bitreader MCParser BinaryFormat ExecutionEngine Target MCJIT X86CodeGen X86AsmParser Interpreter)
+    llvm_map_components_to_libnames(LLVM_LIBS
+        option
+        object
+        profiledata
+        support
+        core
+        mc
+        bitreader
+        MCParser
+        BinaryFormat
+        ExecutionEngine
+        Target
+        MCJIT
+        X86CodeGen
+        X86AsmParser
+        Interpreter
+        passes
+        coverage
+        ObjCARCOpts
+        LTO
+        Coroutines
+    )
+
 
     FILE(GLOB_RECURSE CLANG_INTERNAL_HEADERS ${LLVM_LIBRARY_DIRS}/clang/${LLVM_VERSION}/include/*.h)
     FOREACH(JITFILE ${CLANG_INTERNAL_HEADERS})
@@ -63,9 +85,20 @@ IF(LLVM_FOUND)
     )
     ETISSPlugin(${PROJECT_NAME})
     TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC
+        -Wl,--start-group
         ${LLVM_LIBS}
         clangFrontend
         clangCodeGen
+        clangLex
+        clangSerialization
+        clangAST
+        clangBasic
+        clangSema
+        clangEdit
+        clangAnalysis
+        clangDriver
+        clangParse
+        -Wl,--end-group
     )
     TARGET_INCLUDE_DIRECTORIES(${PROJECT_NAME} PUBLIC include ${LLVM_INCLUDE_DIRS})
 ENDIF()
