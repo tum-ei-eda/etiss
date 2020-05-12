@@ -158,6 +158,7 @@ class Server : public etiss::CoroutinePlugin, public etiss::TranslationPlugin, p
     CPUArch *arch_;
     ETISS_CPU *cpu_;
     ETISS_System *system_;
+    ETISS_System *unwrappedSys_;
     bool status_paused_;
     bool gdb_status_paused_;
     unsigned status_step_;
