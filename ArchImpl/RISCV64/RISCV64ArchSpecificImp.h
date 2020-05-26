@@ -383,13 +383,13 @@ void RISCV64Arch::initInstrSet(etiss::instr::ModedInstructionSet &mis) const
     {
         // Pre-compilation of instruction set to view instruction tree. Could be
         // disabled.
-        etiss::instr::ModedInstructionSet iset("RISCV64ISA");
+        /*etiss::instr::ModedInstructionSet iset("RISCV64ISA");
         bool ok = true;
         RISCV64ISA.addTo(iset, ok);
 
         iset.compile();
 
-        std::cout << iset.print() << std::endl;
+        std::cout << iset.print() << std::endl;*/
     }
 
     bool ok = true;
@@ -405,6 +405,7 @@ void RISCV64Arch::initInstrSet(etiss::instr::ModedInstructionSet &mis) const
         std::function<void(InstructionContext & ic, etiss_uint32 opRd)> updateRiscvInstrLength =
             [](InstructionContext &ic, etiss_uint32 opRd) {
                 ic.instr_width_fully_evaluated_ = true;
+                ic.is_not_default_width_ = true;
                 if (opRd == 0x3f)
                     ic.instr_width_ = 64;
                 else if ((opRd & 0x3f) == 0x1f)
@@ -414,9 +415,8 @@ void RISCV64Arch::initInstrSet(etiss::instr::ModedInstructionSet &mis) const
                 else if ((opRd & 0x3) != 0x3)
                     ic.instr_width_ = 16;
                 else
-                    etiss::log(etiss::FATALERROR, "Support for RISCV64 instruction longer than 64 bits or "
-                                                  "in odd number bytes is not implemented");
-                ic.is_not_default_width_ = true;
+                    // This might happen when code is followed by data.
+                    ic.is_not_default_width_ = false;
             };
 
         BitArrayRange op(6, 0);
@@ -478,8 +478,8 @@ void RISCV64Arch::initInstrSet(etiss::instr::ModedInstructionSet &mis) const
                 break;
             }
         default:
-            etiss::log(etiss::FATALERROR, "Support for RISCV64 instruction longer than 64 bits or in "
-                                          "odd number bytes is not implemented");
+            // This might happen when code is followed by data.
+            ic.is_not_default_width_ = false;
         }
     };
 }
