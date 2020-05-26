@@ -14857,6 +14857,9 @@ static InstructionDefinition ebreak_(ISA32_R64, "ebreak", (uint32_t)0x100073, (u
                                                            "etiss_uint32 exception = 0;\n"
                                                            "etiss_uint32 temp = 0;\n"
                                                            "etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
+
+                                                           "return ETISS_RETURNCODE_CPUFINISHED; \n"
+
                                                            "exception = ETISS_RETURNCODE_BREAKPOINT; \n"
                                                            "cpu->instructionPointer = " +
                                                            toString((uint64_t)(ic.current_address_ + 4)) +

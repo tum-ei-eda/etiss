@@ -127,12 +127,7 @@ etiss::int32 RISCV64Arch::handleException(etiss::int32 cause, ETISS_CPU *cpu)
                     (((RISCV64 *)cpu)->PRIVLV << 8) ^ (((RISCV64 *)cpu)->SSTATUS & MSTATUS_SPP);
                 ((RISCV64 *)cpu)->PRIVLV = PRV_S;
                 etiss::log(etiss::VERBOSE, "Privilege mode is changed to supervisor mdoe:" + etiss::toString(PRV_S));
-                // Customized handler address other than specified in RISC-V ISA
-                // manual
-                if (((RISCV64 *)cpu)->STVEC & 0x1)
-                    cpu->instructionPointer = (((RISCV64 *)cpu)->STVEC & 0x4) + causeCode * 4;
-                else
-                    cpu->instructionPointer = ((RISCV64 *)cpu)->STVEC;
+                cpu->instructionPointer = ((RISCV64 *)cpu)->STVEC & ~0x3;
             }
             else
             {
@@ -150,10 +145,7 @@ etiss::int32 RISCV64Arch::handleException(etiss::int32 cause, ETISS_CPU *cpu)
                     cpu->instructionPointer = addr;
                     break;
                 }
-                if (((RISCV64 *)cpu)->MTVEC & 0x1)
-                    cpu->instructionPointer = (((RISCV64 *)cpu)->MTVEC & 0x4) + causeCode * 4;
-                else
-                    cpu->instructionPointer = ((RISCV64 *)cpu)->MTVEC;
+                cpu->instructionPointer = ((RISCV64 *)cpu)->MTVEC & ~0x3;
             }
             break;
 
@@ -174,9 +166,9 @@ etiss::int32 RISCV64Arch::handleException(etiss::int32 cause, ETISS_CPU *cpu)
                 ((RISCV64 *)cpu)->PRIVLV = PRV_S;
                 etiss::log(etiss::VERBOSE, "Privilege mode is changed to supervisor mdoe:" + etiss::toString(PRV_S));
                 if (((RISCV64 *)cpu)->STVEC & 0x1)
-                    cpu->instructionPointer = (((RISCV64 *)cpu)->STVEC & 0x4) + causeCode * 4;
+                    cpu->instructionPointer = (((RISCV64 *)cpu)->STVEC & ~0x3) + causeCode * 4;
                 else
-                    cpu->instructionPointer = ((RISCV64 *)cpu)->STVEC;
+                    cpu->instructionPointer = ((RISCV64 *)cpu)->STVEC & ~0x3;
             }
             else
             {
@@ -195,9 +187,9 @@ etiss::int32 RISCV64Arch::handleException(etiss::int32 cause, ETISS_CPU *cpu)
                     break;
                 }
                 if (((RISCV64 *)cpu)->MTVEC & 0x1)
-                    cpu->instructionPointer = (((RISCV64 *)cpu)->MTVEC & 0x4) + causeCode * 4;
+                    cpu->instructionPointer = (((RISCV64 *)cpu)->MTVEC & ~0x3) + causeCode * 4;
                 else
-                    cpu->instructionPointer = ((RISCV64 *)cpu)->MTVEC;
+                    cpu->instructionPointer = ((RISCV64 *)cpu)->MTVEC & ~0x3;
             }
             break;
         }
