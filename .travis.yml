@@ -5,36 +5,79 @@ dist: bionic
 language:
     - c++
 
-# Blacklist
-branches:
-  only:
-    - master
-
-# Install dependencies
+# Install packages
 addons:
   apt:
     packages:
+      - g++
       - doxygen
       - graphviz
+      - libboost-system-dev
       - libboost-filesystem-dev
+      - libtinfo-dev
+      - zlib1g-dev
 
 install:
-  - mkdir -p ${TRAVIS_BUILD_DIR}/deps/cmake
+#making directory to store installed dependencies: cmake, toolchain, JIT
+  - mkdir -p ${TRAVIS_BUILD_DIR}/deps
+  - Dep_dir="${TRAVIS_BUILD_DIR}/deps"
+  - mkdir -p ${Dep_dir}/cmake #directory for Cmake version 3.16.2
+  - mkdir -p ${Dep_dir}/toolchain #directly for Riscv64 toolchain
+  - mkdir -p ${Dep_dir}/JIT #directory for LLVM
+#Wget all dependencies
+  #Install , extract cmake to directory
   - wget https://cmake.org/files/v3.16/cmake-3.16.2-Linux-x86_64.sh
-  - sh cmake-3.16.2-Linux-x86_64.sh --prefix=${TRAVIS_BUILD_DIR}/deps/cmake --exclude-subdir
-  - PATH=${TRAVIS_BUILD_DIR}/deps/cmake:${TRAVIS_BUILD_DIR}/deps/cmake/bin:$PATH
+  - Cmake_version16="cmake-3.16.2-Linux-x86_64.sh"
+  - sh ${Cmake_version16} --prefix=${TRAVIS_BUILD_DIR}/deps/cmake --exclude-subdir
+  - PATH=${Dep_dir}/cmake:${Dep_dir}/cmake/bin:$PATH #hiding old version of Cmake
+  #Install, extract Riscv64 to directory 
+  - wget https://static.dev.sifive.com/dev-tools/riscv64-unknown-elf-gcc-8.3.0-2019.08.0-x86_64-linux-ubuntu14.tar.gz
+  - RISC_V64="riscv64-unknown-elf-gcc-8.3.0-2019.08.0-x86_64-linux-ubuntu14"
+  - tar -zxf ${RISC_V64}.tar.gz --directory ${Dep_dir}/toolchain
+  #Install, extract llvm(not working yet) 
+  - travis_retry wget https://releases.llvm.org/7.0.1/clang+llvm-7.0.1-x86_64-linux-gnu-ubuntu-18.04.tar.xz
+  - llvm_701="clang+llvm-7.0.1-x86_64-linux-gnu-ubuntu-18.04"
+  - tar -xf ${llvm_701}.tar.xz --directory ${Dep_dir}/JIT 
 
-# Build your code e.g. by calling make
-script:
-  - mkdir build && cd build
-  - cmake -DETISS_BUILD_MANUAL_DOC=ON ..
+  
+# Build and install ETISS 
+before_script:
+  - cd ${TRAVIS_BUILD_DIR}
+  - mkdir build_dir && cd build_dir
+  - cmake -DLLVM_DIR=${Dep_dir}/JIT/${llvm_701}/lib/cmake/llvm -DCMAKE_BUILD_TYPE=Release -DETISS_BUILD_MANUAL_DOC=ON -DCMAKE_INSTALL_PREFIX:PATH=`pwd`/installed ..
+  - make
   - make doc
+  - make install
 
+script:
+  - cd ${TRAVIS_BUILD_DIR}/build_dir/installed/examples/SW/riscv
+  - mkdir build
+  - cd build
+  - cmake -DRISCV_ELF_GCC_PREFIX=${Dep_dir}/toolchain/${RISC_V64} -DRISCV_ELF_GCC_BASENAME=riscv64-unknown-elf ..
+  - make
+  - cd ${TRAVIS_BUILD_DIR}/build_dir/installed/examples/SW/riscv_cpp
+  - mkdir build
+  - cd build
+  - cmake -DRISCV_ELF_GCC_PREFIX=${Dep_dir}/toolchain/${RISC_V64} -DRISCV_ELF_GCC_BASENAME=riscv64-unknown-elf ..
+  - make 
+  - cd ${TRAVIS_BUILD_DIR}/build_dir/installed/examples/bare_etiss_processor
+  - mkdir build && cd build
+  - cmake ..
+  - make
+  - cd ..
+  - ldd ${TRAVIS_BUILD_DIR}/build_dir/installed/lib/plugins/libGCCJIT.so
+  - ./run_helper.sh ${TRAVIS_BUILD_DIR}/build_dir/installed/examples/SW/riscv/build/riscv_example  
+  - ./run_helper.sh ${TRAVIS_BUILD_DIR}/build_dir/installed/examples/SW/riscv_cpp/build/riscv_example
+  - ./run_helper.sh ${TRAVIS_BUILD_DIR}/build_dir/installed/examples/SW/riscv/build/riscv_example gcc  
+  - ./run_helper.sh ${TRAVIS_BUILD_DIR}/build_dir/installed/examples/SW/riscv_cpp/build/riscv_example gcc
+   
+ 
 # Generate and deploy documentation
 deploy:
   provider: pages
   skip_cleanup: true
-  local_dir: build/doc/html
+  local_dir: build_dir/doc/html
   github_token: $GH_REPO_TOKEN
   on:
     branch: master
+
