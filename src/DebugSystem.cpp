@@ -90,7 +90,14 @@ DebugSystem::DebugSystem(uint32_t rom_start, uint32_t rom_size, uint32_t ram_sta
 
 etiss::int32 DebugSystem::iread(ETISS_CPU *, etiss::uint64 addr, etiss::uint32 len)
 {
-    return RETURNCODE::NOERROR;
+    if (addr >= _rom_start && addr < _rom_start + rom_mem.size())
+    {
+        return RETURNCODE::NOERROR;
+    }
+
+    std::cout << std::hex << addr << std::dec << std::endl;
+    etiss::log(etiss::ERROR, "wrong address issued in DebugSystem::iread\n");
+    return RETURNCODE::IBUS_WRITE_ERROR;
 }
 etiss::int32 DebugSystem::iwrite(ETISS_CPU *, etiss::uint64 addr, etiss::uint8 *buf, etiss::uint32 len)
 {
@@ -150,7 +157,8 @@ etiss::int32 DebugSystem::dread(ETISS_CPU *, etiss::uint64 addr, etiss::uint8 *b
         else
         {
             std::cout << std::hex << addr << std::dec << std::endl;
-            etiss::log(etiss::FATALERROR, "wrong address issued in DebugSystem::dread\n");
+            etiss::log(etiss::ERROR, "wrong address issued in DebugSystem::dread\n");
+            return RETURNCODE::DBUS_READ_ERROR;
         }
     }
 #if ARMv6M_DEBUG_PRINT
@@ -203,7 +211,8 @@ etiss::int32 DebugSystem::dwrite(ETISS_CPU *, etiss::uint64 addr, etiss::uint8 *
     else
     {
         std::cout << std::hex << addr << std::dec << std::endl;
-        etiss::log(etiss::FATALERROR, "wrong address issued in DebugSystem::dwrite\n");
+        etiss::log(etiss::ERROR, "wrong address issued in DebugSystem::dwrite\n");
+        return RETURNCODE::DBUS_WRITE_ERROR;
     }
     return RETURNCODE::NOERROR;
 }

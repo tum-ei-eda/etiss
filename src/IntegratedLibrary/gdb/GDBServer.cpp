@@ -213,18 +213,10 @@ etiss::int32 Server::preInstructionCallback()
             {
                 return RETURNCODE::CPUTERMINATED;
             }
-            if (status_paused_)
+            if (status_pending_jump_)
             {
-                // std::this_thread::sleep_for(std::chrono::milliseconds(50)); // removed due to blocking handle packet
-                // call
-            }
-            else
-            {
-                if (status_pending_jump_)
-                {
-                    cpu_->instructionPointer = status_jumpaddr_;
-                    status_pending_jump_ = false;
-                }
+                cpu_->instructionPointer = status_jumpaddr_;
+                status_pending_jump_ = false;
             }
         }
     }
@@ -776,7 +768,54 @@ void Server::handlePacket(bool block)
 
 etiss::int32 Server::preMemoryAccessCallback(etiss::uint64 addr, etiss::uint32 len, bool data, bool read)
 {
+    etiss::int32 exception = 0;
+    uint64_t buf = 0;
+    if (read)
+    {
+        if (data)
+        {
+            exception = unwrappedSys_->dread(unwrappedSys_->handle, cpu_, addr, (etiss::uint8*)&buf, len);
+        }
+        else
+        {
+            exception = unwrappedSys_->iread(unwrappedSys_->handle, cpu_, addr, len);
+        }
+    }
+    else
+    {
+        if (data)
+        {
+            exception = unwrappedSys_->dwrite(unwrappedSys_->handle, cpu_, addr, (etiss::uint8*)&buf, len);
+        }
+        else
+        {
+            exception = unwrappedSys_->iwrite(unwrappedSys_->handle, cpu_, addr, (etiss::uint8*)&buf, len);
+        }
+    }
+    if (exception)
+    {
+        status_paused_ = true;
 
+        if (!gdb_status_paused_)
+        {
+            con_.snd("T" + hex::fromByte(5), false);
+            gdb_status_paused_ = true;
+        }
+
+        while (unlikely(status_paused_))
+        {
+            handlePacket(true);
+            if (unlikely(status_pending_kill_))
+            {
+                return RETURNCODE::CPUTERMINATED;
+            }
+            if (status_pending_jump_)
+            {
+                cpu_->instructionPointer = status_jumpaddr_;
+                status_pending_jump_ = false;
+            }
+        }
+    }
     return RETURNCODE::NOERROR;
 }
 

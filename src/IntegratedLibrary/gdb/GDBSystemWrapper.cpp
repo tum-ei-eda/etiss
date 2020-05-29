@@ -165,6 +165,7 @@ ETISS_System *Server::wrap(ETISS_CPU *cpu, ETISS_System *sys)
     ret->server_ = this;
 
     ret->sys_ = sys;
+    unwrappedSys_ = sys;
 
     return (ETISS_System *)ret;
 }
