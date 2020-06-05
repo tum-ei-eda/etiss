@@ -68,7 +68,7 @@ class RISCV64MMU : public etiss::mm::MMU
 
     void UpdatePTEFlags(PTE &pte, etiss::mm::MM_ACCESS access) {}
 
-    bool CheckPrivilegedMode() { return (((RISCV64 *)cpu_)->PRIVLV == PRV_M) ? false : true; }
+    bool CheckPrivilegedMode() { return (((RISCV64 *)cpu_)->CSR[3088] == PRV_M) ? false : true; }
 };
 
 #endif

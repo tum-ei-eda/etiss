@@ -849,6 +849,37 @@ loopexit:
     std::cout << std::string("MIPS (estimated): ")
               << etiss::toString(cpu_->cpuTime_ps / (float)cpu_->cpuCycleTime_ps / (endTime - startTime) / 1.0E6)
               << std::endl;
+    int max = 0;
+    for(int i; i<sizeof(cpu_->resources)/8; i++)
+    {	
+        if(cpu_->resources[i] != NULL)
+        {
+            if (cpu_->cycles[i] > max)
+            {
+                max = cpu_->cycles[i];
+            }
+        }
+    }
+    if (max!=0)
+    {//max=0: resource computation turned of 
+        std::cout << std::string("CPU Cycles (with pipeline): ")
+                  << etiss::toString(max) << std::endl;
+    }
+    for(int i; i<sizeof(cpu_->resources)/8; i++)
+    {	
+        if(cpu_->resources[i]!=NULL)
+        {
+            std::cout << std::string("Resource Usage ")
+                      << etiss::toString(cpu_->resources[i])
+                      << std::string(": ")
+                      << etiss::toString(cpu_->resourceUsages[i])
+                      << std::string(" cycles, ")
+                      << etiss::toString((cpu_->resourceUsages[i] / (double) max) * 100)
+                      << std::string("%")
+                      << std::endl;
+        }
+		
+    }
 #if ETISS_CPUCORE_DBG_APPROXIMATE_INSTRUCTION_COUNTER
     etiss::log(etiss::INFO, std::string("InstructionCounter: ") +
                                 etiss::toString(instrcounter / ((double)cpu_->cpuTime_ps / 1000000.0)));

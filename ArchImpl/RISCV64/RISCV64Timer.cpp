@@ -197,7 +197,7 @@ etiss::int32 RISCV64Timer::execute()
     }
     else if (mtime_ >= mtimecmp_ || (!mtimecmp_overflow_ && mtime_overflow_))
     {
-        *(riscv64cpu->MIP) |= MIP_MTIP;
+        (riscv64cpu->CSR[CSR_MIP]) |= MIP_MTIP;
 
         if (mtimecmp_overflow_)
         {

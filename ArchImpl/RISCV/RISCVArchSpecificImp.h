@@ -81,13 +81,13 @@ etiss::int32 RISCVArch::handleException(etiss::int32 cause, ETISS_CPU *cpu)
     etiss_uint32 handledCause = cause;
 
     std::function<void()> disableItr = [cpu]() {
-        if (likely(*(((RISCV *)cpu)->MSTATUS) & MSTATUS_MIE))
+        if (likely((((RISCV *)cpu)->CSR[CSR_MSTATUS]) & MSTATUS_MIE))
         {
             // Push MIE, SIE, UIE to MPIE, SPIE, UPIE
-            etiss_uint32 irq_enable = (*(((RISCV *)cpu)->MSTATUS) & MSTATUS_MIE) |
-                                      (*(((RISCV *)cpu)->MSTATUS) & MSTATUS_UIE) |
-                                      (*(((RISCV *)cpu)->MSTATUS) & MSTATUS_SIE);
-            *(((RISCV *)cpu)->MSTATUS) = (irq_enable << 4) | (*(((RISCV *)cpu)->MSTATUS) & 0xffffff00);
+            etiss_uint32 irq_enable = ((((RISCV *)cpu)->CSR[CSR_MSTATUS]) & MSTATUS_MIE) |
+                                      ((((RISCV *)cpu)->CSR[CSR_MSTATUS]) & MSTATUS_UIE) |
+                                      ((((RISCV *)cpu)->CSR[CSR_MSTATUS]) & MSTATUS_SIE);
+            (((RISCV *)cpu)->CSR[CSR_MSTATUS]) = (irq_enable << 4) | ((((RISCV *)cpu)->CSR[CSR_MSTATUS]) & 0xffffff00);
         }
     };
 
@@ -104,74 +104,74 @@ etiss::int32 RISCVArch::handleException(etiss::int32 cause, ETISS_CPU *cpu)
         // Exception
         case 0x0:
             // Check exception delegation
-            if (((RISCV *)cpu)->MEDELEG & (1 << (causeCode & 0x1f)))
+            if (((RISCV *)cpu)->CSR[CSR_MEDELEG] & (1 << (causeCode & 0x1f)))
             {
                 // Pop MPIE to MIE
                 etiss::log(etiss::VERBOSE, "Exception is delegated to supervisor mode");
-                *(((RISCV *)cpu)->MSTATUS) ^=
-                    ((*(((RISCV *)cpu)->MSTATUS) & MSTATUS_MPIE) >> 4) ^ (*(((RISCV *)cpu)->MSTATUS) & MSTATUS_MIE);
-                ((RISCV *)cpu)->SCAUSE = causeCode;
+                (((RISCV *)cpu)->CSR[CSR_MSTATUS]) ^=
+                    (((((RISCV *)cpu)->CSR[CSR_MSTATUS]) & MSTATUS_MPIE) >> 4) ^ ((((RISCV *)cpu)->CSR[CSR_MSTATUS]) & MSTATUS_MIE);
+                ((RISCV *)cpu)->CSR[CSR_SCAUSE] = causeCode;
                 // Redo the instruction encoutered exception after handling
-                ((RISCV *)cpu)->SEPC = static_cast<etiss_uint32>(cpu->instructionPointer - 4);
-                ((RISCV *)cpu)->SSTATUS ^= (((RISCV *)cpu)->PRIVLV << 8) ^ (((RISCV *)cpu)->SSTATUS & MSTATUS_SPP);
-                ((RISCV *)cpu)->PRIVLV = PRV_S;
-                cpu->instructionPointer = ((RISCV *)cpu)->STVEC & ~0x3;
+                ((RISCV *)cpu)->CSR[CSR_SEPC] = static_cast<etiss_uint32>(cpu->instructionPointer - 4);
+                ((RISCV *)cpu)->CSR[CSR_SSTATUS] ^= (((RISCV *)cpu)->CSR[3088] << 8) ^ (((RISCV *)cpu)->CSR[CSR_SSTATUS & MSTATUS_SPP]);
+                ((RISCV *)cpu)->CSR[3088] = PRV_S;
+                cpu->instructionPointer = ((RISCV *)cpu)->CSR[CSR_STVEC] & ~0x3;
             }
             else
             {
-                ((RISCV *)cpu)->MCAUSE = causeCode;
+                ((RISCV *)cpu)->CSR[CSR_MCAUSE] = causeCode;
                 // Redo the instruction encoutered exception after handling
-                ((RISCV *)cpu)->MEPC = static_cast<etiss_uint32>(cpu->instructionPointer - 4);
-                *(((RISCV *)cpu)->MSTATUS) ^=
-                    (((RISCV *)cpu)->PRIVLV << 11) ^ (*(((RISCV *)cpu)->MSTATUS) & MSTATUS_MPP);
-                ((RISCV *)cpu)->PRIVLV = PRV_M;
+                ((RISCV *)cpu)->CSR[CSR_MEPC] = static_cast<etiss_uint32>(cpu->instructionPointer - 4);
+                (((RISCV *)cpu)->CSR[CSR_MSTATUS]) ^=
+                    (((RISCV *)cpu)->CSR[3088] << 11) ^ ((((RISCV *)cpu)->CSR[CSR_MSTATUS]) & MSTATUS_MPP);
+                ((RISCV *)cpu)->CSR[3088] = PRV_M;
                 // Customized handler address other than specified in RISC-V ISA manual
                 if (addr)
                 {
                     cpu->instructionPointer = addr;
                     break;
                 }
-                cpu->instructionPointer = ((RISCV *)cpu)->MTVEC & ~0x3;
+                cpu->instructionPointer = ((RISCV *)cpu)->CSR[CSR_MTVEC] & ~0x3;
             }
             break;
 
         // Interrupt
         case 0x80000000:
             // Check exception delegation
-            if (((RISCV *)cpu)->MIDELEG & (1 << (causeCode & 0x1f)))
+            if (((RISCV *)cpu)->CSR[CSR_MIDELEG] & (1 << (causeCode & 0x1f)))
             {
                 // Pop MPIE to MIE
                 etiss::log(etiss::VERBOSE, "Interrupt is delegated to supervisor mode");
-                *(((RISCV *)cpu)->MSTATUS) ^=
-                    ((*(((RISCV *)cpu)->MSTATUS) & MSTATUS_MPIE) >> 4) ^ (*(((RISCV *)cpu)->MSTATUS) & MSTATUS_MIE);
-                ((RISCV *)cpu)->SCAUSE = causeCode;
+                (((RISCV *)cpu)->CSR[CSR_MSTATUS]) ^=
+                    (((((RISCV *)cpu)->CSR[CSR_MSTATUS]) & MSTATUS_MPIE) >> 4) ^ ((((RISCV *)cpu)->CSR[CSR_MSTATUS]) & MSTATUS_MIE);
+                ((RISCV *)cpu)->CSR[CSR_SCAUSE] = causeCode;
                 // Return to instruction next interrupted one
-                ((RISCV *)cpu)->SEPC = static_cast<etiss_uint32>(cpu->instructionPointer);
-                ((RISCV *)cpu)->SSTATUS ^= (((RISCV *)cpu)->PRIVLV << 8) ^ (((RISCV *)cpu)->SSTATUS & MSTATUS_SPP);
-                ((RISCV *)cpu)->PRIVLV = PRV_S;
-                if (((RISCV *)cpu)->STVEC & 0x1)
-                    cpu->instructionPointer = (((RISCV *)cpu)->STVEC & ~0x3) + causeCode * 4;
+                ((RISCV *)cpu)->CSR[CSR_SEPC] = static_cast<etiss_uint32>(cpu->instructionPointer);
+                ((RISCV *)cpu)->CSR[CSR_SSTATUS] ^= (((RISCV *)cpu)->CSR[3088] << 8) ^ (((RISCV *)cpu)->CSR[CSR_SSTATUS] & MSTATUS_SPP);
+                ((RISCV *)cpu)->CSR[3088] = PRV_S;
+                if (((RISCV *)cpu)->CSR[CSR_STVEC] & 0x1)
+                    cpu->instructionPointer = (((RISCV *)cpu)->CSR[CSR_STVEC] & ~0x3) + causeCode * 4;
                 else
-                    cpu->instructionPointer = ((RISCV *)cpu)->STVEC & ~0x3;
+                    cpu->instructionPointer = ((RISCV *)cpu)->CSR[CSR_STVEC] & ~0x3;
             }
             else
             {
-                ((RISCV *)cpu)->MCAUSE = causeCode;
+                ((RISCV *)cpu)->CSR[CSR_MCAUSE] = causeCode;
                 // Return to instruction next interrupted one
-                ((RISCV *)cpu)->MEPC = static_cast<etiss_uint32>(cpu->instructionPointer);
-                *(((RISCV *)cpu)->MSTATUS) ^=
-                    (((RISCV *)cpu)->PRIVLV << 11) ^ (*(((RISCV *)cpu)->MSTATUS) & MSTATUS_MPP);
-                ((RISCV *)cpu)->PRIVLV = PRV_M;
+                ((RISCV *)cpu)->CSR[CSR_MEPC] = static_cast<etiss_uint32>(cpu->instructionPointer);
+                (((RISCV *)cpu)->CSR[CSR_MSTATUS]) ^=
+                    (((RISCV *)cpu)->CSR[3088] << 11) ^ ((((RISCV *)cpu)->CSR[CSR_MSTATUS]) & MSTATUS_MPP);
+                ((RISCV *)cpu)->CSR[3088] = PRV_M;
                 // Customized handler address other than specified in RISC-V ISA manual
                 if (addr)
                 {
                     cpu->instructionPointer = addr;
                     break;
                 }
-                if (((RISCV *)cpu)->MTVEC & 0x1)
-                    cpu->instructionPointer = (((RISCV *)cpu)->MTVEC & ~0x3) + causeCode * 4;
+                if (((RISCV *)cpu)->CSR[CSR_MTVEC] & 0x1)
+                    cpu->instructionPointer = (((RISCV *)cpu)->CSR[CSR_MTVEC] & ~0x3) + causeCode * 4;
                 else
-                    cpu->instructionPointer = ((RISCV *)cpu)->MTVEC & ~0x3;
+                    cpu->instructionPointer = ((RISCV *)cpu)->CSR[CSR_MTVEC] & ~0x3;
             }
             break;
         }
@@ -185,7 +185,7 @@ etiss::int32 RISCVArch::handleException(etiss::int32 cause, ETISS_CPU *cpu)
     {
 
     case etiss::RETURNCODE::INTERRUPT:
-        if (!(*((((RISCV *)cpu))->MSTATUS) & MSTATUS_MIE))
+        if (!((((RISCV *)cpu)->CSR[CSR_MSTATUS]) & MSTATUS_MIE))
         {
             std::stringstream msg;
             msg << "Interrupt handling is globally disabled. Interrupt line is still pending." << std::endl;
@@ -194,7 +194,7 @@ etiss::int32 RISCVArch::handleException(etiss::int32 cause, ETISS_CPU *cpu)
             break;
         }
         {
-            etiss_uint32 mip_tmp = *((((RISCV *)cpu))->MIP);
+            etiss_uint32 mip_tmp = ((((RISCV *)cpu))->CSR[CSR_MIP]);
             if (0 == mip_tmp)
             {
                 handledCause = etiss::RETURNCODE::NOERROR;
@@ -208,7 +208,7 @@ etiss::int32 RISCVArch::handleException(etiss::int32 cause, ETISS_CPU *cpu)
                     irqLine = i;
             }
 
-            if (!(*((((RISCV *)cpu))->MIE) & (1 << irqLine)))
+            if (!(((((RISCV *)cpu))->CSR[CSR_MIE]) & (1 << irqLine)))
             {
                 std::stringstream msg;
                 handledCause = etiss::RETURNCODE::NOERROR;
@@ -249,7 +249,7 @@ etiss::int32 RISCVArch::handleException(etiss::int32 cause, ETISS_CPU *cpu)
         disableItr();
         std::stringstream msg;
         msg << "Illegal instruction at address: 0x" << std::hex << cpu->instructionPointer << std::endl;
-        ((RISCV *)cpu)->MTVAL = static_cast<etiss_uint32>(cpu->instructionPointer);
+        ((RISCV *)cpu)->CSR[CSR_MTVAL] = static_cast<etiss_uint32>(cpu->instructionPointer);
         // Point to next instruction
         cpu->instructionPointer += 4;
         etiss::log(etiss::WARNING, msg.str());
@@ -290,7 +290,7 @@ etiss::int32 RISCVArch::handleException(etiss::int32 cause, ETISS_CPU *cpu)
     case etiss::RETURNCODE::SYSCALL:
 
         disableItr();
-        switch (((RISCV *)cpu)->PRIVLV)
+        switch (((RISCV *)cpu)->CSR[3088])
         {
         case PRV_U:
             handledCause = handle(CAUSE_USER_ECALL, 0);
@@ -312,7 +312,7 @@ etiss::int32 RISCVArch::handleException(etiss::int32 cause, ETISS_CPU *cpu)
         disableItr();
         std::stringstream msg;
         msg << "Illegal instruction access at address: 0x" << std::hex << cpu->instructionPointer << std::endl;
-        ((RISCV *)cpu)->MTVAL = static_cast<etiss_uint32>(cpu->instructionPointer);
+        ((RISCV *)cpu)->CSR[CSR_MTVAL] = static_cast<etiss_uint32>(cpu->instructionPointer);
         // Point to next instruction
         cpu->instructionPointer += 4;
         etiss::log(etiss::WARNING, msg.str());
@@ -360,13 +360,13 @@ void RISCVArch::initInstrSet(etiss::instr::ModedInstructionSet &mis) const
 
     {
         // Pre-compilation of instruction set to view instruction tree. Could be disabled.
-        /*etiss::instr::ModedInstructionSet iset("RISCVISA");
+        etiss::instr::ModedInstructionSet iset("RISCVISA");
         bool ok = true;
         RISCVISA.addTo(iset, ok);
 
         iset.compile();
 
-        std::cout << iset.print() << std::endl;*/
+        // std::cout << iset.print() << std::endl;
     }
 
     bool ok = true;
@@ -517,12 +517,12 @@ class RegField_RISCV : public etiss::VirtualStruct::Field
     virtual ~RegField_RISCV() {}
 
   protected:
-    virtual uint64_t _read() const { return (uint64_t) * ((RISCV *)parent_.structure_)->R[gprid_]; }
+    virtual uint64_t _read() const { return (uint64_t) * ((RISCV *)parent_.structure_)->X[gprid_]; }
 
     virtual void _write(uint64_t val)
     {
         etiss::log(etiss::VERBOSE, "write to ETISS cpu state", name_, val);
-        *((RISCV *)parent_.structure_)->R[gprid_] = (etiss_uint32)val;
+        *((RISCV *)parent_.structure_)->X[gprid_] = (etiss_uint32)val;
     }
 };
 
@@ -581,7 +581,7 @@ std::shared_ptr<etiss::VirtualStruct> RISCVArch::getVirtualStruct(ETISS_CPU *cpu
         ret->addField(new RegField_RISCV(*ret, i));
     }
     ret->addField(new pcField_RISCV(*ret));
-    ret->addField(new CSRField<etiss::uint32>(*ret, &((RISCV *)cpu)->MISA, 769));
+    ret->addField(new CSRField<etiss::uint32>(*ret, &((RISCV *)cpu)->CSR[CSR_MISA], 769));
     return ret;
 }
 
@@ -599,9 +599,9 @@ etiss::InterruptVector *RISCVArch::createInterruptVector(ETISS_CPU *cpu)
         return 0;
     RISCV *riscvcpu = (RISCV *)cpu;
     std::vector<etiss::uint32 *> vec;
-    vec.push_back(riscvcpu->MIP);
+    vec.push_back(&riscvcpu->CSR[CSR_MIP]);
     std::vector<etiss::uint32 *> mask;
-    mask.push_back(riscvcpu->MIE);
+    mask.push_back(&riscvcpu->CSR[CSR_MIE]);
     return new etiss::MappedInterruptVector<etiss::uint32>(vec, mask);
 }
 void RISCVArch::deleteInterruptVector(etiss::InterruptVector *vec, ETISS_CPU *cpu)
