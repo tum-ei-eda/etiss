@@ -49,6 +49,7 @@
 #include <iostream>
 #include <sstream>
 #include <stdlib.h> //mkdtemp
+#include <unistd.h>
 
 GCCJIT::GCCJIT(bool cleanup) : etiss::JIT("gcc"), cleanup_(cleanup)
 {
