@@ -1,4 +1,4 @@
-// This file was generated on Fri Jun 05 10:25:50 CEST 2020
+// This file was generated on Thu Jun 11 12:46:32 CEST 2020
 // If necessary please modify this file according to the instructions
 // Contact: eda@tum
 
@@ -36,7 +36,7 @@
 #include "RISCV64ArchSpecificImp.h"
 
 #define RISCV64_DEBUG_CALL 0
-#define RISCV64_Pipeline1 1
+#define RISCV64_Pipeline1 0
 #define RISCV64_Pipeline2 0
 using namespace etiss ;
 using namespace etiss::instr ;
@@ -971,7 +971,7 @@ static InstructionDefinition sb_rs2_imm_rs1_(
 			#if RISCV64_DEBUG_CALL
 			"printf(\"MEM_offs = %#x\\n\",MEM_offs); \n"
 			#endif	
-			"if((offs + 1 >= ((RISCV64*)cpu)->RES) && (offs <= 8 + ((RISCV64*)cpu)->RES))\n"
+			"if((offs + 1 > ((RISCV64*)cpu)->RES) && (offs < 8 + ((RISCV64*)cpu)->RES))\n"
 			"{\n"
 				"((RISCV64*)cpu)->RES = 0;\n"
 				#if RISCV64_DEBUG_CALL
@@ -1502,7 +1502,7 @@ static InstructionDefinition sh_rs2_imm_rs1_(
 			#if RISCV64_DEBUG_CALL
 			"printf(\"MEM_offs = %#x\\n\",MEM_offs); \n"
 			#endif	
-			"if((offs + 2 >= ((RISCV64*)cpu)->RES) && (offs <= 8 + ((RISCV64*)cpu)->RES))\n"
+			"if((offs + 2 > ((RISCV64*)cpu)->RES) && (offs < 8 + ((RISCV64*)cpu)->RES))\n"
 			"{\n"
 				"((RISCV64*)cpu)->RES = 0;\n"
 				#if RISCV64_DEBUG_CALL
@@ -3805,7 +3805,7 @@ static InstructionDefinition sw_rs2_imm_rs1_(
 			#if RISCV64_DEBUG_CALL
 			"printf(\"MEM_offs = %#x\\n\",MEM_offs); \n"
 			#endif	
-			"if((offs + 4 >= ((RISCV64*)cpu)->RES) && (offs <= 8 + ((RISCV64*)cpu)->RES))\n"
+			"if((offs + 4 > ((RISCV64*)cpu)->RES) && (offs < 8 + ((RISCV64*)cpu)->RES))\n"
 			"{\n"
 				"((RISCV64*)cpu)->RES = 0;\n"
 				#if RISCV64_DEBUG_CALL
@@ -4361,7 +4361,7 @@ static InstructionDefinition fsw_rs2_imm_xrs1_(
 			#if RISCV64_DEBUG_CALL
 			"printf(\"MEM_offs = %#x\\n\",MEM_offs); \n"
 			#endif	
-			"if((offs + 4 >= ((RISCV64*)cpu)->RES) && (offs <= 8 + ((RISCV64*)cpu)->RES))\n"
+			"if((offs + 4 > ((RISCV64*)cpu)->RES) && (offs < 8 + ((RISCV64*)cpu)->RES))\n"
 			"{\n"
 				"((RISCV64*)cpu)->RES = 0;\n"
 				#if RISCV64_DEBUG_CALL
@@ -4905,7 +4905,7 @@ static InstructionDefinition sd_rs2_imm_rs1_(
 			#if RISCV64_DEBUG_CALL
 			"printf(\"MEM_offs = %#x\\n\",MEM_offs); \n"
 			#endif	
-			"if((offs + 8 >= ((RISCV64*)cpu)->RES) && (offs <= 8 + ((RISCV64*)cpu)->RES))\n"
+			"if((offs + 8 > ((RISCV64*)cpu)->RES) && (offs < 8 + ((RISCV64*)cpu)->RES))\n"
 			"{\n"
 				"((RISCV64*)cpu)->RES = 0;\n"
 				#if RISCV64_DEBUG_CALL
@@ -5133,7 +5133,7 @@ static InstructionDefinition fsd_rs2_imm_rs1_(
 			#if RISCV64_DEBUG_CALL
 			"printf(\"MEM_offs = %#x\\n\",MEM_offs); \n"
 			#endif	
-			"if((offs + 8 >= ((RISCV64*)cpu)->RES) && (offs <= 8 + ((RISCV64*)cpu)->RES))\n"
+			"if((offs + 8 > ((RISCV64*)cpu)->RES) && (offs < 8 + ((RISCV64*)cpu)->RES))\n"
 			"{\n"
 				"((RISCV64*)cpu)->RES = 0;\n"
 				#if RISCV64_DEBUG_CALL
@@ -10102,7 +10102,7 @@ static InstructionDefinition amoswap_w_rd_rs1_rs2_aqu_aq_rel_rl_(
 			#if RISCV64_DEBUG_CALL
 			"printf(\"MEM_offs = %#x\\n\",MEM_offs); \n"
 			#endif	
-			"if((offs + 4 >= ((RISCV64*)cpu)->RES) && (offs <= 8 + ((RISCV64*)cpu)->RES))\n"
+			"if((offs + 4 > ((RISCV64*)cpu)->RES) && (offs < 8 + ((RISCV64*)cpu)->RES))\n"
 			"{\n"
 				"((RISCV64*)cpu)->RES = 0;\n"
 				#if RISCV64_DEBUG_CALL
@@ -10200,7 +10200,7 @@ static InstructionDefinition amoswap_d_rd_rs1_rs2_aqu_aq_rel_rl_(
 			#if RISCV64_DEBUG_CALL
 			"printf(\"MEM_offs = %#x\\n\",MEM_offs); \n"
 			#endif	
-			"if((offs + 8 >= ((RISCV64*)cpu)->RES) && (offs <= 8 + ((RISCV64*)cpu)->RES))\n"
+			"if((offs + 8 > ((RISCV64*)cpu)->RES) && (offs < 8 + ((RISCV64*)cpu)->RES))\n"
 			"{\n"
 				"((RISCV64*)cpu)->RES = 0;\n"
 				#if RISCV64_DEBUG_CALL
@@ -10308,7 +10308,7 @@ static InstructionDefinition amoadd_w_rd_rs1_rs2_aqu_aq_rel_rl_(
 			#if RISCV64_DEBUG_CALL
 			"printf(\"MEM_offs = %#x\\n\",MEM_offs); \n"
 			#endif	
-			"if((offs + 4 >= ((RISCV64*)cpu)->RES) && (offs <= 8 + ((RISCV64*)cpu)->RES))\n"
+			"if((offs + 4 > ((RISCV64*)cpu)->RES) && (offs < 8 + ((RISCV64*)cpu)->RES))\n"
 			"{\n"
 				"((RISCV64*)cpu)->RES = 0;\n"
 				#if RISCV64_DEBUG_CALL
@@ -10416,7 +10416,7 @@ static InstructionDefinition amoadd_d_rd_rs1_rs2_aqu_aq_rel_rl_(
 			#if RISCV64_DEBUG_CALL
 			"printf(\"MEM_offs = %#x\\n\",MEM_offs); \n"
 			#endif	
-			"if((offs + 8 >= ((RISCV64*)cpu)->RES) && (offs <= 8 + ((RISCV64*)cpu)->RES))\n"
+			"if((offs + 8 > ((RISCV64*)cpu)->RES) && (offs < 8 + ((RISCV64*)cpu)->RES))\n"
 			"{\n"
 				"((RISCV64*)cpu)->RES = 0;\n"
 				#if RISCV64_DEBUG_CALL
@@ -10524,7 +10524,7 @@ static InstructionDefinition amoxor_w_rd_rs1_rs2_aqu_aq_rel_rl_(
 			#if RISCV64_DEBUG_CALL
 			"printf(\"MEM_offs = %#x\\n\",MEM_offs); \n"
 			#endif	
-			"if((offs + 4 >= ((RISCV64*)cpu)->RES) && (offs <= 8 + ((RISCV64*)cpu)->RES))\n"
+			"if((offs + 4 > ((RISCV64*)cpu)->RES) && (offs < 8 + ((RISCV64*)cpu)->RES))\n"
 			"{\n"
 				"((RISCV64*)cpu)->RES = 0;\n"
 				#if RISCV64_DEBUG_CALL
@@ -10632,7 +10632,7 @@ static InstructionDefinition amoxor_d_rd_rs1_rs2_aqu_aq_rel_rl_(
 			#if RISCV64_DEBUG_CALL
 			"printf(\"MEM_offs = %#x\\n\",MEM_offs); \n"
 			#endif	
-			"if((offs + 8 >= ((RISCV64*)cpu)->RES) && (offs <= 8 + ((RISCV64*)cpu)->RES))\n"
+			"if((offs + 8 > ((RISCV64*)cpu)->RES) && (offs < 8 + ((RISCV64*)cpu)->RES))\n"
 			"{\n"
 				"((RISCV64*)cpu)->RES = 0;\n"
 				#if RISCV64_DEBUG_CALL
@@ -10740,7 +10740,7 @@ static InstructionDefinition amoand_w_rd_rs1_rs2_aqu_aq_rel_rl_(
 			#if RISCV64_DEBUG_CALL
 			"printf(\"MEM_offs = %#x\\n\",MEM_offs); \n"
 			#endif	
-			"if((offs + 4 >= ((RISCV64*)cpu)->RES) && (offs <= 8 + ((RISCV64*)cpu)->RES))\n"
+			"if((offs + 4 > ((RISCV64*)cpu)->RES) && (offs < 8 + ((RISCV64*)cpu)->RES))\n"
 			"{\n"
 				"((RISCV64*)cpu)->RES = 0;\n"
 				#if RISCV64_DEBUG_CALL
@@ -10848,7 +10848,7 @@ static InstructionDefinition amoand_d_rd_rs1_rs2_aqu_aq_rel_rl_(
 			#if RISCV64_DEBUG_CALL
 			"printf(\"MEM_offs = %#x\\n\",MEM_offs); \n"
 			#endif	
-			"if((offs + 8 >= ((RISCV64*)cpu)->RES) && (offs <= 8 + ((RISCV64*)cpu)->RES))\n"
+			"if((offs + 8 > ((RISCV64*)cpu)->RES) && (offs < 8 + ((RISCV64*)cpu)->RES))\n"
 			"{\n"
 				"((RISCV64*)cpu)->RES = 0;\n"
 				#if RISCV64_DEBUG_CALL
@@ -10956,7 +10956,7 @@ static InstructionDefinition amoor_w_rd_rs1_rs2_aqu_aq_rel_rl_(
 			#if RISCV64_DEBUG_CALL
 			"printf(\"MEM_offs = %#x\\n\",MEM_offs); \n"
 			#endif	
-			"if((offs + 4 >= ((RISCV64*)cpu)->RES) && (offs <= 8 + ((RISCV64*)cpu)->RES))\n"
+			"if((offs + 4 > ((RISCV64*)cpu)->RES) && (offs < 8 + ((RISCV64*)cpu)->RES))\n"
 			"{\n"
 				"((RISCV64*)cpu)->RES = 0;\n"
 				#if RISCV64_DEBUG_CALL
@@ -11064,7 +11064,7 @@ static InstructionDefinition amoor_d_rd_rs1_rs2_aqu_aq_rel_rl_(
 			#if RISCV64_DEBUG_CALL
 			"printf(\"MEM_offs = %#x\\n\",MEM_offs); \n"
 			#endif	
-			"if((offs + 8 >= ((RISCV64*)cpu)->RES) && (offs <= 8 + ((RISCV64*)cpu)->RES))\n"
+			"if((offs + 8 > ((RISCV64*)cpu)->RES) && (offs < 8 + ((RISCV64*)cpu)->RES))\n"
 			"{\n"
 				"((RISCV64*)cpu)->RES = 0;\n"
 				#if RISCV64_DEBUG_CALL
@@ -11198,7 +11198,7 @@ static InstructionDefinition amomin_w_rd_rs1_rs2_aqu_aq_rel_rl_(
 			#if RISCV64_DEBUG_CALL
 			"printf(\"MEM_offs = %#x\\n\",MEM_offs); \n"
 			#endif	
-			"if((offs + 4 >= ((RISCV64*)cpu)->RES) && (offs <= 8 + ((RISCV64*)cpu)->RES))\n"
+			"if((offs + 4 > ((RISCV64*)cpu)->RES) && (offs < 8 + ((RISCV64*)cpu)->RES))\n"
 			"{\n"
 				"((RISCV64*)cpu)->RES = 0;\n"
 				#if RISCV64_DEBUG_CALL
@@ -11332,7 +11332,7 @@ static InstructionDefinition amomin_d_rd_rs1_rs2_aqu_aq_rel_rl_(
 			#if RISCV64_DEBUG_CALL
 			"printf(\"MEM_offs = %#x\\n\",MEM_offs); \n"
 			#endif	
-			"if((offs + 8 >= ((RISCV64*)cpu)->RES) && (offs <= 8 + ((RISCV64*)cpu)->RES))\n"
+			"if((offs + 8 > ((RISCV64*)cpu)->RES) && (offs < 8 + ((RISCV64*)cpu)->RES))\n"
 			"{\n"
 				"((RISCV64*)cpu)->RES = 0;\n"
 				#if RISCV64_DEBUG_CALL
@@ -11466,7 +11466,7 @@ static InstructionDefinition amomax_w_rd_rs1_rs2_aqu_aq_rel_rl_(
 			#if RISCV64_DEBUG_CALL
 			"printf(\"MEM_offs = %#x\\n\",MEM_offs); \n"
 			#endif	
-			"if((offs + 4 >= ((RISCV64*)cpu)->RES) && (offs <= 8 + ((RISCV64*)cpu)->RES))\n"
+			"if((offs + 4 > ((RISCV64*)cpu)->RES) && (offs < 8 + ((RISCV64*)cpu)->RES))\n"
 			"{\n"
 				"((RISCV64*)cpu)->RES = 0;\n"
 				#if RISCV64_DEBUG_CALL
@@ -11600,7 +11600,7 @@ static InstructionDefinition amomax_d_rd_rs1_rs2_aqu_aq_rel_rl_(
 			#if RISCV64_DEBUG_CALL
 			"printf(\"MEM_offs = %#x\\n\",MEM_offs); \n"
 			#endif	
-			"if((offs + 8 >= ((RISCV64*)cpu)->RES) && (offs <= 8 + ((RISCV64*)cpu)->RES))\n"
+			"if((offs + 8 > ((RISCV64*)cpu)->RES) && (offs < 8 + ((RISCV64*)cpu)->RES))\n"
 			"{\n"
 				"((RISCV64*)cpu)->RES = 0;\n"
 				#if RISCV64_DEBUG_CALL
@@ -11724,7 +11724,7 @@ static InstructionDefinition amominu_w_rd_rs1_rs2_aqu_aq_rel_rl_(
 			#if RISCV64_DEBUG_CALL
 			"printf(\"MEM_offs = %#x\\n\",MEM_offs); \n"
 			#endif	
-			"if((offs + 4 >= ((RISCV64*)cpu)->RES) && (offs <= 8 + ((RISCV64*)cpu)->RES))\n"
+			"if((offs + 4 > ((RISCV64*)cpu)->RES) && (offs < 8 + ((RISCV64*)cpu)->RES))\n"
 			"{\n"
 				"((RISCV64*)cpu)->RES = 0;\n"
 				#if RISCV64_DEBUG_CALL
@@ -11848,7 +11848,7 @@ static InstructionDefinition amominu_d_rd_rs1_rs2_aqu_aq_rel_rl_(
 			#if RISCV64_DEBUG_CALL
 			"printf(\"MEM_offs = %#x\\n\",MEM_offs); \n"
 			#endif	
-			"if((offs + 8 >= ((RISCV64*)cpu)->RES) && (offs <= 8 + ((RISCV64*)cpu)->RES))\n"
+			"if((offs + 8 > ((RISCV64*)cpu)->RES) && (offs < 8 + ((RISCV64*)cpu)->RES))\n"
 			"{\n"
 				"((RISCV64*)cpu)->RES = 0;\n"
 				#if RISCV64_DEBUG_CALL
@@ -11972,7 +11972,7 @@ static InstructionDefinition amomaxu_w_rd_rs1_rs2_aqu_aq_rel_rl_(
 			#if RISCV64_DEBUG_CALL
 			"printf(\"MEM_offs = %#x\\n\",MEM_offs); \n"
 			#endif	
-			"if((offs + 4 >= ((RISCV64*)cpu)->RES) && (offs <= 8 + ((RISCV64*)cpu)->RES))\n"
+			"if((offs + 4 > ((RISCV64*)cpu)->RES) && (offs < 8 + ((RISCV64*)cpu)->RES))\n"
 			"{\n"
 				"((RISCV64*)cpu)->RES = 0;\n"
 				#if RISCV64_DEBUG_CALL
@@ -12096,7 +12096,7 @@ static InstructionDefinition amomaxu_d_rd_rs1_rs2_aqu_aq_rel_rl_(
 			#if RISCV64_DEBUG_CALL
 			"printf(\"MEM_offs = %#x\\n\",MEM_offs); \n"
 			#endif	
-			"if((offs + 8 >= ((RISCV64*)cpu)->RES) && (offs <= 8 + ((RISCV64*)cpu)->RES))\n"
+			"if((offs + 8 > ((RISCV64*)cpu)->RES) && (offs < 8 + ((RISCV64*)cpu)->RES))\n"
 			"{\n"
 				"((RISCV64*)cpu)->RES = 0;\n"
 				#if RISCV64_DEBUG_CALL
@@ -16227,7 +16227,7 @@ static InstructionDefinition c_sd_8_rs2_uimm_8_rs1_(
 			#if RISCV64_DEBUG_CALL
 			"printf(\"MEM_offs = %#x\\n\",MEM_offs); \n"
 			#endif	
-			"if((offs + 8 >= ((RISCV64*)cpu)->RES) && (offs <= 8 + ((RISCV64*)cpu)->RES))\n"
+			"if((offs + 8 > ((RISCV64*)cpu)->RES) && (offs < 8 + ((RISCV64*)cpu)->RES))\n"
 			"{\n"
 				"((RISCV64*)cpu)->RES = 0;\n"
 				#if RISCV64_DEBUG_CALL
@@ -16299,7 +16299,7 @@ static InstructionDefinition c_sdsp_rs2_uimm_sp_(
 			#if RISCV64_DEBUG_CALL
 			"printf(\"MEM_offs = %#x\\n\",MEM_offs); \n"
 			#endif	
-			"if((offs + 8 >= ((RISCV64*)cpu)->RES) && (offs <= 8 + ((RISCV64*)cpu)->RES))\n"
+			"if((offs + 8 > ((RISCV64*)cpu)->RES) && (offs < 8 + ((RISCV64*)cpu)->RES))\n"
 			"{\n"
 				"((RISCV64*)cpu)->RES = 0;\n"
 				#if RISCV64_DEBUG_CALL
@@ -17025,7 +17025,7 @@ static InstructionDefinition c_sw_8_rs2_uimm_8_rs1_(
 			#if RISCV64_DEBUG_CALL
 			"printf(\"MEM_offs = %#x\\n\",MEM_offs); \n"
 			#endif	
-			"if((offs + 4 >= ((RISCV64*)cpu)->RES) && (offs <= 8 + ((RISCV64*)cpu)->RES))\n"
+			"if((offs + 4 > ((RISCV64*)cpu)->RES) && (offs < 8 + ((RISCV64*)cpu)->RES))\n"
 			"{\n"
 				"((RISCV64*)cpu)->RES = 0;\n"
 				#if RISCV64_DEBUG_CALL
@@ -17212,7 +17212,7 @@ static InstructionDefinition c_swsp_rs2_uimm_sp_(
 			#if RISCV64_DEBUG_CALL
 			"printf(\"MEM_offs = %#x\\n\",MEM_offs); \n"
 			#endif	
-			"if((offs + 4 >= ((RISCV64*)cpu)->RES) && (offs <= 8 + ((RISCV64*)cpu)->RES))\n"
+			"if((offs + 4 > ((RISCV64*)cpu)->RES) && (offs < 8 + ((RISCV64*)cpu)->RES))\n"
 			"{\n"
 				"((RISCV64*)cpu)->RES = 0;\n"
 				#if RISCV64_DEBUG_CALL
@@ -18502,7 +18502,7 @@ static InstructionDefinition c_fsd_rs2_uimm_8_rs1_(
 			#if RISCV64_DEBUG_CALL
 			"printf(\"MEM_offs = %#x\\n\",MEM_offs); \n"
 			#endif	
-			"if((offs + 8 >= ((RISCV64*)cpu)->RES) && (offs <= 8 + ((RISCV64*)cpu)->RES))\n"
+			"if((offs + 8 > ((RISCV64*)cpu)->RES) && (offs < 8 + ((RISCV64*)cpu)->RES))\n"
 			"{\n"
 				"((RISCV64*)cpu)->RES = 0;\n"
 				#if RISCV64_DEBUG_CALL
@@ -18574,7 +18574,7 @@ static InstructionDefinition c_fsdsp_rs2_uimm_x2_(
 			#if RISCV64_DEBUG_CALL
 			"printf(\"MEM_offs = %#x\\n\",MEM_offs); \n"
 			#endif	
-			"if((offs + 8 >= ((RISCV64*)cpu)->RES) && (offs <= 8 + ((RISCV64*)cpu)->RES))\n"
+			"if((offs + 8 > ((RISCV64*)cpu)->RES) && (offs < 8 + ((RISCV64*)cpu)->RES))\n"
 			"{\n"
 				"((RISCV64*)cpu)->RES = 0;\n"
 				#if RISCV64_DEBUG_CALL
