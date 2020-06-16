@@ -1,18 +1,18 @@
 #include <cstdint>
-#include "CPU.h"
+#include "etiss/jit/CPU.h"
 extern "C"
 {
     uint32_t handleResources(uint32_t *resource_time, uint32_t **resources, uint32_t num_stages,
                              uint32_t *num_resources, ETISS_CPU *cpu)
     {
-        for (int i = 0; i < num_stages; i++)
+        for (uint32_t i = 0; i < num_stages; i++)
         {
-            int max = 0;
-            for (int j = 0; j < num_resources[i]; j++)
+            etiss_uint64 max = 0;
+            for (uint32_t j = 0; j < num_resources[i]; j++)
             { // set "in use" metric
                 cpu->resourceUsages[resources[i][j]] += resource_time[resources[i][j]];
             }
-            for (int j = 0; j < num_resources[i]; j++)
+            for (uint32_t j = 0; j < num_resources[i]; j++)
             { // find max in this stage
                 if (cpu->cycles[resources[i][j]] > max)
                 {
@@ -22,7 +22,7 @@ extern "C"
 
             if (!(i == 0))
             { // find max in stage before this stage
-                for (int j = 0; j < num_resources[i - 1]; j++)
+                for (uint32_t j = 0; j < num_resources[i - 1]; j++)
                 {
                     if (cpu->cycles[resources[i - 1][j]] > max)
                     {
@@ -30,8 +30,8 @@ extern "C"
                     }
                 }
             }
-            int max_stagetime = 0;
-            for (int j = 0; j < num_resources[i]; j++)
+            uint32_t max_stagetime = 0;
+            for (uint32_t j = 0; j < num_resources[i]; j++)
             { // find max time in stage
                 if (resource_time[resources[i][j] > max_stagetime])
                 {
@@ -39,7 +39,7 @@ extern "C"
                 }
             }
 
-            for (int j = 0; j < num_resources[i]; j++)
+            for (uint32_t j = 0; j < num_resources[i]; j++)
             { // set new values
                 cpu->cycles[resources[i][j]] = max + max_stagetime;
             }
