@@ -56,6 +56,8 @@
 
 #include "etiss/jit/types.h"
 
+static const int ETISS_MAX_RESOURCES = 100;
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -92,11 +94,11 @@ extern "C"
 
         etiss_uint64 cpuTime_ps; ///< simulation time of cpu
 
-        etiss_uint64 resourceUsages[100]; ///<how many cycles each resource is used
-        
-        const char *resources[100]; ///<names of resources
-        
-        etiss_uint64 cycles[100]; ///<how many cycles in each resource (including waiting)
+        etiss_uint64 resourceUsages[ETISS_MAX_RESOURCES]; ///<how many cycles each resource is used
+
+        const char *resources[ETISS_MAX_RESOURCES]; ///<names of resources
+
+        etiss_uint64 cycles[ETISS_MAX_RESOURCES]; ///<how many cycles in each resource (including waiting)
 
         etiss_uint64 cpuCycleTime_ps; ///< frequency of the cpu. use to allign e.g. memory delays
 

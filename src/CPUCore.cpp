@@ -842,17 +842,15 @@ loopexit:
     }
 
     // print some statistics
-    std::cout << "CPU Time: " << etiss::toString(cpu_->cpuTime_ps / 1.0E12)
-              << "s    Simulation Time: " << etiss::toString(endTime - startTime) + "s" << std::endl;
-    std::cout << std::string("CPU Cycles (estimated): ")
-              << etiss::toString(cpu_->cpuTime_ps / (float)cpu_->cpuCycleTime_ps) << std::endl;
-    std::cout << std::string("MIPS (estimated): ")
-              << etiss::toString(cpu_->cpuTime_ps / (float)cpu_->cpuCycleTime_ps / (endTime - startTime) / 1.0E6)
+    std::cout << "CPU Time: " << (cpu_->cpuTime_ps / 1.0E12) << "s    Simulation Time: " << (endTime - startTime) << "s"
               << std::endl;
-    int max = 0;
-    for (int i; i < sizeof(cpu_->resources) / 8; i++)
+    std::cout << "CPU Cycles (estimated): " << (cpu_->cpuTime_ps / (float)cpu_->cpuCycleTime_ps) << std::endl;
+    std::cout << "MIPS (estimated): "
+              << (cpu_->cpuTime_ps / (float)cpu_->cpuCycleTime_ps / (endTime - startTime) / 1.0E6) << std::endl;
+    etiss_uint64 max = 0;
+    for (int i; i < ETISS_MAX_RESOURCES; i++)
     {
-        if (cpu_->resources[i] != NULL)
+        if (cpu_->resources[i])
         {
             if (cpu_->cycles[i] > max)
             {
@@ -862,16 +860,14 @@ loopexit:
     }
     if (max != 0)
     { // max=0: resource computation turned of
-        std::cout << std::string("CPU Cycles (with pipeline): ") << etiss::toString(max) << std::endl;
+        std::cout << "CPU Cycles (with pipeline): " << max << std::endl;
     }
-    for (int i; i < sizeof(cpu_->resources) / 8; i++)
+    for (int i; i < ETISS_MAX_RESOURCES; i++)
     {
-        if (cpu_->resources[i] != NULL)
+        if (cpu_->resources[i])
         {
-            std::cout << std::string("Resource Usage ") << etiss::toString(cpu_->resources[i]) << std::string(": ")
-                      << etiss::toString(cpu_->resourceUsages[i]) << std::string(" cycles, ")
-                      << etiss::toString((cpu_->resourceUsages[i] / (double)max) * 100) << std::string("%")
-                      << std::endl;
+            std::cout << "Resource Usage " << cpu_->resources[i] << ": " << cpu_->resourceUsages[i] << " cycles, "
+                      << ((cpu_->resourceUsages[i] / (double)max) * 100) << "%" << std::endl;
         }
     }
 #if ETISS_CPUCORE_DBG_APPROXIMATE_INSTRUCTION_COUNTER

@@ -2,8 +2,8 @@
 #include "CPU.h"
 extern "C"
 {
-    uint32_t handleResources(uint32_t resource_time[100], uint32_t resources[100][100], uint32_t num_stages,
-                             uint32_t num_resources[100], ETISS_CPU *cpu)
+    uint32_t handleResources(uint32_t *resource_time, uint32_t **resources, uint32_t num_stages,
+                             uint32_t *num_resources, ETISS_CPU *cpu)
     {
         for (int i = 0; i < num_stages; i++)
         {
