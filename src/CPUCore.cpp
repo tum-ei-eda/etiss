@@ -190,14 +190,14 @@ CPUCore::CPUCore(std::shared_ptr<etiss::CPUArch> arch)
 #if ETISS_CPUCORE_DBG_APPROXIMATE_INSTRUCTION_COUNTER
             if (!vcpu_->findName("instructionCounter"))
             {
-                vcpu_->addField(
-                    (new etiss::VirtualStruct::Field(*vcpu_, "instructionCounter", "",
-                                                     etiss::VirtualStruct::Field::R | etiss::VirtualStruct::Field::W |
-                                                         etiss::VirtualStruct::Field::P,
-                                                     8, false, [this]() { return (uint64_t)instrcounter; },
-                                                     [this](uint64_t v) { instrcounter = v; }))
-                        ->setDeleteP(std::function<void(etiss::VirtualStruct::Field *)>(
-                            [](etiss::VirtualStruct::Field *f) { delete f; })));
+                vcpu_->addField((new etiss::VirtualStruct::Field(
+                                     *vcpu_, "instructionCounter", "",
+                                     etiss::VirtualStruct::Field::R | etiss::VirtualStruct::Field::W |
+                                         etiss::VirtualStruct::Field::P,
+                                     8, false, [this]() { return (uint64_t)instrcounter; },
+                                     [this](uint64_t v) { instrcounter = v; }))
+                                    ->setDeleteP(std::function<void(etiss::VirtualStruct::Field *)>(
+                                        [](etiss::VirtualStruct::Field *f) { delete f; })));
             }
 #endif
         }
@@ -546,10 +546,11 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
 
     // get JIT instance
     std::shared_ptr<JIT> jiti = jit_; // copy jit because it may change
-    if (!jiti) // if not present fall back to first loaded jit implementation
+    if (!jiti)                        // if not present fall back to first loaded jit implementation
     {
         jiti = etiss::getDefaultJIT();
-        etiss::log(etiss::WARNING, std::string("Using default jit instance for CPUCore: ") + name_ + " - " + jiti->getName());
+        etiss::log(etiss::WARNING,
+                   std::string("Using default jit instance for CPUCore: ") + name_ + " - " + jiti->getName());
         if (!jiti)
         {
             etiss::log(etiss::ERROR, std::string("No JIT available to ") + name_);
@@ -627,8 +628,7 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
             else
             {
                 std::stringstream stream;
-                stream << "SystemWrapperPlugin \"" << c->getPluginName()
-                        << "\" failed to wrap ETISS_System instance";
+                stream << "SystemWrapperPlugin \"" << c->getPluginName() << "\" failed to wrap ETISS_System instance";
                 etiss::log(etiss::WARNING, stream.str());
             }
         }
@@ -651,7 +651,7 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
     }
 
     // copy coroutine plugins to array
-    std::vector<CoroutinePlugin*> cor_array;
+    std::vector<CoroutinePlugin *> cor_array;
     for (const auto &plugin : plugins)
     {
         auto c = plugin->getCoroutinePlugin();
@@ -775,7 +775,7 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
                 // instead to realize physical cache.
                 blptr = translation.getBlockFast(
                     blptr, cpu_->instructionPointer); // IMPORTANT: no pointer reference is kept here. if the translator
-                                                     // performs a cleanup then blptr must be set to 0
+                                                      // performs a cleanup then blptr must be set to 0
                 //}
 
                 if (unlikely(blptr == 0)) // if no block function pointer could be acquired
@@ -850,9 +850,9 @@ loopexit:
               << etiss::toString(cpu_->cpuTime_ps / (float)cpu_->cpuCycleTime_ps / (endTime - startTime) / 1.0E6)
               << std::endl;
     int max = 0;
-    for(int i; i<sizeof(cpu_->resources)/8; i++)
-    {	
-        if(cpu_->resources[i] != NULL)
+    for (int i; i < sizeof(cpu_->resources) / 8; i++)
+    {
+        if (cpu_->resources[i] != NULL)
         {
             if (cpu_->cycles[i] > max)
             {
@@ -860,25 +860,19 @@ loopexit:
             }
         }
     }
-    if (max!=0)
-    {//max=0: resource computation turned of 
-        std::cout << std::string("CPU Cycles (with pipeline): ")
-                  << etiss::toString(max) << std::endl;
+    if (max != 0)
+    { // max=0: resource computation turned of
+        std::cout << std::string("CPU Cycles (with pipeline): ") << etiss::toString(max) << std::endl;
     }
-    for(int i; i<sizeof(cpu_->resources)/8; i++)
-    {	
-        if(cpu_->resources[i]!=NULL)
+    for (int i; i < sizeof(cpu_->resources) / 8; i++)
+    {
+        if (cpu_->resources[i] != NULL)
         {
-            std::cout << std::string("Resource Usage ")
-                      << etiss::toString(cpu_->resources[i])
-                      << std::string(": ")
-                      << etiss::toString(cpu_->resourceUsages[i])
-                      << std::string(" cycles, ")
-                      << etiss::toString((cpu_->resourceUsages[i] / (double) max) * 100)
-                      << std::string("%")
+            std::cout << std::string("Resource Usage ") << etiss::toString(cpu_->resources[i]) << std::string(": ")
+                      << etiss::toString(cpu_->resourceUsages[i]) << std::string(" cycles, ")
+                      << etiss::toString((cpu_->resourceUsages[i] / (double)max) * 100) << std::string("%")
                       << std::endl;
         }
-		
     }
 #if ETISS_CPUCORE_DBG_APPROXIMATE_INSTRUCTION_COUNTER
     etiss::log(etiss::INFO, std::string("InstructionCounter: ") +
