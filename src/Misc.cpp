@@ -558,7 +558,7 @@ std::vector<std::string> etiss::jitExtHeaderPaths(){
 
 std::vector<std::string> etiss::jitExtLibPaths(){
     std::vector<std::string> x;
-    std::string range = cfg().get<std::string>("JIT-External::LibPaths", "")
+    std::string range = cfg().get<std::string>("JIT-External::LibPaths", "");
     boost::split(x, range, boost::is_any_of(" "));
     return (x);
 }
