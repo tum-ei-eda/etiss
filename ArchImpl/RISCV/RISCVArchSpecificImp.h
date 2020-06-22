@@ -372,6 +372,7 @@ void RISCVArch::initInstrSet(etiss::instr::ModedInstructionSet &mis) const
      
      cfgPar = etiss::cfg().get<std::string>("JIT-External::LibPaths", " ");
      etiss::cfg().set<std::string>("JIT-External::LibPaths", cfgPar + "/etiss/jit/fpu");   
+
     }    
     
     {
