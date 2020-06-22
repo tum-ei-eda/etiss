@@ -59,6 +59,9 @@
 #include <regex>
 #include <string>
 
+#include <boost/algorithm/string/classification.hpp>
+#include <boost/algorithm/string/split.hpp>
+
 using namespace etiss;
 
 std::string etiss::toString(const Verbosity &val)
@@ -530,6 +533,34 @@ std::string etiss::installDir()
 std::string etiss::jitFiles()
 {
     return installDir() + "/include/jit";
+}
+
+std::vector<std::string> etiss::jitExtHeaders(){
+    std::vector<std::string> x;
+    std::string range = cfg().get<std::string>("JIT-External::Headers", "");
+    boost::split(x, range, boost::is_any_of(";, "));
+    return (x);
+}
+
+std::vector<std::string> etiss::jitExtLibraries(){
+    std::vector<std::string> x;
+    std::string range = cfg().get<std::string>("JIT-External::Libs", "");
+    boost::split(x, range, boost::is_any_of(";, "));
+    return (x);
+}
+
+std::vector<std::string> etiss::jitExtHeaderPaths(){
+    std::vector<std::string> x;
+    std::string range = cfg().get<std::string>("JIT-External::HeaderPaths", "");
+    boost::split(x, range, boost::is_any_of(";, "));
+    return (x);
+}
+
+std::vector<std::string> etiss::jitExtLibPaths(){
+    std::vector<std::string> x;
+    std::string range = cfg().get<std::string>("JIT-External::LibPaths", "");
+    boost::split(x, range, boost::is_any_of(";, "));
+    return (x);
 }
 
 // IMPORTANT: check if fpu configuration matches endianness

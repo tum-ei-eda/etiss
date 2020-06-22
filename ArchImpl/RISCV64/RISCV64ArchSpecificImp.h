@@ -380,6 +380,23 @@ etiss::int32 RISCV64Arch::handleException(etiss::int32 cause, ETISS_CPU *cpu)
 */
 void RISCV64Arch::initInstrSet(etiss::instr::ModedInstructionSet &mis) const
 {
+    
+    {
+     /* Set default JIT Extensions. Read Parameters set from ETISS configuration and append with architecturally needed */
+     std::string cfgPar = "";
+     cfgPar = etiss::cfg().get<std::string>("JIT-External::Headers", ";");
+     etiss::cfg().set<std::string>("JIT-External::Headers", cfgPar + "etiss/jit/fpu/softfloat_orig.h;etiss/jit/fpu/libdbtrise_fp_funcs.h"); 
+
+     cfgPar = etiss::cfg().get<std::string>("JIT-External::Libs", ";");
+     etiss::cfg().set<std::string>("JIT-External::Libs", cfgPar + "softfloat;dbtrise_fp_funcs");   
+     
+     cfgPar = etiss::cfg().get<std::string>("JIT-External::HeaderPaths", ";");
+     etiss::cfg().set<std::string>("JIT-External::HeaderPaths", cfgPar + "/etiss/jit/fpu");
+     
+     cfgPar = etiss::cfg().get<std::string>("JIT-External::LibPaths", ";");
+     etiss::cfg().set<std::string>("JIT-External::LibPaths", cfgPar + "/etiss/jit/fpu");   
+    }     
+    
     {
         // Pre-compilation of instruction set to view instruction tree. Could be
         // disabled.

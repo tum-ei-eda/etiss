@@ -308,6 +308,25 @@ std::string installDir();
 std::string jitFiles();
 
 /**
+ * @brief Get ETISS JIT external headers.
+ */
+std::vector<std::string> jitExtHeaders();
+
+/**
+ * @brief Get ETISS JIT external libraries.
+ */
+std::vector<std::string> jitExtLibraries();
+
+/**
+ * @brief Get ETISS JIT external path.
+ */
+std::vector<std::string> jitExtHeaderPaths();
+/**
+ * @brief Get ETISS JIT external path.
+ */
+std::vector<std::string> jitExtLibPaths();
+
+/**
  * @brief simple class to hold configuration options
  */
 class Configuration
