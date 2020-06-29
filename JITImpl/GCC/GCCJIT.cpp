@@ -150,7 +150,7 @@ void *GCCJIT::translate(std::string code, std::set<std::string> headerpaths, std
 
 
     for (std::set<std::string>::const_iterator iter = libraries.begin();iter != libraries.end();iter++){
-            ss << " -l" << *iter << " ";
+            ss << " -l\"" << *iter << "\" ";
     }
 
     //std::cout << "EXECUTING: " << ss.str() << std::endl;
