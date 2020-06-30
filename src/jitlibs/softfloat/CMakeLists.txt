@@ -1,6 +1,5 @@
 PROJECT(softfloat)
 
-##################### SOFTFLOAT UTILITY PROJECT (berkeley softfloat) #####################
 include(FetchContent)
 FetchContent_Declare(softfloat_srcs
 	GIT_REPOSITORY https://github.com/ucb-bar/berkeley-softfloat-3.git
@@ -12,25 +11,50 @@ if(NOT softfloat_srcs_POPULATED)
 	file(RENAME ${softfloat_srcs_SOURCE_DIR}/softfloat.h ${softfloat_srcs_SOURCE_DIR}/softfloat_orig.h )
 	FetchContent_GetProperties(softfloat_srcs)
 	set(EXTERNAL_INSTALL_LOCATION ${softfloat_srcs_SOURCE_DIR})
+	
+CMAKE_HOST_SYSTEM_INFORMATION(RESULT HOSTINFO QUERY 
+	HAS_SSE 	#0
+	HAS_SSE2 	#1
+	OS_NAME 	#2
+	OS_PLATFORM	#3
+	IS_64BIT	#4
+)
+LIST(GET HOSTINFO 2 HI_OS_NAME) #message (STATUS "Get host OS name - " ${HI_OS_NAME})
+LIST(GET HOSTINFO 3 HI_OS_PLATFORM) #message (STATUS "Get host OS platform - " ${HI_OS_PLATFORM})
+LIST(GET HOSTINFO 4 HIF_64BIT) #message (STATUS "Check whether host is 64bit - " ${HIF_64BIT})
+LIST(GET HOSTINFO 0 HIF_SSE) #message (STATUS "Check whether host CPU has Streaming SIMD Extensions (SSE) - " ${HIF_SSE})
+LIST(GET HOSTINFO 1 HIF_SSE2) #message (STATUS "Check whether host CPU has Streaming SIMD Extensions 2 (SSE2) - " ${HIF_SSE2})
+
+IF(NOT ${HI_OS_PLATFORM} STREQUAL "x86_64")
+	MESSAGE(FATAL_ERROR "Host CPU platforms other than 'x86_64' not supported." )
+ELSE()
+	IF(${HI_OS_NAME} STREQUAL "Windows")
+		IF(NOT ${HIF_64BIT})
+			IF(${HIF_SSE2})
+				SET(PLATFORM_N Win32-SSE2-MinGW)
+				SET(SPECIALIZE 8086-SSE)			
+			ELSEIF(${HIF_SSE})
+				SET(PLATFORM_N Win32-MinGW)
+				SET(SPECIALIZE 8086-SSE)
+			ELSE()
+				SET(PLATFORM_N Win32-MinGW)
+				SET(SPECIALIZE 8086)			
+			ENDIF()
+		ELSE()
+			SET(PLATFORM_N Win64-MinGW-w64)
+			SET(SPECIALIZE 8086-SSE)
+		ENDIF()
+	ELSE() #Unix/Linux assumed
+		SET (PLATFORM_N Linux-${HI_OS_PLATFORM}-GCC)
+		IF(${HIF_SSE2} OR ${HIF_SSE})
+			SET(SPECIALIZE 8086-SSE)
+		ELSE()
+			SET(SPECIALIZE 8086)			
+		ENDIF()
+	ENDIF()
+ENDIF()
 
 ##################### SOFTFLOAT UTILITY PROJECT (berkeley softfloat) #####################
-
-EXECUTE_PROCESS( COMMAND uname -m COMMAND tr -d '\n' OUTPUT_VARIABLE ARCHITECTURE )
-IF(WIN32)
-	IF(NOT CMAKE_CL_64)
-		SET (PLATFORM_N Win32-MinGW)
-		SET(SPECIALIZE 8086)
-		message( STATUS "Win32. Architecture: ${ARCHITECTURE}" )
-	ELSE()
-		SET (PLATFORM_N Win64-MinGW-w64)
-		SET(SPECIALIZE 8086-SSE)
-		message( STATUS "Win64. Architecture: ${ARCHITECTURE}" )
-	ENDIF()
-ELSE() #Unix assumed
-	SET (PLATFORM_N Linux-${ARCHITECTURE}-GCC)
-	SET(SPECIALIZE 8086-SSE)
-	message( STATUS "Unix. Architecture: ${ARCHITECTURE}" )
-ENDIF(WIN32)
 
 SET(INC source/include)
 
@@ -351,6 +375,7 @@ SET(SRCS_OTHERS
 	${EXTERNAL_INSTALL_LOCATION}/source/f128M_le_quiet.c
 	${EXTERNAL_INSTALL_LOCATION}/source/f128M_lt_quiet.c
 )
+
 
 SET(BPROJECT_NAME berkeley-${PROJECT_NAME})
 ADD_LIBRARY(${BPROJECT_NAME} STATIC #SHARED
