@@ -848,7 +848,7 @@ loopexit:
     std::cout << "MIPS (estimated): "
               << (cpu_->cpuTime_ps / (float)cpu_->cpuCycleTime_ps / (endTime - startTime) / 1.0E6) << std::endl;
     etiss_uint64 max = 0;
-    for (int i; i < ETISS_MAX_RESOURCES; i++)
+    for (int i = 0; i < ETISS_MAX_RESOURCES; i++)
     {
         if (cpu_->resources[i])
         {
@@ -862,7 +862,7 @@ loopexit:
     { // max=0: resource computation turned of
         std::cout << "CPU Cycles (with pipeline): " << max << std::endl;
     }
-    for (int i; i < ETISS_MAX_RESOURCES; i++)
+    for (int i = 0; i < ETISS_MAX_RESOURCES; i++)
     {
         if (cpu_->resources[i])
         {
