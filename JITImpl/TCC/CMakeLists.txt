@@ -67,7 +67,8 @@ if (NOT EXISTS ${PROJECT_BINARY_DIR}/tcc_${TCCJIT_ARCH})
         file(RENAME ${PROJECT_BINARY_DIR}/${TCC_PKG} ${PROJECT_BINARY_DIR}/tcc_unix)
         file(REMOVE ${PROJECT_BINARY_DIR}/${TCC_PKG}.tar.bz2)
         file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/tcc_unix/build)
-        execute_process(COMMAND ${PROJECT_BINARY_DIR}/tcc_unix/configure --extra-cflags=-fPIC
+        set(ENV{CFLAGS} "-fPIC -Og -g -Wall")
+        execute_process(COMMAND ${PROJECT_BINARY_DIR}/tcc_unix/configure
                 WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/tcc_unix/build)
         execute_process(COMMAND make
                 WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/tcc_unix/build)
