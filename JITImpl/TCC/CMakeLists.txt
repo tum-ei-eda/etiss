@@ -70,6 +70,7 @@ if (NOT EXISTS ${PROJECT_BINARY_DIR}/tcc_${TCCJIT_ARCH})
         set(ENV{CFLAGS} "-fPIC -Og -g -Wall")
         execute_process(COMMAND ${PROJECT_BINARY_DIR}/tcc_unix/configure
                 WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/tcc_unix/build)
+        unset(ENV{CFLAGS})
         execute_process(COMMAND make
                 WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/tcc_unix/build)
     elseif(${TCCJIT_ARCH} STREQUAL win64)
