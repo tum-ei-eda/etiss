@@ -136,24 +136,26 @@ void *GCCJIT::translate(std::string code, std::set<std::string> headerpaths, std
 
     ss.str("");
 
-    ss << "gcc -shared ";
+    ss << "gcc -shared";
     /*
     if (debug)
             ss <<"-g -dl ";
-
-    for (std::set<std::string>::const_iterator iter = librarypaths.begin();iter != librarypaths.end();iter++){
-            ss << "-L\"" << *iter << "\" ";
-    }
-    for (std::set<std::string>::const_iterator iter = libraries.begin();iter != libraries.end();iter++){
-            ss << "-l\"" << *iter << "\" ";
-    }
     */
-
+	
+    for (std::set<std::string>::const_iterator iter = librarypaths.begin();iter != librarypaths.end();iter++){
+            ss << " -L" << *iter << " ";
+    }
+    
     ss << "-o " << path_ << "lib" << codefilename << ".so " << path_ << codefilename << ".o";
 
-    // std::cout << "EXECUTING: " << ss.str() << std::endl;
+
+    for (std::set<std::string>::const_iterator iter = libraries.begin();iter != libraries.end();iter++){
+            ss << " -l\"" << *iter << "\" ";
+    }
+
+    //std::cout << "EXECUTING: " << ss.str() << std::endl;
     eval = system(ss.str().c_str());
-    // std::cout << eval << std::endl;
+    //std::cout << eval << std::endl;
 
     if (eval != 0)
     {
