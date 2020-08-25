@@ -418,7 +418,7 @@ TARGET_COMPILE_DEFINITIONS(${PROJECT_NAME} PUBLIC
 endif()
 
 INSTALL(FILES
-    softfloat.h
-    DESTINATION include/jit/etiss/jit/fpu
+    libsoftfloat.h
+    DESTINATION include/jit/etiss/jit
 )
 InstallJitLib(${PROJECT_NAME})
