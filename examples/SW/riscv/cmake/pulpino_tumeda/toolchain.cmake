@@ -17,6 +17,6 @@ set(CMAKE_OBJCOPY ${RISCV_ELF_GCC_PREFIX}/bin/${RISCV_ELF_GCC_BASENAME}-objcopy$
 
 add_definitions(-D__riscv__)
 add_definitions(-march=rv32gc)
-add_definitions(-mabi=ilp32f)
+add_definitions(-mabi=ilp32d)
 
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -march=rv32gc -mabi=ilp32f")
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -march=rv32gc -mabi=ilp32d")
