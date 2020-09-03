@@ -35,6 +35,7 @@ extern "C" {
 #include "softfloat_orig.h"
 #include "internals.h"
 #include "specialize.h"
+#include "libsoftfloat.h"
 }
 #include <limits>
 

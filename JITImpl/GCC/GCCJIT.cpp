@@ -153,6 +153,11 @@ void *GCCJIT::translate(std::string code, std::set<std::string> headerpaths, std
             ss << " -l\"" << *iter << "\" ";
     }
 
+    ss << "-Wl";
+    for (std::set<std::string>::const_iterator iter = librarypaths.begin();iter != librarypaths.end();iter++){
+            ss << ",-rpath," << *iter;
+    }
+    
     //std::cout << "EXECUTING: " << ss.str() << std::endl;
     eval = system(ss.str().c_str());
     //std::cout << eval << std::endl;

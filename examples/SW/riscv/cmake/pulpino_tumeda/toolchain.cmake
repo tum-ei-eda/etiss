@@ -16,7 +16,7 @@ set(CMAKE_CXX_COMPILER ${RISCV_ELF_GCC_PREFIX}/bin/${RISCV_ELF_GCC_BASENAME}-g++
 set(CMAKE_OBJCOPY ${RISCV_ELF_GCC_PREFIX}/bin/${RISCV_ELF_GCC_BASENAME}-objcopy${EXE_EXT})
 
 add_definitions(-D__riscv__)
-add_definitions(-march=rv32imac)
-add_definitions(-mabi=ilp32)
+add_definitions(-march=rv32gc)
+add_definitions(-mabi=ilp32d)
 
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -march=rv32imac -mabi=ilp32")
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -march=rv32gc -mabi=ilp32d")
