@@ -25,6 +25,11 @@ jobs:
       run: |
         cd ..
         
+    - name: Requirements (Linux)
+      if: matrix.config.name == "Linux"
+      run: |
+        sudo apt-get install libboost-system-dev libboost-filesystem-dev
+        
     #- name: Requirements (Windows)
       #if: matrix.config.os == 'windows-latest'
       #run: |
