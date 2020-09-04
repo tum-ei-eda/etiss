@@ -30,10 +30,15 @@ jobs:
       run: |
         sudo apt-get install libboost-system-dev libboost-filesystem-dev
         
-    #- name: Requirements (Windows)
-      #if: matrix.config.os == 'windows-latest'
-      #run: |
-        #choco install wget unzip
+    - name: Requirements (Windows)
+      if: matrix.config.name == 'Windows'
+      run: |
+        choco install boost-msvc-14.1
+        
+    - name: Requirements (Mac)
+      if: matrix.config.name == 'Mac'
+      run: |
+        sudo brew install boost
 
     - name: Create Build Environment
       run: cmake -E make_directory ${{runner.workspace}}/build
