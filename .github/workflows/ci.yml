@@ -38,7 +38,7 @@ jobs:
     - name: Requirements (Mac)
       if: matrix.config.name == 'Mac'
       run: |
-        sudo brew install boost
+        brew install boost
 
     - name: Create Build Environment
       run: cmake -E make_directory ${{runner.workspace}}/build
