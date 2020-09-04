@@ -26,7 +26,7 @@ jobs:
         cd ..
         
     - name: Requirements (Linux)
-      if: matrix.config.name == "Linux"
+      if: matrix.config.name == 'Linux'
       run: |
         sudo apt-get install libboost-system-dev libboost-filesystem-dev
         
