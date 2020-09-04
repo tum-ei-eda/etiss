@@ -1,0 +1,49 @@
+name: CI
+
+on: [push, pull_request]
+
+env:
+  BUILD_TYPE: Release
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        config:
+          - {name: "Linux", os: ubuntu-latest, cmakegen: ""}
+          - {name: "Windows", os: windows-latest, cmakegen: "-G \"MinGW Makefiles\""}
+          - {name: "Mac", os: macOS-latest, cmakegen: ""}
+
+    runs-on: ${{ matrix.config.os }}
+    name: ${{ matrix.config.name }}
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Requirements
+      shell: bash
+      run: |
+        cd ..
+        
+    #- name: Requirements (Windows)
+      #if: matrix.config.os == 'windows-latest'
+      #run: |
+        #choco install wget unzip
+
+    - name: Create Build Environment
+      run: cmake -E make_directory ${{runner.workspace}}/build
+
+    - name: Configure CMake
+      shell: bash
+      working-directory: ${{runner.workspace}}/build
+      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+
+    - name: Build
+      working-directory: ${{runner.workspace}}/build
+      shell: bash
+      run: cmake --build . --config $BUILD_TYPE
+
+    - name: Install
+      working-directory: ${{runner.workspace}}/build
+      shell: bash
+      run: cmake --build . --config $BUILD_TYPE --target INSTALL
