@@ -64,6 +64,11 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#ifndef SOCK_NONBLOCK
+#include <fcntl.h>
+#define SOCK_NONBLOCK O_NONBLOCK
+#endif
+
 using namespace etiss::plugin::gdb;
 
 UnixTCPGDBConnection::UnixTCPGDBConnection(unsigned port)
