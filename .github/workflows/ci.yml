@@ -50,7 +50,7 @@ jobs:
       run: |
         brew install boost
 
-    - name: Create Build Environment
+    - name: Create Build EnvironmentupdateRiscvInstrLength
       run: cmake -E make_directory ${{runner.workspace}}/build
 
     - name: Configure CMake
@@ -72,8 +72,8 @@ jobs:
       working-directory: ${{runner.workspace}}/install/examples
       shell: bash
       run: |
-        cd SW/riscv
-        mkdir build && cd build
+        mkdir SW/riscv/build
+        cd SW/riscv/build
         cmake .. -DRISCV_ELF_GCC_PREFIX=${{runner.workspace}}/riscv-tc -DRISCV_ELF_GCC_BASENAME=riscv64-unknown-elf
         cmake --build . --config $BUILD_TYPE
         cd -
