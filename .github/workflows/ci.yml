@@ -34,7 +34,7 @@ jobs:
     - name: Requirements (Mac)
       if: matrix.config.name == 'Mac'
       run: |
-        brew install boost
+        brew install boost coreutils
         
     - name: Requirements
       shell: bash
