@@ -4,6 +4,8 @@ on: [push, pull_request]
 
 env:
   BUILD_TYPE: Release
+  RV_TC_NAME: riscv64-unknown-elf-gcc-8.3.0-2020.04.0-x86_64-linux-ubuntu14.tar.gz
+  RV_TC_NAME_WIN: riscv64-unknown-elf-gcc-8.3.0-2020.04.0-x86_64-w64-mingw32.zip
 
 jobs:
   build:
@@ -30,13 +32,15 @@ jobs:
       working-directory: ${{runner.workspace}}
       run: |
         sudo apt-get install libboost-system-dev libboost-filesystem-dev
-        wget -O riscv-tc.tar.gz https://static.dev.sifive.com/dev-tools/riscv64-unknown-elf-gcc-8.3.0-2020.04.0-x86_64-linux-ubuntu14.tar.gz
-        tar xf riscv-tc.tar.gz
+        wget https://static.dev.sifive.com/dev-tools/$RV_TC_NAME
+        tar xf $RV_TC_NAME
         
     - name: Requirements (Windows)
       if: matrix.config.name == 'Windows'
       run: |
-        choco install boost-msvc-14.1
+        choco install boost-msvc-14.1 wget unzip
+        wget https://static.dev.sifive.com/dev-tools/$RV_TC_NAME_WIN
+        unzip $RV_TC_NAME_WIN
         
     - name: Requirements (Mac)
       if: matrix.config.name == 'Mac'
@@ -67,7 +71,7 @@ jobs:
       run: |
         cd SW/riscv
         mkdir build && cd build
-        cmake .. -DRISCV_ELF_GCC_PREFIX=${{runner.workspace}}/riscv-tc -DRISCV_ELF_GCC_BASENAME=riscv64-unknown-elf
+        cmake .. -DRISCV_ELF_GCC_PREFIX=${{runner.workspace}}/$RV_TC_NAME -DRISCV_ELF_GCC_BASENAME=riscv64-unknown-elf
         cmake --build . --config $BUILD_TYPE
         cd -
         cd bare_etiss_processor
