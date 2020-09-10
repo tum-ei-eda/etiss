@@ -63,6 +63,7 @@ jobs:
       run: cmake --build . --config $BUILD_TYPE --target install
     
     - name: DBG WIN
+      if: matrix.config.name == 'Windows'
       working-directory: ${{runner.workspace}}/install/examples
       shell: bash
       run: |
