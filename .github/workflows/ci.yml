@@ -62,6 +62,12 @@ jobs:
       shell: bash
       run: cmake --build . --config $BUILD_TYPE --target install
 
+    - name: DBG WIN
+      if: matrix.config.name == 'Windows'
+      working-directory: ${{runner.workspace}}/install/examples
+      run: |
+        cmake -E make_directory ${{runner.workspace}}/install/examples/SW/riscv/build
+
     - name: Setup tests
       working-directory: ${{runner.workspace}}/install/examples
       run: |
@@ -86,7 +92,6 @@ jobs:
       if: matrix.config.name == 'Linux' || matrix.config.name == 'Mac'
       shell: bash
       run: |
-        ls -lah ${{runner.workspace}}/install/lib/plugins
         ./run_helper.sh ../SW/riscv/build/riscv_example
         ./run_helper.sh ../SW/riscv/build/riscv_example gcc
         ./run_helper.sh ../SW/riscv_cpp/build/riscv_example
