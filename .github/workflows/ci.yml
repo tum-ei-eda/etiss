@@ -61,6 +61,12 @@ jobs:
       working-directory: ${{runner.workspace}}/build
       shell: bash
       run: cmake --build . --config $BUILD_TYPE --target install
+    
+    - name: DBG WIN
+      if: matrix.config.name == 'Windows'
+      working-directory: ${{runner.workspace}}/install/examples
+      shell: bash
+      run: pwd
       
     - name: Setup tests
       working-directory: ${{runner.workspace}}/install/examples
@@ -68,7 +74,6 @@ jobs:
       run: |
         mkdir SW/riscv/build
         cd SW/riscv/build
-        pwd
         cmake .. -DRISCV_ELF_GCC_PREFIX=${{runner.workspace}}/riscv-tc -DRISCV_ELF_GCC_BASENAME=riscv64-unknown-elf
         cmake --build . --config $BUILD_TYPE
         cd -
