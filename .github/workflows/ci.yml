@@ -82,11 +82,12 @@ jobs:
         cmake ..
         cmake --build . --config $BUILD_TYPE
         
-    - name: Test (Linux)
+    - name: Test (Linux/Mac)
       working-directory: ${{runner.workspace}}/install/examples/bare_etiss_processor
       if: matrix.config.name == 'Linux' || matrix.config.name == 'Mac'
       shell: bash
       run: |
+        ls -lah ${{runner.workspace}}/install/lib/plugins
         ./run_helper.sh ../SW/riscv/build/riscv_example
         ./run_helper.sh ../SW/riscv/build/riscv_example gcc
         ./run_helper.sh ../SW/riscv_cpp/build/riscv_example
