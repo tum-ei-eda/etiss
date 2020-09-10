@@ -62,16 +62,8 @@ jobs:
       shell: bash
       run: cmake --build . --config $BUILD_TYPE --target install
 
-    - name: DBG WIN
-      if: matrix.config.name == 'Windows'
-      working-directory: ${{runner.workspace}}/install/examples
-      shell: bash
-      run: |
-        cmake -E make_directory ${{runner.workspace}}/install/examples/SW/riscv/build
-
     - name: Setup tests
       working-directory: ${{runner.workspace}}/install/examples
-      shell: bash
       run: |
         cmake -E make_directory ${{runner.workspace}}/install/examples/SW/riscv/build
         cd SW/riscv/build
