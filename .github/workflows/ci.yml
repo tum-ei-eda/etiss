@@ -19,23 +19,23 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-        
+
     - name: Requirements (Linux)
       if: matrix.config.name == 'Linux'
       run: |
         sudo apt-get install libboost-system-dev libboost-filesystem-dev
-        
+
     - name: Requirements (Windows)
       if: matrix.config.name == 'Windows'
       shell: bash
       run: |
         choco install boost-msvc-14.1 wget unzip
-        
+
     - name: Requirements (Mac)
       if: matrix.config.name == 'Mac'
       run: |
         brew install boost coreutils
-        
+
     - name: Requirements
       shell: bash
       working-directory: ${{runner.workspace}}
@@ -44,7 +44,7 @@ jobs:
         ${{ matrix.config.unpack }} ${{ matrix.config.tc }}${{ matrix.config.tc-ext }}
         mv ${{ matrix.config.tc }} riscv-tc
 
-    - name: Create Build EnvironmentupdateRiscvInstrLength
+    - name: Create Build Environment
       run: cmake -E make_directory ${{runner.workspace}}/build
 
     - name: Configure CMake
@@ -61,33 +61,27 @@ jobs:
       working-directory: ${{runner.workspace}}/build
       shell: bash
       run: cmake --build . --config $BUILD_TYPE --target install
-    
-    - name: DBG WIN
-      if: matrix.config.name == 'Windows'
-      working-directory: ${{runner.workspace}}/install/examples
-      shell: bash
-      run: |
-        mkdir SW/riscv/build
-      
+
     - name: Setup tests
       working-directory: ${{runner.workspace}}/install/examples
       shell: bash
       run: |
-        mkdir SW/riscv/build
+        cmake -E make_directory ${{runner.workspace}}/install/examples/SW/riscv/build
         cd SW/riscv/build
         cmake .. -DRISCV_ELF_GCC_PREFIX=../../../../../riscv-tc -DRISCV_ELF_GCC_BASENAME=riscv64-unknown-elf
         cmake --build . --config $BUILD_TYPE
         cd -
-        mkdir SW/riscv_cpp/build
+        cmake -E make_directory ${{runner.workspace}}/install/examples/SW/riscv_cpp/build
         cd SW/riscv_cpp/build
         cmake .. -DRISCV_ELF_GCC_PREFIX=../../../../../riscv-tc -DRISCV_ELF_GCC_BASENAME=riscv64-unknown-elf
         cmake --build . --config $BUILD_TYPE
         cd -
         cd bare_etiss_processor
-        mkdir build && cd build
+        cmake -E make_directory ${{runner.workspace}}/install/examples/bare_etiss_processor/build
+        cd build
         cmake ..
         cmake --build . --config $BUILD_TYPE
-        
+
     - name: Test (Linux/Mac)
       working-directory: ${{runner.workspace}}/install/examples/bare_etiss_processor
       if: matrix.config.name == 'Linux' || matrix.config.name == 'Mac'
