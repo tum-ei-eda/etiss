@@ -27,8 +27,11 @@ jobs:
         
     - name: Requirements (Linux)
       if: matrix.config.name == 'Linux'
+      working-directory: ${{runner.workspace}}
       run: |
         sudo apt-get install libboost-system-dev libboost-filesystem-dev
+        wget -O riscv-tc.tar.gz https://static.dev.sifive.com/dev-tools/riscv64-unknown-elf-gcc-8.3.0-2020.04.0-x86_64-linux-ubuntu14.tar.gz
+        tar xf riscv-tc.tar.gz
         
     - name: Requirements (Windows)
       if: matrix.config.name == 'Windows'
@@ -57,3 +60,25 @@ jobs:
       working-directory: ${{runner.workspace}}/build
       shell: bash
       run: cmake --build . --config $BUILD_TYPE --target install
+      
+    - name: Setup tests
+      working-directory: ${{runner.workspace}}/install/examples
+      shell: bash
+      run: |
+        cd SW/riscv
+        mkdir build && cd build
+        cmake .. -DRISCV_ELF_GCC_PREFIX=${{runner.workspace}}/riscv-tc -DRISCV_ELF_GCC_BASENAME=riscv64-unknown-elf
+        cmake --build . --config $BUILD_TYPE
+        cd -
+        cd bare_etiss_processor
+        mkdir build && cd build
+        cmake ..
+        cmake --build . --config $BUILD_TYPE
+        
+    - name: Test (Linux)
+      working-directory: ${{runner.workspace}}/install/examples/bare_etiss_processor/build
+      if: matrix.config.name == 'Linux'
+      shell: bash
+      run: |
+        ./run_helper.sh ../../SW/riscv/build/riscv_example
+        ./run_helper.sh ../../SW/riscv/build/riscv_example gcc
