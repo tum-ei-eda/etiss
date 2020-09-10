@@ -77,15 +77,22 @@ jobs:
         cmake .. -DRISCV_ELF_GCC_PREFIX=${{runner.workspace}}/riscv-tc -DRISCV_ELF_GCC_BASENAME=riscv64-unknown-elf
         cmake --build . --config $BUILD_TYPE
         cd -
+        mkdir SW/riscv_cpp/build
+        cd SW/riscv_cpp/build
+        cmake .. -DRISCV_ELF_GCC_PREFIX=${{runner.workspace}}/riscv-tc -DRISCV_ELF_GCC_BASENAME=riscv64-unknown-elf
+        cmake --build . --config $BUILD_TYPE
+        cd -
         cd bare_etiss_processor
         mkdir build && cd build
         cmake ..
         cmake --build . --config $BUILD_TYPE
         
     - name: Test (Linux)
-      working-directory: ${{runner.workspace}}/install/examples/bare_etiss_processor/build
+      working-directory: ${{runner.workspace}}/install/examples/bare_etiss_processor
       if: matrix.config.name == 'Linux'
       shell: bash
       run: |
         ./run_helper.sh ../../SW/riscv/build/riscv_example
         ./run_helper.sh ../../SW/riscv/build/riscv_example gcc
+        ./run_helper.sh ../../SW/riscv_cpp/build/riscv_example
+        ./run_helper.sh ../../SW/riscv_cpp/build/riscv_example gcc
