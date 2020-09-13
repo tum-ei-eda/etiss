@@ -66,6 +66,9 @@ jobs:
       if: matrix.config.name == 'Windows'
       working-directory: ${{runner.workspace}}/install/examples
       run: |
+        ls ${{runner.workspace}}/install/examples/SW/riscv
+        ls ${{runner.workspace}}/install/examples/SW/riscv/build
+        cmake -E make_directory ${{runner.workspace}}/install/examples/SW/riscv
         cmake -E make_directory ${{runner.workspace}}/install/examples/SW/riscv/build
 
     - name: Setup tests
