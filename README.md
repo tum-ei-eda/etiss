@@ -48,7 +48,7 @@ Packages for Ubuntu 18:
 
 ### Build and Installation
 
-Follow these instructions to quickly build ETISS.
+Follow these instructions to quickly build ETISS. Start in the root directory of ETISS by creating a build directory:
 
 	$ mkdir build_dir
 
