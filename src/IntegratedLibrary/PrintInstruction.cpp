@@ -35,10 +35,11 @@
         </pre>
 
         @author Marc Greim <marc.greim@mytum.de>, Chair of Electronic Design Automation, TUM
+        @modified by Yasamin Moradi <yasamin.moradi@tum.de>, Chair of Electronic Design Automation, TUM
 
-        @date July 29, 2014
+        @date Septempber 30, 2020
 
-        @version 0.1
+        @version 0.2
 
 */
 /**
@@ -58,11 +59,16 @@ extern "C"
 #include "etiss/IntegratedLibrary/PrintInstruction.h"
 #include "etiss/CPUArch.h"
 
+//set to 1 if cycles should be printed for each instructions, set to 0 otherwise
+#define WITH_CYCLES 1
+
 using namespace etiss::plugin;
 
 void PrintInstruction::initCodeBlock(etiss::CodeBlock &block) const
 {
     block.fileglobalCode().insert("extern void PrintInstruction_print(const char *,uint64_t);"); // add print function
+    block.fileglobalCode().insert("extern void PrintInstruction_printEndCycle(uint64_t *cycles, const char **resources, uint64_t cpuTime_ps, uint64_t cpuCycleTime_ps);"); // add print End Cycle function
+    block.fileglobalCode().insert("extern void PrintInstruction_printStartCycle(uint64_t *cycles, const char **resources, uint64_t cpuTime_ps, uint64_t cpuCycleTime_ps);"); // add print Start Cycle function
 }
 
 void PrintInstruction::finalizeInstrSet(etiss::instr::ModedInstructionSet &mis) const
@@ -75,18 +81,39 @@ void PrintInstruction::finalizeInstrSet(etiss::instr::ModedInstructionSet &mis) 
                     [&instr](etiss::instr::BitArray &ba, etiss::CodeSet &cs, etiss::instr::InstructionContext &ic) {
                         std::stringstream ss;
 
+                        if (WITH_CYCLES == 1)
+                        {
+                            //print end cycle for previous instruction
+                            ss << "PrintInstruction_printEndCycle(cpu->cycles, cpu->resources, cpu->cpuTime_ps, cpu->cpuCycleTime_ps);\n";
+                            cs.append(CodePart::PREINITIALDEBUGRETURNING).code() = ss.str();
+                        }
+
+                        ss.str("");
+
+                        //print instruction details
                         ss << "PrintInstruction_print(\"";
 
                         ss << "0x" << std::hex << std::setfill('0') << std::setw(16) << ic.current_address_ << ": ";
 
                         ss << instr.printASM(ba);
 
-                        ss << "\\n";
+                        if (WITH_CYCLES == 0){
+                            ss << "\\n";
+                        }
 
                         ss << "\",cpu->instructionPointer);\n";
 
                         cs.append(CodePart::PREINITIALDEBUGRETURNING).code() = ss.str();
 
+                        if (WITH_CYCLES == 1)
+                        {
+                            //print start cycle of instruction
+                            ss.str("");
+
+                            ss << "PrintInstruction_printStartCycle(cpu->cycles, cpu->resources, cpu->cpuTime_ps, cpu->cpuCycleTime_ps);\n";
+
+                            cs.append(CodePart::PREINITIALDEBUGRETURNING).code() = ss.str();
+                        }
                         return true;
                     },
                     0);
@@ -113,6 +140,78 @@ extern "C"
         if (addr == 0x6cac)
         {
             // std::cout << "TCOUNT: " << std::dec << ++pi_6cac << "\n";
+        }
+    }
+}
+
+extern "C"
+{
+    void PrintInstruction_printStartCycle(uint64_t *cycles, const char **resources, uint64_t cpuTime_ps, uint64_t cpuCycleTime_ps)
+    {
+        //cycles: cpu->cycles[] and resource: cpu->resources[]
+
+        //Check if resource calculation is turned on by computing max resources
+        etiss_uint64 max = 0;
+        etiss_uint64 max_resource1 = 0;
+        for (int i = 0; i < 100; i++)
+        //change 100 to ETISS_MAX_RESOURCES
+        {
+            if (resources[i])
+            {
+                if (cycles[i] > max)
+                {
+                    max = cycles[i];
+                }
+            }
+        }
+
+        //find out when the next instruction can be fetched
+        //By when the first resource is released
+        if (resources[0])
+        {
+            if (cycles[0] > 0)
+            {
+                max_resource1 = cycles[0];
+            }
+        }
+
+        if (max != 0 || (max == 0 && cpuTime_ps == 0))
+        { // max!=0: resource computation turned on
+            std::cout << ", Start: " << max_resource1;
+
+            // If this is the last instruction, end cycle will not be printed automatically. Print it here.
+            if (false)
+            {
+                std::cout << ", End: " << max << std::endl;
+            }
+        }
+    }
+}
+
+extern "C"
+{
+    void PrintInstruction_printEndCycle(uint64_t *cycles, const char **resources, uint64_t cpuTime_ps, uint64_t cpuCycleTime_ps)
+    {
+        //cycles: cpu->cycles[] and resource: cpu->resources[]
+
+        //find out when the instruction is fully executed:
+        //check what is the last resource that is being used, and when is it released
+        etiss_uint64 max = 0;
+        for (int i = 0; i < 100; i++)
+        //change 100 to ETISS_MAX_RESOURCES
+        {
+            if (resources[i])
+            {
+                if (cycles[i] > max)
+                {
+                    max = cycles[i];
+                }
+            }
+        }
+
+        if (max != 0 || (max == 0 && cpuTime_ps == 0))
+        { // max!=0: resource computation turned on
+            std::cout << ", End: " << max << std::endl;
         }
     }
 }
