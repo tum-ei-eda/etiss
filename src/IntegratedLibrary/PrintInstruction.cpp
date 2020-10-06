@@ -37,7 +37,7 @@
         @author Marc Greim <marc.greim@mytum.de>, Chair of Electronic Design Automation, TUM
         @modified by Yasamin Moradi <yasamin.moradi@tum.de>, Chair of Electronic Design Automation, TUM
 
-        @date Septempber 30, 2020
+        @date September 30, 2020
 
         @version 0.2
 
