@@ -51,7 +51,7 @@
 
 */
 
-#include <malloc.h>
+#include <stdlib.h>
 
 #include "etiss/System.h"
 
