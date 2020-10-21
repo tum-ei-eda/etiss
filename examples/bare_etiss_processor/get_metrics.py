@@ -57,36 +57,48 @@ class MemRange:
 
 def parseElf(inFile):
     m = {}
-    m["romsize"] = 0
-    m["ramsize"] = 0
-    romsections = [".rodata", ".vectors"]
-    ramsections = [".data", ".bss", ".init_array", ".shbss", ".sbss"]
+    m["rom_rodata"] = 0
+    m["rom_code"] = 0
+    m["rom_misc"] = 0
+    m["ram_data"] = 0
+    m["ram_zdata"] = 0
     heapStart = None
+
+    ignoreSections = ["", ".stack", ".comment", ".riscv.attributes", ".strtab", ".shstrtab"]
 
     with open(inFile, "rb") as f:
         e = elffile.ELFFile(f)
 
         for s in e.iter_sections():
             if s.name.startswith(".text"):
-                m["romsize"] += s.data_size
+                m["rom_code"] += s.data_size
             elif s.name.startswith(".srodata"):
-                m["romsize"] += s.data_size
+                m["rom_rodata"] += s.data_size
             elif s.name.startswith(".sdata"):
-                m["ramsize"] += s.data_size
-            elif any(n in s.name for n in romsections):
-                m["romsize"] += s.data_size
-            elif any(n in s.name for n in ramsections):
-                m["ramsize"] += s.data_size
+                m["ram_data"] += s.data_size
+            elif s.name == ".rodata":
+                m["rom_rodata"] += s.data_size
+            elif (s.name == ".vectors" or
+                s.name == ".init_array"):
+                m["rom_misc"] += s.data_size
+            elif s.name == ".data":
+                m["ram_data"] += s.data_size
+            elif s.name == ".bss" or s.name == ".sbss" or s.name == ".shbss":
+                m["ram_zdata"] += s.data_size
             elif s.name.startswith(".gcc_except"):
                 pass
             elif s.name.startswith(".sdata2"):
+                pass
+            elif s.name.startswith(".debug_"):
+                pass
+            elif s.name in ignoreSections:
                 pass
             elif isinstance(s, SymbolTableSection):
                 for sym in s.iter_symbols():
                     if sym.name == "_heap_start":
                         heapStart = sym["st_value"]
             else:
-                print("ignored: " + s.name)
+                print("warning: ignored: " + s.name + " / size: " + str(s.data_size))
 
     return m, heapStart
 
@@ -125,8 +137,17 @@ if __name__ == "__main__":
     for mem in mems:
         print(mem.stats())
 
+    romsize = sum([staticSizes[k] for k in staticSizes if k.startswith("rom_")])
+    ramsize = sum([staticSizes[k] for k in staticSizes if k.startswith("ram_")])
+    ramsize += s.usage() + h.usage()
+
     print("=== Results ===")
-    print("ROM usage:     " + printSz(staticSizes["romsize"]))
-    print("RAM usage:     " + printSz(staticSizes["ramsize"]))
-    print("Stack usage:   " + printSz(s.usage()))
-    print("Heap usage:    " + printSz(h.usage()))
+    print("ROM usage:        " + printSz(romsize))
+    print("  read-only data: " + printSz(staticSizes["rom_rodata"]))
+    print("  code:           " + printSz(staticSizes["rom_code"]))
+    print("  other required: " + printSz(staticSizes["rom_misc"]))
+    print("RAM usage:        " + printSz(ramsize))
+    print("  data:           " + printSz(staticSizes["ram_data"]))
+    print("  zero-init data: " + printSz(staticSizes["ram_zdata"]))
+    print("  stack:          " + printSz(s.usage()))
+    print("  heap:           " + printSz(h.usage()))
