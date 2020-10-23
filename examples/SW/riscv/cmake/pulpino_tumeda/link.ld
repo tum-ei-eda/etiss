@@ -12,6 +12,7 @@
 // This file was modified by the Chair of Electronic Design Automation, TUM
 */
 
+ENTRY(reset_handler)
 SEARCH_DIR(.)
 __DYNAMIC  =  0;
 

@@ -17,6 +17,7 @@
 
 /* ========================================================= [ entry ] === */
   .section .text
+  .global reset_handler
 
 reset_handler:
 
