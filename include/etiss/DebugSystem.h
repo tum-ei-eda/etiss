@@ -53,16 +53,89 @@
 #include "etiss/System.h"
 #include <fstream>
 
+#include <cstring>
+#include <iostream>
+#include <memory>
+
+template<typename T, typename... Args>
+std::unique_ptr<T> make_unique(Args&&... args)
+{
+    return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
+}
+
 namespace etiss
 {
+  
+  class MemSegment
+  {
+    bool self_allocated_{false};
 
+    public:
+    typedef enum ACCESS{
+      READ,
+      WRITE,
+    } access_t;
+
+    //std::vector<etiss::uint8> mem_;
+    etiss::uint8* mem_;
+    
+    const std::string name_;
+    const etiss::uint64 start_addr_;
+    const etiss::uint64 end_addr_;
+    const etiss::uint64 size_;
+    const access_t mode_;
+
+    MemSegment(etiss::uint64 start_addr, etiss::uint64 size, access_t mode, const std::string name, etiss::uint8* mem = nullptr) :
+        name_(name)
+      , start_addr_(start_addr)
+      , end_addr_(start_addr + size -1)
+      , size_(size)
+      , mode_(mode) {
+      if(mem){ // use reserved memory
+        mem_ = mem;
+      } else {
+        mem_ = new etiss::uint8[size];
+        self_allocated_ = true;  
+      }
+    }
+    
+    virtual ~MemSegment(void){
+      delete[] mem_;
+    }
+    
+    void load(const void* data, size_t file_size_bytes){
+      if(data != nullptr and file_size_bytes <= size_){
+        memcpy(mem_, data, file_size_bytes);
+      }
+    }
+    
+    inline bool addr_in_range(etiss::uint64 addr) const {
+      return ( (addr >= start_addr_ and addr <= end_addr_) ? true : false);
+    }
+    
+    inline bool payload_in_range(etiss::uint64 addr, etiss::uint64 payload_size) const {
+      if(addr_in_range(addr)){
+        return ( ((addr+payload_size - 1) <= end_addr_) ? true : false);
+      }
+      return false;
+    }
+    
+  };
+  
+  
 /**
         @brief simple etiss:System implementation for testing
 */
 class DebugSystem : public System
 {
   public:
+
     DebugSystem(uint32_t rom_start, uint32_t rom_size, uint32_t ram_start, uint32_t ram_size);
+    DebugSystem(void);
+
+    virtual ~DebugSystem(void){
+      for(auto& mseg: msegs_) mseg.reset();
+    }
     // memory access
     etiss::int32 iread(ETISS_CPU *cpu, etiss::uint64 addr, etiss::uint32 len);
     etiss::int32 iwrite(ETISS_CPU *cpu, etiss::uint64 addr, etiss::uint8 *buf, etiss::uint32 len);
@@ -76,21 +149,35 @@ class DebugSystem : public System
             @brief loads a binary image from a file to the given address
     */
     // bool load(etiss::uint64 addr,const char * file);
-    bool loadRom(const char *file);
-    bool loadRam(const char *file);
+    // bool loadRom(const char *file);
+    // bool loadRam(const char *file);
     // void swapEndian(unsigned align = 4);
-
+    
+    etiss::int8 load_elf(const char* file);
+    etiss::uint64 get_startaddr(void){return (start_addr_);}
+    etiss::int8 add_memsegment(std::unique_ptr<MemSegment> mseg, const void* raw_data, size_t file_size_bytes);
   private:
+    
+    std::vector<std::unique_ptr<MemSegment>> msegs_{};
+    
+    etiss::uint64 start_addr_{0};
+    
     // etiss::uint8 * rom_mem;
     // etiss::uint8 * ram_mem;
-    std::vector<uint8> ram_mem{};
-    std::vector<uint8> rom_mem{};
-    uint32_t _rom_start;
-    uint32_t _ram_start;
+    
+    std::vector<uint8> ram_mem_{};
+    std::vector<uint8> rom_mem_{};
+    
+    const etiss::uint64 rom_start_;
+    const etiss::uint64 ram_start_;
+    const etiss::uint64 rom_size_;
+    const etiss::uint64 ram_size_;
+    
     bool _print_ibus_access;
     bool _print_dbus_access;
     bool _print_dbgbus_access;
     bool _print_to_file;
+    
     int message_max_cnt;
 
     std::ofstream trace_file_dbus_;
