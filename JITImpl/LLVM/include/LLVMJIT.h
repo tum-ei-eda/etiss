@@ -128,7 +128,6 @@ class LLVMJIT : public etiss::JIT
 
   private:
     llvm::LLVMContext context_;
-    clang::CompilerInstance clang_;
 };
 
 } // namespace etiss
