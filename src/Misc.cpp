@@ -61,6 +61,9 @@
 
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/algorithm/string/split.hpp>
+#include <boost/program_options/options_description.hpp>
+#include <boost/program_options/parsers.hpp>
+#include <boost/program_options/variables_map.hpp>
 
 using namespace etiss;
 
@@ -381,6 +384,94 @@ bool etiss::Configuration::isSet(std::string key)
     std::lock_guard<std::mutex> lock(mu_);
     return cfg_.find(key) != cfg_.end();
 }
+
+
+//MINE
+bool found = false;
+std::string tmp;
+std::pair<std::__cxx11::string, std::__cxx11::string> etiss::Configuration::set_cmd_line_boost(const std::string& s)
+{
+    namespace po = boost::program_options;
+    std::string ofile;
+    std::string inifile;
+        //std::vector<std::string> args;
+        //const char* argvi[100];
+    //int c = 0;
+    //bool used = false;
+    etiss::Configuration sobj; //WHY??
+            if (found)
+            {
+                if (sobj.isSet(ofile))
+                    etiss::log(etiss::WARNING, "CONFIG " + tmp + " already set. Overwriting it to " + s);
+                return make_pair(ofile, s);
+                found = false;
+                //used = true;
+            }
+            if (s.length() > 2)
+            {
+                if (s.find("-f") == 0) 
+                {
+                    //used = true;
+                    size_t epos = s.find_first_of('=');
+                    if (s.length() > 5 && s.substr(2, 3) == "no-")
+                    {
+                        if (epos == std::string::npos)
+                        {
+                            tmp = s.substr(5);
+                            if (sobj.isSet(tmp))
+                                etiss::log(etiss::WARNING, "CONFIG " + tmp + " already set. Overwriting it to false.");
+                            etiss::log(etiss::VERBOSE, std::string("CONFIG: set ") + tmp + " to false");
+                            return make_pair(tmp, std::string("false"));
+                        }
+                        
+                        else
+                        { // unusual case. assuming option shall be erased. value after '=' is ignored
+                            tmp = s.substr(5, epos - 5);
+                            sobj.remove(tmp);
+                            etiss::log(etiss::VERBOSE, std::string("CONFIG: removed ") + tmp);
+                            return make_pair(std::string(), std::string());
+                        }
+                    }   
+                    else 
+                    {
+                        if (epos == std::string::npos)
+                        {
+                            tmp = s.substr(2);
+                            if (sobj.isSet(tmp))
+                                etiss::log(etiss::WARNING, "CONFIG " + tmp + " already set. Overwriting it to true.");
+                            etiss::log(etiss::VERBOSE, std::string("CONFIG: set ") + tmp + " to true");
+                            return make_pair(s.substr(2), std::string("true"));
+                        }
+                        else
+                        {
+                            tmp = s.substr(2, epos - 2);
+                            std::string tval = s.substr(epos + 1);
+                            if (sobj.isSet(tmp))
+                                etiss::log(etiss::WARNING, "CONFIG " + tmp + " already set. Overwriting it to " + tval);
+                            etiss::log(etiss::VERBOSE, std::string("CONFIG: set ") + tmp + " to " + tval);
+                            return make_pair(s.substr(2), tval);
+                            
+                        }
+                        return make_pair(std::string(), std::string());
+                    }  
+                }  
+
+                else if (s.find("-o") == 0)
+                {
+                    //used = true;
+                    found = true;
+                    ofile = s.substr(2);
+                }
+            }
+
+            return make_pair(std::string(), std::string());
+            /*if (!used)
+            {
+                //argvi[c] = *s;
+                c++;
+            }*/
+}
+
 
 std::list<std::string> etiss::Configuration::set(const std::list<std::string> &args)
 {

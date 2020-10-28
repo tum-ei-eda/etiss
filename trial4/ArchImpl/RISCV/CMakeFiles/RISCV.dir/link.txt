@@ -1,0 +1,1 @@
+/usr/bin/c++ -fPIC  -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG  -shared -Wl,-soname,libRISCV.so -o libRISCV.so CMakeFiles/RISCV.dir/RISCVArch.cpp.o CMakeFiles/RISCV.dir/RISCVArchLib.cpp.o  -Wl,-rpath,"\$ORIGIN" ../../libETISS.so /usr/lib/x86_64-linux-gnu/libboost_filesystem.so /usr/lib/x86_64-linux-gnu/libboost_system.so -lpthread -ldl 

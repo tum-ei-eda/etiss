@@ -1,0 +1,16 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../include/etiss/IntegratedLibrary/SimpleIni/ConvertUTF.h
+
+/home/anoushka/workspace/etiss/src/IntegratedLibrary/SimpleIni/ConvertUTF.c
+etiss/IntegratedLibrary/SimpleIni/ConvertUTF.h
+/home/anoushka/workspace/etiss/src/IntegratedLibrary/SimpleIni/etiss/IntegratedLibrary/SimpleIni/ConvertUTF.h
+stdio.h
+-
+
