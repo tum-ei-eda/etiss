@@ -598,11 +598,14 @@ void etiss::Initializer::loadIniPlugins(std::shared_ptr<etiss::CPUCore> cpu)
                 {
                     //function returns true false
                     options[iter_key.pItem] = std::string(vm[std::string(iter_key.pItem)].as<std::string>());
-                    std::cout<<"Set on command line";
+                    std::cout<<"Written from vm to options\n";
+                    //std::cout<<std::string(iter_key.pItem)<<" set on command line to "<<options[iter_key.pItem];
+                    etiss::log(etiss::INFO,
+                                "    options[" + std::string(iter_key.pItem) + "] = " + std::string(vm[std::string(iter_key.pItem)].as<std::string>()));
                 }
                 catch(const std::exception& e)
                 {
-                    std::cout << "Plugin not set on the command line. Checking in .ini file.\n";
+                    std::cout << "\nPlugin not set on the command line. Checking in .ini file.\n";
                     for (auto iter_value : values)
                     {
                         options[iter_key.pItem] = iter_value.pItem;

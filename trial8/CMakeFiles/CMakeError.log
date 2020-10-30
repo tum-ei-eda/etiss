@@ -1,0 +1,63 @@
+Performing C SOURCE FILE Test CMAKE_HAVE_LIBC_PTHREAD failed with the following output:
+Change Dir: /home/anoushka/workspace/etiss/trial8/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_c50ec/fast && /usr/bin/make -f CMakeFiles/cmTC_c50ec.dir/build.make CMakeFiles/cmTC_c50ec.dir/build
+make[1]: Entering directory '/home/anoushka/workspace/etiss/trial8/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_c50ec.dir/src.c.o
+/usr/bin/cc   -DCMAKE_HAVE_LIBC_PTHREAD -fPIE   -o CMakeFiles/cmTC_c50ec.dir/src.c.o   -c /home/anoushka/workspace/etiss/trial8/CMakeFiles/CMakeTmp/src.c
+Linking C executable cmTC_c50ec
+/usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_c50ec.dir/link.txt --verbose=1
+/usr/bin/cc  -DCMAKE_HAVE_LIBC_PTHREAD    CMakeFiles/cmTC_c50ec.dir/src.c.o  -o cmTC_c50ec 
+CMakeFiles/cmTC_c50ec.dir/src.c.o: In function `main':
+src.c:(.text+0x3e): undefined reference to `pthread_create'
+src.c:(.text+0x4a): undefined reference to `pthread_detach'
+src.c:(.text+0x5b): undefined reference to `pthread_join'
+src.c:(.text+0x6f): undefined reference to `pthread_atfork'
+collect2: error: ld returned 1 exit status
+CMakeFiles/cmTC_c50ec.dir/build.make:86: recipe for target 'cmTC_c50ec' failed
+make[1]: *** [cmTC_c50ec] Error 1
+make[1]: Leaving directory '/home/anoushka/workspace/etiss/trial8/CMakeFiles/CMakeTmp'
+Makefile:121: recipe for target 'cmTC_c50ec/fast' failed
+make: *** [cmTC_c50ec/fast] Error 2
+
+
+Source file was:
+#include <pthread.h>
+
+void* test_func(void* data)
+{
+  return data;
+}
+
+int main(void)
+{
+  pthread_t thread;
+  pthread_create(&thread, NULL, test_func, NULL);
+  pthread_detach(thread);
+  pthread_join(thread, NULL);
+  pthread_atfork(NULL, NULL, NULL);
+  pthread_exit(NULL);
+
+  return 0;
+}
+
+Determining if the function pthread_create exists in the pthreads failed with the following output:
+Change Dir: /home/anoushka/workspace/etiss/trial8/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_5aaf6/fast && /usr/bin/make -f CMakeFiles/cmTC_5aaf6.dir/build.make CMakeFiles/cmTC_5aaf6.dir/build
+make[1]: Entering directory '/home/anoushka/workspace/etiss/trial8/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_5aaf6.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create -fPIE   -o CMakeFiles/cmTC_5aaf6.dir/CheckFunctionExists.c.o   -c /usr/local/share/cmake-3.16/Modules/CheckFunctionExists.c
+Linking C executable cmTC_5aaf6
+/usr/local/bin/cmake -E cmake_link_script CMakeFiles/cmTC_5aaf6.dir/link.txt --verbose=1
+/usr/bin/cc  -DCHECK_FUNCTION_EXISTS=pthread_create    CMakeFiles/cmTC_5aaf6.dir/CheckFunctionExists.c.o  -o cmTC_5aaf6  -lpthreads 
+/usr/bin/ld: cannot find -lpthreads
+collect2: error: ld returned 1 exit status
+CMakeFiles/cmTC_5aaf6.dir/build.make:86: recipe for target 'cmTC_5aaf6' failed
+make[1]: *** [cmTC_5aaf6] Error 1
+make[1]: Leaving directory '/home/anoushka/workspace/etiss/trial8/CMakeFiles/CMakeTmp'
+Makefile:121: recipe for target 'cmTC_5aaf6/fast' failed
+make: *** [cmTC_5aaf6/fast] Error 2
+
+
+

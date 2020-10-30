@@ -1,0 +1,417 @@
+[
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8",
+  "command": "/usr/bin/cc -DETISS_EXPORTS -DETISS_LIB_SHARED=1 -DETISS_PLUGIN_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c  -O3 -DNDEBUG -fPIC   -o CMakeFiles/ETISS.dir/src/IntegratedLibrary/SimpleIni/ConvertUTF.c.o   -c /home/anoushka/workspace/etiss/src/IntegratedLibrary/SimpleIni/ConvertUTF.c",
+  "file": "/home/anoushka/workspace/etiss/src/IntegratedLibrary/SimpleIni/ConvertUTF.c"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_LIB_SHARED=1 -DETISS_PLUGIN_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/ETISS.dir/src/IntegratedLibrary/errorInjection/Plugin.cpp.o -c /home/anoushka/workspace/etiss/src/IntegratedLibrary/errorInjection/Plugin.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/IntegratedLibrary/errorInjection/Plugin.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_LIB_SHARED=1 -DETISS_PLUGIN_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/ETISS.dir/src/IntegratedLibrary/fault/SwitchSystem.cpp.o -c /home/anoushka/workspace/etiss/src/IntegratedLibrary/fault/SwitchSystem.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/IntegratedLibrary/fault/SwitchSystem.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_LIB_SHARED=1 -DETISS_PLUGIN_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/ETISS.dir/src/IntegratedLibrary/gdb/GDBConnection.cpp.o -c /home/anoushka/workspace/etiss/src/IntegratedLibrary/gdb/GDBConnection.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/IntegratedLibrary/gdb/GDBConnection.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_LIB_SHARED=1 -DETISS_PLUGIN_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/ETISS.dir/src/IntegratedLibrary/gdb/GDBCore.cpp.o -c /home/anoushka/workspace/etiss/src/IntegratedLibrary/gdb/GDBCore.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/IntegratedLibrary/gdb/GDBCore.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_LIB_SHARED=1 -DETISS_PLUGIN_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/ETISS.dir/src/IntegratedLibrary/gdb/GDBServer.cpp.o -c /home/anoushka/workspace/etiss/src/IntegratedLibrary/gdb/GDBServer.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/IntegratedLibrary/gdb/GDBServer.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_LIB_SHARED=1 -DETISS_PLUGIN_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/ETISS.dir/src/IntegratedLibrary/gdb/GDBSystemWrapper.cpp.o -c /home/anoushka/workspace/etiss/src/IntegratedLibrary/gdb/GDBSystemWrapper.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/IntegratedLibrary/gdb/GDBSystemWrapper.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_LIB_SHARED=1 -DETISS_PLUGIN_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/ETISS.dir/src/IntegratedLibrary/gdb/Hex.cpp.o -c /home/anoushka/workspace/etiss/src/IntegratedLibrary/gdb/Hex.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/IntegratedLibrary/gdb/Hex.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_LIB_SHARED=1 -DETISS_PLUGIN_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/ETISS.dir/src/IntegratedLibrary/gdb/UnixTCPGDBConnection.cpp.o -c /home/anoushka/workspace/etiss/src/IntegratedLibrary/gdb/UnixTCPGDBConnection.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/IntegratedLibrary/gdb/UnixTCPGDBConnection.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_LIB_SHARED=1 -DETISS_PLUGIN_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/ETISS.dir/src/IntegratedLibrary/InstructionAccurateCallback.cpp.o -c /home/anoushka/workspace/etiss/src/IntegratedLibrary/InstructionAccurateCallback.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/IntegratedLibrary/InstructionAccurateCallback.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_LIB_SHARED=1 -DETISS_PLUGIN_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/ETISS.dir/src/IntegratedLibrary/InstructionSpecificAddressCallback.cpp.o -c /home/anoushka/workspace/etiss/src/IntegratedLibrary/InstructionSpecificAddressCallback.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/IntegratedLibrary/InstructionSpecificAddressCallback.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_LIB_SHARED=1 -DETISS_PLUGIN_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/ETISS.dir/src/IntegratedLibrary/Logger.cpp.o -c /home/anoushka/workspace/etiss/src/IntegratedLibrary/Logger.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/IntegratedLibrary/Logger.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_LIB_SHARED=1 -DETISS_PLUGIN_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/ETISS.dir/src/IntegratedLibrary/MemoryDevice.cpp.o -c /home/anoushka/workspace/etiss/src/IntegratedLibrary/MemoryDevice.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/IntegratedLibrary/MemoryDevice.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_LIB_SHARED=1 -DETISS_PLUGIN_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/ETISS.dir/src/IntegratedLibrary/PrintInstruction.cpp.o -c /home/anoushka/workspace/etiss/src/IntegratedLibrary/PrintInstruction.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/IntegratedLibrary/PrintInstruction.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_LIB_SHARED=1 -DETISS_PLUGIN_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/ETISS.dir/src/IntegratedLibrary/VariableValueLogger.cpp.o -c /home/anoushka/workspace/etiss/src/IntegratedLibrary/VariableValueLogger.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/IntegratedLibrary/VariableValueLogger.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_LIB_SHARED=1 -DETISS_PLUGIN_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/ETISS.dir/src/IntegratedLibrary/VirtualStructMemory.cpp.o -c /home/anoushka/workspace/etiss/src/IntegratedLibrary/VirtualStructMemory.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/IntegratedLibrary/VirtualStructMemory.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_LIB_SHARED=1 -DETISS_PLUGIN_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/ETISS.dir/src/fault/xml/pugixml.cpp.o -c /home/anoushka/workspace/etiss/src/fault/xml/pugixml.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/fault/xml/pugixml.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_LIB_SHARED=1 -DETISS_PLUGIN_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/ETISS.dir/src/fault/Action.cpp.o -c /home/anoushka/workspace/etiss/src/fault/Action.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/fault/Action.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_LIB_SHARED=1 -DETISS_PLUGIN_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/ETISS.dir/src/fault/Fault.cpp.o -c /home/anoushka/workspace/etiss/src/fault/Fault.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/fault/Fault.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_LIB_SHARED=1 -DETISS_PLUGIN_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/ETISS.dir/src/fault/Injector.cpp.o -c /home/anoushka/workspace/etiss/src/fault/Injector.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/fault/Injector.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_LIB_SHARED=1 -DETISS_PLUGIN_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/ETISS.dir/src/fault/InjectorAddress.cpp.o -c /home/anoushka/workspace/etiss/src/fault/InjectorAddress.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/fault/InjectorAddress.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_LIB_SHARED=1 -DETISS_PLUGIN_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/ETISS.dir/src/fault/Stressor.cpp.o -c /home/anoushka/workspace/etiss/src/fault/Stressor.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/fault/Stressor.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_LIB_SHARED=1 -DETISS_PLUGIN_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/ETISS.dir/src/fault/Trigger.cpp.o -c /home/anoushka/workspace/etiss/src/fault/Trigger.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/fault/Trigger.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_LIB_SHARED=1 -DETISS_PLUGIN_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/ETISS.dir/src/fault/XML.cpp.o -c /home/anoushka/workspace/etiss/src/fault/XML.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/fault/XML.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_LIB_SHARED=1 -DETISS_PLUGIN_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/ETISS.dir/src/fpu/softfloat.cpp.o -c /home/anoushka/workspace/etiss/src/fpu/softfloat.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/fpu/softfloat.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_LIB_SHARED=1 -DETISS_PLUGIN_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/ETISS.dir/src/interfaces/Delegate.cpp.o -c /home/anoushka/workspace/etiss/src/interfaces/Delegate.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/interfaces/Delegate.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_LIB_SHARED=1 -DETISS_PLUGIN_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/ETISS.dir/src/interfaces/Dot.cpp.o -c /home/anoushka/workspace/etiss/src/interfaces/Dot.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/interfaces/Dot.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_LIB_SHARED=1 -DETISS_PLUGIN_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/ETISS.dir/src/interfaces/VCD.cpp.o -c /home/anoushka/workspace/etiss/src/interfaces/VCD.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/interfaces/VCD.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_LIB_SHARED=1 -DETISS_PLUGIN_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/ETISS.dir/src/interfaces/Wishbone.cpp.o -c /home/anoushka/workspace/etiss/src/interfaces/Wishbone.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/interfaces/Wishbone.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_LIB_SHARED=1 -DETISS_PLUGIN_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/ETISS.dir/src/mm/DMMUWrapper.cpp.o -c /home/anoushka/workspace/etiss/src/mm/DMMUWrapper.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/mm/DMMUWrapper.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_LIB_SHARED=1 -DETISS_PLUGIN_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/ETISS.dir/src/mm/MMU.cpp.o -c /home/anoushka/workspace/etiss/src/mm/MMU.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/mm/MMU.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_LIB_SHARED=1 -DETISS_PLUGIN_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/ETISS.dir/src/mm/PTE.cpp.o -c /home/anoushka/workspace/etiss/src/mm/PTE.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/mm/PTE.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_LIB_SHARED=1 -DETISS_PLUGIN_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/ETISS.dir/src/mm/PTEFormat.cpp.o -c /home/anoushka/workspace/etiss/src/mm/PTEFormat.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/mm/PTEFormat.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_LIB_SHARED=1 -DETISS_PLUGIN_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/ETISS.dir/src/mm/PageFaultVector.cpp.o -c /home/anoushka/workspace/etiss/src/mm/PageFaultVector.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/mm/PageFaultVector.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_LIB_SHARED=1 -DETISS_PLUGIN_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/ETISS.dir/src/Benchmark.cpp.o -c /home/anoushka/workspace/etiss/src/Benchmark.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/Benchmark.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_LIB_SHARED=1 -DETISS_PLUGIN_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/ETISS.dir/src/CPUArch.cpp.o -c /home/anoushka/workspace/etiss/src/CPUArch.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/CPUArch.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_LIB_SHARED=1 -DETISS_PLUGIN_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/ETISS.dir/src/CPUCore.cpp.o -c /home/anoushka/workspace/etiss/src/CPUCore.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/CPUCore.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_LIB_SHARED=1 -DETISS_PLUGIN_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/ETISS.dir/src/CVirtualStruct.cpp.o -c /home/anoushka/workspace/etiss/src/CVirtualStruct.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/CVirtualStruct.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_LIB_SHARED=1 -DETISS_PLUGIN_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/ETISS.dir/src/CodePart.cpp.o -c /home/anoushka/workspace/etiss/src/CodePart.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/CodePart.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_LIB_SHARED=1 -DETISS_PLUGIN_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/ETISS.dir/src/DebugSystem.cpp.o -c /home/anoushka/workspace/etiss/src/DebugSystem.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/DebugSystem.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_LIB_SHARED=1 -DETISS_PLUGIN_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/ETISS.dir/src/ETISS.cpp.o -c /home/anoushka/workspace/etiss/src/ETISS.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/ETISS.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_LIB_SHARED=1 -DETISS_PLUGIN_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/ETISS.dir/src/ETISSInit.cpp.o -c /home/anoushka/workspace/etiss/src/ETISSInit.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/ETISSInit.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_LIB_SHARED=1 -DETISS_PLUGIN_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/ETISS.dir/src/ETISSPython.cpp.o -c /home/anoushka/workspace/etiss/src/ETISSPython.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/ETISSPython.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_LIB_SHARED=1 -DETISS_PLUGIN_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/ETISS.dir/src/ErrorDefinition.cpp.o -c /home/anoushka/workspace/etiss/src/ErrorDefinition.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/ErrorDefinition.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_LIB_SHARED=1 -DETISS_PLUGIN_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/ETISS.dir/src/FastMemory.cpp.o -c /home/anoushka/workspace/etiss/src/FastMemory.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/FastMemory.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_LIB_SHARED=1 -DETISS_PLUGIN_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/ETISS.dir/src/Instruction.cpp.o -c /home/anoushka/workspace/etiss/src/Instruction.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/Instruction.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_LIB_SHARED=1 -DETISS_PLUGIN_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/ETISS.dir/src/IntegratedLibrary.cpp.o -c /home/anoushka/workspace/etiss/src/IntegratedLibrary.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/IntegratedLibrary.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_LIB_SHARED=1 -DETISS_PLUGIN_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/ETISS.dir/src/IntegratedLibraryHelper.cpp.o -c /home/anoushka/workspace/etiss/src/IntegratedLibraryHelper.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/IntegratedLibraryHelper.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_LIB_SHARED=1 -DETISS_PLUGIN_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/ETISS.dir/src/InterruptHandler.cpp.o -c /home/anoushka/workspace/etiss/src/InterruptHandler.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/InterruptHandler.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_LIB_SHARED=1 -DETISS_PLUGIN_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/ETISS.dir/src/InterruptVector.cpp.o -c /home/anoushka/workspace/etiss/src/InterruptVector.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/InterruptVector.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_LIB_SHARED=1 -DETISS_PLUGIN_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/ETISS.dir/src/JIT.cpp.o -c /home/anoushka/workspace/etiss/src/JIT.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/JIT.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_LIB_SHARED=1 -DETISS_PLUGIN_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/ETISS.dir/src/LibraryInterface.cpp.o -c /home/anoushka/workspace/etiss/src/LibraryInterface.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/LibraryInterface.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_LIB_SHARED=1 -DETISS_PLUGIN_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/ETISS.dir/src/Memory.cpp.o -c /home/anoushka/workspace/etiss/src/Memory.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/Memory.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_LIB_SHARED=1 -DETISS_PLUGIN_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/ETISS.dir/src/Misc.cpp.o -c /home/anoushka/workspace/etiss/src/Misc.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/Misc.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_LIB_SHARED=1 -DETISS_PLUGIN_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/ETISS.dir/src/Plugin.cpp.o -c /home/anoushka/workspace/etiss/src/Plugin.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/Plugin.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_LIB_SHARED=1 -DETISS_PLUGIN_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/ETISS.dir/src/ReturnCode.cpp.o -c /home/anoushka/workspace/etiss/src/ReturnCode.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/ReturnCode.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_LIB_SHARED=1 -DETISS_PLUGIN_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/ETISS.dir/src/System.cpp.o -c /home/anoushka/workspace/etiss/src/System.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/System.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_LIB_SHARED=1 -DETISS_PLUGIN_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/ETISS.dir/src/Timing.cpp.o -c /home/anoushka/workspace/etiss/src/Timing.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/Timing.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_LIB_SHARED=1 -DETISS_PLUGIN_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/ETISS.dir/src/Translation.cpp.o -c /home/anoushka/workspace/etiss/src/Translation.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/Translation.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_LIB_SHARED=1 -DETISS_PLUGIN_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/ETISS.dir/src/VirtualStruct.cpp.o -c /home/anoushka/workspace/etiss/src/VirtualStruct.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/VirtualStruct.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8/src/copy_binary",
+  "command": "/usr/bin/c++     -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIE   -std=gnu++11 -o CMakeFiles/copy_binary.dir/main.cpp.o -c /home/anoushka/workspace/etiss/src/copy_binary/main.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/copy_binary/main.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8/src/jitlibs/softfloat",
+  "command": "/usr/bin/c++   -I/home/anoushka/workspace/etiss/src/jitlibs/softfloat/.   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/softfloat.dir/dummy.cpp.o -c /home/anoushka/workspace/etiss/src/jitlibs/softfloat/dummy.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/jitlibs/softfloat/dummy.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8/src/jitlibs/resources",
+  "command": "/usr/bin/c++   -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/resources.dir/resources.cpp.o -c /home/anoushka/workspace/etiss/src/jitlibs/resources/resources.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/jitlibs/resources/resources.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8/src/jitlibs/fp_funcs",
+  "command": "/usr/bin/c++   -I/home/anoushka/workspace/etiss/src/jitlibs/softfloat/.   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/dbtrise_fp_funcs.dir/fp_functions.cpp.o -c /home/anoushka/workspace/etiss/src/jitlibs/fp_funcs/fp_functions.cpp",
+  "file": "/home/anoushka/workspace/etiss/src/jitlibs/fp_funcs/fp_functions.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8/ArchImpl/OR1K",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_PLUGIN_IMPORTS -DOR1KArch_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/OR1KArch.dir/OR1K_Helper.cpp.o -c /home/anoushka/workspace/etiss/ArchImpl/OR1K/OR1K_Helper.cpp",
+  "file": "/home/anoushka/workspace/etiss/ArchImpl/OR1K/OR1K_Helper.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8/ArchImpl/OR1K",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_PLUGIN_IMPORTS -DOR1KArch_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/OR1KArch.dir/OR1KArch_fpu.cpp.o -c /home/anoushka/workspace/etiss/ArchImpl/OR1K/OR1KArch_fpu.cpp",
+  "file": "/home/anoushka/workspace/etiss/ArchImpl/OR1K/OR1KArch_fpu.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8/ArchImpl/OR1K",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_PLUGIN_IMPORTS -DOR1KArch_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/OR1KArch.dir/OR1KArch.cpp.o -c /home/anoushka/workspace/etiss/ArchImpl/OR1K/OR1KArch.cpp",
+  "file": "/home/anoushka/workspace/etiss/ArchImpl/OR1K/OR1KArch.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8/ArchImpl/OR1K",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_PLUGIN_IMPORTS -DOR1KArch_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/OR1KArch.dir/OR1KGDBCore.cpp.o -c /home/anoushka/workspace/etiss/ArchImpl/OR1K/OR1KGDBCore.cpp",
+  "file": "/home/anoushka/workspace/etiss/ArchImpl/OR1K/OR1KGDBCore.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8/ArchImpl/OR1K",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_PLUGIN_IMPORTS -DOR1KArch_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/OR1KArch.dir/OR1KTimer.cpp.o -c /home/anoushka/workspace/etiss/ArchImpl/OR1K/OR1KTimer.cpp",
+  "file": "/home/anoushka/workspace/etiss/ArchImpl/OR1K/OR1KTimer.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8/ArchImpl/OR1K",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_PLUGIN_IMPORTS -DOR1KArch_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/OR1KArch.dir/OR1200Timing.cpp.o -c /home/anoushka/workspace/etiss/ArchImpl/OR1K/OR1200Timing.cpp",
+  "file": "/home/anoushka/workspace/etiss/ArchImpl/OR1K/OR1200Timing.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8/ArchImpl/OR1K",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_PLUGIN_IMPORTS -DOR1KArch_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/OR1KArch.dir/ORBIS32_I.cpp.o -c /home/anoushka/workspace/etiss/ArchImpl/OR1K/ORBIS32_I.cpp",
+  "file": "/home/anoushka/workspace/etiss/ArchImpl/OR1K/ORBIS32_I.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8/ArchImpl/OR1K",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_PLUGIN_IMPORTS -DOR1KArch_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/OR1KArch.dir/ORBIS32_II.cpp.o -c /home/anoushka/workspace/etiss/ArchImpl/OR1K/ORBIS32_II.cpp",
+  "file": "/home/anoushka/workspace/etiss/ArchImpl/OR1K/ORBIS32_II.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8/ArchImpl/OR1K",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_PLUGIN_IMPORTS -DOR1KArch_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/OR1KArch.dir/ORFPX32.cpp.o -c /home/anoushka/workspace/etiss/ArchImpl/OR1K/ORFPX32.cpp",
+  "file": "/home/anoushka/workspace/etiss/ArchImpl/OR1K/ORFPX32.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8/ArchImpl/RISCV",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_PLUGIN_IMPORTS -DRISCV_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/RISCV.dir/RISCVArch.cpp.o -c /home/anoushka/workspace/etiss/ArchImpl/RISCV/RISCVArch.cpp",
+  "file": "/home/anoushka/workspace/etiss/ArchImpl/RISCV/RISCVArch.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8/ArchImpl/RISCV",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_PLUGIN_IMPORTS -DRISCV_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/RISCV.dir/RISCVArchLib.cpp.o -c /home/anoushka/workspace/etiss/ArchImpl/RISCV/RISCVArchLib.cpp",
+  "file": "/home/anoushka/workspace/etiss/ArchImpl/RISCV/RISCVArchLib.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8/ArchImpl/RISCV64",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_PLUGIN_IMPORTS -DRISCV64_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/RISCV64.dir/RISCV64Arch.cpp.o -c /home/anoushka/workspace/etiss/ArchImpl/RISCV64/RISCV64Arch.cpp",
+  "file": "/home/anoushka/workspace/etiss/ArchImpl/RISCV64/RISCV64Arch.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8/ArchImpl/RISCV64",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_PLUGIN_IMPORTS -DRISCV64_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/RISCV64.dir/RISCV64ArchLib.cpp.o -c /home/anoushka/workspace/etiss/ArchImpl/RISCV64/RISCV64ArchLib.cpp",
+  "file": "/home/anoushka/workspace/etiss/ArchImpl/RISCV64/RISCV64ArchLib.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8/ArchImpl/RISCV64",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_PLUGIN_IMPORTS -DRISCV64_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/RISCV64.dir/RISCV64MMU.cpp.o -c /home/anoushka/workspace/etiss/ArchImpl/RISCV64/RISCV64MMU.cpp",
+  "file": "/home/anoushka/workspace/etiss/ArchImpl/RISCV64/RISCV64MMU.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8/ArchImpl/RISCV64",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_PLUGIN_IMPORTS -DRISCV64_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/RISCV64.dir/RISCV64Timer.cpp.o -c /home/anoushka/workspace/etiss/ArchImpl/RISCV64/RISCV64Timer.cpp",
+  "file": "/home/anoushka/workspace/etiss/ArchImpl/RISCV64/RISCV64Timer.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8/JITImpl/GCC",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_PLUGIN_IMPORTS -DGCCJIT_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/GCCJIT.dir/GCCJIT.cpp.o -c /home/anoushka/workspace/etiss/JITImpl/GCC/GCCJIT.cpp",
+  "file": "/home/anoushka/workspace/etiss/JITImpl/GCC/GCCJIT.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8/JITImpl/GCC",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_PLUGIN_IMPORTS -DGCCJIT_EXPORTS -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/GCCJIT.dir/GCCJITLIB.cpp.o -c /home/anoushka/workspace/etiss/JITImpl/GCC/GCCJITLIB.cpp",
+  "file": "/home/anoushka/workspace/etiss/JITImpl/GCC/GCCJITLIB.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8/JITImpl/TCC",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_PLUGIN_IMPORTS -DTCCJIT_EXPORTS -I/home/anoushka/workspace/etiss/trial8/JITImpl/TCC/tcc_unix -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/TCCJIT.dir/TCCJIT.cpp.o -c /home/anoushka/workspace/etiss/JITImpl/TCC/TCCJIT.cpp",
+  "file": "/home/anoushka/workspace/etiss/JITImpl/TCC/TCCJIT.cpp"
+},
+{
+  "directory": "/home/anoushka/workspace/etiss/trial8/JITImpl/TCC",
+  "command": "/usr/bin/c++  -DETISS_EXPORTS -DETISS_PLUGIN_IMPORTS -DTCCJIT_EXPORTS -I/home/anoushka/workspace/etiss/trial8/JITImpl/TCC/tcc_unix -I/home/anoushka/workspace/etiss/include -I/home/anoushka/workspace/etiss/trial8/include -I/home/anoushka/workspace/etiss/include_c -I/home/anoushka/workspace/etiss/trial8/include_c   -fdiagnostics-color=always -Wall -Wpedantic -O3 -DNDEBUG -fPIC   -std=gnu++11 -o CMakeFiles/TCCJIT.dir/TCCJITLib.cpp.o -c /home/anoushka/workspace/etiss/JITImpl/TCC/TCCJITLib.cpp",
+  "file": "/home/anoushka/workspace/etiss/JITImpl/TCC/TCCJITLib.cpp"
+}
+]
