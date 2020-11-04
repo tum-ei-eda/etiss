@@ -1,0 +1,18 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/anoushka/workspace/etiss/src/copy_binary/main.cpp
+cstdio
+-
+fstream
+-
+vector
+-
+string
+-
+
