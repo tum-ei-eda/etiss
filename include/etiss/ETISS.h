@@ -348,14 +348,14 @@ class Initializer
         toList(args, args_append...);
         initialize(args);
     }
-    // MINE
+    
     Initializer(std::list<std::string> *files, int argc, const char* argv[])
     {
         std::cout << "Entered Initializer constructor.\n";
         loadIni(files);
         initialized(argc, argv);
     }
-    // MINE END
+    
     /**
      * @brief Constructor that initializes ETISS.
      *

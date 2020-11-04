@@ -1,2 +1,0 @@
-/usr/bin/ar qc libsoftfloat.a  CMakeFiles/softfloat.dir/dummy.cpp.o
-/usr/bin/ranlib libsoftfloat.a

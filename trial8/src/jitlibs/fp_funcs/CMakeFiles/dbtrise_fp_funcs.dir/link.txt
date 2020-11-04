@@ -1,2 +1,0 @@
-/usr/bin/ar qc libdbtrise_fp_funcs.a  CMakeFiles/dbtrise_fp_funcs.dir/fp_functions.cpp.o
-/usr/bin/ranlib libdbtrise_fp_funcs.a

@@ -1,5 +1,0 @@
-OR1KArch,/home/anoushka/workspace/etiss/trial6/installed/lib/plugins,OR1KArch
-RISCV,/home/anoushka/workspace/etiss/trial6/installed/lib/plugins,RISCV
-RISCV64,/home/anoushka/workspace/etiss/trial6/installed/lib/plugins,RISCV64
-GCCJIT,/home/anoushka/workspace/etiss/trial6/installed/lib/plugins,GCCJIT
-TCCJIT,/home/anoushka/workspace/etiss/trial6/installed/lib/plugins,TCCJIT
