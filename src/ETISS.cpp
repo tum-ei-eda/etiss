@@ -597,14 +597,22 @@ void etiss::Initializer::loadIniPlugins(std::shared_ptr<etiss::CPUCore> cpu)
                 {
                     //function returns true false
                     options[iter_key.pItem] = std::string(vm[std::string(iter_key.pItem)].as<std::string>());
+<<<<<<< HEAD
                     std::cout<<"\n"<< iter_section.pItem <<"::"<<iter_key.pItem<< " written from command line.\n";
+=======
+                    std::cout<<"Written from command line to options\n";
+>>>>>>> af724a8f23e41882195f6923e47bc1307d187d9a
                     //std::cout<<std::string(iter_key.pItem)<<" set on command line to "<<options[iter_key.pItem];
                     etiss::log(etiss::INFO,
                                 "    options[" + std::string(iter_key.pItem) + "] = " + std::string(vm[std::string(iter_key.pItem)].as<std::string>()));
                 }
                 catch(const std::exception& e)
                 {
+<<<<<<< HEAD
                     std::cout <<"\n"<< iter_section.pItem <<"::"<<iter_key.pItem<<" not set on the command line. Checking in .ini file.\n";
+=======
+                    std::cout << "\nPlugin "<<iter_key.pItem<<" not set on the command line. Checking in .ini file.\n";
+>>>>>>> af724a8f23e41882195f6923e47bc1307d187d9a
                     for (auto iter_value : values)
                     {
                         options[iter_key.pItem] = iter_value.pItem;
