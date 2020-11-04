@@ -1,0 +1,1 @@
+/usr/bin/c++   -fdiagnostics-color=always -Wall -Wpedantic -g -D_DEBUG   CMakeFiles/copy_binary.dir/main.cpp.o  -o copy_binary  -Wl,-rpath,"\$ORIGIN" 

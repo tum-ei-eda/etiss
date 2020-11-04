@@ -426,6 +426,8 @@ void etiss::Initializer::loadIni(std::list<std::string> *files)
     }
 }
 
+boost::program_options::variables_map vm;
+
 void etiss_loadIniConfigs()
 {
     if (!po_simpleIni) // no .ini files were given.
@@ -545,9 +547,6 @@ void etiss_loadIniConfigs()
     }
 }
 
-//MINE
-boost::program_options::variables_map vm;
-//MINE END
 
 void etiss::Initializer::loadIniPlugins(std::shared_ptr<etiss::CPUCore> cpu)
 {
@@ -598,14 +597,14 @@ void etiss::Initializer::loadIniPlugins(std::shared_ptr<etiss::CPUCore> cpu)
                 {
                     //function returns true false
                     options[iter_key.pItem] = std::string(vm[std::string(iter_key.pItem)].as<std::string>());
-                    std::cout<<"Written from command line to options\n";
+                    std::cout<<"\n"<< iter_section.pItem <<"::"<<iter_key.pItem<< " written from command line.\n";
                     //std::cout<<std::string(iter_key.pItem)<<" set on command line to "<<options[iter_key.pItem];
                     etiss::log(etiss::INFO,
                                 "    options[" + std::string(iter_key.pItem) + "] = " + std::string(vm[std::string(iter_key.pItem)].as<std::string>()));
                 }
                 catch(const std::exception& e)
                 {
-                    std::cout << "\nPlugin "<<iter_key.pItem<<" not set on the command line. Checking in .ini file.\n";
+                    std::cout <<"\n"<< iter_section.pItem <<"::"<<iter_key.pItem<<" not set on the command line. Checking in .ini file.\n";
                     for (auto iter_value : values)
                     {
                         options[iter_key.pItem] = iter_value.pItem;
@@ -839,22 +838,14 @@ void etiss_initialized(int argc, const char* argv[], bool forced = false)
         initialized_ = true;
     }
     
-    //MINE
     {
         namespace po = boost::program_options;
-        //bool found = false;
-        //std::string ofile;
-        //std::string inifile;
-        //std::vector<std::string> args;
-        //const char* argvi[100];
-        //int c = 0;
-
         try 
         {
             po::options_description desc("Allowed options");
             desc.add_options()
             ("help", "produce a help message")
-            ("norangeexception", po::value<std::string>(), "just an option (flag)")
+            /*("norangeexception", po::value<std::string>(), "just an option (flag)")
             ("returnjump", po::value<std::string>(), "just an option (flag)")
             ("hostendianness", po::value<std::string>(), "just an option (flag)")
             ("ignore_sr_iee", po::value<std::string>(), "just an option (flag)")
@@ -867,44 +858,39 @@ void etiss_initialized(int argc, const char* argv[], bool forced = false)
             ("pyconsole", po::value<std::string>(), "just an option (flag)")
             ("jit-debug", po::value<std::string>(), "just an option (flag)")
             ("ETISS::enable_dmi", po::value<std::string>(), "just an option (flag)")
-            ("ETISS::log_pc", po::value<std::string>(), "just an option (flag)")
-            ("logaddr", po::value<std::string>(), "plugin option")
-            ("logmask", po::value<std::string>(), "plugin option")
+            ("ETISS::log_pc", po::value<std::string>(), "just an option (flag)") */
+            ("logaddr", po::value<std::string>(), "Plugin Logger option")
+            ("logmask", po::value<std::string>(), "Plugin Logger option")
             ;
 
-            
-
-            //po::variables_map vm;
             po::command_line_parser parser{argc, argv};
             po::command_line_parser iniparser{argc, argv};
-            //parser.options(desc).allow_unregistered().extra_parser(inifileload);
             iniparser.options(desc).allow_unregistered().extra_parser(inifileload).run();
             parser.options(desc).allow_unregistered().extra_parser(etiss::Configuration::set_cmd_line_boost);
             po::parsed_options parsed_options = parser.run();
             po::store(parsed_options, vm);
 
-            //po::store(basic_command_line_parser(argc, argv).options(desc).allow_unregistered().extra_parser(set_cmd_line_boost)
-                //.run(), vm);
-
-            //if (found)
-            //{
-            //    etiss::log(etiss::WARNING, std::string("Expected option value after " + ofile));
-            //}
-
             if (vm.count("help")) {
                 std::cout << desc;
-                std::cout << "\nIn addition -fOPTION and -fno-OPTION syntax are recognized.\n";
                 std::cout << "\nPlease begin all options with --\n";
+                std::cout << "\nIn addition -fOPTION and -fno-OPTION syntax are recognized to set flags.\n";
+            }
+
+            auto unregistered = po::collect_unrecognized(parsed_options.options, po::include_positional);
+            for (auto iter_unreg : unregistered)
+            {
+                if (iter_unreg.find("-i") != 0 )
+                {
+                    std::cout << "\nUnrecognised option "<< iter_unreg<< ".\n";
+                    std::cout << "Please use --help to list all recognised options. \n\n";
+                }
             }
         }
     catch(std::exception& e) {
         std::cout << e.what() << "\n";
     }
     }
-    //MINE END
     etiss_loadIniConfigs();
-
-    //flaglist = etiss::cfg().set(flaglist);
 
     // log level
     {
@@ -997,8 +983,9 @@ void etiss::initialized(int argc, const char* argv[])
 
 void etiss::forceInitialization()
 {
-    std::vector<std::string> args;
-    etiss_initialize(args, true);
+    //std::vector<std::string> args;
+    const char *argv[]={""};
+    etiss_initialized(0, argv, true);
 }
 
 //__attribute__((destructor))
