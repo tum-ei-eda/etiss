@@ -14809,7 +14809,6 @@ return true;
 nullptr
 );
 //-------------------------------------------------------------------------------------------------------------------
-#define RISCV_DEBUG_CALL 0
 static InstructionDefinition sub8_rs2_rs1_rd(
  		ISA32_RISCV,
  		"sub8",
@@ -14980,7 +14979,6 @@ return true;
 0,
 nullptr
 );
-#define RISCV_DEBUG_CALL 0
 //-------------------------------------------------------------------------------------------------------------------
 static InstructionDefinition smaqa_rs2_rs1_rd(
  		ISA32_RISCV,
@@ -15159,7 +15157,6 @@ return true;
 nullptr
 );
 //-------------------------------------------------------------------------------------------------------------------
-#define RISCV_DEBUG_CALL 0
 static InstructionDefinition sll8_rs2_rs1_rd(
  		ISA32_RISCV,
  		"sll8",
@@ -15330,7 +15327,6 @@ return true;
 0,
 nullptr
 );
-#define RISCV_DEBUG_CALL 0
 //-------------------------------------------------------------------------------------------------------------------
 static InstructionDefinition smin8_rs2_rs1_rd(
  		ISA32_RISCV,
