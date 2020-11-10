@@ -385,63 +385,59 @@ bool etiss::Configuration::isSet(std::string key)
     return cfg_.find(key) != cfg_.end();
 }
 
-
-std::pair<std::__cxx11::string, std::__cxx11::string> etiss::Configuration::set_cmd_line_boost(const std::string& s)
+std::pair<std::string, std::string> etiss::Configuration::set_cmd_line_boost(const std::string& s)
 {
     namespace po = boost::program_options;
     etiss::Configuration sobj;
-            if (s.length() > 2)
+    if (s.length() > 2)
+    {
+        if (s.find("-f") == 0) 
+        {
+            size_t epos = s.find_first_of('=');
+            if (s.length() > 5 && s.substr(2, 3) == "no-")
             {
-                if (s.find("-f") == 0) 
+                if (epos == std::string::npos)
                 {
-                    size_t epos = s.find_first_of('=');
-                    if (s.length() > 5 && s.substr(2, 3) == "no-")
-                    {
-                        if (epos == std::string::npos)
-                        {
-                            std::string tmp = s.substr(5);
-                            if (sobj.isSet(tmp))
-                                etiss::log(etiss::WARNING, "CONFIG " + tmp + " already set. Overwriting it to false.");
-                            etiss::log(etiss::VERBOSE, std::string("CONFIG: set ") + tmp + " to false");
-                            etiss::cfg().set<bool>(tmp, "false");
-                            return make_pair(tmp, std::string("false"));
-                        }
-                        
-                        else
-                        { // unusual case. assuming option shall be erased. value after '=' is ignored
-                            std::string tmp = s.substr(5, epos - 5);
-                            sobj.remove(tmp);
-                            etiss::log(etiss::VERBOSE, std::string("CONFIG: removed ") + tmp);
-                            return make_pair(std::string(), std::string());
-                        }
-                    }   
-                    else 
-                    {
-                        if (epos == std::string::npos)
-                        {
-                            std::string tmp = s.substr(2);
-                            if (sobj.isSet(tmp))
-                                etiss::log(etiss::WARNING, "CONFIG " + tmp + " already set. Overwriting it to true.");
-                            etiss::log(etiss::VERBOSE, std::string("CONFIG: set ") + tmp + " to true");
-                            etiss::cfg().set<bool>(tmp, "true");
-                            return make_pair(s.substr(2), std::string("true"));
-                        }
-                        else
-                        {
-                            std::string tmp = s.substr(2, epos - 2);
-                            std::string tval = s.substr(epos + 1);
-                            if (sobj.isSet(tmp))
-                                etiss::log(etiss::WARNING, "CONFIG " + tmp + " already set. Overwriting it to " + tval);
-                            etiss::log(etiss::VERBOSE, std::string("CONFIG: set ") + tmp + " to " + tval);
-                            return make_pair(s.substr(2), tval);
-                            
-                        }
-                        return make_pair(std::string(), std::string());
-                    }  
-                }  
-            }
-
-            return make_pair(std::string(), std::string());
+                    std::string tmp = s.substr(5);
+                    if (sobj.isSet(tmp))
+                        etiss::log(etiss::WARNING, "CONFIG " + tmp + " already set. Overwriting it to false.");
+                    etiss::log(etiss::VERBOSE, std::string("CONFIG: set ") + tmp + " to false");
+                    etiss::cfg().set<bool>(tmp, "false");
+                    return make_pair(tmp, std::string("false"));
+                }
+                else
+                { // unusual case. assuming option shall be erased. value after '=' is ignored
+                    std::string tmp = s.substr(5, epos - 5);
+                    sobj.remove(tmp);
+                    etiss::log(etiss::VERBOSE, std::string("CONFIG: removed ") + tmp);
+                    return make_pair(std::string(), std::string());
+                }
+            }   
+            else 
+            {
+                if (epos == std::string::npos)
+                {
+                    std::string tmp = s.substr(2);
+                    if (sobj.isSet(tmp))
+                        etiss::log(etiss::WARNING, "CONFIG " + tmp + " already set. Overwriting it to true.");
+                    etiss::log(etiss::VERBOSE, std::string("CONFIG: set ") + tmp + " to true");
+                    etiss::cfg().set<bool>(tmp, "true");
+                    return make_pair(s.substr(2), std::string("true"));
+                }
+                else
+                {
+                    std::string tmp = s.substr(2, epos - 2);
+                    std::string tval = s.substr(epos + 1);
+                    if (sobj.isSet(tmp))
+                        etiss::log(etiss::WARNING, "CONFIG " + tmp + " already set. Overwriting it to " + tval);
+                    etiss::log(etiss::VERBOSE, std::string("CONFIG: set ") + tmp + " to " + tval);
+                    return make_pair(s.substr(2), tval);
+                }
+                return make_pair(std::string(), std::string());
+            }  
+        }  
+    }
+    return make_pair(std::string(), std::string());
 }
 
 

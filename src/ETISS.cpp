@@ -70,6 +70,8 @@ std::string etiss_defaultjit_;
 std::list<std::shared_ptr<etiss::LibraryInterface>> etiss_libraries_;
 std::recursive_mutex etiss_libraries_mu_;
 
+boost::program_options::variables_map vm;
+
 std::set<std::string> etiss::listCPUArchs()
 {
     std::set<std::string> ret;
@@ -426,8 +428,6 @@ void etiss::Initializer::loadIni(std::list<std::string> *files)
     }
 }
 
-boost::program_options::variables_map vm;
-
 void etiss_loadIniConfigs()
 {
     if (!po_simpleIni) // no .ini files were given.
@@ -547,6 +547,12 @@ void etiss_loadIniConfigs()
     }
 }
 
+bool set_cmd_check(std::string cmdlineoption)
+{
+    if (vm.find(cmdlineoption) != vm.end())
+        return true;
+    return false;
+}
 
 void etiss::Initializer::loadIniPlugins(std::shared_ptr<etiss::CPUCore> cpu)
 {
@@ -589,36 +595,32 @@ void etiss::Initializer::loadIniPlugins(std::shared_ptr<etiss::CPUCore> cpu)
         po_simpleIni->GetAllKeys(iter_section.pItem, keys);
         for (auto iter_key : keys)
         {
-            //MINE 
-                // get all values of a key with multiple values = value of option
-                CSimpleIniA::TNamesDepend values;
-                po_simpleIni->GetAllValues(iter_section.pItem, iter_key.pItem, values);
-                try
+            // get all values of a key with multiple values = value of option
+            CSimpleIniA::TNamesDepend values;
+            po_simpleIni->GetAllValues(iter_section.pItem, iter_key.pItem, values);
+            bool cmdcheck;
+            cmdcheck = set_cmd_check(std::string(iter_key.pItem));
+            if (cmdcheck)
+            {
+                options[iter_key.pItem] = std::string(vm[std::string(iter_key.pItem)].as<std::string>());
+                std::cout<<"\n"<< iter_section.pItem <<"::"<<iter_key.pItem<< " written from command line.\n";
+                etiss::log(etiss::INFO,
+                            "    options[" + std::string(iter_key.pItem) + "] = " + std::string(vm[std::string(iter_key.pItem)].as<std::string>()));
+            }
+            else
+            {
+                std::cout <<"\n"<< iter_section.pItem <<"::"<<iter_key.pItem<<" not set on the command line. Checking in .ini file.\n";
+                for (auto iter_value : values)
                 {
-                    //function returns true false
-                    options[iter_key.pItem] = std::string(vm[std::string(iter_key.pItem)].as<std::string>());
-                    std::cout<<"\n"<< iter_section.pItem <<"::"<<iter_key.pItem<< " written from command line.\n";
-                    //std::cout<<std::string(iter_key.pItem)<<" set on command line to "<<options[iter_key.pItem];
+                    options[iter_key.pItem] = iter_value.pItem;
                     etiss::log(etiss::INFO,
-                                "    options[" + std::string(iter_key.pItem) + "] = " + std::string(vm[std::string(iter_key.pItem)].as<std::string>()));
+                            "    options[" + std::string(iter_key.pItem) + "] = " + std::string(iter_value.pItem));
                 }
-                catch(const std::exception& e)
-                {
-                    std::cout <<"\n"<< iter_section.pItem <<"::"<<iter_key.pItem<<" not set on the command line. Checking in .ini file.\n";
-                    for (auto iter_value : values)
-                    {
-                        options[iter_key.pItem] = iter_value.pItem;
-                        etiss::log(etiss::INFO,
-                                "    options[" + std::string(iter_key.pItem) + "] = " + std::string(iter_value.pItem));
-                    }
+                // check if more than one value is set in the ini file
+                if (values.size() > 1)
+                    etiss::log(etiss::WARNING, "Multi values for option. Took only last one!");
 
-                    // check if more than one value is set in the ini file
-                    if (values.size() > 1)
-                        etiss::log(etiss::WARNING, "Multi values for option. Took only last one!");
-
-                }
-                
-            //MINE END
+            }
         }
         cpu->addPlugin(etiss::getPlugin(pluginName, options));
     }
@@ -675,128 +677,7 @@ void etiss::Initializer::loadIniJIT(std::shared_ptr<etiss::CPUCore> cpu)
     }
 }
 
-void etiss_initialize(std::vector<std::string> args, bool forced = false)
-{
-    static std::mutex mu_;
-    static bool initialized_(false);
-    {
-        std::lock_guard<std::mutex> lock(mu_);
-        if (initialized_)
-        {
-            if (!forced)
-            {
-                etiss::log(etiss::WARNING, "Multiple calls to etiss::initialize");
-            }
-            else
-            {
-                return;
-            }
-        }
-        else
-        {
-            if (forced)
-            {
-                etiss::log(etiss::WARNING, "etiss::initialize has not been called before using ETISS library "
-                                           "functions. Please add the line \'etiss::initialize(argc,argv);\' "
-                                           "at the beginning of \'int main(int argc,char**argv);\'");
-            }
-        }
-        initialized_ = true;
-    }
-
-    std::list<std::string> flaglist;
-    for (auto iter = args.begin(); iter != args.end(); iter++)
-    {
-        // if arg starts with -i load .ini file
-        if (iter->substr(0, 2) == "-i")
-            etiss_loadIni(iter->substr(2));
-        else
-            flaglist.push_back(*iter);
-    }
-    etiss_loadIniConfigs();
-
-    flaglist = etiss::cfg().set(flaglist);
-
-    // log level
-    {
-        int ll = cfg().get<int>("loglevel", etiss::WARNING);
-        if (ll >= 0 && ll <= etiss::VERBOSE)
-        { // valid log level
-          // dnm
-            // etiss::verbosity() = etiss::VERBOSE;
-            etiss::verbosity() = (Verbosity)ll;
-            etiss::log(etiss::VERBOSE, "Log level set to VERBOSE");
-        }
-        else
-        {
-            etiss::verbosity() = etiss::WARNING;
-            etiss::log(etiss::ERROR, "Specified log level is not valid. must range between 0 (= "
-                                     "silent) and 5 (= verbose)");
-        }
-    }
-
-    etiss::py::init(); // init python
-
-    // configure console
-    if (cfg().get<bool>("sigint-console", false))
-    {
-        etiss_initialize_SIGINT();
-    }
-    else
-    {
-        etiss_remove_SIGINT();
-    }
-
-    // load all found libraries
-    if (cfg().get<bool>("library-loading", true))
-    {
-        preloadLibraries();
-    }
-
-    // load integrated library
-    if (cfg().get<bool>("integrated-library", true))
-    {
-        etiss::addLibrary(LibraryInterface::openIntegratedLibrary());
-    }
-
-    // check if some required files can be found
-    {
-        std::string path = etiss::installDir();
-        std::vector<std::string> requiredFiles;
-
-        // required files
-        requiredFiles.push_back(path + "/include/jit/etiss/jit/CPU.h");
-
-        // check
-        for (auto iter = requiredFiles.begin(); iter != requiredFiles.end(); iter++)
-        {
-            std::ifstream f(iter->c_str());
-            if (!f)
-            {
-                etiss::log(etiss::WARNING, std::string("Could not find file: ") + *iter + "\n" +
-                                               "\t The installation seems broken");
-            }
-        }
-    }
-
-    // load fault files
-    {
-        std::string faults = cfg().get<std::string>("faults.xml", "");
-        if (!faults.empty())
-        {
-            std::list<std::string> ffs = etiss::split(faults, ';');
-            for (auto ff : ffs)
-            {
-                etiss::fault::Stressor::loadXML(ff);
-            }
-        }
-    }
-
-    if (cfg().get<bool>("pyconsole", false))
-        etiss::py::console();
-}
-
-std::pair<std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> > inifileload(const std::string& s)
+std::pair<std::string, std::string> inifileload(const std::string& s)
 {
     if (s.find("-i") == 0)
     {
@@ -808,8 +689,7 @@ std::pair<std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> > i
     return make_pair(std::string(), std::string());
 }
 
-
-void etiss_initialized(int argc, const char* argv[], bool forced = false)
+void etiss_initialize(int argc, const char* argv[], bool forced = false)
 {
     static std::mutex mu_;
     static bool initialized_(false);
@@ -845,20 +725,6 @@ void etiss_initialized(int argc, const char* argv[], bool forced = false)
             po::options_description desc("Allowed options");
             desc.add_options()
             ("help", "produce a help message")
-            /*("norangeexception", po::value<std::string>(), "just an option (flag)")
-            ("returnjump", po::value<std::string>(), "just an option (flag)")
-            ("hostendianness", po::value<std::string>(), "just an option (flag)")
-            ("ignore_sr_iee", po::value<std::string>(), "just an option (flag)")
-            ("cleanup", po::value<std::string>(), "just an option (flag)")
-            ("verifyJIT", po::value<std::string>(), "just an option (flag)")
-            ("copy-headers", po::value<std::string>(), "just an option (flag)")
-            ("sigint-console", po::value<std::string>(), "just an option (flag)")
-            ("library-loading", po::value<std::string>(), "just an option (flag)")
-            ("integrated-library", po::value<std::string>(), "just an option (flag)")
-            ("pyconsole", po::value<std::string>(), "just an option (flag)")
-            ("jit-debug", po::value<std::string>(), "just an option (flag)")
-            ("ETISS::enable_dmi", po::value<std::string>(), "just an option (flag)")
-            ("ETISS::log_pc", po::value<std::string>(), "just an option (flag)") */
             ("logaddr", po::value<std::string>(), "Plugin Logger option")
             ("logmask", po::value<std::string>(), "Plugin Logger option")
             ;
@@ -870,7 +736,8 @@ void etiss_initialized(int argc, const char* argv[], bool forced = false)
             po::parsed_options parsed_options = parser.run();
             po::store(parsed_options, vm);
 
-            if (vm.count("help")) {
+            if (vm.count("help")) 
+            {
                 std::cout << desc;
                 std::cout << "\nPlease begin all options with --\n";
             }
@@ -885,9 +752,10 @@ void etiss_initialized(int argc, const char* argv[], bool forced = false)
                 }
             }
         }
-    catch(std::exception& e) {
-        std::cout << e.what() << "\n";
-    }
+        catch(std::exception& e) 
+        {
+            std::cout << e.what() << "\n";
+        }
     }
     etiss_loadIniConfigs();
 
@@ -970,21 +838,15 @@ void etiss_initialized(int argc, const char* argv[], bool forced = false)
         etiss::py::console();
 }
 
-void etiss::initialize(std::vector<std::string> args)
+void etiss::initialize(int argc, const char* argv[])
 {
-    etiss_initialize(args, false);
-}
-
-void etiss::initialized(int argc, const char* argv[])
-{
-    etiss_initialized(argc, argv, false);
+    etiss_initialize(argc, argv, false);
 }
 
 void etiss::forceInitialization()
 {
-    //std::vector<std::string> args;
     const char *argv[]={""};
-    etiss_initialized(0, argv, true);
+    etiss_initialize(0, argv, true);
 }
 
 //__attribute__((destructor))

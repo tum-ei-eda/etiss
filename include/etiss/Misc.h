@@ -440,7 +440,7 @@ class Configuration
      */
     std::list<std::string> set(const std::list<std::string> &args);
 
-    static std::pair<std::__cxx11::string, std::__cxx11::string> set_cmd_line_boost(const std::string& s);
+    static std::pair<std::string, std::string> set_cmd_line_boost(const std::string& s);
 
     /**
      * @brief get a copy of the configuration as a map
