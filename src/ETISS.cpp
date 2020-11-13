@@ -699,7 +699,7 @@ void etiss_initialize(int argc, const char* argv[], bool forced = false)
         {
             if (!forced)
             {
-                etiss::log(etiss::WARNING, "Multiple calls to etiss::initialized");
+                etiss::log(etiss::WARNING, "Multiple calls to etiss::initialize");
             }
             else
             {
@@ -710,9 +710,9 @@ void etiss_initialize(int argc, const char* argv[], bool forced = false)
         {
             if (forced)
             {
-                etiss::log(etiss::WARNING, "etiss::initialized has not been called before using ETISS library "
-                                           "functions. Please add the line \'etiss::initialized(argc,argv);\' "
-                                           "at the beginning of \'int main(int argc,char**argv);\'");
+                etiss::log(etiss::WARNING, "etiss::initialize has not been called before using ETISS library "
+                                           "functions. Please add the line \'etiss::initialize(argc,argv);\' "
+                                           "at the beginning of \'int main(int argc, char**argv);\'");
             }
         }
         initialized_ = true;
