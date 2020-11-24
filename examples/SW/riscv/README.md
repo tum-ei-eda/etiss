@@ -8,7 +8,7 @@ project) for simple RISC-V software compilation
 In order to compile riscv software, the following requirements has to be
 met:
 
-  - A RISC-V toolchain is required for cross-compiling.
+  - A RISC-V toolchain is required for cross-compiling. (Recommended: https://www.sifive.com/software)
 
 ### RISC-V test cases
 
@@ -22,11 +22,14 @@ To compile the SW:
 	$ mkdir build && cd build
   # At EDA:
 	$ cmake ..
+	$ make
   # Otherwise:
-  $ cmake -DRISCV_ELF_GCC_PREFIX=path/to/toolchain -DRISCV_ELF_GCC_BASENAME=riscv64-unknown-elf ..
+	$ cmake -DRISCV_ELF_GCC_PREFIX=path/to/toolchain -DRISCV_ELF_GCC_BASENAME=riscv64-unknown-elf ..
 	$ make
 
 ### Instruction test software
+
+Note: This part is optional and not well maintained. First try a simulation with the riscv_example executable that was created with the commands above.
 
 In the folder `instr_tests/`, there are the test SWs which could be used
 to test ISA model instruction by instruction. These SWs originates from
@@ -48,7 +51,7 @@ Comment date: 15, Mar., 2018)
 
 # Building on Windows
 
-Get a RISC-V toolchain. Recommended: https://www.sifive.com/boards (scroll down to toolchain downloads)
+Get a RISC-V toolchain. Recommended: https://www.sifive.com/software (scroll down to toolchain downloads)
 
 Get GNU Make for Windows: http://gnuwin32.sourceforge.net/packages/make.htm
 
