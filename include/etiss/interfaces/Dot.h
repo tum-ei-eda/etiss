@@ -420,7 +420,7 @@ class VariableDependencyGraph
 
     std::unordered_set<std::pair<const void *, const void *>, std::hash<std::pair<const void *, const void *>>,
                        std::equal_to<std::pair<const void *, const void *>>,
-                       etiss::ObjectPool<std::pair<const void *const, const void *const>>>
+                       etiss::ObjectPool<std::pair<const void *, const void *>>>
         deps_;
 
   public:

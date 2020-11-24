@@ -49,7 +49,7 @@
         @detail
 
 */
-#include <malloc.h>
+#include <stdlib.h>
 
 #include "etiss/IntegratedLibrary/gdb/GDBServer.h"
 

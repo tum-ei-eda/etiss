@@ -362,16 +362,16 @@ void RISCVArch::initInstrSet(etiss::instr::ModedInstructionSet &mis) const
      /* Set default JIT Extensions. Read Parameters set from ETISS configuration and append with architecturally needed */
      std::string cfgPar = "";
      cfgPar = etiss::cfg().get<std::string>("JIT-External::Headers", ";");
-     etiss::cfg().set<std::string>("JIT-External::Headers", cfgPar + "etiss/jit/fpu/softfloat_orig.h;etiss/jit/fpu/libdbtrise_fp_funcs.h"); 
+     etiss::cfg().set<std::string>("JIT-External::Headers", cfgPar + "etiss/jit/libsoftfloat.h"); 
 
      cfgPar = etiss::cfg().get<std::string>("JIT-External::Libs", ";");
-     etiss::cfg().set<std::string>("JIT-External::Libs", cfgPar + "softfloat;dbtrise_fp_funcs");   
+     etiss::cfg().set<std::string>("JIT-External::Libs", cfgPar + "softfloat");   
      
      cfgPar = etiss::cfg().get<std::string>("JIT-External::HeaderPaths", ";");
-     etiss::cfg().set<std::string>("JIT-External::HeaderPaths", cfgPar + "/etiss/jit/fpu");
+     etiss::cfg().set<std::string>("JIT-External::HeaderPaths", cfgPar + "/etiss/jit");
      
      cfgPar = etiss::cfg().get<std::string>("JIT-External::LibPaths", ";");
-     etiss::cfg().set<std::string>("JIT-External::LibPaths", cfgPar + "/etiss/jit/fpu");   
+     etiss::cfg().set<std::string>("JIT-External::LibPaths", cfgPar + "/etiss/jit");   
 
     }    
     
@@ -404,6 +404,8 @@ void RISCVArch::initInstrSet(etiss::instr::ModedInstructionSet &mis) const
                 else if ((opRd & 0x3f) == 0x1f)
                     ic.instr_width_ = 48;
                 else if (((opRd & 0x1f) >= 0x3) && ((opRd & 0x1f) < 0x1f))
+                    ic.instr_width_ = 32;
+                else if(opRd == 0x7f) /* P-Extension instructions */
                     ic.instr_width_ = 32;
                 else if ((opRd & 0x3) != 0x3)
                     ic.instr_width_ = 16;
@@ -441,6 +443,11 @@ void RISCVArch::initInstrSet(etiss::instr::ModedInstructionSet &mis) const
             if ((((opRd & 0x1f) >= 0x3) || ((opRd & 0x1f) < 0x1f)) || (opRd == 0))
             {
                 ic.is_not_default_width_ = false;
+                break;
+            }
+            else if(opRd == 0x7f) /* P-Extension instructions */
+            {
+                updateRiscvInstrLength(ic, opRd);
                 break;
             }
             else

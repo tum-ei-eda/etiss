@@ -5,7 +5,7 @@ ETISS_DIR=@CMAKE_INSTALL_PREFIX@/
 
 
 # Clear tmp file
-DYN_INI=/tmp/etiss_dynamic.ini
+DYN_INI=$(mktemp /tmp/etiss_dynamic_XXXXXXXXXX.ini)
 echo "" > $DYN_INI
 
 
@@ -111,3 +111,6 @@ if [ "${USE_GDB}" -eq 1 ]; then
 else
     ${VP_EXE} ${ARGS} ${CMD_OPTIONS}
 fi
+
+rm $DYN_INI
+
