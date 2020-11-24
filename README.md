@@ -43,7 +43,7 @@ ETISS is supported on x86_64 Linux and Windows hosts. Tested compilers include G
 
 Packages for Ubuntu 18:
 
-    sudo apt-get install g++ libboost-system-dev libboost-filesystem-dev libboost-program-options-dev graphviz doxygen libtinfo-dev zlib1g-dev
+    sudo apt-get install g++ libboost-system-dev libboost-filesystem-dev libboost-program-options-dev graphviz doxygen libtinfo-dev zlib1g-dev texinfo
 
 ### Build and Installation
 
