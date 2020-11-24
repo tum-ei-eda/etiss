@@ -484,63 +484,72 @@ void etiss_loadIniConfigs()
             // check if cfg is already set
             if (etiss::cfg().isSet(iter_key.pItem))
             {
-                message << "    cfg already set. Overwriting it: ";
+                message << "    cfg already set on command line. ";
+                message << "    " << iter_key.pItem << "=";
+                const ::std::type_info& type = vm[std::string(iter_key.pItem)].value().type() ;
+                if (type == typeid(::std::string))
+                    message << vm[std::string(iter_key.pItem)].as<std::string>() << ",";
+                else if (type == typeid(int))
+                    message << vm[std::string(iter_key.pItem)].as<int>() << ",";
+                else if (type == typeid(bool))
+                    message << std::boolalpha << vm[std::string(iter_key.pItem)].as<bool>() << ",";
                 warning = true;
             }
-
-            // write key (=option) to message.
-            message << "    " << iter_key.pItem << "=";
-
-            // get all values of a key with multiple values
-            CSimpleIniA::TNamesDepend values;
-            po_simpleIni->GetAllValues(iter_section.pItem, iter_key.pItem, values);
-            for (auto iter_value : values)
+            else
             {
-                // Handle configurations
-                if (std::string(iter_section.pItem) == "StringConfigurations")
+                // write key (=option) to message.
+                message << "    " << iter_key.pItem << "=";
+
+                // get all values of a key with multiple values
+                CSimpleIniA::TNamesDepend values;
+                po_simpleIni->GetAllValues(iter_section.pItem, iter_key.pItem, values);
+                for (auto iter_value : values)
                 {
-                    etiss::cfg().set<std::string>(iter_key.pItem, iter_value.pItem);
+                    // Handle configurations
+                    if (std::string(iter_section.pItem) == "StringConfigurations")
+                    {
+                        etiss::cfg().set<std::string>(iter_key.pItem, iter_value.pItem);
+                    }
+                    else if (std::string(iter_section.pItem) == "BoolConfigurations")
+                    {
+                        etiss::cfg().set<bool>(iter_key.pItem,
+                                            po_simpleIni->GetBoolValue(iter_section.pItem, iter_key.pItem));
+                    }
+                    else if (std::string(iter_section.pItem) == "IntConfigurations") // already load!
+                    {
+                        etiss::cfg().set<long long>(iter_key.pItem,
+                                                    po_simpleIni->GetDoubleValue(iter_section.pItem, iter_key.pItem));
+                        // we use double, as long could have only 32 Bit (e.g. on Windows)
+                        // and long long is not offered by the ini library
+                    }
+                    else
+                    // we don't add a DoubleConfigurations section, as converting them
+                    // to and from strings could provoke accuracy issues.
+                    // To support double, a Configuration::get<double>() has to be
+                    // added to Misc.cpp
+                    {
+                        message << "   Section not found  for Value:";
+                        warning = true;
+                    }
+
+                    // write item (=option value) to message.
+                    message << iter_value.pItem << ",";
                 }
-                else if (std::string(iter_section.pItem) == "BoolConfigurations")
+
+                // check if more than one value is set in the ini file
+                if (values.size() > 1)
                 {
-                    etiss::cfg().set<bool>(iter_key.pItem,
-                                           po_simpleIni->GetBoolValue(iter_section.pItem, iter_key.pItem));
-                }
-                else if (std::string(iter_section.pItem) == "IntConfigurations") // already load!
-                {
-                    etiss::cfg().set<long long>(iter_key.pItem,
-                                                po_simpleIni->GetDoubleValue(iter_section.pItem, iter_key.pItem));
-                    // we use double, as long could have only 32 Bit (e.g. on Windows)
-                    // and long long is not offered by the ini library
-                }
-                else
-                // we don't add a DoubleConfigurations section, as converting them
-                // to and from strings could provoke accuracy issues.
-                // To support double, a Configuration::get<double>() has to be
-                // added to Misc.cpp
-                {
-                    message << "   Section not found  for Value:";
                     warning = true;
-                }
-
-                // write item (=option value) to message.
-                message << iter_value.pItem << ",";
-            }
-
-            // check if more than one value is set in the ini file
-            if (values.size() > 1)
-            {
-                warning = true;
-                if (std::string{ iter_section.pItem } == "StringConfigurations")
-                {
-                    message << "   Multi values. Take only LAST one!";
-                }
-                else
-                {
-                    message << "   Multi values. Take only FIRST one!";
+                    if (std::string{ iter_section.pItem } == "StringConfigurations")
+                    {
+                        message << "   Multi values. Take only LAST one!";
+                    }
+                    else
+                    {
+                        message << "   Multi values. Take only FIRST one!";
+                    }
                 }
             }
-
             // add message to etiss log.
             etiss::log(warning ? etiss::WARNING : etiss::INFO, message.str());
         }
@@ -587,7 +596,7 @@ void etiss::Initializer::loadIniPlugins(std::shared_ptr<etiss::CPUCore> cpu)
             continue;
         }
 
-        etiss::log(etiss::INFO, "  Adding Plugin " + pluginName);
+        etiss::log(etiss::INFO, "  Adding Plugin " + pluginName + "\n\n");
         std::map<std::string, std::string> options;
 
         // get all keys in a section = plugin option
@@ -603,18 +612,18 @@ void etiss::Initializer::loadIniPlugins(std::shared_ptr<etiss::CPUCore> cpu)
             if (cmdcheck)
             {
                 options[iter_key.pItem] = std::string(vm[std::string(iter_key.pItem)].as<std::string>());
-                std::cout<<"\n"<< iter_section.pItem <<"::"<<iter_key.pItem<< " written from command line.\n";
+                std::cout << iter_section.pItem << "::" << iter_key.pItem << " written from command line.\n";
                 etiss::log(etiss::INFO,
-                            "    options[" + std::string(iter_key.pItem) + "] = " + std::string(vm[std::string(iter_key.pItem)].as<std::string>()));
+                            "    options[" + std::string(iter_key.pItem) + "] = " + std::string(vm[std::string(iter_key.pItem)].as<std::string>()) + "\n\n");
             }
             else
             {
-                std::cout <<"\n"<< iter_section.pItem <<"::"<<iter_key.pItem<<" not set on the command line. Checking in .ini file.\n";
+                std::cout << iter_section.pItem << "::" << iter_key.pItem << " not set on the command line. Checking in .ini file.\n";
                 for (auto iter_value : values)
                 {
                     options[iter_key.pItem] = iter_value.pItem;
                     etiss::log(etiss::INFO,
-                            "    options[" + std::string(iter_key.pItem) + "] = " + std::string(iter_value.pItem));
+                            "    options[" + std::string(iter_key.pItem) + "] = " + std::string(iter_value.pItem) + "\n\n");
                 }
                 // check if more than one value is set in the ini file
                 if (values.size() > 1)
@@ -724,9 +733,31 @@ void etiss_initialize(int argc, const char* argv[], bool forced = false)
         {
             po::options_description desc("Allowed options");
             desc.add_options()
-            ("help", "produce a help message")
-            ("logaddr", po::value<std::string>(), "Plugin Logger option")
-            ("logmask", po::value<std::string>(), "Plugin Logger option")
+            ("help", "Produce a help message that lists all supported options.")
+            ("ignore_sr_iee", po::value<bool>(), "Ignore exception on OpenRISC. [bool]")
+            ("cleanup", po::value<bool>(), "Cleans up temporary files in GCCJIT. ")
+            ("verifyJIT", po::value<bool>(), "Run some basic checks to verify the functionality of the JIT engine.")
+            ("jit-debug", po::value<bool>(), "Causes the JIT Engines to compile in debug mode.")
+            ("ETISS::enable_dmi", po::value<bool>(), "Enables the Direct Memory Interface feature of SystemC to speed up memory accesses. This needs to be disabled for memory tracing.")
+            ("ETISS::log_pc", po::value<bool>(), "Enables logging of the program counter.")
+            ("logaddr", po::value<std::string>(), "Provides the compare address that is used to check for memory accesses that are redirected to the logger.")
+            ("logmask", po::value<std::string>(), "Provides the mask that is used to check for memory accesses that are redirected to the logger.")
+            ("ifStallCycles", po::value<int>(), "Add instruction stall cycles on OpenRISC.")
+            ("Translation::MaxBlockSize", po::value<int>(), "Sets maximum amount of instructions in a block.")
+            ("Arch::cpuCycleTime_ps", po::value<int>(), "Sets CPU cycles time on OpenRISC and ARM.")
+            ("ETISS::outputPathPrefix", po::value<std::string>(), "Path prefix to use when writing output files.")
+            ("sw_binary_ram", po::value<std::string>(), "Path to binary file to be loaded into RAM.")
+            ("sw_binary_rom", po::value<std::string>(), "Path to binary file to be loaded into ROM.")
+            ("logLevel", po::value<int>(), "Verbosity of logging output.")
+            ("DebugSystem::printDbusAccess", po::value<bool>(), "Traces accesses to the data bus.")
+            ("DebugSystem::printIbusAccess", po::value<bool>(), "Traces accesses to the instruction bus.")
+            ("DebugSystem::printDbgbusAccess", po::value<bool>(), "Traces accesses to the debug bus.")
+            ("DebugSystem::printToFile", po::value<bool>(), "Write all tracing to a file instead of the terminal. The file will be located at ETISS::outputPathPrefix.")
+            ("CPUArch", po::value<std::string>(), "The CPU Architecture to simulate.")
+            ("JIT-External::Headers", po::value<std::string>(), "List of semicolon-separated paths to headers for the JIT to include.")
+            ("JIT-External::Libs", po::value<std::string>(), "List of semicolon-separated library names for the JIT to link.")
+            ("JIT-External::HeaderPaths", po::value<std::string>(), "List of semicolon-separated headers paths for the JIT.")
+            ("JIT-External::LibPaths", po::value<std::string>(), "List of semicolon-separated library paths for the JIT.")
             ;
 
             po::command_line_parser parser{argc, argv};
@@ -738,8 +769,9 @@ void etiss_initialize(int argc, const char* argv[], bool forced = false)
 
             if (vm.count("help")) 
             {
-                std::cout << desc;
-                std::cout << "\nPlease begin all options with --\n";
+                std::cout << "\nPlease begin all options with --\n\n";
+                std::cout << desc << "\n";
+                etiss::log(etiss::FATALERROR, std::string("Please choose the right configurations from the list and re-run.\n"));
             }
 
             auto unregistered = po::collect_unrecognized(parsed_options.options, po::include_positional);
@@ -747,14 +779,39 @@ void etiss_initialize(int argc, const char* argv[], bool forced = false)
             {
                 if (iter_unreg.find("-i") != 0 )
                 {
-                    std::cout << "\nUnrecognised option "<< iter_unreg<< ".\n";
-                    std::cout << "Please use --help to list all recognised options. \n\n";
+                    etiss::log(etiss::FATALERROR, std::string("Unrecognised option ") + iter_unreg +
+                                               "\n\t Please use --help to list all recognised options. \n");
+                }
+            }
+
+            for (po::variables_map::iterator i = vm.begin() ; i != vm.end() ; ++ i)
+            {
+                const po::variable_value& v = i->second;
+                if (!v.empty())
+                {
+                    const ::std::type_info& type = v.value().type();
+                    if (type == typeid(::std::string))
+                    {
+                        const ::std::string& val = v.as<::std::string>() ;
+                        etiss::cfg().set<std::string>(std::string(i->first), val);
+                    }
+                    else if (type == typeid(int))
+                    {
+                        int val = v.as<int>();
+                        etiss::cfg().set<int>(std::string(i->first), val);
+                    }
+                    else if (type == typeid(bool))
+                    {
+                        bool val = v.as<bool>();
+                        etiss::cfg().set<bool>(std::string(i->first), val);
+                    }
                 }
             }
         }
         catch(std::exception& e) 
         {
-            std::cout << e.what() << "\n";
+            etiss::log(etiss::FATALERROR, std::string(e.what()) +
+                                               "\n\t Please use --help to list all recognised options. \n");
         }
     }
     etiss_loadIniConfigs();
