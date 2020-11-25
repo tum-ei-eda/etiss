@@ -79,6 +79,14 @@ namespace gdb
 class BreakpointDB
 {
   public:
+    enum BPType
+    {
+      BPTYPE_BREAK_MEM = 1,
+      BPTYPE_BREAK_HW = 2,
+      BPTYPE_WATCH_WRITE = 4,
+      BPTYPE_WATCH_READ = 8
+    };
+  public:
     BreakpointDB();
     inline bool isEmpty() { return instrbrkpt_ == 0; }
     inline etiss::uint32 get(etiss::uint64 addr)
@@ -166,6 +174,7 @@ class Server : public etiss::CoroutinePlugin, public etiss::TranslationPlugin, p
     bool status_pending_kill_;
     etiss::uint64 status_jumpaddr_;
     BreakpointDB breakpoints_;
+    BreakpointDB watchpoints_;
     unsigned execute_skip_count;
     unsigned execute_skip_index;
     unsigned minimal_pc_alignment;
