@@ -6,7 +6,7 @@
 
         Copyright 2018 Infineon Technologies AG
 
-        This file is part of ETISS tool, see <https://gitlab.lrz.de/de-tum-ei-eda-open/etiss>.
+        This file is part of ETISS tool, see <https://github.com/tum-ei-eda/etiss>.
 
         The initial version of this software has been created with the funding support by the German Federal
         Ministry of Education and Research (BMBF) in the project EffektiV under grant 01IS13022.
@@ -46,16 +46,16 @@ unsigned int isqrt2(int x) {
     if (x<0) return 0;
 
     bit = (unsigned int) 0x40000000;
-    rest = (unsigned int) x; 
+    rest = (unsigned int) x;
     root = 0;
 
     while (bit > 0)
     {
-	if (rest >= (bit | root)) 
+	if (rest >= (bit | root))
         {
 	    rest = rest - (bit | root);
             root = root >>1;
-            root = root | bit; 
+            root = root | bit;
         }
         else
         {
@@ -64,7 +64,7 @@ unsigned int isqrt2(int x) {
         bit = bit >> 2;
     }
     return root;
-} 
+}
 
 void test_qrt(volatile char* logger_addr){
 	int m1;
@@ -75,14 +75,14 @@ void test_qrt(volatile char* logger_addr){
 	if(isqrt2(m1) != 32){
     custom_print_string(logger_addr, "qrt1 failed: ");
 		custom_print_hex_int64(logger_addr, isqrt2(m1));
-    PRINT_CHAR(logger_addr, '\n'); 
+    PRINT_CHAR(logger_addr, '\n');
 	}else{
 		custom_print_string(logger_addr, "qrt1 success!\n");
 	}
 	if(isqrt2(m2) != 656){
 		custom_print_string(logger_addr, "qrt2 failed: ");
     custom_print_hex_int64(logger_addr, isqrt2(m2));
-    PRINT_CHAR(logger_addr, '\n'); 
+    PRINT_CHAR(logger_addr, '\n');
 	}else{
 		custom_print_string(logger_addr, "qrt2 success!\n");
 	}
@@ -90,32 +90,32 @@ void test_qrt(volatile char* logger_addr){
 }
 
 void test_mul(volatile char* logger_addr){
-	
+
 	int m1;
 	int m2;
-	
-	
-	
+
+
+
 	m1 = 3567;
 	m2 = 56454;
-	
+
 	if (m1 * m2 != 201371418){
 		custom_print_string(logger_addr, "mul1 failed: ");
     custom_print_hex_int64(logger_addr, m1 * m2);
     PRINT_CHAR(logger_addr, '\n');
-		
+
 	}else{
 		custom_print_string(logger_addr, "mul1 success!\n");
 	}
-	
+
 	m1 = 3567;
 	m2 = -56454;
-	
+
 	if (m1 * m2 != -201371418){
 		custom_print_string(logger_addr, "mul2 failed: ");
     custom_print_hex_int64(logger_addr, m1 * m2);
     PRINT_CHAR(logger_addr, '\n');
-		
+
 	}else{
 		custom_print_string(logger_addr, "mul2 success!\n");
 }
@@ -123,122 +123,122 @@ void test_mul(volatile char* logger_addr){
 }
 
 void test_div(volatile char* logger_addr){
-	
+
 	int m1;
 	int m2;
-	
-	
+
+
 	m1 = 201371418;
 	m2 = -56454;
-	
+
 	if (m1 / m2 != -3567){
 		custom_print_string(logger_addr, "div1 failed: ");
     custom_print_hex_int64(logger_addr, m1 / m2);
-    PRINT_CHAR(logger_addr, '\n'); 
-		
+    PRINT_CHAR(logger_addr, '\n');
+
 	}else{
 		custom_print_string(logger_addr, "div1 success!\n");
 	}
-	
+
 	m1 = 201371418;
 	m2 = 56454;
-	
+
 	if (m1 / 56454 != 3567){
 		custom_print_string(logger_addr, "div2 failed: ");
     custom_print_hex_int64(logger_addr, m1 / 56454);
     PRINT_CHAR(logger_addr, '\n');
-		
+
 	}else{
 		custom_print_string(logger_addr, "div2 success!\n");
 	}
 }
 
 void test_fmul(volatile char* logger_addr){
-	
+
 	float m1;
 	float m2;
-	
+
 	m1 = 3.4375;
 	m2 = 5.3125;
-	
+
 	if (m1 * m2 != 18.26171875f){
 		custom_print_string(logger_addr, "fmul1 failed: ");
     custom_print_float(logger_addr, m1 * m2);
     PRINT_CHAR(logger_addr, '\n');
-		
+
 	}else{
 		custom_print_string(logger_addr, "fmul1 success!\n");
 	}
-	
+
 	m1 = -3.4375;
 	m2 = 5.3125;
-	
+
 	if (m1 * m2 != -18.26171875f){
 		custom_print_string(logger_addr, "fmul2 failed: ");
     custom_print_float(logger_addr, m1 * m2);
     PRINT_CHAR(logger_addr, '\n');
-		
+
 	}else{
 		custom_print_string(logger_addr, "fmul2 success!\n");
 	}
-	
+
 }
 
 void test_fdiv(volatile char* logger_addr){
-	
+
 	float m1;
 	float m2;
-	
+
 	m1 = 4.153968;
 	m2 = 5.3256;
-	
+
 	if (m1 / m2 != 0.78f){
 		custom_print_string(logger_addr, "fdiv1 failed: ");
     custom_print_float(logger_addr, m1 / m2);
     PRINT_CHAR(logger_addr, '\n');
-		
+
 	}else{
 		custom_print_string(logger_addr, "fdiv1 success!\n");
 	}
-	
+
 	m1 = -4.153968;
 	m2 = 5.3256;
-	
+
 	if (m1 / m2 != -0.78f){
 		custom_print_string(logger_addr, "fdiv2 failed: ");
     custom_print_float(logger_addr, m1 / m2);
     PRINT_CHAR(logger_addr, '\n');
-		
+
 	}else{
 		custom_print_string(logger_addr, "fdiv2 success!\n");
 	}
 
 	m1 = 8.470875;
 	m2 = 3.4575;
-	
+
 	if (m1 / m2 != 2.45f){
 		custom_print_string(logger_addr, "fdiv3 failed: ");
     custom_print_float(logger_addr, m1 / m2);
     PRINT_CHAR(logger_addr, '\n');
-		
+
 	}else{
 		custom_print_string(logger_addr, "fdiv3 success!\n");
 	}
 }
 
 void test_shift(volatile char* logger_addr){
-	
+
 	int m1;
 	int m2;
-	
+
 	m1 = 3;
 	m2 = 5;
-	
+
 	if (((m1 << m2)>>6) != 1){
 		custom_print_string(logger_addr, "shift failed: ");
     custom_print_hex_int64(logger_addr, ((m1 << m2)>>6));
     PRINT_CHAR(logger_addr, '\n');
-		
+
 	}else{
 		custom_print_string(logger_addr, "shift success!\n");
 	}

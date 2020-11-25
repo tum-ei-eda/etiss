@@ -6,7 +6,7 @@
 
         Copyright 2018 Infineon Technologies AG
 
-        This file is part of ETISS tool, see <https://gitlab.lrz.de/de-tum-ei-eda-open/etiss>.
+        This file is part of ETISS tool, see <https://github.com/tum-ei-eda/etiss>.
 
         The initial version of this software has been created with the funding support by the German Federal
         Ministry of Education and Research (BMBF) in the project EffektiV under grant 01IS13022.
@@ -74,6 +74,7 @@ int main(int argc, const char *argv[])
     std::cout << "=== Setting up test system ===" << std::endl;
     std::cout << "  Setting up Memory" << std::endl;
     etiss::DebugSystem dsys(0x0, 0x80000, 0x80000, 0x80000);
+    //etiss::DebugSystem dsys(0x0, 0x100000, 0x100000, 0x200000);
     // load image to memory
     //  if(!dsys.load(0,etiss::cfg().get<std::string>("sw_binary","").c_str())){
     //    etiss::log(etiss::FATALERROR,"Could not load image file "
