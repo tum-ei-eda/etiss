@@ -59,6 +59,10 @@
 #include <fstream>
 #include <functional>
 
+#include <boost/program_options/options_description.hpp>
+#include <boost/program_options/parsers.hpp>
+#include <boost/program_options/variables_map.hpp>
+
 #if ETISS_USE_DLSYM
 #include <dlfcn.h>
 #endif
@@ -556,11 +560,9 @@ void etiss_loadIniConfigs()
     }
 }
 
-bool set_cmd_check(std::string cmdlineoption)
+static bool set_cmd_check(std::string cmdlineoption)
 {
-    if (vm.find(cmdlineoption) != vm.end())
-        return true;
-    return false;
+    return (vm.find(cmdlineoption) != vm.end());
 }
 
 void etiss::Initializer::loadIniPlugins(std::shared_ptr<etiss::CPUCore> cpu)
