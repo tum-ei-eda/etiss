@@ -10,9 +10,9 @@ jobs:
     strategy:
       matrix:
         config:
-          - {name: "Linux", os: ubuntu-latest, cmakegen: "", tc: "riscv64-unknown-elf-gcc-8.3.0-2020.04.0-x86_64-linux-ubuntu14", tc-ext: ".tar.gz", unpack: "tar xf"}
-          - {name: "Windows", os: windows-latest, cmakegen: "-G \"MinGW Makefiles\"", tc: "riscv64-unknown-elf-gcc-8.3.0-2020.04.0-x86_64-w64-mingw32", tc-ext: ".zip", unpack: "unzip"}
-          - {name: "Mac", os: macOS-latest, cmakegen: "", tc: "riscv64-unknown-elf-gcc-8.3.0-2020.04.0-x86_64-apple-darwin", tc-ext: ".tar.gz", unpack: "tar xf"}
+          - {name: "Linux", os: ubuntu-latest, cmakegen: "", jit: "clang+llvm-10.0.0-x86_64-linux-gnu-ubuntu-18.04", jit-ext: ".tar.xz", tc: "riscv64-unknown-elf-gcc-8.3.0-2020.04.0-x86_64-linux-ubuntu14", tc-ext: ".tar.gz", unpack: "tar xf"}
+          - {name: "Windows", os: windows-latest, cmakegen: "-G \"MinGW Makefiles\"", jit: "LLVM-10.0.0-win64", jit-ext: ".exe", tc: "riscv64-unknown-elf-gcc-8.3.0-2020.04.0-x86_64-w64-mingw32", tc-ext: ".zip", unpack: "unzip"}
+          - {name: "Mac", os: macOS-latest, cmakegen: "", jit: "clang+llvm-10.0.0-x86_64-apple-darwin", jit-ext: ".tar.xz", tc: "riscv64-unknown-elf-gcc-8.3.0-2020.04.0-x86_64-apple-darwin", tc-ext: ".tar.gz", unpack: "tar xf"}
 
     runs-on: ${{ matrix.config.os }}
     name: ${{ matrix.config.name }}
@@ -44,6 +44,10 @@ jobs:
         wget https://static.dev.sifive.com/dev-tools/${{ matrix.config.tc }}${{ matrix.config.tc-ext }}
         ${{ matrix.config.unpack }} ${{ matrix.config.tc }}${{ matrix.config.tc-ext }}
         mv ${{ matrix.config.tc }} riscv-tc
+
+        wget https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.0/${{ matrix.config.jit }}${{ matrix.config.jit-ext }}
+        ${{ matrix.config.unpack }} ${{ matrix.config.jit }}${{ matrix.config.jit-ext }}
+        mv ${{ matrix.config.jit }} llvm-jit
 
     - name: Create Build Environment
       run: cmake -E make_directory ${{runner.workspace}}/build
@@ -89,5 +93,7 @@ jobs:
       run: |
         ./run_helper.sh ../SW/riscv/build/riscv_example
         ./run_helper.sh ../SW/riscv/build/riscv_example gcc
+        ./run_helper.sh ../SW/riscv/build/riscv_example llvm
         ./run_helper.sh ../SW/riscv_cpp/build/riscv_example
         ./run_helper.sh ../SW/riscv_cpp/build/riscv_example gcc
+        ./run_helper.sh ../SW/riscv_cpp/build/riscv_example llvm
