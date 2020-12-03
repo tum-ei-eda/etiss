@@ -33,7 +33,7 @@ jobs:
         choco install wget unzip
 
     - name: Requirements (Mac)
-      if: matrix.config.name == 'Mac'
+      if: matrix.config.name == 'Mac' 
       run: |
         brew install boost coreutils
 
@@ -46,8 +46,10 @@ jobs:
         mv ${{ matrix.config.tc }} riscv-tc
 
         wget https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.0/${{ matrix.config.jit }}${{ matrix.config.jit-ext }}
+      if: matrix.config.name == 'Linux' || matrix.config.name == 'Mac'
+      run: |
         ${{ matrix.config.unpack }} ${{ matrix.config.jit }}${{ matrix.config.jit-ext }}
-        mv ${{ matrix.config.jit }} llvm-jit
+        mv ${{ matrix.config.tc }} llvm-jit
 
     - name: Create Build Environment
       run: cmake -E make_directory ${{runner.workspace}}/build
