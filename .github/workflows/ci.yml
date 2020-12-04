@@ -27,12 +27,13 @@ jobs:
 
     - name: Requirements (Windows)
       if: matrix.config.name == 'Windows'
+      working-directory: ${{runner.workspace}}
       shell: bash
       run: |
         choco install boost-msvc-14.1 --version=1.67.0
         choco install wget unzip
         wget https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.0/LLVM-10.0.0-win64.exe
-        LLVM-10.0.0-win64.exe /sp- /verysilent /suppressmsgboxes /norestart | more
+        LLVM-10.0.0-win64.exe /sp- /verysilent /suppressmsgboxes /norestart 
 
     - name: Requirements (Mac)
       if: matrix.config.name == 'Mac'
@@ -40,9 +41,9 @@ jobs:
         brew install boost coreutils
   
     - name: Requirements (Linux/Mac)
-      shell: bash
-      working-directory: ${{runner.workspace}}
       if: matrix.config.name == 'Linux' || matrix.config.name == 'Mac'
+      working-directory: ${{runner.workspace}}
+      shell: bash
       run: |
         wget https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.0/${{ matrix.config.jit }}${{ matrix.config.jit-ext }}
         ${{ matrix.config.unpack }} ${{ matrix.config.jit }}${{ matrix.config.jit-ext }}
