@@ -45,6 +45,8 @@ jobs:
       run: |
         wget https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.0/${{ matrix.config.jit }}${{ matrix.config.jit-ext }}
         ${{ matrix.config.unpack }} ${{ matrix.config.jit }}${{ matrix.config.jit-ext }}
+        mv ${{ matrix.config.jit }} llvm-jit
+        export LLVM_DIR=${{runner.workspace}}/llvm-jit
 
     - name: Requirements
       shell: bash
