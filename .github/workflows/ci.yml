@@ -31,11 +31,21 @@ jobs:
       run: |
         choco install boost-msvc-14.1 --version=1.67.0
         choco install wget unzip
+        wget https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.0/LLVM-10.0.0-win64.exe
+        LLVM-10.0.0-win64.exe /sp- /verysilent /suppressmsgboxes /norestart | more
 
     - name: Requirements (Mac)
-      if: matrix.config.name == 'Mac' 
+      if: matrix.config.name == 'Mac'
       run: |
         brew install boost coreutils
+  
+      - name: Requirements (Linux/Mac)
+      shell: bash
+      working-directory: ${{runner.workspace}}
+      if: matrix.config.name == 'Linux' || matrix.config.name == 'Mac'
+      run: |
+        wget https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.0/${{ matrix.config.jit }}${{ matrix.config.jit-ext }}
+        ${{ matrix.config.unpack }} ${{ matrix.config.jit }}${{ matrix.config.jit-ext }}
 
     - name: Requirements
       shell: bash
@@ -44,12 +54,6 @@ jobs:
         wget https://static.dev.sifive.com/dev-tools/${{ matrix.config.tc }}${{ matrix.config.tc-ext }}
         ${{ matrix.config.unpack }} ${{ matrix.config.tc }}${{ matrix.config.tc-ext }}
         mv ${{ matrix.config.tc }} riscv-tc
-
-        wget https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.0/${{ matrix.config.jit }}${{ matrix.config.jit-ext }}
-      if: matrix.config.name == 'Linux' || matrix.config.name == 'Mac'
-      run: |
-        ${{ matrix.config.unpack }} ${{ matrix.config.jit }}${{ matrix.config.jit-ext }}
-        mv ${{ matrix.config.tc }} llvm-jit
 
     - name: Create Build Environment
       run: cmake -E make_directory ${{runner.workspace}}/build
