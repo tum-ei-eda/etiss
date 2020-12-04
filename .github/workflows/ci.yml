@@ -39,7 +39,7 @@ jobs:
       run: |
         brew install boost coreutils
   
-      - name: Requirements (Linux/Mac)
+    - name: Requirements (Linux/Mac)
       shell: bash
       working-directory: ${{runner.workspace}}
       if: matrix.config.name == 'Linux' || matrix.config.name == 'Mac'
