@@ -27,13 +27,11 @@ jobs:
 
     - name: Requirements (Windows)
       if: matrix.config.name == 'Windows'
-      working-directory: ${{runner.workspace}}
       shell: bash
       run: |
         choco install boost-msvc-14.1 --version=1.67.0
         choco install wget unzip
-        wget https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.0/LLVM-10.0.0-win64.exe
-        LLVM-10.0.0-win64.exe /sp- /verysilent /suppressmsgboxes /norestart 
+        choco install llvm --version=10.0.0
 
     - name: Requirements (Mac)
       if: matrix.config.name == 'Mac'
