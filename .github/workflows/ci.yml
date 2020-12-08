@@ -10,9 +10,9 @@ jobs:
     strategy:
       matrix:
         config:
-          - {name: "Linux", os: ubuntu-latest, cmakegen: "", jit: "clang+llvm-10.0.0-x86_64-linux-gnu-ubuntu-18.04", jit-ext: ".tar.xz", tc: "riscv64-unknown-elf-gcc-8.3.0-2020.04.0-x86_64-linux-ubuntu14", tc-ext: ".tar.gz", unpack: "tar xf"}
-          - {name: "Windows", os: windows-latest, cmakegen: "-G \"MinGW Makefiles\"", jit: "LLVM-10.0.0-win64", jit-ext: ".exe", tc: "riscv64-unknown-elf-gcc-8.3.0-2020.04.0-x86_64-w64-mingw32", tc-ext: ".zip", unpack: "unzip"}
-          - {name: "Mac", os: macOS-latest, cmakegen: "", jit: "clang+llvm-10.0.0-x86_64-apple-darwin", jit-ext: ".tar.xz", tc: "riscv64-unknown-elf-gcc-8.3.0-2020.04.0-x86_64-apple-darwin", tc-ext: ".tar.gz", unpack: "tar xf"}
+          - {name: "Linux", os: ubuntu-latest, cmakegen: "", jit: "clang+llvm-7.0.0-x86_64-linux-gnu-ubuntu-16.04", jit-ext: ".tar.xz", tc: "riscv64-unknown-elf-gcc-8.3.0-2020.04.0-x86_64-linux-ubuntu14", tc-ext: ".tar.gz", unpack: "tar xf"}
+          - {name: "Windows", os: windows-latest, cmakegen: "-G \"MinGW Makefiles\"", jit: "LLVM-7.0.0-win64", jit-ext: "", tc: "riscv64-unknown-elf-gcc-8.3.0-2020.04.0-x86_64-w64-mingw32", tc-ext: ".zip", unpack: "unzip"}
+          - {name: "Mac", os: macOS-latest, cmakegen: "", jit: "clang+llvm-7.0.0-x86_64-apple-darwin", jit-ext: ".tar.xz", tc: "riscv64-unknown-elf-gcc-8.3.0-2020.04.0-x86_64-apple-darwin", tc-ext: ".tar.gz", unpack: "tar xf"}
 
     runs-on: ${{ matrix.config.os }}
     name: ${{ matrix.config.name }}
@@ -31,7 +31,8 @@ jobs:
       run: |
         choco install boost-msvc-14.1 --version=1.67.0
         choco install wget unzip
-        choco install llvm --version=10.0.0
+        choco install llvm --version=7.0.0
+        mv ${{ matrix.config.jit }} llvm-lib
 
     - name: Requirements (Mac)
       if: matrix.config.name == 'Mac'
@@ -42,12 +43,11 @@ jobs:
       if: matrix.config.name == 'Linux' || matrix.config.name == 'Mac'
       working-directory: ${{runner.workspace}}
       shell: bash
-      run: |
-        wget https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.0/${{ matrix.config.jit }}${{ matrix.config.jit-ext }}
+      run: | 
+        wget https://releases.llvm.org/7.0.0/${{ matrix.config.jit }}${{ matrix.config.jit-ext }}
         ${{ matrix.config.unpack }} ${{ matrix.config.jit }}${{ matrix.config.jit-ext }}
-        mv ${{ matrix.config.jit }} llvm-jit
-        export LLVM_DIR=${{runner.workspace}}/llvm-jit
-
+        mv ${{ matrix.config.jit }} llvm-lib
+        
     - name: Requirements
       shell: bash
       working-directory: ${{runner.workspace}}
@@ -62,7 +62,9 @@ jobs:
     - name: Configure CMake
       shell: bash
       working-directory: ${{runner.workspace}}/build
-      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_INSTALL_PREFIX=../install
+      run: |
+        export LLVM_DIR=${{runner.workspace}}/llvm-lib
+        cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_INSTALL_PREFIX=../install
 
     - name: Build
       working-directory: ${{runner.workspace}}/build
@@ -104,3 +106,21 @@ jobs:
         ./run_helper.sh ../SW/riscv_cpp/build/riscv_example
         ./run_helper.sh ../SW/riscv_cpp/build/riscv_example gcc
         ./run_helper.sh ../SW/riscv_cpp/build/riscv_example llvm
+      
+      name: Test (Windows)
+      working-directory: ${{runner.workspace}}/install/examples/bare_etiss_processor
+      if: matrix.config.name == 'Windows'
+      shell: bash
+      run: |
+        ETISS_DIR=@CMAKE_INSTALL_PREFIX@/
+        TARGETSW_PATH_ELF="../SW/riscv/build/riscv_example"
+        TARGET_ELFFILE=$(basename -- "$TARGETSW_PATH_ELF")
+        TARGET_ELFDIR=$(dirname -- "$TARGETSW_PATH_ELF")
+        TARGETNAME=$(echo "${TARGET_ELFFILE%.*}")
+        TARGETSW_PATH_ROM=$(realpath ${TARGET_ELFDIR}/${TARGETNAME}.rom)
+        TARGETSW_PATH_RAM=$(realpath ${TARGET_ELFDIR}/${TARGETNAME}.ram)
+        VP_EXE="${ETISS_DIR}/examples/bare_etiss_processor/build/main"
+        
+        --ETISS::enable_dmi=true
+        --ETISS::log_pc=false
+        --loglevel=4
