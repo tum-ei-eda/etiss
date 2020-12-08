@@ -106,21 +106,3 @@ jobs:
         ./run_helper.sh ../SW/riscv_cpp/build/riscv_example
         ./run_helper.sh ../SW/riscv_cpp/build/riscv_example gcc
         ./run_helper.sh ../SW/riscv_cpp/build/riscv_example llvm
-      
-      name: Test (Windows)
-      working-directory: ${{runner.workspace}}/install/examples/bare_etiss_processor
-      if: matrix.config.name == 'Windows'
-      shell: bash
-      run: |
-        ETISS_DIR=@CMAKE_INSTALL_PREFIX@/
-        TARGETSW_PATH_ELF="../SW/riscv/build/riscv_example"
-        TARGET_ELFFILE=$(basename -- "$TARGETSW_PATH_ELF")
-        TARGET_ELFDIR=$(dirname -- "$TARGETSW_PATH_ELF")
-        TARGETNAME=$(echo "${TARGET_ELFFILE%.*}")
-        TARGETSW_PATH_ROM=$(realpath ${TARGET_ELFDIR}/${TARGETNAME}.rom)
-        TARGETSW_PATH_RAM=$(realpath ${TARGET_ELFDIR}/${TARGETNAME}.ram)
-        VP_EXE="${ETISS_DIR}/examples/bare_etiss_processor/build/main"
-        
-        --ETISS::enable_dmi=true
-        --ETISS::log_pc=false
-        --loglevel=4
