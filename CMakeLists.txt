@@ -1,7 +1,7 @@
 #
 #	Copyright 2018 Infineon Technologies AG
 #
-#	This file is part of ETISS tool, see <https://gitlab.lrz.de/de-tum-ei-eda-open/etiss>
+#	This file is part of ETISS tool, see <https://github.com/tum-ei-eda/etiss>
 #
 #	The initial version of this software has been created with the funding support by the German Federal
 #	Ministry of Education and Research(BMBF) in the project EffektiV under grant 01IS13022.
@@ -308,7 +308,10 @@ ADD_LIBRARY(ETISS SHARED
     ${ETISS_SOURCE} ${ETISS_HEADER}
 )
 set_target_properties(ETISS PROPERTIES COMPILE_DEFINITIONS "ETISS_LIB_SHARED=1;ETISS_EXPORTS;ETISS_PLUGIN_EXPORTS")
-TARGET_LINK_LIBRARIES(ETISS PUBLIC ${Boost_LIBRARIES} Boost::boost Threads::Threads)
+TARGET_LINK_LIBRARIES(ETISS PUBLIC Boost::boost Threads::Threads)
+IF(UNIX)
+    TARGET_LINK_LIBRARIES(ETISS PUBLIC ${Boost_LIBRARIES})
+ENDIF()
 IF(WIN32)
     # Sadly CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS does not set -Wl,--export-all-symbols if gcc is sued
     IF(NOT CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")

@@ -6,7 +6,7 @@
 
         Copyright 2018 Infineon Technologies AG
 
-        This file is part of ETISS tool, see <https://gitlab.lrz.de/de-tum-ei-eda-open/etiss>.
+        This file is part of ETISS tool, see <https://github.com/tum-ei-eda/etiss>.
 
         The initial version of this software has been created with the funding support by the German Federal
         Ministry of Education and Research (BMBF) in the project EffektiV under grant 01IS13022.
@@ -151,7 +151,15 @@ void *LLVMJIT::translate(std::string code, std::set<std::string> headerpaths, st
 
     // compilation task
     std::vector<std::string> args;
-    args.push_back("-O3");
+    if (debug)
+    {
+        args.push_back("-g");
+        args.push_back("-O0");
+    }
+    else
+    {
+        args.push_back("-O3");
+    }
     args.push_back("-std=c99");
     args.push_back("-isystem" + etiss::jitFiles() + "/clang_stdlib");
     args.push_back("-isystem/usr/include");
