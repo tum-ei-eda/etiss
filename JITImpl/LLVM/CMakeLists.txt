@@ -84,19 +84,38 @@ IF(LLVM_FOUND)
         src/LLVMJIT.cpp
     )
     ETISSPlugin(${PROJECT_NAME})
-    TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC
-        clangFrontend
-        clangSerialization
-        clangDriver
-        clangCodeGen
-        clangParse
-        clangSema
-        clangAnalysis
-        clangEdit
-        clangAST
-        clangLex
-        clangBasic
-        ${LLVM_LIBS}
-    )
+    IF(UNIX OR WIN32 OR WIN64)
+        TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC
+            -Wl,--start-group
+            ${LLVM_LIBS}
+            clangFrontend
+            clangCodeGen
+            clangLex
+            clangSerialization
+            clangAST
+            clangBasic
+            clangSema
+            clangEdit
+            clangAnalysis
+            clangDriver
+            clangParse
+            -Wl,--end-group
+        )
+    ELSE()
+        TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC
+            clangFrontend
+            clangSerialization
+            clangDriver
+            clangCodeGen
+            clangParse
+            clangSema
+            clangAnalysis
+            clangEdit
+            clangAST
+            clangLex
+            clangBasic
+            ${LLVM_LIBS}
+        )
+    ENDIF()
     TARGET_INCLUDE_DIRECTORIES(${PROJECT_NAME} PUBLIC include ${LLVM_INCLUDE_DIRS})
 ENDIF()

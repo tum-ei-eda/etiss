@@ -32,12 +32,14 @@ jobs:
         choco install boost-msvc-14.1 --version=1.67.0
         choco install wget unzip
         choco install llvm --version=7.0.0
-        mv ${{ matrix.config.jit }}${{ matrix.config.jit-ext }} llvm-lib
+        mv C:\Users\..\..\..\..\chocolatey\llvm\7.0.0\LLVM-7.0.0-win64.exe llvm-lib
 
     - name: Requirements (Mac)
       if: matrix.config.name == 'Mac'
       run: |
         brew install boost coreutils
+        xcode-select --install
+        open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg
   
     - name: Requirements (Linux/Mac)
       if: matrix.config.name == 'Linux' || matrix.config.name == 'Mac'
