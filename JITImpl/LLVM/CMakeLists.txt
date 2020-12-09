@@ -85,20 +85,18 @@ IF(LLVM_FOUND)
     )
     ETISSPlugin(${PROJECT_NAME})
     TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC
-        -Wl,--start-group
-        ${LLVM_LIBS}
         clangFrontend
-        clangCodeGen
-        clangLex
         clangSerialization
-        clangAST
-        clangBasic
-        clangSema
-        clangEdit
-        clangAnalysis
         clangDriver
+        clangCodeGen
         clangParse
-        -Wl,--end-group
+        clangSema
+        clangAnalysis
+        clangEdit
+        clangAST
+        clangLex
+        clangBasic
+        ${LLVM_LIBS}
     )
     TARGET_INCLUDE_DIRECTORIES(${PROJECT_NAME} PUBLIC include ${LLVM_INCLUDE_DIRS})
 ENDIF()
