@@ -84,7 +84,7 @@ IF(LLVM_FOUND)
         src/LLVMJIT.cpp
     )
     ETISSPlugin(${PROJECT_NAME})
-    IF(UNIX OR WIN32 OR WIN64)
+    IF(UNIX OR WIN32)
         TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC
             -Wl,--start-group
             ${LLVM_LIBS}

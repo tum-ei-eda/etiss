@@ -38,7 +38,6 @@ jobs:
       if: matrix.config.name == 'Mac'
       run: |
         brew install boost coreutils
-        xcode-select --install
         open /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg
   
     - name: Requirements (Linux/Mac)
