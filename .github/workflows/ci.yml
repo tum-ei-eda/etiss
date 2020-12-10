@@ -39,7 +39,7 @@ jobs:
       if: matrix.config.name == 'Mac'
       run: |
         brew install boost coreutils
-        PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
+        sudo installer -pkg /Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg -target /
   
     - name: Requirements (Linux/Mac)
       if: matrix.config.name == 'Linux' || matrix.config.name == 'Mac'
@@ -61,20 +61,11 @@ jobs:
     - name: Create Build Environment
       run: cmake -E make_directory ${{runner.workspace}}/build
 
-    - name: Configure CMake (Linux/Mac)
-      if: matrix.config.name == 'Linux' || matrix.config.name == 'Mac'
+    - name: Configure CMake
       shell: bash
       working-directory: ${{runner.workspace}}/build
       run: |
         export LLVM_DIR=${{runner.workspace}}/llvm-lib
-        cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_INSTALL_PREFIX=../install
-    
-    - name: Configure CMake (Windows)
-      if: matrix.config.name == 'Windows'
-      shell: bash
-      working-directory: ${{runner.workspace}}/build
-      run: |
-        export LLVM_DIR=llvm-lib
         cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_INSTALL_PREFIX=../install
 
     - name: Build
