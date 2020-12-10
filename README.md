@@ -42,6 +42,10 @@ Packages for Ubuntu 18:
 
     sudo apt-get install g++ libboost-system-dev libboost-filesystem-dev libboost-program-options-dev graphviz doxygen libtinfo-dev zlib1g-dev texinfo
 
+If LLVM-JIT is used:
+
+	sudo apt-get install gcc-multilib
+
 ### Build and Installation
 
 Follow these instructions to quickly build ETISS. Start in the root directory of ETISS by creating a build directory:
