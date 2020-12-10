@@ -41,7 +41,6 @@ jobs:
         brew install boost coreutils
         sudo rm -rf /Library/Developer/CommandLineTools
         xcode-select --install
-        cd /Library/Developer/CommandLineTools/Packages/
         open macOS_SDK_headers_for_macOS_10.14.pkg
   
     - name: Requirements (Linux/Mac)
