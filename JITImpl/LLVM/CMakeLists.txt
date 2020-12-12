@@ -84,38 +84,19 @@ IF(LLVM_FOUND)
         src/LLVMJIT.cpp
     )
     ETISSPlugin(${PROJECT_NAME})
-    if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-        TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC
-            clangFrontend
-            clangSerialization
-            clangDriver
-            clangCodeGen
-            clangParse
-            clangSema
-            clangAnalysis
-            clangEdit
-            clangAST
-            clangLex
-            clangBasic
-            ${LLVM_LIBS}
+    TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC
+        clangCodeGen
+        clangFrontend
+        clangSerialization
+        clangDriver
+        clangParse
+        clangSema
+        clangAnalysis
+        clangEdit
+        clangAST
+        clangLex
+        clangBasic
+        ${LLVM_LIBS}
         )
-    ELSE()
-        TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC
-            -Wl,--start-group
-            ${LLVM_LIBS}
-            clangFrontend
-            clangCodeGen
-            clangLex
-            clangSerialization
-            clangAST
-            clangBasic
-            clangSema
-            clangEdit
-            clangAnalysis
-            clangDriver
-            clangParse
-            -Wl,--end-group
-        )
-    ENDIF()
     TARGET_INCLUDE_DIRECTORIES(${PROJECT_NAME} PUBLIC include ${LLVM_INCLUDE_DIRS})
 ENDIF()
