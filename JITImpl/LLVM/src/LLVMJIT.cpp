@@ -163,6 +163,7 @@ void *LLVMJIT::translate(std::string code, std::set<std::string> headerpaths, st
     args.push_back("-std=c99");
     args.push_back("-isystem" + etiss::jitFiles() + "/clang_stdlib");
     args.push_back("-isystem/usr/include");
+    args.push_back("-isystem/usr/include/x86_64-linux-gnu");
     for (const auto &headerPath : headerpaths)
     {
         args.push_back("-I" + headerPath);
