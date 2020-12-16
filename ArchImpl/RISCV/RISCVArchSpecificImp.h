@@ -6,7 +6,7 @@
 
         Copyright 2018 Chair of Electronic Design Automation, TUM
 
-        This file is part of ETISS tool, see <https://gitlab.lrz.de/de-tum-ei-eda-open/etiss>.
+        This file is part of ETISS tool, see <https://github.com/tum-ei-eda/etiss>.
 
         The initial version of this software has been created with the funding support by the German Federal
         Ministry of Education and Research (BMBF) in the project EffektiV under grant 01IS13022.
@@ -362,19 +362,19 @@ void RISCVArch::initInstrSet(etiss::instr::ModedInstructionSet &mis) const
      /* Set default JIT Extensions. Read Parameters set from ETISS configuration and append with architecturally needed */
      std::string cfgPar = "";
      cfgPar = etiss::cfg().get<std::string>("JIT-External::Headers", ";");
-     etiss::cfg().set<std::string>("JIT-External::Headers", cfgPar + "etiss/jit/libsoftfloat.h"); 
+     etiss::cfg().set<std::string>("JIT-External::Headers", cfgPar + "etiss/jit/libsoftfloat.h");
 
      cfgPar = etiss::cfg().get<std::string>("JIT-External::Libs", ";");
-     etiss::cfg().set<std::string>("JIT-External::Libs", cfgPar + "softfloat");   
-     
+     etiss::cfg().set<std::string>("JIT-External::Libs", cfgPar + "softfloat");
+
      cfgPar = etiss::cfg().get<std::string>("JIT-External::HeaderPaths", ";");
      etiss::cfg().set<std::string>("JIT-External::HeaderPaths", cfgPar + "/etiss/jit");
-     
-     cfgPar = etiss::cfg().get<std::string>("JIT-External::LibPaths", ";");
-     etiss::cfg().set<std::string>("JIT-External::LibPaths", cfgPar + "/etiss/jit");   
 
-    }    
-    
+     cfgPar = etiss::cfg().get<std::string>("JIT-External::LibPaths", ";");
+     etiss::cfg().set<std::string>("JIT-External::LibPaths", cfgPar + "/etiss/jit");
+
+    }
+
     {
         // Pre-compilation of instruction set to view instruction tree. Could be disabled.
         etiss::instr::ModedInstructionSet iset("RISCVISA");
