@@ -645,6 +645,16 @@ void etiss::Initializer::loadIniJIT(std::shared_ptr<etiss::CPUCore> cpu)
         return;
     }
 
+    // check if JIT is set on command line
+    bool jitcheck;
+    jitcheck = set_cmd_check(std::string("JIT_Type"));
+    if (jitcheck)
+    {
+        std::string jitName = std::string(vm[std::string("JIT_Type")].as<std::string>());
+        etiss::log(etiss::INFO, " Adding JIT \"" + std::string(jitName) + '\"');
+        cpu->set(getJIT(jitName));
+    }
+
     // get all sections
     CSimpleIniA::TNamesDepend sections;
     po_simpleIni->GetAllSections(sections);
@@ -756,6 +766,7 @@ void etiss_initialize(int argc, const char* argv[], bool forced = false)
             ("DebugSystem::printDbgbusAccess", po::value<bool>(), "Traces accesses to the debug bus.")
             ("DebugSystem::printToFile", po::value<bool>(), "Write all tracing to a file instead of the terminal. The file will be located at ETISS::outputPathPrefix.")
             ("CPUArch", po::value<std::string>(), "The CPU Architecture to simulate.")
+            ("JIT_Type", po::value<std::string>(), "The JIT compiler to use.")
             ("JIT-External::Headers", po::value<std::string>(), "List of semicolon-separated paths to headers for the JIT to include.")
             ("JIT-External::Libs", po::value<std::string>(), "List of semicolon-separated library names for the JIT to link.")
             ("JIT-External::HeaderPaths", po::value<std::string>(), "List of semicolon-separated headers paths for the JIT.")
