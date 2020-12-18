@@ -6,7 +6,7 @@
 
         Copyright 2018 Chair of Electronic Design Automation, TUM
 
-        This file is part of ETISS tool, see <https://gitlab.lrz.de/de-tum-ei-eda-open/etiss>.
+        This file is part of ETISS tool, see <https://github.com/tum-ei-eda/etiss>.
 
         The initial version of this software has been created with the funding support by the German Federal
         Ministry of Education and Research (BMBF) in the project EffektiV under grant 01IS13022.
@@ -197,7 +197,7 @@ etiss::int32 RISCV64Timer::execute()
     }
     else if (mtime_ >= mtimecmp_ || (!mtimecmp_overflow_ && mtime_overflow_))
     {
-        *(riscv64cpu->MIP) |= MIP_MTIP;
+        (riscv64cpu->CSR[CSR_MIP]) |= MIP_MTIP;
 
         if (mtimecmp_overflow_)
         {

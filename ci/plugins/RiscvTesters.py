@@ -2,7 +2,7 @@
 #
 #	Copyright 2018 Infineon Technologies AG
 #
-#	This file is part of ETISS tool, see <https://gitlab.lrz.de/de-tum-ei-eda-open/etiss>
+#	This file is part of ETISS tool, see <https://github.com/tum-ei-eda/etiss>
 #
 #	The initial version of this software has been created with the funding support by the German Federal
 #	Ministry of Education and Research(BMBF) in the project EffektiV under grant 01IS13022.
@@ -44,7 +44,7 @@ from testScript import generateJITScript
 
 """ RISCV testers plugin creation interface
 
-	The plugin creation interface is transparent for PluginLoader, a loader 
+	The plugin creation interface is transparent for PluginLoader, a loader
 	should be registered in PluginLoader in order to create plugin
 """
 
@@ -87,7 +87,7 @@ def createPlugin(index, **kwargs):
 if __name__ == '__main__':
 	logger = lg.createLogger("RiscvArchTesterLogger", debug = True)
 	testers  = []
-	for i in range(0, countPlugins()):	
+	for i in range(0, countPlugins()):
 		testers.append(createPlugin(i))
 	for t in testers:
 		if t:

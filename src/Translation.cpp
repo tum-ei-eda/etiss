@@ -6,7 +6,7 @@
 
         Copyright 2018 Infineon Technologies AG
 
-        This file is part of ETISS tool, see <https://gitlab.lrz.de/de-tum-ei-eda-open/etiss>.
+        This file is part of ETISS tool, see <https://github.com/tum-ei-eda/etiss>.
 
         The initial version of this software has been created with the funding support by the German Federal
         Ministry of Education and Research (BMBF) in the project EffektiV under grant 01IS13022.
@@ -320,7 +320,13 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
     CodeBlock block(instructionindex);
     block.fileglobalCode().insert("#include \"etiss/jit/CPU.h\"\n"
                                   "#include \"etiss/jit/System.h\"\n"
+                                  "#include \"etiss/jit/libresources.h\"\n"
                                   "#include \"etiss/jit/ReturnCode.h\"\n");
+
+    for(auto &it: jitExtHeaders()){
+        if(it != "") block.fileglobalCode().insert("#include \"" + it + "\"\n");
+    }
+
     block.functionglobalCode().insert("if (cpu->mode != " + toString(cpu_.mode) +
                                       ") return ETISS_RETURNCODE_RELOADCURRENTBLOCK;");
 
@@ -347,12 +353,26 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
     std::set<std::string> headers;
     headers.insert(etiss::jitFiles());
     headers.insert(arch_->getIncludePath());
+    for(auto & it: jitExtHeaderPaths()){
+       if(it != "") headers.insert(it);
+    }
+
     std::set<std::string> libloc;
     libloc.insert(arch_->getIncludePath());
     libloc.insert(etiss::cfg().get<std::string>("etiss_path", "./"));
     libloc.insert(etiss::jitFiles());
+    libloc.insert(etiss::jitFiles() + "/etiss/jit");
+    for(auto & it: jitExtLibPaths()){
+       if(it != "") libloc.insert(etiss::jitFiles() + it);
+    }
+
     std::set<std::string> libs;
     //libs.insert("ETISS");
+    libs.insert("resources");
+    for(auto & it: jitExtLibraries()){
+       if(it != "") libs.insert(it);
+    }
+
     /* DEBUG HELPER: write code files to work directory
     {
             static unsigned count = 0;

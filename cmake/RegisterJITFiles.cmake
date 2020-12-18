@@ -5,8 +5,8 @@ MACRO(RegisterJITFiles Files)
         LIST(GET FilePair 0 TargetFile)
         LIST(GET FilePair -1 ExistingFile)
         GET_FILENAME_COMPONENT(TargetPath ${TargetFile} DIRECTORY)
-        INSTALL(FILES "${ExistingFile}" DESTINATION "include/jit/${TargetPath}")
-
+        GET_FILENAME_COMPONENT(TargetFile ${TargetFile} NAME)
+        INSTALL(FILES "${ExistingFile}" DESTINATION "include/jit/${TargetPath}" RENAME ${TargetFile})
 
         # mimicing installation in build tree as well
         # NOTE: pluginexport hasn't been generated yet so will be copied later

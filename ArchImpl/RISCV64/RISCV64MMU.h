@@ -6,7 +6,7 @@
 
         Copyright 2018 Chair of Electronic Design Automation, TUM
 
-        This file is part of ETISS tool, see <https://gitlab.lrz.de/de-tum-ei-eda-open/etiss>.
+        This file is part of ETISS tool, see <https://github.com/tum-ei-eda/etiss>.
 
         The initial version of this software has been created with the funding support by the German Federal
         Ministry of Education and Research (BMBF) in the project EffektiV under grant 01IS13022.
@@ -68,7 +68,7 @@ class RISCV64MMU : public etiss::mm::MMU
 
     void UpdatePTEFlags(PTE &pte, etiss::mm::MM_ACCESS access) {}
 
-    bool CheckPrivilegedMode() { return (((RISCV64 *)cpu_)->PRIVLV == PRV_M) ? false : true; }
+    bool CheckPrivilegedMode() { return (((RISCV64 *)cpu_)->CSR[3088] == PRV_M) ? false : true; }
 };
 
 #endif

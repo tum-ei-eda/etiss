@@ -115,7 +115,7 @@ MACRO(ADD_EXECUTABLE_PULPINO_INTERNAL TARGET_NAME ADD_PLATFORM_FILES)
         COMMAND ${CMAKE_OBJCOPY}
             ARGS -O binary ${TARGET_NAME} ${TARGET_NAME}.bin
         COMMAND ${DD_CMD}
-            ARGS bs=1 count=524288 if=${TARGET_NAME}.bin of=${TARGET_NAME}.rom
+            ARGS bs=1 count=${DD_ARG_SKIP} if=${TARGET_NAME}.bin of=${TARGET_NAME}.rom
         COMMAND ${DD_CMD}
             ARGS bs=1 skip=${DD_ARG_SKIP} if=${TARGET_NAME}.bin of=${TARGET_NAME}.ram
         WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}

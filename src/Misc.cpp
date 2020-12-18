@@ -6,7 +6,7 @@
 
         Copyright 2018 Infineon Technologies AG
 
-        This file is part of ETISS tool, see <https://gitlab.lrz.de/de-tum-ei-eda-open/etiss>.
+        This file is part of ETISS tool, see <https://github.com/tum-ei-eda/etiss>.
 
         The initial version of this software has been created with the funding support by the German Federal
         Ministry of Education and Research (BMBF) in the project EffektiV under grant 01IS13022.
@@ -58,6 +58,12 @@
 #include <iterator>
 #include <regex>
 #include <string>
+
+#include <boost/algorithm/string/classification.hpp>
+#include <boost/algorithm/string/split.hpp>
+#include <boost/program_options/options_description.hpp>
+#include <boost/program_options/parsers.hpp>
+#include <boost/program_options/variables_map.hpp>
 
 using namespace etiss;
 
@@ -379,6 +385,62 @@ bool etiss::Configuration::isSet(std::string key)
     return cfg_.find(key) != cfg_.end();
 }
 
+std::pair<std::string, std::string> etiss::Configuration::set_cmd_line_boost(const std::string& s)
+{
+    namespace po = boost::program_options;
+    etiss::Configuration sobj;
+    if (s.length() > 2)
+    {
+        if (s.find("-f") == 0) 
+        {
+            size_t epos = s.find_first_of('=');
+            if (s.length() > 5 && s.substr(2, 3) == "no-")
+            {
+                if (epos == std::string::npos)
+                {
+                    std::string tmp = s.substr(5);
+                    if (sobj.isSet(tmp))
+                        etiss::log(etiss::WARNING, "CONFIG " + tmp + " already set. Overwriting it to false.");
+                    etiss::log(etiss::VERBOSE, std::string("CONFIG: set ") + tmp + " to false");
+                    etiss::cfg().set<bool>(tmp, "false");
+                    return make_pair(tmp, std::string("false"));
+                }
+                else
+                { // unusual case. assuming option shall be erased. value after '=' is ignored
+                    std::string tmp = s.substr(5, epos - 5);
+                    sobj.remove(tmp);
+                    etiss::log(etiss::VERBOSE, std::string("CONFIG: removed ") + tmp);
+                    return make_pair(std::string(), std::string());
+                }
+            }   
+            else 
+            {
+                if (epos == std::string::npos)
+                {
+                    std::string tmp = s.substr(2);
+                    if (sobj.isSet(tmp))
+                        etiss::log(etiss::WARNING, "CONFIG " + tmp + " already set. Overwriting it to true.");
+                    etiss::log(etiss::VERBOSE, std::string("CONFIG: set ") + tmp + " to true");
+                    etiss::cfg().set<bool>(tmp, "true");
+                    return make_pair(s.substr(2), std::string("true"));
+                }
+                else
+                {
+                    std::string tmp = s.substr(2, epos - 2);
+                    std::string tval = s.substr(epos + 1);
+                    if (sobj.isSet(tmp))
+                        etiss::log(etiss::WARNING, "CONFIG " + tmp + " already set. Overwriting it to " + tval);
+                    etiss::log(etiss::VERBOSE, std::string("CONFIG: set ") + tmp + " to " + tval);
+                    return make_pair(s.substr(2), tval);
+                }
+                return make_pair(std::string(), std::string());
+            }  
+        }  
+    }
+    return make_pair(std::string(), std::string());
+}
+
+
 std::list<std::string> etiss::Configuration::set(const std::list<std::string> &args)
 {
     std::list<std::string> ret;
@@ -530,6 +592,34 @@ std::string etiss::installDir()
 std::string etiss::jitFiles()
 {
     return installDir() + "/include/jit";
+}
+
+std::vector<std::string> etiss::jitExtHeaders(){
+    std::vector<std::string> x;
+    std::string range = cfg().get<std::string>("JIT-External::Headers", "");
+    boost::split(x, range, boost::is_any_of(";, "));
+    return (x);
+}
+
+std::vector<std::string> etiss::jitExtLibraries(){
+    std::vector<std::string> x;
+    std::string range = cfg().get<std::string>("JIT-External::Libs", "");
+    boost::split(x, range, boost::is_any_of(";, "));
+    return (x);
+}
+
+std::vector<std::string> etiss::jitExtHeaderPaths(){
+    std::vector<std::string> x;
+    std::string range = cfg().get<std::string>("JIT-External::HeaderPaths", "");
+    boost::split(x, range, boost::is_any_of(";, "));
+    return (x);
+}
+
+std::vector<std::string> etiss::jitExtLibPaths(){
+    std::vector<std::string> x;
+    std::string range = cfg().get<std::string>("JIT-External::LibPaths", "");
+    boost::split(x, range, boost::is_any_of(";, "));
+    return (x);
 }
 
 // IMPORTANT: check if fpu configuration matches endianness

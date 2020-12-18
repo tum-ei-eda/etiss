@@ -1,7 +1,7 @@
 #
 #	Copyright 2018 Infineon Technologies AG
 #
-#	This file is part of ETISS tool, see <https://gitlab.lrz.de/de-tum-ei-eda-open/etiss>
+#	This file is part of ETISS tool, see <https://github.com/tum-ei-eda/etiss>
 #
 #	The initial version of this software has been created with the funding support by the German Federal
 #	Ministry of Education and Research(BMBF) in the project EffektiV under grant 01IS13022.
@@ -121,7 +121,7 @@ INCLUDE(ETISSPlugin)
 
 # Find packages
 FIND_PACKAGE(Threads REQUIRED)
-FIND_PACKAGE(Boost COMPONENTS filesystem system REQUIRED)
+FIND_PACKAGE(Boost COMPONENTS filesystem system program_options REQUIRED)
 FIND_PACKAGE(Doxygen)
 IF(ETISS_USE_PYTHON)
     SET(Boost_VERBOSE ON)
@@ -160,7 +160,7 @@ ELSE()
     SET(ETISS_USE_DLSYM ON)
     SET(ETISS_USE_DLSYM_DEEPBIND ON)
     SET(ETISS_USE_GETPROC OFF)
-    SET(ETISS_USE_BYTESWAP_H ON)
+    SET(ETISS_USE_BYTESWAP_H OFF)
     SET(ETISS_USE_POSIX_SOCKET ON)
     SET(ETISS_USE_DLADDR ON)
 
@@ -173,7 +173,7 @@ ELSE()
         ETISS_CAN_USE_DLSYM_DEEPBIND
     )
     IF(NOT ETISS_CAN_USE_DLSYM_DEEPBIND)
-        MESSAGE(FATAL_ERROR "Need RTLD_DEEPBIND on Linux")
+        #MESSAGE(FATAL_ERROR "Need RTLD_DEEPBIND on Linux")
     ENDIF()
     SET(CMAKE_REQUIRED_LIBRARIES dl)
     CHECK_CXX_SOURCE_COMPILES(
@@ -185,7 +185,7 @@ ELSE()
     ENDIF()
     CHECK_INCLUDE_FILES(byteswap.h ETISS_CAN_USE_BYTESWAP_H)
     IF(NOT ETISS_CAN_USE_BYTESWAP_H)
-        MESSAGE(FATAL_ERROR "Need byteswap on Linux")
+        #MESSAGE(FATAL_ERROR "Need byteswap on Linux")
     ENDIF()
     CHECK_INCLUDE_FILES("string.h;errno.h;sys/types.h;sys/socket.h;netinet/in.h;netinet/tcp.h;unistd.h" ETISS_CAN_USE_POSIX_SOCKET)
     IF(NOT ETISS_CAN_USE_POSIX_SOCKET)
@@ -320,7 +320,9 @@ set_target_properties(ETISS PROPERTIES
   COMPILE_DEFINITIONS "ETISS_LIB_SHARED=1;ETISS_EXPORTS;ETISS_PLUGIN_EXPORTS"
   LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib/
 )
-TARGET_LINK_LIBRARIES(ETISS PUBLIC ${Boost_LIBRARIES} Boost::boost Threads::Threads)
+IF(UNIX)
+    TARGET_LINK_LIBRARIES(ETISS PUBLIC ${Boost_LIBRARIES})
+ENDIF()
 IF(WIN32)
     # Sadly CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS does not set -Wl,--export-all-symbols if gcc is sued
     IF(NOT CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")

@@ -1,7 +1,7 @@
 #
 #	Copyright 2018 Infineon Technologies AG
 #
-#	This file is part of ETISS tool, see <https://gitlab.lrz.de/de-tum-ei-eda-open/etiss>
+#	This file is part of ETISS tool, see <https://github.com/tum-ei-eda/etiss>
 #
 #	The initial version of this software has been created with the funding support by the German Federal
 #	Ministry of Education and Research(BMBF) in the project EffektiV under grant 01IS13022.
@@ -67,14 +67,16 @@ if (NOT EXISTS ${PROJECT_BINARY_DIR}/tcc_${TCCJIT_ARCH})
         file(RENAME ${PROJECT_BINARY_DIR}/${TCC_PKG} ${PROJECT_BINARY_DIR}/tcc_unix)
         file(REMOVE ${PROJECT_BINARY_DIR}/${TCC_PKG}.tar.bz2)
         file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/tcc_unix/build)
-        execute_process(COMMAND ${PROJECT_BINARY_DIR}/tcc_unix/configure --extra-cflags=-fPIC
+        set(ENV{CFLAGS} "-fPIC -Og -g -Wall")
+        execute_process(COMMAND ${PROJECT_BINARY_DIR}/tcc_unix/configure
                 WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/tcc_unix/build)
+        unset(ENV{CFLAGS})
         execute_process(COMMAND make
                 WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/tcc_unix/build)
     elseif(${TCCJIT_ARCH} STREQUAL win64)
         if (EXISTS ${PROJECT_SOURCE_DIR}/${TCC_PKG}-win64-bin.tar.bz2)
             execute_process(COMMAND ${CMAKE_COMMAND} -E tar xzf ${PROJECT_SOURCE_DIR}/${TCC_PKG}-win64-bin.zip
-                    WORKING_DIRECTORY ${PROJECT_BINARY_DIR})      
+                    WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 			file(RENAME ${PROJECT_BINARY_DIR}/tcc ${PROJECT_BINARY_DIR}/tcc_win32)
 			file(REMOVE ${PROJECT_BINARY_DIR}/${TCC_PKG}-win32-bin.zip)
 		elseif(EXISTS ${PREBUILT_TOOL_PKGS_DIR}/${TCC_PKG}-win64-bin-with-import-lib.tar.bz2)
@@ -94,7 +96,7 @@ if (NOT EXISTS ${PROJECT_BINARY_DIR}/tcc_${TCCJIT_ARCH})
     elseif(${TCCJIT_ARCH} STREQUAL win32)
         if (EXISTS ${PROJECT_SOURCE_DIR}/${TCC_PKG}.tar.bz2)
             execute_process(COMMAND ${CMAKE_COMMAND} -E tar xzf ${PROJECT_SOURCE_DIR}/${TCC_PKG}-win32-bin.zip
-                    WORKING_DIRECTORY ${PROJECT_BINARY_DIR})      
+                    WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 			file(RENAME ${PROJECT_BINARY_DIR}/tcc ${PROJECT_BINARY_DIR}/tcc_win32)
 			file(REMOVE ${PROJECT_BINARY_DIR}/${TCC_PKG}-win32-bin.zip)
 		elseif(EXISTS ${PREBUILT_TOOL_PKGS_DIR}/${TCC_PKG}-win32-bin-with-import-lib.tar.bz2)
@@ -105,7 +107,7 @@ if (NOT EXISTS ${PROJECT_BINARY_DIR}/tcc_${TCCJIT_ARCH})
         else()
             file(DOWNLOAD http://download.savannah.gnu.org/releases/tinycc/${TCC_PKG}-win32-bin.zip ${PROJECT_BINARY_DIR}/${TCC_PKG}-win32-bin.zip SHOW_PROGRESS)
             execute_process(COMMAND ${CMAKE_COMMAND} -E tar xzf ${PROJECT_BINARY_DIR}/${TCC_PKG}-win32-bin.zip
-                    WORKING_DIRECTORY ${PROJECT_BINARY_DIR})       
+                    WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
 			file(RENAME ${PROJECT_BINARY_DIR}/tcc ${PROJECT_BINARY_DIR}/tcc_win32)
 			file(REMOVE ${PROJECT_BINARY_DIR}/${TCC_PKG}-win32-bin.zip)
         endif()
