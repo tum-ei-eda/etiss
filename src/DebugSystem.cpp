@@ -191,7 +191,7 @@ DebugSystem::DebugSystem(uint32_t rom_start, uint32_t rom_size, uint32_t ram_sta
     // mem = new etiss::uint8[DEBUGSYSTEM_MEMBLOCKSIZE*2];
     rom_mem_.resize(rom_size, 0);
     ram_mem_.resize(ram_size, 0);
-    
+    std::cout<<"Hey I m the wished constructor"<<std::endl;
     _print_ibus_access = etiss::cfg().get<bool>("DebugSystem::printIbusAccess", false);
     _print_dbus_access = etiss::cfg().get<bool>("DebugSystem::printDbusAccess", false);
     _print_dbgbus_access = etiss::cfg().get<bool>("DebugSystem::printDbgbusAccess", false);
@@ -212,6 +212,12 @@ DebugSystem::DebugSystem(void) :
   , rom_size_(0)
   , ram_size_(0) 
 {
+  std::cout<<"*****************"<<std::endl;
+  std::cout<<"im here"<<std::endl;
+  std::cout<<"ram_start"<< std::hex<<ram_start_<<std::endl;
+  std::cout<<"*************"<<std::endl;
+
+
  
   _print_ibus_access = etiss::cfg().get<bool>("DebugSystem::printIbusAccess", false);
   _print_dbus_access = etiss::cfg().get<bool>("DebugSystem::printDbusAccess", false);
@@ -270,24 +276,6 @@ etiss::int32 DebugSystem::dread(ETISS_CPU *, etiss::uint64 addr, etiss::uint8 *b
 {
   if (len > 0)
   {
-        // if (addr >= DEBUGSYSTEM_MEMBLOCKSIZE * 2 ||
-        //     addr + len > DEBUGSYSTEM_MEMBLOCKSIZE * 2) {
-        //   std::stringstream message;
-        //   message << "Failed to read data: 0x";
-        //   for (int i = 0; i < len; i++) {
-        //     message << std::setfill('0') << std::setw(2) << std::hex <<
-        //     (int)buf[i];
-        //   }
-        //   message << std::setfill(' ') << " from " << addr << "-" << addr + len -
-        //   1
-        //           << std::dec << std::endl;
-        //   printMessage("data read error", message.str(), message_max_cnt);
-        //   memset(buf, 0, len);
-        //   return RETURNCODE::IBUS_READ_ERROR;
-        // }
-        //
-        // memcpy(buf, mem + addr, len);
-
     int i_seg = 0;
     int n_segs = msegs_.size();
     size_t offset = 0;
@@ -331,67 +319,12 @@ etiss::int32 DebugSystem::dread(ETISS_CPU *, etiss::uint64 addr, etiss::uint8 *b
     }
     
   }
-//         if (addr >= rom_start_ && addr < rom_start_ + rom_mem_.size())
-//         {
-//             addr -= rom_start_;
-//             memcpy(buf, rom_mem_.data() + addr, len);
-//         }
-//         else if (addr >= ram_start_ && addr < ram_start_ + ram_mem_.size())
-//         {
-//             addr -= ram_start_;
-//             memcpy(buf, ram_mem_.data() + addr, len);
-// 
-//             if (_print_dbus_access)
-//             {
-//                 Trace(addr, len, false, _print_to_file, trace_file_dbus_);
-//             }
-//         }
-//         else
-//         {
-//             std::cout << std::hex << addr << std::dec << std::endl;
-//             etiss::log(etiss::ERROR, "wrong address issued in DebugSystem::dread\n");
-//             return RETURNCODE::DBUS_READ_ERROR;
-//         }
-//     }
-// #if ARMv6M_DEBUG_PRINT
-//     else
-//     {
-//         // std::cout << "debug print: " << std::hex << addr << std::endl;
-//     }
-// #endif
     
     return RETURNCODE::NOERROR;
 }
 
 etiss::int32 DebugSystem::dwrite(ETISS_CPU *, etiss::uint64 addr, etiss::uint8 *buf, etiss::uint32 len)
 {
-    // if (addr >= DEBUGSYSTEM_MEMBLOCKSIZE * 2 ||
-    //     addr + len > DEBUGSYSTEM_MEMBLOCKSIZE * 2) {
-    //   std::stringstream message;
-    //   message << "Failed to write data:0x";
-    //   for (int i = 0; i < len; i++) {
-    //     message << std::setfill('0') << std::setw(2) << std::hex <<
-    //     (int)buf[i];
-    //   }
-    //   message << std::setfill(' ') << " to " << addr << "-" << addr + len - 1
-    //           << std::dec << std::endl;
-    //   printMessage("data write error", message.str(), message_max_cnt);
-    //   return RETURNCODE::DBUS_WRITE_ERROR;
-    // }
-    // if ((addr > rom_start_ && addr < _rom_end) ||
-    //     (addr + len > rom_start_ && addr + len < _rom_end)) {
-    //   std::stringstream message;
-    //   message << "Denied ROM write access!";
-    //   for (int i = 0; i < len; i++) {
-    //     message << std::setfill('0') << std::setw(2) << std::hex <<
-    //     (int)buf[i];
-    //   }
-    //   message << std::setfill(' ') << " to " << addr << "-" << addr + len - 1
-    //           << std::dec << std::endl;
-    //   printMessage("data write error", message.str(), message_max_cnt);
-    //   return RETURNCODE::NOERROR;
-    // }
-
   int i_seg = 0;
   int n_segs = msegs_.size();
   size_t offset = 0;
@@ -425,64 +358,18 @@ etiss::int32 DebugSystem::dwrite(ETISS_CPU *, etiss::uint64 addr, etiss::uint8 *
         Trace(addr, len, true, _print_to_file, trace_file_dbus_);
       }
     } else {
+      std::cout << "ram_start: " <<std::hex << ram_start_ << std::dec << std::endl;
+      std::cout<< "ram size:" << ram_mem_.size() << std::dec << std::endl;
       std::cout << std::hex << addr << std::dec << std::endl;
       etiss::log(etiss::ERROR, "wrong address issued in DebugSystem::dwrite\n");
       return RETURNCODE::DBUS_READ_ERROR;
     }
   }
-//     if (addr >= ram_start_ && addr < ram_start_ + ram_mem_.size())
-//     {
-//         addr -= ram_start_;
-//         memcpy(ram_mem_.data() + addr, buf, len);
-// 
-//         if (_print_dbus_access)
-//         {
-//             Trace(addr, len, true, _print_to_file, trace_file_dbus_);
-//         }
-//     }
-//     else
-//     {
-//         std::cout << std::hex << addr << std::dec << std::endl;
-//         etiss::log(etiss::ERROR, "wrong address issued in DebugSystem::dwrite\n");
-//         return RETURNCODE::DBUS_WRITE_ERROR;
-//     }
     return RETURNCODE::NOERROR;
 }
 
 etiss::int32 DebugSystem::dbg_read(etiss::uint64 addr, etiss::uint8 *buf, etiss::uint32 len)
 {
-    // if (addr >= DEBUGSYSTEM_MEMBLOCKSIZE * 2 ||
-    //     addr + len > DEBUGSYSTEM_MEMBLOCKSIZE * 2) {
-    //   std::stringstream message;
-    //   message << "Failed to read debug data from 0x" << std::hex << addr << "-"
-    //           << addr + len - 1 << std::dec << std::endl;
-    //   printMessage("instr read error", message.str(), message_max_cnt);
-    //   memset(buf, 0, len);
-    //   return RETURNCODE::IBUS_READ_ERROR;
-    // }
-    //
-    // memcpy(buf, mem + addr, len);
-    //
-    // if (_print_dbgbus_access) {
-    //   std::stringstream text;
-    //   text << "read dbg:0x";
-    //   for (int i = 0; i < len; i++) {
-    //     text << std::setfill('0') << std::setw(2) << std::hex << (int)buf[i];
-    //   }
-    //   text << std::setfill(' ') << " to " << addr << "-" << addr + len - 1
-    //        << std::dec << std::endl;
-    //
-    //   if (_print_to_file) {
-    //     std::ofstream fout;
-    //     fout.open(etiss::cfg().get<std::string>("ETISS::outputPathPrefix", "")
-    //     +
-    //                   "dbgBusAccess.txt",
-    //               std::ios::binary | std::ios::out | std::ios::app);
-    //     fout << text.str();
-    //   } else
-    //     std::cout << text.str();
-    // }
-    //
 
     int i_seg = 0;
     int n_segs = msegs_.size();
@@ -520,63 +407,11 @@ etiss::int32 DebugSystem::dbg_read(etiss::uint64 addr, etiss::uint8 *buf, etiss:
       }
     }
     
-  
-//     if (_print_dbgbus_access)
-//     {
-//         std::cout << "dbg_read: " << std::hex << addr << std::dec << ", len: " << len << std::endl;
-//     }
-// 
-//     if (addr >= rom_start_ && addr < rom_start_ + rom_mem_.size())
-//     {
-//         addr -= rom_start_;
-//         memcpy(buf, rom_mem_.data() + addr, len);
-//     }
-//     else if (addr >= ram_start_ && addr < ram_start_ + ram_mem_.size())
-//     {
-//         addr -= ram_start_;
-//         memcpy(buf, ram_mem_.data() + addr, len);
-//     }
-//     else
-//     {
-//         etiss::log(etiss::FATALERROR, "wrong address issued in DebugSystem::dbg_read\n");
-//     }
-    // TODO(sharif) _print_dbus_access, _print_to_file
     return RETURNCODE::NOERROR;
 }
 
 etiss::int32 DebugSystem::dbg_write(etiss::uint64 addr, etiss::uint8 *buf, etiss::uint32 len)
 {
-    // if (addr >= DEBUGSYSTEM_MEMBLOCKSIZE * 2 ||
-    //     addr + len > DEBUGSYSTEM_MEMBLOCKSIZE * 2) {
-    //   std::stringstream message;
-    //   message << "Failed to write data to 0x" << std::hex << addr << "-"
-    //           << addr + len - 1 << std::dec << std::endl;
-    //   printMessage("instr write error", message.str(), message_max_cnt);
-    //   return RETURNCODE::IBUS_WRITE_ERROR;
-    // }
-    //
-    // memcpy(mem + addr, buf, len);
-    //
-    // if (_print_dbgbus_access) {
-    //   std::stringstream text;
-    //   text << "write dbg:0x";
-    //   for (int i = 0; i < len; i++) {
-    //     text << std::setfill('0') << std::setw(2) << std::hex << (int)buf[i];
-    //   }
-    //   text << std::setfill(' ') << " to " << addr << "-" << addr + len - 1
-    //        << std::dec << std::endl;
-    //
-    //   if (_print_to_file) {
-    //     std::ofstream fout;
-    //     fout.open(etiss::cfg().get<std::string>("ETISS::outputPathPrefix", "")
-    //     +
-    //                   "dbgBusAccess.txt",
-    //               std::ios::binary | std::ios::out | std::ios::app);
-    //     fout << text.str();
-    //   } else
-    //     std::cout << text.str();
-    // }
-
   int i_seg = 0;
   int n_segs = msegs_.size();
   size_t offset = 0;
@@ -610,129 +445,8 @@ etiss::int32 DebugSystem::dbg_write(etiss::uint64 addr, etiss::uint8 *buf, etiss
     }
   }
     
-  
-//     if (_print_dbgbus_access)
-//     {
-//         std::cout << "dbg_write: " << std::hex << addr << std::dec << ", len: " << len << std::endl;
-//     }
-// 
-//     if (addr >= rom_start_ && addr < rom_start_ + rom_mem_.size())
-//     {
-//         addr -= rom_start_;
-//         memcpy(rom_mem_.data() + addr, buf, len);
-//     }
-//     else if (addr >= ram_start_ && addr < ram_start_ + ram_mem_.size())
-//     {
-//         addr -= ram_start_;
-//         memcpy(ram_mem_.data() + addr, buf, len);
-//     }
-//     else
-//     {
-//         etiss::log(etiss::FATALERROR, "wrong address issued in DebugSystem::dbg_write\n");
-//     }
-    // TODO(sharif) _print_dbus_access, _print_to_file
     return RETURNCODE::NOERROR;
 }
-/*bool DebugSystem::load(etiss::uint64 addr,const char * file){
-        std::ifstream in;
-        in.open(file,std::ifstream::binary);
-
-        if (!in.is_open())
-        {
-            std::cout <<"binary load failed! ("<< *file << ") " << std::endl;
-            return false;
-        }
-
-        etiss::uint8 byte;
-        while (in.good()){
-                byte = (etiss::uint8) in.get();
-                if (in.good()){
-                        if (addr< DEBUGSYSTEM_MEMBLOCKSIZE*2){
-                                mem[addr] = byte;
-                        } else {
-                                std::cout << "ERROR: failed to load data to
-debug system memory: invalid address (" << std::hex << addr << std::dec << ")"
-<< std::endl; return false;
-                        }
-                        addr++;
-                }
-        }
-        std::cout <<"binary loaded!"<< std::endl;
-        return true;
-}*/
-
-// bool DebugSystem::loadRom(const char *file)
-// {
-//     std::ifstream in;
-//     in.open(file, std::ifstream::binary);
-// 
-//     if (!in)
-//     {
-//         std::cout << "rom binary load failed! (" << *file << ") " << std::endl;
-//         return false;
-//     }
-// 
-//     etiss::uint64 addr = 0;
-//     etiss::uint8 byte;
-//     while (in.good())
-//     {
-//         byte = (etiss::uint8)in.get();
-//         if (in.good())
-//         {
-//             if (addr < rom_mem_.size())
-//             {
-//                 rom_mem_[addr] = byte;
-//             }
-//             else
-//             {
-//                 std::cout << "ERROR: failed to load data to debug rom system memory: "
-//                              "invalid address ("
-//                           << std::hex << addr << std::dec << ")" << std::endl;
-//                 return false;
-//             }
-//             addr++;
-//         }
-//     }
-//     std::cout << "rom binary loaded!" << std::endl;
-//     return true;
-// }
-// 
-// bool DebugSystem::loadRam(const char *file)
-// {
-//     std::ifstream in;
-//     in.open(file, std::ifstream::binary);
-// 
-//     if (!in)
-//     {
-//         std::cout << "ram binary load failed! (" << *file << ") " << std::endl;
-//         return false;
-//     }
-// 
-//     etiss::uint64 addr = 0;
-//     etiss::uint8 byte;
-//     while (in.good())
-//     {
-//         byte = (etiss::uint8)in.get();
-//         if (in.good())
-//         {
-//             if (addr < ram_mem_.size())
-//             {
-//                 ram_mem_[addr] = byte;
-//             }
-//             else
-//             {
-//                 std::cout << "ERROR: failed to load data to debug ram system memory: "
-//                              "invalid address ("
-//                           << std::hex << addr << std::dec << ")" << std::endl;
-//                 in.close();
-//                 return false;
-//             }
-//             addr++;
-//         }
-//     }
-//     std::cout << "ram binary loaded!" << std::endl;
-//     return true;
-// }
 
 extern void global_sync_time(uint64 time_ps);
 void DebugSystem::syncTime(ETISS_CPU *cpu)
@@ -740,22 +454,4 @@ void DebugSystem::syncTime(ETISS_CPU *cpu)
     // std::cout << "CPU time: " << cpu -> cpuTime_ps << "ps" << std::endl;
     // global_sync_time(cpu->cpuTime_ps);
 }
-// void DebugSystem::swapEndian(unsigned align) {
-//   etiss::uint8 buf_[8];
-//   etiss::uint8* buf;
-//   if (align > 8) {
-//     buf = new etiss::uint8[align];
-//   } else {
-//     buf = buf_;
-//   }
-//   for (int i = 0; i < DEBUGSYSTEM_MEMBLOCKSIZE * 2; i += align) {
-//     etiss::uint8* cur = mem + i;
-//     for (unsigned j = 0; j < align; j++) {
-//       buf[j] = cur[j];
-//     }
-//     for (unsigned j = 0; j < align; j++) {
-//       cur[align - j - 1] = buf[j];
-//     }
-//   }
-//   if (buf != buf_) delete[] buf;
-// }
+

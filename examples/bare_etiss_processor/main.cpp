@@ -74,6 +74,7 @@ int main(int argc, const char *argv[])
     std::cout << "=== Setting up test system ===" << std::endl;
     std::cout << "  Setting up Memory" << std::endl;
     //etiss::DebugSystem dsys(0x0, 0x0, 0x80000000, 0x80000); //(0x0, 0x80000, 0x80000, 0x80000); //(0x0, 0x80000, 0x80000, 0x80000);//
+    //edited constructor
     etiss::DebugSystem dsys;
 		// load image to memory
     //  if(!dsys.load(0,etiss::cfg().get<std::string>("sw_binary","").c_str())){
