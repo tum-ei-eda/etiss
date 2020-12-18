@@ -322,6 +322,8 @@ set_target_properties(ETISS PROPERTIES
 )
 IF(UNIX)
     TARGET_LINK_LIBRARIES(ETISS PUBLIC ${Boost_LIBRARIES})
+ELSE(UNIX)
+    TARGET_LINK_LIBRARIES(ETISS PUBLIC Boost::boost Threads::Threads)
 ENDIF()
 IF(WIN32)
     # Sadly CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS does not set -Wl,--export-all-symbols if gcc is sued
