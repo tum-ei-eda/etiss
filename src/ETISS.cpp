@@ -482,7 +482,7 @@ void etiss_loadIniConfigs()
             bool warning = false;
 
             // skip loglevel
-            if (std::string(iter_key.pItem) == "loglevel")
+            if ((std::string(iter_key.pItem) == "loglevel") | (std::string(iter_key.pItem) == "JIT_Type"))
                 continue;
 
             // check if cfg is already set
@@ -660,8 +660,11 @@ void etiss::Initializer::loadIniJIT(std::shared_ptr<etiss::CPUCore> cpu)
     po_simpleIni->GetAllSections(sections);
     for (auto iter_section : sections)
     {
+        if (jitcheck)
+            continue;
+        
         // only load JIT sections
-        if (std::string(iter_section.pItem).substr(0, 3) != std::string("JIT"))
+        if (std::string(iter_section.pItem).substr(0, 20) != std::string("StringConfigurations"))
             continue;
 
         // check if JIT is already present
@@ -676,7 +679,7 @@ void etiss::Initializer::loadIniJIT(std::shared_ptr<etiss::CPUCore> cpu)
         po_simpleIni->GetAllKeys(iter_section.pItem, keys);
         for (auto iter_key : keys)
         {
-            if (std::string(iter_key.pItem) == "type")
+            if (std::string(iter_key.pItem) == "JIT_Type")
             {
                 // get all values of a key with multiple values = value of option
                 CSimpleIniA::TNamesDepend values;
@@ -690,7 +693,8 @@ void etiss::Initializer::loadIniJIT(std::shared_ptr<etiss::CPUCore> cpu)
                 etiss::log(etiss::INFO, " Adding JIT \"" + std::string(jitName) + '\"');
                 cpu->set(getJIT(jitName));
             }
-            else
+            else if ((std::string(iter_key.pItem) != "sw_binary_ram") & (std::string(iter_key.pItem) != "sw_binary_rom") & (std::string(iter_key.pItem) != "vp::dram_file") &
+                        (std::string(iter_key.pItem) != "vp::iram_file") & (std::string(iter_key.pItem) != "CPUArch") &(std::string(iter_key.pItem) != "ETISS::outputPathPrefix"))
             {
                 etiss::log(etiss::WARNING, "option " + std::string(iter_key.pItem) + " unknown");
             }
