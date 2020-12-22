@@ -560,11 +560,6 @@ void etiss_loadIniConfigs()
     }
 }
 
-static bool set_cmd_check(std::string cmdlineoption)
-{
-    return (vm.find(cmdlineoption) != vm.end());
-}
-
 void etiss::Initializer::loadIniPlugins(std::shared_ptr<etiss::CPUCore> cpu)
 {
     if (!po_simpleIni)
@@ -609,9 +604,7 @@ void etiss::Initializer::loadIniPlugins(std::shared_ptr<etiss::CPUCore> cpu)
             // get all values of a key with multiple values = value of option
             CSimpleIniA::TNamesDepend values;
             po_simpleIni->GetAllValues(iter_section.pItem, iter_key.pItem, values);
-            bool cmdcheck;
-            cmdcheck = set_cmd_check(std::string(iter_key.pItem));
-            if (cmdcheck)
+            if (etiss::cfg().isSet(iter_key.pItem))
             {
                 options[iter_key.pItem] = std::string(vm[std::string(iter_key.pItem)].as<std::string>());
                 std::cout << iter_section.pItem << "::" << iter_key.pItem << " written from command line.\n";
@@ -639,53 +632,19 @@ void etiss::Initializer::loadIniPlugins(std::shared_ptr<etiss::CPUCore> cpu)
 
 void etiss::Initializer::loadIniJIT(std::shared_ptr<etiss::CPUCore> cpu)
 {
-    if (!po_simpleIni)
+    // check if JIT is set
+    if (!etiss::cfg().isSet("JIT_Type"))
     {
-        etiss::log(etiss::WARNING, "Ini file not loaded. Can't load JIT from simpleIni!");
+        etiss::log(etiss::INFO, "No JIT configured. Will use default JIT. \n");
         return;
     }
-
-    // get all sections
-    CSimpleIniA::TNamesDepend sections;
-    po_simpleIni->GetAllSections(sections);
-    for (auto iter_section : sections)
+    if (cpu->getJITName() != "")
     {
-        // only load JIT sections
-        if (std::string(iter_section.pItem).substr(0, 3) != std::string("JIT"))
-            continue;
-
-        // check if JIT is already present
-        if (cpu->getJITName() != "")
-        {
-            etiss::log(etiss::WARNING,
-                       "etiss::Initializer::loadIniJIT:" + std::string(" JIT already present. Overwriting it."));
-        }
-
-        // get all keys in a section = plugin option
-        CSimpleIniA::TNamesDepend keys;
-        po_simpleIni->GetAllKeys(iter_section.pItem, keys);
-        for (auto iter_key : keys)
-        {
-            if (std::string(iter_key.pItem) == "type")
-            {
-                // get all values of a key with multiple values = value of option
-                CSimpleIniA::TNamesDepend values;
-                std::string jitName = po_simpleIni->GetValue(iter_section.pItem, iter_key.pItem);
-
-                // check if more than one value is set in the ini file
-                if (values.size() > 1)
-                    etiss::log(etiss::WARNING, "etiss::Initializer::loadIniJIT:" +
-                                                   std::string(" Multi values for option. Took only first one!"));
-
-                etiss::log(etiss::INFO, " Adding JIT \"" + std::string(jitName) + '\"');
-                cpu->set(getJIT(jitName));
-            }
-            else
-            {
-                etiss::log(etiss::WARNING, "option " + std::string(iter_key.pItem) + " unknown");
-            }
-        }
+        etiss::log(etiss::WARNING,
+                    "etiss::Initializer::loadIniJIT:" + std::string(" JIT already present. Overwriting it."));
     }
+    etiss::log(etiss::INFO, " Adding JIT \"" + cfg().get<std::string>("JIT_Type", "") + '\"');
+    cpu->set(getJIT(cfg().get<std::string>("JIT_Type", "")));
 }
 
 std::pair<std::string, std::string> inifileload(const std::string& s)
@@ -756,6 +715,7 @@ void etiss_initialize(int argc, const char* argv[], bool forced = false)
             ("DebugSystem::printDbgbusAccess", po::value<bool>(), "Traces accesses to the debug bus.")
             ("DebugSystem::printToFile", po::value<bool>(), "Write all tracing to a file instead of the terminal. The file will be located at ETISS::outputPathPrefix.")
             ("CPUArch", po::value<std::string>(), "The CPU Architecture to simulate.")
+            ("JIT_Type", po::value<std::string>(), "The JIT compiler to use.")
             ("JIT-External::Headers", po::value<std::string>(), "List of semicolon-separated paths to headers for the JIT to include.")
             ("JIT-External::Libs", po::value<std::string>(), "List of semicolon-separated library names for the JIT to link.")
             ("JIT-External::HeaderPaths", po::value<std::string>(), "List of semicolon-separated headers paths for the JIT.")
