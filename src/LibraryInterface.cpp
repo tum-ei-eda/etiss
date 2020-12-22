@@ -6,7 +6,7 @@
 
         Copyright 2018 Infineon Technologies AG
 
-        This file is part of ETISS tool, see <https://gitlab.lrz.de/de-tum-ei-eda-open/etiss>.
+        This file is part of ETISS tool, see <https://github.com/tum-ei-eda/etiss>.
 
         The initial version of this software has been created with the funding support by the German Federal
         Ministry of Education and Research (BMBF) in the project EffektiV under grant 01IS13022.
@@ -184,7 +184,12 @@ static void *ETISS_dlsym(void *handle, std::string name, std::string symbol, boo
 static void *ETISS_dlopen(const std::string &path, const std::string &name)
 {
 #if ETISS_USE_DLSYM
-    std::string fullname = path + "lib" + name + ".so";
+    std::string fullname = path + "lib" + name +
+#ifdef __APPLE__
+            ".dylib";
+#else
+            ".so";
+#endif
     void *ret = dlopen(fullname.c_str(), RTLD_GLOBAL | RTLD_NOW
 #if ETISS_USE_DLSYM_DEEPBIND
     //|RTLD_DEEPBIND

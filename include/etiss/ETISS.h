@@ -6,7 +6,7 @@
 
         Copyright 2018 Infineon Technologies AG
 
-        This file is part of ETISS tool, see <https://gitlab.lrz.de/de-tum-ei-eda-open/etiss>.
+        This file is part of ETISS tool, see <https://github.com/tum-ei-eda/etiss>.
 
         The initial version of this software has been created with the funding support by the German Federal
         Ministry of Education and Research (BMBF) in the project EffektiV under grant 01IS13022.
@@ -208,7 +208,7 @@ std::set<std::string> listLibraryPrefixes();
  * etiss::initialize / etiss::shutdown manually
  */
 void initialize(std::vector<std::string> args);
-
+void initialize(int argc, const char* argv[]);
 /**
  * @brief Get the default JIT implementation.
  *
@@ -345,7 +345,13 @@ class Initializer
         toList(args, args_append...);
         initialize(args);
     }
-
+    
+    Initializer(std::list<std::string> *files, int argc, const char* argv[])
+    {
+        loadIni(files);
+        initialize(argc, argv);
+    }
+    
     /**
      * @brief Constructor that initializes ETISS.
      *

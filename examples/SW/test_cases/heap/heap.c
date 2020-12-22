@@ -6,7 +6,7 @@
 
         Copyright 2018 Infineon Technologies AG
 
-        This file is part of ETISS tool, see <https://gitlab.lrz.de/de-tum-ei-eda-open/etiss>.
+        This file is part of ETISS tool, see <https://github.com/tum-ei-eda/etiss>.
 
         The initial version of this software has been created with the funding support by the German Federal
         Ministry of Education and Research (BMBF) in the project EffektiV under grant 01IS13022.
@@ -64,9 +64,9 @@ typedef   struct OS_Heap_s {
 static    OS_Heap_t  *HeapArray[HEAP_COUNT];
 
 OS_Heap_t *OS_HeapCreate(const char *Name, void *thisHeapStorage, uint32 Size, int hp__ADDR)
-{	
+{
 	//assert(((uint32)thisHeap & 3) == 0);
-	
+
 	OS_Heap_t *heap;
 	heap                  = (OS_Heap_t*)thisHeapStorage;
 	heap->magic           = HEAP_MAGIC;
@@ -76,7 +76,7 @@ OS_Heap_t *OS_HeapCreate(const char *Name, void *thisHeapStorage, uint32 Size, i
 	heap->available->size = (Size - sizeof(OS_Heap_t)) / sizeof(HeapNode_t);
 	heap->base.next       = heap->available;
 	heap->base.size       = 0;
-	
+
 	//printf("HeapCreate: Returned hp=%d\n", (int)heap);
 	return heap;
 }
@@ -92,15 +92,15 @@ void *OS_HeapMalloc(OS_Heap_t *Heap, int Bytes)
 		//printf("Malloc: 'Heap' aligned to first item in HeapArray.\n");
 		Heap = HeapArray[(int)Heap]; //WP_HPARRAY[HEAP]
 	}
-	
+
 	nunits = (Bytes + sizeof(HeapNode_t) - 1) / sizeof(HeapNode_t) + 1;
 	//printf("Malloc: numUnits = %d \n", nunits);
-	
+
 	prevp = Heap->available;
 	for(node = prevp->next; ; prevp = node, node = node->next)
 	{
 		//printf("  Malloc: process node with size=%d ...\n", node->size);
-		
+
 		if(node->size >= nunits)       //Big enough?
 		{
 			if(node->size == nunits){
@@ -108,7 +108,7 @@ void *OS_HeapMalloc(OS_Heap_t *Heap, int Bytes)
 				prevp->next = node->next;
 			}
 			else
-			{   
+			{
 				//printf("  Malloc: CASE: Big enough and divide! \n");
 
 				#ifdef REQ_SYN
@@ -150,7 +150,7 @@ void heap(volatile char* logger_addr){
 }
 /*
  * ░░░░░░░░░░░░░░░ Use steps ░░░░░░░░░░░░░░░░
- *   ├─ Init 
+ *   ├─ Init
  *   │    ├─ a global heap storage:  static OS_Heap_t *HeapArray[HEAP_COUNT];
  *   │    ├─ the heap array       :  	OS_Heap_t *hp;
  *   │    ├                       :  	HeapArray[0] = OS_HeapCreate("Heap1", (uint32*)HeapArray, 1000);

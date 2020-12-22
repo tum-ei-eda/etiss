@@ -6,7 +6,7 @@
 
         Copyright 2018 Infineon Technologies AG
 
-        This file is part of ETISS tool, see <https://gitlab.lrz.de/de-tum-ei-eda-open/etiss>.
+        This file is part of ETISS tool, see <https://github.com/tum-ei-eda/etiss>.
 
         The initial version of this software has been created with the funding support by the German Federal
         Ministry of Education and Research (BMBF) in the project EffektiV under grant 01IS13022.
@@ -119,7 +119,7 @@ short   img_static[200*6] = {
 		0x07ff, 0x0c00, 0x0800, 0x0200, 0xf800, 0xf300, 0x0400, 0x0000, 0x07ff, 0x0c00, 0x0800, 0x0200, 0xf800, 0xf300, 0x0400, 0x0000, 0x07ff, 0x0c00, 0x0800, 0x0200,0xf800, 0xf300, 0x0400, 0x0000, 0x07ff, 0x0c00, 0x0800, 0x0200, 0xf800, 0xf300, 0x0400
 	};
 	short b_static[10] = {  0x0c60, 0x0c40, 0x0c20, 0x0c00, 0xf600, 0xf400, 0xf200, 0xf000, 0x0c60,0x0c40    };
-	
+
 /*****************************************************
 *		JPEG Discrete Cosine Transform 		     *
 *****************************************************/
@@ -172,7 +172,7 @@ void jdct(volatile char* logger_addr)
 // 	jpegdct(&img_static[64],  b);	jpegdct(&img_static[128], b);	jpegdct(&img_static[196], b);	jpegdct(&img_static[256], b);	jpegdct(&img_static[320], b);
 // 	jpegdct(&img_static[384], b);	jpegdct(&img_static[448], b);	jpegdct(&img_static[512], b);	jpegdct(&img_static[576], b);	jpegdct(&img_static[640], b);
 // 	jpegdct(&img_static[704], b);	jpegdct(&img_static[768], b);	jpegdct(&img_static[832], b);	jpegdct(&img_static[896], b);
-	
+
   int i=64;
 	//for(i=64;i<1200;i+=128){
 	//	jpegdct(&img_static[i],  b_static);
@@ -189,5 +189,5 @@ void jdct(volatile char* logger_addr)
 		jpegdct(&img_static[i],  b_static);
 	    jpegdct(&img_static[i],  b_static);
 	    jpegdct(&img_static[i],  b_static);
-    
+
 }

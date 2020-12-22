@@ -6,7 +6,7 @@
 
         Copyright 2018 Infineon Technologies AG
 
-        This file is part of ETISS tool, see <https://gitlab.lrz.de/de-tum-ei-eda-open/etiss>.
+        This file is part of ETISS tool, see <https://github.com/tum-ei-eda/etiss>.
 
         The initial version of this software has been created with the funding support by the German Federal
         Ministry of Education and Research (BMBF) in the project EffektiV under grant 01IS13022.
@@ -78,6 +78,14 @@ namespace gdb
 */
 class BreakpointDB
 {
+  public:
+    enum BPType
+    {
+      BPTYPE_BREAK_MEM = 1,
+      BPTYPE_BREAK_HW = 2,
+      BPTYPE_WATCH_WRITE = 4,
+      BPTYPE_WATCH_READ = 8
+    };
   public:
     BreakpointDB();
     inline bool isEmpty() { return instrbrkpt_ == 0; }
@@ -166,6 +174,7 @@ class Server : public etiss::CoroutinePlugin, public etiss::TranslationPlugin, p
     bool status_pending_kill_;
     etiss::uint64 status_jumpaddr_;
     BreakpointDB breakpoints_;
+    BreakpointDB watchpoints_;
     unsigned execute_skip_count;
     unsigned execute_skip_index;
     unsigned minimal_pc_alignment;

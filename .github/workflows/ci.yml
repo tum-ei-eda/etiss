@@ -1,0 +1,107 @@
+name: CI
+
+on: [push, pull_request]
+
+env:
+  BUILD_TYPE: Release
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        config:
+          - {name: "Linux", os: ubuntu-latest, cmakegen: "", jit: "clang+llvm-7.0.0-x86_64-linux-gnu-ubuntu-16.04", jit-ext: ".tar.xz", tc: "riscv64-unknown-elf-gcc-8.3.0-2020.04.0-x86_64-linux-ubuntu14", tc-ext: ".tar.gz", unpack: "tar xf"}
+          - {name: "Windows", os: windows-latest, cmakegen: "-G \"MinGW Makefiles\"", jit: "LLVM-7.0.0-win64", jit-ext: ".exe", tc: "riscv64-unknown-elf-gcc-8.3.0-2020.04.0-x86_64-w64-mingw32", tc-ext: ".zip", unpack: "unzip"}
+          - {name: "Mac", os: macOS-latest, cmakegen: "", jit: "clang+llvm-7.0.0-x86_64-apple-darwin", jit-ext: ".tar.xz", tc: "riscv64-unknown-elf-gcc-8.3.0-2020.04.0-x86_64-apple-darwin", tc-ext: ".tar.gz", unpack: "tar xf"}
+
+    runs-on: ${{ matrix.config.os }}
+    name: ${{ matrix.config.name }}
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Requirements (Linux)
+      if: matrix.config.name == 'Linux'
+      run: |
+        sudo apt-get install libboost-system-dev libboost-filesystem-dev libboost-program-options-dev
+
+    - name: Requirements (Windows)
+      if: matrix.config.name == 'Windows'
+      shell: bash
+      run: |
+        choco install boost-msvc-14.1 --version=1.67.0
+        choco install wget unzip
+        choco install llvm --version=7.0.0
+
+    - name: Requirements (Mac)
+      if: matrix.config.name == 'Mac'
+      run: |
+        brew install boost coreutils
+  
+    - name: Requirements (Linux/Mac)
+      if: matrix.config.name == 'Linux' || matrix.config.name == 'Mac'
+      working-directory: ${{runner.workspace}}
+      shell: bash
+      run: | 
+        wget https://releases.llvm.org/7.0.0/${{ matrix.config.jit }}${{ matrix.config.jit-ext }}
+        ${{ matrix.config.unpack }} ${{ matrix.config.jit }}${{ matrix.config.jit-ext }}
+        mv ${{ matrix.config.jit }} llvm-lib
+        
+    - name: Requirements
+      shell: bash
+      working-directory: ${{runner.workspace}}
+      run: |
+        wget https://static.dev.sifive.com/dev-tools/${{ matrix.config.tc }}${{ matrix.config.tc-ext }}
+        ${{ matrix.config.unpack }} ${{ matrix.config.tc }}${{ matrix.config.tc-ext }}
+        mv ${{ matrix.config.tc }} riscv-tc
+
+    - name: Create Build Environment
+      run: cmake -E make_directory ${{runner.workspace}}/build
+
+    - name: Configure CMake
+      shell: bash
+      working-directory: ${{runner.workspace}}/build
+      run: |
+        export LLVM_DIR=${{runner.workspace}}/llvm-lib
+        cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_INSTALL_PREFIX=../install
+
+    - name: Build
+      working-directory: ${{runner.workspace}}/build
+      shell: bash
+      run: cmake --build . --config $BUILD_TYPE
+
+    - name: Install
+      working-directory: ${{runner.workspace}}/build
+      shell: bash
+      run: cmake --build . --config $BUILD_TYPE --target install
+
+    - name: Setup tests
+      working-directory: ${{runner.workspace}}/install/examples
+      run: |
+        cmake -E make_directory ${{runner.workspace}}/install/examples/SW/riscv/build
+        cd SW/riscv/build
+        cmake .. -DRISCV_ELF_GCC_PREFIX=../../../../../riscv-tc -DRISCV_ELF_GCC_BASENAME=riscv64-unknown-elf
+        cmake --build . --config $BUILD_TYPE
+        cd -
+        cmake -E make_directory ${{runner.workspace}}/install/examples/SW/riscv_cpp/build
+        cd SW/riscv_cpp/build
+        cmake .. -DRISCV_ELF_GCC_PREFIX=../../../../../riscv-tc -DRISCV_ELF_GCC_BASENAME=riscv64-unknown-elf
+        cmake --build . --config $BUILD_TYPE
+        cd -
+        cd bare_etiss_processor
+        cmake -E make_directory ${{runner.workspace}}/install/examples/bare_etiss_processor/build
+        cd build
+        cmake ..
+        cmake --build . --config $BUILD_TYPE
+
+    - name: Test (Linux/Mac)
+      working-directory: ${{runner.workspace}}/install/examples/bare_etiss_processor
+      if: matrix.config.name == 'Linux' || matrix.config.name == 'Mac'
+      shell: bash
+      run: |
+        ./run_helper.sh ../SW/riscv/build/riscv_example
+        ./run_helper.sh ../SW/riscv/build/riscv_example gcc
+        ./run_helper.sh ../SW/riscv/build/riscv_example llvm
+        ./run_helper.sh ../SW/riscv_cpp/build/riscv_example
+        ./run_helper.sh ../SW/riscv_cpp/build/riscv_example gcc
+        ./run_helper.sh ../SW/riscv_cpp/build/riscv_example llvm
