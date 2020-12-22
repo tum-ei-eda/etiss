@@ -482,7 +482,7 @@ void etiss_loadIniConfigs()
             bool warning = false;
 
             // skip loglevel
-            if ((std::string(iter_key.pItem) == "loglevel"))
+            if (std::string(iter_key.pItem) == "loglevel")
                 continue;
 
             // check if cfg is already set
