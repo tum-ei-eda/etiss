@@ -560,11 +560,6 @@ void etiss_loadIniConfigs()
     }
 }
 
-static bool set_cmd_check(std::string cmdlineoption)
-{
-    return (vm.find(cmdlineoption) != vm.end());
-}
-
 void etiss::Initializer::loadIniPlugins(std::shared_ptr<etiss::CPUCore> cpu)
 {
     if (!po_simpleIni)
@@ -609,9 +604,7 @@ void etiss::Initializer::loadIniPlugins(std::shared_ptr<etiss::CPUCore> cpu)
             // get all values of a key with multiple values = value of option
             CSimpleIniA::TNamesDepend values;
             po_simpleIni->GetAllValues(iter_section.pItem, iter_key.pItem, values);
-            bool cmdcheck;
-            cmdcheck = set_cmd_check(std::string(iter_key.pItem));
-            if (cmdcheck)
+            if (etiss::cfg().isSet(iter_key.pItem))
             {
                 options[iter_key.pItem] = std::string(vm[std::string(iter_key.pItem)].as<std::string>());
                 std::cout << iter_section.pItem << "::" << iter_key.pItem << " written from command line.\n";
@@ -640,15 +633,12 @@ void etiss::Initializer::loadIniPlugins(std::shared_ptr<etiss::CPUCore> cpu)
 void etiss::Initializer::loadIniJIT(std::shared_ptr<etiss::CPUCore> cpu)
 {
     // check if JIT is set on command line
-    bool jitcheck;
-    jitcheck = set_cmd_check(std::string("JIT_Type"));
-    if (jitcheck)
+    if (etiss::cfg().isSet("JIT_Type"))
     {
-        etiss::log(etiss::INFO, " Adding JIT \"" + cfg().get<std::string>("JIT_Type", "") + ". JIT set on command line." + '\"');
+        etiss::log(etiss::INFO, " Adding JIT \"" + cfg().get<std::string>("JIT_Type", "") + '\"');
         cpu->set(getJIT(cfg().get<std::string>("JIT_Type", "")));
         return;
     }
-
     // check if JIT is set from .ini file
     if (!po_simpleIni)
     {
@@ -662,7 +652,7 @@ void etiss::Initializer::loadIniJIT(std::shared_ptr<etiss::CPUCore> cpu)
             etiss::log(etiss::WARNING,
                        "etiss::Initializer::loadIniJIT:" + std::string(" JIT already present. Overwriting it."));
         }
-        etiss::log(etiss::INFO, " Adding JIT \"" + cfg().get<std::string>("JIT_Type", "") + ". JIT set from ini file." + '\"');
+        etiss::log(etiss::INFO, " Adding JIT \"" + cfg().get<std::string>("JIT_Type", "") + '\"');
         cpu->set(getJIT(cfg().get<std::string>("JIT_Type", "")));
     }
 }
