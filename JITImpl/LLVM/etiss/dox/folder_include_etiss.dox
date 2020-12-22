@@ -1,0 +1,5 @@
+/*! \page folder_include_etiss Overview of include/etiss/
+
+	This folder contains the C++ header files of etiss. Relevant for implementing translation (etiss::CPUArch), compilation (etiss::JIT) or general (etiss::Plugin) plugins are the files CPUArch.h, JIT.h and Plugin.h. To provide instances of such implementations they should be collected and provided by a (dynamic) library. Relevant for a library implementation is the sub folder \ref folder_include_etiss_helper "helper/" for implementation and the files LibraryInterface.h and LibraryInterface.cpp to view the loading mechanism.
+
+*/

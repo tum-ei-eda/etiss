@@ -1,0 +1,5 @@
+/*! \page folder_include Overview of include/
+
+	The include folder contains the folder \ref folder_include_etiss "etiss/" in which any C++ header file of ETISS is located
+
+ */

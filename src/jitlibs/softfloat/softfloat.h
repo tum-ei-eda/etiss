@@ -1,5 +1,5 @@
-#ifndef LIBSOFTFLOAT_H_
-#define LIBSOFTFLOAT_H_
+#ifndef JITLIB_FPFUNCS_H
+#define JITLIB_FPFUNCS_H
 
 #include <stdint.h>
 
@@ -31,4 +31,4 @@ uint64_t fcvt_32_64(uint32_t v1, uint32_t op, uint8_t mode);
 uint32_t fcvt_64_32(uint64_t v1, uint32_t op, uint8_t mode);
 uint32_t unbox_s(uint64_t v);
 
-#endif // LIBSOFTFLOAT_H_
+#endif

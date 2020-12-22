@@ -1,0 +1,107 @@
+/*! \page howto_createproject How to create a sub project for ETISS
+
+This tutorial is intended for the creation of a plugin for ETISS (etiss::CPUArch,etiss::JIT,etiss::Plugin). Refer to \ref howto_etiss "this" page for information about how to use ETISS in a simulation.
+
+ETISS plugins can be put into 4 folders. etiss::CPUArch,etiss::JIT and etiss::Plugin implementtions should be put into ArchImpl,JITImple and PluginImpl respectively and general projects that don't fit into that category can be put into the projects folder.
+
+CMake is used to build ETISS and sub projects. By default the CMakeLists.txt files will scan the ArchImpl,JITImple,PluginImpl and projects folders for subfolders and will add those folders to the current build if they contain a CMakeLists.txt file.
+If you are familiar with CMake then the next section can be skipped.
+
+\section howto_createproject_tmpl ETISS's CMakeLists.txt.template
+
+To speed up sub project creation a CMakeLists.txt helper file is provided. With that file and these step by step instructions it is possible to compile C++ code without knowing cmake.
+Furthermore the template file allows to use a Makefile instead of cmake. For instructions to use a Makefile see \ref howto_createproject_tmpl_make "Using a Makefile".
+
+\subsection howto_createproject_tmpl_step1 Step 1:
+
+Create a project folder in the ArchImpl,JITImple,PluginImpl or projects folder (e.g. ArchImpl/OR1K).
+
+\subsection howto_createproject_tmpl_step2 Step 2:
+
+In the project folde create a CMakeLists.txt file (e.g. ArchImpl/OR1K/CMakeLists.txt). Copy the following text into the created file and replace the %YOURPROJECT% token with the name of your project (e.g. OR1KArch)
+
+\code
+
+set(ETISS_PROJECT_NAME %YOURPROJECT% )
+set(ETISS_PROJECT_PATH ${CMAKE_CURRENT_LIST_DIR})
+
+include(../../CMakeLists.txt.project.template)
+
+\endcode
+
+\subsection howto_createproject_tmpl_step3 Step 3:
+
+If all source files (*.ccp) are located in your project directory (e.g. ArchImpl/OR1K/*.cpp) and project header files are located in your project directory or a subfolder called include within your project directory then no further actions are required an the project was successfully created. In that case you can skip to \ref howto_createproject_tmpl_step4 "Step 4".
+Otherwise it is neccessary to add source/header files to the project manually.
+
+Source files can be added to the "${ETISS_PROJECT_NAME}_ADDITIONAL_PROJECT_FILES" variable. The command file(GLOB_RECURSE ${ETISS_PROJECT_NAME}_ADDITIONAL_PROJECT_FILES src/*.cpp) can be used for example to add any *.cpp file in the src sub folder. 
+
+To include header paths simply add the line include_directories("/path/to/header/directory").
+
+Example:
+\code
+
+set(ETISS_PROJECT_NAME %YOURPROJECT% )
+set(ETISS_PROJECT_PATH ${CMAKE_CURRENT_LIST_DIR})
+
+file(GLOB_RECURSE ${ETISS_PROJECT_NAME}_ADDITIONAL_PROJECT_FILES src/*.cpp) # add all *.cpp in the src folder and its sub folders
+set(${ETISS_PROJECT_NAME}_ADDITIONAL_PROJECT_FILES ${${ETISS_PROJECT_NAME}_ADDITIONAL_PROJECT_FILES} /some/additional/source/file.cpp) # adds the "/some/additional/source/file.cpp" file to the list of source files
+
+include_directories("/path/to/header/directory") # add a custom header search path
+
+include(../../CMakeLists.txt.project.template)
+
+\endcode
+
+\subsection howto_createproject_tmpl_step4 Step 4:
+
+If there is already a build directoy where the command "$cmake /path/to/ETISS" has been executed in, then it is neccessary to clean that directory and run the command again.
+
+Otherwise simply create a build directory (e.g. path/to/ETISS/install). <br>In a console window run:
+\code 
+$cd path/to/ETISS/install
+$cmake path/to/ETISS
+\endcode
+
+\attention due to some legacy Makefiles that are used it is strongly recommended to not use a directoy called build within the ETISS project folder (e.g. path/to/ETISS/build).
+
+
+\subsection howto_createproject_tmpl_make Using a Makefile
+
+To use a Makefile with your project follow \ref howto_createproject_tmpl_step1 "Step 1" and \ref howto_createproject_tmpl_step "Step 2".
+Then add the line set(${ETISS_PROJECT_NAME}_MAKEFILE Makefile) to the CMakeLists.txt file. In case the makefile is not called Makefile that part need to be changed.
+
+\code
+set(ETISS_PROJECT_NAME %YOURPROJECT%)
+set(ETISS_PROJECT_PATH ${CMAKE_CURRENT_LIST_DIR})
+
+set(${ETISS_PROJECT_NAME}_MAKEFILE Makefile) #usually this is right but if your makefile has a special name then this needs to be changed
+
+include(../../CMakeLists.txt.project.template)
+\endcode
+
+In this case it is expected that the sub project creates a shared library in its project folder named after of the project name and the platform dependent default library prefix and sufix strings (e.g project name is "test" then on linux a libtest.so file is expected).
+
+The makefile will be executed with these 3 variables set: 
+<table>
+<tr>
+<th>Variable</th>
+<th>Description</th>
+</tr>
+<tr>
+<td>INCLUDE_ARGS</td>
+<td>arguments that should be passed to compiler invections for files that include etiss headers.</td>
+</tr>
+<tr>
+<td>INCLUDE_DIRS</td>
+<td>list of directories that contain header files needed for/by ETISS</td>
+</tr>
+<tr>
+<td>BUILD_DIR</td>
+<td>a build directory where the makefile should put compilation results into</td>
+</tr>
+</table>
+
+Project files should be added to the ${ETISS_PROJECT_NAME}_MAKEFILE_PROJECTFILES variable to show them in genereated IDE projects (e.g. set(${ETISS_PROJECT_NAME}_MAKEFILE_PROJECTFILES main.cpp). Files added to this variable will NOT be compiled/processed in any way by cmake.
+
+*/

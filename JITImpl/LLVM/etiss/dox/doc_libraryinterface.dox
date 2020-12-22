@@ -1,0 +1,221 @@
+/*! \page doc_libraryinterface Interface for libraries
+
+ETISS itself (libETISS.so/.a) is a framework that uses implementations of etiss::CPUArch,etiss::JIT and etiss::Plugin to translate instructions to C code, compile the generated code and extend simulation capabilities. These implementations are provided by libraries (shared or integrated)
+
+Shared libraries and the \ref status_implementation_integratedlibrary "integrated library" of ETISS are wrapped in a etiss::LibraryInterface object. Those objects are then added with etiss::addLibrary .etiss::CPUArch,etiss::JIT and etiss::Plugin implementations from added libraries can then be instantiated with etiss::getCPUArch , etiss::getJIT and etiss::getPlugin. This concept allows to combine different library sources under one interface and even add new libraries at runtime.
+In case of implementing a shared library consider \ref misc_striplibrary
+
+For each of the 3 base classes (etiss::CPUArch,etiss::JIT and etiss::Plugin) etiss::LibraryInterface provides a method to count,name,instantiate and delete an implementation:
+
+\code{refer to etiss::LibraryInterface for full member list}
+virtual unsigned 	countPlugins ()
+virtual unsigned 	countCPUArchs ()
+virtual unsigned 	countJITs ()
+virtual std::string 	nameJIT (unsigned index)
+virtual std::string 	namePlugin (unsigned index)
+virtual std::string 	nameCPUArch (unsigned index)
+virtual etiss::JIT * 	createJIT (unsigned index, std::map< std::string, std::string > options=std::map< std::string, std::string >())
+virtual etiss::CPUArch * 	createCPUArch (unsigned index, std::map< std::string, std::string > options=std::map< std::string, std::string >())
+virtual etiss::Plugin * 	createPlugin (unsigned index, std::map< std::string, std::string > options=std::map< std::string, std::string >())
+virtual void 	deleteJIT (etiss::JIT *)
+virtual void 	deleteCPUArch (etiss::CPUArch *)
+virtual void 	deletePlugin (etiss::Plugin *)
+\endcode
+
+In case of a shared library a special implementation of etiss::LibraryInterface loads a lib*.so file with dlopen (RTLD_GLOBAL flag is set) and looks for symbols of functions that implement the above shown methods. Use etiss::loadLibrary to open a shared library manually. To avoid name clashed between multiple loaded libraries the symbols are expected to be prefixed with the library name. An example header file for those functions of a library called libYOURLIB.so could look like this:
+
+\code
+
+#include "etiss/CPUArch.h"
+#include "etiss/Plugin.h"
+
+extern "C" { // prevent name mangling
+
+	extern int YOURLIB_etissversion(); // required version check to ensure compatibility of the ETISS version this has been compiled against // should return ETISS_LIBRARYIF_VERSION defined in etiss/Version.h
+
+	extern unsigned YOURLIB_countCPUArch();
+	extern unsigned YOURLIB_countPlugin();
+	
+	extern const char * YOURLIB_nameCPUArch(unsigned index);
+	extern const char * YOURLIB_namePlugin(unsigned index);
+	
+	extern etiss::CPUArch * YOURLIB_createCPUArch(unsigned index, std::map< std::string, std::string > options=std::map< std::string, std::string >());
+	extern etiss::Plugin * YOURLIB_createPlugin(unsigned index, std::map< std::string, std::string > options=std::map< std::string, std::string >());
+	
+	extern void YOURLIB_deleteCPUArch(etiss::CPUArch *);
+	extern void YOURLIB_deletePlugin(etiss::Plugin *);
+
+}
+
+\endcode
+
+"extern int YOURLIB_etissversion()" allows to prevent loading of incompatible libraries.
+Other functions are defined similar to the methods of the etiss::LibraryInterface. Only the functions for the type of implementations a shared library provides need to be implemented (note the missing functions for etiss::JIT in above example). It is also possible to bundle a static library with libETISS.so/.a . In this case no change to the code needs to be made since ETISS will fist try to load a shared library and then falls back to the current application to load these functions (\ref misc_integratelibrary).
+
+Refer to \ref howto_cpuarch ,  \ref howto_jit  and \ref howto_plugin  for step by step examples of how to implement a shared library.
+
+
+\section doc_libraryinterface_files The LibraryInterface file copy extension
+
+Due to the compilation of C code at runtime various files (mostly headers) are needed at runtime. The scrip includeHeaderCodegen.py allows to generate c/c++ code that contains those files together with a relative path in arrays. For a list of options that can be passed to the script run "$ python includeHeaderCodegen.py -h":
+
+\code {$ python includeHeaderCodegen.py -h}
+
+usage: includeHeaderCodegen.py [-h] [-f BaseFolder File]
+                               [-s BaseFolder FolderToScan] [-a FolderToScan]
+                               [-ns namespace] [-l name] [-n name] [-d name]
+                               [-mkd dFile targetName] [-ch file includename]
+                               outputFile
+
+positional arguments:
+  outputFile            Target file for the generated C code containing the
+                        stored files added via -s
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -f BaseFolder File, --file BaseFolder File
+                        Add a single file that will be stored in the generated
+                        code file.File paths are stored relative to
+                        BaseFolder.
+  -s BaseFolder FolderToScan, --store BaseFolder FolderToScan
+                        Adds files that will be stored in the generated code
+                        file.File paths are stored relative to BaseFolder.
+  -a FolderToScan, --storeAll FolderToScan
+                        Adds files that will be stored in the generated code
+                        file.File paths are stored relative to this folder.
+  -ns namespace, --namespace namespace
+                        defines the variables in a namspace. nested namespaces
+                        can be used by adding [-ns namespace] multiple times:
+                        e.g. -ns namespaceOuter -ns namepaceInner
+  -l name, --arrayLengthVariable name
+                        Sets the name of the array length variable of file
+                        names and file data arrays
+  -n name, --fileNameArray name
+                        Sets the variable name of the file name array
+  -d name, --fileDataArray name
+                        Sets the variable name of the file name array
+  -mkd dFile targetName, --makeDependency dFile targetName
+                        Sets the target file for the .d file to include in a
+                        makefile. The second parameter is the target name that
+                        runs this script
+  -ch file includename, --createHeader file includename
+                        Creates an optional header file defining the variables
+
+\endcode
+
+Example command as used by ETISS itself:
+
+\code
+python ./includeHeaderCodegen.py -f ./ ./Printlibs.mk -s ./include_c ./include_c/etiss/jit -mkd ./build/IncludedFiles.cpp.d src/IncludedFiles.cpp -ns etiss -ns storedfiles -l count -n names -d data -ch include/etiss/IncludedFiles.h etiss/IncludedFiles.h src/IncludedFiles.cpp
+\endcode
+
+Shortened example output for the files stored within ETISS:
+
+\code{include/etiss/IncludedFiles.h}
+// NOTE: this file was generated by includeHeaderCodegen.py. DO NOT MODIFY.
+
+
+
+///		@author Marc Greim <marc.greim@mytum.de>
+
+namespace etiss{
+namespace storedfiles{
+extern const int count;
+extern const unsigned char names_0[];
+extern const unsigned char names_1[];
+extern const unsigned char names_2[];
+extern const unsigned char names_3[];
+extern const unsigned char names_4[];
+extern const unsigned char names_5[];
+extern const unsigned char names_6[];
+extern const unsigned char names_7[];
+extern const char * names[];
+extern const unsigned char data_0[];
+extern const unsigned char data_1[];
+extern const unsigned char data_2[];
+extern const unsigned char data_3[];
+extern const unsigned char data_4[];
+extern const unsigned char data_5[];
+extern const unsigned char data_6[];
+extern const unsigned char data_7[];
+extern const char * data[];
+}
+}
+\endcode
+\code{src/IncludedFiles.cpp}
+
+// NOTE: this file was generated by includeHeaderCodegen.py. DO NOT MODIFY.
+
+
+
+
+///@author Marc Greim <marc.greim@mytum.de>
+
+
+#include "etiss/IncludedFiles.h"
+
+const int etiss::storedfiles::count = 8;
+const unsigned char etiss::storedfiles::names_0[] = {0x65,0x74,0x69,0x73,0x73,0x2f,0x6a,0x69,0x74,0x2f,0x43,0x50,0x55,0x2e,0x68,0x00}; 
+const unsigned char etiss::storedfiles::names_1[] = {0x65,0x74,0x69,0x73,0x73,0x2f,0x6a,0x69,0x74,0x2f,0x53,0x79,0x73,0x74,0x65,0x6d,0x2e,0x68,0x00};
+const unsigned char etiss::storedfiles::names_2[] = {0x65,0x74,0x69,0x73,0x73,0x2f,0x6a,0x69,0x74,0x2f,0x74,0x79,0x70,0x65,0x73,0x2e,0x68,0x00};
+const unsigned char etiss::storedfiles::names_3[] = {0x65,0x74,0x69,0x73,0x73,0x2f,0x6a,0x69,0x74,0x2f,0x52,0x65,0x74,0x75,0x72,0x6e,0x43,0x6f,0x64,0x65,0x2e,0x68,0x00};
+const unsigned char etiss::storedfiles::names_4[] = {0x65,0x74,0x69,0x73,0x73,0x2f,0x6a,0x69,0x74,0x2f,0x74,0x79,0x70,0x65,0x73,0x2e,0x68,0x7e,0x00};
+const unsigned char etiss::storedfiles::names_5[] = {0x65,0x74,0x69,0x73,0x73,0x2f,0x6a,0x69,0x74,0x2f,0x52,0x65,0x74,0x75,0x72,0x6e,0x43,0x6f,0x64,0x65,0x2e,0x68,0x7e,0x00};
+const unsigned char etiss::storedfiles::names_6[] = {0x65,0x74,0x69,0x73,0x73,0x2f,0x6a,0x69,0x74,0x2f,0x66,0x70,0x75,0x2f,0x73,0x6f,0x66,0x74,0x66,0x6c,0x6f,0x61,0x74,0x2e,0x68,0x00};
+const unsigned char etiss::storedfiles::names_7[] = {0x50,0x72,0x69,0x6e,0x74,0x6c,0x69,0x62,0x73,0x2e,0x6d,0x6b,0x00};
+const char * etiss::storedfiles::names[] = {
+	(const char *) etiss::storedfiles::names_0,
+	(const char *) etiss::storedfiles::names_1,
+	(const char *) etiss::storedfiles::names_2,
+	(const char *) etiss::storedfiles::names_3,
+	(const char *) etiss::storedfiles::names_4,
+	(const char *) etiss::storedfiles::names_5,
+	(const char *) etiss::storedfiles::names_6,
+	(const char *) etiss::storedfiles::names_7
+};
+const unsigned char etiss::storedfiles::data_0[] = {0x00}; // data removed for documentation
+const unsigned char etiss::storedfiles::data_1[] = {0x00}; // data removed for documentation
+const unsigned char etiss::storedfiles::data_2[] = {0x00}; // data removed for documentation
+const unsigned char etiss::storedfiles::data_3[] = {0x00}; // data removed for documentation
+const unsigned char etiss::storedfiles::data_4[] = {0x00}; // data removed for documentation
+const unsigned char etiss::storedfiles::data_5[] = {0x00}; // data removed for documentation
+const unsigned char etiss::storedfiles::data_6[] = {0x00}; // data removed for documentation
+const unsigned char etiss::storedfiles::data_7[] = {0x00}; // data removed for documentation
+const char * etiss::storedfiles::data[] = {
+	(const char *) etiss::storedfiles::data_0,
+	(const char *) etiss::storedfiles::data_1,
+	(const char *) etiss::storedfiles::data_2,
+	(const char *) etiss::storedfiles::data_3,
+	(const char *) etiss::storedfiles::data_4,
+	(const char *) etiss::storedfiles::data_5,
+	(const char *) etiss::storedfiles::data_6,
+	(const char *) etiss::storedfiles::data_7
+};
+
+
+\endcode
+
+Apart from using includeHeaderCodegen.py any custom storage/generation mechanism can be used to ensure availability of files at runtime. 
+
+When a etiss::LibraryInterface is added via etiss::addLibrary then etiss::LibraryInterface::getFileCount,etiss::LibraryInterface::getFileName and etiss::LibraryInterface::getFileData are used to create those files. In case of a shared library these function need to be implemented for libYOURLIB.so like this:
+\code
+extern "C" {
+	int YOURLIB_getFileCount(){
+        	return count; // change variable name / function body as needed
+        }
+	const char * YOURLIB_getFileName(int index){
+		return names[index]; // change variable name / function body as needed
+	}
+	const char * YOURLIB_getFileData(int index){
+		return data[index]; // change variable name / function body as needed
+	}
+}
+\endcode
+
+Those files will be extracted relative to the path specified by the configuration option "etiss_wd" (can be changed before etiss::initialize with etiss::cfg.set("etiss_wd","/some/path")). By default the path is set to "~/.etiss/" ETISS_VERSION_STRING "/" (e.g. ~/.etiss/0.2/). Since the relative file paths are simply appended the etiss_wd value must end with "/".<br/>
+<b>If the target file already exists it will not be overwritten. Libraries need to consider using version numbers in their relative paths to prevent file version conflicts.</b>
+
+
+
+
+*/

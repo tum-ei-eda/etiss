@@ -1,0 +1,164 @@
+/*! \page status_implementation Implementation Status
+
+This document describes the current status of integrated/default supplied Libraries and their implementations of etiss::CPUArch, etiss::JIT and etiss::Plugin.
+
+\section status_implementation_integratedlibrary ETISS's Integrated Library
+	
+	This library is loaded at startup unless -fno-integrated-library was passed to etiss::initialize. Header/Source files are located in include/etiss/IntegratedLibrary/* and src/IntegratedLibrary/*
+	
+	<table border="1" style="width:100%">
+	  <tr>
+	    <th><b>Name</b><br/>(as used in etiss::getJIT, etiss::getCPUArch and etiss::getPlugin)</th>
+	    <th><b>Description</b></th>
+	    <th><b>Options</b></th>
+	    <th><b>Class</b></th>
+	    <th><b>Type</b></th>
+	  </tr>
+	  <tr>
+	    <td> PrintInstruction <br/> (etiss::getPlugin) </td>
+	    <td>Prints instructions in the form:<br/>
+	    	Executing: &lt;instruction&gt; @ &lt;address&gt;
+	    <pre>
+	Executing: 0x9c605001 @0x0000000000003938
+
+	Executing: 0x9c800000 @0x000000000000393c
+
+	Executing: 0x04001683 @0x0000000000003940 (start of meta instruction)
+
+	Executing: 0x15000000 @0x0000000000003944 (end of meta instruction)
+	    </pre>
+	    </td>
+	    <td></td>
+	    <td> etiss::plugin::PrintInstruction </td>
+	    <td> etiss::Plugin <br/> etiss::TranslatorPlugin </td>
+	  </tr>
+	  <tr>
+	    <td> gdbserver <br/> (etiss::getPlugin) </td>
+	    <td> Runs a gbd server. This requires support from the used etiss::CPUArch implementation (namely a valid etiss::plugin::gdb::GDBCore implementation). gdb can then connect to a server port to debug the simulated software. The server port is 2222 by default. If this plugin is added to a etiss::CPUCore the execution will wait until a debugger connected and continued execution.<br/>
+	    <pre>
+Enter in a terminal:
+	gdb
+	file <Your Simulated Software>
+	target remote localhost:2222
+	    </pre>
+	    </td>
+	    <td>
+	    <pre>
+port -&gt; &lt;int&gt; : specify server port
+	    </pre>
+	    </td>
+	    <td> etiss::plugin::gdb::Server </td>
+	    <td> etiss::Plugin <br/> etiss::CoroutinePlugin <br/> etiss::TranslatorPlugin <br/> etiss::SystemWrapperPlugin </td>
+	  </tr>
+	  <tr>
+	    <td> BlockAccurateHandler <br/> (etiss::getPlugin) </td>
+	    <td> Allows to inject register errors after a block. Errors are read from a file for the specified register.A Error definition consist of a injection time and the index of a flipped bit:
+	    <pre>
+Syntax:
+	TIME_IN_NANOSECONDS;AFFECTED_BIT[;ERROR_ID]
+	
+NOTE: 	the ";ERROR_ID" part is optional. No spaces may exist inbetween the values
+
+Example:
+	1000;3
+	2000;0;1234
+	
+above example schedules an error at time:
+	1000 ns: bit number 3 will be flipped e.g. @999ns: 0x00000000 @1001ns: 0x00000008
+	2000 ns: bit number 0 will be flipped e.g. @1999ns: 0x00000008 @2100ns: 0x00000009
+	
+NOTE: 	due to the infrequent execution of this plugin (usually only after a block)
+	there may be a large delay between scheduled time and application of the error
+	
+	    </pre>
+	    </td>
+	    <td> <pre>
+-r&lt;REGISTERNAME&gt; -&gt; &lt;filepath&gt; : read error definitions from the file for the specified register
+	    </pre> </td>
+	    <td> etiss::plugin::errorInjection::BlockAccurateHandler </td>
+	    <td> etiss::Plugin <br/> etiss::CoroutinePlugin </td>
+	  </tr>
+	  <tr>
+	    <td>  </td>
+	    <td>  </td>
+	    <td>  </td>
+	    <td>  </td>
+	    <td>  </td>
+	  </tr>
+	</table>
+	
+\section status_implementation_or1k OR1K example implementation
+
+	ETISS has a shared library that provides an example 32bit implementation of the OR1K architecture. The instructions of the ORBIS32 and ORFPX32 group are supported. For detailed information on the implementation refer to https://docs.google.com/spreadsheets/d/1BbbDszsa3vRI0pxGgkrSbvH-ye9bHRmfAEO6OwCqSvU/edit?usp=sharing
+
+	To use this implementation call "etiss::CPUCore::create("or1k","YOURCORENAME",options);" where "options" is std::map<std::string,std::string>. The shared library should be located in ArchImpl/OR1K.
+	
+	Currently supported options are:
+	<table border="1" style="width:100%">
+	  <tr>
+	    <th><b>Option</b><br/></th>
+	    <th><b>Values </b></th>
+	    <th><b>Description</b></th>
+	  </tr>
+	  <tr>
+	    <td> norangeexception </td>
+	    <td> true <br/> <b>false</b> </td>
+	    <td> If set to true then the may be no generation of RANGEEXCEPTION.</td>
+	  </tr>
+	  <tr>
+	    <td> returnjump </td>
+	    <td> true <br/> <b>false</b> </td>
+	    <td> If set to true then the translated code will use return statements in a block for jumps instead of signaling the block end. </td>
+	  </tr><tr>
+	    <td> hostendianness </td>
+	    <td> true <br/> <b>false</b> </td>
+	    <td> [experimental,pending] If set to true then instruction reads and data reads will be performed under the assumption that the host endianness is the same as the endianness of the simulated processor. </td>
+	  </tr><tr>
+	    <td>  </td>
+	    <td>  </td>
+	    <td>  </td>
+	  </tr>
+	 </table>
+	
+\section status_implementation_gcc GCC based just in time compiler
+
+	This etiss::JIT implementation writes the passed code to a file and invokes gcc to create a dynamic library which is then loaded into the application with dlopen and the RTLD_LOCAL flag. etiss::JIT::translate returns a library handle and etiss::JIT::getFunction returns a function pointer loaded with dlsym.
+	
+	gcc get invoked with the flags "-c -Wall -fPIC -march=native -mtune=native -pipe -g -O2" in debug mode and "-c -Wall -fPIC -march=native -mtune=native -pipe -O3" otherwise to create an object file.
+	
+	Currently supported options are:
+	<table border="1" style="width:100%">
+	  <tr>
+	    <th><b>Option</b><br/></th>
+	    <th><b>Values </b></th>
+	    <th><b>Description</b></th>
+	  </tr>
+	  </tr><tr>
+	    <td> cleanup </td>
+	    <td> <b>true</b> <br/> false </td>
+	    <td> deletes temporary files (code + shared libraries) after the instance has been deleted </td>
+	  </tr><tr>
+	    <td>  </td>
+	    <td>  </td>
+	    <td>  </td>
+	  </tr>
+	 </table>
+\section status_implementation_llvm LLVM/Clang based just in time compiler
+
+	This etiss::JIT implementation compiles and loads passed code within the memory. Compilation is usually faster than with the GCC based compiler. LLVMs MCJIT engine is used to generate executable functions. etiss::JIT::getFunction can only return function pointers (not any symbol like the dlsym call of the GCC based compiler). This restriction has no relevance for the intended use of etiss::JIT.
+	
+	For more information refer to http://www.llvm.org and http://clang.llvm.org/ . The execution engine used to create function pointers is described on this site http://llvm.org/docs/MCJITDesignAndImplementation.html
+	
+	
+	Currently no options are supported.
+	
+\section status_implementation_tcc TCC (Tiny C Compiler) based just in time compiler
+
+	TCC can compile code in memory like LLVM/Clang but is much faster. The compiled functions are however considerable less performant that those from GCC or LLVM/Clang. TCC is recommended for use with very large programs where fast compilation and small memory footprint are the main aspect.
+	
+	For more information refer to http://bellard.org/tcc/
+	
+	Currently no options are supported.
+
+ */
+

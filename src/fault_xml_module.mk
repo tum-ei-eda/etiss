@@ -1,7 +1,7 @@
 #
 #	Copyright 2018 Infineon Technologies AG
 #
-#	This file is part of ETISS tool, see <https://github.com/tum-ei-eda/etiss>
+#	This file is part of ETISS tool, see <https://gitlab.lrz.de/de-tum-ei-eda-open/etiss>
 #
 #	The initial version of this software has been created with the funding support by the German Federal
 #	Ministry of Education and Research(BMBF) in the project EffektiV under grant 01IS13022.
@@ -52,7 +52,7 @@ $(FAULT_XML_MODULE_BUILD)fault/%.o: fault/%.cpp
 
 fault_xml_module.a: $(FAULT_XML_MODULE_OBJECTS)
 	ar rcs fault_xml_module.a $(FAULT_XML_MODULE_OBJECTS)
-
+	
 clean:
 	rm -f fault/*.o
 	rm -f fault/xml/*.o

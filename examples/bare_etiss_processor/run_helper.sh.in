@@ -5,7 +5,7 @@ ETISS_DIR=@CMAKE_INSTALL_PREFIX@/
 
 
 # Clear tmp file
-DYN_INI=$(mktemp /tmp/etiss_dynamic_XXXXXXXXXX.ini)
+DYN_INI=/tmp/etiss_dynamic.ini
 echo "" > $DYN_INI
 
 
@@ -42,8 +42,6 @@ echo -e \
     >> $DYN_INI
 
 VP_EXE="${ETISS_DIR}/examples/bare_etiss_processor/build/main"
-
-CMD_OPTIONS=""
 
 USE_GDB=0
 USE_TGDB=0
@@ -83,7 +81,8 @@ do
         VP_EXE="$2"
         shift
     else
-        CMD_OPTIONS="${CMD_OPTIONS} ${arg}"
+        echo -e "Unknown argument: $arg"
+        exit 1
     fi
     shift
 done
@@ -109,7 +108,5 @@ fi
 if [ "${USE_GDB}" -eq 1 ]; then
     gdb --args ${VP_EXE} ${ARGS}
 else
-    ${VP_EXE} ${ARGS} ${CMD_OPTIONS}
+    ${VP_EXE} ${ARGS}
 fi
-
-rm $DYN_INI

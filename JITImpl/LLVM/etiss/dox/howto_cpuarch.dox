@@ -1,0 +1,547 @@
+/*! \page howto_cpuarch How to implement a cpu architecture for ETISS
+
+	ETISS includes an example implementation of the OR1K cpu architecture. It is located in ArchImpl/OR1K/ and should be refered to for examples.
+
+	For simplification the architecture in this guide will be referred to as <b>X</b>.
+
+	\section howto_cpuarch_step1 Step 1: Create a workfolder and necessary files
+
+	First of all a directory for your cpu architecture should be created. It is recommended to create a folder in ArchImpl with the name of the cpu architecture (analogue to ArchImpl/OR1K/: ArchImpl/<b>X</b>/)
+
+	For the following steps a header file for the cpu state structure, a header and source file for the etiss::CPUArch implementation and a source file containing an interface for etiss are needed. The following empty files should be created in your ArchImpl/<b>X</b>/ folder:
+
+	<pre>
+		<b>X</b>.h
+		<b>X</b>Arch.h
+		<b>X</b>Arch.cpp
+		<b>X</b>ArchLib.cpp
+		CMakeLists.txt
+	</pre>
+	
+	For a how-to for the creation of a CMakeLists.txt file please have a look at \ref howto_createproject "How to create a sub project for ETISS"
+
+	\section howto_cpuarch_step2 Step 2: Implement a CPU state structure
+
+	ETISS requires the state of a cpu to be stored in a structure. The basic CPU structure defined as ETISS_CPU in include_c/etiss/jit/CPU.h contains fields for cpu time, instruction pointer and cycle time.
+	This structure needs to be extended for a cpu architecture. The new structure should be defined in <b>X</b>.h .
+
+	<b> NOTE: the code in X.h must be C compliant code (not just C++) since it needs to be used at runtime for just in time code compilation. </b>
+
+	The content of <b>X</b>.h should look like this:
+
+	\code{.c}
+
+#ifndef X_X_H_
+#define X_X_H_
+
+#include "etiss/jit/CPU.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#pragma pack(push, 1) // important!
+struct X {
+
+	ETISS_CPU cpu; // original cpu struct must be defined as the first field of the new structure. this allows to cast X * to ETISS_CPU * and vice versa
+
+	etiss_uint32 X_registers[16]; // some example registers
+
+	etiss_uint32 X_intterrupt; // some interrupt register
+
+	etiss_uint32 X_intterrupt_mask; // some interrupt mask
+
+	etiss_uint32 timercfg; // some timer configuration register
+
+	// further registers
+
+};
+#pragma pack(pop) // undo changes
+
+typedef struct X X; // convenient use of X instead of struct X in generated C code
+
+#ifdef __cplusplus
+} // extern "C"
+#endif
+
+#endif
+
+	\endcode
+	
+	Additionally it is neccessary to support a VirtualStruct to allow access to the fields by various plugins. Please have a look at the documentation of etiss::VirtualStruct and etiss::VirtualStruct::Field. This needs to be implemented by the etiss::CPUArch object.
+
+	\section howto_cpuarch_step3 Step3 : Implement etiss::CPUArch
+
+	To enable ETISS to execute instructions of a cpu architecture, etiss::CPUArch needs to be implemented to handle translation of instructions to C code and to provide basic architecture related information and functions.
+
+	The implementation should be done in <b>X</b>Arch.h/.cpp.
+
+	<b>X</b>Arch.h:
+
+	\code{.cpp}
+		#include "etiss/CPUArch.h"
+
+		#include "X.h"
+		#include "XTimer.h" // optional
+		#include "XGDBCore.h" // optional
+
+		class XArch : public etiss::CPUArch {
+		public:
+			XArch();
+			~XArch();
+
+			const std::set<std::string> & getListenerSupportedRegisters(); // defined by etiss::CPUArchRegListenerInterface
+
+            // provide flexible access to the field of your cpu state structure
+			virtual std::shared_ptr<etiss::VirtualStruct> getVirtualStruct(ETISS_CPU * cpu);
+
+			// optional but common functions to provide a timer for the cpu architecture
+			etiss::Plugin * newTimer(ETISS_CPU * cpu);  // see How to implement a cpu architecture for ETISS: Step 4 // defined by etiss::CPUArchDefaultPlugins
+			void deleteTimer(etiss::Plugin * timer);  // defined by etiss::CPUArchDefaultPlugins
+
+			ETISS_CPU * newCPU(); // allocate a X structure
+			void resetCPU(ETISS_CPU * cpu,etiss::uint64 * startpointer); // reset registers and instruction pointer
+			void deleteCPU(ETISS_CPU *); // delete previously allocated X structure
+			unsigned getMaximumInstructionSizeInBytes(); // largest block of data containing instruction(s) that may be requested by the translate function (e.g. 8 byte for 32bit instructions where a delay slot instruction needs to be translated together with the previous instruction (=2 instructions))
+			unsigned getInstructionSizeInBytes(); // smalest number of bytes of on instruction (e.g. 4 byte for 32bit instructions)
+			const std::set<std::string> & getHeaders() const; // should return e.g. "X.h" and (if the cpu uses ETISS's integrated softfloat functions) "etiss/jit/fpu/softfloat.h"
+			// optional but common function to handle cpu execution related exceptions. if not implemented any exception will terminate the simulated cpu
+			etiss::int32 handleException(etiss::int32 code,ETISS_CPU * cpu); // applies exceptions to the cpu state and returns 0 on success
+			// optional but common function to provide access to the interrupt vector of a cpu
+			etiss::InterruptVector * createInterruptVector(ETISS_CPU * cpu);
+			void deleteInterruptVector(etiss::InterruptVector * vec,ETISS_CPU * cpu);
+			// optional but common function to support a gdb server
+			etiss::plugin::gdb::GDBCore & getGDBCore(); // see How to implement a cpu architecture for ETISS: Step 5
+
+		private:
+			std::set<std::string> listenerSupportedRegisters_; // used by const std::set<std::string> & getListenerSupportedRegisters()
+			std::set<std::string> registers32_; // used by const std::set<std::string> & getRegisters32()
+			std::set<std::string> headers_; // used by const std::set<std::string> & getHeaders() const
+			XGDBCore xgdbcore_; // used by etiss::plugin::gdb::GDBCore & getGDBCore() /// see How to implement a cpu architecture for ETISS: Step 5
+		};
+
+	\endcode
+
+	<b>X</b>Arch.cpp:
+
+	\code{.cpp}
+
+		#include "XArch.h"
+
+		using namespace etiss;
+
+		XArch::XArch() : CPUArch("X"){
+			//TODO
+
+			registers32_.insert("timerConfig");
+			registers32_.insert("X_registers1"); // X::X_registers[1]
+			// add other registers
+
+
+			headers_.insert("X.h");
+			headers_.insert("etiss/jit/fpu/softfloat.h");
+
+			listenerSupportedRegisters_.insert("timerConfig"); // for X::timercfg
+
+		}
+		XArch::~XArch() {
+			//TODO
+		}
+
+		const std::set<std::string> & XArch::getListenerSupportedRegisters(){
+			return listenerSupportedRegisters_;
+		}
+
+		std::shared_ptr<etiss::VirtualStruct> getVirtualStruct(ETISS_CPU * cpu){
+		    auto ret = new etiss::VirtualStruct(cpu,[](Field*f){delete f;});
+		    
+		    X * xcpu = (X*)cpu;
+		    
+		    ret->addField(new etiss::VirtualStruct::Field(
+                *ret, // reference to the parent structure
+                std::string("X_registers[12]"), // name
+                std::string("X_register_12"), // pretty (human readable) name
+                etiss::VirtualStruct::Field::R|etiss::VirtualStruct::Field::W, // read/write flags
+                4, // width in bytes
+                false, // use provided lambda function and not virtual functions
+                [ret](){ // read
+					return (uint64_t) ((X*)ret->structure_)->X_registers[12];
+				},
+				[vcore,i](uint64_t val){ // write
+					((X*)ret->structure_)->X_registers[12] = (uint32_t)val;
+				}
+				);
+		    
+		    
+		    return ret;
+		}
+
+
+		etiss::Plugin * XArch::newTimer(ETISS_CPU * cpu){
+			return new XTimer(); // see How to implement a cpu architecture for ETISS: Step 4
+		}
+		void XArch::deleteTimer(etiss::Plugin * timer){
+			delete timer;
+		}
+
+		ETISS_CPU * XArch::newCPU(){
+			return (ETISS_CPU*) new X(); // see How to implement a cpu architecture for ETISS: Step 2
+		}
+		void XArch::resetCPU(ETISS_CPU * cpu,etiss::uint64 * startpointer){
+			//TODO
+			//e.g.
+
+			if (startpointer)
+				cpu->instructionPointer = *startpointer;
+
+			for (int i = 0;i<16;i++)
+				((X*)cpu)->X_registers[i] = 0;
+
+			((X*)cpu)->timercfg = 0x43847594;
+
+
+		}
+		void XArch::deleteCPU(ETISS_CPU * cpu){
+			delete cpu;
+		}
+		unsigned XArch::getMaximumInstructionSizeInBytes(){
+			//TODO
+			return 8;
+		}
+		unsigned XArch::getInstructionSizeInBytes(){
+			//TODO
+			return 4;
+		}
+
+		const std::set<std::string> & XArch::getHeaders() const{
+			return headers_;
+		}
+		etiss::int32 XArch::handleException(etiss::int32 code,ETISS_CPU * cpu){
+			//TODO
+			//e.g.
+			switch (code){
+			case etiss::RETURNCODE::DBUS_READ_ERROR: // global data bus error code defined in include_c/etiss/jit/ReturnCode.h. These codes are also available in C under the name ETISS_RETURNCODE_XXXXXXXXXXXX (e.g. ETISS_RETURNCODE_DBUS_READ_ERROR)
+				cpu->instructionPointer = 0x1000 >> 2; // jump to an assumed error handler at address 0x1000. since the instruction pointer points to an instruction index, the addess 0x1000 need to be divided by the instruction size returned by getInstructionSizeInBytes() (in this case 4 hence ">> 2")
+				return etiss::RETURNCODE::NOERROR; // == 0 // return no error code since the error has been handled and should not terminate the simulation.
+			default:
+				return code; // terminates cpu execution
+			}
+		}
+		etiss::InterruptVector * XArch::createInterruptVector(ETISS_CPU * cpu){
+			//TODO
+			//this may return a custom implementation of etiss::InterruptVector (in this case please refer to the documentation of that class)
+			//a simpler solution is to use the template class etiss::MappedInterruptVector<INT> that allows to simply wrap pointers to integer variables as demonstrated by this code
+			//e.g.
+			etiss::uint32 * interruptRegister = &(((X*)cpu)->X_intterrupt); // interrupt bit vector
+			etiss::uint32 * interruptMask = &(((X*)cpu)->X_intterrupt_mask); // mask for interrupt bits
+
+			//NOTE: MappedInterruptVector supports multiple consecutive interrupt + mask registers
+			std::vector<etiss::uint32*> interruptRegisters;
+			interruptRegisters.push_back(interruptRegister);
+
+			std::vector<etiss::uint32*> interruptMasks;
+			interruptMasks.push_back(interruptMask);
+
+
+			return new MappedInterruptVector<etiss::uint32>(interruptRegisters,interruptMasks);
+
+		}
+		void XArch::deleteInterruptVector(etiss::InterruptVector * vec,ETISS_CPU * cpu){
+			delete vec;
+		}
+		etiss::plugin::gdb::GDBCore & XArch::getGDBCore(){
+			return xgdbcore_;
+		}
+
+
+	\endcode
+
+	If the above example has been modified to remove timer and gdbcore support then the next two chapters can be skipped.
+	
+	Besides implmenting the CPUArch interface it is necessary to implement the inherited etiss::TranslatorPlugin interface. That interface is responsible for adding translation functionality. For further information please refer to the classes defined in Instruction.h .
+	The classes etiss::instr::ModedInstructionSet, etiss::instr::VariableInstructionSet, etiss::instr::InstructionSet and etiss::instr::Instruction implement lookup and translation functionality.
+	etiss::instr::InstructionCollection, etiss::instr::InstructionClass, etiss::instr::InstructionGroup and etiss::instr::InstructionDefinition are helper classes that allow to store neccessary information for the previous group of classes in an ordered manner.
+	The OR1K example uses those classes to define all instructions and uses the etiss::instr::InstructionCollection::addTo(ModedInstructionSet &set, bool &ok) function to push the definitions into the ModedInstruction set and sub sets.
+	
+	A simple example of an fictive instruction set implementation provided by a CPUArch using above classes:
+	
+	\code
+
+[...]
+
+etiss::instr::InstructionGroup Thumb16_all("Thumb16_all",16);
+etiss::instr::InstructionGroup ARMvX_all("ARMvX_all",32);
+etiss::instr::InstructionClass Thumb16(1,"Thumb16",16,Thumb16_all);
+etiss::instr::InstructionClass ARMvX(0,"ARMvX",32,ARMv6_all);
+etiss::instr::InstructionCollection CortexXX("CortexXX",ARMvX,Thumb16);
+
+static InstructionDefinition add(
+    ARMvX_all, // associated InstructionGroup
+
+    "add", // name
+
+    parse_i32("6x38 15x0 1x0 2x0 4x0 4xe"), // opcode value
+
+    parse_i32("6xFF 15x0 1x0 2xF 4x0 4xF"), // mask that defines which bits make up the opcode
+
+    [](BitArray & ba,etiss::CodeSet & cs,InstructionContext & ic) // callback to translate the "add" instruction
+{
+    CodePart & part = cs.append(CodePart::APPENDEDRETURNINGREQUIRED); // add a code container
+    part.code = "((X*)cpu)->X_registers[1] = ((X*)cpu)->X_registers[2] + ((X*)cpu)->X_registers[3];"; // add translated instruction to code container
+    
+    return true;
+},
+
+0, // see etiss::instr::Instruction::BUILTINGROUP for possible value and meaning
+
+0, // callback routing to enable printing of assembler output. optional
+
+);
+
+    
+    // called to add instructions to the instruction set
+    // add 	"virtual void initInstrSet(etiss::instr::ModedInstructionSet & ) const;" to the XArch header.
+	void XArch::initInstrSet(etiss::instr::ModedInstructionSet & mis) const{
+	    bool ok = true;
+	    CortexXX.addTo(mis,ok);
+	    if (!ok)
+	        etiss::log(etiss::FATALERROR,"Failed to add instructions for CoretxXX");
+	}
+	
+	\endcode
+
+	\section howto_cpuarch_step4 Step 4 (only required if newTimer(ETISS_CPU * cpu) is implemented) : Implement a timer plugin
+
+	It is recommended to provide a Timer plugin to enable common functionality out of the box.
+	In this example the timer plugin class is named <b>X</b>Timer (see etiss::Plugin * <b>X</b>Arch::newTimer(ETISS_CPU * cpu) of \ref howto_cpuarch_step3 "Step 3").
+
+	The additional files <b>X</b>Timer.h and <b>X</b>Timer.cpp need to be created in the ArchImpl/<b>X</b>/ folder.
+
+	This timer example assumes 1. that it is acceptable that the timer event only fires in between blocks (a more accurate timer would come at greater performance cost) and 2. that it needs to configure itself according to the value of X::timercfg. This results in the use of 2 plugin interface: etiss::CoroutinePlugin whose etiss::CoroutinePlugin::execute function is called in between blocks and etiss::RegisterDevicePlugin whose eitss::RegisterDevicePlugin::changedRegister function as called upon signaled register changes
+
+	<b>X</b>Timer.h:
+	\code
+
+		#include "etiss/Plugin.h"
+
+		#include "X.h"
+
+		class XTimer : public etiss::CoroutinePlugin, public etiss::RegisterDevicePlugin {
+		public:
+			XTimer();
+			virtual ~XTimer();
+			virtual etiss::int32 execute();
+			virtual void changedRegister(const char * name);
+		protected:
+			std::string _getPluginName() const;
+		private:
+			bool enabled_;
+		};
+
+
+	\endcode
+
+	<b>X</b>Timer.cpp:
+	\code
+		#include "XTimer.h"
+
+		XTimer::XTimer(){
+			enabled_ = false;
+		}
+		XTimer::~XTimer(){}
+
+		etiss::int32 XTimer::execute(){
+			//TODO
+			// e.g.
+
+			if (enabled_){ //NOTE: in this simple example this check could also be performed on the cpu structure itself without the flag and the changedRegister method. In case of a more complex implementation with a modifyable timer counter register this is usually the way to go. see ArchImpl/OR1K/OR1KTimer.cpp
+				if (true) { // check timer condition
+					return 71; // return a X architecture specific timer exception code
+				}
+			}
+
+			return 0;
+
+		}
+		void XTimer::changedRegister(const char * name){
+			//TODO
+			if (std::string(name) == std::string("timerConfig")){
+				enabled_ = ((X*)plugin_cpu_)->timercfg != 0; // note etiss::Plugin defined the protected pointers ETISS_CPU * plugin_cpu_, ETISS_System * plugin_system_ and CPUArch * plugin_arch_ which are always valid during simulation and thus during calls to etiss::RegisterDevicePlugin::changedRegister and etiss::CoroutinePlugin::execute
+			}
+		}
+
+		std::string XTimer::_getPluginName() const{
+			return "XTimer";
+		}
+
+
+
+
+	\endcode
+
+
+	\section howto_cpuarch_step5 Step 5 (only required if getGDBCore() is implemented) : Implement etiss::gdb::GDBCode to support a GDB server
+
+	It is recommended to provide a etiss::plugin::gdb::GDBCore implementation. This minimalistic and easy to implement interface allows to use gdb to debug a simulated program.
+
+	The additional files <b>X</b>GDBCore.h and <b>X</b>GDBCore.cpp need to be created in ArchImpl/<b>X</b>/.
+
+	<b>X</b>GDBCore.h:
+
+	\code
+		#include "etiss/IntegratedLibrary/gdb/GDBCore.h"
+
+		class XGDBCore : public etiss::plugin::gdb::GDBCore {
+			virtual std::string mapRegister(unsigned index);
+			virtual unsigned mapRegister(std::string name);
+			virtual unsigned mappedRegisterCount();
+			virtual bool isLittleEndian();
+		};
+	\endcode
+
+	<b>X</b>GDBCore.cpp:
+
+	\code
+		#include "XGDBCore.h"
+
+		std::string XGDBCore::mapRegister(unsigned index){
+			//TODO
+			switch (index){
+			case 0:
+				return "timerConfig";
+			case 1:
+				return "X_register1";
+			default:
+				return "";
+			}
+		}
+		unsigned XGDBCore::mapRegister(std::string name){
+			//TODO
+			if (name == std::string("timerConfig")){
+				return 0;
+			}
+			if (name == std::string("X_register1")){
+				return 1;
+			}
+			return INVALIDMAPPING;
+		}
+		unsigned XGDBCore::mappedRegisterCount(){
+			//TODO
+			return 2;
+		}
+		bool XGDBCore::isLittleEndian(){
+			//TODO
+			return true;
+		}
+	\endcode
+
+	\section howto_cpuarch_step6 Step 6: Implement the loading interface
+
+	ETISS preferably loads a cpu architecture as a dynamic library at runtime. To do this it is necessary to implement some functions to find the CPUArch implementation(s).
+
+	Additional to the shown functions additional functions can be used to provide header files at runtime. Refer to \ref doc_libraryinterface_files "The LibraryInterface file copy extension" for an explanation on how to store files within a library and extract them at runtime. This should be used to provide the <b>X</b>.h header file for runtime compilation. Please note that all files with the name included_c/<b>*</b> can be included during runtime compilation as #include "<b>*</b>".
+	
+	<b>X</b>ArchLib.cpp:
+
+	\code
+		// define a name for this library. this will be used to avoid name clashes with other libraries. in this example the library is named "X".
+		// IMPORTANT this name MUST match the library name: e.g. X -> libX.so
+		#define ETISS_LIBNAME X
+
+		#include "etiss/helper/CPUArchLibrary.h" // defines the following functions
+
+		#include "XArch.h"
+
+		extern "C"{
+
+			// implements version function
+			ETISS_LIBRARYIF_VERSION_FUNC_IMPL
+
+			unsigned X_countCPUArch(){
+				//TODO
+				return 1; // number of cpu architectures provided
+			}
+			const char * X_nameCPUArch(unsigned index){
+				//TODO
+				switch (index){
+				case 0:
+					return "X";
+				default:
+					return "";
+				}
+			}
+			etiss::CPUArch* X_createCPUArch(unsigned index,std::map<std::string,std::string> options){
+				//TODO
+				switch (index){
+				case 0:
+					// parse arguments?
+					return new XArch();
+				default:
+					return 0;
+				}
+			}
+			void X_deleteCPUArch(etiss::CPUArch* arch){
+				delete arch;
+			}
+
+		}
+
+	\endcode
+
+	\section howto_cpuarch_step7 Step 7: Build and run the Library
+
+	Finally a makefile or a CMakeLists.txt is needed to build the new library with the <b>X</b> architecture implementation as a dynamic library.
+	Currently the default project CMakeLists.txt include provided by ETISS (\ref howto_createproject "How to create a sub project for ETISS") doesn't support stripping of symbols. Plans are to support it at later time when cmake provides better support for this.
+	
+	Makefile:
+
+	\code
+
+DEBUG?=1
+
+CC=gcc
+
+ifeq ($(DEBUG),0)
+	DBGPARAM =
+	OPTLEVEL?=-O3
+else
+	DBGPARAM =-g
+	OPTLEVEL?=
+endif
+
+ETISS_FOLDER=../..
+
+CFLAGS=-std=c++0x -c -MMD -Wall -Werror -fPIC $(OPTLEVEL) $(DBGPARAM) -DDEBUG=$(DEBUG) -I$(ETISS_FOLDER)/include -I$(ETISS_FOLDER)/include_c
+
+
+all : libX.so
+
+XArch.o : XArch.cpp
+	$(CC) $(CFLAGS) XArch.cpp
+
+XGDBCore.o : XGDBCore.cpp
+	$(CC) $(CFLAGS) XGDBCore.cpp
+
+XTimer.o : XTimer.cpp
+	$(CC) $(CFLAGS) XTimer.cpp
+
+XArchLib.o: XArchLib.cpp
+	$(CC) $(CFLAGS) XArchLib.cpp
+
+-include ./*.d
+
+libX.so : XArch.o XGDBCore.o XTimer.o XArchLib.o
+	$(CC) -std=c++0x -shared -g -L$(ETISS_FOLDER) -dl -o libX.so XArchLib.o XArch.o XGDBCore.o XTimer.o
+
+clean :
+	rm -f *o
+	rm -f libX.so
+
+	\endcode
+
+	Once the dynamic library was build it is available in ETISS by default if placed in ArchImpl/X/ or can be loaded with void etiss::loadLibrary(std::string path,std::string name). Use etiss::listLibraries() and etiss::listCPUArchs() to view the status of loaded libraries.
+
+	Refer to  \ref misc_striplibrary "Removing symbols from a shared library" once the api of the new library is out of it's testing state or runtime linkage errors arise.
+
+
+*/

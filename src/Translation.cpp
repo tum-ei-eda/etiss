@@ -6,7 +6,7 @@
 
         Copyright 2018 Infineon Technologies AG
 
-        This file is part of ETISS tool, see <https://github.com/tum-ei-eda/etiss>.
+        This file is part of ETISS tool, see <https://gitlab.lrz.de/de-tum-ei-eda-open/etiss>.
 
         The initial version of this software has been created with the funding support by the German Federal
         Ministry of Education and Research (BMBF) in the project EffektiV under grant 01IS13022.
@@ -322,7 +322,7 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
                                   "#include \"etiss/jit/System.h\"\n"
                                   "#include \"etiss/jit/libresources.h\"\n"
                                   "#include \"etiss/jit/ReturnCode.h\"\n");
-
+    
     for(auto &it: jitExtHeaders()){
         if(it != "") block.fileglobalCode().insert("#include \"" + it + "\"\n");
     }
@@ -356,7 +356,7 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
     for(auto & it: jitExtHeaderPaths()){
        if(it != "") headers.insert(it);
     }
-
+    
     std::set<std::string> libloc;
     libloc.insert(arch_->getIncludePath());
     libloc.insert(etiss::cfg().get<std::string>("etiss_path", "./"));
@@ -365,7 +365,7 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
     for(auto & it: jitExtLibPaths()){
        if(it != "") libloc.insert(etiss::jitFiles() + it);
     }
-
+    
     std::set<std::string> libs;
     //libs.insert("ETISS");
     libs.insert("resources");

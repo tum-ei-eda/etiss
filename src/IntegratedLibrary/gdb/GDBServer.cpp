@@ -6,7 +6,7 @@
 
         Copyright 2018 Infineon Technologies AG
 
-        This file is part of ETISS tool, see <https://github.com/tum-ei-eda/etiss>.
+        This file is part of ETISS tool, see <https://gitlab.lrz.de/de-tum-ei-eda-open/etiss>.
 
         The initial version of this software has been created with the funding support by the German Federal
         Ministry of Education and Research (BMBF) in the project EffektiV under grant 01IS13022.
@@ -180,7 +180,7 @@ etiss::int32 Server::preInstructionCallback()
         etiss::uint32 bp = breakpoints_.get(arch_->getGDBCore().getInstructionPointer(cpu_) >> minimal_pc_alignment);
         if (unlikely(bp != 0))
         {
-            if ((bp & (BreakpointDB::BPTYPE_BREAK_HW | BreakpointDB::BPTYPE_BREAK_MEM)) != 0)
+            if ((bp & 3) != 0)
             {
                 status_paused_ = true;
             }
@@ -608,45 +608,19 @@ void Server::handlePacket(bool block)
             {
                 if (command.length() > 2 && command[2] == ',')
                 {
-                    BreakpointDB *bpDB = nullptr;
-                    etiss::uint32 requestedFlags = 0;
                     switch (command[1])
                     {
-                    case '0':
-                        bpDB = &breakpoints_;
-                        requestedFlags = BreakpointDB::BPTYPE_BREAK_MEM;
-                        break;
-                    case '1':
-                        bpDB = &breakpoints_;
-                        requestedFlags = BreakpointDB::BPTYPE_BREAK_HW;
-                        break;
-                    case '2':
-                        bpDB = &watchpoints_;
-                        requestedFlags = BreakpointDB::BPTYPE_WATCH_WRITE;
-                        break;
-                    case '3':
-                        bpDB = &watchpoints_;
-                        requestedFlags = BreakpointDB::BPTYPE_WATCH_READ;
-                        break;
-                    case '4':
-                        bpDB = &watchpoints_;
-                        requestedFlags = BreakpointDB::BPTYPE_WATCH_READ | BreakpointDB::BPTYPE_WATCH_WRITE;
-                        break;
-                    }
-                    if (bpDB)
+                    case '0': // memory breakpoint
                     {
                         unsigned pos = 3;
                         etiss::uint64 addr = hex::tryInt<etiss::uint64>(command, pos);
+                        addr = addr >> minimal_pc_alignment;
                         if (pos > 3)
                         {
-                            if (bpDB == &breakpoints_)
+                            etiss::uint32 flags = breakpoints_.get(addr);
+                            if ((flags & 1) == 0)
                             {
-                                addr = addr >> minimal_pc_alignment;
-                            }
-                            etiss::uint32 existingFlags = bpDB->get(addr);
-                            if ((existingFlags & requestedFlags) != requestedFlags)
-                            {
-                                bpDB->set(addr, existingFlags | requestedFlags);
+                                breakpoints_.set(addr, flags | 1);
                             }
                             answer = "OK";
                         }
@@ -654,6 +628,28 @@ void Server::handlePacket(bool block)
                         {
                             answer = "EFF";
                         }
+                    }
+                    break;
+                    case '1': // hardware breakpoint
+                    {
+                        unsigned pos = 3;
+                        etiss::uint64 addr = hex::tryInt<etiss::uint64>(command, pos);
+                        addr = addr >> minimal_pc_alignment;
+                        if (pos > 3)
+                        {
+                            etiss::uint32 flags = breakpoints_.get(addr);
+                            if ((flags & 2) == 0)
+                            {
+                                breakpoints_.set(addr, flags | 2);
+                            }
+                            answer = "OK";
+                        }
+                        else
+                        {
+                            answer = "EFF";
+                        }
+                    }
+                    break;
                     }
                 }
             }
@@ -662,43 +658,19 @@ void Server::handlePacket(bool block)
             {
                 if (command.length() > 2 && command[2] == ',')
                 {
-                    BreakpointDB *bpDB = nullptr;
-                    etiss::uint32 flagsToDelete = 0;
                     switch (command[1])
                     {
-                    case '0':
-                        bpDB = &breakpoints_;
-                        flagsToDelete = BreakpointDB::BPTYPE_BREAK_MEM;
-                        break;
-                    case '1':
-                        bpDB = &breakpoints_;
-                        flagsToDelete = BreakpointDB::BPTYPE_BREAK_HW;
-                        break;
-                    case '2':
-                        bpDB = &watchpoints_;
-                        flagsToDelete = BreakpointDB::BPTYPE_WATCH_WRITE;
-                        break;
-                    case '3':
-                        bpDB = &watchpoints_;
-                        flagsToDelete = BreakpointDB::BPTYPE_WATCH_READ;
-                        break;
-                    case '4':
-                        bpDB = &watchpoints_;
-                        flagsToDelete = BreakpointDB::BPTYPE_WATCH_READ | BreakpointDB::BPTYPE_WATCH_WRITE;
-                        break;
-                    }
-
-                    if (bpDB)
+                    case '0': // memory breakpoint
                     {
                         unsigned pos = 3;
                         etiss::uint64 addr = hex::tryInt<etiss::uint64>(command, pos);
                         addr = addr >> minimal_pc_alignment;
                         if (pos > 3)
                         {
-                            etiss::uint32 existingFlags = bpDB->get(addr);
-                            if ((existingFlags & flagsToDelete) != 0)
+                            etiss::uint32 flags = breakpoints_.get(addr);
+                            if ((flags & 1) != 0)
                             {
-                                bpDB->set(addr, existingFlags & ~flagsToDelete);
+                                breakpoints_.set(addr, flags & ~1);
                             }
                             answer = "OK";
                         }
@@ -706,6 +678,28 @@ void Server::handlePacket(bool block)
                         {
                             answer = "EFF";
                         }
+                    }
+                    break;
+                    case '1': // hardware breakpoint
+                    {
+                        unsigned pos = 3;
+                        etiss::uint64 addr = hex::tryInt<etiss::uint64>(command, pos);
+                        addr = addr >> minimal_pc_alignment;
+                        if (pos > 3)
+                        {
+                            etiss::uint32 flags = breakpoints_.get(addr);
+                            if ((flags & 2) != 0)
+                            {
+                                breakpoints_.set(addr, flags & ~2);
+                            }
+                            answer = "OK";
+                        }
+                        else
+                        {
+                            answer = "EFF";
+                        }
+                    }
+                    break;
                     }
                 }
             }
@@ -778,13 +772,6 @@ etiss::int32 Server::preMemoryAccessCallback(etiss::uint64 addr, etiss::uint32 l
     uint64_t buf = 0;
     if (read)
     {
-        if (!watchpoints_.isEmpty())
-        {
-            if (watchpoints_.get(addr) & BreakpointDB::BPTYPE_WATCH_READ)
-            {
-                status_paused_ = true;
-            }
-        }
         if (data)
         {
             exception = unwrappedSys_->dread(unwrappedSys_->handle, cpu_, addr, (etiss::uint8*)&buf, len);
@@ -796,13 +783,6 @@ etiss::int32 Server::preMemoryAccessCallback(etiss::uint64 addr, etiss::uint32 l
     }
     else
     {
-        if (!watchpoints_.isEmpty())
-        {
-            if (watchpoints_.get(addr) & BreakpointDB::BPTYPE_WATCH_WRITE)
-            {
-                status_paused_ = true;
-            }
-        }
         if (data)
         {
             exception = unwrappedSys_->dwrite(unwrappedSys_->handle, cpu_, addr, (etiss::uint8*)&buf, len);
@@ -815,10 +795,7 @@ etiss::int32 Server::preMemoryAccessCallback(etiss::uint64 addr, etiss::uint32 l
     if (exception)
     {
         status_paused_ = true;
-    }
 
-    if (status_paused_)
-    {
         if (!gdb_status_paused_)
         {
             con_.snd("T" + hex::fromByte(5), false);

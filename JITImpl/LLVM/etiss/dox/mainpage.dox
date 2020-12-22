@@ -1,0 +1,148 @@
+/*!
+\mainpage Extendable Translating Instruction Set Simulator (ETISS)
+\anchor etiss_main
+
+\tableofcontents
+
+\section Introduction
+
+ETISS is an instruction set simulator, that translates instructions into C code.
+The C-code of an instruction block is compiled and executed at runtime.
+Instruction translation is done by an etiss::CPUArch implementation.
+etiss::TranslationPlugin allows to add additional code to a translated
+instruction (e.g. etiss::plugin::gdb::Server adds code for debugging). The
+CPUArch provides a cpu structure and access functions. etiss::JIT instances
+handle compilation and loading of the translated instruction. etiss::CPUCore
+manages these objects and executes a processor model.
+
+
+\section install Installation
+
+This section assumes that ETISS is not precompiled. The described methods assume
+a common linux system and have been tested on Ubuntu 18.04 with gcc 7.4.
+Used paths are usually relative.
+
+
+\subsection install1 Required Files and Folder Structure
+
+The toplevel folder of ETISS (e.g. ./ETISS/trunk) (in the following refered to as "path/to/ETISS" ) should contain the following file/folders:
+
+<pre>
+    \ref folder_include_etiss "include/etiss/"    C++ header files of ETISS
+    \ref folder_include_c_etiss "include_c/etiss/"    C compatible header files for ETISS and translation
+    \ref folder_src "src/"    C++ source files of ETISS
+    \ref folder_ArchImpl "ArchImpl/"    etiss::CPUArch implementations (included: \ref folder_ArchImpl_OR1K "OR1K", \ref folder_ArchImpl_RISCV "RISCV", \ref folder_ArchImpl_RISCV64 "RISCV64" )
+    \ref folder_JITImpl "JITImpl/"    etiss::JIT implementations should be located here (included: \ref folder_JITImpl_GCC "GCC", \ref folder_JITImpl_LLVM "LLVM", \ref folder_JITImpl_TCC "TCC" )
+    \ref folder_JITImpl "PluginImpl/"    etiss::Plugin implementations should be located here
+
+    CMakeLists.txt    main CMakeLists file. It builds ETISS and any project located in the ArchImpl,JITImpl,PluginImpl,projects sub folders if they also have a CMakeLists.txt.
+</pre>
+
+\subsection install2 Compile ETISS with ArchImpl and JITImpl sub projects
+
+ETISS itself has only standard depencencies like <stdint.h> or <dlsym.h> and
+dosn't require external tools beyond those of a default C++ environment.
+
+Therefore ETISS is supposed to compile out of the box. Just make sure that the Boost filesystem library is installed (libboost-filesystem-dev on Ubuntu).
+
+The provided CPUArch implementations and the default JIT
+implementation that uses TCC should also need no
+adaption. The GCC JIT requires GCC to be installed and the LLVM JIT requires the LLVM and Clang development libraries and headers. Set the environment variable LLVM_DIR to the LLVM installation path to use it.
+
+The provided example software located in SW/ requires a gnu tool chain for the
+respective architectures. Set the appropriate CMake option variables to specify the toolchain path.
+
+To build ETISS create a new directory (e.g. install) and open a terminal in that
+folder. To install ETISS into standard folders, run the following commands in opened
+terminal:
+
+<pre>
+    \$ mkdir build && cd build
+    \$ cmake ..
+    \$ make
+    \$ make install
+</pre>
+
+Above command will detect the default build system on the current host and
+generate neccessary files (e.g. Makefiles for Unix systems). For further option
+please have a look at the CMakeLists.txt in the ETISS root folder. The comment
+section at the beginning of the file contains a table with variables and
+options. Because no install folder was given, the default install folder for
+programs is used. This will likely require administrator rights for \$ make
+install. A possible and recommended cmake command with additional options is:
+
+<pre>
+    \$ mkdir build && cd build
+    \$ cmake -DCMAKE_BUILD_TYPE=Debug -DETISS_BUILD_MANUAL_DOC=ON -DCMAKE_INSTALL_PREFIX:PATH=`pwd`/installed ..
+    \$ make
+    \$ make doc
+    \$ make install
+</pre>
+
+That command will configure ETISS to build in debug mode. It will prevent the
+documentation to be created upon running the "all" target of the generated
+makefile (requires building of the target doc to get and install the
+documentation). The make command will then build ETISS and plugins. \$ make
+install installs etiss into the target folder.
+
+
+\section create1 Create a project
+
+This documentation is targeted at projects that use ETISS, not projects that
+primarily aiming to extend ETISS. Refer to \ref howto_etiss "How to use ETISS"
+for a guide to the frontend api and use of ETISS.
+\ref hstructure "Highlevel structure of ETISS" shows the general structure of
+ETISS including the frontend api.
+
+
+\section create2 Create a library for etiss
+
+ETISS can be extended with plugins. The tree classes etiss::CPUArch, etiss::JIT
+and etiss::Plugin are the main classes for extension. etiss::CPUArch implements
+instruction translation, etiss::JIT handles compiling/linking of genereated
+C-code and etiss::Plugin is the base plugin class that is inherited by the 5
+plug-in types etiss::InterruptListenerPlugin, etiss::TranslationPlugin,
+etiss::CoroutinePlugin,etiss::SystemWrapperPlugin and
+etiss::RegisterDevicePlugin. etiss::CPUArch inherites the
+etiss::TranslationPlugin. Implementing that interface is sufficient in case of
+etiss::JIT and etiss::Plugin (+ child classes) to use them by adding them to a
+CPUCore with etiss::CPUCore::set() and etiss::CPUCore::addPlugin().
+
+For detailed implementation guides for etiss::CPUArch,etiss::JIT and
+etiss::Plugin refer to the respective guides:
+
+  \li \ref howto_cpuarch
+  \li \ref howto_jit
+  \li \ref howto_plugin
+
+To create a library for ETISS that provides etiss::CPUArch, etiss::JIT or
+etiss::Plugin implementations also refer to \ref folder_include_etiss_helper
+"include/etiss/helper/"
+
+The following two images show how plugins interact with the
+etiss::CPUCore::execute() function that is the primary simulation loop of any
+processor.
+
+Flow chart for the execution of the primary simulation loop in
+etiss::CPUCore::execute() together with plugins.
+
+\image html "doc_cpucore.png"
+
+Flow chart of the translation phase. An etiss::CPUArch implementation is
+responsible for handeling of endiannes and determining of instruction length.
+
+\image html "instruction_read.png"
+
+
+\section hstructure Highlevel structure of ETISS
+
+\image html "Structure Overview.png"
+
+
+\section MMU
+
+ETISS version 0.1 doesn't provide a MMU with its example OR1K implementation.
+For further information please refer to the \ref mmu_concepts "MMU Concepts"
+page.
+
+ */

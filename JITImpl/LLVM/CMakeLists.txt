@@ -1,7 +1,7 @@
 #
 #	Copyright 2018 Infineon Technologies AG
 #
-#	This file is part of ETISS tool, see <https://github.com/tum-ei-eda/etiss>
+#	This file is part of ETISS tool, see <https://gitlab.lrz.de/de-tum-ei-eda-open/etiss>
 #
 #	The initial version of this software has been created with the funding support by the German Federal
 #	Ministry of Education and Research(BMBF) in the project EffektiV under grant 01IS13022.
@@ -37,10 +37,10 @@
 PROJECT(LLVMJIT)
 
 IF(NOT DEFINED ENV{LLVM_DIR})
-    SET(ENV{LLVM_DIR} "/opt/clang+llvm-7.0.1-x86_64-linux-gnu-ubuntu-18.04")
+    SET(ENV{LLVM_DIR} "/opt/clang+llvm-11.0.0-x86_64-linux-gnu-ubuntu-20.04")
 ENDIF()
 
-FIND_PACKAGE(LLVM 7 CONFIG)
+FIND_PACKAGE(LLVM 11 CONFIG)
 
 IF(LLVM_FOUND)
     MESSAGE("Using LLVM_DIR: ${LLVM_DIR}")
@@ -61,6 +61,7 @@ IF(LLVM_FOUND)
         ExecutionEngine
         Target
         MCJIT
+        orcjit
         X86CodeGen
         X86AsmParser
         Interpreter
@@ -85,18 +86,20 @@ IF(LLVM_FOUND)
     )
     ETISSPlugin(${PROJECT_NAME})
     TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC
-        clangCodeGen
+        -Wl,--start-group
+        ${LLVM_LIBS}
         clangFrontend
+        clangCodeGen
+        clangLex
         clangSerialization
+        clangAST
+        clangBasic
+        clangSema
+        clangEdit
+        clangAnalysis
         clangDriver
         clangParse
-        clangSema
-        clangAnalysis
-        clangEdit
-        clangAST
-        clangLex
-        clangBasic
-        ${LLVM_LIBS}
-        )
+        -Wl,--end-group
+    )
     TARGET_INCLUDE_DIRECTORIES(${PROJECT_NAME} PUBLIC include ${LLVM_INCLUDE_DIRS})
 ENDIF()

@@ -1,0 +1,55 @@
+/*! \page misc Additional Information
+
+\section misc_striplibrary Removing symbols from a shared library
+
+ETISS can load shared libraries at runtime to add etiss::CPUArch,etiss::JIT and etiss::Plugin implementations. Since these libraries may contain symbols that are used in generated code those libraries are loaded with RTLD_GLOBAL into the application. To prevent problems with symbols that are defined in multiple libraries it is strongly recommended to strip all symbols that are not needed for ETISS's library loading mechanism or are not used in generated code. Additionally any non stripped symbol should have a prefix related to the library name (e.g. LIBNAME_customPrint() instead of customPrint()).
+
+To strip unneeded symbols add "-Wl,--version-script=YOURSTRIPCONFIGURATION.cfg" (without quotes) to the build command of a shared library. E.g.:
+
+\code
+
+libGCCJIT.so : GCCJIT.o GCCJITLIB.cpp
+	$(CC) -std=c++0x -shared -g -fPIC -MMD -I$(BaseFolder)/include -I$(BaseFolder)/include_c GCCJITLIB.cpp -o libGCCJIT.so GCCJIT.o -Wl,--version-script=GCCJITLIBAPI.cfg
+
+\endcode
+(excerpt from JITImpl/GCC/Makefile)
+
+The file YOURSTRIPCONFIGURATION.cfg should look similar to this:
+
+\code
+{
+global: 
+	GCCJIT_countJIT;
+	GCCJIT_nameJIT;
+	GCCJIT_createJIT;
+	GCCJIT_deleteJIT;
+	GCCJIT_etissversion;
+local: *;
+};
+\endcode
+(JITImpl/GCC/GCCJITLIBAPI.cfg)
+
+Symbols that are defined as global in above example can be found once the library was loaded. Local symbols can only be used within the library. "local: *;" defines all symbols as local if they are not explicitly defined as global.
+
+
+\section misc_codegenoverview Storage Class Structure and Code Location Overview
+
+The following image shows the structure and location of the code (and additional information) that is stored in different classes. Dashed lines indicate that sub elements are not shown in this instance but there is always one type instance with all sub elements. The example code that is stored in the shown classes has a gray background.
+Underlined strings mark classes related to code storage except in the case of etiss::CodePart::TYPE and sub entries which are an enumeration that defines CodePart positions. 
+If the codepart type contains the keyword optional then the codepart may be discarded if the getAffectedRegister() set will be overwritten before it is used.
+If the codepart type contains the keyword returning then the code may have a return statement (must return etiss_int32). In this case the conjunction of the getAffectedRegister() set together with a set of overwritten registers of the following codeparts is used to remove previous optional CodeParts if possible.
+
+Any CodePart should define a proper affected and required RegisterSet to allow full optimization. If a group of registers is only used by non optional code parts (optional code parts may still read them) then they may be left out of register sets.
+
+\image html "Code Generation Overview.png"
+
+
+\section misc_integratelibrary Integrate a Library into an executable using ETISS
+
+The guides \ref howto_cpuarch \ref howto_jit \ref howto_plugin describe a way to create a dynamic library for ETISS. Alternatively it is possible to have such a library inside an application that uses ETISS.
+This can be achieved by either linking a static library or directly using object files.
+If etiss::loadLibrary() should be used to open that library the same functions as needed for a dynamic library (see \ref doc_libraryinterface) are needed and that the main executable must make these symbols available to the dynamic linker (appending the -rdynamic flag to the linking step is the most basic way to do that but may come at a performance penalty for large executables)
+
+Integrated symbols will be looked up with the library name as a prefix. Therefore that name must match the library name even if it has been integrated into the executable. Althought possible it is not recommended to define those functions without a prefix.
+
+*/

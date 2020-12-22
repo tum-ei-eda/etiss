@@ -1,0 +1,23 @@
+/*! \page mmu_concepts Decription of possible Memory Management Unit implementations
+
+	As of version 0.1 the provided OR1K example implementation doesn't provide a MMU.
+	To implement a MMU two concepts should be considered:
+	
+	\section mmu_external External MMU
+	
+	
+	This type of MMU can be implemented as a plugin und doesn't require changes to an etiss::CPUArch implementation.<br>
+	Such a plugin can extend etiss::RegisterDevicePlugin to be notified about changes e.g. to special purpose registers (MMU configuaration registers).<br>
+	Changes to the virtual memory layout of instructions can be applied by deleting the translated blocks.To do this the returncode etiss::RETURNCODE::RELOADBLOCKS must be passed to delete previously translated instructions. This can either be done by implementing etiss::TranslatorPlugin and adding "return ETISS_RETURNCODE_RELOADBLOCKS;" when appropriate or by implementing etiss::CoroutinePlugin and returning etiss::RETURNCODE::RELOADBLOCKS after a block changed the MMU configuration.<br>
+	The efects of the MMU have to be applied via an etiss::System/ETISS_System implementation or an etiss::SystemWrapperPlugin.
+	
+	
+	\section mmu_internal Internal MMU
+	
+	
+	The idea of such an MMU is to speed up execution by preventing retranslation of blocks due to changes by an MMU. Like in QEMU physical addresses are used for translation. The downside is that such a MMU currently cannot be implemented with plugins and must be part of an etiss::CPUArch implementation.
+	
+	
+	
+
+*/

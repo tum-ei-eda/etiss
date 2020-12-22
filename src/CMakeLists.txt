@@ -1,7 +1,7 @@
 #
 #	Copyright 2018 Infineon Technologies AG
 #
-#	This file is part of ETISS tool, see <https://github.com/tum-ei-eda/etiss>
+#	This file is part of ETISS tool, see <https://gitlab.lrz.de/de-tum-ei-eda-open/etiss>
 #
 #	The initial version of this software has been created with the funding support by the German Federal
 #	Ministry of Education and Research(BMBF) in the project EffektiV under grant 01IS13022.
@@ -44,6 +44,6 @@ endforeach()
 
 
 unset(LOCAL_SOURCE)
-FILE(GLOB LOCAL_SOURCE *.cpp)
+FILE(GLOB LOCAL_SOURCE *.cpp) 
 
 set(ETISS_SOURCE ${ETISS_SOURCE} ${LOCAL_SOURCE} PARENT_SCOPE)
