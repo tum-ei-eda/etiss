@@ -632,29 +632,19 @@ void etiss::Initializer::loadIniPlugins(std::shared_ptr<etiss::CPUCore> cpu)
 
 void etiss::Initializer::loadIniJIT(std::shared_ptr<etiss::CPUCore> cpu)
 {
-    // check if JIT is set on command line
-    if (etiss::cfg().isSet("JIT_Type"))
+    // check if JIT is set
+    if (!etiss::cfg().isSet("JIT_Type"))
     {
-        etiss::log(etiss::INFO, " Adding JIT \"" + cfg().get<std::string>("JIT_Type", "") + '\"');
-        cpu->set(getJIT(cfg().get<std::string>("JIT_Type", "")));
+        etiss::log(etiss::INFO, "No JIT configured. Will use default JIT. \n");
         return;
     }
-    // check if JIT is set from .ini file
-    if (!po_simpleIni)
+    if (cpu->getJITName() != "")
     {
-        etiss::log(etiss::WARNING, "Ini file not loaded. Can't load JIT from simpleIni!");
-        return;
+        etiss::log(etiss::WARNING,
+                    "etiss::Initializer::loadIniJIT:" + std::string(" JIT already present. Overwriting it."));
     }
-    else
-    {
-        if (cpu->getJITName() != "")
-        {
-            etiss::log(etiss::WARNING,
-                       "etiss::Initializer::loadIniJIT:" + std::string(" JIT already present. Overwriting it."));
-        }
-        etiss::log(etiss::INFO, " Adding JIT \"" + cfg().get<std::string>("JIT_Type", "") + '\"');
-        cpu->set(getJIT(cfg().get<std::string>("JIT_Type", "")));
-    }
+    etiss::log(etiss::INFO, " Adding JIT \"" + cfg().get<std::string>("JIT_Type", "") + '\"');
+    cpu->set(getJIT(cfg().get<std::string>("JIT_Type", "")));
 }
 
 std::pair<std::string, std::string> inifileload(const std::string& s)
