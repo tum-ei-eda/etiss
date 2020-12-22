@@ -482,7 +482,7 @@ void etiss_loadIniConfigs()
             bool warning = false;
 
             // skip loglevel
-            if ((std::string(iter_key.pItem) == "loglevel") | (std::string(iter_key.pItem) == "JIT_Type"))
+            if ((std::string(iter_key.pItem) == "loglevel"))
                 continue;
 
             // check if cfg is already set
@@ -639,66 +639,31 @@ void etiss::Initializer::loadIniPlugins(std::shared_ptr<etiss::CPUCore> cpu)
 
 void etiss::Initializer::loadIniJIT(std::shared_ptr<etiss::CPUCore> cpu)
 {
-    if (!po_simpleIni)
-    {
-        etiss::log(etiss::WARNING, "Ini file not loaded. Can't load JIT from simpleIni!");
-        return;
-    }
-
     // check if JIT is set on command line
     bool jitcheck;
     jitcheck = set_cmd_check(std::string("JIT_Type"));
     if (jitcheck)
     {
-        std::string jitName = std::string(vm[std::string("JIT_Type")].as<std::string>());
-        etiss::log(etiss::INFO, " Adding JIT \"" + std::string(jitName) + '\"');
-        cpu->set(getJIT(jitName));
+        etiss::log(etiss::INFO, " Adding JIT \"" + cfg().get<std::string>("JIT_Type", "") + ". JIT set on command line." + '\"');
+        cpu->set(getJIT(cfg().get<std::string>("JIT_Type", "")));
+        return;
     }
 
-    // get all sections
-    CSimpleIniA::TNamesDepend sections;
-    po_simpleIni->GetAllSections(sections);
-    for (auto iter_section : sections)
+    // check if JIT is set from .ini file
+    if (!po_simpleIni)
     {
-        if (jitcheck)
-            continue;
-        
-        // only load JIT sections
-        if (std::string(iter_section.pItem).substr(0, 20) != std::string("StringConfigurations"))
-            continue;
-
-        // check if JIT is already present
+        etiss::log(etiss::WARNING, "Ini file not loaded. Can't load JIT from simpleIni!");
+        return;
+    }
+    else
+    {
         if (cpu->getJITName() != "")
         {
             etiss::log(etiss::WARNING,
                        "etiss::Initializer::loadIniJIT:" + std::string(" JIT already present. Overwriting it."));
         }
-
-        // get all keys in a section = plugin option
-        CSimpleIniA::TNamesDepend keys;
-        po_simpleIni->GetAllKeys(iter_section.pItem, keys);
-        for (auto iter_key : keys)
-        {
-            if (std::string(iter_key.pItem) == "JIT_Type")
-            {
-                // get all values of a key with multiple values = value of option
-                CSimpleIniA::TNamesDepend values;
-                std::string jitName = po_simpleIni->GetValue(iter_section.pItem, iter_key.pItem);
-
-                // check if more than one value is set in the ini file
-                if (values.size() > 1)
-                    etiss::log(etiss::WARNING, "etiss::Initializer::loadIniJIT:" +
-                                                   std::string(" Multi values for option. Took only first one!"));
-
-                etiss::log(etiss::INFO, " Adding JIT \"" + std::string(jitName) + '\"');
-                cpu->set(getJIT(jitName));
-            }
-            else if ((std::string(iter_key.pItem) != "sw_binary_ram") & (std::string(iter_key.pItem) != "sw_binary_rom") & (std::string(iter_key.pItem) != "vp::dram_file") &
-                        (std::string(iter_key.pItem) != "vp::iram_file") & (std::string(iter_key.pItem) != "CPUArch") &(std::string(iter_key.pItem) != "ETISS::outputPathPrefix"))
-            {
-                etiss::log(etiss::WARNING, "option " + std::string(iter_key.pItem) + " unknown");
-            }
-        }
+        etiss::log(etiss::INFO, " Adding JIT \"" + cfg().get<std::string>("JIT_Type", "") + ". JIT set from ini file." + '\"');
+        cpu->set(getJIT(cfg().get<std::string>("JIT_Type", "")));
     }
 }
 
