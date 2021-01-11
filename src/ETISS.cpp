@@ -408,6 +408,8 @@ void etiss_loadIni(std::string fileName)
         std::cout << "Initializer::loadIni(): Failed to load Ini: " << fileName << std::endl;
         return;
     }
+        else 
+        std::cout << "Initializer::loadIni(): Ini loaded " << fileName << std::endl;
 }
 
 void etiss::Initializer::loadIni(std::list<std::string> *files)
@@ -420,10 +422,20 @@ void etiss::Initializer::loadIni(std::list<std::string> *files)
         std::cout << "Info: simpleIni already exists!" << std::endl;
 
     // load file
+    bool load_bol ;
     for (auto it_files : *files)
     {
+   
         etiss_loadIni(it_files);
+        load_bol=true;
+
     }
+    if (load_bol == true )
+        std::cout << "Info:Ini succesfuly loaded" << std::endl;
+    else
+        std::cout << "Info: Failed to load ini " << std::endl;
+
+
 }
 
 void etiss_loadIniConfigs()

@@ -75,48 +75,20 @@ uint32_t printMessage(std::string key, std::string message, uint32_t maxCount)
 
 etiss::int8 DebugSystem::load_elf(const char* elf_file){
   ELFIO::elfio reader;
-  bool is_64bit = false, is_riscv = false, is_or1k = false;
-  
+   
   if( !reader.load(elf_file) ){
     etiss::log(etiss::ERROR, "ELF reader could not process file\n");
     return (-1);
   }
-  
-  std::string arch_name = etiss::cfg().get<std::string>("CPUArch", "");
-  if(arch_name == ""){
-    etiss::log(etiss::ERROR, "CPUArch unset in configuration\n");
-    return(-1);
+  //set architecture automatically 
+  if  (reader.get_machine() == EM_RISCV)  {
+    if ((reader.get_class() == ELFCLASS64))
+      etiss::cfg().set<std::string>("CPUArch", "RISCV64"); // RISCV and OR1K work as well 
   }
   
-  // Prepare expected header information
-  if(arch_name.find("64") != std::string::npos){
-    is_64bit = true;    
-  }
-  if((arch_name == "RISCV") or (arch_name == "RISCV64")){
-    is_riscv = true;    
-  } else if (arch_name == "OR1K") {
-    is_or1k = true;
-  }
-   
-  // Check header information 
-  if ( (reader.get_class() == ELFCLASS32) && is_64bit) {
-    etiss::log(etiss::ERROR, "CPUArch is 64 bit, given ELF file is 32 bit\n");
-    return(-2);
-  }
-  
-  if ( (reader.get_class() == ELFCLASS64) && !is_64bit) {
-    etiss::log(etiss::ERROR, "CPUArch is 32 bit, given ELF file is 64 bit\n");
-    return(-2);
-  }
-  
-  if ( (reader.get_machine() == EM_RISCV) && !is_riscv) {
-    etiss::log(etiss::ERROR, "CPUArch is RISC-V, given ELF file is not\n");
-    return(-2);
-  }
-  
-  if ( (reader.get_machine() == EM_OPENRISC) && !is_or1k) {
-    etiss::log(etiss::ERROR, "CPUArch is OR1K, given ELF file is not\n");
-    return(-2);
+  if (reader.get_machine() == EM_OPENRISC) {
+    if ((reader.get_class() == ELFCLASS64))
+      etiss::cfg().set<std::string>("CPUArch", "OR1K64");
   }
   
   for(auto& seg : reader.segments){
