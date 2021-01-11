@@ -83,12 +83,17 @@ etiss::int8 DebugSystem::load_elf(const char* elf_file){
   //set architecture automatically 
   if  (reader.get_machine() == EM_RISCV)  {
     if ((reader.get_class() == ELFCLASS64))
-      etiss::cfg().set<std::string>("CPUArch", "RISCV64"); // RISCV and OR1K work as well 
+      etiss::cfg().set<std::string>("CPUArch", "RISCV64");// RISCV and OR1K work as well 
+    if ((reader.get_class() == ELFCLASS32))
+      etiss::cfg().set<std::string>("CPUArch", "RISCV");
+      //add conditions 
+
+
   }
-  
+  // 
   if (reader.get_machine() == EM_OPENRISC) {
-    if ((reader.get_class() == ELFCLASS64))
-      etiss::cfg().set<std::string>("CPUArch", "OR1K64");
+    if ((reader.get_class() == ELFCLASS32))
+        etiss::cfg().set<std::string>("CPUArch", "OR1K");
   }
   
   for(auto& seg : reader.segments){
@@ -184,12 +189,6 @@ DebugSystem::DebugSystem(void) :
   , rom_size_(0)
   , ram_size_(0) 
 {
-  std::cout<<"*****************"<<std::endl;
-  std::cout<<"im here"<<std::endl;
-  std::cout<<"ram_start"<< std::hex<<ram_start_<<std::endl;
-  std::cout<<"*************"<<std::endl;
-
-
  
   _print_ibus_access = etiss::cfg().get<bool>("DebugSystem::printIbusAccess", false);
   _print_dbus_access = etiss::cfg().get<bool>("DebugSystem::printDbusAccess", false);
