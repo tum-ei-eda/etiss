@@ -76,6 +76,9 @@ std::recursive_mutex etiss_libraries_mu_;
 
 boost::program_options::variables_map vm;
 
+std::vector<std::string> pluginList;
+std::vector<std::string> pluginOptions = {"logaddr", "logmask", "port"};
+
 std::set<std::string> etiss::listCPUArchs()
 {
     std::set<std::string> ret;
@@ -562,6 +565,33 @@ void etiss_loadIniConfigs()
 
 void etiss::Initializer::loadIniPlugins(std::shared_ptr<etiss::CPUCore> cpu)
 {
+    std::map<std::string, std::string> options;
+    for (auto iter = pluginOptions.begin(); iter != pluginOptions.end(); iter++)
+    {
+        if(etiss::cfg().isSet(*iter))
+        {
+            options[*iter] = std::string(vm[std::string(*iter)].as<std::string>());
+        }
+    }
+    for (auto pname = pluginList.begin(); pname != pluginList.end(); pname++)
+    {
+        bool pluginAlreadyPresent = false;
+        for (auto iter : *cpu->getPlugins())
+        {
+            if (iter->getPluginName() == std::string(*pname))
+            {
+                pluginAlreadyPresent = true;
+                break;
+            }
+        }
+        if (pluginAlreadyPresent)
+        {
+            etiss::log(etiss::WARNING, "    Warning: Plugin already present. Skipping it: " + *pname);
+            continue;
+        }
+        etiss::log(etiss::INFO, "  Adding Plugin " + *pname + "\n\n");
+        cpu->addPlugin(etiss::getPlugin(*pname, options));
+    }
     if (!po_simpleIni)
     {
         etiss::log(etiss::WARNING, "Ini file not loaded. Can't load plugins from simpleIni!");
@@ -594,13 +624,16 @@ void etiss::Initializer::loadIniPlugins(std::shared_ptr<etiss::CPUCore> cpu)
         }
 
         etiss::log(etiss::INFO, "  Adding Plugin " + pluginName + "\n\n");
-        std::map<std::string, std::string> options;
 
         // get all keys in a section = plugin option
         CSimpleIniA::TNamesDepend keys;
         po_simpleIni->GetAllKeys(iter_section.pItem, keys);
         for (auto iter_key : keys)
         {
+            if(std::find(pluginOptions.begin(), pluginOptions.end(), iter_key.pItem) == pluginOptions.end()) 
+            {
+                pluginOptions.push_back(std::string(iter_key.pItem));
+            }
             // get all values of a key with multiple values = value of option
             CSimpleIniA::TNamesDepend values;
             po_simpleIni->GetAllValues(iter_section.pItem, iter_key.pItem, values);
@@ -654,7 +687,14 @@ std::pair<std::string, std::string> inifileload(const std::string& s)
         std::string inifile;
         inifile = s.substr(2);
         etiss_loadIni(inifile);
-        return make_pair(std::string(), std::string());
+    }
+    if (s.find("-p") == 0)
+    {
+        std::string pluginName;
+        pluginName = s.substr(2); //Create a global list with all plugin names. Then iterate over it and load it after command line and ini file is completely parsed by sending options along with the plugin name.
+        pluginList.push_back(pluginName);
+        std::cout << "\nGot plugin name: " << pluginName << "\n";
+        
     }
     return make_pair(std::string(), std::string());
 }
@@ -720,6 +760,7 @@ void etiss_initialize(int argc, const char* argv[], bool forced = false)
             ("JIT-External::Libs", po::value<std::string>(), "List of semicolon-separated library names for the JIT to link.")
             ("JIT-External::HeaderPaths", po::value<std::string>(), "List of semicolon-separated headers paths for the JIT.")
             ("JIT-External::LibPaths", po::value<std::string>(), "List of semicolon-separated library paths for the JIT.")
+            ("port", po::value<std::string>(), "Option for gdbserver")
             ;
 
             po::command_line_parser parser{argc, argv};
@@ -739,7 +780,7 @@ void etiss_initialize(int argc, const char* argv[], bool forced = false)
             auto unregistered = po::collect_unrecognized(parsed_options.options, po::include_positional);
             for (auto iter_unreg : unregistered)
             {
-                if (iter_unreg.find("-i") != 0 )
+                if (iter_unreg.find("-i") != 0 && iter_unreg.find("-p"))
                 {
                     etiss::log(etiss::FATALERROR, std::string("Unrecognised option ") + iter_unreg +
                                                "\n\t Please use --help to list all recognised options. \n");
