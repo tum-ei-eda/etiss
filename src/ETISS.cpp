@@ -566,19 +566,18 @@ void etiss_loadIniConfigs()
 void etiss::Initializer::loadIniPlugins(std::shared_ptr<etiss::CPUCore> cpu)
 {
     std::map<std::string, std::string> options;
-    for (auto iter = pluginOptions.begin(); iter != pluginOptions.end(); iter++)
-    {
-        if(etiss::cfg().isSet(*iter))
-        {
-            options[*iter] = std::string(vm[std::string(*iter)].as<std::string>());
-        }
-    }
     for (auto pname = pluginList.begin(); pname != pluginList.end(); pname++)
     {
         bool pluginAlreadyPresent = false;
         for (auto iter : *cpu->getPlugins())
         {
-            if (iter->getPluginName() == std::string(*pname))
+            std::string plugname = iter->getPluginName();
+            std::string::size_type pos = plugname.find(' ');
+            if (pos != std::string::npos)
+            {
+                plugname = plugname.substr(0, pos);
+            }
+            if (plugname == *pname)
             {
                 pluginAlreadyPresent = true;
                 break;
@@ -591,6 +590,16 @@ void etiss::Initializer::loadIniPlugins(std::shared_ptr<etiss::CPUCore> cpu)
         }
         etiss::log(etiss::INFO, "  Adding Plugin " + *pname + "\n\n");
         cpu->addPlugin(etiss::getPlugin(*pname, options));
+    }
+    for (auto iter = pluginOptions.begin(); iter != pluginOptions.end(); iter++)
+    {
+        if(etiss::cfg().isSet(*iter))
+        {
+            options[*iter] = std::string(vm[std::string(*iter)].as<std::string>());
+            std::cout << *iter << " written from command line.\n";
+                etiss::log(etiss::INFO,
+                            "    options[" + std::string(*iter) + "] = " + std::string(vm[std::string(*iter)].as<std::string>()) + "\n\n");
+        }
     }
     if (!po_simpleIni)
     {
@@ -611,7 +620,13 @@ void etiss::Initializer::loadIniPlugins(std::shared_ptr<etiss::CPUCore> cpu)
         bool pluginAlreadyPresent = false;
         for (auto iter : *cpu->getPlugins())
         {
-            if (iter->getPluginName() == pluginName)
+            std::string plugname = iter->getPluginName();
+            std::string::size_type pos = plugname.find(' ');
+            if (pos != std::string::npos)
+            {
+                plugname = plugname.substr(0, pos);
+            }
+            if (plugname == pluginName)
             {
                 pluginAlreadyPresent = true;
                 break;
@@ -630,21 +645,10 @@ void etiss::Initializer::loadIniPlugins(std::shared_ptr<etiss::CPUCore> cpu)
         po_simpleIni->GetAllKeys(iter_section.pItem, keys);
         for (auto iter_key : keys)
         {
-            if(std::find(pluginOptions.begin(), pluginOptions.end(), iter_key.pItem) == pluginOptions.end()) 
-            {
-                pluginOptions.push_back(std::string(iter_key.pItem));
-            }
             // get all values of a key with multiple values = value of option
             CSimpleIniA::TNamesDepend values;
             po_simpleIni->GetAllValues(iter_section.pItem, iter_key.pItem, values);
-            if (etiss::cfg().isSet(iter_key.pItem))
-            {
-                options[iter_key.pItem] = std::string(vm[std::string(iter_key.pItem)].as<std::string>());
-                std::cout << iter_section.pItem << "::" << iter_key.pItem << " written from command line.\n";
-                etiss::log(etiss::INFO,
-                            "    options[" + std::string(iter_key.pItem) + "] = " + std::string(vm[std::string(iter_key.pItem)].as<std::string>()) + "\n\n");
-            }
-            else
+            if (!etiss::cfg().isSet(iter_key.pItem))
             {
                 std::cout << iter_section.pItem << "::" << iter_key.pItem << " not set on the command line. Checking in .ini file.\n";
                 for (auto iter_value : values)
@@ -656,7 +660,6 @@ void etiss::Initializer::loadIniPlugins(std::shared_ptr<etiss::CPUCore> cpu)
                 // check if more than one value is set in the ini file
                 if (values.size() > 1)
                     etiss::log(etiss::WARNING, "Multi values for option. Took only last one!");
-
             }
         }
         cpu->addPlugin(etiss::getPlugin(pluginName, options));
@@ -680,7 +683,7 @@ void etiss::Initializer::loadIniJIT(std::shared_ptr<etiss::CPUCore> cpu)
     cpu->set(getJIT(cfg().get<std::string>("JIT_Type", "")));
 }
 
-std::pair<std::string, std::string> inifileload(const std::string& s)
+std::pair<std::string, std::string> extra_parser(const std::string& s)
 {
     if (s.find("-i") == 0)
     {
@@ -693,8 +696,6 @@ std::pair<std::string, std::string> inifileload(const std::string& s)
         std::string pluginName;
         pluginName = s.substr(2); //Create a global list with all plugin names. Then iterate over it and load it after command line and ini file is completely parsed by sending options along with the plugin name.
         pluginList.push_back(pluginName);
-        std::cout << "\nGot plugin name: " << pluginName << "\n";
-        
     }
     return make_pair(std::string(), std::string());
 }
@@ -765,7 +766,7 @@ void etiss_initialize(int argc, const char* argv[], bool forced = false)
 
             po::command_line_parser parser{argc, argv};
             po::command_line_parser iniparser{argc, argv};
-            iniparser.options(desc).allow_unregistered().extra_parser(inifileload).run();
+            iniparser.options(desc).allow_unregistered().extra_parser(extra_parser).run();
             parser.options(desc).allow_unregistered().extra_parser(etiss::Configuration::set_cmd_line_boost);
             po::parsed_options parsed_options = parser.run();
             po::store(parsed_options, vm);
