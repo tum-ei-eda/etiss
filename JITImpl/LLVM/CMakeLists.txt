@@ -1,7 +1,7 @@
 #
 #	Copyright 2018 Infineon Technologies AG
 #
-#	This file is part of ETISS tool, see <https://gitlab.lrz.de/de-tum-ei-eda-open/etiss>
+#	This file is part of ETISS tool, see <https://github.com/tum-ei-eda/etiss>
 #
 #	The initial version of this software has been created with the funding support by the German Federal
 #	Ministry of Education and Research(BMBF) in the project EffektiV under grant 01IS13022.
@@ -85,20 +85,18 @@ IF(LLVM_FOUND)
     )
     ETISSPlugin(${PROJECT_NAME})
     TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC
-        -Wl,--start-group
-        ${LLVM_LIBS}
-        clangFrontend
         clangCodeGen
-        clangLex
+        clangFrontend
         clangSerialization
-        clangAST
-        clangBasic
-        clangSema
-        clangEdit
-        clangAnalysis
         clangDriver
         clangParse
-        -Wl,--end-group
-    )
+        clangSema
+        clangAnalysis
+        clangEdit
+        clangAST
+        clangLex
+        clangBasic
+        ${LLVM_LIBS}
+        )
     TARGET_INCLUDE_DIRECTORIES(${PROJECT_NAME} PUBLIC include ${LLVM_INCLUDE_DIRS})
 ENDIF()

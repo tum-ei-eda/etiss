@@ -1,7 +1,7 @@
 #
 #	Copyright 2018 Infineon Technologies AG
 #
-#	This file is part of ETISS tool, see <https://gitlab.lrz.de/de-tum-ei-eda-open/etiss>
+#	This file is part of ETISS tool, see <https://github.com/tum-ei-eda/etiss>
 #
 #	The initial version of this software has been created with the funding support by the German Federal
 #	Ministry of Education and Research(BMBF) in the project EffektiV under grant 01IS13022.
@@ -39,7 +39,7 @@ from os import listdir
 from os.path import isfile, isdir, join, relpath,abspath
 import argparse
 
-	
+
 
 def genCPPFile(hasArch,hasJIT,hasPlugin,hasFiles,libname):
 	file = ""
@@ -153,7 +153,7 @@ def genCPPFile(hasArch,hasJIT,hasPlugin,hasFiles,libname):
 		file = file + '	}\n\n\n'
 	file = file + '} // extern C\n'
 	return file
-	
+
 def genMakefile(libname,etissfolder):
 	file = ''
 	file = file + '\n'
@@ -235,20 +235,20 @@ args = parser.parse_args()
 
 with open('lib' + args.libname + '.cpp', 'w+') as f:
 	f.write(genCPPFile(args.hasArch,args.hasJIT,args.hasPlugin,args.hasFiles,args.libname))
-	
+
 with open('Makefile', 'w+') as f:
 	f.write(genMakefile(args.libname,args.etissFolder))
-	
+
 with open( args.libname + 'ABI.cfg', 'w+') as f:
 	f.write(genABI(args.libname))
-	
+
 if not os.path.exists('include'):
     os.makedirs('include')
 if not os.path.exists('src'):
     os.makedirs('src')
-	
 
-	
+
+
 
 
 

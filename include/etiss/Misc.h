@@ -6,7 +6,7 @@
 
         Copyright 2018 Infineon Technologies AG
 
-        This file is part of ETISS tool, see <https://gitlab.lrz.de/de-tum-ei-eda-open/etiss>.
+        This file is part of ETISS tool, see <https://github.com/tum-ei-eda/etiss>.
 
         The initial version of this software has been created with the funding support by the German Federal
         Ministry of Education and Research (BMBF) in the project EffektiV under grant 01IS13022.
@@ -439,6 +439,8 @@ class Configuration
      * @return a list of input elements that have not been used in this function due to an unrecognized format
      */
     std::list<std::string> set(const std::list<std::string> &args);
+
+    static std::pair<std::string, std::string> set_cmd_line_boost(const std::string& s);
 
     /**
      * @brief get a copy of the configuration as a map

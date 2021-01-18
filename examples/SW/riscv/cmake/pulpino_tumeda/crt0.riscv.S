@@ -229,7 +229,7 @@ store_regs:
 
 // load back registers from stack
 end_except:
-  lw x10, 0x18(x2)  // only restore a0 for general exception handler
+  lw x10, 0x14(x2)  // only restore a0 for general exception handler
 end_except_ecall:
   lw x28, 0x50(x2)  // lpstart[1]
   lw x29, 0x54(x2)  // lpend[1]

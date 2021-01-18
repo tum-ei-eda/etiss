@@ -2,7 +2,7 @@
         @copyright
         <pre>
         Copyright 2018 Chair of Electronic Design Automation, TUM
-        This file is part of ETISS tool, see <https://gitlab.lrz.de/de-tum-ei-eda-open/etiss>.
+        This file is part of ETISS tool, see <https://github.com/tum-ei-eda/etiss>.
         The initial version of this software has been created with the funding support by the German Federal
         Ministry of Education and Research (BMBF) in the project EffektiV under grant 01IS13022.
         Redistribution and use in source and binary forms, with or without modification, are permitted
@@ -37,7 +37,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-#pragma pack(push, 1) 
+#pragma pack(push, 1)
 struct RISCV64 {
 	ETISS_CPU cpu; // original cpu struct must be defined as the first field of the new structure. this allows to cast X * to ETISS_CPU * and vice vers
 	etiss_uint64 ZERO;
