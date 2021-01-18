@@ -87,15 +87,20 @@ etiss::int8 DebugSystem::load_elf(const char* elf_file){
     if ((reader.get_class() == ELFCLASS32))
       etiss::cfg().set<std::string>("CPUArch", "RISCV");
       //add conditions 
-
+    else 
+      std::cout<<"System architecture is neither 64 nor 32 bit"<<std::endl;
 
   }
   // 
   if (reader.get_machine() == EM_OPENRISC) {
     if ((reader.get_class() == ELFCLASS32))
         etiss::cfg().set<std::string>("CPUArch", "OR1K");
+    if ((reader.get_class() == ELFCLASS64))
+        std::cout<<"OR1k 64 is not supported ";
   }
-  
+  if ((reader.get_machine() != EM_OPENRISC) && (reader.get_machine() != EM_RISCV))
+    std::cout<<"Target software not supported "<<std::endl;
+
   for(auto& seg : reader.segments){
     std::unique_ptr<MemSegment> mseg;
     etiss::uint64 start_addr = seg->get_physical_address();
