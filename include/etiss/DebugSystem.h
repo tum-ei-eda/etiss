@@ -100,7 +100,8 @@ namespace etiss
     }
     
     virtual ~MemSegment(void){
-      delete[] mem_;
+        if (self_allocated_ == true )
+                delete[] mem_;
     }
     
     void load(const void* data, size_t file_size_bytes){
