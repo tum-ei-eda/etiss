@@ -6,7 +6,7 @@
 
         Copyright 2018 Infineon Technologies AG
 
-        This file is part of ETISS tool, see <https://github.com/tum-ei-eda/etiss>.
+        This file is part of ETISS tool, see <https://gitlab.lrz.de/de-tum-ei-eda-open/etiss>.
 
         The initial version of this software has been created with the funding support by the German Federal
         Ministry of Education and Research (BMBF) in the project EffektiV under grant 01IS13022.
@@ -130,6 +130,22 @@ LLVMJIT::LLVMJIT() : JIT("LLVMJIT")
         etiss_jit_llvm_init_done_ = true;
     }
     etiss_jit_llvm_init_mu_.unlock();
+
+    // create logger
+    DiagnosticOptions *diagOpts = new DiagnosticOptions();
+    TextDiagnosticPrinter *diagPrinter = new TextDiagnosticPrinter(llvm::outs(), diagOpts);
+    clang_.createDiagnostics(diagPrinter);
+
+    // configure compiler target
+    auto pto = std::make_shared<clang::TargetOptions>();
+    pto->Triple = llvm::sys::getDefaultTargetTriple();
+    TargetInfo *pti = TargetInfo::CreateTargetInfo(clang_.getDiagnostics(), pto);
+    clang_.setTarget(pti);
+
+    // initialize compiler parts
+    clang_.createFileManager();
+    clang_.createSourceManager(clang_.getFileManager());
+    clang_.createPreprocessor(clang::TranslationUnitKind::TU_Module);
 }
 
 LLVMJIT::~LLVMJIT() {}
@@ -137,59 +153,58 @@ LLVMJIT::~LLVMJIT() {}
 void *LLVMJIT::translate(std::string code, std::set<std::string> headerpaths, std::set<std::string> librarypaths,
                          std::set<std::string> libraries, std::string &error, bool debug)
 {
-    clang::CompilerInstance CI;
+
+    void *ret = 0;
+
+    // diagnostics
     DiagnosticOptions *diagOpts = new DiagnosticOptions();
-    TextDiagnosticPrinter *diagPrinter = new TextDiagnosticPrinter(llvm::outs(), diagOpts);
-    CI.createDiagnostics(diagPrinter);
-    auto pto = std::make_shared<clang::TargetOptions>();
-    pto->Triple = llvm::sys::getDefaultTargetTriple();
-    TargetInfo *pti = TargetInfo::CreateTargetInfo(CI.getDiagnostics(), pto);
-    CI.setTarget(pti);
-    CI.createFileManager();
-    CI.createSourceManager(CI.getFileManager());
-    CI.createPreprocessor(clang::TranslationUnitKind::TU_Module);
+    TextDiagnosticPrinter *DiagClient = new TextDiagnosticPrinter(llvm::errs(), diagOpts);
+    IntrusiveRefCntPtr<DiagnosticIDs> DiagID(new DiagnosticIDs());
+    DiagnosticsEngine Diags(DiagID, diagOpts, DiagClient);
 
     // compilation task
-    std::vector<std::string> args;
-    if (debug)
-    {
-        args.push_back("-g");
-        args.push_back("-O0");
-    }
-    else
-    {
-        args.push_back("-O3");
-    }
-    args.push_back("-std=c99");
-    args.push_back("-isystem" + etiss::jitFiles() + "/clang_stdlib");
-    args.push_back("-isystem/usr/include");
-    for (const auto &headerPath : headerpaths)
-    {
-        args.push_back("-I" + headerPath);
-    }
+    // NOTE: Every entry of args could only contain one option, the second will be discarded silently!
+    std::vector<const char *> args;
+    std::vector<std::string> args_ref;
     args.push_back("/etiss_llvm_clang_memory_mapped_file.c");
+    // Print out verbose info of compiler to check configuration
+    // args.push_back("-v");
+    args.push_back("-O3");
+    //	args.push_back("-I/usr/include"); // include  system headers
+    for (auto iter = headerpaths.begin(); iter != headerpaths.end(); iter++)
+    {
+        args_ref.push_back("-I" + *iter);
+        args.push_back(args_ref.back().c_str());
+    }
+    args_ref.push_back("-I" + etiss::jitFiles() + "/clang_stdlib");
+    args.push_back(args_ref.back().c_str());
+    /// TODO: implement method to find/configure standard header path at runtime
+#ifdef CLANG_HEADERS
+#define CLANG_HEADERS_tostring_(X) #X
+#define CLANG_HEADERS_tostring(X) CLANG_HEADERS_tostring_(X)
+    args.push_back("-isystem"); // include as system headers to supress warnings
+    args_ref.push_back(etiss::cfg().get<std::string>("etiss_wd", CLANG_HEADERS_tostring(CLANG_FALLBACK_PATH)) +
+                       CLANG_HEADERS_tostring(CLANG_HEADER_REALTIVE_PATH));
+    args.push_back(args_ref.back().c_str());
+#endif
 
     // configure compiler call
-    std::vector<const char *> argsCStr;
-    for (const auto &arg : args)
-    {
-        argsCStr.push_back(arg.c_str());
-    }
-    if (!CompilerInvocation::CreateFromArgs(CI.getInvocation(), &argsCStr[0], &argsCStr[argsCStr.size()], CI.getDiagnostics())) {
-        printf("ERROR ON PARSING ARGS\n");
-    }
-
+    CompilerInvocation::CreateFromArgs(clang_.getInvocation(), &args[0], &args[0] + args.size(), Diags);
     // input file is mapped to memory area containing the code
     auto buffer = MemoryBuffer::getMemBufferCopy(code, "/etiss_llvm_clang_memory_mapped_file.c");
-    CI.getSourceManager().overrideFileContents(
-        CI.getFileManager().getVirtualFile("/etiss_llvm_clang_memory_mapped_file.c", buffer->getBufferSize(), 0),
+    clang_.getSourceManager().overrideFileContents(
+        clang_.getFileManager().getVirtualFile("/etiss_llvm_clang_memory_mapped_file.c", buffer->getBufferSize(), 0),
         buffer.get(), true);
+    // buffer =
+    // MemoryBuffer::getMemBufferCopy(code,"/etiss_llvm_clang_memory_mapped_file.c");
+    // clang_.getPreprocessorOpts().addRemappedFile("/etiss_llvm_clang_memory_mapped_file.c",
+    // buffer); clang_.createPreprocessor();
 
     // compiler should only output llvm module
     EmitLLVMOnlyAction *action = new EmitLLVMOnlyAction();
 
     // compile
-    if (!CI.ExecuteAction(*action))
+    if (!clang_.ExecuteAction(*action))
     {
         error = "failed to execute translation action ";
         return 0;
@@ -201,7 +216,9 @@ void *LLVMJIT::translate(std::string code, std::set<std::string> headerpaths, st
 
     // TODO: check if lib is valid now not later
 
-    return (void*)lib;
+    ret = (void *)lib;
+
+    return ret;
 }
 void *LLVMJIT::getFunction(void *handle, std::string name, std::string &error)
 {

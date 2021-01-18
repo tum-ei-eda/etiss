@@ -12,6 +12,7 @@
 // This file was modified by the Chair of Electronic Design Automation, TUM
 */
 
+ENTRY(reset_handler)
 SEARCH_DIR(.)
 __DYNAMIC  =  0;
 
@@ -29,9 +30,8 @@ MEMORY
 
 /* Stack information variables */
 _min_stack     = VAR_stack_size;   /* minimum stack space to reserve */
-_stack_start   = ORIGIN(dataram) + LENGTH(dataram);
 _heap_start    = _bss_end;
-_heap_end      = _stack_start;
+
 
 /* We have to align each sector to word boundaries as our current s19->slm
  * conversion scripts are not able to handle non-word aligned sections. */
@@ -136,9 +136,12 @@ SECTIONS
         . = . + _min_stack ;
         . = ALIGN(4);
         stack = . ;
+        _stack_start   = .;
+        _heap_end      = _stack_start;
         _stack = . ;
     } > dataram
-
+    
+    /* no data in the elf file the stack ram is included */
     .stab  0 (NOLOAD) :
     {
         [ .stab ]

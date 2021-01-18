@@ -1,7 +1,7 @@
 #
 #	Copyright 2018 Infineon Technologies AG
 #
-#	This file is part of ETISS tool, see <https://github.com/tum-ei-eda/etiss>
+#	This file is part of ETISS tool, see <https://gitlab.lrz.de/de-tum-ei-eda-open/etiss>
 #
 #	The initial version of this software has been created with the funding support by the German Federal
 #	Ministry of Education and Research(BMBF) in the project EffektiV under grant 01IS13022.
@@ -41,7 +41,7 @@ import xml.etree.ElementTree as ET
 if len(sys.argv) != 2:
     print 'usage: python append_codeblocks_with_examples.py <cb_file>'
     sys.exit()
-
+    
 cb_file = sys.argv[1]
 if not os.path.exists(cb_file):
     print 'File does not excist!'
@@ -169,9 +169,9 @@ fault_injection_DualCPU_main = ET.fromstring(
 '		<Unit filename="../examples/fault_injection_new/vp/mainDualCPU.cpp">\n\
 			<Option target="fault_injection_DualCPU" />\n\
 		</Unit>')
-
-
-
+		
+		
+		
 # xml string for files in example bare_etiss_processor
 bare_etiss_processor_main = ET.fromstring(
 '		<Unit filename="../examples/bare_etiss_processor/main.cpp">\n\
@@ -273,9 +273,9 @@ for unit in project.findall("Unit[@filename='../examples/fault_injection_new/vp/
 if (not found):
     print 'Added file mainDualCPU.cpp.'
     project.append(fault_injection_DualCPU_main)
-
-
-
+    
+    
+    
 # add files of example fault_injection_new to project
 found = False
 for unit in project.findall("Unit[@filename='../examples/bare_etiss_processor/main.cpp']"):
@@ -283,7 +283,7 @@ for unit in project.findall("Unit[@filename='../examples/bare_etiss_processor/ma
     found = True
 if (not found):
     project.append(bare_etiss_processor_main)
-
+			
 
 
 # Write back to file

@@ -47,8 +47,6 @@ class MemRange:
         return self.count
 
     def usage(self):
-        if self.low > self.high:
-            return 0
         return self.high - self.low
 
     def stats(self):

@@ -6,7 +6,7 @@
 
         Copyright 2018 Infineon Technologies AG
 
-        This file is part of ETISS tool, see <https://github.com/tum-ei-eda/etiss>.
+        This file is part of ETISS tool, see <https://gitlab.lrz.de/de-tum-ei-eda-open/etiss>.
 
         The initial version of this software has been created with the funding support by the German Federal
         Ministry of Education and Research (BMBF) in the project EffektiV under grant 01IS13022.
@@ -98,7 +98,7 @@ void interruptcontroler()
   or1k_interrupt_handler_add(4, irq4, NULL);
   or1k_interrupt_enable(2);
   or1k_interrupt_enable(3);
-  or1k_interrupt_enable(4);
+  or1k_interrupt_enable(4);     
   or1k_interrupts_enable();
 
   custom_print_string(global_logger_addr,"PICSR = ");
@@ -110,18 +110,18 @@ void ticktimer()
 {
   // setup period in cycles (maximum: 2^28-1)
   uint32_t timer_period = 40000;
-
-  // Register Timer Handler Function
-  or1k_timer_set_handler(&timer_isr);
-
+  
+  // Register Timer Handler Function 
+  or1k_timer_set_handler(&timer_isr); 
+  
   // unmask timer irq
-  or1k_mtspr(SPR_SR, or1k_mfspr(SPR_SR) | SPR_SR_TEE);
-
+  or1k_mtspr(SPR_SR, or1k_mfspr(SPR_SR) | SPR_SR_TEE); 
+  
   // Setup the counter register. Just for fun we initialize it with the half
-  // of the period, which leads to the first timer interrupt coming after
-  // half of the period.
-  or1k_mtspr(SPR_TTCR, timer_period / 2);
-
+  // of the period, which leads to the first timer interrupt coming after 
+  // half of the period. 
+  or1k_mtspr(SPR_TTCR, timer_period / 2); 
+  
   // Set Timer Mode Register to start timer
   or1k_mtspr(SPR_TTMR, SPR_TTMR_IE      // interrupt enable
                       | SPR_TTMR_RT     // restart after timer match

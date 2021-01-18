@@ -6,7 +6,7 @@
 
         Copyright 2018 Infineon Technologies AG
 
-        This file is part of ETISS tool, see <https://github.com/tum-ei-eda/etiss>.
+        This file is part of ETISS tool, see <https://gitlab.lrz.de/de-tum-ei-eda-open/etiss>.
 
         The initial version of this software has been created with the funding support by the German Federal
         Ministry of Education and Research (BMBF) in the project EffektiV under grant 01IS13022.
@@ -142,11 +142,11 @@ void *GCCJIT::translate(std::string code, std::set<std::string> headerpaths, std
     if (debug)
             ss <<"-g -dl ";
     */
-
+	
     for (std::set<std::string>::const_iterator iter = librarypaths.begin();iter != librarypaths.end();iter++){
             ss << " -L" << *iter << " ";
     }
-
+    
     ss << "-o " << path_ << "lib" << codefilename << ".so " << path_ << codefilename << ".o";
 
 
@@ -158,7 +158,7 @@ void *GCCJIT::translate(std::string code, std::set<std::string> headerpaths, std
     for (std::set<std::string>::const_iterator iter = librarypaths.begin();iter != librarypaths.end();iter++){
             ss << ",-rpath," << *iter;
     }
-
+    
     //std::cout << "EXECUTING: " << ss.str() << std::endl;
     eval = system(ss.str().c_str());
     //std::cout << eval << std::endl;

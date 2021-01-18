@@ -6,7 +6,7 @@
 
         Copyright 2018 Infineon Technologies AG
 
-        This file is part of ETISS tool, see <https://github.com/tum-ei-eda/etiss>.
+        This file is part of ETISS tool, see <https://gitlab.lrz.de/de-tum-ei-eda-open/etiss>.
 
         The initial version of this software has been created with the funding support by the German Federal
         Ministry of Education and Research (BMBF) in the project EffektiV under grant 01IS13022.
@@ -134,7 +134,7 @@ int edgeDetect () {
 	*(w+0) = pixBuf1;
 	*(w+1) = pixBuf2;
 	*(w+2) = pixBuf3;
-
+	
 	//the algo
 	int numCharIn  = 0;   //idx for first input char
 	int numCharOut = 0;   //idx for first output char

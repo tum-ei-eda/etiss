@@ -1,7 +1,7 @@
 #
 #	Copyright 2018 Infineon Technologies AG
 #
-#	This file is part of ETISS tool, see <https://github.com/tum-ei-eda/etiss>
+#	This file is part of ETISS tool, see <https://gitlab.lrz.de/de-tum-ei-eda-open/etiss>
 #
 #	The initial version of this software has been created with the funding support by the German Federal
 #	Ministry of Education and Research(BMBF) in the project EffektiV under grant 01IS13022.
@@ -71,11 +71,11 @@ class Trigger(object):
 		return self._type
 
 	type_ = property(_get_type)
-
+	
 	@staticmethod
 	def nopTrigger():
 		return Trigger(type_="NOP")
-
+	
 	@staticmethod
 	def timeTrigger(injector_,time_ps_):
 		return Trigger(type_="TIME",injector=injector_,time_ps=time_ps_)
@@ -147,8 +147,8 @@ class Action(object):
 		else:
 			raise Exception("unknown type. use static methods to construct a valid action.")
 		self.__isfrozen = True
-
-
+		
+		
 	def _get_id(self):
 		return self._id
 	def _set_id(self, value):
@@ -156,7 +156,7 @@ class Action(object):
 			raise TypeError("id must be set to an integer")
 		self._id = value
 	id_ = property(_get_id, _set_id)
-
+	
 	def _get_name(self):
 		return self._name
 	def _set_name(self, value):
@@ -164,13 +164,13 @@ class Action(object):
 			str(value)
 		self._name = value
 	name_ = property(_get_name, _set_name)
-
+	
 	def _get_type(self):
 		return self._type
 	def _set_type(self,val):
 		raise Exception("type cannot be changed")
 	type_ = property(_get_type, _set_type)
-
+	
 	def _get_target(self):
 		return self._target
 	def _set_target(self,value):
@@ -178,15 +178,15 @@ class Action(object):
 			raise TypeError("target can only be set to a valid Target object")
 		self._target = value
 	target_ = property(_get_target,_set_target)
-
+	
 	@staticmethod
 	def nopAction():
 		return Action(type_="NOP")
-
+		
 	@staticmethod
 	def bitflipAction(injector_,field_,bit_):
 		return Action(type_="BITFLIP",injector=injector_,field=field_,bit=bit_)
-
+		
 	@staticmethod
 	def commandAction(injector_,command_):
 		return Action(type_="COMMAND",injector=injector_,command=command_)
@@ -194,7 +194,7 @@ class Action(object):
 	@staticmethod
 	def injectionAction(fault_):
 		return Action(type_="INJECTION",fault=fault_)
-
+	
 	def toXML(self,offset = "\t"):
 		ret = offset + '<action'
 		if self.id_ is not None:
@@ -202,16 +202,16 @@ class Action(object):
 		if self.name_ is not None:
 			ret += ' name=\"' + str(self.name_) + '\"'
 		ret += ' type=\"' + str(self.type_) + '\"'
-
+		
 		ret += '>\n'
 		if self._type == "NOP":
 			pass
 		elif self._type == "BITFLIP":
-			ret += offset + "\t<injector>"+self._injector+"</injector>\n"
-			ret += offset + "\t<field>"+self._field+"</field>\n"
+			ret += offset + "\t<injector>"+self._injector+"</injector>\n" 
+			ret += offset + "\t<field>"+self._field+"</field>\n" 
 			ret += offset + "\t<bit>"+str(self._bit)+"</bit>\n"
 		elif self._type == "COMMAND":
-			ret += offset + "\t<injector>"+self._injector+"</injector>\n"
+			ret += offset + "\t<injector>"+self._injector+"</injector>\n" 
 			ret += offset + "\t<command>"+self._command+"</command>\n"
 		elif self._type == "INJECTION":
 			ret += self._fault.toXML(offset+"\t",isPartOfList=True) + "\n"
@@ -219,10 +219,10 @@ class Action(object):
 			raise Exception("cannot convert unknown action type to XML")
 		ret += offset +'</action>'
 		return ret
+	
 
-
-
-
+	
+	
 class Fault(object):
 	__isfrozen = False
 	def __setattr__(self, key, value):
@@ -236,10 +236,10 @@ class Fault(object):
 		self._actions = []
 		self._triggers = []
 		self.__isfrozen = True
-
+		
 	def __repr__(self):
 		return self.toXML()
-
+		
 
 	def _get_id(self):
 		return self._id
@@ -248,7 +248,7 @@ class Fault(object):
 			raise TypeError("id must be set to an integer")
 		self._id = value
 	id_ = property(_get_id, _set_id)
-
+	
 	def _get_name(self):
 		return self._name
 	def _set_name(self, value):
@@ -273,9 +273,9 @@ class Fault(object):
 						self._actions.append(v)
 		else:
 			self._actions = []
-
+	
 	actions_ = property(_get_actions,_set_actions)
-
+        
 	def _get_triggers(self):
 		return self._triggers
 	def _set_triggers(self,value):
@@ -292,10 +292,10 @@ class Fault(object):
 						self._triggers.append(v)
 		else:
 			self._triggers = []
-
-
+        
+	
 	triggers_ = property(_get_triggers,_set_triggers)
-
+	
 	def toXML(self,offset = "",isPartOfList=False):
 		ret = ""
 		ooffset = offset
@@ -320,6 +320,6 @@ class Fault(object):
 		if not isPartOfList:
 			ret += ooffset + "\n</faults>"
 		return ret
-
-
+		
+	
 

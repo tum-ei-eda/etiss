@@ -6,7 +6,7 @@
 
         Copyright 2018 Infineon Technologies AG
 
-        This file is part of ETISS tool, see <https://github.com/tum-ei-eda/etiss>.
+        This file is part of ETISS tool, see <https://gitlab.lrz.de/de-tum-ei-eda-open/etiss>.
 
         The initial version of this software has been created with the funding support by the German Federal
         Ministry of Education and Research (BMBF) in the project EffektiV under grant 01IS13022.
@@ -408,6 +408,8 @@ void etiss_loadIni(std::string fileName)
         std::cout << "Initializer::loadIni(): Failed to load Ini: " << fileName << std::endl;
         return;
     }
+        else 
+        std::cout << "Initializer::loadIni(): Ini sucessfully loaded " << fileName << std::endl;
 }
 
 void etiss::Initializer::loadIni(std::list<std::string> *files)
@@ -420,10 +422,20 @@ void etiss::Initializer::loadIni(std::list<std::string> *files)
         std::cout << "Info: simpleIni already exists!" << std::endl;
 
     // load file
+    bool load_bol;
     for (auto it_files : *files)
     {
+ // the check above is sufficient no need for this / checked for previous cases false and last true gives true not the case based on files structure
         etiss_loadIni(it_files);
+        load_bol=true;
+
     }
+    if (load_bol == true )
+        std::cout << "Info:Ini succesfuly loaded" << std::endl;
+    if (load_bol == false)
+        std::cout << "Info: Pending ini " << std::endl;
+
+
 }
 
 void etiss_loadIniConfigs()
