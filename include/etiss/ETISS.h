@@ -208,7 +208,7 @@ std::set<std::string> listLibraryPrefixes();
  * etiss::initialize / etiss::shutdown manually
  */
 void initialize(std::vector<std::string> args);
-
+void initialize(int argc, const char* argv[]);
 /**
  * @brief Get the default JIT implementation.
  *
@@ -345,7 +345,13 @@ class Initializer
         toList(args, args_append...);
         initialize(args);
     }
-
+    
+    Initializer(std::list<std::string> *files, int argc, const char* argv[])
+    {
+        loadIni(files);
+        initialize(argc, argv);
+    }
+    
     /**
      * @brief Constructor that initializes ETISS.
      *
