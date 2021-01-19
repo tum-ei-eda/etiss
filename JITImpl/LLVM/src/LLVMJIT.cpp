@@ -77,20 +77,20 @@ using namespace llvm::orc;
 std::mutex etiss_jit_llvm_init_mu_;
 bool etiss_jit_llvm_init_done_ = false;
 
-
 class OrcJit
-{ 
-public:
-     OrcJit(llvm::orc::JITTargetMachineBuilder JTMB, llvm::DataLayout DL) :
-       ObjectLayer(ES, [](){ return std::make_unique<llvm::SectionMemoryManager>(); }),
-        CompileLayer(ES, ObjectLayer, std::make_unique<llvm::orc::ConcurrentIRCompiler>(std::move(JTMB))),
-       OptimizeLayer(ES, CompileLayer, optimizeModule),
-        DL(std::move(DL)),
-        Mangle(ES, this->DL),
-        Ctx(std::make_unique<llvm::LLVMContext>()),
-        MainJITDylib(ES.createBareJITDylib("<main>"))
+{
+  public:
+    OrcJit(llvm::orc::JITTargetMachineBuilder JTMB, llvm::DataLayout DL)
+        : ObjectLayer(ES, []() { return std::make_unique<llvm::SectionMemoryManager>(); })
+        , CompileLayer(ES, ObjectLayer, std::make_unique<llvm::orc::ConcurrentIRCompiler>(std::move(JTMB)))
+        , OptimizeLayer(ES, CompileLayer, optimizeModule)
+        , DL(std::move(DL))
+        , Mangle(ES, this->DL)
+        , Ctx(std::make_unique<llvm::LLVMContext>())
+        , MainJITDylib(ES.createBareJITDylib("<main>"))
     {
-        MainJITDylib.addGenerator(llvm::cantFail(llvm::orc::DynamicLibrarySearchGenerator::GetForCurrentProcess(DL.getGlobalPrefix())));
+        MainJITDylib.addGenerator(
+            llvm::cantFail(llvm::orc::DynamicLibrarySearchGenerator::GetForCurrentProcess(DL.getGlobalPrefix())));
     }
 
     static llvm::Expected<std::unique_ptr<OrcJit>> Create()
@@ -109,16 +109,19 @@ public:
     const llvm::DataLayout &getDataLayout() const { return DL; }
     llvm::LLVMContext &getContext() { return *Ctx.getContext(); }
 
-    void addModule(std::unique_ptr<llvm::Module> M) {
-        llvm::cantFail(OptimizeLayer.add(MainJITDylib,
-                                    llvm::orc::ThreadSafeModule(std::move(M), Ctx)));
+    void addModule(std::unique_ptr<llvm::Module> M)
+    {
+        llvm::cantFail(OptimizeLayer.add(MainJITDylib, llvm::orc::ThreadSafeModule(std::move(M), Ctx)));
     }
 
-    llvm::Expected<llvm::JITEvaluatedSymbol> lookup(llvm::StringRef Name) {
-        return ES.lookup({&MainJITDylib}, Mangle(Name.str()));
+    llvm::Expected<llvm::JITEvaluatedSymbol> lookup(llvm::StringRef Name)
+    {
+        return ES.lookup({ &MainJITDylib }, Mangle(Name.str()));
     }
 
-    static llvm::orc::ThreadSafeModule optimizeModule(llvm::orc::ThreadSafeModule TSM, const llvm::orc::MaterializationResponsibility &R) {
+    static llvm::orc::ThreadSafeModule optimizeModule(llvm::orc::ThreadSafeModule TSM,
+                                                      const llvm::orc::MaterializationResponsibility &R)
+    {
         auto lock = TSM.getContext();
         auto M = TSM.getModuleUnlocked();
 
@@ -131,7 +134,6 @@ public:
         FPM->add(llvm::createGVNPass());
         FPM->add(llvm::createCFGSimplificationPass());
         FPM->doInitialization();
-    
 
         // Run the optimizations over all functions in the module being added to
         // the JIT.
@@ -140,7 +142,8 @@ public:
 
         return TSM;
     }
-private:
+
+  private:
     llvm::orc::ExecutionSession ES;
     llvm::orc::RTDyldObjectLinkingLayer ObjectLayer;
     llvm::orc::IRCompileLayer CompileLayer;
@@ -151,69 +154,6 @@ private:
     llvm::orc::ThreadSafeContext Ctx;
     llvm::orc::JITDylib &MainJITDylib;
 };
-
-
-LLVMLibrary::LLVMLibrary(llvm::LLVMContext &context, std::unique_ptr<llvm::Module> module) : engine_(0)
-{
-    if (module != 0)
-    {
-        // create engine
-        engine_ = EngineBuilder(std::move(module))
-                      .setErrorStr(&error_)
-                      .setOptLevel(CodeGenOpt::Aggressive)
-                      .setRelocationModel(llvm::Reloc::Static)
-                      .create();
-        if (engine_ == 0)
-        {
-            std::cout << "ERROR: LLVM: failed to create execution engine: " << error_ << std::endl;
-            error_ = "Failed to create execution engine: " + error_;
-        }
-        else
-        {
-            // "compile" module for access
-            engine_->finalizeObject();
-        }
-    }
-    else
-    {
-        error_ = "Failed to get module from action";
-    }
-}
-LLVMLibrary::~LLVMLibrary()
-{
-    delete engine_;
-}
-
-void *LLVMLibrary::getFunction(std::string name, std::string &error)
-{
-    if (engine_)
-    {
-        // get function decalaration
-        Function *f = engine_->FindFunctionNamed(name.c_str());
-        if (f != 0)
-        {
-            // get function pointer
-            void *ret = engine_->getPointerToFunction(f);
-            if (ret != 0)
-            {
-                return ret;
-            }
-            else
-            {
-                error = "Failed to get function: " + error_;
-            }
-        }
-        else
-        {
-            error = "Failed to find function: " + name;
-        }
-    }
-    else
-    {
-        error = "no llvm execution engine present";
-    }
-    return 0;
-}
 
 LLVMJIT::LLVMJIT() : JIT("LLVMJIT")
 {
@@ -229,27 +169,26 @@ LLVMJIT::LLVMJIT() : JIT("LLVMJIT")
         etiss_jit_llvm_init_done_ = true;
     }
     etiss_jit_llvm_init_mu_.unlock();
- 
+
     auto orcJit = OrcJit::Create();
     if (!orcJit)
         throw std::runtime_error("fail");
     orcJit_ = (*orcJit).release();
-   
 }
 
-LLVMJIT::~LLVMJIT() { delete orcJit_; }
-
+LLVMJIT::~LLVMJIT()
+{
+    delete orcJit_;
+}
 
 void *LLVMJIT::translate(std::string code, std::set<std::string> headerpaths, std::set<std::string> librarypaths,
                          std::set<std::string> libraries, std::string &error, bool debug)
 {
-   //create the CI
     clang::CompilerInstance CI;
-    
-   //diagnostics 
+
     DiagnosticOptions *diagOpts = new DiagnosticOptions();
     TextDiagnosticPrinter *diagPrinter = new TextDiagnosticPrinter(llvm::outs(), diagOpts);
-    
+
     CI.createDiagnostics(diagPrinter);
     auto pto = std::make_shared<clang::TargetOptions>();
     pto->Triple = llvm::sys::getDefaultTargetTriple();
@@ -286,7 +225,8 @@ void *LLVMJIT::translate(std::string code, std::set<std::string> headerpaths, st
     {
         argsCStr.push_back(arg.c_str());
     }
-    if (!CompilerInvocation::CreateFromArgs(CI.getInvocation(), argsCStr, CI.getDiagnostics())) {
+    if (!CompilerInvocation::CreateFromArgs(CI.getInvocation(), argsCStr, CI.getDiagnostics()))
+    {
         printf("ERROR ON PARSING ARGS\n");
     }
 
@@ -297,10 +237,8 @@ void *LLVMJIT::translate(std::string code, std::set<std::string> headerpaths, st
         buffer.get(), true);
 
     // compiler should only output llvm module
-    
+
     EmitLLVMOnlyAction action(&orcJit_->getContext());
-   // EmitLLVMOnlyAction *action = new EmitLLVMOnlyAction();
-    
 
     // compile
     if (!CI.ExecuteAction(action))
@@ -310,23 +248,17 @@ void *LLVMJIT::translate(std::string code, std::set<std::string> headerpaths, st
     }
 
     // load module with orcjit
-        orcJit_->addModule(action.takeModule());
+    orcJit_->addModule(action.takeModule());
 
-   // ret = (void*)1;
-   return (void*)1;
-   
+    return (void *)1;
 }
 
 void *LLVMJIT::getFunction(void *handle, std::string name, std::string &error)
 {
 
-   auto func = orcJit_->lookup(name);
+    auto func = orcJit_->lookup(name);
     if (!func)
         throw std::runtime_error("fail");
-    return (void*)(*func).getAddress();
- 
-
+    return (void *)(*func).getAddress();
 }
-void LLVMJIT::free(void *handle)
-{
-}
+void LLVMJIT::free(void *handle) {}

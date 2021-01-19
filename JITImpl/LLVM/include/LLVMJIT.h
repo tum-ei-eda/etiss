@@ -130,8 +130,6 @@ class LLVMJIT : public etiss::JIT
 
   private:
     llvm::LLVMContext context_;
-
-    
     OrcJit *orcJit_ = nullptr;
 
 };
