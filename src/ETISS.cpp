@@ -566,11 +566,11 @@ void etiss::Initializer::loadIniPlugins(std::shared_ptr<etiss::CPUCore> cpu)
     std::map<std::string, std::string> options;
     if (vm.count("pluginToLoad"))
     {
-        const std::vector<std::string> lists = vm["pluginToLoad"].as<std::vector<std::string>>();
-        for (auto nameplug = lists.begin(); nameplug != lists.end(); nameplug++)
+        const std::vector<std::string> pluginList = vm["pluginToLoad"].as<std::vector<std::string>>();
+        for (auto pluginName = pluginList.begin(); pluginName != pluginList.end(); pluginName++)
         {
-            etiss::log(etiss::INFO, "  Adding Plugin " + *nameplug + "\n");
-            cpu->addPlugin(etiss::getPlugin(*nameplug, options));
+            etiss::log(etiss::INFO, "  Adding Plugin " + *pluginName + "\n");
+            cpu->addPlugin(etiss::getPlugin(*pluginName, options));
         }
     }
     for (auto iter = pluginOptions.begin(); iter != pluginOptions.end(); iter++)
@@ -601,12 +601,12 @@ void etiss::Initializer::loadIniPlugins(std::shared_ptr<etiss::CPUCore> cpu)
         bool pluginAlreadyPresent = false;
         for (auto iter : *cpu->getPlugins())
         {
-            std::string plugname = iter->getPluginName();
+            std::string pluginNamecpu = iter->getPluginName();
             if (pos != std::string::npos)
             {
-                plugname = plugname.substr(0, pos);
+                pluginNamecpu = pluginNamecpu.substr(0, pos);
             }
-            if (plugname == pluginName)
+            if (pluginNamecpu == pluginName)
             {
                 pluginAlreadyPresent = true;
                 break;
