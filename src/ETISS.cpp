@@ -415,6 +415,8 @@ void etiss_loadIni(std::string fileName)
         std::cout << "Initializer::loadIni(): Failed to load Ini: " << fileName << std::endl;
         return;
     }
+        else 
+        std::cout << "Initializer::loadIni(): Ini sucessfully loaded " << fileName << std::endl;
 }
 
 void etiss::Initializer::loadIni(std::list<std::string> *files)
@@ -429,8 +431,13 @@ void etiss::Initializer::loadIni(std::list<std::string> *files)
     // load file
     for (auto it_files : *files)
     {
+ // the check above is sufficient no need for this / checked for previous cases false and last true gives true not the case based on files structure
         etiss_loadIni(it_files);
+
     }
+    
+
+
 }
 
 void etiss_loadIniConfigs()

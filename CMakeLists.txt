@@ -225,6 +225,17 @@ unset(TMP_CONFIG_HEADER_REL)
 file(GLOB TMP_CONFIG_HEADER_REL RELATIVE ${ETISS_ROOT} ${PROJECT_BINARY_DIR}/include/etiss/config.h)
 set(ETISS_HEADER ${ETISS_HEADER} ${TMP_CONFIG_HEADER_REL})
 
+
+include(FetchContent)
+FetchContent_Declare(elfio_srcs
+	GIT_REPOSITORY https://github.com/serge1/ELFIO.git
+	GIT_TAG Release_3.6
+)
+if(NOT elfio_srcs_POPULATED)
+	FetchContent_Populate(elfio_srcs)
+	FetchContent_GetProperties(elfio_srcs)
+endif()	
+
 ### Doxyfile
 set(ETISS_DOX_LOCATIONS ${ETISS_DOX_LOCATIONS} ${PROJECT_BINARY_DIR}/include)
 set(ETISS_DOX_LOCATIONS ${ETISS_DOX_LOCATIONS} ${PROJECT_BINARY_DIR}/include_c)
@@ -342,6 +353,7 @@ TARGET_INCLUDE_DIRECTORIES(ETISS PUBLIC
     "${PROJECT_SOURCE_DIR}/include_c"
     "${PROJECT_BINARY_DIR}/include_c"
     ${INCGEN_INC_DIR}
+    ${elfio_srcs_SOURCE_DIR}
 )
 
 GENERATE_EXPORT_HEADER(ETISS
