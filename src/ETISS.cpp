@@ -569,6 +569,26 @@ void etiss::Initializer::loadIniPlugins(std::shared_ptr<etiss::CPUCore> cpu)
         const std::vector<std::string> pluginList = vm["pluginToLoad"].as<std::vector<std::string>>();
         for (auto pluginName = pluginList.begin(); pluginName != pluginList.end(); pluginName++)
         {
+            std::string::size_type pos = std::string(*pluginName).length();
+            bool pluginAlreadyPresent = false;
+            for (auto iter : *cpu->getPlugins())
+            {
+                std::string pluginNamecpu = iter->getPluginName();
+                if (pos != std::string::npos)
+                {
+                    pluginNamecpu = pluginNamecpu.substr(0, pos);
+                }
+                if (pluginNamecpu == *pluginName)
+                {
+                    pluginAlreadyPresent = true;
+                    break;
+                }
+            }
+            if (pluginAlreadyPresent)
+            {
+                etiss::log(etiss::WARNING, "    Warning: Plugin already present. Skipping it: " + *pluginName + "\n");
+                continue;
+            }
             etiss::log(etiss::INFO, "  Adding Plugin " + *pluginName + "\n");
             cpu->addPlugin(etiss::getPlugin(*pluginName, options));
         }
