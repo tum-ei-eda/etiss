@@ -103,3 +103,4 @@ else
     ${VP_EXE} ${ARGS} ${CMD_OPTIONS}
 fi
 
+rm $DYN_INI

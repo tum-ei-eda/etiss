@@ -428,18 +428,13 @@ void etiss::Initializer::loadIni(std::list<std::string> *files)
         std::cout << "Info: simpleIni already exists!" << std::endl;
 
     // load file
-    bool load_bol;
     for (auto it_files : *files)
     {
  // the check above is sufficient no need for this / checked for previous cases false and last true gives true not the case based on files structure
         etiss_loadIni(it_files);
-        load_bol=true;
 
     }
-    if (load_bol == true )
-        std::cout << "Info:Ini succesfuly loaded" << std::endl;
-    if (load_bol == false)
-        std::cout << "Info: Pending ini " << std::endl;
+    
 
 
 }

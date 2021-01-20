@@ -92,14 +92,19 @@ etiss::int8 DebugSystem::load_elf(const char* elf_file){
 
   }
   // 
-  if (reader.get_machine() == EM_OPENRISC) {
+  else if (reader.get_machine() == EM_OPENRISC) {
     if ((reader.get_class() == ELFCLASS32))
         etiss::cfg().set<std::string>("CPUArch", "OR1K");
     if ((reader.get_class() == ELFCLASS64))
         std::cout<<"OR1k 64 is not supported ";
   }
-  if ((reader.get_machine() != EM_OPENRISC) && (reader.get_machine() != EM_RISCV))
+  else
+  {    
     std::cout<<"Target software not supported "<<std::endl;
+    std::cout<<"Target software: "<< reader.get_machine()<<std::endl;
+
+  }
+
 
   for(auto& seg : reader.segments){
     std::unique_ptr<MemSegment> mseg;
@@ -173,7 +178,6 @@ DebugSystem::DebugSystem(uint32_t rom_start, uint32_t rom_size, uint32_t ram_sta
     // mem = new etiss::uint8[DEBUGSYSTEM_MEMBLOCKSIZE*2];
     rom_mem_.resize(rom_size, 0);
     ram_mem_.resize(ram_size, 0);
-    std::cout<<"Hey I m the wished constructor"<<std::endl;
     _print_ibus_access = etiss::cfg().get<bool>("DebugSystem::printIbusAccess", false);
     _print_dbus_access = etiss::cfg().get<bool>("DebugSystem::printDbusAccess", false);
     _print_dbgbus_access = etiss::cfg().get<bool>("DebugSystem::printDbgbusAccess", false);
@@ -188,13 +192,8 @@ DebugSystem::DebugSystem(uint32_t rom_start, uint32_t rom_size, uint32_t ram_sta
 }
 
 
-DebugSystem::DebugSystem(void) :
-    rom_start_(-1)
-  , ram_start_(-1)
-  , rom_size_(0)
-  , ram_size_(0) 
-{
- 
+DebugSystem::DebugSystem() : DebugSystem(-1, 0, -1, 0){
+
   _print_ibus_access = etiss::cfg().get<bool>("DebugSystem::printIbusAccess", false);
   _print_dbus_access = etiss::cfg().get<bool>("DebugSystem::printDbusAccess", false);
   _print_dbgbus_access = etiss::cfg().get<bool>("DebugSystem::printDbgbusAccess", false);

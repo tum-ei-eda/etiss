@@ -60,42 +60,15 @@ int main(int argc, const char *argv[])
     etiss::Initializer initializer(&iniFiles, argc, argv);
     std::cout << "=== Finished setting up configurations ===" << std::endl << std::endl;
 
-    // if a custom library need to be added or etiss failed to find libraries then
-    // they can be added manually. the library name must be given without the lib
-    // prefix or the .so suffix:
-    // etiss::loadLibrary("/path/to/library","LibraryName");
-
-    // if a plugin library is not part of a shared library or the shared library
-    // is already loaded then a plugin library can be added like this:
-    // std::shared_ptr<etiss::LibraryInterface> mylib
-    // = std::shared_ptr<etiss::LibraryInterface>(new MyLib());
-    // etiss::addLibrary(mylib);
-
     std::cout << "=== Setting up test system ===" << std::endl;
     std::cout << "  Setting up Memory" << std::endl;
 
     etiss::DebugSystem dsys(0x0, 0x80000, 0x80000, 0x80000);
-    //etiss::DebugSystem dsys(0x0, 0x100000, 0x100000, 0x200000);
-    // load image to memory
-    //  if(!dsys.load(0,etiss::cfg().get<std::string>("sw_binary","").c_str())){
-    //    etiss::log(etiss::FATALERROR,"Could not load image file "
-    //        + etiss::cfg().get<std::string>("sw_binary","")
-    //        + std::string(" check the config sw_binary in ../ETISS.ini!"),
-    //        ETISS_SRCLOC);
-    //  }
-
-//     if (!dsys.loadRom(etiss::cfg().get<std::string>("sw_binary_rom", "").c_str()) ||
-//         !dsys.loadRam(etiss::cfg().get<std::string>("sw_binary_ram", "").c_str()))
-//     {
-//         etiss::log(etiss::FATALERROR, "ram/rom not loaded properly\n");
-//     }
     
     if (dsys.load_elf(etiss::cfg().get<std::string>("vp::elf_file", "").c_str() ) < 0 ){
       etiss::log(etiss::FATALERROR, "ELF file not loaded properly\n");
     }
-    //uint8_t tbuf[4] = {};
-    //dsys.add_memsegment(make_unique<etiss::MemSegment>(etiss::cfg().get<int>("logaddr", 0x80000000), 4, etiss::MemSegment::WRITE, std::string("logger") ), tbuf);
-    // can be used to write a small assembler programm beginning at address 0
+    
     if (false)
     {
         std::list<etiss::uint32> instructions;
@@ -119,27 +92,8 @@ int main(int argc, const char *argv[])
     std::cout << "  Setting up CPUCore" << std::endl;
     // create a cpu core named core0 with the or1k architecture
     std::string CPUArchName = etiss::cfg().get<std::string>("CPUArch", "");
-
-		etiss::uint64 startAddress = dsys.get_startaddr();
-		std::cout << "ELF start address: 0x" << std::hex << startAddress << std::dec << std::endl;
-
-//     etiss::uint64 startAddress = 0x0;
-//      switch ((char)CPUArchName.c_str()[0])
-//      {
-//      case (char)'o':
-//          startAddress = 0x100;
-//          break;
-//      case (char)'A':
-//          startAddress = 0x68;
-//          break;
-//      // TODO: For RISCV, MSTATUS register has to be configured in advance to
-//      // support interrupt.
-//      case (char)'R':
-// 				 std::cout << "ELF start address: 0x" << std::hex << dsys.get_startaddr() << std::dec << std::endl;
-//          startAddress = 0x80000000; //0x80;//
-//          break;
-//      }
-    
+	etiss::uint64 startAddress = dsys.get_startaddr();
+	std::cout << "ELF start address: 0x" << std::hex << startAddress << std::dec << std::endl;   
     std::shared_ptr<etiss::CPUCore> cpu = etiss::CPUCore::create(CPUArchName, "core0");
     if (!cpu)
     {
