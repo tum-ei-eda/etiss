@@ -75,23 +75,23 @@ uint32_t printMessage(std::string key, std::string message, uint32_t maxCount)
 
 etiss::int8 DebugSystem::load_elf(const char* elf_file){
   ELFIO::elfio reader;
-   
+
   if( !reader.load(elf_file) ){
     etiss::log(etiss::ERROR, "ELF reader could not process file\n");
     return (-1);
   }
-  //set architecture automatically 
+  //set architecture automatically
   if  (reader.get_machine() == EM_RISCV)  {
     if ((reader.get_class() == ELFCLASS64))
-      etiss::cfg().set<std::string>("CPUArch", "RISCV64");// RISCV and OR1K work as well 
+      etiss::cfg().set<std::string>("CPUArch", "RISCV64");// RISCV and OR1K work as well
     if ((reader.get_class() == ELFCLASS32))
       etiss::cfg().set<std::string>("CPUArch", "RISCV");
-      //add conditions 
-    else 
+      //add conditions
+    else
       std::cout<<"System architecture is neither 64 nor 32 bit"<<std::endl;
 
   }
-  // 
+  //
   else if (reader.get_machine() == EM_OPENRISC) {
     if ((reader.get_class() == ELFCLASS32))
         etiss::cfg().set<std::string>("CPUArch", "OR1K");
@@ -99,7 +99,7 @@ etiss::int8 DebugSystem::load_elf(const char* elf_file){
         std::cout<<"OR1k 64 is not supported ";
   }
   else
-  {    
+  {
     std::cout<<"Target software not supported "<<std::endl;
     std::cout<<"Target software: "<< reader.get_machine()<<std::endl;
 
@@ -114,10 +114,10 @@ etiss::int8 DebugSystem::load_elf(const char* elf_file){
     MemSegment::access_t mode = (seg->get_type() & PF_W) ? MemSegment::WRITE : MemSegment::READ;
     std::stringstream sname;
     sname << seg->get_index() << " - " << std::hex << std::setfill ('0') << (mode ==  MemSegment::WRITE  ? "W" : "R" ) << "[0x" << std::setw(sizeof(etiss::uint64)*2) << start_addr + size -1 << " - " << "0x" << std::setw(sizeof(etiss::uint64)*2) << start_addr<< "]";
-    
-    bool newseg_valid = true;  
+
+    bool newseg_valid = true;
     for(const auto& mseg_it : msegs_){
-      if( ( start_addr >= mseg_it->start_addr_) and
+      if( ( start_addr >= mseg_it->start_addr_) &&
         ( start_addr <= mseg_it->end_addr_) ){
           std::stringstream msg;
           msg << "Segment " << sname.str() << "already occupied by another segment\n";
@@ -127,29 +127,29 @@ etiss::int8 DebugSystem::load_elf(const char* elf_file){
         }
     }
     if(newseg_valid){
-      if ( (start_addr >= rom_start_) and (start_addr < (rom_start_ + rom_size_)) ){
+      if ( (start_addr >= rom_start_) && (start_addr < (rom_start_ + rom_size_)) ){
         mseg = make_unique<MemSegment>( start_addr, size, mode, sname.str(), rom_mem_.data() + (start_addr - rom_start_) );
-      } else if ( (start_addr >= ram_start_) and (start_addr < (ram_start_ + ram_size_)) ) {
+      } else if ( (start_addr >= ram_start_) && (start_addr < (ram_start_ + ram_size_)) ) {
         mseg = make_unique<MemSegment>( start_addr, size, mode, sname.str(), ram_mem_.data() + (start_addr - ram_start_) );
       } else if( rom_size_ == 0 && ram_size_ == 0 ) { // system memory is dynamically allocated during ELF load (self managed by each memory segment)
         mseg = make_unique<MemSegment>( start_addr, size, mode, sname.str() );
       } else {
         break;
       }
-      if(mseg and seg->get_data()) {
+      if(mseg && seg->get_data()) {
         add_memsegment(std::move(mseg), seg->get_data(), file_size);
       }
     }
   }
-  
+
   // read start or rather program boot address from ELF
   start_addr_ = reader.get_entry();
-  
+
   return 0;
 }
 
 etiss::int8 DebugSystem::add_memsegment(std::unique_ptr<MemSegment> mseg, const void* raw_data, size_t file_size_bytes){
-  
+
   // sorted insert (0 < start_addr_ < ...)
   size_t i_seg = 0;
   for(i_seg = 0; i_seg < msegs_.size(); ++i_seg){
@@ -158,7 +158,7 @@ etiss::int8 DebugSystem::add_memsegment(std::unique_ptr<MemSegment> mseg, const 
     }
   }
   msegs_.insert(msegs_.begin() + i_seg, std::move(mseg));
-  
+
   // init data
   msegs_[i_seg]->load(raw_data, file_size_bytes);
 
@@ -169,7 +169,7 @@ etiss::int8 DebugSystem::add_memsegment(std::unique_ptr<MemSegment> mseg, const 
   return 0;
 }
 
-DebugSystem::DebugSystem(uint32_t rom_start, uint32_t rom_size, uint32_t ram_start, uint32_t ram_size) : 
+DebugSystem::DebugSystem(uint32_t rom_start, uint32_t rom_size, uint32_t ram_start, uint32_t ram_size) :
     rom_start_(rom_start)
   , ram_start_(ram_start)
   , rom_size_(rom_size)
@@ -214,11 +214,11 @@ etiss::int32 DebugSystem::iread(ETISS_CPU *, etiss::uint64 addr, etiss::uint32 l
   for(i_seg = 0; n_segs; ++i_seg){
     if(msegs_[i_seg]->addr_in_range(addr)) break;
   }
-  
+
   if(i_seg < n_segs){
    return RETURNCODE::NOERROR;
-  } 
-  
+  }
+
   if (addr >= rom_start_ && addr < rom_start_ + rom_mem_.size()) {
     return RETURNCODE::NOERROR;
   }
@@ -240,7 +240,7 @@ static void Trace(etiss::uint64 addr, etiss::uint32 len, bool isWrite, bool toFi
           << (isWrite ? ";w;" : ";r;")                             // type
           << std::setw(8) << std::setfill('0') << std::hex << addr // addr
           << ";" << len << std::endl;
- 
+
      if (toFile)
          file << text.str();
      else
@@ -260,7 +260,7 @@ etiss::int32 DebugSystem::dread(ETISS_CPU *, etiss::uint64 addr, etiss::uint8 *b
         break;
       }
     }
-    
+
     if (i_seg < n_segs) {
       if ( msegs_[i_seg]->payload_in_range(addr, len) ) {
         memcpy(buf, msegs_[i_seg]->mem_ + offset, len);
@@ -270,7 +270,7 @@ etiss::int32 DebugSystem::dread(ETISS_CPU *, etiss::uint64 addr, etiss::uint8 *b
       } else {
         std::cout << std::hex << addr << std::dec << std::endl;
         std::stringstream msg;
-        msg << "length (" << len << ") of databus access out of bounds for DebugSystem::dread at associated segment " 
+        msg << "length (" << len << ") of databus access out of bounds for DebugSystem::dread at associated segment "
           <<  msegs_[i_seg]->name_ << "\n";
         etiss::log(etiss::ERROR, msg.str());
         return RETURNCODE::DBUS_READ_ERROR;
@@ -292,9 +292,9 @@ etiss::int32 DebugSystem::dread(ETISS_CPU *, etiss::uint64 addr, etiss::uint8 *b
         return RETURNCODE::DBUS_READ_ERROR;
       }
     }
-    
+
   }
-    
+
     return RETURNCODE::NOERROR;
 }
 
@@ -309,7 +309,7 @@ etiss::int32 DebugSystem::dwrite(ETISS_CPU *, etiss::uint64 addr, etiss::uint8 *
       break;
     }
   }
-  
+
   if (i_seg < n_segs) {
     if ( msegs_[i_seg]->payload_in_range(addr, len) ) {
       memcpy(msegs_[i_seg]->mem_ + offset, buf, len);
@@ -319,7 +319,7 @@ etiss::int32 DebugSystem::dwrite(ETISS_CPU *, etiss::uint64 addr, etiss::uint8 *
     } else {
       std::cout << std::hex << addr << std::dec << std::endl;
       std::stringstream msg;
-      msg << "length (" << len << ") of databus access out of bounds for DebugSystem::dwrite at associated segment " 
+      msg << "length (" << len << ") of databus access out of bounds for DebugSystem::dwrite at associated segment "
         << msegs_[i_seg]->name_ << "\n";
       etiss::log(etiss::ERROR, msg.str());
       return RETURNCODE::DBUS_WRITE_ERROR;
@@ -355,14 +355,14 @@ etiss::int32 DebugSystem::dbg_read(etiss::uint64 addr, etiss::uint8 *buf, etiss:
         break;
       }
     }
-    
+
     if (i_seg < n_segs) {
       if ( msegs_[i_seg]->payload_in_range(addr, len) ) {
         memcpy(buf, msegs_[i_seg]->mem_ + offset, len);
       } else {
         std::cout << std::hex << addr << std::dec << std::endl;
         std::stringstream msg;
-        msg << "length (" << len << ") of databus access out of bounds for DebugSystem::dbg_read at associated segment " 
+        msg << "length (" << len << ") of databus access out of bounds for DebugSystem::dbg_read at associated segment "
           <<  msegs_[i_seg]->name_ << "\n";
         etiss::log(etiss::ERROR, msg.str());
         return RETURNCODE::DBUS_READ_ERROR;
@@ -381,7 +381,7 @@ etiss::int32 DebugSystem::dbg_read(etiss::uint64 addr, etiss::uint8 *buf, etiss:
         return RETURNCODE::DBUS_READ_ERROR;
       }
     }
-    
+
     return RETURNCODE::NOERROR;
 }
 
@@ -396,14 +396,14 @@ etiss::int32 DebugSystem::dbg_write(etiss::uint64 addr, etiss::uint8 *buf, etiss
       break;
     }
   }
-  
+
   if (i_seg < n_segs) {
     if ( msegs_[i_seg]->payload_in_range(addr, len) ) {
       memcpy(msegs_[i_seg]->mem_ + offset, buf, len);
     } else {
       std::cout << std::hex << addr << std::dec << std::endl;
       std::stringstream msg;
-      msg << "length (" << len << ") of databus access out of bounds for DebugSystem::dbg_write at associated segment " 
+      msg << "length (" << len << ") of databus access out of bounds for DebugSystem::dbg_write at associated segment "
         << msegs_[i_seg]->name_ << "\n";
       etiss::log(etiss::ERROR, msg.str());
       return RETURNCODE::DBUS_WRITE_ERROR;
@@ -419,7 +419,7 @@ etiss::int32 DebugSystem::dbg_write(etiss::uint64 addr, etiss::uint8 *buf, etiss
       return RETURNCODE::DBUS_READ_ERROR;
     }
   }
-    
+
     return RETURNCODE::NOERROR;
 }
 
