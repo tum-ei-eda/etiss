@@ -128,11 +128,11 @@ etiss::int8 DebugSystem::load_elf(const char* elf_file){
     }
     if(newseg_valid){
       if ( (start_addr >= rom_start_) && (start_addr < (rom_start_ + rom_size_)) ){
-        mseg = make_unique<MemSegment>( start_addr, size, mode, sname.str(), rom_mem_.data() + (start_addr - rom_start_) );
+        mseg = std::make_unique<MemSegment>( start_addr, size, mode, sname.str(), rom_mem_.data() + (start_addr - rom_start_) );
       } else if ( (start_addr >= ram_start_) && (start_addr < (ram_start_ + ram_size_)) ) {
-        mseg = make_unique<MemSegment>( start_addr, size, mode, sname.str(), ram_mem_.data() + (start_addr - ram_start_) );
+        mseg = std::make_unique<MemSegment>( start_addr, size, mode, sname.str(), ram_mem_.data() + (start_addr - ram_start_) );
       } else if( rom_size_ == 0 && ram_size_ == 0 ) { // system memory is dynamically allocated during ELF load (self managed by each memory segment)
-        mseg = make_unique<MemSegment>( start_addr, size, mode, sname.str() );
+        mseg = std::make_unique<MemSegment>( start_addr, size, mode, sname.str() );
       } else {
         break;
       }
