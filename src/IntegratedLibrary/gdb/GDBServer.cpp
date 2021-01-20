@@ -844,7 +844,7 @@ etiss::int32 Server::preMemoryAccessCallback(etiss::uint64 addr, etiss::uint32 l
 
 std::string Server::_getPluginName() const
 {
-    return "GDB";
+    return "gdbserver";
 }
 
 void *Server::getPluginHandle()
