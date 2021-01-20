@@ -37,10 +37,10 @@
 PROJECT(LLVMJIT)
 
 IF(NOT DEFINED ENV{LLVM_DIR})
-    SET(ENV{LLVM_DIR} "/opt/clang+llvm-7.0.1-x86_64-linux-gnu-ubuntu-18.04")
+    SET(ENV{LLVM_DIR} "/opt/clang+llvm-11.0.0-x86_64-linux-gnu-ubuntu-20.04")
 ENDIF()
 
-FIND_PACKAGE(LLVM 7 CONFIG)
+FIND_PACKAGE(LLVM 11 CONFIG)
 
 IF(LLVM_FOUND)
     MESSAGE("Using LLVM_DIR: ${LLVM_DIR}")
@@ -61,6 +61,7 @@ IF(LLVM_FOUND)
         ExecutionEngine
         Target
         MCJIT
+        orcjit
         X86CodeGen
         X86AsmParser
         Interpreter

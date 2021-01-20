@@ -94,7 +94,7 @@ echo -e "[JIT]\n type=${JIT}" >> $DYN_INI
 ARGS="-i${ETISS_DIR}/examples/bare_etiss_processor/base.ini -i${DYN_INI}"
 if [ "${USE_TGDB}" -eq 1 ]; then
     if [ "${DO_NOT_ATTACH}" -eq 0 ]; then
-        konsole --workdir $(pwd) -e "bash -c '/usr/local/research/projects/SystemDesign/tools/riscv/current/bin/riscv32-unknown-elf-gdb -ex \"tar rem :2222\" $TARGETSW_PATH_ELF'" &
+        konsole --workdir $(pwd) -e "bash -c '/usr/local/research/projects/SystemDesign/tools/riscv/current/bin/riscv64-unknown-elf-gdb -ex \"tar rem :2222\" $TARGETSW_PATH_ELF'" &
     fi
 fi
 if [ "${USE_GDB}" -eq 1 ]; then

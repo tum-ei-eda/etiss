@@ -40,3 +40,6 @@
 
 # Temporaries
 *~
+
+ArchImpl/ARMv6M
+examples/SW/arm
