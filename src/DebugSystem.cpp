@@ -192,19 +192,7 @@ DebugSystem::DebugSystem(uint32_t rom_start, uint32_t rom_size, uint32_t ram_sta
 }
 
 
-DebugSystem::DebugSystem() : DebugSystem(-1, 0, -1, 0){
-
-  _print_ibus_access = etiss::cfg().get<bool>("DebugSystem::printIbusAccess", false);
-  _print_dbus_access = etiss::cfg().get<bool>("DebugSystem::printDbusAccess", false);
-  _print_dbgbus_access = etiss::cfg().get<bool>("DebugSystem::printDbgbusAccess", false);
-  _print_to_file = etiss::cfg().get<bool>("DebugSystem::printToFile", false);
-  message_max_cnt = etiss::cfg().get<int>("DebugSystem::message_max_cnt", 100);
-
-  if (_print_dbus_access)
-  {
-    trace_file_dbus_.open(etiss::cfg().get<std::string>("ETISS::outputPathPrefix", "") + "dBusAccess.csv", std::ios::binary);
-	}
-}
+DebugSystem::DebugSystem() : DebugSystem(-1, 0, -1, 0) {}
 
 
 etiss::int32 DebugSystem::iread(ETISS_CPU *, etiss::uint64 addr, etiss::uint32 len)
