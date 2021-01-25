@@ -776,7 +776,7 @@ void etiss_initialize(int argc, const char* argv[], bool forced = false)
             auto unregistered = po::collect_unrecognized(parsed_options.options, po::include_positional);
             for (auto iter_unreg : unregistered)
             {
-                if (iter_unreg.find("-i") != 0 && iter_unreg.find("-p"))
+                if (iter_unreg.find("-i") != 0)
                 {
                     etiss::log(etiss::FATALERROR, std::string("Unrecognised option ") + iter_unreg +
                                                "\n\t Please use --help to list all recognised options. \n");
