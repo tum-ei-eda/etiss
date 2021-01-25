@@ -87,7 +87,7 @@ if [ "${DO_TRACE}" -eq 1 ]; then
     echo -e "[BoolConfigurations]\n DebugSystem::printToFile=true" >> $DYN_INI
 fi
 
-echo -e "[JIT]\n type=${JIT}" >> $DYN_INI
+echo -e "[StringConfigurations]\n JIT_Type=${JIT}" >> $DYN_INI
 
 
 # Call
