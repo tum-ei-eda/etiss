@@ -371,6 +371,9 @@ void Server::handlePacket(bool block)
                     case 8:
                         hex::fromInt(answer, (uint64_t)f->read(), arch_->getGDBCore().isLittleEndian());
                         break;
+                    default:
+                        answer = "EFF";
+                        etiss::log(etiss::ERROR, "GDB g: Invalid read length");
                     }
                 }
             }
@@ -447,6 +450,7 @@ void Server::handlePacket(bool block)
                             break;
                         }
                         regIndex = (regIndex << 4) | hex::fromHex(command[i]);
+                        answer = "OK";
                     }
                 }
                 auto f = plugin_core_->getStruct()->findName(arch_->getGDBCore().mapRegister(regIndex));
@@ -510,6 +514,9 @@ void Server::handlePacket(bool block)
                 case 8:
                     hex::fromInt(answer, (uint64_t)f->read(), arch_->getGDBCore().isLittleEndian());
                     break;
+                default:
+                    answer = "EFF";
+                    etiss::log(etiss::ERROR, "GDB p: Invalid read length");
                 }
             }
             break;
@@ -529,7 +536,6 @@ void Server::handlePacket(bool block)
                 {
                     answer = hex::fromBytes(buf, length);
                 }
-                nodbgaction = true;
                 delete[] buf;
             }
             break;
@@ -537,9 +543,14 @@ void Server::handlePacket(bool block)
             {
                 unsigned pos = 1;
                 etiss::uint64 addr = hex::tryInt<etiss::uint64>(command, pos);
-                pos++;
+                pos++; // comma
                 etiss::uint32 length = hex::tryInt<etiss::uint32>(command, pos);
+                pos++; // colon
                 std::vector<etiss::uint8> buf(length);
+                for (int i = 0; i < length; i++)
+                {
+                    buf[i] = hex::tryInt<etiss::uint8>(command, pos);
+                }
                 etiss::int32 exception = (*system_->dbg_write)(system_->handle, addr, buf.data(), length);
                 if (exception != RETURNCODE::NOERROR)
                 {
@@ -549,7 +560,6 @@ void Server::handlePacket(bool block)
                 {
                     answer = "OK";
                 }
-                nodbgaction = true;
             }
             break;
             case 'c': // continue
@@ -731,6 +741,14 @@ void Server::handlePacket(bool block)
                 else if (command.substr(1, 7) == "TStatus")
                 {
                     answer = "T0;tnotrun:0";
+                }
+                else if (command.substr(1, 11) == "fThreadInfo")
+                {
+                    answer = "m1";
+                }
+                else if (command.substr(1, 11) == "sThreadInfo")
+                {
+                    answer = "l";
                 }
             }
             break;

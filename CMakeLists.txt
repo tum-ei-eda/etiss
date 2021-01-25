@@ -41,6 +41,8 @@ IF(${CMAKE_CURRENT_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_BINARY_DIR})
     MESSAGE(FATAL_ERROR "In-source builds are not allowed because they pollute the source tree with temporary files that might have to be deleted later. Please create a separate folder in which you run CMake.")
 ENDIF()
 
+set(ETISS_BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR} CACHE INTERNAL "ETISS build location")
+
 # Declare ETISS version
 set(ETISS_VERSION_MAJOR 0)
 set(ETISS_VERSION_MINOR 8)
@@ -223,6 +225,17 @@ unset(TMP_CONFIG_HEADER_REL)
 file(GLOB TMP_CONFIG_HEADER_REL RELATIVE ${ETISS_ROOT} ${PROJECT_BINARY_DIR}/include/etiss/config.h)
 set(ETISS_HEADER ${ETISS_HEADER} ${TMP_CONFIG_HEADER_REL})
 
+
+include(FetchContent)
+FetchContent_Declare(elfio_srcs
+	GIT_REPOSITORY https://github.com/serge1/ELFIO.git
+	GIT_TAG Release_3.6
+)
+if(NOT elfio_srcs_POPULATED)
+	FetchContent_Populate(elfio_srcs)
+	FetchContent_GetProperties(elfio_srcs)
+endif()	
+
 ### Doxyfile
 set(ETISS_DOX_LOCATIONS ${ETISS_DOX_LOCATIONS} ${PROJECT_BINARY_DIR}/include)
 set(ETISS_DOX_LOCATIONS ${ETISS_DOX_LOCATIONS} ${PROJECT_BINARY_DIR}/include_c)
@@ -277,6 +290,13 @@ FILES_MATCHING
 # copy cmake files
 set(INSTALL_CMAKE_DIR lib/CMake/ETISS CACHE PATH "Installation directory for CMake files")
 
+# to allow linking with ETISS lib in build-tree
+# copying headers
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION ${ETISS_BINARY_DIR}/include/)
+# plugins/list.txt file
+file(WRITE ${ETISS_BINARY_DIR}/lib/plugins/list.txt)
+
+
 
 ############# TARGETS ##############
 
@@ -307,10 +327,14 @@ SET(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
 ADD_LIBRARY(ETISS SHARED
     ${ETISS_SOURCE} ${ETISS_HEADER}
 )
-set_target_properties(ETISS PROPERTIES COMPILE_DEFINITIONS "ETISS_LIB_SHARED=1;ETISS_EXPORTS;ETISS_PLUGIN_EXPORTS")
-TARGET_LINK_LIBRARIES(ETISS PUBLIC Boost::boost Threads::Threads)
+set_target_properties(ETISS PROPERTIES
+  COMPILE_DEFINITIONS "ETISS_LIB_SHARED=1;ETISS_EXPORTS;ETISS_PLUGIN_EXPORTS"
+  LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib/
+)
 IF(UNIX)
     TARGET_LINK_LIBRARIES(ETISS PUBLIC ${Boost_LIBRARIES})
+ELSE(UNIX)
+    TARGET_LINK_LIBRARIES(ETISS PUBLIC Boost::boost Threads::Threads)
 ENDIF()
 IF(WIN32)
     # Sadly CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS does not set -Wl,--export-all-symbols if gcc is sued
@@ -329,6 +353,7 @@ TARGET_INCLUDE_DIRECTORIES(ETISS PUBLIC
     "${PROJECT_SOURCE_DIR}/include_c"
     "${PROJECT_BINARY_DIR}/include_c"
     ${INCGEN_INC_DIR}
+    ${elfio_srcs_SOURCE_DIR}
 )
 
 GENERATE_EXPORT_HEADER(ETISS
@@ -346,6 +371,8 @@ INSTALL(FILES ${PROJECT_BINARY_DIR}/include/etiss/pluginexport.h
         DESTINATION  include/etiss)
 INSTALL(TARGETS ETISS DESTINATION lib)
 
+# mimicing installation in build tree as well
+file(COPY ${PROJECT_BINARY_DIR}/include/etiss/pluginexport.h DESTINATION ${PROJECT_BINARY_DIR}/include/jit/etiss/)
 
 ### create a list of plugin libraries in the install directory
 string(REPLACE "." "\\\\." REGEX_CMAKE_SHARED_LIBRARY_SUFFIX ${CMAKE_SHARED_LIBRARY_SUFFIX})

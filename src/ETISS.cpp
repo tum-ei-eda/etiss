@@ -415,6 +415,8 @@ void etiss_loadIni(std::string fileName)
         std::cout << "Initializer::loadIni(): Failed to load Ini: " << fileName << std::endl;
         return;
     }
+        else
+        std::cout << "Initializer::loadIni(): Ini sucessfully loaded " << fileName << std::endl;
 }
 
 void etiss::Initializer::loadIni(std::list<std::string> *files)
@@ -429,8 +431,13 @@ void etiss::Initializer::loadIni(std::list<std::string> *files)
     // load file
     for (auto it_files : *files)
     {
+ // the check above is sufficient no need for this / checked for previous cases false and last true gives true not the case based on files structure
         etiss_loadIni(it_files);
+
     }
+
+
+
 }
 
 void etiss_loadIniConfigs()
@@ -694,7 +701,7 @@ std::pair<std::string, std::string> inifileload(const std::string& s)
     return make_pair(std::string(), std::string());
 }
 
-void etiss_initialize(int argc, const char* argv[], bool forced = false)
+void etiss_initialize(const std::vector<std::string>& args, bool forced = false)
 {
     static std::mutex mu_;
     static bool initialized_(false);
@@ -722,10 +729,10 @@ void etiss_initialize(int argc, const char* argv[], bool forced = false)
         }
         initialized_ = true;
     }
-    
+
     {
         namespace po = boost::program_options;
-        try 
+        try
         {
             po::options_description desc("Allowed options");
             desc.add_options()
@@ -759,14 +766,14 @@ void etiss_initialize(int argc, const char* argv[], bool forced = false)
             ("pluginToLoad,p", po::value<std::vector<std::string>>()->multitoken(), "List of plugins to be loaded.")
             ;
 
-            po::command_line_parser parser{argc, argv};
-            po::command_line_parser iniparser{argc, argv};
+            po::command_line_parser parser{args};
+            po::command_line_parser iniparser{args};
             iniparser.options(desc).allow_unregistered().extra_parser(inifileload).run();
             parser.options(desc).allow_unregistered().extra_parser(etiss::Configuration::set_cmd_line_boost);
             po::parsed_options parsed_options = parser.run();
             po::store(parsed_options, vm);
 
-            if (vm.count("help")) 
+            if (vm.count("help"))
             {
                 std::cout << "\nPlease begin all options with --\n\n";
                 std::cout << desc << "\n";
@@ -807,7 +814,7 @@ void etiss_initialize(int argc, const char* argv[], bool forced = false)
                 }
             }
         }
-        catch(std::exception& e) 
+        catch(std::exception& e)
         {
             etiss::log(etiss::FATALERROR, std::string(e.what()) +
                                                "\n\t Please use --help to list all recognised options. \n");
@@ -894,15 +901,15 @@ void etiss_initialize(int argc, const char* argv[], bool forced = false)
         etiss::py::console();
 }
 
-void etiss::initialize(int argc, const char* argv[])
+void etiss::initialize(std::vector<std::string>& args)
 {
-    etiss_initialize(argc, argv, false);
+    etiss_initialize(args, false);
 }
 
 void etiss::forceInitialization()
 {
-    const char *argv[]={""};
-    etiss_initialize(0, argv, true);
+    std::vector<std::string> args{};
+    etiss_initialize(args, true);
 }
 
 //__attribute__((destructor))
