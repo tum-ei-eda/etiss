@@ -10,9 +10,9 @@ jobs:
     strategy:
       matrix:
         config:
-          - {name: "Linux", os: ubuntu-latest, cmakegen: "", jit: "clang+llvm-7.0.0-x86_64-linux-gnu-ubuntu-16.04", jit-ext: ".tar.xz", tc: "riscv64-unknown-elf-gcc-8.3.0-2020.04.0-x86_64-linux-ubuntu14", tc-ext: ".tar.gz", unpack: "tar xf"}
-          - {name: "Windows", os: windows-latest, cmakegen: "-G \"MinGW Makefiles\"", jit: "LLVM-7.0.0-win64", jit-ext: ".exe", tc: "riscv64-unknown-elf-gcc-8.3.0-2020.04.0-x86_64-w64-mingw32", tc-ext: ".zip", unpack: "unzip"}
-          - {name: "Mac", os: macOS-latest, cmakegen: "", jit: "clang+llvm-7.0.0-x86_64-apple-darwin", jit-ext: ".tar.xz", tc: "riscv64-unknown-elf-gcc-8.3.0-2020.04.0-x86_64-apple-darwin", tc-ext: ".tar.gz", unpack: "tar xf"}
+          - {name: "Linux", os: ubuntu-latest, cmakegen: "", llvm: "linux-gnu-ubuntu-16.04", llvm-ext: ".tar.xz", tc: "linux-ubuntu14", tc-ext: ".tar.gz", unpack: "tar xf"}
+          - {name: "Windows", os: windows-latest, cmakegen: "-G \"MinGW Makefiles\"", llvm: "", llvm-ext: "", tc: "w64-mingw32", tc-ext: ".zip", unpack: "unzip"}
+          - {name: "Mac", os: macOS-latest, cmakegen: "", llvm: "apple-darwin", llvm-ext: ".tar.xz", tc: "apple-darwin", tc-ext: ".tar.gz", unpack: "tar xf"}
 
     runs-on: ${{ matrix.config.os }}
     name: ${{ matrix.config.name }}
@@ -31,29 +31,31 @@ jobs:
       run: |
         choco install boost-msvc-14.1 --version=1.67.0
         choco install wget unzip
-        choco install llvm --version=7.0.0
+        choco install llvm --version=11.0.0
 
     - name: Requirements (Mac)
       if: matrix.config.name == 'Mac'
       run: |
         brew install boost coreutils
-  
+
     - name: Requirements (Linux/Mac)
       if: matrix.config.name == 'Linux' || matrix.config.name == 'Mac'
       working-directory: ${{runner.workspace}}
       shell: bash
-      run: | 
-        wget https://releases.llvm.org/7.0.0/${{ matrix.config.jit }}${{ matrix.config.jit-ext }}
-        ${{ matrix.config.unpack }} ${{ matrix.config.jit }}${{ matrix.config.jit-ext }}
-        mv ${{ matrix.config.jit }} llvm-lib
-        
+      run: |
+        LLVM_NAME="clang+llvm-11.0.0-x86_64-${{ matrix.config.llvm }}"
+        wget https://github.com/llvm/llvm-project/releases/download/llvmorg-11.0.0/$LLVM_NAME${{ matrix.config.llvm-ext }}
+        ${{ matrix.config.unpack }} $LLVM_NAME${{ matrix.config.llvm-ext }}
+        mv $LLVM_NAME llvm-lib
+
     - name: Requirements
       shell: bash
       working-directory: ${{runner.workspace}}
       run: |
-        wget https://static.dev.sifive.com/dev-tools/${{ matrix.config.tc }}${{ matrix.config.tc-ext }}
-        ${{ matrix.config.unpack }} ${{ matrix.config.tc }}${{ matrix.config.tc-ext }}
-        mv ${{ matrix.config.tc }} riscv-tc
+        TC_NAME="riscv64-unknown-elf-gcc-8.3.0-2020.04.0-x86_64-${{ matrix.config.tc }}"
+        wget https://static.dev.sifive.com/dev-tools/$TC_NAME${{ matrix.config.tc-ext }}
+        ${{ matrix.config.unpack }} $TC_NAME${{ matrix.config.tc-ext }}
+        mv $TC_NAME riscv-tc
 
     - name: Create Build Environment
       run: cmake -E make_directory ${{runner.workspace}}/build

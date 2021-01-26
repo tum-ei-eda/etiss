@@ -64,7 +64,7 @@ option(ETISS_USE_PROFILEFLAGS "Enable or disable the -pg compiler and linker fla
 
 # Global configuration
 SET(CMAKE_POSITION_INDEPENDENT_CODE ON)
-SET(CMAKE_CXX_STANDARD 11)
+SET(CMAKE_CXX_STANDARD 14)
 SET(CMAKE_CXX_STANDARD_REQUIRED ON)
 SET(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
@@ -234,7 +234,7 @@ FetchContent_Declare(elfio_srcs
 if(NOT elfio_srcs_POPULATED)
 	FetchContent_Populate(elfio_srcs)
 	FetchContent_GetProperties(elfio_srcs)
-endif()	
+endif()
 
 ### Doxyfile
 set(ETISS_DOX_LOCATIONS ${ETISS_DOX_LOCATIONS} ${PROJECT_BINARY_DIR}/include)
