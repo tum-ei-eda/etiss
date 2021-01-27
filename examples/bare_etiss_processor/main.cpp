@@ -136,4 +136,45 @@ int main(int argc, const char *argv[])
     // print the exception code returned by the cpu core
     std::cout << "CPU0 exited with exception: 0x" << std::hex << exception << std::dec << ": "
               << etiss::RETURNCODE::getErrorMessages()[exception] << std::endl;
+              
+              
+    switch(exception){
+        case etiss::RETURNCODE::CPUFINISHED:
+        case etiss::RETURNCODE::NOERROR:
+        case etiss::RETURNCODE::CPUTERMINATED:
+        return 0;
+        break;
+        case etiss::RETURNCODE::DBUS_READ_ERROR:
+        case etiss::RETURNCODE::DBUS_WRITE_ERROR:
+        case etiss::RETURNCODE::IBUS_READ_ERROR:
+        case etiss::RETURNCODE::IBUS_WRITE_ERROR:
+        case etiss::RETURNCODE::INTERRUPT:
+        case etiss::RETURNCODE::RESET:
+        case etiss::RETURNCODE::ILLEGALINSTRUCTION:
+        case etiss::RETURNCODE::ILLEGALJUMP:
+        case etiss::RETURNCODE::INSTR_PAGEFAULT:
+        case etiss::RETURNCODE::LOAD_PAGEFAULT:
+        case etiss::RETURNCODE::STORE_PAGEFAULT:
+        case etiss::RETURNCODE::GDBNOERROR:
+        case etiss::RETURNCODE::SYSCALL:
+        case etiss::RETURNCODE::PAGEFAULT:
+        return 1;
+        break;
+        case etiss::RETURNCODE::JITERROR:
+        case etiss::RETURNCODE::JITCOMPILATIONERROR:
+        return 2;
+        break;
+        case etiss::RETURNCODE::GENERALERROR:
+        case etiss::RETURNCODE::RELOADBLOCKS:
+        case etiss::RETURNCODE::RELOADCURRENTBLOCK:
+        case etiss::RETURNCODE::BREAKPOINT:
+        case etiss::RETURNCODE::ARCHERROR:
+        case etiss::RETURNCODE::EMULATIONNOTSUPPORTED:
+        case etiss::RETURNCODE::INVALIDSYSTEM:
+        return 3;
+        break;
+        default:
+        return -1;
+        break;
+    }
 }
