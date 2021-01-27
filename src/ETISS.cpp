@@ -751,7 +751,7 @@ void etiss_initialize(const std::vector<std::string>& args, bool forced = false)
             ("ETISS::outputPathPrefix", po::value<std::string>(), "Path prefix to use when writing output files.")
             ("sw_binary_ram", po::value<std::string>(), "Path to binary file to be loaded into RAM.")
             ("sw_binary_rom", po::value<std::string>(), "Path to binary file to be loaded into ROM.")
-            ("logLevel", po::value<int>(), "Verbosity of logging output.")
+            ("loglevel", po::value<int>(), "Verbosity of logging output.")
             ("DebugSystem::printDbusAccess", po::value<bool>(), "Traces accesses to the data bus.")
             ("DebugSystem::printIbusAccess", po::value<bool>(), "Traces accesses to the instruction bus.")
             ("DebugSystem::printDbgbusAccess", po::value<bool>(), "Traces accesses to the debug bus.")
@@ -764,6 +764,7 @@ void etiss_initialize(const std::vector<std::string>& args, bool forced = false)
             ("JIT-External::LibPaths", po::value<std::string>(), "List of semicolon-separated library paths for the JIT.")
             ("port", po::value<std::string>(), "Option for gdbserver")
             ("pluginToLoad,p", po::value<std::vector<std::string>>()->multitoken(), "List of plugins to be loaded.")
+            ("vp::elf_file", po::value<std::string>(), "Load ELF file.")
             ;
 
             po::command_line_parser parser{args};
