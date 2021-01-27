@@ -111,12 +111,5 @@ jobs:
       if: matrix.config.name == 'Windows'
       shell: bash
       run: |
-        TARGETSW_PATH_ELF=${{runner.workspace}}/install/examples/SW/riscv/build/riscv_example
-        TARGET_ELFFILE=$(basename -- "$TARGETSW_PATH_ELF")
-        TARGET_ELFDIR=$(dirname -- "$TARGETSW_PATH_ELF")
-        TARGETNAME=$(echo "${TARGET_ELFFILE%.*}")
-        TARGETSW_PATH_ROM=$(realpath ${TARGET_ELFDIR}/${TARGETNAME}.rom)
-        TARGETSW_PATH_RAM=$(realpath ${TARGET_ELFDIR}/${TARGETNAME}.ram)
-        ETISS_DIR=${{runner.workspace}}/install
-        VP_EXE="${ETISS_DIR}/examples/bare_etiss_processor/build/main"
-        ${VP_EXE} --sw_binary_ram=${TARGETSW_PATH_RAM} --sw_binary_rom=${TARGETSW_PATH_ROM} --CPUArch=RISCV --JIT_Type=TCCJIT --loglevel=4 --vp::elf_file=$TARGETSW_PATH_ELF -pLogger
+        VP_EXE="$D:\a\etiss/install/examples/bare_etiss_processor/build/main"
+        ${VP_EXE} --vp::elf_file=D:\a\etiss/install/examples/SW/riscv/build/riscv_example --CPUArch=RISCV --JIT_Type=TCCJIT --loglevel=4 -pLogger
