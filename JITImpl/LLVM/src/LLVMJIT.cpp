@@ -119,6 +119,22 @@ class OrcJit
         return ES.lookup({ &MainJITDylib }, Mangle(Name.str()));
     }
 
+    bool loadLib(const std::string &libName, const std::set<std::string> &libPaths)
+    {
+        for (const auto &libPath : libPaths)
+        {
+            SmallString<128> fullPath;
+            sys::path::append(fullPath, libPath, "lib" + libName + ".so");
+            if (sys::fs::exists(fullPath))
+            {
+                MainJITDylib.addGenerator(llvm::cantFail(llvm::orc::DynamicLibrarySearchGenerator::Load(fullPath.c_str(), DL.getGlobalPrefix())));
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     static llvm::orc::ThreadSafeModule optimizeModule(llvm::orc::ThreadSafeModule TSM,
                                                       const llvm::orc::MaterializationResponsibility &R)
     {
@@ -219,6 +235,19 @@ void *LLVMJIT::translate(std::string code, std::set<std::string> headerpaths, st
     args.push_back("/etiss_llvm_clang_memory_mapped_file.c");
     args.push_back("-isystem/usr/include/x86_64-linux-gnu");
 
+    for (const auto &lib : libraries)
+    {
+        if (loadedLibs_.count(lib) == 0)
+        {
+            if (!orcJit_->loadLib(lib, librarypaths))
+            {
+                error = "could not load library";
+                return 0;
+            }
+            loadedLibs_.insert(lib);
+        }
+    }
+
     // configure compiler call
     std::vector<const char *> argsCStr;
     for (const auto &arg : args)
@@ -227,7 +256,8 @@ void *LLVMJIT::translate(std::string code, std::set<std::string> headerpaths, st
     }
     if (!CompilerInvocation::CreateFromArgs(CI.getInvocation(), argsCStr, CI.getDiagnostics()))
     {
-        printf("ERROR ON PARSING ARGS\n");
+        error = "error on parsing args";
+        return 0;
     }
 
     // input file is mapped to memory area containing the code
