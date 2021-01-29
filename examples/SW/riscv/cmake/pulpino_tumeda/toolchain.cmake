@@ -19,4 +19,7 @@ add_definitions(-D__riscv__)
 add_definitions(-march=${RISCV_ARCH})
 add_definitions(-mabi=${RISCV_ABI})
 
+# The linker argument setting below will break the cmake test program on 64-bit, so disable test program linking for now.
+set(CMAKE_TRY_COMPILE_TARGET_TYPE "STATIC_LIBRARY")
+
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -march=${RISCV_ARCH} -mabi=${RISCV_ABI}")

@@ -23,8 +23,7 @@ if [ "$#" -lt 1 ]; then
         "  v        Set ETISS output to verbose\n" \
         "  trace    Trace memory accesses\n" \
         "  gcc      Use GCC as JIT instead of TCC\n" \
-        "  llvm     Use LLVM as JIT instead of TCC\n" \
-        "  rv64     Use RISC-V 64-bit instead of RISC-V 32-bit\n"
+        "  llvm     Use LLVM as JIT instead of TCC\n"
     exit 1
 fi
 TARGETSW_PATH_ELF=$1
