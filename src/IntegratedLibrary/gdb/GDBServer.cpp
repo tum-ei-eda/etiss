@@ -547,7 +547,7 @@ void Server::handlePacket(bool block)
                 etiss::uint32 length = hex::tryInt<etiss::uint32>(command, pos);
                 pos++; // colon
                 std::vector<etiss::uint8> buf(length);
-                for (int i = 0; i < length; i++)
+                for (etiss::uint32 i = 0; i < length; i++)
                 {
                     buf[i] = hex::tryInt<etiss::uint8>(command, pos);
                 }
