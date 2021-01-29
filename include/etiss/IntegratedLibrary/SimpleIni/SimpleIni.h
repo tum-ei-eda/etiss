@@ -327,7 +327,7 @@ class CSimpleIniTempl
 #endif
 
         /** Strict less ordering by name of key only */
-        struct KeyOrder : std::binary_function<Entry, Entry, bool>
+        struct KeyOrder
         {
             bool operator()(const Entry &lhs, const Entry &rhs) const
             {
@@ -337,7 +337,7 @@ class CSimpleIniTempl
         };
 
         /** Strict less ordering by order, and then name of key */
-        struct LoadOrder : std::binary_function<Entry, Entry, bool>
+        struct LoadOrder
         {
             bool operator()(const Entry &lhs, const Entry &rhs) const
             {
