@@ -27,12 +27,19 @@ jobs:
 
     - name: Requirements (Windows)
       if: matrix.config.name == 'Windows'
+      working-directory: ${{runner.workspace}}
       shell: bash
       run: |
         choco install boost-msvc-14.1 --version=1.67.0
         choco install wget unzip
         choco install llvm --version=7.0.0
-        choco install make
+        wget https://sourceforge.net/projects/gnuwin32/files/make/3.81/make-3.81-bin.zip/download?use_mirror=deac-fra&download=
+        unzip make-3.81-bin
+        mv make-3.81-bin gnumake
+        mkdir build
+        cd build
+        cmake -G "Unix Makefiles" -DCMAKE_MAKE_PROGRAM=${{runner.workspace}}/gnumake/bin/make.exe ..
+        cmake --build .
 
     - name: Requirements (Mac)
       if: matrix.config.name == 'Mac'
