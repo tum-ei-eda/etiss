@@ -85,13 +85,15 @@ etiss::int8 DebugSystem::load_elf(const char *elf_file)
     // set architecture automatically
     if (reader.get_machine() == EM_RISCV)
     {
-        if ((reader.get_class() == ELFCLASS64))
+        if ((reader.get_class() == ELFCLASS64)) {
             etiss::cfg().set<std::string>("CPUArch", "RISCV64"); // RISCV and OR1K work as well
-        if ((reader.get_class() == ELFCLASS32))
+        } else if ((reader.get_class() == ELFCLASS32)) {
             etiss::cfg().set<std::string>("CPUArch", "RISCV");
         // add conditions
-        else
+        } else {
             std::cout << "System architecture is neither 64 nor 32 bit" << std::endl;
+            return -1;
+        }
     }
     //
     else if (reader.get_machine() == EM_OPENRISC)
