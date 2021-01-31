@@ -32,6 +32,7 @@ jobs:
         choco install boost-msvc-14.1 --version=1.67.0
         choco install wget unzip
         choco install llvm --version=7.0.0
+        choco install make
 
     - name: Requirements (Mac)
       if: matrix.config.name == 'Mac'
@@ -111,5 +112,5 @@ jobs:
       if: matrix.config.name == 'Windows'
       shell: bash
       run: |
-        VP_EXE="${{runner.workspace}}/install/examples/bare_etiss_processor/build/main"
+        VP_EXE="${{runner.workspace}}/install/examples/bare_etiss_processor/build/Debug/main.exe"
         ${VP_EXE} --vp::elf_file=${{runner.workspace}}/install/examples/SW/riscv/build/riscv_example --CPUArch=RISCV --JIT_Type=TCCJIT --loglevel=4 -pLogger
