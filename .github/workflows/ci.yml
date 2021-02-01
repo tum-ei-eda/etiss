@@ -27,16 +27,16 @@ jobs:
 
     - name: Requirements (Windows)
       if: matrix.config.name == 'Windows'
-      working-directory: ${{runner.workspace}}
+      working-directory: ${{runner.workspace}}/install/examples/SW/riscv
       shell: bash
       run: |
         choco install boost-msvc-14.1 --version=1.67.0
         choco install wget unzip
         choco install llvm --version=7.0.0
-        wget http://gnuwin32.sourceforge.net/downlinks/make.php
+        choco install make
         mkdir build
         cd build
-        cmake -G "Unix Makefiles" -DCMAKE_MAKE_PROGRAM=${{runner.workspace}}/make-3.81.exe ..
+        cmake -G "Unix Makefiles" -DCMAKE_MAKE_PROGRAM=make.exe ..
         cmake --build .
 
     - name: Requirements (Mac)
