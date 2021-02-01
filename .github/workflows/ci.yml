@@ -33,11 +33,6 @@ jobs:
         choco install wget unzip
         choco install llvm --version=7.0.0
         choco install make
-        cd ${{runner.workspace}}/install/examples/SW/riscv
-        mkdir build
-        cd build
-        cmake -G "Unix Makefiles" -DCMAKE_MAKE_PROGRAM=make.exe ..
-        cmake --build .
 
     - name: Requirements (Mac)
       if: matrix.config.name == 'Mac'
@@ -80,6 +75,16 @@ jobs:
       working-directory: ${{runner.workspace}}/build
       shell: bash
       run: cmake --build . --config $BUILD_TYPE --target install
+    
+    - name: Configure GNU Make (Windows)
+      if: matrix.config.name == 'Windows'
+      shell: bash
+      working-directory: ${{runner.workspace}}/install/examples/SW/riscv
+      run: |
+        mkdir build
+        cd build
+        cmake -G "Unix Makefiles" -DCMAKE_MAKE_PROGRAM=make.exe ..
+        cmake --build .
 
     - name: Setup tests
       working-directory: ${{runner.workspace}}/install/examples
