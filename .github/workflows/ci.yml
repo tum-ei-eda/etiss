@@ -10,9 +10,9 @@ jobs:
     strategy:
       matrix:
         config:
-          - {name: "Linux", os: ubuntu-latest, cmakegen: "", jit: "clang+llvm-7.0.0-x86_64-linux-gnu-ubuntu-16.04", jit-ext: ".tar.xz", tc: "riscv64-unknown-elf-gcc-8.3.0-2020.04.0-x86_64-linux-ubuntu14", tc-ext: ".tar.gz", unpack: "tar xf"}
-          - {name: "Windows", os: windows-latest, cmakegen: "-G \"MinGW Makefiles\"", jit: "LLVM-7.0.0-win64", jit-ext: ".exe", tc: "riscv64-unknown-elf-gcc-8.3.0-2020.04.0-x86_64-w64-mingw32", tc-ext: ".zip", unpack: "unzip"}
-          - {name: "Mac", os: macOS-latest, cmakegen: "", jit: "clang+llvm-7.0.0-x86_64-apple-darwin", jit-ext: ".tar.xz", tc: "riscv64-unknown-elf-gcc-8.3.0-2020.04.0-x86_64-apple-darwin", tc-ext: ".tar.gz", unpack: "tar xf"}
+          - {name: "Linux", os: ubuntu-latest, cmakeAddCfg: "", cmakegen: "", jit: "clang+llvm-7.0.0-x86_64-linux-gnu-ubuntu-16.04", jit-ext: ".tar.xz", tc: "riscv64-unknown-elf-gcc-8.3.0-2020.04.0-x86_64-linux-ubuntu14", tc-ext: ".tar.gz", unpack: "tar xf"}
+          - {name: "Windows", os: windows-latest, cmakeAddCfg: "-G \"Unix Makefiles\" -DCMAKE_MAKE_PROGRAM=make.exe", cmakegen: "-G \"MinGW Makefiles\"", jit: "LLVM-7.0.0-win64", jit-ext: ".exe", tc: "riscv64-unknown-elf-gcc-8.3.0-2020.04.0-x86_64-w64-mingw32", tc-ext: ".zip", unpack: "unzip"}
+          - {name: "Mac", os: macOS-latest, cmakeAddCfg: "", cmakegen: "", jit: "clang+llvm-7.0.0-x86_64-apple-darwin", jit-ext: ".tar.xz", tc: "riscv64-unknown-elf-gcc-8.3.0-2020.04.0-x86_64-apple-darwin", tc-ext: ".tar.gz", unpack: "tar xf"}
 
     runs-on: ${{ matrix.config.os }}
     name: ${{ matrix.config.name }}
@@ -75,23 +75,13 @@ jobs:
       working-directory: ${{runner.workspace}}/build
       shell: bash
       run: cmake --build . --config $BUILD_TYPE --target install
-    
-    - name: Configure GNU Make (Windows)
-      if: matrix.config.name == 'Windows'
-      shell: bash
-      working-directory: ${{runner.workspace}}/install/examples/SW/riscv
-      run: |
-        mkdir build
-        cd build
-        cmake -G "Unix Makefiles" -DCMAKE_MAKE_PROGRAM=make.exe ..
-        cmake --build .
 
     - name: Setup tests
       working-directory: ${{runner.workspace}}/install/examples
       run: |
         cmake -E make_directory ${{runner.workspace}}/install/examples/SW/riscv/build
         cd SW/riscv/build
-        cmake .. -DRISCV_ELF_GCC_PREFIX=../../../../../riscv-tc -DRISCV_ELF_GCC_BASENAME=riscv64-unknown-elf
+        cmake .. -DRISCV_ELF_GCC_PREFIX=../../../../../riscv-tc -DRISCV_ELF_GCC_BASENAME=riscv64-unknown-elf ${{matrix.config.cmakeAddCfg}}
         cmake --build . --config $BUILD_TYPE
         cd -
         cmake -E make_directory ${{runner.workspace}}/install/examples/SW/riscv_cpp/build
