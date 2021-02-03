@@ -11,7 +11,7 @@ jobs:
       matrix:
         config:
           - {name: "Linux", os: ubuntu-latest, cmakeAddCfg: "", cmakegen: "", jit: "clang+llvm-7.0.0-x86_64-linux-gnu-ubuntu-16.04", jit-ext: ".tar.xz", tc: "riscv64-unknown-elf-gcc-8.3.0-2020.04.0-x86_64-linux-ubuntu14", tc-ext: ".tar.gz", unpack: "tar xf"}
-          - {name: "Windows", os: windows-latest, cmakeAddCfg: "-G \"Unix Makefiles\" -DCMAKE_MAKE_PROGRAM=make.exe", cmakegen: "-G \"MinGW Makefiles\"", jit: "LLVM-7.0.0-win64", jit-ext: ".exe", tc: "riscv64-unknown-elf-gcc-8.3.0-2020.04.0-x86_64-w64-mingw32", tc-ext: ".zip", unpack: "unzip"}
+          - {name: "Windows", os: windows-latest, cmakeAddCfg: "-G \"Unix Makefiles\" -DCMAKE_MAKE_PROGRAM=make", cmakegen: "-G \"MinGW Makefiles\"", jit: "LLVM-7.0.0-win64", jit-ext: ".exe", tc: "riscv64-unknown-elf-gcc-8.3.0-2020.04.0-x86_64-w64-mingw32", tc-ext: ".zip", unpack: "unzip"}
           - {name: "Mac", os: macOS-latest, cmakeAddCfg: "", cmakegen: "", jit: "clang+llvm-7.0.0-x86_64-apple-darwin", jit-ext: ".tar.xz", tc: "riscv64-unknown-elf-gcc-8.3.0-2020.04.0-x86_64-apple-darwin", tc-ext: ".tar.gz", unpack: "tar xf"}
 
     runs-on: ${{ matrix.config.os }}
@@ -33,6 +33,7 @@ jobs:
         choco install wget unzip
         choco install llvm --version=7.0.0
         choco install make
+        make="C:\Users\runneradmin\AppData\Local\Temp\chocolatey\bin\make.exe"
 
     - name: Requirements (Mac)
       if: matrix.config.name == 'Mac'
@@ -112,5 +113,5 @@ jobs:
       if: matrix.config.name == 'Windows'
       shell: bash
       run: |
-        VP_EXE="${{runner.workspace}}/install/examples/bare_etiss_processor/build/Debug/main.exe"
+        VP_EXE="${{runner.workspace}}/install/examples/bare_etiss_processor/build/Debug/main"
         ${VP_EXE} --vp::elf_file=${{runner.workspace}}/install/examples/SW/riscv/build/riscv_example --CPUArch=RISCV --JIT_Type=TCCJIT --loglevel=4 -pLogger
