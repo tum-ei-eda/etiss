@@ -56,6 +56,7 @@ jobs:
         wget https://static.dev.sifive.com/dev-tools/${{ matrix.config.tc }}${{ matrix.config.tc-ext }}
         ${{ matrix.config.unpack }} ${{ matrix.config.tc }}${{ matrix.config.tc-ext }}
         mv ${{ matrix.config.tc }} riscv-tc
+        ls
 
     - name: Create Build Environment
       run: cmake -E make_directory ${{runner.workspace}}/build
@@ -113,5 +114,10 @@ jobs:
       if: matrix.config.name == 'Windows'
       shell: bash
       run: |
-        VP_EXE="${{runner.workspace}}/install/examples/bare_etiss_processor/build/Debug/main"
+        cd ${{runner.workspace}}/install/examples/bare_etiss_processor/build
+        ls
+        cd Debug
+        ls
+        mv main.exe ${{runner.workspace}}/install/examples/bare_etiss_processor/build
+        VP_EXE="${{runner.workspace}}/install/examples/bare_etiss_processor/build/main.exe"
         ${VP_EXE} --vp::elf_file=${{runner.workspace}}/install/examples/SW/riscv/build/riscv_example --CPUArch=RISCV --JIT_Type=TCCJIT --loglevel=4 -pLogger
