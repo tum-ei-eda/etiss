@@ -111,12 +111,10 @@ jobs:
         ./run_helper.sh ../SW/riscv_cpp/build/riscv_example llvm
 
     - name: Test (Windows)
+      working-directory: ${{runner.workspace}}/install/examples/bare_etiss_processor/build/Debug
       if: matrix.config.name == 'Windows'
       shell: bash
       run: |
-        cd ${{runner.workspace}}/install/examples/bare_etiss_processor/build
-        ls
-        cd Debug
         ls
         mv main.exe ${{runner.workspace}}/install/examples/bare_etiss_processor/build
         VP_EXE="${{runner.workspace}}/install/examples/bare_etiss_processor/build/main.exe"
