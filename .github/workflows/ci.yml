@@ -57,6 +57,9 @@ jobs:
         ${{ matrix.config.unpack }} ${{ matrix.config.tc }}${{ matrix.config.tc-ext }}
         mv ${{ matrix.config.tc }} riscv-tc
         ls
+        cd riscv-tc
+        ls
+        pwd
 
     - name: Create Build Environment
       run: cmake -E make_directory ${{runner.workspace}}/build
