@@ -12,8 +12,11 @@ set(RISCV_ARCH "rv32gc" CACHE STRING "march argument to the compiler")
 set(RISCV_ABI "ilp32d" CACHE STRING "mabi argument to the compiler")
 
 set(CMAKE_C_COMPILER ${RISCV_ELF_GCC_PREFIX}/bin/${RISCV_ELF_GCC_BASENAME}-gcc${EXE_EXT})
+MESSAGE("var value: ${CMAKE_C_COMPILER}")
 set(CMAKE_CXX_COMPILER ${RISCV_ELF_GCC_PREFIX}/bin/${RISCV_ELF_GCC_BASENAME}-g++${EXE_EXT})
+MESSAGE("var value: ${CMAKE_CXX_COMPILER}")
 set(CMAKE_OBJCOPY ${RISCV_ELF_GCC_PREFIX}/bin/${RISCV_ELF_GCC_BASENAME}-objcopy${EXE_EXT})
+MESSAGE("var value: ${CMAKE_OBJCOPY}")
 
 add_definitions(-D__riscv__)
 add_definitions(-march=${RISCV_ARCH})

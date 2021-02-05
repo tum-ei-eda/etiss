@@ -115,7 +115,6 @@ jobs:
       if: matrix.config.name == 'Windows'
       shell: bash
       run: |
-        ls
-        mv main.exe D:\a\etiss/install/examples/bare_etiss_processor/build
-        VP_EXE="D:\a\etiss/install/examples/bare_etiss_processor/build/main.exe"
-        ${VP_EXE} --vp::elf_file=D:\a\etiss/install/examples/SW/riscv/build/riscv_example --CPUArch=RISCV --JIT_Type=TCCJIT --loglevel=4 -pLogger
+        mv * ../
+        VP_EXE="${{runner.workspace}}/install/examples/bare_etiss_processor/build/main.exe"
+        ${VP_EXE} --vp::elf_file=${{runner.workspace}}/install/examples/SW/riscv/build/riscv_example --CPUArch=RISCV --JIT_Type=TCCJIT --loglevel=4 -pLogger
