@@ -60,6 +60,12 @@ jobs:
         cd riscv-tc
         ls
         pwd
+        cd riscv64-unknown-elf
+        ls
+        pwd
+        cd bin
+        ls
+        pwd
 
     - name: Create Build Environment
       run: cmake -E make_directory ${{runner.workspace}}/build
