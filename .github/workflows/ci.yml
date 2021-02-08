@@ -60,9 +60,6 @@ jobs:
         cd riscv-tc
         ls
         pwd
-        cd riscv64-unknown-elf
-        ls
-        pwd
         cd bin
         ls
         pwd
