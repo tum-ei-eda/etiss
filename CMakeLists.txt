@@ -293,6 +293,9 @@ set(INSTALL_CMAKE_DIR lib/CMake/ETISS CACHE PATH "Installation directory for CMa
 # to allow linking with ETISS lib in build-tree
 # copying headers
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION ${ETISS_BINARY_DIR}/include/)
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/include_c/ DESTINATION ${ETISS_BINARY_DIR}/include/)
+file(GLOB JIT_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/src/jitlibs/**/*.h)
+file(COPY ${JIT_HEADERS} DESTINATION ${ETISS_BINARY_DIR}/include/jit/etiss/jit/)
 # plugins/list.txt file
 file(WRITE ${ETISS_BINARY_DIR}/lib/plugins/list.txt)
 
