@@ -128,8 +128,7 @@ SECTIONS
         _bss_end = .;
     } > dataram
 
-    _remaining_ram = VAR_ram_size - _bss_end;
-    _stack_addptr = _remaining_ram - _min_stack;
+    _stack_addptr = VAR_ram_start + VAR_ram_size - _bss_end - _min_stack;
 
     /* do not place anything after this address, because the heap starts here! */
 
