@@ -8,6 +8,7 @@ set(DEFAULT_BASENAME "riscv64-unknown-elf")
 
 IF(WIN32)
     set(RISCV_ELF_GCC_PREFIX "/d/a/etiss/riscv-tc" CACHE PATH "install location for riscv-gcc toolchain")
+    MESSAGE("riscv elf: ${RISCV_ELF_GCC_PREFIX}")
     set(RISCV_ELF_GCC_BASENAME ${DEFAULT_BASENAME} CACHE STRING "base name of the toolchain executables")
     set(RISCV_ARCH "rv32gc" CACHE STRING "march argument to the compiler")
     set(RISCV_ABI "ilp32d" CACHE STRING "mabi argument to the compiler")
