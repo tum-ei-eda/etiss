@@ -10,9 +10,9 @@ The following table contains a list of current options. Plugins may have theire 
 	    <th><b>Description</b></th>
 	  </tr>
 	  </tr><tr>
-	    <td> loglevel </td>
+	    <td> etiss.loglevel </td>
 	    <td> SILENT = 0 <br>FATALERROR = 1 <br>ERROR = 2 <br>WARNING = 3 (default) <br>INFO = 4 <br>VERBOSE = 5 <br><br></td>
-	    <td> sets the log level an suppresses messages of higher log levels.<br>e.g. "-floglevel=5" or "-ologlevel 5" </td>
+	    <td> sets the log level an suppresses messages of higher log levels.<br>e.g. "-fetiss.loglevel=5" or "-oetiss.loglevel 5" </td>
 	  </tr><tr>
 	    <td> etiss_wd </td>
 	    <td> path </td>

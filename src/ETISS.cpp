@@ -75,7 +75,7 @@ std::list<std::shared_ptr<etiss::LibraryInterface>> etiss_libraries_;
 std::recursive_mutex etiss_libraries_mu_;
 
 boost::program_options::variables_map vm;
-std::vector<std::string> pluginOptions = {"logaddr", "logmask", "port"};
+std::vector<std::string> pluginOptions = {"plugin.logger.logaddr", "plugin.logger.logmask", "plugin.gdbserver.port"};
 
 std::set<std::string> etiss::listCPUArchs()
 {
@@ -449,9 +449,9 @@ void etiss_loadIniConfigs()
     std::cout << "  Load Configs from .ini files:" << std::endl;
 
     // preload loglevel
-    etiss::cfg().set<int>("loglevel", po_simpleIni->GetLongValue("IntConfigurations", "loglevel", etiss::WARNING));
+    etiss::cfg().set<int>("etiss.loglevel", po_simpleIni->GetLongValue("IntConfigurations", "etiss.loglevel", etiss::WARNING));
     {
-        int ll = cfg().get<int>("loglevel", etiss::WARNING);
+        int ll = cfg().get<int>("etiss.loglevel", etiss::WARNING);
         if (ll >= 0 && ll <= etiss::VERBOSE)
         { // valid log level
           // dnm
@@ -490,7 +490,7 @@ void etiss_loadIniConfigs()
             bool warning = false;
 
             // skip loglevel
-            if (std::string(iter_key.pItem) == "loglevel")
+            if (std::string(iter_key.pItem) == "etiss.loglevel")
                 continue;
 
             // check if cfg is already set
@@ -676,7 +676,7 @@ void etiss::Initializer::loadIniPlugins(std::shared_ptr<etiss::CPUCore> cpu)
 void etiss::Initializer::loadIniJIT(std::shared_ptr<etiss::CPUCore> cpu)
 {
     // check if JIT is set
-    if (!etiss::cfg().isSet("JIT_Type"))
+    if (!etiss::cfg().isSet("jit.type"))
     {
         etiss::log(etiss::INFO, "No JIT configured. Will use default JIT. \n");
         return;
@@ -686,8 +686,8 @@ void etiss::Initializer::loadIniJIT(std::shared_ptr<etiss::CPUCore> cpu)
         etiss::log(etiss::WARNING,
                     "etiss::Initializer::loadIniJIT:" + std::string(" JIT already present. Overwriting it."));
     }
-    etiss::log(etiss::INFO, " Adding JIT \"" + cfg().get<std::string>("JIT_Type", "") + '\"');
-    cpu->set(getJIT(cfg().get<std::string>("JIT_Type", "")));
+    etiss::log(etiss::INFO, " Adding JIT \"" + cfg().get<std::string>("jit.type", "") + '\"');
+    cpu->set(getJIT(cfg().get<std::string>("jit.type", "")));
 }
 
 std::pair<std::string, std::string> inifileload(const std::string& s)
@@ -737,32 +737,33 @@ void etiss_initialize(const std::vector<std::string>& args, bool forced = false)
             po::options_description desc("Allowed options");
             desc.add_options()
             ("help", "Produce a help message that lists all supported options.")
-            ("ignore_sr_iee", po::value<bool>(), "Ignore exception on OpenRISC. [bool]")
-            ("cleanup", po::value<bool>(), "Cleans up temporary files in GCCJIT. ")
-            ("verifyJIT", po::value<bool>(), "Run some basic checks to verify the functionality of the JIT engine.")
-            ("jit-debug", po::value<bool>(), "Causes the JIT Engines to compile in debug mode.")
-            ("ETISS::enable_dmi", po::value<bool>(), "Enables the Direct Memory Interface feature of SystemC to speed up memory accesses. This needs to be disabled for memory tracing.")
-            ("ETISS::log_pc", po::value<bool>(), "Enables logging of the program counter.")
-            ("logaddr", po::value<std::string>(), "Provides the compare address that is used to check for memory accesses that are redirected to the logger.")
-            ("logmask", po::value<std::string>(), "Provides the mask that is used to check for memory accesses that are redirected to the logger.")
-            ("ifStallCycles", po::value<int>(), "Add instruction stall cycles on OpenRISC.")
-            ("Translation::MaxBlockSize", po::value<int>(), "Sets maximum amount of instructions in a block.")
-            ("Arch::cpuCycleTime_ps", po::value<int>(), "Sets CPU cycles time on OpenRISC and ARM.")
-            ("ETISS::outputPathPrefix", po::value<std::string>(), "Path prefix to use when writing output files.")
-            ("sw_binary_ram", po::value<std::string>(), "Path to binary file to be loaded into RAM.")
-            ("sw_binary_rom", po::value<std::string>(), "Path to binary file to be loaded into ROM.")
-            ("logLevel", po::value<int>(), "Verbosity of logging output.")
-            ("DebugSystem::printDbusAccess", po::value<bool>(), "Traces accesses to the data bus.")
-            ("DebugSystem::printIbusAccess", po::value<bool>(), "Traces accesses to the instruction bus.")
-            ("DebugSystem::printDbgbusAccess", po::value<bool>(), "Traces accesses to the debug bus.")
-            ("DebugSystem::printToFile", po::value<bool>(), "Write all tracing to a file instead of the terminal. The file will be located at ETISS::outputPathPrefix.")
-            ("CPUArch", po::value<std::string>(), "The CPU Architecture to simulate.")
-            ("JIT_Type", po::value<std::string>(), "The JIT compiler to use.")
-            ("JIT-External::Headers", po::value<std::string>(), "List of semicolon-separated paths to headers for the JIT to include.")
-            ("JIT-External::Libs", po::value<std::string>(), "List of semicolon-separated library names for the JIT to link.")
-            ("JIT-External::HeaderPaths", po::value<std::string>(), "List of semicolon-separated headers paths for the JIT.")
-            ("JIT-External::LibPaths", po::value<std::string>(), "List of semicolon-separated library paths for the JIT.")
-            ("port", po::value<std::string>(), "Option for gdbserver")
+            ("arch.cpu", po::value<std::string>(), "The CPU Architecture to simulate.")
+            ("arch.or1k.ignore_sr_iee", po::value<bool>(), "Ignore exception on OpenRISC.")
+            ("arch.or1k.if_stall_cycles", po::value<int>(), "Add instruction stall cycles on OpenRISC.")
+            ("arch.cpu_cycle_time_ps", po::value<int>(), "Sets CPU cycles time on OpenRISC and ARM.")
+            ("etiss.enable_dmi", po::value<bool>(), "Enables the Direct Memory Interface feature of SystemC to speed up memory accesses. This needs to be disabled for memory tracing.")
+            ("etiss.log_pc", po::value<bool>(), "Enables logging of the program counter.")
+            ("etiss.max_block_size", po::value<int>(), "Sets maximum amount of instructions in a block.")
+            ("etiss.output_path_prefix", po::value<std::string>(), "Path prefix to use when writing output files.")
+            ("etiss.loglevel", po::value<int>(), "Verbosity of logging output.")
+            ("jit.gcc.cleanup", po::value<bool>(), "Cleans up temporary files in GCCJIT. ")
+            ("jit.verify", po::value<bool>(), "Run some basic checks to verify the functionality of the JIT engine.")
+            ("jit.debug", po::value<bool>(), "Causes the JIT Engines to compile in debug mode.")
+            ("jit.type", po::value<std::string>(), "The JIT compiler to use.")
+            ("jit.external_headers", po::value<std::string>(), "List of semicolon-separated paths to headers for the JIT to include.")
+            ("jit.external_libs", po::value<std::string>(), "List of semicolon-separated library names for the JIT to link.")
+            ("jit.external_header_paths", po::value<std::string>(), "List of semicolon-separated headers paths for the JIT.")
+            ("jit.external_lib_paths", po::value<std::string>(), "List of semicolon-separated library paths for the JIT.")
+            ("vp.sw_binary_ram", po::value<std::string>(), "Path to binary file to be loaded into RAM.")
+            ("vp.sw_binary_rom", po::value<std::string>(), "Path to binary file to be loaded into ROM.")
+            ("vp.elf_file", po::value<std::string>(), "Load ELF file.")
+            ("simple_mem_system.print_dbus_access", po::value<bool>(), "Traces accesses to the data bus.")
+            ("simple_mem_system.print_ibus_access", po::value<bool>(), "Traces accesses to the instruction bus.")
+            ("simple_mem_system.print_dbgbus_access", po::value<bool>(), "Traces accesses to the debug bus.")
+            ("simple_mem_system.print_to_file", po::value<bool>(), "Write all tracing to a file instead of the terminal. The file will be located at etiss.output_path_prefix.")
+            ("plugin.logger.logaddr", po::value<std::string>(), "Provides the compare address that is used to check for memory accesses that are redirected to the logger.")
+            ("plugin.logger.logmask", po::value<std::string>(), "Provides the mask that is used to check for memory accesses that are redirected to the logger.")
+            ("plugin.gdbserver.port", po::value<std::string>(), "Option for gdbserver")
             ("pluginToLoad,p", po::value<std::vector<std::string>>()->multitoken(), "List of plugins to be loaded.")
             ;
 
@@ -824,7 +825,7 @@ void etiss_initialize(const std::vector<std::string>& args, bool forced = false)
 
     // log level
     {
-        int ll = cfg().get<int>("loglevel", etiss::WARNING);
+        int ll = cfg().get<int>("etiss.loglevel", etiss::WARNING);
         if (ll >= 0 && ll <= etiss::VERBOSE)
         { // valid log level
           // dnm

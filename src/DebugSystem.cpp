@@ -86,9 +86,9 @@ etiss::int8 DebugSystem::load_elf(const char *elf_file)
     if (reader.get_machine() == EM_RISCV)
     {
         if ((reader.get_class() == ELFCLASS64)) {
-            etiss::cfg().set<std::string>("CPUArch", "RISCV64"); // RISCV and OR1K work as well
+            etiss::cfg().set<std::string>("arch.cpu", "RISCV64"); // RISCV and OR1K work as well
         } else if ((reader.get_class() == ELFCLASS32)) {
-            etiss::cfg().set<std::string>("CPUArch", "RISCV");
+            etiss::cfg().set<std::string>("arch.cpu", "RISCV");
         // add conditions
         } else {
             std::cout << "System architecture is neither 64 nor 32 bit" << std::endl;
@@ -99,7 +99,7 @@ etiss::int8 DebugSystem::load_elf(const char *elf_file)
     else if (reader.get_machine() == EM_OPENRISC)
     {
         if ((reader.get_class() == ELFCLASS32))
-            etiss::cfg().set<std::string>("CPUArch", "OR1K");
+            etiss::cfg().set<std::string>("arch.cpu", "OR1K");
         if ((reader.get_class() == ELFCLASS64))
             std::cout << "OR1k 64 is not supported ";
     }
@@ -195,15 +195,15 @@ DebugSystem::DebugSystem(uint32_t rom_start, uint32_t rom_size, uint32_t ram_sta
 {
     rom_mem_.resize(rom_size, 0);
     ram_mem_.resize(ram_size, 0);
-    _print_ibus_access = etiss::cfg().get<bool>("DebugSystem::printIbusAccess", false);
-    _print_dbus_access = etiss::cfg().get<bool>("DebugSystem::printDbusAccess", false);
-    _print_dbgbus_access = etiss::cfg().get<bool>("DebugSystem::printDbgbusAccess", false);
-    _print_to_file = etiss::cfg().get<bool>("DebugSystem::printToFile", false);
+    _print_ibus_access = etiss::cfg().get<bool>("simple_mem_system.print_ibus_access", false);
+    _print_dbus_access = etiss::cfg().get<bool>("simple_mem_system.print_dbus_access", false);
+    _print_dbgbus_access = etiss::cfg().get<bool>("simple_mem_system.print_dbgbus_access", false);
+    _print_to_file = etiss::cfg().get<bool>("simple_mem_system.print_to_file", false);
     message_max_cnt = etiss::cfg().get<int>("DebugSystem::message_max_cnt", 100);
 
     if (_print_dbus_access)
     {
-        trace_file_dbus_.open(etiss::cfg().get<std::string>("ETISS::outputPathPrefix", "") + "dBusAccess.csv",
+        trace_file_dbus_.open(etiss::cfg().get<std::string>("etiss.output_path_prefix", "") + "dBusAccess.csv",
                               std::ios::binary);
     }
 }

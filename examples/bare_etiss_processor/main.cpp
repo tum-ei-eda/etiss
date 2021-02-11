@@ -57,7 +57,7 @@ int main(int argc, const char *argv[])
     std::list<std::string> iniFiles;
     // iniFiles.push_back("../ETISS.ini"); // will be loaded within the run.sh
     // iniFiles.push_back("additional.ini");
-    etiss::Initializer initializer(&iniFiles, argc, argv);
+    etiss::Initializer initializer(argc, argv); //add &iniFiles as the first argument if .ini files are loaded explicitly here
     std::cout << "=== Finished setting up configurations ===" << std::endl << std::endl;
 
     std::cout << "=== Setting up test system ===" << std::endl;
@@ -65,7 +65,7 @@ int main(int argc, const char *argv[])
 
     etiss::DebugSystem dsys(0x0, 0x80000, 0x80000, 0x80000);
     
-    if (dsys.load_elf(etiss::cfg().get<std::string>("vp::elf_file", "").c_str() ) < 0 ){
+    if (dsys.load_elf(etiss::cfg().get<std::string>("vp.elf_file", "").c_str() ) < 0 ){
       etiss::log(etiss::FATALERROR, "ELF file not loaded properly\n");
     }
     
@@ -91,7 +91,7 @@ int main(int argc, const char *argv[])
 
     std::cout << "  Setting up CPUCore" << std::endl;
     // create a cpu core named core0 with the or1k architecture
-    std::string CPUArchName = etiss::cfg().get<std::string>("CPUArch", "");
+    std::string CPUArchName = etiss::cfg().get<std::string>("arch.cpu", "");
 	etiss::uint64 startAddress = dsys.get_startaddr();
 	std::cout << "ELF start address: 0x" << std::hex << startAddress << std::dec << std::endl;   
     std::shared_ptr<etiss::CPUCore> cpu = etiss::CPUCore::create(CPUArchName, "core0");

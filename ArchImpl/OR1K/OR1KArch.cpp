@@ -101,7 +101,7 @@ extern "C"
         if (ret->opt_hostendianness)
             etiss::log(etiss::INFO, "An OR1K CPUArch instance has been configured use host endianness. No byte "
                                     "swapping will be performed.");
-        ret->ignore_sr_iee = cfg.get<bool>("ignore_sr_iee", false);
+        ret->ignore_sr_iee = cfg.get<bool>("arch.or1k.ignore_sr_iee", false);
         if (ret->ignore_sr_iee)
             etiss::log(etiss::INFO,
                        "An OR1K CPUArch instance has been configured to ignore the IEE flag of the SR register.");
@@ -269,7 +269,7 @@ void OR1KArch::resetCPU(ETISS_CPU *uccpu, etiss::uint64 *startpointer)
 
     uccpu->cpuTime_ps = 0;
     uccpu->cpuCycleTime_ps = etiss::cfg(getLastAssignedCoreName())
-                                 .get<uint32_t>("Arch::cpuCycleTime_ps", 10000); // original: 10000; // 100MHz
+                                 .get<uint32_t>("arch.cpu_cycle_time_ps", 10000); // original: 10000; // 100MHz
 
     cpu->R = cpu->GPR[0];
 
