@@ -657,7 +657,7 @@ void etiss::Initializer::loadIniPlugins(std::shared_ptr<etiss::CPUCore> cpu)
             po_simpleIni->GetAllValues(iter_section.pItem, iter_key.pItem, values);
             if (!etiss::cfg().isSet(iter_key.pItem))
             {
-                std::cout << iter_section.pItem << "::" << iter_key.pItem << " not set on the command line. Checking in .ini file.\n";
+                std::cout << iter_key.pItem << " not set on the command line. Checking in .ini file.\n";
                 for (auto iter_value : values)
                 {
                     options[iter_key.pItem] = iter_value.pItem;
