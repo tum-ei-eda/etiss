@@ -174,6 +174,15 @@ void RISCVArch::resetCPU(ETISS_CPU * cpu,etiss::uint64 * startpointer)
 		riscvcpu->FENCE[i] = 0;
 	}
 	riscvcpu->RES = 0;
+
+	/* >>> manually added code section */
+	riscvcpu->CSR[0x304] = (0xFFFFFBBB);
+		// MIE: enable all core-local and add. platform-specific interrupts
+	riscvcpu->CSR[0x104] = riscvcpu->CSR[0x304] & (~(0x888));
+		// SIE: enable all core-local and add. platform-specific interrupts (supervised)
+	riscvcpu->CSR[0x004] = riscvcpu->CSR[0x304] & (~(0xAAA));
+		// UIE: enable all core-local and add. platform-specific interrupts (user)
+	/* <<< manually added code section */
 }
 
 void RISCVArch::deleteCPU(ETISS_CPU *cpu)

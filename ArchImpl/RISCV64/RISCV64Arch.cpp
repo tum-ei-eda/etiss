@@ -180,6 +180,15 @@ void RISCV64Arch::resetCPU(ETISS_CPU * cpu,etiss::uint64 * startpointer)
 		riscv64cpu->FENCE[i] = 0;
 	}
 	riscv64cpu->RES = 0;
+
+	/* >>> manually added code section */
+	riscv64cpu->CSR[0x304] = (0xFFFFFFFFFFFFFBBB);
+		// MIE: enable all core-local and add. platform-specific interrupts
+	riscv64cpu->CSR[0x104] = riscv64cpu->CSR[0x304] & (~(0x888));
+		// SIE: enable all core-local and add. platform-specific interrupts (supervised)
+	riscv64cpu->CSR[0x004] = riscv64cpu->CSR[0x304] & (~(0xAAA));
+		// UIE: enable all core-local and add. platform-specific interrupts (user)
+	/* <<< manually added code section */
 }
 
 void RISCV64Arch::deleteCPU(ETISS_CPU *cpu)
