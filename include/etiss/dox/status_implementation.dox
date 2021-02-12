@@ -121,7 +121,7 @@ NOTE: 	due to the infrequent execution of this plugin (usually only after a bloc
 	    <th><b>Description</b></th>
 	  </tr>
 	  </tr><tr>
-	    <td> cleanup </td>
+	    <td> jit.gcc.cleanup </td>
 	    <td> <b>true</b> <br/> false </td>
 	    <td> deletes temporary files (code + shared libraries) after the instance has been deleted </td>
 	  </tr><tr>

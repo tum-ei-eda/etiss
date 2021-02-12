@@ -64,7 +64,6 @@ int main(int argc, const char *argv[])
     std::cout << "  Setting up Memory" << std::endl;
 
     etiss::SimpleMemSystem dsys(0x0, 0x80000, 0x80000, 0x80000);
-    std::cout << "\n" << std::string(etiss::cfg().get<std::string>("vp.elf_file", "NOT LOADED").c_str()) << "\n";
     if (dsys.load_elf(etiss::cfg().get<std::string>("vp.elf_file", "").c_str() ) < 0 ){
       etiss::log(etiss::FATALERROR, "ELF file not loaded properly\n");
     }
