@@ -376,15 +376,6 @@ void etiss_SIGINT_handler(int sig)
         return;
     }
 }
-//__attribute__((constructor))
-static void etiss_initialize_SIGINT()
-{
-    if (!etiss_SIGINT_handler_enabled)
-    {
-        etiss_prev_SIGINT_handler = signal(SIGINT, etiss_SIGINT_handler);
-        etiss_SIGINT_handler_enabled = true;
-    }
-}
 
 //__attribute__((destructor))
 static void etiss_remove_SIGINT()
@@ -843,24 +834,11 @@ void etiss_initialize(const std::vector<std::string>& args, bool forced = false)
 
     etiss::py::init(); // init python
 
-    // configure console
-    if (cfg().get<bool>("sigint-console", false))
-    {
-        etiss_initialize_SIGINT();
-    }
-    else
-    {
-        etiss_remove_SIGINT();
-    }
-
-    // load all found libraries
-    if (cfg().get<bool>("library-loading", true))
-    {
-        preloadLibraries();
-    }
+    etiss_remove_SIGINT();
+    preloadLibraries();
 
     // load integrated library
-    if (cfg().get<bool>("integrated-library", true))
+    if (cfg().get<bool>("etiss.load_integrated_libraries", true))
     {
         etiss::addLibrary(LibraryInterface::openIntegratedLibrary());
     }
@@ -897,9 +875,6 @@ void etiss_initialize(const std::vector<std::string>& args, bool forced = false)
             }
         }
     }
-
-    if (cfg().get<bool>("pyconsole", false))
-        etiss::py::console();
 }
 
 void etiss::initialize(std::vector<std::string>& args)

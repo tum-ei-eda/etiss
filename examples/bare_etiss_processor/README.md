@@ -49,7 +49,7 @@ core when it runs target SW. The gdbserver could be enabled by configure
 options in `./ETISS.ini` with this configuration:
 
 	[Plugin gdbserver];
-		port=<port_number_you_defined>
+		plugin.gdbserver.port=<port_number_you_defined>
 		minPcAlign=<minimal_instruction_bits_alignment>
 
 The gdbserver surveilles undelying target SW, send/recieve commands

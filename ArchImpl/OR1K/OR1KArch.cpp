@@ -90,17 +90,6 @@ extern "C"
         Configuration cfg;
         cfg.config() = options;
 
-        ret->perfopt_noRangeException_ = cfg.get<bool>("norangeexception", false);
-        if (ret->perfopt_noRangeException_)
-            etiss::log(etiss::INFO, "An OR1K CPUArch instance has been configured to ignore range exceptions");
-        ret->opt_returnjump_ = cfg.get<bool>("returnjump", false);
-        if (ret->opt_returnjump_)
-            etiss::log(etiss::INFO, "An OR1K CPUArch instance has been configured use a return statement instead of "
-                                    "ending a block at a jump");
-        ret->opt_hostendianness = cfg.get<bool>("hostendianness", false);
-        if (ret->opt_hostendianness)
-            etiss::log(etiss::INFO, "An OR1K CPUArch instance has been configured use host endianness. No byte "
-                                    "swapping will be performed.");
         ret->ignore_sr_iee = cfg.get<bool>("arch.or1k.ignore_sr_iee", false);
         if (ret->ignore_sr_iee)
             etiss::log(etiss::INFO,
@@ -243,9 +232,6 @@ OR1KArch::OR1KArch() : etiss::CPUArch("or32")
     listenerSupportedRegisters_.insert("TTMR");
     listenerSupportedRegisters_.insert("TTCR");
 
-    perfopt_noRangeException_ = false;
-    opt_returnjump_ = false;
-    opt_hostendianness = false;
     ignore_sr_iee = false;
 }
 

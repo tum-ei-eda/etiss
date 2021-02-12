@@ -22,25 +22,9 @@ The following table contains a list of current options. Plugins may have theire 
 			 Attention: etiss_wd can only be set with the arguments passed to etiss::initialize. Later changes are not possible and calls to etiss::cfg().set("etiss_wd",...) will be ignored.
  			</td>
 	  </tr><tr>
-	    <td> copy-headers </td>
-	    <td> true/false </td>
-	    <td> This option allows ETISS to writing its header files into the etiss_wd folder. this option is enabled by default and should not be disabled.  </td>
-	  </tr><tr>
-	    <td> sigint-console </td>
-	    <td> true/false (default) </td>
-	    <td> if enabled then pressing ctrl-c will stop ETISS and a python console can be used. this option is experimental and currently doesn't support mutithreading. use with caution</td>
-	  </tr><tr>
-	    <td> library-loading </td>
-	    <td> true (default)/false </td>
-	    <td> if enabled then ETISS will try to locate plugin libraries and load them. if not enabled then external libraries must be loaded manually. </td>
-	  </tr><tr>
-	    <td> integrated-library </td>
+	    <td> etiss.load_integrated_libraries </td>
 	    <td> true (default)/false </td>
 	    <td> if enabled then the integrated plugin library (gdb server,logger, etc. [see \ref status_implementation]) of ETISS will be enabled. </td>
-	  </tr><tr>
-	    <td> pyconsole </td>
-	    <td> true/false (default) </td>
-	    <td> if enabled then a python console will be provided after initialization has been done. Use ctrl-d to exit the console and return from the initialization function.</td>
 	  </tr>
 	 </table>
 	 

@@ -4,7 +4,7 @@ This document describes the current status of integrated/default supplied Librar
 
 \section status_implementation_integratedlibrary ETISS's Integrated Library
 	
-	This library is loaded at startup unless -fno-integrated-library was passed to etiss::initialize. Header/Source files are located in include/etiss/IntegratedLibrary/* and src/IntegratedLibrary/*
+	This library is loaded at startup unless -fno-etiss.load_integrated_libraries was passed to etiss::initialize. Header/Source files are located in include/etiss/IntegratedLibrary/* and src/IntegratedLibrary/*
 	
 	<table border="1" style="width:100%">
 	  <tr>
@@ -101,19 +101,6 @@ NOTE: 	due to the infrequent execution of this plugin (usually only after a bloc
 	    <th><b>Description</b></th>
 	  </tr>
 	  <tr>
-	    <td> norangeexception </td>
-	    <td> true <br/> <b>false</b> </td>
-	    <td> If set to true then the may be no generation of RANGEEXCEPTION.</td>
-	  </tr>
-	  <tr>
-	    <td> returnjump </td>
-	    <td> true <br/> <b>false</b> </td>
-	    <td> If set to true then the translated code will use return statements in a block for jumps instead of signaling the block end. </td>
-	  </tr><tr>
-	    <td> hostendianness </td>
-	    <td> true <br/> <b>false</b> </td>
-	    <td> [experimental,pending] If set to true then instruction reads and data reads will be performed under the assumption that the host endianness is the same as the endianness of the simulated processor. </td>
-	  </tr><tr>
 	    <td>  </td>
 	    <td>  </td>
 	    <td>  </td>

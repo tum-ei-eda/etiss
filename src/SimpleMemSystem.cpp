@@ -44,13 +44,13 @@
 /**
         @file
 
-        @brief implementation of etiss/DebugSystem.h
+        @brief implementation of etiss/SimpleMemSystem.h
 
         @detail
 
 */
 
-#include "etiss/DebugSystem.h"
+#include "etiss/SimpleMemSystem.h"
 #include "etiss/CPUArch.h"
 #include "etiss/Misc.h"
 #include <cstring>
@@ -73,7 +73,7 @@ uint32_t printMessage(std::string key, std::string message, uint32_t maxCount)
     return count;
 }
 
-etiss::int8 DebugSystem::load_elf(const char *elf_file)
+etiss::int8 SimpleMemSystem::load_elf(const char *elf_file)
 {
     ELFIO::elfio reader;
 
@@ -166,7 +166,7 @@ etiss::int8 DebugSystem::load_elf(const char *elf_file)
     return 0;
 }
 
-etiss::int8 DebugSystem::add_memsegment(std::unique_ptr<MemSegment> mseg, const void *raw_data, size_t file_size_bytes)
+etiss::int8 SimpleMemSystem::add_memsegment(std::unique_ptr<MemSegment> mseg, const void *raw_data, size_t file_size_bytes)
 {
 
     // sorted insert (0 < start_addr_ < ...)
@@ -190,7 +190,7 @@ etiss::int8 DebugSystem::add_memsegment(std::unique_ptr<MemSegment> mseg, const 
     return 0;
 }
 
-DebugSystem::DebugSystem(uint32_t rom_start, uint32_t rom_size, uint32_t ram_start, uint32_t ram_size)
+SimpleMemSystem::SimpleMemSystem(uint32_t rom_start, uint32_t rom_size, uint32_t ram_start, uint32_t ram_size)
     : rom_start_(rom_start), ram_start_(ram_start), rom_size_(rom_size), ram_size_(ram_size)
 {
     rom_mem_.resize(rom_size, 0);
@@ -199,7 +199,7 @@ DebugSystem::DebugSystem(uint32_t rom_start, uint32_t rom_size, uint32_t ram_sta
     _print_dbus_access = etiss::cfg().get<bool>("simple_mem_system.print_dbus_access", false);
     _print_dbgbus_access = etiss::cfg().get<bool>("simple_mem_system.print_dbgbus_access", false);
     _print_to_file = etiss::cfg().get<bool>("simple_mem_system.print_to_file", false);
-    message_max_cnt = etiss::cfg().get<int>("DebugSystem::message_max_cnt", 100);
+    message_max_cnt = etiss::cfg().get<int>("simple_mem_system.message_max_cnt", 100);
 
     if (_print_dbus_access)
     {
@@ -208,9 +208,9 @@ DebugSystem::DebugSystem(uint32_t rom_start, uint32_t rom_size, uint32_t ram_sta
     }
 }
 
-DebugSystem::DebugSystem() : DebugSystem(-1, 0, -1, 0) {}
+SimpleMemSystem::SimpleMemSystem() : SimpleMemSystem(-1, 0, -1, 0) {}
 
-etiss::int32 DebugSystem::iread(ETISS_CPU *, etiss::uint64 addr, etiss::uint32 len)
+etiss::int32 SimpleMemSystem::iread(ETISS_CPU *, etiss::uint64 addr, etiss::uint32 len)
 {
     int i_seg = 0;
     int n_segs = msegs_.size();
@@ -231,11 +231,11 @@ etiss::int32 DebugSystem::iread(ETISS_CPU *, etiss::uint64 addr, etiss::uint32 l
     }
 
     std::cout << std::hex << addr << std::dec << std::endl;
-    etiss::log(etiss::ERROR, "wrong address issued in DebugSystem::iread\n");
+    etiss::log(etiss::ERROR, "wrong address issued in SimpleMemSystem::iread\n");
     return RETURNCODE::IBUS_WRITE_ERROR;
 }
 
-etiss::int32 DebugSystem::iwrite(ETISS_CPU *, etiss::uint64 addr, etiss::uint8 *buf, etiss::uint32 len)
+etiss::int32 SimpleMemSystem::iwrite(ETISS_CPU *, etiss::uint64 addr, etiss::uint8 *buf, etiss::uint32 len)
 {
     etiss::log(etiss::VERBOSE, "Blocked instruction write ");
     return RETURNCODE::IBUS_WRITE_ERROR;
@@ -255,7 +255,7 @@ static void Trace(etiss::uint64 addr, etiss::uint32 len, bool isWrite, bool toFi
         std::cout << text.str();
 }
 
-etiss::int32 DebugSystem::dread(ETISS_CPU *, etiss::uint64 addr, etiss::uint8 *buf, etiss::uint32 len)
+etiss::int32 SimpleMemSystem::dread(ETISS_CPU *, etiss::uint64 addr, etiss::uint8 *buf, etiss::uint32 len)
 {
     if (len > 0)
     {
@@ -286,7 +286,7 @@ etiss::int32 DebugSystem::dread(ETISS_CPU *, etiss::uint64 addr, etiss::uint8 *b
                 std::cout << std::hex << addr << std::dec << std::endl;
                 std::stringstream msg;
                 msg << "length (" << len
-                    << ") of databus access out of bounds for DebugSystem::dread at associated segment "
+                    << ") of databus access out of bounds for SimpleMemSystem::dread at associated segment "
                     << msegs_[i_seg]->name_ << "\n";
                 etiss::log(etiss::ERROR, msg.str());
                 return RETURNCODE::DBUS_READ_ERROR;
@@ -312,7 +312,7 @@ etiss::int32 DebugSystem::dread(ETISS_CPU *, etiss::uint64 addr, etiss::uint8 *b
             else
             {
                 std::cout << std::hex << addr << std::dec << std::endl;
-                etiss::log(etiss::ERROR, "wrong address issued in DebugSystem::dread\n");
+                etiss::log(etiss::ERROR, "wrong address issued in SimpleMemSystem::dread\n");
                 return RETURNCODE::DBUS_READ_ERROR;
             }
         }
@@ -321,7 +321,7 @@ etiss::int32 DebugSystem::dread(ETISS_CPU *, etiss::uint64 addr, etiss::uint8 *b
     return RETURNCODE::NOERROR;
 }
 
-etiss::int32 DebugSystem::dwrite(ETISS_CPU *, etiss::uint64 addr, etiss::uint8 *buf, etiss::uint32 len)
+etiss::int32 SimpleMemSystem::dwrite(ETISS_CPU *, etiss::uint64 addr, etiss::uint8 *buf, etiss::uint32 len)
 {
     int i_seg = 0;
     int n_segs = msegs_.size();
@@ -350,7 +350,7 @@ etiss::int32 DebugSystem::dwrite(ETISS_CPU *, etiss::uint64 addr, etiss::uint8 *
             std::cout << std::hex << addr << std::dec << std::endl;
             std::stringstream msg;
             msg << "length (" << len
-                << ") of databus access out of bounds for DebugSystem::dwrite at associated segment "
+                << ") of databus access out of bounds for SimpleMemSystem::dwrite at associated segment "
                 << msegs_[i_seg]->name_ << "\n";
             etiss::log(etiss::ERROR, msg.str());
             return RETURNCODE::DBUS_WRITE_ERROR;
@@ -373,14 +373,14 @@ etiss::int32 DebugSystem::dwrite(ETISS_CPU *, etiss::uint64 addr, etiss::uint8 *
             std::cout << "ram_start: " << std::hex << ram_start_ << std::dec << std::endl;
             std::cout << "ram size:" << ram_mem_.size() << std::dec << std::endl;
             std::cout << std::hex << addr << std::dec << std::endl;
-            etiss::log(etiss::ERROR, "wrong address issued in DebugSystem::dwrite\n");
+            etiss::log(etiss::ERROR, "wrong address issued in SimpleMemSystem::dwrite\n");
             return RETURNCODE::DBUS_READ_ERROR;
         }
     }
     return RETURNCODE::NOERROR;
 }
 
-etiss::int32 DebugSystem::dbg_read(etiss::uint64 addr, etiss::uint8 *buf, etiss::uint32 len)
+etiss::int32 SimpleMemSystem::dbg_read(etiss::uint64 addr, etiss::uint8 *buf, etiss::uint32 len)
 {
 
     int i_seg = 0;
@@ -406,7 +406,7 @@ etiss::int32 DebugSystem::dbg_read(etiss::uint64 addr, etiss::uint8 *buf, etiss:
             std::cout << std::hex << addr << std::dec << std::endl;
             std::stringstream msg;
             msg << "length (" << len
-                << ") of databus access out of bounds for DebugSystem::dbg_read at associated segment "
+                << ") of databus access out of bounds for SimpleMemSystem::dbg_read at associated segment "
                 << msegs_[i_seg]->name_ << "\n";
             etiss::log(etiss::ERROR, msg.str());
             return RETURNCODE::DBUS_READ_ERROR;
@@ -427,7 +427,7 @@ etiss::int32 DebugSystem::dbg_read(etiss::uint64 addr, etiss::uint8 *buf, etiss:
         else
         {
             std::cout << std::hex << addr << std::dec << std::endl;
-            etiss::log(etiss::ERROR, "wrong address issued in DebugSystem::dbg_read\n");
+            etiss::log(etiss::ERROR, "wrong address issued in SimpleMemSystem::dbg_read\n");
             return RETURNCODE::DBUS_READ_ERROR;
         }
     }
@@ -435,7 +435,7 @@ etiss::int32 DebugSystem::dbg_read(etiss::uint64 addr, etiss::uint8 *buf, etiss:
     return RETURNCODE::NOERROR;
 }
 
-etiss::int32 DebugSystem::dbg_write(etiss::uint64 addr, etiss::uint8 *buf, etiss::uint32 len)
+etiss::int32 SimpleMemSystem::dbg_write(etiss::uint64 addr, etiss::uint8 *buf, etiss::uint32 len)
 {
     int i_seg = 0;
     int n_segs = msegs_.size();
@@ -460,7 +460,7 @@ etiss::int32 DebugSystem::dbg_write(etiss::uint64 addr, etiss::uint8 *buf, etiss
             std::cout << std::hex << addr << std::dec << std::endl;
             std::stringstream msg;
             msg << "length (" << len
-                << ") of databus access out of bounds for DebugSystem::dbg_write at associated segment "
+                << ") of databus access out of bounds for SimpleMemSystem::dbg_write at associated segment "
                 << msegs_[i_seg]->name_ << "\n";
             etiss::log(etiss::ERROR, msg.str());
             return RETURNCODE::DBUS_WRITE_ERROR;
@@ -476,7 +476,7 @@ etiss::int32 DebugSystem::dbg_write(etiss::uint64 addr, etiss::uint8 *buf, etiss
         else
         {
             std::cout << std::hex << addr << std::dec << std::endl;
-            etiss::log(etiss::ERROR, "wrong address issued in DebugSystem::dbg_write\n");
+            etiss::log(etiss::ERROR, "wrong address issued in SimpleMemSystem::dbg_write\n");
             return RETURNCODE::DBUS_READ_ERROR;
         }
     }
@@ -485,7 +485,7 @@ etiss::int32 DebugSystem::dbg_write(etiss::uint64 addr, etiss::uint8 *buf, etiss
 }
 
 extern void global_sync_time(uint64 time_ps);
-void DebugSystem::syncTime(ETISS_CPU *cpu)
+void SimpleMemSystem::syncTime(ETISS_CPU *cpu)
 {
     // std::cout << "CPU time: " << cpu -> cpuTime_ps << "ps" << std::endl;
     // global_sync_time(cpu->cpuTime_ps);

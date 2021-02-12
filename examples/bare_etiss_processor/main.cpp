@@ -41,7 +41,7 @@
 */
 
 #include "TracePrinter.h"
-#include "etiss/DebugSystem.h"
+#include "etiss/SimpleMemSystem.h"
 #include "etiss/ETISS.h"
 
 int main(int argc, const char *argv[])
@@ -63,8 +63,8 @@ int main(int argc, const char *argv[])
     std::cout << "=== Setting up test system ===" << std::endl;
     std::cout << "  Setting up Memory" << std::endl;
 
-    etiss::DebugSystem dsys(0x0, 0x80000, 0x80000, 0x80000);
-    
+    etiss::SimpleMemSystem dsys(0x0, 0x80000, 0x80000, 0x80000);
+    std::cout << "\n" << std::string(etiss::cfg().get<std::string>("vp.elf_file", "NOT LOADED").c_str()) << "\n";
     if (dsys.load_elf(etiss::cfg().get<std::string>("vp.elf_file", "").c_str() ) < 0 ){
       etiss::log(etiss::FATALERROR, "ELF file not loaded properly\n");
     }
@@ -128,7 +128,7 @@ int main(int argc, const char *argv[])
 
     // Simulation start
     std::cout << std::endl << "=== Simulation start ===" << std::endl;
-    // run cpu with the DebugSystem (in other cases that "system" is most likely a
+    // run cpu with the SimpleMemSystem (in other cases that "system" is most likely a
     // bus that connects the cpu to memory,periphery,etc)
     etiss_int32 exception = cpu->execute(dsys);
     std::cout << "=== Simulation end ===" << std::endl << std::endl;
