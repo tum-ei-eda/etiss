@@ -112,21 +112,6 @@ class OR1KArch : public etiss::CPUArch
     OR1KGDBCore gdbcore_;
 
   public:
-    bool perfopt_noRangeException_; ///< performance option: if true then no range
-                                    ///< exception shall be thrown (speedup of
-                                    ///< additions etc.) @see etiss::CPUArch *
-                                    ///< OR1KArch_createCPUArch(unsigned
-                                    ///< index,std::map<std::string,std::string>
-                                    ///< options)
-    bool opt_returnjump_;           ///< if true then isjump will allways be false and jumps
-                                    ///< will be implemented with a return statement @see
-                                    ///< etiss::CPUArch * OR1KArch_createCPUArch(unsigned
-                                    ///< index,std::map<std::string,std::string> options)
-    bool opt_hostendianness;        ///< if true then no byte swapping will be done.
-                                    ///< requires the endianness of instruction/data in
-                                    ///< the memory to match host endianness @see
-                                    ///< etiss::CPUArch * OR1KArch_createCPUArch(unsigned
-                                    ///< index,std::map<std::string,std::string> options)
     bool ignore_sr_iee;             ///< ignore sr iee flag
 };
 

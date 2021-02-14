@@ -889,7 +889,7 @@ Server *Server::createTCPServer(std::map<std::string, std::string> options)
     int port = 2222;
 
     { // parse port
-        auto f = options.find("port");
+        auto f = options.find("plugin.gdbserver.port");
         if (f != options.end())
         {
             int tmp = atoi(f->second.c_str());
