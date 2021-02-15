@@ -41,7 +41,7 @@ IF(NOT DEFINED ENV{LLVM_DIR})
 ENDIF()
 
 IF(NOT DEFINED ENV{Clang_DIR})
-    SET(ENV{Clang_DIR} "/opt/clang+llvm-11.0.0-x86_64-linux-gnu-ubuntu-20.04")
+    SET(ENV{Clang_DIR} ENV{LLVM_DIR})
 ENDIF()
 
 
