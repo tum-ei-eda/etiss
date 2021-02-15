@@ -40,6 +40,11 @@ IF(NOT DEFINED ENV{LLVM_DIR})
     SET(ENV{LLVM_DIR} "/opt/clang+llvm-11.0.0-x86_64-linux-gnu-ubuntu-20.04")
 ENDIF()
 
+IF(NOT DEFINED ENV{Clang_DIR})
+    SET(ENV{Clang_DIR} "/opt/clang+llvm-11.0.0-x86_64-linux-gnu-ubuntu-20.04")
+ENDIF()
+
+
 FIND_PACKAGE(LLVM 11 CONFIG)
 FIND_PACKAGE(Clang CONFIG)
 
