@@ -23,8 +23,7 @@ if [ "$#" -lt 1 ]; then
         "  v        Set ETISS output to verbose\n" \
         "  trace    Trace memory accesses\n" \
         "  gcc      Use GCC as JIT instead of TCC\n" \
-        "  llvm     Use LLVM as JIT instead of TCC\n" \
-        "  rv64     Use RISC-V 64-bit instead of RISC-V 32-bit\n"
+        "  llvm     Use LLVM as JIT instead of TCC\n"
     exit 1
 fi
 TARGETSW_PATH_ELF=$1
@@ -32,7 +31,7 @@ TARGET_ELFFILE=$(basename -- "$TARGETSW_PATH_ELF")
 TARGET_ELFDIR=$(dirname -- "$TARGETSW_PATH_ELF")
 echo -e \
   "[StringConfigurations]\n" \
-  "vp::elf_file=$TARGETSW_PATH_ELF\n" \
+  "vp.elf_file=$TARGETSW_PATH_ELF\n" \
     >> $DYN_INI
 
 VP_EXE="${ETISS_DIR}/examples/bare_etiss_processor/build/main"
@@ -55,7 +54,7 @@ do
         USE_GDB=1
     elif [ "$arg" = "tgdb" ]; then
         USE_TGDB=1
-        echo -e "[Plugin gdbserver]\n port=2222" >> $DYN_INI
+        echo -e "[Plugin gdbserver]\n plugin.gdbserver.port=2222" >> $DYN_INI
     elif [ "$arg" = "noattach" ]; then
         DO_NOT_ATTACH=1
     elif [ "$arg" = "nodmi" ]; then
@@ -79,15 +78,15 @@ do
     shift
 done
 
-echo -e "[BoolConfigurations]\n ETISS::enable_dmi=${ENABLE_DMI}" >> $DYN_INI
-echo -e "[BoolConfigurations]\n ETISS::log_pc=${LOG_PC}" >> $DYN_INI
-echo -e "[IntConfigurations]\n logLevel=${LOG_LEVEL}" >> $DYN_INI
+echo -e "[BoolConfigurations]\n etiss.enable_dmi=${ENABLE_DMI}" >> $DYN_INI
+echo -e "[BoolConfigurations]\n etiss.log_pc=${LOG_PC}" >> $DYN_INI
+echo -e "[IntConfigurations]\n etiss.loglevel=${LOG_LEVEL}" >> $DYN_INI
 if [ "${DO_TRACE}" -eq 1 ]; then
-    echo -e "[BoolConfigurations]\n DebugSystem::printDbusAccess=true" >> $DYN_INI
-    echo -e "[BoolConfigurations]\n DebugSystem::printToFile=true" >> $DYN_INI
+    echo -e "[BoolConfigurations]\n simple_mem_system.print_dbus_access=true" >> $DYN_INI
+    echo -e "[BoolConfigurations]\n simple_mem_system.print_to_file=true" >> $DYN_INI
 fi
 
-echo -e "[StringConfigurations]\n JIT_Type=${JIT}" >> $DYN_INI
+echo -e "[StringConfigurations]\n jit.type=${JIT}" >> $DYN_INI
 
 
 # Call

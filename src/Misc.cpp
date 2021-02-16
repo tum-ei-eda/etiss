@@ -596,28 +596,28 @@ std::string etiss::jitFiles()
 
 std::vector<std::string> etiss::jitExtHeaders(){
     std::vector<std::string> x;
-    std::string range = cfg().get<std::string>("JIT-External::Headers", "");
+    std::string range = cfg().get<std::string>("jit.external_headers", "");
     boost::split(x, range, boost::is_any_of(";, "));
     return (x);
 }
 
 std::vector<std::string> etiss::jitExtLibraries(){
     std::vector<std::string> x;
-    std::string range = cfg().get<std::string>("JIT-External::Libs", "");
+    std::string range = cfg().get<std::string>("jit.external_libs", "");
     boost::split(x, range, boost::is_any_of(";, "));
     return (x);
 }
 
 std::vector<std::string> etiss::jitExtHeaderPaths(){
     std::vector<std::string> x;
-    std::string range = cfg().get<std::string>("JIT-External::HeaderPaths", "");
+    std::string range = cfg().get<std::string>("jit.external_header_paths", "");
     boost::split(x, range, boost::is_any_of(";, "));
     return (x);
 }
 
 std::vector<std::string> etiss::jitExtLibPaths(){
     std::vector<std::string> x;
-    std::string range = cfg().get<std::string>("JIT-External::LibPaths", "");
+    std::string range = cfg().get<std::string>("jit.external_lib_paths", "");
     boost::split(x, range, boost::is_any_of(";, "));
     return (x);
 }

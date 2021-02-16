@@ -22,7 +22,7 @@ Then run this script:
 
 
 RAM_START = 0x100000
-RAM_SIZE = 0x200000
+RAM_SIZE = 0x100000
 STACK_SIZE = 0x4000
 
 
@@ -119,12 +119,11 @@ if __name__ == "__main__":
     if not heapStart:
         raise RuntimeError("did not find heap start")
 
-    heapStart = heapStart - RAM_START
     print("heap starts at: " + hex(heapStart))
 
-    d = MemRange("Data", 0, heapStart)
-    h = MemRange("Heap", heapStart, RAM_SIZE - STACK_SIZE)
-    s = MemRange("Stack", RAM_SIZE - STACK_SIZE, RAM_SIZE)
+    d = MemRange("Data", RAM_START, heapStart)
+    h = MemRange("Heap", heapStart, RAM_START + RAM_SIZE - STACK_SIZE)
+    s = MemRange("Stack", RAM_START + RAM_SIZE - STACK_SIZE, RAM_START + RAM_SIZE)
     mems = [d, h, s]
 
     traceFile = sys.argv[2] if len(sys.argv) > 2 else "dBusAccess.csv"

@@ -48,8 +48,8 @@
 
 */
 
-#ifndef ETISS_INCLUDE_DEBUGSYSTEM_H_
-#define ETISS_INCLUDE_DEBUGSYSTEM_H_
+#ifndef ETISS_INCLUDE_SimpleMemSystem_H_
+#define ETISS_INCLUDE_SimpleMemSystem_H_
 #include "etiss/System.h"
 #include "etiss/make_unique.h"
 #include <fstream>
@@ -127,13 +127,13 @@ class MemSegment
 /**
         @brief simple etiss:System implementation for testing
 */
-class DebugSystem : public System
+class SimpleMemSystem : public System
 {
   public:
-    DebugSystem(uint32_t rom_start, uint32_t rom_size, uint32_t ram_start, uint32_t ram_size);
-    DebugSystem(void);
+    SimpleMemSystem(uint32_t rom_start, uint32_t rom_size, uint32_t ram_start, uint32_t ram_size);
+    SimpleMemSystem(void);
 
-    virtual ~DebugSystem(void)
+    virtual ~SimpleMemSystem(void)
     {
         for (auto &mseg : msegs_)
             mseg.reset();

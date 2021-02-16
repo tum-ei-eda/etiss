@@ -93,30 +93,12 @@
 #include <mutex>
 #include <string>
 #include <vector>
+#include <unordered_set>
 
 class OrcJit;
 
 namespace etiss
 {
-
-/**
-        @brief contains compiled code from LLVMJIT::translate and a execution
-   engine
-*/
-class LLVMLibrary
-{
-  public:
-    LLVMLibrary(llvm::LLVMContext &context, std::unique_ptr<llvm::Module> module);
-    ~LLVMLibrary();
-    /**
-            @brief lookup function name; NOTE: functions only NOT symbols
-    */
-    void *getFunction(std::string name, std::string &error);
-
-  private:
-    llvm::ExecutionEngine *engine_;
-    std::string error_;
-};
 
 class LLVMJIT : public etiss::JIT
 {
@@ -131,6 +113,7 @@ class LLVMJIT : public etiss::JIT
   private:
     llvm::LLVMContext context_;
     OrcJit *orcJit_ = nullptr;
+    std::unordered_set<std::string> loadedLibs_;
 
 };
 

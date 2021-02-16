@@ -128,10 +128,13 @@ SECTIONS
         _bss_end = .;
     } > dataram
 
+    _stack_addptr = VAR_ram_start + VAR_ram_size - _bss_end - _min_stack;
+
     /* do not place anything after this address, because the heap starts here! */
 
     /* ensure there is enough room for stack */
     .stack (NOLOAD): {
+        . = . + _stack_addptr;
         . = ALIGN(4);
         . = . + _min_stack ;
         . = ALIGN(4);
@@ -140,7 +143,7 @@ SECTIONS
         _heap_end      = _stack_start;
         _stack = . ;
     } > dataram
-    
+
     /* no data in the elf file the stack ram is included */
     .stab  0 (NOLOAD) :
     {

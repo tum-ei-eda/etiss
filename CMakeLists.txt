@@ -64,7 +64,7 @@ option(ETISS_USE_PROFILEFLAGS "Enable or disable the -pg compiler and linker fla
 
 # Global configuration
 SET(CMAKE_POSITION_INDEPENDENT_CODE ON)
-SET(CMAKE_CXX_STANDARD 11)
+SET(CMAKE_CXX_STANDARD 14)
 SET(CMAKE_CXX_STANDARD_REQUIRED ON)
 SET(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
@@ -234,7 +234,7 @@ FetchContent_Declare(elfio_srcs
 if(NOT elfio_srcs_POPULATED)
 	FetchContent_Populate(elfio_srcs)
 	FetchContent_GetProperties(elfio_srcs)
-endif()	
+endif()
 
 ### Doxyfile
 set(ETISS_DOX_LOCATIONS ${ETISS_DOX_LOCATIONS} ${PROJECT_BINARY_DIR}/include)
@@ -293,6 +293,9 @@ set(INSTALL_CMAKE_DIR lib/CMake/ETISS CACHE PATH "Installation directory for CMa
 # to allow linking with ETISS lib in build-tree
 # copying headers
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION ${ETISS_BINARY_DIR}/include/)
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/include_c/ DESTINATION ${ETISS_BINARY_DIR}/include/)
+file(GLOB JIT_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/src/jitlibs/**/*.h)
+file(COPY ${JIT_HEADERS} DESTINATION ${ETISS_BINARY_DIR}/include/jit/etiss/jit/)
 # plugins/list.txt file
 file(WRITE ${ETISS_BINARY_DIR}/lib/plugins/list.txt)
 
