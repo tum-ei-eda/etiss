@@ -389,7 +389,7 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
 #endif
     // compile library
     void *funcs =
-        jit_->translate(code, headers, libloc, libs, error, etiss::cfg().get<bool>("jit-debug", ETISS_DEBUG) != 0);
+        jit_->translate(code, headers, libloc, libs, error, etiss::cfg().get<bool>("jit.debug", ETISS_DEBUG) != 0);
 
     if (funcs == 0)
     {
@@ -451,7 +451,7 @@ etiss::int32 Translation::translateBlock(CodeBlock &cb)
     context.force_block_end_ = false;
 
     unsigned count = 0;
-    const unsigned maxcount = etiss::cfg().get<unsigned>("Translation::MaxBlockSize", 100);
+    const unsigned maxcount = etiss::cfg().get<unsigned>("etiss.max_block_size", 100);
 
     etiss::instr::VariableInstructionSet *const vis_ = mis_->get(cpu_.mode);
 

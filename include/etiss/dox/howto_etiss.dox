@@ -101,7 +101,7 @@ be passed to this function. A ETISS_System implementation is preferred since
 etiss::System needs to be wrapped in a ETISS_System structure thus adding an
 additional function call per access. The System handles instruction/data
 reads/writes and synchronizes times. For a simple example implementation refer
-to etiss::DebugSystem.
+to etiss::SimpleMemSystem.
 
 Alternatively a systemC wrapper class called SystemCBridge
 (defined in systemc/SystemCBridge.h) can handle ETISSs interrupt and system

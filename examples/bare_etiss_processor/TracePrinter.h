@@ -47,7 +47,7 @@
 
 /**
  * @brief A simple logger dedicated to print PC trace. Most accurate
- *        when Translation::MaxBlockSize in ETISS.int is set to 1.
+ *        when etiss.max_block_size in ETISS.ini is set to 1.
  *
  * @param terminateAddr: Terminate simulation when hit certain address
  *

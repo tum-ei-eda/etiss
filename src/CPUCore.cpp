@@ -559,7 +559,7 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
     }
 
     // verify jit
-    if (etiss::cfg().get<bool>("verifyJIT", true))
+    if (etiss::cfg().get<bool>("jit.verify", true))
     {
         if (!verifyJITSizeOf("etiss_int64", sizeof(etiss_int64), jiti.get()))
             return RETURNCODE::JITCOMPILATIONERROR;

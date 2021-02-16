@@ -1,7 +1,7 @@
 /*! \page etiss_cfg ETISS Configuration/Options (runtime)
 
 This page list options that can be passed to ETISS or set at runtime. Options are parsed by etiss::initialize() and can be accessed/changed with etiss::cfg().
-The following table contains a list of current options. Plugins may have theire own options. Please have a look at the respective plugin documentation for auch options. The documentation for the integrated library and related plugin implementations can be found \ref status_implementation here.
+The following table contains a list of current options. Plugins may have their own options. Please have a look at the respective plugin documentation for such options. The documentation for the integrated library and related plugin implementations can be found \ref status_implementation here.
 
 	<table border="1" style="width:100%">
 	  <tr>
@@ -10,37 +10,19 @@ The following table contains a list of current options. Plugins may have theire 
 	    <th><b>Description</b></th>
 	  </tr>
 	  </tr><tr>
-	    <td> loglevel </td>
-	    <td> SILENT = 0 <br>FATALERROR = 1 <br>ERROR = 2 <br>WARNING = 3 (default) <br>INFO = 4 <br>VERBOSE = 5 <br><br></td>
-	    <td> sets the log level an suppresses messages of higher log levels.<br>e.g. "-floglevel=5" or "-ologlevel 5" </td>
-	  </tr><tr>
-	    <td> etiss_wd </td>
-	    <td> path </td>
-	    <td> etiss_wd must conatain a valid path (or a path that can be created with mkdir) where the program has read/write permission.
-			 By default the path "~/.etiss/<ETISS_VERSION_INTERFACE>/" is used. The ~/ path is resolved using the HOME environment variable (see getenv("HOME"))
-			 <br><br>
-			 Attention: etiss_wd can only be set with the arguments passed to etiss::initialize. Later changes are not possible and calls to etiss::cfg().set("etiss_wd",...) will be ignored.
- 			</td>
-	  </tr><tr>
-	    <td> copy-headers </td>
-	    <td> true/false </td>
-	    <td> This option allows ETISS to writing its header files into the etiss_wd folder. this option is enabled by default and should not be disabled.  </td>
-	  </tr><tr>
-	    <td> sigint-console </td>
-	    <td> true/false (default) </td>
-	    <td> if enabled then pressing ctrl-c will stop ETISS and a python console can be used. this option is experimental and currently doesn't support mutithreading. use with caution</td>
-	  </tr><tr>
-	    <td> library-loading </td>
-	    <td> true (default)/false </td>
-	    <td> if enabled then ETISS will try to locate plugin libraries and load them. if not enabled then external libraries must be loaded manually. </td>
-	  </tr><tr>
-	    <td> integrated-library </td>
-	    <td> true (default)/false </td>
-	    <td> if enabled then the integrated plugin library (gdb server,logger, etc. [see \ref status_implementation]) of ETISS will be enabled. </td>
-	  </tr><tr>
-	    <td> pyconsole </td>
-	    <td> true/false (default) </td>
-	    <td> if enabled then a python console will be provided after initialization has been done. Use ctrl-d to exit the console and return from the initialization function.</td>
+	    <td> help </td>
+	    <td> Lists the configurations that can be set by the user and the functionality of each configuration.<br>Usage: "--help" </td>
+	  </tr>
+	    <td> .ini files </td>
+	    <td> Loads .ini files directly into ETISS. <br>Usage: "-i FileName1 -i FileName2"</td>
+	  </tr>
+	  </tr>
+	    <td> plugins </td>
+	    <td> Loads plugins directly into ETISS. <br>Usage: "-p ListPluginNames"</td>
+	  </tr>
+	  </tr>
+	    <td> elf file </td>
+	    <td> Loads the elf file that is required to begin the execution. <br>Usage: "--vp.elf_file=/path/to/elf_file"</td>
 	  </tr>
 	 </table>
 	 
