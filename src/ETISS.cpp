@@ -809,16 +809,18 @@ void etiss_initialize(const std::vector<std::string>& args, bool forced = false)
                 }
             }
         }
-        catch(std::exception& e)
+        catch(const std::exception& e)
         {
             const boost::stacktrace::stacktrace* st = boost::get_error_info<traced>(e);
+            std::cout << "ENTERED EXCEPTION: " << *st << "\n";
+            std::cerr << *st << '\n';
             if (st) 
             {
                 std::cout << "\n STACK TRACED\n";
                 std::cerr << *st << '\n';
             }
-            etiss::log(etiss::FATALERROR, std::string(e.what()) +
-                                               "\n\t Please use --help to list all recognised options. \n");
+            //etiss::log(etiss::FATALERROR, std::string(e.what()) +
+                                               //"\n\t Please use --help to list all recognised options. \n");
         }
     }
     etiss_loadIniConfigs();
