@@ -62,6 +62,8 @@
 #include <boost/program_options/options_description.hpp>
 #include <boost/program_options/parsers.hpp>
 #include <boost/program_options/variables_map.hpp>
+#include <boost/stacktrace.hpp>
+#include <boost/exception/all.hpp>
 
 #if ETISS_USE_DLSYM
 #include <dlfcn.h>
@@ -74,6 +76,7 @@ std::string etiss_defaultjit_;
 std::list<std::shared_ptr<etiss::LibraryInterface>> etiss_libraries_;
 std::recursive_mutex etiss_libraries_mu_;
 
+typedef boost::error_info<struct tag_stacktrace, boost::stacktrace::stacktrace> traced;
 boost::program_options::variables_map vm;
 std::vector<std::string> pluginOptions = {"plugin.logger.logaddr", "plugin.logger.logmask", "plugin.gdbserver.port"};
 
@@ -808,6 +811,12 @@ void etiss_initialize(const std::vector<std::string>& args, bool forced = false)
         }
         catch(std::exception& e)
         {
+            const boost::stacktrace::stacktrace* st = boost::get_error_info<traced>(e);
+            if (st) 
+            {
+                std::cout << "\n STACK TRACED\n";
+                std::cerr << *st << '\n';
+            }
             etiss::log(etiss::FATALERROR, std::string(e.what()) +
                                                "\n\t Please use --help to list all recognised options. \n");
         }
