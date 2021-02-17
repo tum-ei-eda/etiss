@@ -69,16 +69,19 @@ jobs:
         cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_INSTALL_PREFIX=../install
 
     - name: Build
+      if: matrix.config.name == 'Linux' || matrix.config.name == 'Windows'
       working-directory: ${{runner.workspace}}/build
       shell: bash
-      run: cmake --build . --config $BUILD_TYPE  -D_GNU_SOURCE=1
+      run: cmake --build . --config $BUILD_TYPE
 
     - name: Install
+      if: matrix.config.name == 'Linux' || matrix.config.name == 'Windows'
       working-directory: ${{runner.workspace}}/build
       shell: bash
       run: cmake --build . --config $BUILD_TYPE --target install
 
     - name: Setup tests
+      if: matrix.config.name == 'Linux' || matrix.config.name == 'Windows'
       working-directory: ${{runner.workspace}}/install/examples
       run: |
         cmake -E make_directory ${{runner.workspace}}/install/examples/SW/riscv/build
