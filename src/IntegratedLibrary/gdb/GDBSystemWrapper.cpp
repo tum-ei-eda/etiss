@@ -57,73 +57,66 @@ using namespace etiss::plugin::gdb;
 
 struct ETISS_GDBSystem
 {
-
     struct ETISS_System system;
-
     ETISS_System *sys_;
-
     etiss::plugin::gdb::Server *server_;
 };
 
 typedef struct ETISS_GDBSystem ETISS_GDBSystem;
 
-etiss_int32 gdb_system_call_iread(void *handle, ETISS_CPU *cpu, etiss_uint64 addr, etiss_uint32 length)
+static etiss_int32 gdb_system_call_iread(void *handle, ETISS_CPU *cpu, etiss_uint64 addr, etiss_uint32 length)
 {
-    ETISS_GDBSystem *gdbsys = ((ETISS_GDBSystem *)handle);
-    ETISS_System *sys = gdbsys->sys_;
-    return gdbsys->server_->preMemoryAccessCallback(addr, length, false, true);
+    auto gdbsys = (ETISS_GDBSystem *)handle;
+    etiss_int32 exc = gdbsys->sys_->iread(gdbsys->sys_->handle, cpu, addr, length);
+    return gdbsys->server_->postMemAccessCallback(exc);
 }
-etiss_int32 gdb_system_call_iwrite(void *handle, ETISS_CPU *cpu, etiss_uint64 addr, etiss_uint8 *buffer,
-                                   etiss_uint32 length)
+static etiss_int32 gdb_system_call_iwrite(void *handle, ETISS_CPU *cpu, etiss_uint64 addr, etiss_uint8 *buffer,
+                                          etiss_uint32 length)
 {
-    ETISS_GDBSystem *gdbsys = ((ETISS_GDBSystem *)handle);
-    ETISS_System *sys = gdbsys->sys_;
-    return gdbsys->server_->preMemoryAccessCallback(addr, length, false, false);
-}
-
-etiss_int32 gdb_system_call_dread(void *handle, ETISS_CPU *cpu, etiss_uint64 addr, etiss_uint8 *buffer,
-                                  etiss_uint32 length)
-{
-    ETISS_GDBSystem *gdbsys = ((ETISS_GDBSystem *)handle);
-    ETISS_System *sys = gdbsys->sys_;
-    return gdbsys->server_->preMemoryAccessCallback(addr, length, true, true);
-}
-etiss_int32 gdb_system_call_dwrite(void *handle, ETISS_CPU *cpu, etiss_uint64 addr, etiss_uint8 *buffer,
-                                   etiss_uint32 length)
-{
-    ETISS_GDBSystem *gdbsys = ((ETISS_GDBSystem *)handle);
-    ETISS_System *sys = gdbsys->sys_;
-    return gdbsys->server_->preMemoryAccessCallback(addr, length, true, false);
+    auto gdbsys = (ETISS_GDBSystem *)handle;
+    etiss_int32 exc = gdbsys->sys_->iwrite(gdbsys->sys_->handle, cpu, addr, buffer, length);
+    return gdbsys->server_->postMemAccessCallback(exc);
 }
 
-etiss_int32 gdb_system_call_dbg_read(void *handle, etiss_uint64 addr, etiss_uint8 *buffer, etiss_uint32 length)
+static etiss_int32 gdb_system_call_dread(void *handle, ETISS_CPU *cpu, etiss_uint64 addr, etiss_uint8 *buffer,
+                                         etiss_uint32 length)
 {
-    ETISS_GDBSystem *gdbsys = ((ETISS_GDBSystem *)handle);
-    ETISS_System *sys = gdbsys->sys_;
-    return sys->dbg_read(sys->handle, addr, buffer, length);
+    auto gdbsys = (ETISS_GDBSystem *)handle;
+    gdbsys->server_->preDReadCallback(addr);
+    etiss_int32 exc = gdbsys->sys_->dread(gdbsys->sys_->handle, cpu, addr, buffer, length);
+    return gdbsys->server_->postMemAccessCallback(exc);
+}
+static etiss_int32 gdb_system_call_dwrite(void *handle, ETISS_CPU *cpu, etiss_uint64 addr, etiss_uint8 *buffer,
+                                          etiss_uint32 length)
+{
+    auto gdbsys = (ETISS_GDBSystem *)handle;
+    gdbsys->server_->preDWriteCallback(addr);
+    etiss_int32 exc = gdbsys->sys_->dwrite(gdbsys->sys_->handle, cpu, addr, buffer, length);
+    return gdbsys->server_->postMemAccessCallback(exc);
 }
 
-etiss_int32 gdb_system_call_dbg_write(void *handle, etiss_uint64 addr, etiss_uint8 *buffer, etiss_uint32 length)
+static etiss_int32 gdb_system_call_dbg_read(void *handle, etiss_uint64 addr, etiss_uint8 *buffer, etiss_uint32 length)
 {
-    ETISS_GDBSystem *gdbsys = ((ETISS_GDBSystem *)handle);
-    ETISS_System *sys = gdbsys->sys_;
-    return sys->dbg_write(sys->handle, addr, buffer, length);
+    ETISS_GDBSystem *gdbsys = (ETISS_GDBSystem *)handle;
+    return gdbsys->sys_->dbg_read(gdbsys->sys_->handle, addr, buffer, length);
 }
 
-void gdb_system_call_syncTime(void *handle, ETISS_CPU *cpu)
+static etiss_int32 gdb_system_call_dbg_write(void *handle, etiss_uint64 addr, etiss_uint8 *buffer, etiss_uint32 length)
 {
-    ETISS_GDBSystem *gdbsys = ((ETISS_GDBSystem *)handle);
-    ETISS_System *sys = gdbsys->sys_;
-    sys->syncTime(sys->handle, cpu);
+    ETISS_GDBSystem *gdbsys = (ETISS_GDBSystem *)handle;
+    return gdbsys->sys_->dbg_write(gdbsys->sys_->handle, addr, buffer, length);
+}
+
+static void gdb_system_call_syncTime(void *handle, ETISS_CPU *cpu)
+{
+    ETISS_GDBSystem *gdbsys = (ETISS_GDBSystem *)handle;
+    gdbsys->sys_->syncTime(gdbsys->sys_->handle, cpu);
 }
 
 ETISS_System *Server::wrap(ETISS_CPU *cpu, ETISS_System *sys)
 {
-
     if (sys == 0)
         return 0;
-
-    // return sys;
 
     ETISS_GDBSystem *ret = new ETISS_GDBSystem();
 
