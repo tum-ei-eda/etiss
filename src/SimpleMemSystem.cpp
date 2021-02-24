@@ -153,7 +153,7 @@ etiss::int8 SimpleMemSystem::load_elf(const char *elf_file)
             {
                 break;
             }
-            if (mseg && seg->get_data())
+            if (mseg)
             {
                 add_memsegment(std::move(mseg), seg->get_data(), file_size);
             }
