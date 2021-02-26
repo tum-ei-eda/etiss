@@ -790,10 +790,10 @@ void Server::handlePacket(bool block)
     }
 }
 
-etiss::int32 Server::preMemoryAccessCallback(etiss::uint64 addr, etiss::uint32 len, bool data, bool read)
+etiss::int32 Server::memoryAccessCallback(etiss::uint64 addr, etiss::uint8 * buffer, etiss::uint32 len, bool data, bool read)
 {
     etiss::int32 exception = 0;
-    uint64_t buf = 0;
+    //uint64_t buf = 0;
     if (read)
     {
         if (!watchpoints_.isEmpty())
@@ -805,7 +805,7 @@ etiss::int32 Server::preMemoryAccessCallback(etiss::uint64 addr, etiss::uint32 l
         }
         if (data)
         {
-            exception = unwrappedSys_->dread(unwrappedSys_->handle, cpu_, addr, (etiss::uint8*)&buf, len);
+            exception = unwrappedSys_->dread(unwrappedSys_->handle, cpu_, addr, buffer, len);
         }
         else
         {
@@ -823,11 +823,11 @@ etiss::int32 Server::preMemoryAccessCallback(etiss::uint64 addr, etiss::uint32 l
         }
         if (data)
         {
-            exception = unwrappedSys_->dwrite(unwrappedSys_->handle, cpu_, addr, (etiss::uint8*)&buf, len);
+            exception = unwrappedSys_->dwrite(unwrappedSys_->handle, cpu_, addr, buffer, len);
         }
         else
         {
-            exception = unwrappedSys_->iwrite(unwrappedSys_->handle, cpu_, addr, (etiss::uint8*)&buf, len);
+            exception = unwrappedSys_->iwrite(unwrappedSys_->handle, cpu_, addr, buffer, len);
         }
     }
     if (exception)

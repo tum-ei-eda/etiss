@@ -130,7 +130,7 @@ class Server : public etiss::CoroutinePlugin, public etiss::TranslationPlugin, p
 
     virtual etiss::int32 preInstructionCallback();
 
-    virtual etiss::int32 preMemoryAccessCallback(etiss::uint64 addr, etiss::uint32 len, bool data, bool read);
+    virtual etiss::int32 memoryAccessCallback(etiss::uint64 addr, etiss::uint8 * buffer, etiss::uint32 len, bool data, bool read);
 
     virtual etiss::int32 execute(); // called before block execution, check for BREAK command
 

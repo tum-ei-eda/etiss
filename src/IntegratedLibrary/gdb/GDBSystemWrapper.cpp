@@ -69,51 +69,29 @@ typedef struct ETISS_GDBSystem ETISS_GDBSystem;
 
 etiss_int32 gdb_system_call_iread(void *handle, ETISS_CPU *cpu, etiss_uint64 addr, etiss_uint32 length)
 {
+    uint64_t empty_buffer = 0;
     ETISS_GDBSystem *gdbsys = ((ETISS_GDBSystem *)handle);
-    ETISS_System *sys = gdbsys->sys_;
-    etiss::int32 exception = gdbsys->server_->preMemoryAccessCallback(addr, length, false, true);
-    if (unlikely(exception != 0))
-    {
-        return exception;
-    }
-    return sys->iread(sys->handle, cpu, addr, length);
+    return gdbsys->server_->memoryAccessCallback(addr, (etiss::uint8*)&empty_buffer, length, false, true);
 }
 etiss_int32 gdb_system_call_iwrite(void *handle, ETISS_CPU *cpu, etiss_uint64 addr, etiss_uint8 *buffer,
                                    etiss_uint32 length)
 {
     ETISS_GDBSystem *gdbsys = ((ETISS_GDBSystem *)handle);
-    ETISS_System *sys = gdbsys->sys_;
-    etiss::int32 exception = gdbsys->server_->preMemoryAccessCallback(addr, length, false, false);
-    if (unlikely(exception != 0))
-    {
-        return exception;
-    }
-    return sys->iwrite(sys->handle, cpu, addr, buffer, length);
+    return gdbsys->server_->memoryAccessCallback(addr, buffer, length, false, false);
 }
 
 etiss_int32 gdb_system_call_dread(void *handle, ETISS_CPU *cpu, etiss_uint64 addr, etiss_uint8 *buffer,
                                   etiss_uint32 length)
 {
     ETISS_GDBSystem *gdbsys = ((ETISS_GDBSystem *)handle);
-    ETISS_System *sys = gdbsys->sys_;
-    etiss::int32 exception = gdbsys->server_->preMemoryAccessCallback(addr, length, true, true);
-    if (unlikely(exception != 0))
-    {
-        return exception;
-    }
-    return sys->dread(sys->handle, cpu, addr, buffer, length);
+    return gdbsys->server_->memoryAccessCallback(addr, buffer, length, true, true);
 }
+
 etiss_int32 gdb_system_call_dwrite(void *handle, ETISS_CPU *cpu, etiss_uint64 addr, etiss_uint8 *buffer,
                                    etiss_uint32 length)
 {
     ETISS_GDBSystem *gdbsys = ((ETISS_GDBSystem *)handle);
-    ETISS_System *sys = gdbsys->sys_;
-    etiss::int32 exception = gdbsys->server_->preMemoryAccessCallback(addr, length, true, false);
-    if (unlikely(exception != 0))
-    {
-        return exception;
-    }
-    return sys->dwrite(sys->handle, cpu, addr, buffer, length);
+    return gdbsys->server_->memoryAccessCallback(addr, buffer, length, true, false);
 }
 
 etiss_int32 gdb_system_call_dbg_read(void *handle, etiss_uint64 addr, etiss_uint8 *buffer, etiss_uint32 length)
