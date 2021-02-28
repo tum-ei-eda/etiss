@@ -811,6 +811,7 @@ void etiss_initialize(const std::vector<std::string>& args, bool forced = false)
         }
         catch(const std::exception& e)
         {
+            std::cout << "ENTERED EXCEPTION\n";
             const boost::stacktrace::stacktrace* st = boost::get_error_info<traced>(e);
             std::cout << "ENTERED EXCEPTION: " << *st << "\n";
             std::cerr << *st << '\n';
