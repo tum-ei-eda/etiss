@@ -697,6 +697,8 @@ std::pair<std::string, std::string> inifileload(const std::string& s)
 
 void etiss_initialize(const std::vector<std::string>& args, bool forced = false)
 {
+    std::cout << "\n 1) In ETISS.cpp line 700\n";
+    std::cout << "\n1: " << boost::stacktrace::stacktrace();
     static std::mutex mu_;
     static bool initialized_(false);
     {
@@ -726,6 +728,7 @@ void etiss_initialize(const std::vector<std::string>& args, bool forced = false)
 
     {
         namespace po = boost::program_options;
+        std::cout << "\n2: " << boost::stacktrace::stacktrace();
         try
         {
             po::options_description desc("Allowed options");
@@ -768,6 +771,8 @@ void etiss_initialize(const std::vector<std::string>& args, bool forced = false)
             po::parsed_options parsed_options = parser.run();
             po::store(parsed_options, vm);
 
+            std::cout << "\n3: " << boost::stacktrace::stacktrace();
+
             if (vm.count("help"))
             {
                 std::cout << "\nPlease begin all options with --\n\n";
@@ -784,6 +789,8 @@ void etiss_initialize(const std::vector<std::string>& args, bool forced = false)
                                                "\n\t Please use --help to list all recognised options. \n");
                 }
             }
+
+            std::cout << "\n4: " << boost::stacktrace::stacktrace();
 
             for (po::variables_map::iterator i = vm.begin() ; i != vm.end() ; ++ i)
             {
@@ -808,9 +815,11 @@ void etiss_initialize(const std::vector<std::string>& args, bool forced = false)
                     }
                 }
             }
+            std::cout << "\n5: " << boost::stacktrace::stacktrace();
         }
         catch(const std::exception& e)
         {
+            std::cout << "\n6: " << boost::stacktrace::stacktrace();
             std::cout << "ENTERED EXCEPTION\n";
             const boost::stacktrace::stacktrace* st = boost::get_error_info<traced>(e);
             std::cout << "ENTERED EXCEPTION: " << *st << "\n";
@@ -891,6 +900,7 @@ void etiss_initialize(const std::vector<std::string>& args, bool forced = false)
 
 void etiss::initialize(std::vector<std::string>& args)
 {
+    std::cout << "\n 1) In ETISS.cpp line 902\n";
     etiss_initialize(args, false);
 }
 

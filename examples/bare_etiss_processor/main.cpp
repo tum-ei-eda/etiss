@@ -57,6 +57,7 @@ int main(int argc, const char *argv[])
     std::list<std::string> iniFiles;
     // iniFiles.push_back("../ETISS.ini"); // will be loaded within the run.sh
     // iniFiles.push_back("additional.ini");
+    std::cout << "\n 1) In main.cpp\n";
     etiss::Initializer initializer(argc, argv); //add &iniFiles as the first argument if .ini files are loaded explicitly here
     std::cout << "=== Finished setting up configurations ===" << std::endl << std::endl;
 
