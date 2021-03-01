@@ -334,7 +334,6 @@ class Initializer
     {
         // const and non const *argv[] are allowed. This assertion is
         // easier than duplicing the constructor.
-        std::cout << "\n 1) In ETISS.h line 337\n";
         static_assert(std::is_same<const char, argvT>::value || std::is_same<char, argvT>::value,
                       "argv must be of type const char or char");
         std::vector<std::string> args;
@@ -342,20 +341,17 @@ class Initializer
         {
             args.push_back(std::string(argv[i]));
         }
-        std::cout << "\n 1) In ETISS.h line 345\n";
         toList(args, args_append...);
         initialize(args);
     }
 
     Initializer(std::list<std::string> *files, int argc, const char* argv[])
     {
-        std::cout << "\n 1) In ETISS.h line 352\n";
         std::vector<std::string> args;
         for (int i = 1; i < argc; i++)
         {
             args.push_back(std::string(argv[i]));
         }
-        std::cout << "\n 1) In ETISS.h line 358\n";
         loadIni(files);
         initialize(args);
     }

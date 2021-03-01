@@ -89,6 +89,7 @@ Packages for Windows:
  - choco install cmake --version=3.13.3
  - choco install boost-msvc-14.1 --version=1.67.0
  - choco install make
+ - choco install git
 
 ### Build and Installation
 

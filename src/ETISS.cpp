@@ -62,8 +62,6 @@
 #include <boost/program_options/options_description.hpp>
 #include <boost/program_options/parsers.hpp>
 #include <boost/program_options/variables_map.hpp>
-#include <boost/stacktrace.hpp>
-#include <boost/exception/all.hpp>
 
 #if ETISS_USE_DLSYM
 #include <dlfcn.h>
@@ -76,7 +74,6 @@ std::string etiss_defaultjit_;
 std::list<std::shared_ptr<etiss::LibraryInterface>> etiss_libraries_;
 std::recursive_mutex etiss_libraries_mu_;
 
-typedef boost::error_info<struct tag_stacktrace, boost::stacktrace::stacktrace> traced;
 boost::program_options::variables_map vm;
 std::vector<std::string> pluginOptions = {"plugin.logger.logaddr", "plugin.logger.logmask", "plugin.gdbserver.port"};
 
@@ -697,8 +694,6 @@ std::pair<std::string, std::string> inifileload(const std::string& s)
 
 void etiss_initialize(const std::vector<std::string>& args, bool forced = false)
 {
-    std::cout << "\n 1) In ETISS.cpp line 700\n";
-    std::cout << "\n1: " << boost::stacktrace::stacktrace();
     static std::mutex mu_;
     static bool initialized_(false);
     {
@@ -728,9 +723,9 @@ void etiss_initialize(const std::vector<std::string>& args, bool forced = false)
 
     {
         namespace po = boost::program_options;
-        std::cout << "\n2: " << boost::stacktrace::stacktrace();
         try
         {
+            std::cout << "\nLine 728: Entered try\n";
             po::options_description desc("Allowed options");
             desc.add_options()
             ("help", "Produce a help message that lists all supported options.")
@@ -771,7 +766,7 @@ void etiss_initialize(const std::vector<std::string>& args, bool forced = false)
             po::parsed_options parsed_options = parser.run();
             po::store(parsed_options, vm);
 
-            std::cout << "\n3: " << boost::stacktrace::stacktrace();
+            std::cout << "\nLine 769: Parsing done\n";
 
             if (vm.count("help"))
             {
@@ -790,47 +785,41 @@ void etiss_initialize(const std::vector<std::string>& args, bool forced = false)
                 }
             }
 
-            std::cout << "\n4: " << boost::stacktrace::stacktrace();
+            std::cout << "\nLine 788: Unrecognised parsed\n";
 
             for (po::variables_map::iterator i = vm.begin() ; i != vm.end() ; ++ i)
             {
                 const po::variable_value& v = i->second;
                 if (!v.empty())
                 {
+                    std::cout << "\nLine 795: v is not empty\n";
                     const ::std::type_info& type = v.value().type();
+                    std::cout << "\nLine 797: Checked type\n";
                     if (type == typeid(::std::string))
                     {
-                        const ::std::string& val = v.as<::std::string>() ;
+                        std::cout << "\nLine 800: Checked string type\n";
+                        const ::std::string& val = v.as<::std::string>();
                         etiss::cfg().set<std::string>(std::string(i->first), val);
                     }
                     else if (type == typeid(int))
                     {
+                        std::cout << "\nLine 806: Checked int type\n";
                         int val = v.as<int>();
                         etiss::cfg().set<int>(std::string(i->first), val);
                     }
                     else if (type == typeid(bool))
                     {
+                        std::cout << "\nLine 806: Checked bool type\n";
                         bool val = v.as<bool>();
                         etiss::cfg().set<bool>(std::string(i->first), val);
                     }
                 }
             }
-            std::cout << "\n5: " << boost::stacktrace::stacktrace();
         }
         catch(const std::exception& e)
         {
-            std::cout << "\n6: " << boost::stacktrace::stacktrace();
-            std::cout << "ENTERED EXCEPTION\n";
-            const boost::stacktrace::stacktrace* st = boost::get_error_info<traced>(e);
-            std::cout << "ENTERED EXCEPTION: " << *st << "\n";
-            std::cerr << *st << '\n';
-            if (st) 
-            {
-                std::cout << "\n STACK TRACED\n";
-                std::cerr << *st << '\n';
-            }
-            //etiss::log(etiss::FATALERROR, std::string(e.what()) +
-                                               //"\n\t Please use --help to list all recognised options. \n");
+            etiss::log(etiss::FATALERROR, std::string(e.what()) +
+                                               "\n\t Please use --help to list all recognised options. \n");
         }
     }
     etiss_loadIniConfigs();
