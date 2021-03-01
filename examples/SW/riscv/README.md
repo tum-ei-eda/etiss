@@ -24,8 +24,17 @@ To compile the SW:
 	$ cmake ..
 	$ make
   # Otherwise:
+
+  ## LINUX SYSTEM
 	$ cmake -DRISCV_ELF_GCC_PREFIX=path/to/toolchain -DRISCV_ELF_GCC_BASENAME=riscv64-unknown-elf ..
 	$ make
+
+  ## WINDOWS SYSTEM
+  $ cmake .. -DRISCV_ELF_GCC_PREFIX=X:\path\to\toolchain -DRISCV_ELF_GCC_BASENAME=riscv64-unknown-elf -G "Unix Makefiles"
+
+    If make is not set correctly add -DCMAKE_MAKE_PROGRAM=X:\path\to\gmake\bin\make.exe in the above line
+
+	$ cmake --build . --config $BUILD_TYPE
 
 ### Instruction test software
 
@@ -48,14 +57,3 @@ Softwares provided by pulpino project is also compatible with our model.
 The software is located in ./pulpino/SW and they have their own cmake
 compilation script (which does not work for now, modify it if in need.
 Comment date: 15, Mar., 2018)
-
-# Building on Windows
-
-Get a RISC-V toolchain. Recommended: https://www.sifive.com/software (scroll down to toolchain downloads)
-
-Get GNU Make for Windows: http://gnuwin32.sourceforge.net/packages/make.htm
-
-    mkdir build
-    cd build
-    cmake -G "Unix Makefiles" -DCMAKE_MAKE_PROGRAM=X:\path\to\gmake\bin\make.exe ..
-    cmake --build .

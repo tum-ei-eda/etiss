@@ -23,7 +23,14 @@ the example software:
 	$ cd ../SW/<or1k>|<riscv>/
 	$ mkdir build && cd build
 	$ cmake ..
+
+### LINUX SYSTEM
+
 	$ make
+
+### WINDOWS SYSTEM
+
+	$ cmake --build . --config $BUILD_TYPE
 
 Finally we can build and run the simulation with the following script:
 
