@@ -342,8 +342,9 @@ class Initializer
         {
             args.push_back(std::string(argv[i]));
         }
-        toList(args, args_append...);
-        initialize(args);
+        //toList(args, args_append...);
+        //initialize(args);
+        initialize(argc, argv);
     }
 
     Initializer(std::list<std::string> *files, int argc, const char* argv[])
