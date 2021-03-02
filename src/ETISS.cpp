@@ -760,9 +760,9 @@ void etiss_initialize(const std::vector<std::string>& args, bool forced = false)
             ("pluginToLoad,p", po::value<std::vector<std::string>>()->multitoken(), "List of plugins to be loaded.")
             ;
             std::cout << "\nLine 762\n";
-            po::command_line_parser parser{args};
+            po::command_line_parser parser(args);
             std::cout << "\nLine 764\n";
-            po::command_line_parser iniparser{args};
+            po::command_line_parser iniparser(args);
             std::cout << "\nLine 766\n";
             iniparser.options(desc).allow_unregistered().extra_parser(inifileload).run();
             std::cout << "\nLine 768\n";
