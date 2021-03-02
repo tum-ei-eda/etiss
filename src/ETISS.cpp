@@ -727,6 +727,7 @@ void etiss_initialize(const std::vector<std::string>& args, bool forced = false)
         {
             std::cout << "\nLine 728: Entered try\n";
             po::options_description desc("Allowed options");
+            std::cout << "\nLine 730\n";
             desc.add_options()
             ("help", "Produce a help message that lists all supported options.")
             ("arch.cpu", po::value<std::string>(), "The CPU Architecture to simulate.")
@@ -758,15 +759,20 @@ void etiss_initialize(const std::vector<std::string>& args, bool forced = false)
             ("plugin.gdbserver.port", po::value<std::string>(), "Option for gdbserver")
             ("pluginToLoad,p", po::value<std::vector<std::string>>()->multitoken(), "List of plugins to be loaded.")
             ;
-
+            std::cout << "\nLine 762\n";
             po::command_line_parser parser{args};
+            std::cout << "\nLine 764\n";
             po::command_line_parser iniparser{args};
+            std::cout << "\nLine 766\n";
             iniparser.options(desc).allow_unregistered().extra_parser(inifileload).run();
+            std::cout << "\nLine 768\n";
             parser.options(desc).allow_unregistered().extra_parser(etiss::Configuration::set_cmd_line_boost);
+            std::cout << "\nLine 770\n";
             po::parsed_options parsed_options = parser.run();
+            std::cout << "\nLine 772\n";
             po::store(parsed_options, vm);
 
-            std::cout << "\nLine 769: Parsing done\n";
+            std::cout << "\nLine 775: Parsing done\n";
 
             if (vm.count("help"))
             {
@@ -785,31 +791,31 @@ void etiss_initialize(const std::vector<std::string>& args, bool forced = false)
                 }
             }
 
-            std::cout << "\nLine 788: Unrecognised parsed\n";
+            std::cout << "\nLine 794: Unrecognised parsed\n";
 
             for (po::variables_map::iterator i = vm.begin() ; i != vm.end() ; ++ i)
             {
                 const po::variable_value& v = i->second;
                 if (!v.empty())
                 {
-                    std::cout << "\nLine 795: v is not empty\n";
+                    std::cout << "\nLine 801: v is not empty\n";
                     const ::std::type_info& type = v.value().type();
                     std::cout << "\nLine 797: Checked type\n";
                     if (type == typeid(::std::string))
                     {
-                        std::cout << "\nLine 800: Checked string type\n";
+                        std::cout << "\nLine 806: Checked string type\n";
                         const ::std::string& val = v.as<::std::string>();
                         etiss::cfg().set<std::string>(std::string(i->first), val);
                     }
                     else if (type == typeid(int))
                     {
-                        std::cout << "\nLine 806: Checked int type\n";
+                        std::cout << "\nLine 812: Checked int type\n";
                         int val = v.as<int>();
                         etiss::cfg().set<int>(std::string(i->first), val);
                     }
                     else if (type == typeid(bool))
                     {
-                        std::cout << "\nLine 806: Checked bool type\n";
+                        std::cout << "\nLine 818: Checked bool type\n";
                         bool val = v.as<bool>();
                         etiss::cfg().set<bool>(std::string(i->first), val);
                     }
