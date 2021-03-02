@@ -692,7 +692,7 @@ std::pair<std::string, std::string> inifileload(const std::string& s)
     return make_pair(std::string(), std::string());
 }
 
-void etiss_initialize(const std::vector<std::string>& args, bool forced = false)
+void etiss_initialize(int argc, const char* argv[], bool forced = false)
 {
     static std::mutex mu_;
     static bool initialized_(false);
@@ -760,9 +760,9 @@ void etiss_initialize(const std::vector<std::string>& args, bool forced = false)
             ("pluginToLoad,p", po::value<std::vector<std::string>>()->multitoken(), "List of plugins to be loaded.")
             ;
             std::cout << "\nLine 762\n";
-            po::command_line_parser parser(args);
+            po::command_line_parser parser{argc, argv};
             std::cout << "\nLine 764\n";
-            po::command_line_parser iniparser(args);
+            po::command_line_parser iniparser{argc, argv};
             std::cout << "\nLine 766\n";
             iniparser.options(desc).allow_unregistered().extra_parser(inifileload).run();
             std::cout << "\nLine 768\n";
@@ -893,16 +893,19 @@ void etiss_initialize(const std::vector<std::string>& args, bool forced = false)
     }
 }
 
-void etiss::initialize(std::vector<std::string>& args)
+void etiss::initialize(int argc, const char* argv[])
 {
     std::cout << "\n 1) In ETISS.cpp line 902\n";
-    etiss_initialize(args, false);
+    etiss_initialize(argc, argv, false);
+    //etiss_initialize(args, false);
 }
 
 void etiss::forceInitialization()
 {
-    std::vector<std::string> args{};
-    etiss_initialize(args, true);
+    const char *argv[]={""};
+    etiss_initialize(0, argv, true);
+    //std::vector<std::string> args{};
+    //etiss_initialize(args, true);
 }
 
 //__attribute__((destructor))
