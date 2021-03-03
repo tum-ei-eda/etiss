@@ -69,19 +69,16 @@ jobs:
         cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=../install
 
     - name: Build
-      if: matrix.config.name == 'Linux' || matrix.config.name == 'Windows'
       working-directory: ${{runner.workspace}}/build
       shell: bash
       run: cmake --build . --config $BUILD_TYPE
 
     - name: Install
-      if: matrix.config.name == 'Linux' || matrix.config.name == 'Windows'
       working-directory: ${{runner.workspace}}/build
       shell: bash
       run: cmake --build . --config $BUILD_TYPE --target install
 
     - name: Setup tests
-      if: matrix.config.name == 'Linux' || matrix.config.name == 'Windows'
       working-directory: ${{runner.workspace}}/install/examples
       run: |
         cmake -E make_directory ${{runner.workspace}}/install/examples/SW/riscv/build
@@ -131,4 +128,4 @@ jobs:
       run: |
         PATH=$PATH:/d/a/etiss/install/lib/
         VP_EXE="${{runner.workspace}}/install/examples/bare_etiss_processor/build/Debug/main.exe"
-        ${VP_EXE} --vp.elf_file=${{runner.workspace}}/install/examples/SW/riscv/build/riscv_example --arch.cpu=RISCV --jit.type=TCCJIT --etiss.loglevel=4 -pLogger
+        ${VP_EXE} --vp.elf_file=${{runner.workspace}}/install/examples/SW/riscv/build/riscv_example --arch.cpu=RISCV --jit.type=TCCJIT --etiss.loglevel=4 -pgdbserver -pLogger --plugin.gdbserver.port=2222
