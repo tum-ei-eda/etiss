@@ -62,6 +62,7 @@
 #include <boost/program_options/options_description.hpp>
 #include <boost/program_options/parsers.hpp>
 #include <boost/program_options/variables_map.hpp>
+#include <boost/version.hpp>
 
 #if ETISS_USE_DLSYM
 #include <dlfcn.h>
@@ -692,7 +693,7 @@ std::pair<std::string, std::string> inifileload(const std::string& s)
     return make_pair(std::string(), std::string());
 }
 
-void etiss_initialize(int argc, const char* argv[], bool forced = false)
+void etiss_initialize(const std::vector<std::string>& args, bool forced = false)
 {
     static std::mutex mu_;
     static bool initialized_(false);
@@ -759,10 +760,11 @@ void etiss_initialize(int argc, const char* argv[], bool forced = false)
             ("plugin.gdbserver.port", po::value<std::string>(), "Option for gdbserver")
             ("pluginToLoad,p", po::value<std::vector<std::string>>()->multitoken(), "List of plugins to be loaded.")
             ;
+            std::cout << "\nBoost version: " << BOOST_LIB_VERSION << endl;
             std::cout << "\nLine 762\n";
-            po::command_line_parser parser{argc, argv};
+            po::command_line_parser parser{args};
             std::cout << "\nLine 764\n";
-            po::command_line_parser iniparser{argc, argv};
+            po::command_line_parser iniparser{args};
             std::cout << "\nLine 766\n";
             iniparser.options(desc).allow_unregistered().extra_parser(inifileload).run();
             std::cout << "\nLine 768\n";
@@ -893,19 +895,16 @@ void etiss_initialize(int argc, const char* argv[], bool forced = false)
     }
 }
 
-void etiss::initialize(int argc, const char* argv[])
+void etiss::initialize(std::vector<std::string>& args)
 {
     std::cout << "\n 1) In ETISS.cpp line 902\n";
-    etiss_initialize(argc, argv, false);
-    //etiss_initialize(args, false);
+    etiss_initialize(args, false);
 }
 
 void etiss::forceInitialization()
 {
-    const char *argv[]={""};
-    etiss_initialize(0, argv, true);
-    //std::vector<std::string> args{};
-    //etiss_initialize(args, true);
+    std::vector<std::string> args{};
+    etiss_initialize(args, true);
 }
 
 //__attribute__((destructor))
