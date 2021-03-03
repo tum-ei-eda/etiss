@@ -29,7 +29,6 @@ jobs:
       if: matrix.config.name == 'Windows'
       shell: bash
       run: |
-        choco install boost-msvc-14.1 --version=1.67.0
         choco install wget unzip
         choco install llvm --version=11.0.0
         choco install make
