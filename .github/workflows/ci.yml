@@ -122,7 +122,7 @@ jobs:
         ./run_helper.sh ../SW/riscv/build64/riscv_example
         ./run_helper.sh ../SW/riscv_cpp/build64/riscv_example
 
-    - name: Test (Windows)
+    - name: Test (Windows) 
       if: matrix.config.name == 'Windows'
       shell: bash
       run: |
