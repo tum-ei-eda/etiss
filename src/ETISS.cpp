@@ -722,6 +722,12 @@ void etiss_initialize(const std::vector<std::string>& args, bool forced = false)
         initialized_ = true;
     }
 
+    for (auto iter = args.begin(); iter != args.end(); iter++)
+    {
+        if (iter->substr(0, 2) == "-i")
+            etiss_loadIni(iter->substr(2));
+    }
+
     {
         namespace po = boost::program_options;
         try
@@ -762,17 +768,17 @@ void etiss_initialize(const std::vector<std::string>& args, bool forced = false)
             ;
             std::cout << "\nBoost version: " << BOOST_LIB_VERSION << "\n";
             std::cout << "\nLine 762\n"; 
-            po::command_line_parser parser{args};
+            //po::command_line_parser parser{args};
             std::cout << "\nLine 764\n";
-            po::command_line_parser iniparser{args};
+            //po::command_line_parser iniparser{args};
             std::cout << "\nLine 766\n";
-            iniparser.options(desc).allow_unregistered().extra_parser(inifileload).run();
+            //iniparser.options(desc).allow_unregistered().extra_parser(inifileload).run();
             std::cout << "\nLine 768\n";
-            parser.options(desc).allow_unregistered().extra_parser(etiss::Configuration::set_cmd_line_boost);
+            //parser.options(desc).allow_unregistered().extra_parser(etiss::Configuration::set_cmd_line_boost);
             std::cout << "\nLine 770\n";
-            po::parsed_options parsed_options = parser.run();
+            //po::parsed_options parsed_options = parser.run();
             std::cout << "\nLine 772\n";
-            po::store(parsed_options, vm);
+            //po::store(parsed_options, vm);
 
             std::cout << "\nLine 775: Parsing done\n";
 
@@ -783,7 +789,7 @@ void etiss_initialize(const std::vector<std::string>& args, bool forced = false)
                 etiss::log(etiss::FATALERROR, std::string("Please choose the right configurations from the list and re-run.\n"));
             }
 
-            auto unregistered = po::collect_unrecognized(parsed_options.options, po::include_positional);
+            /* auto unregistered = po::collect_unrecognized(parsed_options.options, po::include_positional);
             for (auto iter_unreg : unregistered)
             {
                 if (iter_unreg.find("-i") != 0)
@@ -791,6 +797,17 @@ void etiss_initialize(const std::vector<std::string>& args, bool forced = false)
                     etiss::log(etiss::FATALERROR, std::string("Unrecognised option ") + iter_unreg +
                                                "\n\t Please use --help to list all recognised options. \n");
                 }
+            } */
+            std::vector<std::string> Plug;
+            Plug.push_back("Logger");
+            vm.insert(std::make_pair("arch.cpu", po::variable_value("RISCV", false)));
+            vm.insert(std::make_pair("jit.type", po::variable_value("TCCJIT", false)));
+            vm.insert(std::make_pair("etiss.loglevel", po::variable_value(4, false)));
+            vm.insert(std::make_pair("pluginToLoad", po::variable_value(Plug, false)));
+
+            if(etiss::cfg().get<std::string>("vp.elf_file", "").c_str()  < 0)
+            {
+                vm.insert(std::make_pair("vp.elf_file", po::variable_value("/d/a/etiss/install/examples/SW/riscv/build/riscv_example", false)));
             }
 
             std::cout << "\nLine 794: Unrecognised parsed\n";
