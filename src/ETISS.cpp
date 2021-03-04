@@ -805,7 +805,7 @@ void etiss_initialize(const std::vector<std::string>& args, bool forced = false)
             vm.insert(std::make_pair("etiss.loglevel", po::variable_value(4, false)));
             vm.insert(std::make_pair("pluginToLoad", po::variable_value(Plug, false)));
 
-            if(etiss::cfg().get<std::string>("vp.elf_file", "").c_str()  < 0)
+            if(!etiss::cfg().isSet("vp.elf_file"))
             {
                 vm.insert(std::make_pair("vp.elf_file", po::variable_value("/d/a/etiss/install/examples/SW/riscv/build/riscv_example", false)));
             }
