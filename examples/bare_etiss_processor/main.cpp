@@ -54,7 +54,7 @@ int main(int argc, const char *argv[])
     // ./main [-o<option> <value>] [-f[no]<flag>] [-i<additionalinifile>]
     // All arguments with this format will be evaluated by the Initializer.
     std::cout << "=== Setting up configurations ===" << std::endl;
-    std::list<std::string> iniFiles;
+    //std::list<std::string> iniFiles;
     // iniFiles.push_back("../ETISS.ini"); // will be loaded within the run.sh
     // iniFiles.push_back("additional.ini");
     std::cout << "\n 1) In main.cpp\n";
