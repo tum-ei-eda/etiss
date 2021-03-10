@@ -21,6 +21,7 @@ VAR_rom_size = DEFINED(PULPINO_ROM_SIZE) ? PULPINO_ROM_SIZE : 0x80000;
 VAR_ram_start = DEFINED(PULPINO_RAM_START) ? PULPINO_RAM_START : 0x80000;
 VAR_ram_size = DEFINED(PULPINO_RAM_SIZE) ? PULPINO_RAM_SIZE : 0x80000;
 VAR_stack_size = DEFINED(PULPINO_STACK_SIZE) ? PULPINO_STACK_SIZE : 0x1000;
+VAR_heap_size = DEFINED(PULPINO_HEAP_SIZE) ? PULPINO_HEAP_SIZE : 0x1000;
 
 MEMORY
 {
@@ -30,8 +31,11 @@ MEMORY
 
 /* Stack information variables */
 _min_stack     = VAR_stack_size;   /* minimum stack space to reserve */
+_min_heap      = VAR_heap_size;    /* minimum heap space to reserve */
 _heap_start    = _bss_end;
+_heap_end      = _stack_start;
 
+_stack_start = ORIGIN(dataram) + LENGTH(dataram);
 
 /* We have to align each sector to word boundaries as our current s19->slm
  * conversion scripts are not able to handle non-word aligned sections. */
@@ -134,14 +138,10 @@ SECTIONS
 
     /* ensure there is enough room for stack */
     .stack (NOLOAD): {
-        . = . + _stack_addptr;
         . = ALIGN(4);
-        . = . + _min_stack ;
+        . = . + _min_heap;
+        . = . + _min_stack;
         . = ALIGN(4);
-        stack = . ;
-        _stack_start   = .;
-        _heap_end      = _stack_start;
-        _stack = . ;
     } > dataram
 
     /* no data in the elf file the stack ram is included */
