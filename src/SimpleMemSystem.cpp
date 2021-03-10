@@ -61,6 +61,7 @@
 #include <memory>
 
 #define ARMv6M_DEBUG_PRINT 0
+#define MAX_MEMSEGS 99
 
 using namespace etiss;
 
@@ -111,7 +112,6 @@ etiss::int8 SimpleMemSystem::load_elf(const char *elf_file)
 
     for (auto &seg : reader.segments)
     {
-        std::unique_ptr<MemSegment> mseg;
         etiss::uint64 start_addr = seg->get_physical_address();
         etiss::uint64 size = seg->get_memory_size();
         size_t file_size = seg->get_file_size();
@@ -122,42 +122,29 @@ etiss::int8 SimpleMemSystem::load_elf(const char *elf_file)
               << "0x" << std::setw(sizeof(etiss::uint64) * 2) << start_addr << "]";
 
         bool newseg_valid = true;
-        for (const auto &mseg_it : msegs_)
+        bool mapped = false;
+
+        for (const auto &mseg_it: msegs_)
         {
-            if ((start_addr >= mseg_it->start_addr_) && (start_addr <= mseg_it->end_addr_))
+            if (mseg_it->payload_in_range(start_addr, size))
             {
                 std::stringstream msg;
-                msg << "Segment " << sname.str() << "already occupied by another segment\n";
-                etiss::log(etiss::WARNING, msg.str().c_str());
-                newseg_valid = false;
+                msg << "Found a matching memory segment at 0x" << std::hex << std::setfill('0') << std::setw(8) << start_addr << std::endl;
+                etiss::log(etiss::INFO, msg.str());
+                mseg_it->load(seg->get_data() + (mseg_it->start_addr_ - start_addr), file_size);
+                mapped = true;
                 break;
             }
         }
-        if (newseg_valid)
-        {
-            if ((start_addr >= rom_start_) && (start_addr < (rom_start_ + rom_size_)))
-            {
-                mseg = std::make_unique<MemSegment>(start_addr, size, mode, sname.str(),
-                                                    rom_mem_.data() + (start_addr - rom_start_));
-            }
-            else if ((start_addr >= ram_start_) && (start_addr < (ram_start_ + ram_size_)))
-            {
-                mseg = std::make_unique<MemSegment>(start_addr, size, mode, sname.str(),
-                                                    ram_mem_.data() + (start_addr - ram_start_));
-            }
-            else if (rom_size_ == 0 && ram_size_ == 0)
-            { // system memory is dynamically allocated during ELF load (self managed by each memory segment)
-                mseg = std::make_unique<MemSegment>(start_addr, size, mode, sname.str());
-            }
-            else
-            {
-                break;
-            }
-            if (mseg)
-            {
-                add_memsegment(std::move(mseg), seg->get_data(), file_size);
-            }
-        }
+
+        if (mapped) continue;
+
+        std::stringstream msg;
+        msg << "Found no matching memory segments at 0x" << std::hex << std::setfill('0') << std::setw(8) << start_addr << ", creating one. WARNING: this assumes the segment is defined correctly in the ELF-file!" << std::endl;
+        etiss::log(etiss::WARNING, msg.str());
+
+        auto mseg = std::make_unique<MemSegment>(start_addr, size, mode, sname.str());
+        add_memsegment(std::move(mseg), seg->get_data(), file_size);
     }
 
     // read start or rather program boot address from ELF
@@ -205,6 +192,30 @@ SimpleMemSystem::SimpleMemSystem(uint32_t rom_start, uint32_t rom_size, uint32_t
     {
         trace_file_dbus_.open(etiss::cfg().get<std::string>("etiss.output_path_prefix", "") + "dBusAccess.csv",
                               std::ios::binary);
+    }
+
+    std::stringstream ss;
+
+    for (int i = 0; i < MAX_MEMSEGS; ++i) {
+        ss << "simple_mem_system.memseg_origin_" << std::setw(2) << std::setfill('0') << i;
+        uint64_t origin = etiss::cfg().get<uint64_t>(ss.str(), -1);
+        std::stringstream().swap(ss);
+
+        ss << "simple_mem_system.memseg_length_" << std::setw(2) << std::setfill('0') << i;
+        uint64_t length = etiss::cfg().get<uint64_t>(ss.str(), -1);
+        std::stringstream().swap(ss);
+
+        if (origin != -1 && length != -1) {
+            configured_address_spaces_[origin] = length;
+
+            std::stringstream sname;
+            sname << i << " - " << std::hex << std::setfill('0')
+                << "[0x" << std::setw(sizeof(etiss::uint64) * 2) << origin + length - 1 << " - "
+                << "0x" << std::setw(sizeof(etiss::uint64) * 2) << origin << "]";
+
+            auto mseg = std::make_unique<MemSegment>(origin, length, MemSegment::READ, sname.str());
+            add_memsegment(std::move(mseg), nullptr, 0);
+        }
     }
 }
 

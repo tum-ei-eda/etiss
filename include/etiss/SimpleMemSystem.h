@@ -57,6 +57,7 @@
 #include <cstring>
 #include <iostream>
 #include <memory>
+#include <map>
 
 namespace etiss
 {
@@ -180,6 +181,8 @@ class SimpleMemSystem : public System
     int message_max_cnt;
 
     std::ofstream trace_file_dbus_;
+
+    std::map<etiss::uint64, etiss::uint64> configured_address_spaces_;
 };
 
 } // namespace etiss
