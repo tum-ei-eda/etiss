@@ -63,11 +63,17 @@ int main(int argc, const char *argv[])
     std::cout << "=== Setting up test system ===" << std::endl;
     std::cout << "  Setting up Memory" << std::endl;
 
-    etiss::SimpleMemSystem dsys(0x0, 0x80000, 0x80000, 0x80000);
-    if (dsys.load_elf(etiss::cfg().get<std::string>("vp.elf_file", "").c_str() ) < 0 ){
-      etiss::log(etiss::FATALERROR, "ELF file not loaded properly\n");
+    etiss::SimpleMemSystem dsys;
+    if (dsys.load_segments() != etiss::RETURNCODE::NOERROR) {
+        etiss::log(etiss::FATALERROR, "Error during segment load\n");
     }
-    
+
+    if (etiss::cfg().isSet("vp.elf_file")) {
+        if (dsys.load_elf(etiss::cfg().get<std::string>("vp.elf_file", "").c_str() ) != etiss::RETURNCODE::NOERROR) {
+            etiss::log(etiss::FATALERROR, "ELF file not loaded properly\n");
+        }
+    }
+
     if (false)
     {
         std::list<etiss::uint32> instructions;
@@ -92,7 +98,7 @@ int main(int argc, const char *argv[])
     // create a cpu core named core0 with the or1k architecture
     std::string CPUArchName = etiss::cfg().get<std::string>("arch.cpu", "");
 	etiss::uint64 startAddress = dsys.get_startaddr();
-	std::cout << "ELF start address: 0x" << std::hex << startAddress << std::dec << std::endl;   
+	std::cout << "ELF start address: 0x" << std::hex << startAddress << std::dec << std::endl;
     std::shared_ptr<etiss::CPUCore> cpu = etiss::CPUCore::create(CPUArchName, "core0");
     if (!cpu)
     {
@@ -104,8 +110,8 @@ int main(int argc, const char *argv[])
     cpu->setTimer(false);
 
     // reset CPU with a manual start address
-    etiss::uint64 sa = startAddress; // Where should PC pointer at beginning is
-                                     // dependent layout of boot code
+    etiss::uint64 sa = etiss::cfg().get<uint64_t>("vp.entry_point", startAddress);  // Where should PC pointer at beginning is
+                                                                                    // dependent layout of boot code
     cpu->reset(&sa);
 
     // add the virtual structure of the cpu to the VirtualStruct root. This allows
@@ -135,8 +141,8 @@ int main(int argc, const char *argv[])
     // print the exception code returned by the cpu core
     std::cout << "CPU0 exited with exception: 0x" << std::hex << exception << std::dec << ": "
               << etiss::RETURNCODE::getErrorMessages()[exception] << std::endl;
-              
-              
+
+
     switch(exception){
         case etiss::RETURNCODE::CPUFINISHED:
         case etiss::RETURNCODE::NOERROR:
