@@ -28,10 +28,6 @@ the example software:
 
 	$ make
 
-### WINDOWS SYSTEM
-
-	$ cmake --build . --config $BUILD_TYPE
-
 Finally we can build and run the simulation with the following script:
 
 	$ mkdir build && cd build
@@ -43,6 +39,16 @@ Finally we can build and run the simulation with the following script:
 
   > NOTE: This script simply adds environment variables and starts the main executable
   with ETISS.ini as parameter.
+
+### WINDOWS SYSTEM
+
+	$ cmake --build . --config $BUILD_TYPE
+
+Set the PATH variable to include files in the build/installed/lib/ folder and then run the program by passing required architecture, jit and plugins. An example is shown here. Please use --help to display all configurations supported. 
+
+	$ PATH=$PATH:X:/path/to/lib/
+	$ cd build/Debug
+	$ main --vp.elf_file=X:/path/to/build/installed/examples/SW/riscv/build/riscv_example --arch.cpu=RISCV --jit.type=TCCJIT --etiss.loglevel=4 -pLogger
 
 ## Debugging
 

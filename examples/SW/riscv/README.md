@@ -31,9 +31,6 @@ To compile the SW:
 
   ## WINDOWS SYSTEM
   	$ cmake .. -DRISCV_ELF_GCC_PREFIX=X:\path\to\toolchain -DRISCV_ELF_GCC_BASENAME=riscv64-unknown-elf -G "Unix Makefiles"
-
-If make is not set correctly add -DCMAKE_MAKE_PROGRAM=X:\path\to\gmake\bin\make.exe in the above line
-
 	$ cmake --build . --config $BUILD_TYPE
 
 ### Instruction test software
