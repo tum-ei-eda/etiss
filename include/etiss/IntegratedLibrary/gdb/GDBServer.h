@@ -126,40 +126,33 @@ class Server : public etiss::CoroutinePlugin, public etiss::TranslationPlugin, p
   public:
     Server(etiss::plugin::gdb::PacketProtocol &pp);
 
-    virtual ~Server();
+    // Plugin
+    void init(ETISS_CPU *cpu, ETISS_System *system, CPUArch *arch) override;
+    void cleanup() override;
 
-    virtual etiss::int32 preInstructionCallback();
+    // Coroutine
+    etiss::int32 execute() override; // called before block execution, check for BREAK command
 
-    virtual etiss::int32 preMemoryAccessCallback(etiss::uint64 addr, etiss::uint32 len, bool data, bool read);
+    // Translation
+    void finalizeInstrSet(etiss::instr::ModedInstructionSet &) const override;
+    void finalizeCodeBlock(etiss::CodeBlock &) const override;
+    void *getPluginHandle() override; // handle is pointer to this object
 
-    virtual etiss::int32 execute(); // called before block execution, check for BREAK command
+    /// SystemWrapper, @see GDBSystemWrapper.cpp
+    ETISS_System *wrap(ETISS_CPU *cpu, ETISS_System *system) override; // wrap for memory breakpoints
+    ETISS_System *unwrap(ETISS_CPU *cpu, ETISS_System *system) override; // undo wrapping
 
-    virtual void process(etiss::CodeBlock &block, unsigned index); // add instruction breakpoint check
+    etiss::int32 preInstructionCallback();
+    void preDReadCallback(etiss::uint64 addr);
+    void preDWriteCallback(etiss::uint64 addr);
+    etiss::int32 postMemAccessCallback(etiss::int32 exception);
 
-    virtual void finalizeInstrSet(etiss::instr::ModedInstructionSet &) const;
-
-    virtual void finalizeCodeBlock(etiss::CodeBlock &) const;
-
-    /**
-
-            @see GDBSystemWrapper.cpp
-    */
-    virtual ETISS_System *wrap(ETISS_CPU *cpu, ETISS_System *system); // wrap for memory breakpoints
-    /**
-
-            @see GDBSystemWrapper.cpp
-    */
-    virtual ETISS_System *unwrap(ETISS_CPU *cpu, ETISS_System *system); // undo wrapping
-
-    virtual void *getPluginHandle(); // handle is pointer to this object
-
-    virtual void init(ETISS_CPU *cpu, ETISS_System *system, CPUArch *arch);
-
-    virtual void cleanup();
 
   protected:
-    virtual void handlePacket(bool block);
-    virtual std::string _getPluginName() const;
+    // Plugin
+    std::string _getPluginName() const override;
+
+    void handlePacket(bool block);
 
   protected:
     etiss::plugin::gdb::PacketProtocol &con_;
