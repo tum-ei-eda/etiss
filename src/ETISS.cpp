@@ -732,8 +732,6 @@ void etiss_initialize(const std::vector<std::string>& args, bool forced = false)
         etiss::cfg().set<std::string>("arch.cpu", "RISCV");
         etiss::cfg().set<std::string>("jit.type", "TCCJIT");
         etiss::cfg().set<int>("etiss.loglevel", 4);
-        if(!etiss::cfg().isSet("vp.elf_file"))
-            etiss::cfg().set<std::string>("vp.elf_file", "/d/a/etiss/install/examples/SW/riscv/build/riscv_example");
     }
 
     /* {
@@ -856,7 +854,8 @@ void etiss_initialize(const std::vector<std::string>& args, bool forced = false)
         }
     }  */
     etiss_loadIniConfigs();
-
+    if(!etiss::cfg().isSet("vp.elf_file"))
+            etiss::cfg().set<std::string>("vp.elf_file", "/d/a/etiss/install/examples/SW/riscv/build/riscv_example");
     // log level
     {
         int ll = cfg().get<int>("etiss.loglevel", etiss::WARNING);
