@@ -59,9 +59,9 @@
 #include <fstream>
 #include <functional>
 
-#include <boost/program_options/options_description.hpp>
-#include <boost/program_options/parsers.hpp>
-#include <boost/program_options/variables_map.hpp>
+//#include <boost/program_options/options_description.hpp>
+//#include <boost/program_options/parsers.hpp>
+//#include <boost/program_options/variables_map.hpp>
 #include <boost/version.hpp>
 
 #if ETISS_USE_DLSYM
@@ -75,7 +75,7 @@ std::string etiss_defaultjit_;
 std::list<std::shared_ptr<etiss::LibraryInterface>> etiss_libraries_;
 std::recursive_mutex etiss_libraries_mu_;
 
-boost::program_options::variables_map vm;
+//boost::program_options::variables_map vm;
 std::vector<std::string> pluginOptions = {"plugin.logger.logaddr", "plugin.logger.logmask", "plugin.gdbserver.port"};
 
 std::set<std::string> etiss::listCPUArchs()
@@ -490,13 +490,13 @@ void etiss_loadIniConfigs()
             {
                 message << "    cfg already set on command line. ";
                 message << "    " << iter_key.pItem << "=";
-                const ::std::type_info& type = vm[std::string(iter_key.pItem)].value().type() ;
-                if (type == typeid(::std::string))
-                    message << vm[std::string(iter_key.pItem)].as<std::string>() << ",";
-                else if (type == typeid(int))
-                    message << vm[std::string(iter_key.pItem)].as<int>() << ",";
-                else if (type == typeid(bool))
-                    message << std::boolalpha << vm[std::string(iter_key.pItem)].as<bool>() << ",";
+                //const ::std::type_info& type = vm[std::string(iter_key.pItem)].value().type() ;
+                //if (type == typeid(::std::string))
+                   // message << vm[std::string(iter_key.pItem)].as<std::string>() << ",";
+                //else if (type == typeid(int))
+                   // message << vm[std::string(iter_key.pItem)].as<int>() << ",";
+                //else if (type == typeid(bool))
+                   // message << std::boolalpha << vm[std::string(iter_key.pItem)].as<bool>() << ",";
                 warning = true;
             }
             else
@@ -563,7 +563,8 @@ void etiss_loadIniConfigs()
 void etiss::Initializer::loadIniPlugins(std::shared_ptr<etiss::CPUCore> cpu)
 {
     std::map<std::string, std::string> options;
-    if (vm.count("pluginToLoad"))
+    cpu->addPlugin(etiss::getPlugin("Logger", options));
+    /* if (vm.count("pluginToLoad"))
     {
         const std::vector<std::string> pluginList = vm["pluginToLoad"].as<std::vector<std::string>>();
         for (auto pluginName = pluginList.begin(); pluginName != pluginList.end(); pluginName++)
@@ -591,15 +592,15 @@ void etiss::Initializer::loadIniPlugins(std::shared_ptr<etiss::CPUCore> cpu)
             etiss::log(etiss::INFO, "  Adding Plugin " + *pluginName + "\n");
             cpu->addPlugin(etiss::getPlugin(*pluginName, options));
         }
-    }
+    } */
     for (auto iter = pluginOptions.begin(); iter != pluginOptions.end(); iter++)
     {
-        if(etiss::cfg().isSet(*iter))
+        /* if(etiss::cfg().isSet(*iter))
         {
             options[*iter] = std::string(vm[std::string(*iter)].as<std::string>());
                 etiss::log(etiss::INFO, *iter + " written from command line\n" +
                             "               options[" + std::string(*iter) + "] = " + std::string(vm[std::string(*iter)].as<std::string>()) + "\n");
-        }
+        } */
     }
     if (!po_simpleIni)
     {
@@ -727,8 +728,14 @@ void etiss_initialize(const std::vector<std::string>& args, bool forced = false)
         if (iter->substr(0, 2) == "-i")
             etiss_loadIni(iter->substr(2));
     }
-
     {
+        etiss::cfg().set<std::string>("arch.cpu", "RISCV");
+        etiss::cfg().set<std::string>("jit.type", "TCCJIT");
+        etiss::cfg().set<int>("etiss.loglevel", 4);
+        etiss::cfg().set<std::string>("vp.elf_file", "/d/a/etiss/install/examples/SW/riscv/build/riscv_example");
+    }
+
+    /* {
         namespace po = boost::program_options;
         try
         {
@@ -798,7 +805,7 @@ void etiss_initialize(const std::vector<std::string>& args, bool forced = false)
                                                "\n\t Please use --help to list all recognised options. \n");
                 }
             } */
-            std::vector<std::string> Plug;
+            /* std::vector<std::string> Plug;
             Plug.push_back("Logger");
             vm.insert(std::make_pair("arch.cpu", po::variable_value("RISCV", false)));
             vm.insert(std::make_pair("jit.type", po::variable_value("TCCJIT", false)));
@@ -846,7 +853,7 @@ void etiss_initialize(const std::vector<std::string>& args, bool forced = false)
             etiss::log(etiss::FATALERROR, std::string(e.what()) +
                                                "\n\t Please use --help to list all recognised options. \n");
         }
-    }
+    }  */
     etiss_loadIniConfigs();
 
     // log level
