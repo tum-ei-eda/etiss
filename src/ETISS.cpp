@@ -515,13 +515,14 @@ void etiss_loadIniConfigs()
                     }
                     else if (std::string(iter_section.pItem) == "BoolConfigurations")
                     {
-                        etiss::cfg().set<bool>(iter_key.pItem,
-                                            po_simpleIni->GetBoolValue(iter_section.pItem, iter_key.pItem));
+                        etiss::cfg().set<bool>(iter_key.pItem, iter_value.pItem);
                     }
                     else if (std::string(iter_section.pItem) == "IntConfigurations") // already load!
                     {
-                        etiss::cfg().set<long long>(iter_key.pItem,
-                                                    po_simpleIni->GetDoubleValue(iter_section.pItem, iter_key.pItem));
+                        std::string itemval = iter_value.pItem;
+                        std::size_t sz = 0;
+                        double val = std::stod(itemval, &sz);
+                        etiss::cfg().set<long long>(iter_key.pItem, val);
                         // we use double, as long could have only 32 Bit (e.g. on Windows)
                         // and long long is not offered by the ini library
                     }
@@ -543,14 +544,7 @@ void etiss_loadIniConfigs()
                 if (values.size() > 1)
                 {
                     warning = true;
-                    if (std::string{ iter_section.pItem } == "StringConfigurations")
-                    {
                         message << "   Multi values. Take only LAST one!";
-                    }
-                    else
-                    {
-                        message << "   Multi values. Take only FIRST one!";
-                    }
                 }
             }
             // add message to etiss log.
