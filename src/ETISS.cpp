@@ -515,7 +515,10 @@ void etiss_loadIniConfigs()
                     }
                     else if (std::string(iter_section.pItem) == "BoolConfigurations")
                     {
-                        etiss::cfg().set<bool>(iter_key.pItem, iter_value.pItem);
+                        std::string itemval = iter_value.pItem;
+                        bool val;
+                        std::istringstream(itemval) >> std::boolalpha >> val;
+                        etiss::cfg().set<bool>(iter_key.pItem, val);
                     }
                     else if (std::string(iter_section.pItem) == "IntConfigurations") // already load!
                     {
