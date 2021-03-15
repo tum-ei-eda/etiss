@@ -88,17 +88,17 @@ jobs:
         cd -
         cmake -E make_directory ${{runner.workspace}}/install/examples/SW/riscv/build64
         cd SW/riscv/build64
-        cmake .. -DRISCV_ELF_GCC_PREFIX=../../../../../riscv-tc -DRISCV_ELF_GCC_BASENAME=riscv64-unknown-elf -DRISCV_ARCH=rv64gc -DRISCV_ABI=lp64d
+        cmake .. -DRISCV_ELF_GCC_PREFIX=../../../../../riscv-tc -DRISCV_ELF_GCC_BASENAME=riscv64-unknown-elf -DRISCV_ARCH=rv64gc -DRISCV_ABI=lp64d ${{matrix.config.cmakeAddCfg}}
         cmake --build . --config $BUILD_TYPE
         cd -
         cmake -E make_directory ${{runner.workspace}}/install/examples/SW/riscv_cpp/build
         cd SW/riscv_cpp/build
-        cmake .. -DRISCV_ELF_GCC_PREFIX=../../../../../riscv-tc -DRISCV_ELF_GCC_BASENAME=riscv64-unknown-elf
+        cmake .. -DRISCV_ELF_GCC_PREFIX=../../../../../riscv-tc -DRISCV_ELF_GCC_BASENAME=riscv64-unknown-elf ${{matrix.config.cmakeAddCfg}}
         cmake --build . --config $BUILD_TYPE
         cd -
         cmake -E make_directory ${{runner.workspace}}/install/examples/SW/riscv_cpp/build64
         cd SW/riscv_cpp/build64
-        cmake .. -DRISCV_ELF_GCC_PREFIX=../../../../../riscv-tc -DRISCV_ELF_GCC_BASENAME=riscv64-unknown-elf -DRISCV_ARCH=rv64gc -DRISCV_ABI=lp64d
+        cmake .. -DRISCV_ELF_GCC_PREFIX=../../../../../riscv-tc -DRISCV_ELF_GCC_BASENAME=riscv64-unknown-elf -DRISCV_ARCH=rv64gc -DRISCV_ABI=lp64d ${{matrix.config.cmakeAddCfg}}
         cmake --build . --config $BUILD_TYPE
         cd -
         cd bare_etiss_processor
