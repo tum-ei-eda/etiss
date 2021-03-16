@@ -137,7 +137,7 @@ void *GCCJIT::translate(std::string code, std::set<std::string> headerpaths, std
 
     ss.str("");
 
-    ss << "gcc -shared";
+    ss << "gcc -shared ";
     /*
     if (debug)
             ss <<"-g -dl ";
@@ -147,14 +147,16 @@ void *GCCJIT::translate(std::string code, std::set<std::string> headerpaths, std
             ss << " -L" << *iter << " ";
     }
 
-    ss << "-o " << path_ << "lib" << codefilename << ".so " << path_ << codefilename << ".o";
+    ss << " -o " << path_ << "lib" << codefilename << ".so " << path_ << codefilename << ".o ";
 
 
     for (std::set<std::string>::const_iterator iter = libraries.begin();iter != libraries.end();iter++){
             ss << " -l\"" << *iter << "\" ";
     }
 
-    ss << "-Wl";
+    if(!librarypaths.empty())
+        ss << "-Wl";
+
     for (std::set<std::string>::const_iterator iter = librarypaths.begin();iter != librarypaths.end();iter++){
             ss << ",-rpath," << *iter;
     }
