@@ -107,6 +107,8 @@ Configure the build system:
 
 Compile the package:
 
+Compile in Release mode or Debug mode by setting $BUILD_TYPE to Release or Debug appropriately.
+
 	$ cmake --build . --config $BUILD_TYPE
 
 Install the package:

@@ -61,9 +61,9 @@
 
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/algorithm/string/split.hpp>
-//#include <boost/program_options/options_description.hpp>
-//#include <boost/program_options/parsers.hpp>
-//#include <boost/program_options/variables_map.hpp>
+#include <boost/program_options/options_description.hpp>
+#include <boost/program_options/parsers.hpp>
+#include <boost/program_options/variables_map.hpp>
 
 using namespace etiss;
 
@@ -385,7 +385,7 @@ bool etiss::Configuration::isSet(std::string key)
     return cfg_.find(key) != cfg_.end();
 }
 
-/* std::pair<std::string, std::string> etiss::Configuration::set_cmd_line_boost(const std::string& s)
+std::pair<std::string, std::string> etiss::Configuration::set_cmd_line_boost(const std::string& s)
 {
     namespace po = boost::program_options;
     etiss::Configuration sobj;
@@ -438,7 +438,7 @@ bool etiss::Configuration::isSet(std::string key)
         }  
     }
     return make_pair(std::string(), std::string());
-} */
+}
 
 
 std::list<std::string> etiss::Configuration::set(const std::list<std::string> &args)
