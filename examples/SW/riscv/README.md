@@ -25,6 +25,9 @@ To compile the SW:
 	$ make
   # Otherwise:
 	$ cmake -DRISCV_ELF_GCC_PREFIX=path/to/toolchain -DRISCV_ELF_GCC_BASENAME=riscv64-unknown-elf ..
+	# for RV64...
+	$ cmake -DRISCV_ELF_GCC_PREFIX=path/to/toolchain -DRISCV_ELF_GCC_BASENAME=riscv64-unknown-elf -DRISCV_ARCH=rv64g -DRISCV_ABI=lp64d ..
+	
 	$ make
 
 ### Instruction test software
