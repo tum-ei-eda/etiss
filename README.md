@@ -81,7 +81,7 @@ Install the package:
 
 Requirements for Windows:
 
- - Install Visual Studio (2019 community edition). In the installer, the only component needed is "Desktop development with C++".
+ - Install Visual Studio (2019 community edition). In the installer, select the component "Desktop development with C++". Here, under "Optional" make sure "C++ CMake tools for Windows" is selected.
  - Install Chocolately software from https://chocolatey.org/install
 
 Packages for Windows:
