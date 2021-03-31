@@ -47,7 +47,7 @@ After SW compilation, we can build and run the simulation with the following scr
 
 Set the PATH variable to include files in the build/installed/lib/ folder and then run the program by passing required architecture, jit and plugins. An example is shown here. Please use --help to display all configurations supported. 
 
-	$ set PATH=%PATH%;X:/path/to/lib
+	$ $Env:Path="X:/path/to/lib;"+$Env:Path
 	$ cd build/$BUILD_TYPE 
   
   > NOTE: $BUILD_TYPE is either Release or Debug depending on how it was compiled.)
