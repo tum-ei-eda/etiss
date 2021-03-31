@@ -86,14 +86,17 @@ Requirements for Windows:
 
 Packages for Windows:
 
- - choco install cmake --version=3.13.3
- - choco install boost-msvc-14.1 --version=1.67.0
+ - choco install boost-msvc-14.2
  - choco install make
  - choco install git
 
+   > NOTE: If developer powershell is not used, please also install the CMake package as follows:
+
+   - choco install cmake --version=3.13.3
+
 ### Build and Installation
 
-Follow these instructions to quickly build ETISS. Start in the root directory of ETISS by creating a build directory:
+Follow these instructions to quickly build ETISS. The developer powershell of Visual Studio is recommended. Otherwise the environment PATH variable might have to be set accordingly to locate various tools. Start in the root directory of ETISS by creating a build directory:
 
 	$ mkdir build_dir
 
