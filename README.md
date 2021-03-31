@@ -36,7 +36,7 @@ ETISS is supported on x86_64 Linux and Windows hosts. Tested compilers include G
   - GCC Compiler >= 5.0
   - Boost >= 1.54
   - Graphviz + Doxygen (For documentation generation)
-  - LLVM + Clang 7 (Please download appropriate pre-built binaries from https://releases.llvm.org/download.html)
+  - LLVM + Clang 11 (Please download appropriate pre-built binaries from https://releases.llvm.org/download.html and put them in /opt/)
 
 ## LINUX SYSTEM
 
