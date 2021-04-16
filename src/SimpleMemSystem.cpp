@@ -115,7 +115,7 @@ etiss::int8 SimpleMemSystem::load_elf(const char *elf_file)
         etiss::uint64 start_addr = seg->get_physical_address();
         etiss::uint64 size = seg->get_memory_size();
         size_t file_size = seg->get_file_size();
-        MemSegment::access_t mode = (seg->get_type() & PF_W) ? MemSegment::WRITE : MemSegment::READ;
+        MemSegment::access_t mode = (seg->get_flags() & PF_W) ? MemSegment::WRITE : MemSegment::READ;
         std::stringstream sname;
         sname << seg->get_index() << " - " << std::hex << std::setfill('0') << (mode == MemSegment::WRITE ? "W" : "R")
               << "[0x" << std::setw(sizeof(etiss::uint64) * 2) << start_addr + size - 1 << " - "
