@@ -237,7 +237,7 @@ etiss::int8 SimpleMemSystem::load_elf(const char *elf_file)
             etiss::log(etiss::ERROR, msg.str());
             return -1;
         } else {
-            msg << ", creating one. WARNING: this assumes the segment is defined correctly in the ELF-file!" << std::endl;
+            msg << ", creating one. WARNING: the segment will be created with the size information present in the ELF-file, the resulting segment may be too small to fit dynamic data (cache, heap)!" << std::endl;
             etiss::log(etiss::WARNING, msg.str());
         }
 
@@ -298,14 +298,16 @@ etiss::int32 SimpleMemSystem::iread(ETISS_CPU *, etiss::uint64 addr, etiss::uint
     }
 
     std::stringstream ss;
-    ss << "Error during ibus read at address 0x" << std::hex << std::setw(8) << std::setfill('0') << " with length " << len << std::endl;
+    ss << "Error during ibus read at address 0x" << std::hex << std::setw(8) << std::setfill('0') << addr << " with length " << len << std::endl;
     etiss::log(etiss::ERROR, ss.str());
     return RETURNCODE::IBUS_READ_ERROR;
 }
 
 etiss::int32 SimpleMemSystem::iwrite(ETISS_CPU *, etiss::uint64 addr, etiss::uint8 *buf, etiss::uint32 len)
 {
-    etiss::log(etiss::VERBOSE, "Blocked instruction write ");
+    std::stringstream ss;
+    ss << "Blocked instruction bus write at address 0x" << std::hex << std::setw(8) << std::setfill('0') << addr << " with length" << len << std::endl;
+    etiss::log(etiss::VERBOSE, ss.str());
     return RETURNCODE::IBUS_WRITE_ERROR;
 }
 
