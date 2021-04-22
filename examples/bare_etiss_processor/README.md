@@ -15,17 +15,10 @@ to simulate. Target software path should be explicitly given for
 in this file (e.g. logger severity level).
 
 Check README in `../SW` to assure all prerequisites are fullfilled (e.g.
-setting up path to toolchain, getting required libraries, ...).
+setting up path to toolchain, getting required libraries, ...). You also 
+find the detailed instructrions to compile SW in respective directories
 
-After checking all prerequisites, execute the following commands to build
-the example software:
-
-	$ cd ../SW/<or1k>|<riscv>/
-	$ mkdir build && cd build
-	$ cmake ..
-	$ make
-
-Finally we can build and run the simulation with the following script:
+After SW compilation, we can build and run the simulation with the following script:
 
 	$ mkdir build && cd build
 	$ cmake ..
@@ -49,7 +42,7 @@ core when it runs target SW. The gdbserver could be enabled by configure
 options in `./ETISS.ini` with this configuration:
 
 	[Plugin gdbserver];
-		port=<port_number_you_defined>
+		plugin.gdbserver.port=<port_number_you_defined>
 		minPcAlign=<minimal_instruction_bits_alignment>
 
 The gdbserver surveilles undelying target SW, send/recieve commands

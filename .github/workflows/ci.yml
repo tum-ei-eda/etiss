@@ -10,9 +10,9 @@ jobs:
     strategy:
       matrix:
         config:
-          - {name: "Linux", os: ubuntu-latest, cmakegen: "", tc: "riscv64-unknown-elf-gcc-8.3.0-2020.04.0-x86_64-linux-ubuntu14", tc-ext: ".tar.gz", unpack: "tar xf"}
-          - {name: "Windows", os: windows-latest, cmakegen: "-G \"MinGW Makefiles\"", tc: "riscv64-unknown-elf-gcc-8.3.0-2020.04.0-x86_64-w64-mingw32", tc-ext: ".zip", unpack: "unzip"}
-          - {name: "Mac", os: macOS-latest, cmakegen: "", tc: "riscv64-unknown-elf-gcc-8.3.0-2020.04.0-x86_64-apple-darwin", tc-ext: ".tar.gz", unpack: "tar xf"}
+          - {name: "Linux", os: ubuntu-latest, cmakegen: "", llvm: "linux-gnu-ubuntu-20.04", llvm-ext: ".tar.xz", tc: "linux-ubuntu14", tc-ext: ".tar.gz", unpack: "tar xf"}
+          - {name: "Windows", os: windows-latest, cmakegen: "-G \"MinGW Makefiles\"", llvm: "", llvm-ext: "", tc: "w64-mingw32", tc-ext: ".zip", unpack: "unzip"}
+          - {name: "Mac", os: macOS-latest, cmakegen: "", llvm: "apple-darwin", llvm-ext: ".tar.xz", tc: "apple-darwin", tc-ext: ".tar.gz", unpack: "tar xf"}
 
     runs-on: ${{ matrix.config.os }}
     name: ${{ matrix.config.name }}
@@ -31,19 +31,31 @@ jobs:
       run: |
         choco install boost-msvc-14.1 --version=1.67.0
         choco install wget unzip
+        choco install llvm --version=11.0.0
 
     - name: Requirements (Mac)
       if: matrix.config.name == 'Mac'
       run: |
         brew install boost coreutils
 
+    - name: Requirements (Linux/Mac)
+      if: matrix.config.name == 'Linux' || matrix.config.name == 'Mac'
+      working-directory: ${{runner.workspace}}
+      shell: bash
+      run: |
+        LLVM_NAME="clang+llvm-11.0.0-x86_64-${{ matrix.config.llvm }}"
+        wget https://github.com/llvm/llvm-project/releases/download/llvmorg-11.0.0/$LLVM_NAME${{ matrix.config.llvm-ext }}
+        ${{ matrix.config.unpack }} $LLVM_NAME${{ matrix.config.llvm-ext }}
+        mv $LLVM_NAME llvm-lib
+
     - name: Requirements
       shell: bash
       working-directory: ${{runner.workspace}}
       run: |
-        wget https://static.dev.sifive.com/dev-tools/${{ matrix.config.tc }}${{ matrix.config.tc-ext }}
-        ${{ matrix.config.unpack }} ${{ matrix.config.tc }}${{ matrix.config.tc-ext }}
-        mv ${{ matrix.config.tc }} riscv-tc
+        TC_NAME="riscv64-unknown-elf-gcc-8.3.0-2020.04.0-x86_64-${{ matrix.config.tc }}"
+        wget https://static.dev.sifive.com/dev-tools/$TC_NAME${{ matrix.config.tc-ext }}
+        ${{ matrix.config.unpack }} $TC_NAME${{ matrix.config.tc-ext }}
+        mv $TC_NAME riscv-tc
 
     - name: Create Build Environment
       run: cmake -E make_directory ${{runner.workspace}}/build
@@ -51,7 +63,9 @@ jobs:
     - name: Configure CMake
       shell: bash
       working-directory: ${{runner.workspace}}/build
-      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_INSTALL_PREFIX=../install
+      run: |
+        export LLVM_DIR=${{runner.workspace}}/llvm-lib
+        cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_INSTALL_PREFIX=../install
 
     - name: Build
       working-directory: ${{runner.workspace}}/build
@@ -71,9 +85,19 @@ jobs:
         cmake .. -DRISCV_ELF_GCC_PREFIX=../../../../../riscv-tc -DRISCV_ELF_GCC_BASENAME=riscv64-unknown-elf
         cmake --build . --config $BUILD_TYPE
         cd -
+        cmake -E make_directory ${{runner.workspace}}/install/examples/SW/riscv/build64
+        cd SW/riscv/build64
+        cmake .. -DRISCV_ELF_GCC_PREFIX=../../../../../riscv-tc -DRISCV_ELF_GCC_BASENAME=riscv64-unknown-elf -DRISCV_ARCH=rv64gc -DRISCV_ABI=lp64d
+        cmake --build . --config $BUILD_TYPE
+        cd -
         cmake -E make_directory ${{runner.workspace}}/install/examples/SW/riscv_cpp/build
         cd SW/riscv_cpp/build
         cmake .. -DRISCV_ELF_GCC_PREFIX=../../../../../riscv-tc -DRISCV_ELF_GCC_BASENAME=riscv64-unknown-elf
+        cmake --build . --config $BUILD_TYPE
+        cd -
+        cmake -E make_directory ${{runner.workspace}}/install/examples/SW/riscv_cpp/build64
+        cd SW/riscv_cpp/build64
+        cmake .. -DRISCV_ELF_GCC_PREFIX=../../../../../riscv-tc -DRISCV_ELF_GCC_BASENAME=riscv64-unknown-elf -DRISCV_ARCH=rv64gc -DRISCV_ABI=lp64d
         cmake --build . --config $BUILD_TYPE
         cd -
         cd bare_etiss_processor
@@ -84,10 +108,15 @@ jobs:
 
     - name: Test (Linux/Mac)
       working-directory: ${{runner.workspace}}/install/examples/bare_etiss_processor
-      if: matrix.config.name == 'Linux' || matrix.config.name == 'Mac'
+      #if: matrix.config.name == 'Linux' || matrix.config.name == 'Mac'
+      if: matrix.config.name == 'Linux'
       shell: bash
       run: |
         ./run_helper.sh ../SW/riscv/build/riscv_example
         ./run_helper.sh ../SW/riscv/build/riscv_example gcc
+        ./run_helper.sh ../SW/riscv/build/riscv_example llvm
         ./run_helper.sh ../SW/riscv_cpp/build/riscv_example
         ./run_helper.sh ../SW/riscv_cpp/build/riscv_example gcc
+        ./run_helper.sh ../SW/riscv_cpp/build/riscv_example llvm
+        ./run_helper.sh ../SW/riscv/build64/riscv_example
+        ./run_helper.sh ../SW/riscv_cpp/build64/riscv_example

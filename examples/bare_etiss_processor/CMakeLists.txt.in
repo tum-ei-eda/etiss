@@ -22,3 +22,27 @@ add_executable(main main.cpp)
 #link required libraries
 #not python libraries may not be found and this could lead to problems if ETISS was configure to use python.
 target_link_libraries(main ${ETISS_LIBRARIES})
+
+IF(PULPINO_ROM_START)
+    add_compile_definitions(ROM_START=${PULPINO_ROM_START})
+ELSE()
+    add_compile_definitions(ROM_START=0x0)
+ENDIF()
+
+IF(PULPINO_ROM_SIZE)
+    add_compile_definitions(ROM_SIZE=${PULPINO_ROM_SIZE})
+ELSE()
+    add_compile_definitions(ROM_SIZE=0x80000)
+ENDIF()
+
+IF(PULPINO_RAM_START)
+    add_compile_definitions(RAM_START=${PULPINO_RAM_START})
+ELSE()
+    add_compile_definitions(RAM_START=0x80000)
+ENDIF()
+
+IF(PULPINO_RAM_SIZE)
+    add_compile_definitions(RAM_SIZE=${PULPINO_RAM_SIZE})
+ELSE()
+    add_compile_definitions(RAM_SIZE=0x80000)
+ENDIF()

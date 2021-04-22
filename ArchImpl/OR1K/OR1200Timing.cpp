@@ -72,7 +72,7 @@ etiss::Plugin *getOR1200Timing(etiss::Configuration &cfg)
     );
 
     // ther are additional cycles pre instruction due to stalls (cache, bus etc.)
-    int ifStallCycles = cfg.get<int>("ifStallCycles", 0);
+    int ifStallCycles = cfg.get<int>("arch.or1k.if_stall_cycles", 0);
     if (ifStallCycles > 0)
     {
         std::string code = std::string("cpu->cpuTime_ps += ") + etiss::toString(ifStallCycles) +

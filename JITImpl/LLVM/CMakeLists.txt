@@ -37,14 +37,25 @@
 PROJECT(LLVMJIT)
 
 IF(NOT DEFINED ENV{LLVM_DIR})
-    SET(ENV{LLVM_DIR} "/opt/clang+llvm-7.0.1-x86_64-linux-gnu-ubuntu-18.04")
+    SET(ENV{LLVM_DIR} "/opt/clang+llvm-11.0.0-x86_64-linux-gnu-ubuntu-20.04")
 ENDIF()
 
-FIND_PACKAGE(LLVM 7 CONFIG)
+IF(NOT DEFINED ENV{Clang_DIR})
+    SET(ENV{Clang_DIR} $ENV{LLVM_DIR})
+ENDIF()
+
+
+FIND_PACKAGE(LLVM 11 CONFIG)
+FIND_PACKAGE(Clang CONFIG)
+
+OPTION(ETISS_LINK_CLANG_DYLIB "Link against the clang dynamic library" ${CLANG_LINK_CLANG_DYLIB})
+OPTION(ETISS_LINK_LLVM_DYLIB "Link against the llvm dynamic library" ${LLVM_LINK_LLVM_DYLIB})
 
 IF(LLVM_FOUND)
     MESSAGE("Using LLVM_DIR: ${LLVM_DIR}")
     MESSAGE("LLVM Version: ${LLVM_VERSION}")
+    MESSAGE("Clang DYLIB Link: ${ETISS_LINK_CLANG_DYLIB}")
+    MESSAGE("LLVM DYLIB Link: ${ETISS_LINK_LLVM_DYLIB}")
 
     LINK_DIRECTORIES(${LLVM_LIBRARY_DIRS})
     ADD_DEFINITIONS(${LLVM_DEFINITIONS})
@@ -61,6 +72,7 @@ IF(LLVM_FOUND)
         ExecutionEngine
         Target
         MCJIT
+        orcjit
         X86CodeGen
         X86AsmParser
         Interpreter
@@ -84,21 +96,30 @@ IF(LLVM_FOUND)
         src/LLVMJIT.cpp
     )
     ETISSPlugin(${PROJECT_NAME})
-    TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC
-        -Wl,--start-group
-        ${LLVM_LIBS}
-        clangFrontend
-        clangCodeGen
-        clangLex
-        clangSerialization
-        clangAST
-        clangBasic
-        clangSema
-        clangEdit
-        clangAnalysis
-        clangDriver
-        clangParse
-        -Wl,--end-group
-    )
+
+    if(ETISS_LINK_CLANG_DYLIB)
+        TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC clang-cpp)
+    else()
+        TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC
+            clangCodeGen
+            clangFrontend
+            clangSerialization
+            clangDriver
+            clangParse
+            clangSema
+            clangAnalysis
+            clangEdit
+            clangAST
+            clangLex
+            clangBasic
+        )
+    endif()
+
+    if(ETISS_LINK_LLVM_DYLIB)
+        TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC LLVM)
+    else()
+        TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC ${LLVM_LIBS})
+    endif()
+
     TARGET_INCLUDE_DIRECTORIES(${PROJECT_NAME} PUBLIC include ${LLVM_INCLUDE_DIRS})
 ENDIF()

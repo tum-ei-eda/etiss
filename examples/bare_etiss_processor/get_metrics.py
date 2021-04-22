@@ -21,11 +21,6 @@ Then run this script:
 '''
 
 
-RAM_START = 0x100000
-RAM_SIZE = 0x200000
-STACK_SIZE = 0x4000
-
-
 class MemRange:
     def __init__(self, name, min, max):
         self.name = name
@@ -71,6 +66,9 @@ def parseElf(inFile):
     with open(inFile, "rb") as f:
         e = elffile.ELFFile(f)
 
+        ramStart = e.get_segment(1)['p_paddr']
+        ramSize = e.get_segment(1)['p_memsz']
+
         for s in e.iter_sections():
             if s.name.startswith(".text"):
                 m["rom_code"] += s.data_size
@@ -99,10 +97,12 @@ def parseElf(inFile):
                 for sym in s.iter_symbols():
                     if sym.name == "_heap_start":
                         heapStart = sym["st_value"]
+                    elif sym.name == "_min_stack":
+                        stackSize = sym["st_value"]
             else:
                 print("warning: ignored: " + s.name + " / size: " + str(s.data_size))
 
-    return m, heapStart
+    return m, ramStart, ramSize, heapStart, stackSize
 
 
 def printSz(sz):
@@ -115,16 +115,15 @@ if __name__ == "__main__":
         exit(1)
 
     elfFile = sys.argv[1]
-    staticSizes, heapStart = parseElf(elfFile)
+    staticSizes, ramStart, ramSize, heapStart, stackSize = parseElf(elfFile)
     if not heapStart:
         raise RuntimeError("did not find heap start")
 
-    heapStart = heapStart - RAM_START
     print("heap starts at: " + hex(heapStart))
 
-    d = MemRange("Data", 0, heapStart)
-    h = MemRange("Heap", heapStart, RAM_SIZE - STACK_SIZE)
-    s = MemRange("Stack", RAM_SIZE - STACK_SIZE, RAM_SIZE)
+    d = MemRange("Data", ramStart, heapStart)
+    h = MemRange("Heap", heapStart, ramStart + ramSize - stackSize)
+    s = MemRange("Stack", ramStart + ramSize - stackSize, ramStart + ramSize)
     mems = [d, h, s]
 
     traceFile = sys.argv[2] if len(sys.argv) > 2 else "dBusAccess.csv"

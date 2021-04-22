@@ -74,7 +74,7 @@ class Logger : public etiss::SystemWrapperPlugin
                         unsigned len); // called whenever a write(or read) occured to logger address
 
   protected:
-    inline virtual std::string _getPluginName() const { return std::string("Logger @") + etiss::toString(addr); }
+    inline virtual std::string _getPluginName() const { return std::string("Logger"); }
 
   private:
     uint64_t addr;

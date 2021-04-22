@@ -78,19 +78,17 @@ class RISCVGDBCore : public etiss::plugin::gdb::GDBCore
             ss << "R" << index;
             return ss.str();
         }
-        switch (index)
+        else if (index == 32)
         {
-        case 32:
             return "instructionPointer";
-            /**************************************************************************
-             *   Further register should be added here to send data over gdbserver	  *
-             ***************************************************************************/
         }
-        if (index > 64)
+        else if (index <= 64)
         {
-            std::stringstream ss;
-            ss << "CSR" << index - 65;
-            return ss.str();
+            return "F" + std::to_string(index - 33);
+        }
+        else if (index <= 0xffff)
+        {
+            return "CSR" + std::to_string(index - 65);
         }
         return "";
     }

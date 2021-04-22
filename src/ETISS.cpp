@@ -75,6 +75,7 @@ std::list<std::shared_ptr<etiss::LibraryInterface>> etiss_libraries_;
 std::recursive_mutex etiss_libraries_mu_;
 
 boost::program_options::variables_map vm;
+std::vector<std::string> pluginOptions = {"plugin.logger.logaddr", "plugin.logger.logmask", "plugin.gdbserver.port"};
 
 std::set<std::string> etiss::listCPUArchs()
 {
@@ -283,7 +284,7 @@ std::shared_ptr<Plugin> etiss::getPlugin(std::string name, std::map<std::string,
                                 ptrPlugin = std::shared_ptr<Plugin>(ca, [lib](Plugin *p) { lib->deletePlugin(p); });
                                 strPluginName = lib->getName();
                                 etiss::log(etiss::INFO, "Plugin \"" + name + "\" loaded via library interface \"" +
-                                                            strPluginName + "\"");
+                                                            strPluginName + "\"\n");
                             }
                         }
                         break;
@@ -375,15 +376,6 @@ void etiss_SIGINT_handler(int sig)
         return;
     }
 }
-//__attribute__((constructor))
-static void etiss_initialize_SIGINT()
-{
-    if (!etiss_SIGINT_handler_enabled)
-    {
-        etiss_prev_SIGINT_handler = signal(SIGINT, etiss_SIGINT_handler);
-        etiss_SIGINT_handler_enabled = true;
-    }
-}
 
 //__attribute__((destructor))
 static void etiss_remove_SIGINT()
@@ -414,6 +406,8 @@ void etiss_loadIni(std::string fileName)
         std::cout << "Initializer::loadIni(): Failed to load Ini: " << fileName << std::endl;
         return;
     }
+        else
+        std::cout << "Initializer::loadIni(): Ini sucessfully loaded " << fileName << std::endl;
 }
 
 void etiss::Initializer::loadIni(std::list<std::string> *files)
@@ -428,8 +422,13 @@ void etiss::Initializer::loadIni(std::list<std::string> *files)
     // load file
     for (auto it_files : *files)
     {
+ // the check above is sufficient no need for this / checked for previous cases false and last true gives true not the case based on files structure
         etiss_loadIni(it_files);
+
     }
+
+
+
 }
 
 void etiss_loadIniConfigs()
@@ -441,9 +440,9 @@ void etiss_loadIniConfigs()
     std::cout << "  Load Configs from .ini files:" << std::endl;
 
     // preload loglevel
-    etiss::cfg().set<int>("loglevel", po_simpleIni->GetLongValue("IntConfigurations", "loglevel", etiss::WARNING));
+    etiss::cfg().set<int>("etiss.loglevel", po_simpleIni->GetLongValue("IntConfigurations", "etiss.loglevel", etiss::WARNING));
     {
-        int ll = cfg().get<int>("loglevel", etiss::WARNING);
+        int ll = cfg().get<int>("etiss.loglevel", etiss::WARNING);
         if (ll >= 0 && ll <= etiss::VERBOSE)
         { // valid log level
           // dnm
@@ -482,7 +481,7 @@ void etiss_loadIniConfigs()
             bool warning = false;
 
             // skip loglevel
-            if (std::string(iter_key.pItem) == "loglevel")
+            if (std::string(iter_key.pItem) == "etiss.loglevel")
                 continue;
 
             // check if cfg is already set
@@ -516,13 +515,17 @@ void etiss_loadIniConfigs()
                     }
                     else if (std::string(iter_section.pItem) == "BoolConfigurations")
                     {
-                        etiss::cfg().set<bool>(iter_key.pItem,
-                                            po_simpleIni->GetBoolValue(iter_section.pItem, iter_key.pItem));
+                        std::string itemval = iter_value.pItem;
+                        bool val;
+                        std::istringstream(itemval) >> std::boolalpha >> val;
+                        etiss::cfg().set<bool>(iter_key.pItem, val);
                     }
                     else if (std::string(iter_section.pItem) == "IntConfigurations") // already load!
                     {
-                        etiss::cfg().set<long long>(iter_key.pItem,
-                                                    po_simpleIni->GetDoubleValue(iter_section.pItem, iter_key.pItem));
+                        std::string itemval = iter_value.pItem;
+                        std::size_t sz = 0;
+                        double val = std::stod(itemval, &sz);
+                        etiss::cfg().set<long long>(iter_key.pItem, val);
                         // we use double, as long could have only 32 Bit (e.g. on Windows)
                         // and long long is not offered by the ini library
                     }
@@ -544,14 +547,7 @@ void etiss_loadIniConfigs()
                 if (values.size() > 1)
                 {
                     warning = true;
-                    if (std::string{ iter_section.pItem } == "StringConfigurations")
-                    {
                         message << "   Multi values. Take only LAST one!";
-                    }
-                    else
-                    {
-                        message << "   Multi values. Take only FIRST one!";
-                    }
                 }
             }
             // add message to etiss log.
@@ -560,13 +556,47 @@ void etiss_loadIniConfigs()
     }
 }
 
-static bool set_cmd_check(std::string cmdlineoption)
-{
-    return (vm.find(cmdlineoption) != vm.end());
-}
-
 void etiss::Initializer::loadIniPlugins(std::shared_ptr<etiss::CPUCore> cpu)
 {
+    std::map<std::string, std::string> options;
+    if (vm.count("pluginToLoad"))
+    {
+        const std::vector<std::string> pluginList = vm["pluginToLoad"].as<std::vector<std::string>>();
+        for (auto pluginName = pluginList.begin(); pluginName != pluginList.end(); pluginName++)
+        {
+            std::string::size_type pos = std::string(*pluginName).length();
+            bool pluginAlreadyPresent = false;
+            for (auto iter : *cpu->getPlugins())
+            {
+                std::string pluginNamecpu = iter->getPluginName();
+                if (pos != std::string::npos)
+                {
+                    pluginNamecpu = pluginNamecpu.substr(0, pos);
+                }
+                if (pluginNamecpu == *pluginName)
+                {
+                    pluginAlreadyPresent = true;
+                    break;
+                }
+            }
+            if (pluginAlreadyPresent)
+            {
+                etiss::log(etiss::WARNING, "    Warning: Plugin already present. Skipping it: " + *pluginName + "\n");
+                continue;
+            }
+            etiss::log(etiss::INFO, "  Adding Plugin " + *pluginName + "\n");
+            cpu->addPlugin(etiss::getPlugin(*pluginName, options));
+        }
+    }
+    for (auto iter = pluginOptions.begin(); iter != pluginOptions.end(); iter++)
+    {
+        if(etiss::cfg().isSet(*iter))
+        {
+            options[*iter] = std::string(vm[std::string(*iter)].as<std::string>());
+                etiss::log(etiss::INFO, *iter + " written from command line\n" +
+                            "               options[" + std::string(*iter) + "] = " + std::string(vm[std::string(*iter)].as<std::string>()) + "\n");
+        }
+    }
     if (!po_simpleIni)
     {
         etiss::log(etiss::WARNING, "Ini file not loaded. Can't load plugins from simpleIni!");
@@ -581,12 +611,17 @@ void etiss::Initializer::loadIniPlugins(std::shared_ptr<etiss::CPUCore> cpu)
         if (std::string(iter_section.pItem).substr(0, 6) != std::string("Plugin"))
             continue;
         std::string pluginName = std::string(iter_section.pItem).substr(7);
-
+        std::string::size_type pos = pluginName.length();
         // check if Plugin is already present
         bool pluginAlreadyPresent = false;
         for (auto iter : *cpu->getPlugins())
         {
-            if (iter->getPluginName() == pluginName)
+            std::string pluginNamecpu = iter->getPluginName();
+            if (pos != std::string::npos)
+            {
+                pluginNamecpu = pluginNamecpu.substr(0, pos);
+            }
+            if (pluginNamecpu == pluginName)
             {
                 pluginAlreadyPresent = true;
                 break;
@@ -594,12 +629,11 @@ void etiss::Initializer::loadIniPlugins(std::shared_ptr<etiss::CPUCore> cpu)
         }
         if (pluginAlreadyPresent)
         {
-            etiss::log(etiss::WARNING, "    Warning: Plugin already present. Skipping it: " + pluginName);
+            etiss::log(etiss::WARNING, "    Warning: Plugin already present. Skipping it: " + pluginName + "\n");
             continue;
         }
 
-        etiss::log(etiss::INFO, "  Adding Plugin " + pluginName + "\n\n");
-        std::map<std::string, std::string> options;
+        etiss::log(etiss::INFO, "  Adding Plugin " + pluginName + "\n");
 
         // get all keys in a section = plugin option
         CSimpleIniA::TNamesDepend keys;
@@ -609,18 +643,9 @@ void etiss::Initializer::loadIniPlugins(std::shared_ptr<etiss::CPUCore> cpu)
             // get all values of a key with multiple values = value of option
             CSimpleIniA::TNamesDepend values;
             po_simpleIni->GetAllValues(iter_section.pItem, iter_key.pItem, values);
-            bool cmdcheck;
-            cmdcheck = set_cmd_check(std::string(iter_key.pItem));
-            if (cmdcheck)
+            if (!etiss::cfg().isSet(iter_key.pItem))
             {
-                options[iter_key.pItem] = std::string(vm[std::string(iter_key.pItem)].as<std::string>());
-                std::cout << iter_section.pItem << "::" << iter_key.pItem << " written from command line.\n";
-                etiss::log(etiss::INFO,
-                            "    options[" + std::string(iter_key.pItem) + "] = " + std::string(vm[std::string(iter_key.pItem)].as<std::string>()) + "\n\n");
-            }
-            else
-            {
-                std::cout << iter_section.pItem << "::" << iter_key.pItem << " not set on the command line. Checking in .ini file.\n";
+                std::cout << iter_key.pItem << " not set on the command line. Checking in .ini file.\n";
                 for (auto iter_value : values)
                 {
                     options[iter_key.pItem] = iter_value.pItem;
@@ -630,7 +655,6 @@ void etiss::Initializer::loadIniPlugins(std::shared_ptr<etiss::CPUCore> cpu)
                 // check if more than one value is set in the ini file
                 if (values.size() > 1)
                     etiss::log(etiss::WARNING, "Multi values for option. Took only last one!");
-
             }
         }
         cpu->addPlugin(etiss::getPlugin(pluginName, options));
@@ -639,53 +663,19 @@ void etiss::Initializer::loadIniPlugins(std::shared_ptr<etiss::CPUCore> cpu)
 
 void etiss::Initializer::loadIniJIT(std::shared_ptr<etiss::CPUCore> cpu)
 {
-    if (!po_simpleIni)
+    // check if JIT is set
+    if (!etiss::cfg().isSet("jit.type"))
     {
-        etiss::log(etiss::WARNING, "Ini file not loaded. Can't load JIT from simpleIni!");
+        etiss::log(etiss::INFO, "No JIT configured. Will use default JIT. \n");
         return;
     }
-
-    // get all sections
-    CSimpleIniA::TNamesDepend sections;
-    po_simpleIni->GetAllSections(sections);
-    for (auto iter_section : sections)
+    if (cpu->getJITName() != "")
     {
-        // only load JIT sections
-        if (std::string(iter_section.pItem).substr(0, 3) != std::string("JIT"))
-            continue;
-
-        // check if JIT is already present
-        if (cpu->getJITName() != "")
-        {
-            etiss::log(etiss::WARNING,
-                       "etiss::Initializer::loadIniJIT:" + std::string(" JIT already present. Overwriting it."));
-        }
-
-        // get all keys in a section = plugin option
-        CSimpleIniA::TNamesDepend keys;
-        po_simpleIni->GetAllKeys(iter_section.pItem, keys);
-        for (auto iter_key : keys)
-        {
-            if (std::string(iter_key.pItem) == "type")
-            {
-                // get all values of a key with multiple values = value of option
-                CSimpleIniA::TNamesDepend values;
-                std::string jitName = po_simpleIni->GetValue(iter_section.pItem, iter_key.pItem);
-
-                // check if more than one value is set in the ini file
-                if (values.size() > 1)
-                    etiss::log(etiss::WARNING, "etiss::Initializer::loadIniJIT:" +
-                                                   std::string(" Multi values for option. Took only first one!"));
-
-                etiss::log(etiss::INFO, " Adding JIT \"" + std::string(jitName) + '\"');
-                cpu->set(getJIT(jitName));
-            }
-            else
-            {
-                etiss::log(etiss::WARNING, "option " + std::string(iter_key.pItem) + " unknown");
-            }
-        }
+        etiss::log(etiss::WARNING,
+                    "etiss::Initializer::loadIniJIT:" + std::string(" JIT already present. Overwriting it."));
     }
+    etiss::log(etiss::INFO, " Adding JIT \"" + cfg().get<std::string>("jit.type", "") + '\"');
+    cpu->set(getJIT(cfg().get<std::string>("jit.type", "")));
 }
 
 std::pair<std::string, std::string> inifileload(const std::string& s)
@@ -695,12 +685,11 @@ std::pair<std::string, std::string> inifileload(const std::string& s)
         std::string inifile;
         inifile = s.substr(2);
         etiss_loadIni(inifile);
-        return make_pair(std::string(), std::string());
     }
     return make_pair(std::string(), std::string());
 }
 
-void etiss_initialize(int argc, const char* argv[], bool forced = false)
+void etiss_initialize(const std::vector<std::string>& args, bool forced = false)
 {
     static std::mutex mu_;
     static bool initialized_(false);
@@ -728,48 +717,52 @@ void etiss_initialize(int argc, const char* argv[], bool forced = false)
         }
         initialized_ = true;
     }
-    
+
     {
         namespace po = boost::program_options;
-        try 
+        try
         {
             po::options_description desc("Allowed options");
             desc.add_options()
             ("help", "Produce a help message that lists all supported options.")
-            ("ignore_sr_iee", po::value<bool>(), "Ignore exception on OpenRISC. [bool]")
-            ("cleanup", po::value<bool>(), "Cleans up temporary files in GCCJIT. ")
-            ("verifyJIT", po::value<bool>(), "Run some basic checks to verify the functionality of the JIT engine.")
-            ("jit-debug", po::value<bool>(), "Causes the JIT Engines to compile in debug mode.")
-            ("ETISS::enable_dmi", po::value<bool>(), "Enables the Direct Memory Interface feature of SystemC to speed up memory accesses. This needs to be disabled for memory tracing.")
-            ("ETISS::log_pc", po::value<bool>(), "Enables logging of the program counter.")
-            ("logaddr", po::value<std::string>(), "Provides the compare address that is used to check for memory accesses that are redirected to the logger.")
-            ("logmask", po::value<std::string>(), "Provides the mask that is used to check for memory accesses that are redirected to the logger.")
-            ("ifStallCycles", po::value<int>(), "Add instruction stall cycles on OpenRISC.")
-            ("Translation::MaxBlockSize", po::value<int>(), "Sets maximum amount of instructions in a block.")
-            ("Arch::cpuCycleTime_ps", po::value<int>(), "Sets CPU cycles time on OpenRISC and ARM.")
-            ("ETISS::outputPathPrefix", po::value<std::string>(), "Path prefix to use when writing output files.")
-            ("sw_binary_ram", po::value<std::string>(), "Path to binary file to be loaded into RAM.")
-            ("sw_binary_rom", po::value<std::string>(), "Path to binary file to be loaded into ROM.")
-            ("logLevel", po::value<int>(), "Verbosity of logging output.")
-            ("DebugSystem::printDbusAccess", po::value<bool>(), "Traces accesses to the data bus.")
-            ("DebugSystem::printIbusAccess", po::value<bool>(), "Traces accesses to the instruction bus.")
-            ("DebugSystem::printDbgbusAccess", po::value<bool>(), "Traces accesses to the debug bus.")
-            ("DebugSystem::printToFile", po::value<bool>(), "Write all tracing to a file instead of the terminal. The file will be located at ETISS::outputPathPrefix.")
-            ("CPUArch", po::value<std::string>(), "The CPU Architecture to simulate.")
-            ("JIT-External::Headers", po::value<std::string>(), "List of semicolon-separated paths to headers for the JIT to include.")
-            ("JIT-External::Libs", po::value<std::string>(), "List of semicolon-separated library names for the JIT to link.")
-            ("JIT-External::HeaderPaths", po::value<std::string>(), "List of semicolon-separated headers paths for the JIT.")
-            ("JIT-External::LibPaths", po::value<std::string>(), "List of semicolon-separated library paths for the JIT.")
+            ("arch.cpu", po::value<std::string>(), "The CPU Architecture to simulate.")
+            ("arch.or1k.ignore_sr_iee", po::value<bool>(), "Ignore exception on OpenRISC.")
+            ("arch.or1k.if_stall_cycles", po::value<int>(), "Add instruction stall cycles on OpenRISC.")
+            ("arch.cpu_cycle_time_ps", po::value<int>(), "Sets CPU cycles time on OpenRISC and ARM.")
+            ("etiss.enable_dmi", po::value<bool>(), "Enables the Direct Memory Interface feature of SystemC to speed up memory accesses. This needs to be disabled for memory tracing.")
+            ("etiss.log_pc", po::value<bool>(), "Enables logging of the program counter.")
+            ("etiss.max_block_size", po::value<int>(), "Sets maximum amount of instructions in a block.")
+            ("etiss.output_path_prefix", po::value<std::string>(), "Path prefix to use when writing output files.")
+            ("etiss.loglevel", po::value<int>(), "Verbosity of logging output.")
+            ("jit.gcc.cleanup", po::value<bool>(), "Cleans up temporary files in GCCJIT. ")
+            ("jit.verify", po::value<bool>(), "Run some basic checks to verify the functionality of the JIT engine.")
+            ("jit.debug", po::value<bool>(), "Causes the JIT Engines to compile in debug mode.")
+            ("jit.type", po::value<std::string>(), "The JIT compiler to use.")
+            ("jit.external_headers", po::value<std::string>(), "List of semicolon-separated paths to headers for the JIT to include.")
+            ("jit.external_libs", po::value<std::string>(), "List of semicolon-separated library names for the JIT to link.")
+            ("jit.external_header_paths", po::value<std::string>(), "List of semicolon-separated headers paths for the JIT.")
+            ("jit.external_lib_paths", po::value<std::string>(), "List of semicolon-separated library paths for the JIT.")
+            ("vp.sw_binary_ram", po::value<std::string>(), "Path to binary file to be loaded into RAM.")
+            ("vp.sw_binary_rom", po::value<std::string>(), "Path to binary file to be loaded into ROM.")
+            ("vp.elf_file", po::value<std::string>(), "Load ELF file.")
+            ("simple_mem_system.print_dbus_access", po::value<bool>(), "Traces accesses to the data bus.")
+            ("simple_mem_system.print_ibus_access", po::value<bool>(), "Traces accesses to the instruction bus.")
+            ("simple_mem_system.print_dbgbus_access", po::value<bool>(), "Traces accesses to the debug bus.")
+            ("simple_mem_system.print_to_file", po::value<bool>(), "Write all tracing to a file instead of the terminal. The file will be located at etiss.output_path_prefix.")
+            ("plugin.logger.logaddr", po::value<std::string>(), "Provides the compare address that is used to check for memory accesses that are redirected to the logger.")
+            ("plugin.logger.logmask", po::value<std::string>(), "Provides the mask that is used to check for memory accesses that are redirected to the logger.")
+            ("plugin.gdbserver.port", po::value<std::string>(), "Option for gdbserver")
+            ("pluginToLoad,p", po::value<std::vector<std::string>>()->multitoken(), "List of plugins to be loaded.")
             ;
 
-            po::command_line_parser parser{argc, argv};
-            po::command_line_parser iniparser{argc, argv};
+            po::command_line_parser parser{args};
+            po::command_line_parser iniparser{args};
             iniparser.options(desc).allow_unregistered().extra_parser(inifileload).run();
             parser.options(desc).allow_unregistered().extra_parser(etiss::Configuration::set_cmd_line_boost);
             po::parsed_options parsed_options = parser.run();
             po::store(parsed_options, vm);
 
-            if (vm.count("help")) 
+            if (vm.count("help"))
             {
                 std::cout << "\nPlease begin all options with --\n\n";
                 std::cout << desc << "\n";
@@ -779,7 +772,7 @@ void etiss_initialize(int argc, const char* argv[], bool forced = false)
             auto unregistered = po::collect_unrecognized(parsed_options.options, po::include_positional);
             for (auto iter_unreg : unregistered)
             {
-                if (iter_unreg.find("-i") != 0 )
+                if (iter_unreg.find("-i") != 0 && iter_unreg.find("-p"))
                 {
                     etiss::log(etiss::FATALERROR, std::string("Unrecognised option ") + iter_unreg +
                                                "\n\t Please use --help to list all recognised options. \n");
@@ -810,7 +803,7 @@ void etiss_initialize(int argc, const char* argv[], bool forced = false)
                 }
             }
         }
-        catch(std::exception& e) 
+        catch(std::exception& e)
         {
             etiss::log(etiss::FATALERROR, std::string(e.what()) +
                                                "\n\t Please use --help to list all recognised options. \n");
@@ -820,7 +813,7 @@ void etiss_initialize(int argc, const char* argv[], bool forced = false)
 
     // log level
     {
-        int ll = cfg().get<int>("loglevel", etiss::WARNING);
+        int ll = cfg().get<int>("etiss.loglevel", etiss::WARNING);
         if (ll >= 0 && ll <= etiss::VERBOSE)
         { // valid log level
           // dnm
@@ -838,24 +831,11 @@ void etiss_initialize(int argc, const char* argv[], bool forced = false)
 
     etiss::py::init(); // init python
 
-    // configure console
-    if (cfg().get<bool>("sigint-console", false))
-    {
-        etiss_initialize_SIGINT();
-    }
-    else
-    {
-        etiss_remove_SIGINT();
-    }
-
-    // load all found libraries
-    if (cfg().get<bool>("library-loading", true))
-    {
-        preloadLibraries();
-    }
+    etiss_remove_SIGINT();
+    preloadLibraries();
 
     // load integrated library
-    if (cfg().get<bool>("integrated-library", true))
+    if (cfg().get<bool>("etiss.load_integrated_libraries", true))
     {
         etiss::addLibrary(LibraryInterface::openIntegratedLibrary());
     }
@@ -892,20 +872,17 @@ void etiss_initialize(int argc, const char* argv[], bool forced = false)
             }
         }
     }
-
-    if (cfg().get<bool>("pyconsole", false))
-        etiss::py::console();
 }
 
-void etiss::initialize(int argc, const char* argv[])
+void etiss::initialize(std::vector<std::string>& args)
 {
-    etiss_initialize(argc, argv, false);
+    etiss_initialize(args, false);
 }
 
 void etiss::forceInitialization()
 {
-    const char *argv[]={""};
-    etiss_initialize(0, argv, true);
+    std::vector<std::string> args{};
+    etiss_initialize(args, true);
 }
 
 //__attribute__((destructor))

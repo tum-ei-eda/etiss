@@ -135,8 +135,8 @@ extern "C"
         case 3:
             etiss::Configuration cfg;
             cfg.config() = options;
-            return new etiss::plugin::Logger(cfg.get<uint64_t>("logaddr", 0x80000000),
-                                             cfg.get<uint64_t>("logmask", 0xF0000000));
+            return new etiss::plugin::Logger(cfg.get<uint64_t>("plugin.logger.logaddr", 0x80000000),
+                                             cfg.get<uint64_t>("plugin.logger.logmask", 0xF0000000));
         }
         return 0;
     }

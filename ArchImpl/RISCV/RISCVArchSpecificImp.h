@@ -361,17 +361,17 @@ void RISCVArch::initInstrSet(etiss::instr::ModedInstructionSet &mis) const
     {
      /* Set default JIT Extensions. Read Parameters set from ETISS configuration and append with architecturally needed */
      std::string cfgPar = "";
-     cfgPar = etiss::cfg().get<std::string>("JIT-External::Headers", ";");
-     etiss::cfg().set<std::string>("JIT-External::Headers", cfgPar + "etiss/jit/libsoftfloat.h");
+     cfgPar = etiss::cfg().get<std::string>("jit.external_headers", ";");
+     etiss::cfg().set<std::string>("jit.external_headers", cfgPar + "etiss/jit/libsoftfloat.h");
 
-     cfgPar = etiss::cfg().get<std::string>("JIT-External::Libs", ";");
-     etiss::cfg().set<std::string>("JIT-External::Libs", cfgPar + "softfloat");
+     cfgPar = etiss::cfg().get<std::string>("jit.external_libs", ";");
+     etiss::cfg().set<std::string>("jit.external_libs", cfgPar + "softfloat");
 
-     cfgPar = etiss::cfg().get<std::string>("JIT-External::HeaderPaths", ";");
-     etiss::cfg().set<std::string>("JIT-External::HeaderPaths", cfgPar + "/etiss/jit");
+     cfgPar = etiss::cfg().get<std::string>("jit.external_header_paths", ";");
+     etiss::cfg().set<std::string>("jit.external_header_paths", cfgPar + "/etiss/jit");
 
-     cfgPar = etiss::cfg().get<std::string>("JIT-External::LibPaths", ";");
-     etiss::cfg().set<std::string>("JIT-External::LibPaths", cfgPar + "/etiss/jit");
+     cfgPar = etiss::cfg().get<std::string>("jit.external_lib_paths", ";");
+     etiss::cfg().set<std::string>("jit.external_lib_paths", cfgPar + "/etiss/jit");
 
     }
 
@@ -521,77 +521,100 @@ void RISCVArch::compensateEndianess(ETISS_CPU *cpu, etiss::instr::BitArray &ba) 
    of a core. Further fiels might be needed to enable gdbserver etc.
 
 */
-class RegField_RISCV : public etiss::VirtualStruct::Field
+template <typename T>
+class BaseField_RISCV : public etiss::VirtualStruct::Field
 {
-  private:
-    const unsigned gprid_;
+private:
+    T * const p_;
 
-  public:
-    RegField_RISCV(etiss::VirtualStruct &parent, unsigned gprid)
-        : Field(parent, std::string("R") + etiss::toString(gprid), std::string("R") + etiss::toString(gprid), R | W, 4)
-        , gprid_(gprid)
+public:
+    BaseField_RISCV(etiss::VirtualStruct &parent, std::string name, size_t sizeInBytes, void *p)
+        : Field(parent, name, name, R | W, sizeInBytes)
+        , p_((T*)p)
     {
     }
 
-    RegField_RISCV(etiss::VirtualStruct &parent, std::string name, unsigned gprid)
-        : Field(parent, name, name, R | W, 4), gprid_(gprid)
-    {
-    }
+protected:
+    uint64_t _read() const override { return (uint64_t)*p_; }
 
-    virtual ~RegField_RISCV() {}
-
-  protected:
-    virtual uint64_t _read() const { return (uint64_t) * ((RISCV *)parent_.structure_)->X[gprid_]; }
-
-    virtual void _write(uint64_t val)
+    void _write(uint64_t val) override
     {
         etiss::log(etiss::VERBOSE, "write to ETISS cpu state", name_, val);
-        *((RISCV *)parent_.structure_)->X[gprid_] = (etiss_uint32)val;
+        *p_ = (T)val;
     }
 };
 
-class pcField_RISCV : public etiss::VirtualStruct::Field
+class RegField_RISCV : public BaseField_RISCV<uint32_t>
 {
-  public:
-    pcField_RISCV(etiss::VirtualStruct &parent) : Field(parent, "instructionPointer", "instructionPointer", R | W, 4) {}
-
-    virtual ~pcField_RISCV() {}
-
-  protected:
-    virtual uint64_t _read() const { return (uint64_t)((ETISS_CPU *)parent_.structure_)->instructionPointer; }
-
-    virtual void _write(uint64_t val)
+public:
+    RegField_RISCV(etiss::VirtualStruct &parent, int id)
+        : BaseField_RISCV<uint32_t>(parent, "R" + std::to_string(id), 4, ((RISCV *)parent.structure_)->X[id])
     {
-        etiss::log(etiss::VERBOSE, "write to ETISS cpu state", name_, val);
-        ((ETISS_CPU *)parent_.structure_)->instructionPointer = (etiss_uint32)val;
+    }
+};
+
+class FloatRegField_RISCV : public BaseField_RISCV<uint32_t>
+{
+public:
+    FloatRegField_RISCV(etiss::VirtualStruct &parent, int id)
+        : BaseField_RISCV<uint32_t>(parent, "F" + std::to_string(id), 4, &((RISCV *)parent.structure_)->F[id])
+    {
+    }
+};
+
+class pcField_RISCV : public BaseField_RISCV<uint32_t>
+{
+public:
+    pcField_RISCV(etiss::VirtualStruct &parent)
+        : BaseField_RISCV<uint32_t>(parent, "instructionPointer", 4, &((ETISS_CPU *)parent.structure_)->instructionPointer)
+    {
     }
 };
 
 template <typename T>
-class CSRField : public etiss::VirtualStruct::Field
+class CSRField : public BaseField_RISCV<T>
 {
-  private:
-    T *const csr_;
-    const unsigned csrid_;
-
-  public:
-    CSRField(etiss::VirtualStruct &parent, T *csr, unsigned csrid)
-        : Field(parent, std::string("CSR") + etiss::toString(csrid), std::string("CSR") + etiss::toString(csrid), R | W,
-                sizeof(T))
-        , csr_(csr)
-        , csrid_(csrid)
+public:
+    CSRField(etiss::VirtualStruct &parent, T *csr, int csrid)
+        : BaseField_RISCV<T>(parent, "CSR" + std::to_string(csrid), sizeof(T), csr)
     {
     }
+};
 
-    virtual ~CSRField() {}
-
-  protected:
-    virtual uint64_t _read() const { return (uint64_t)*csr_; }
-
-    virtual void _write(uint64_t val)
+class FFLAGSField_RISCV : public etiss::VirtualStruct::Field
+{
+    uint32_t * const p_;
+public:
+    FFLAGSField_RISCV(etiss::VirtualStruct &parent)
+        : Field(parent, "CSR1", "CSR1", R | W, 4, 5)
+        , p_(&((RISCV *)parent.structure_)->FCSR)
+    {
+    }
+protected:
+    uint64_t _read() const override { return (uint64_t)(*p_ & 0x1f); }
+    void _write(uint64_t val) override
     {
         etiss::log(etiss::VERBOSE, "write to ETISS cpu state", name_, val);
-        *csr_ = (T)val;
+        uint32_t tmp = *p_;
+        *p_ = tmp | ((uint32_t)val & 0x1f);
+    }
+};
+class FRMField_RISCV : public etiss::VirtualStruct::Field
+{
+    uint32_t * const p_;
+public:
+    FRMField_RISCV(etiss::VirtualStruct &parent)
+        : Field(parent, "CSR2", "CSR2", R | W, 4, 3)
+        , p_(&((RISCV *)parent.structure_)->FCSR)
+    {
+    }
+protected:
+    uint64_t _read() const override { return (uint64_t)((*p_ >> 5) & 0x7); }
+    void _write(uint64_t val) override
+    {
+        etiss::log(etiss::VERBOSE, "write to ETISS cpu state", name_, val);
+        uint32_t tmp = *p_;
+        *p_ = tmp | (((uint32_t)val & 0x7) << 5);
     }
 };
 
@@ -599,13 +622,29 @@ std::shared_ptr<etiss::VirtualStruct> RISCVArch::getVirtualStruct(ETISS_CPU *cpu
 {
     auto ret = etiss::VirtualStruct::allocate(cpu, [](etiss::VirtualStruct::Field *f) { delete f; });
 
-    for (uint32_t i = 0; i < 32; ++i)
+    for (int i = 0; i < 32; ++i)
     {
-
         ret->addField(new RegField_RISCV(*ret, i));
+        ret->addField(new FloatRegField_RISCV(*ret, i));
     }
     ret->addField(new pcField_RISCV(*ret));
-    ret->addField(new CSRField<etiss::uint32>(*ret, &((RISCV *)cpu)->CSR[CSR_MISA], 769));
+
+    auto addCSRCustom = [&](int id, void *ptr){
+        ret->addField(new CSRField<etiss::uint32>(*ret, (uint32_t*)ptr, id));
+    };
+    auto addCSR = [&](int id){
+        addCSRCustom(id, &((RISCV *)cpu)->CSR[id]);
+    };
+    addCSRCustom(3, &((RISCV *)cpu)->FCSR);
+    ret->addField(new FFLAGSField_RISCV(*ret));
+    ret->addField(new FRMField_RISCV(*ret));
+    addCSR(CSR_MISA);
+    addCSR(CSR_MIE);
+    addCSR(CSR_MTVEC);
+    addCSR(CSR_MEPC);
+    addCSR(CSR_MCAUSE);
+    addCSR(CSR_MTVAL);
+
     return ret;
 }
 

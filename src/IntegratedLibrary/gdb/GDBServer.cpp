@@ -170,8 +170,6 @@ Server::Server(etiss::plugin::gdb::PacketProtocol &pp) : con_(pp)
     minimal_pc_alignment = 2;
 }
 
-Server::~Server() {}
-
 etiss::int32 Server::preInstructionCallback()
 {
     // check for instruction breakpoints
@@ -245,43 +243,6 @@ etiss::int32 Server::execute()
     }
 
     return 0;
-}
-
-void Server::process(etiss::CodeBlock &block, unsigned index)
-{
-
-    // add gdb callback code at the start of single instructions and at the start of meta instructions (NOT in between
-    // parts of meta instructions)
-    bool wasmeta = false;
-    for (unsigned i = 0; i < block.length(); i++)
-    {
-        if (!wasmeta)
-        { // may return
-            CodeSet &cs = block.get(i).getCodeSet();
-            CodePart &part = cs.append(CodePart::PREINITIALDEBUGRETURNING);
-            std::stringstream ss;
-            ss << "{\n";
-            ss << "\tetiss_int32 _gdb_exception = gdb_pre_instruction(cpu,system,plugin_pointers[" << index << "]);\n";
-            ss << "\tif (_gdb_exception != 0)\n\t return _gdb_exception==-16?0:_gdb_exception;";
-            ss << "}";
-            part.getCode() = ss.str();
-        }
-        else
-        {
-            CodeSet &cs = block.get(i).getCodeSet();
-            CodePart &part = cs.prepend(CodePart::INITIALREQUIRED);
-            std::stringstream ss;
-            ss << "{\n";
-            ss << "\tgdb_pre_instruction_noreturn(cpu,system,plugin_pointers[" << index << "]);\n";
-            ss << "}";
-            part.getCode() = ss.str();
-        }
-        // wasmeta = block.get(i).isMetaInstruction();
-    }
-
-    // add file global code
-    block.fileglobalCode().insert("extern etiss_int32 gdb_pre_instruction(ETISS_CPU * ,ETISS_System * ,void * );extern "
-                                  "void gdb_pre_instruction_noreturn(ETISS_CPU * ,ETISS_System * ,void * );");
 }
 
 static void Server_finalizeInstrSet(etiss::instr::InstructionSet *set, std::string pcode)
@@ -371,6 +332,9 @@ void Server::handlePacket(bool block)
                     case 8:
                         hex::fromInt(answer, (uint64_t)f->read(), arch_->getGDBCore().isLittleEndian());
                         break;
+                    default:
+                        answer = "EFF";
+                        etiss::log(etiss::ERROR, "GDB g: Invalid read length");
                     }
                 }
             }
@@ -447,6 +411,7 @@ void Server::handlePacket(bool block)
                             break;
                         }
                         regIndex = (regIndex << 4) | hex::fromHex(command[i]);
+                        answer = "OK";
                     }
                 }
                 auto f = plugin_core_->getStruct()->findName(arch_->getGDBCore().mapRegister(regIndex));
@@ -510,6 +475,9 @@ void Server::handlePacket(bool block)
                 case 8:
                     hex::fromInt(answer, (uint64_t)f->read(), arch_->getGDBCore().isLittleEndian());
                     break;
+                default:
+                    answer = "EFF";
+                    etiss::log(etiss::ERROR, "GDB p: Invalid read length");
                 }
             }
             break;
@@ -529,7 +497,6 @@ void Server::handlePacket(bool block)
                 {
                     answer = hex::fromBytes(buf, length);
                 }
-                nodbgaction = true;
                 delete[] buf;
             }
             break;
@@ -537,9 +504,14 @@ void Server::handlePacket(bool block)
             {
                 unsigned pos = 1;
                 etiss::uint64 addr = hex::tryInt<etiss::uint64>(command, pos);
-                pos++;
+                pos++; // comma
                 etiss::uint32 length = hex::tryInt<etiss::uint32>(command, pos);
+                pos++; // colon
                 std::vector<etiss::uint8> buf(length);
+                for (etiss::uint32 i = 0; i < length; i++)
+                {
+                    buf[i] = hex::tryInt<etiss::uint8>(command, pos);
+                }
                 etiss::int32 exception = (*system_->dbg_write)(system_->handle, addr, buf.data(), length);
                 if (exception != RETURNCODE::NOERROR)
                 {
@@ -549,7 +521,6 @@ void Server::handlePacket(bool block)
                 {
                     answer = "OK";
                 }
-                nodbgaction = true;
             }
             break;
             case 'c': // continue
@@ -596,7 +567,7 @@ void Server::handlePacket(bool block)
             }
             break;
             case 'v':
-            break;
+                break;
             case 'W': // custom break message; might be changed in future if W is used (apply changes also to
                       // Connection::BREAKMESSAGE)
             {
@@ -732,6 +703,14 @@ void Server::handlePacket(bool block)
                 {
                     answer = "T0;tnotrun:0";
                 }
+                else if (command.substr(1, 11) == "fThreadInfo")
+                {
+                    answer = "m1";
+                }
+                else if (command.substr(1, 11) == "sThreadInfo")
+                {
+                    answer = "l";
+                }
             }
             break;
             case 'k':
@@ -772,46 +751,29 @@ void Server::handlePacket(bool block)
     }
 }
 
-etiss::int32 Server::preMemoryAccessCallback(etiss::uint64 addr, etiss::uint32 len, bool data, bool read)
+void Server::preDReadCallback(etiss::uint64 addr)
 {
-    etiss::int32 exception = 0;
-    uint64_t buf = 0;
-    if (read)
+    if (!watchpoints_.isEmpty())
     {
-        if (!watchpoints_.isEmpty())
+        if (watchpoints_.get(addr) & BreakpointDB::BPTYPE_WATCH_READ)
         {
-            if (watchpoints_.get(addr) & BreakpointDB::BPTYPE_WATCH_READ)
-            {
-                status_paused_ = true;
-            }
-        }
-        if (data)
-        {
-            exception = unwrappedSys_->dread(unwrappedSys_->handle, cpu_, addr, (etiss::uint8*)&buf, len);
-        }
-        else
-        {
-            exception = unwrappedSys_->iread(unwrappedSys_->handle, cpu_, addr, len);
+            status_paused_ = true;
         }
     }
-    else
+}
+void Server::preDWriteCallback(etiss::uint64 addr)
+{
+    if (!watchpoints_.isEmpty())
     {
-        if (!watchpoints_.isEmpty())
+        if (watchpoints_.get(addr) & BreakpointDB::BPTYPE_WATCH_WRITE)
         {
-            if (watchpoints_.get(addr) & BreakpointDB::BPTYPE_WATCH_WRITE)
-            {
-                status_paused_ = true;
-            }
-        }
-        if (data)
-        {
-            exception = unwrappedSys_->dwrite(unwrappedSys_->handle, cpu_, addr, (etiss::uint8*)&buf, len);
-        }
-        else
-        {
-            exception = unwrappedSys_->iwrite(unwrappedSys_->handle, cpu_, addr, (etiss::uint8*)&buf, len);
+            status_paused_ = true;
         }
     }
+}
+
+etiss::int32 Server::postMemAccessCallback(etiss::int32 exception)
+{
     if (exception)
     {
         status_paused_ = true;
@@ -836,15 +798,17 @@ etiss::int32 Server::preMemoryAccessCallback(etiss::uint64 addr, etiss::uint32 l
             {
                 cpu_->instructionPointer = status_jumpaddr_;
                 status_pending_jump_ = false;
+                exception = RETURNCODE::NOERROR;
             }
         }
     }
-    return RETURNCODE::NOERROR;
+
+    return exception;
 }
 
 std::string Server::_getPluginName() const
 {
-    return "GDB";
+    return "gdbserver";
 }
 
 void *Server::getPluginHandle()
@@ -871,7 +835,7 @@ Server *Server::createTCPServer(std::map<std::string, std::string> options)
     int port = 2222;
 
     { // parse port
-        auto f = options.find("port");
+        auto f = options.find("plugin.gdbserver.port");
         if (f != options.end())
         {
             int tmp = atoi(f->second.c_str());
