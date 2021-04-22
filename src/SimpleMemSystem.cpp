@@ -152,8 +152,8 @@ etiss::int8 SimpleMemSystem::load_elf(const char *elf_file)
 
     if (!reader.load(elf_file))
     {
-        etiss::log(etiss::ERROR, "ELF reader could not process file\n");
-        return (-1);
+        etiss::log(etiss::ERROR, "ELF reader could not process file");
+        return -1;
     }
 
     if (etiss::cfg().isSet("arch.cpu")) {
@@ -337,12 +337,12 @@ static void Trace(etiss::uint64 addr, etiss::uint32 len, bool isWrite, bool toFi
         std::cout << text.str();
 }
 
-etiss::int32 SimpleMemSystem::dread(ETISS_CPU *, etiss::uint64 addr, etiss::uint8 *buf, etiss::uint32 len)
+etiss::int32 SimpleMemSystem::dread(ETISS_CPU *cpu, etiss::uint64 addr, etiss::uint8 *buf, etiss::uint32 len)
 {
     return dbg_read(addr, buf, len);
 }
 
-etiss::int32 SimpleMemSystem::dwrite(ETISS_CPU *, etiss::uint64 addr, etiss::uint8 *buf, etiss::uint32 len)
+etiss::int32 SimpleMemSystem::dwrite(ETISS_CPU *cpu, etiss::uint64 addr, etiss::uint8 *buf, etiss::uint32 len)
 {
     return dbg_write(addr, buf, len);
 }
