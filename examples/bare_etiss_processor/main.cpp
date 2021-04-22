@@ -98,12 +98,11 @@ int main(int argc, const char *argv[])
     // create a cpu core named core0 with the or1k architecture
     std::string CPUArchName = etiss::cfg().get<std::string>("arch.cpu", "");
 	etiss::uint64 startAddress = dsys.get_startaddr();
-	std::cout << "ELF start address: 0x" << std::hex << startAddress << std::dec << std::endl;
+	std::cout << "  ELF start address: 0x" << std::hex << startAddress << std::dec << std::endl;
     std::shared_ptr<etiss::CPUCore> cpu = etiss::CPUCore::create(CPUArchName, "core0");
     if (!cpu)
     {
-        etiss::log(etiss::ERROR, "failed to create cpu core");
-        return -1;
+        etiss::log(etiss::FATALERROR, "  Failed to create CPU core!");
     }
 
     // disable timer plugin

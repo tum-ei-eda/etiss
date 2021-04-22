@@ -125,7 +125,7 @@ etiss::int8 SimpleMemSystem::load_segments() {
                 ifs.open(image, std::ifstream::binary | std::ifstream::ate);
                 if (!ifs.good()) {
                     std::stringstream msg;
-                    msg << "Error during read of segment image file " << image << "!" << std::endl;
+                    msg << "Error during read of segment image file " << image << "!";
                     etiss::log(etiss::ERROR, msg.str());
                     return RETURNCODE::GENERALERROR;
                 }
@@ -155,31 +155,42 @@ etiss::int8 SimpleMemSystem::load_elf(const char *elf_file)
         etiss::log(etiss::ERROR, "ELF reader could not process file\n");
         return (-1);
     }
-    // set architecture automatically
-    if (reader.get_machine() == EM_RISCV)
-    {
-        if ((reader.get_class() == ELFCLASS64)) {
-            etiss::cfg().set<std::string>("arch.cpu", "RISCV64"); // RISCV and OR1K work as well
-        } else if ((reader.get_class() == ELFCLASS32)) {
-            etiss::cfg().set<std::string>("arch.cpu", "RISCV");
-        // add conditions
-        } else {
-            std::cout << "System architecture is neither 64 nor 32 bit" << std::endl;
+
+    if (etiss::cfg().isSet("arch.cpu")) {
+        std::stringstream ss;
+        ss << "Assuming CPU architecture " << etiss::cfg().get<std::string>("arch.cpu", nullptr) << " as set in configuration file. ELF architecture field will be ignored";
+        etiss::log(etiss::INFO, ss.str());
+    } else {
+        // set architecture automatically
+        if (reader.get_machine() == EM_RISCV)
+        {
+            if ((reader.get_class() == ELFCLASS64)) {
+                etiss::cfg().set<std::string>("arch.cpu", "RISCV64"); // RISCV and OR1K work as well
+            } else if ((reader.get_class() == ELFCLASS32)) {
+                etiss::cfg().set<std::string>("arch.cpu", "RISCV");
+            // add conditions
+            } else {
+                etiss::log(etiss::ERROR, "System architecture is neither 64 nor 32 bit!");
+                return -1;
+            }
+        }
+        else if (reader.get_machine() == EM_OPENRISC)
+        {
+            if ((reader.get_class() == ELFCLASS32))
+                etiss::cfg().set<std::string>("arch.cpu", "OR1K");
+            if ((reader.get_class() == ELFCLASS64))
+                std::cout << "OR1k 64 is not supported ";
+        }
+        else
+        {
+            std::stringstream ss;
+            ss << "Target architecture with code 0x" << std::hex << std::setw(2) << std::setfill('0') << reader.get_machine() << " was not automatically recognized, please set the arch.cpu parameter manually!";
+            etiss::log(etiss::ERROR, ss.str());
             return -1;
         }
-    }
-    //
-    else if (reader.get_machine() == EM_OPENRISC)
-    {
-        if ((reader.get_class() == ELFCLASS32))
-            etiss::cfg().set<std::string>("arch.cpu", "OR1K");
-        if ((reader.get_class() == ELFCLASS64))
-            std::cout << "OR1k 64 is not supported ";
-    }
-    else
-    {
-        std::cout << "Target architecture not recognized, please set it manually using the arch.cpu configuration option." << std::endl;
-        std::cout << "Target software: " << reader.get_machine() << std::endl;
+        std::stringstream ss;
+        ss << "Set ETISS architecture to " << etiss::cfg().get<std::string>("arch.cpu", "") << " as specified in ELF-file.";
+        etiss::log(etiss::INFO, ss.str());
     }
 
     for (auto &seg : reader.segments)
@@ -214,14 +225,15 @@ etiss::int8 SimpleMemSystem::load_elf(const char *elf_file)
         {
             if (mseg_it->payload_in_range(start_addr, size))
             {
-                std::stringstream msg;
-                msg << "Found a matching memory segment at 0x" << std::hex << std::setfill('0') << std::setw(8) << start_addr << std::endl;
-                etiss::log(etiss::INFO, msg.str());
-
                 mseg_it->name_ = sname.str();
                 mseg_it->mode_ = static_cast<MemSegment::access_t>(mode);
 
                 mseg_it->load(seg->get_data() + (mseg_it->start_addr_ - start_addr), file_size);
+
+                std::stringstream msg;
+                msg << "Initialized the memory segment " << mseg_it->name_ << " from ELF-file";
+                etiss::log(etiss::INFO, msg.str());
+
                 mapped = true;
                 break;
             }
@@ -233,11 +245,11 @@ etiss::int8 SimpleMemSystem::load_elf(const char *elf_file)
         msg << "Found no matching memory segments at 0x" << std::hex << std::setfill('0') << std::setw(8) << start_addr;
 
         if (error_on_seg_mismatch_) {
-            msg << "! As you turned on error_on_seg_mismatch, ETISS will now terminate." << std::endl;
+            msg << "! As you turned on error_on_seg_mismatch, ETISS will now terminate.";
             etiss::log(etiss::ERROR, msg.str());
             return -1;
         } else {
-            msg << ", creating one. WARNING: the segment will be created with the size information present in the ELF-file, the resulting segment may be too small to fit dynamic data (cache, heap)!" << std::endl;
+            msg << ", creating one. WARNING: the segment will be created with the size information present in the ELF-file, the resulting segment may be too small to fit dynamic data (cache, heap)!";
             etiss::log(etiss::WARNING, msg.str());
         }
 
@@ -269,7 +281,7 @@ etiss::int8 SimpleMemSystem::add_memsegment(std::unique_ptr<MemSegment> mseg, co
     msegs_[i_seg]->load(raw_data, file_size_bytes);
 
     std::stringstream msg;
-    msg << "New Memory segment added: " << msegs_[i_seg]->name_ << std::endl;
+    msg << "New Memory segment added: " << msegs_[i_seg]->name_;
     etiss::log(etiss::INFO, msg.str().c_str());
 
     return 0;
@@ -298,7 +310,7 @@ etiss::int32 SimpleMemSystem::iread(ETISS_CPU *, etiss::uint64 addr, etiss::uint
     }
 
     std::stringstream ss;
-    ss << "Error during ibus read at address 0x" << std::hex << std::setw(8) << std::setfill('0') << addr << " with length " << len << std::endl;
+    ss << "Error during ibus read at address 0x" << std::hex << std::setw(8) << std::setfill('0') << addr << " with length " << len;
     etiss::log(etiss::ERROR, ss.str());
     return RETURNCODE::IBUS_READ_ERROR;
 }
@@ -306,7 +318,7 @@ etiss::int32 SimpleMemSystem::iread(ETISS_CPU *, etiss::uint64 addr, etiss::uint
 etiss::int32 SimpleMemSystem::iwrite(ETISS_CPU *, etiss::uint64 addr, etiss::uint8 *buf, etiss::uint32 len)
 {
     std::stringstream ss;
-    ss << "Blocked instruction bus write at address 0x" << std::hex << std::setw(8) << std::setfill('0') << addr << " with length" << len << std::endl;
+    ss << "Blocked instruction bus write at address 0x" << std::hex << std::setw(8) << std::setfill('0') << addr << " with length" << len;
     etiss::log(etiss::VERBOSE, ss.str());
     return RETURNCODE::IBUS_WRITE_ERROR;
 }
@@ -352,7 +364,7 @@ etiss::int32 SimpleMemSystem::dbg_read(etiss::uint64 addr, etiss::uint8 *buf, et
 
     std::stringstream ss;
 
-    ss << "Error during dbus read at address 0x" << std::hex << std::setw(8) << std::setfill('0') << addr << " with length " << len << std::endl;
+    ss << "Error during dbus read at address 0x" << std::hex << std::setw(8) << std::setfill('0') << addr << " with length " << len;
     etiss::log(etiss::ERROR, ss.str());
 
     return RETURNCODE::DBUS_READ_ERROR;
@@ -375,7 +387,7 @@ etiss::int32 SimpleMemSystem::dbg_write(etiss::uint64 addr, etiss::uint8 *buf, e
 
     std::stringstream ss;
 
-    ss << "Error during dbus write at address 0x" << std::hex << std::setw(8) << std::setfill('0') << addr << " with length " << len << std::endl;
+    ss << "Error during dbus write at address 0x" << std::hex << std::setw(8) << std::setfill('0') << addr << " with length " << len;
     etiss::log(etiss::ERROR, ss.str());
 
     return RETURNCODE::DBUS_WRITE_ERROR;

@@ -645,7 +645,10 @@ void etiss::Initializer::loadIniPlugins(std::shared_ptr<etiss::CPUCore> cpu)
             po_simpleIni->GetAllValues(iter_section.pItem, iter_key.pItem, values);
             if (!etiss::cfg().isSet(iter_key.pItem))
             {
-                std::cout << iter_key.pItem << " not set on the command line. Checking in .ini file.\n";
+                std::stringstream ss;
+                ss << iter_key.pItem << " not set on the command line. Checking in .ini file.";
+                etiss::log(etiss::INFO, ss.str());
+
                 for (auto iter_value : values)
                 {
                     options[iter_key.pItem] = iter_value.pItem;
@@ -654,7 +657,7 @@ void etiss::Initializer::loadIniPlugins(std::shared_ptr<etiss::CPUCore> cpu)
                 }
                 // check if more than one value is set in the ini file
                 if (values.size() > 1)
-                    etiss::log(etiss::WARNING, "Multi values for option. Took only last one!");
+                    etiss::log(etiss::WARNING, "Multiple values for option. Took only last one!");
             }
         }
         cpu->addPlugin(etiss::getPlugin(pluginName, options));
