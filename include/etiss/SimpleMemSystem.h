@@ -68,6 +68,7 @@ class MemSegment
 
   public:
     enum access_t {
+        UNSET = 0,
         READ = 1,
         WRITE = 2,
         EXEC = 3
@@ -162,15 +163,24 @@ class SimpleMemSystem : public System
     // bool loadRam(const char *file);
     // void swapEndian(unsigned align = 4);
 
-    etiss::int8 load_elf(const char *file);
-    etiss::int8 load_segments(void);
+    void init_memory();
+    void load_elf();
+    void load_segments(void);
     etiss::uint64 get_startaddr(void) { return (start_addr_); }
-    etiss::int8 add_memsegment(std::unique_ptr<MemSegment> mseg, const void *raw_data, size_t file_size_bytes);
+    void add_memsegment(std::unique_ptr<MemSegment>& mseg, const void *raw_data, size_t file_size_bytes);
 
   private:
     std::vector<std::unique_ptr<MemSegment>> msegs_{};
+    etiss::int32 dbus_access(ETISS_CPU *cpu, etiss::uint64 addr, etiss::uint8 *buf, etiss::uint32 len, bool write);
 
     etiss::uint64 start_addr_{ 0 };
+
+    struct find_fitting_mseg {
+        find_fitting_mseg(uint64 addr, uint64 size) : addr(addr), size(size) {}
+        bool operator() (const std::unique_ptr<MemSegment> & mseg) { return mseg->payload_in_range(addr, size); }
+    private:
+        uint64 addr, size;
+    };
 
     /*
     std::vector<uint8> ram_mem_{};

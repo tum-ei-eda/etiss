@@ -64,15 +64,7 @@ int main(int argc, const char *argv[])
     std::cout << "  Setting up Memory" << std::endl;
 
     etiss::SimpleMemSystem dsys;
-    if (dsys.load_segments() != etiss::RETURNCODE::NOERROR) {
-        etiss::log(etiss::FATALERROR, "Error during segment load\n");
-    }
-
-    if (etiss::cfg().isSet("vp.elf_file")) {
-        if (dsys.load_elf(etiss::cfg().get<std::string>("vp.elf_file", "").c_str() ) != etiss::RETURNCODE::NOERROR) {
-            etiss::log(etiss::FATALERROR, "ELF file not loaded properly\n");
-        }
-    }
+    dsys.init_memory();
 
     if (false)
     {

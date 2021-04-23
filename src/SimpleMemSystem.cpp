@@ -75,7 +75,13 @@ uint32_t printMessage(std::string key, std::string message, uint32_t maxCount)
     return count;
 }
 
-etiss::int8 SimpleMemSystem::load_segments() {
+void SimpleMemSystem::init_memory() {
+    load_segments();
+    load_elf();
+    std::sort(msegs_.begin(), msegs_.end(), [](std::unique_ptr<MemSegment> & a, std::unique_ptr<MemSegment> & b) {return a->start_addr_ < b->start_addr_;});
+}
+
+void SimpleMemSystem::load_segments() {
     std::stringstream ss;
 
     for (int i = 0; i < MAX_MEMSEGS; ++i) {
@@ -92,13 +98,13 @@ etiss::int8 SimpleMemSystem::load_segments() {
         std::stringstream().swap(ss);
 
         ss << "simple_mem_system.memseg_mode_" << std::setw(2) << std::setfill('0') << i;
-        std::string mode = etiss::cfg().get<std::string>(ss.str(), "RWX");
+        std::string mode = etiss::cfg().get<std::string>(ss.str(), "");
         std::stringstream().swap(ss);
 
         if (origin != (etiss::uint64) -1 && length != (etiss::uint64) -1) {
             configured_address_spaces_[origin] = length;
 
-            int access = 0;
+            int access = MemSegment::UNSET;
             std::string modestr = "";
             if (mode.find('R') != mode.npos) {
                 access |= MemSegment::READ;
@@ -119,6 +125,8 @@ etiss::int8 SimpleMemSystem::load_segments() {
                 << "0x" << std::hex << std::setfill('0') << std::setw(sizeof(etiss::uint64) * 2) << origin << "]";
 
             etiss::uint8 *buf = nullptr;
+            size_t fsize = 0;
+
             if (image != "")
             {
                 std::ifstream ifs;
@@ -126,10 +134,9 @@ etiss::int8 SimpleMemSystem::load_segments() {
                 if (!ifs.good()) {
                     std::stringstream msg;
                     msg << "Error during read of segment image file " << image << "!";
-                    etiss::log(etiss::ERROR, msg.str());
-                    return RETURNCODE::GENERALERROR;
+                    etiss::log(etiss::FATALERROR, msg.str());
                 }
-                size_t fsize = ifs.tellg();
+                fsize = ifs.tellg();
                 ifs.seekg(0, std::ifstream::beg);
 
                 buf = new etiss::uint8[fsize];
@@ -138,27 +145,28 @@ etiss::int8 SimpleMemSystem::load_segments() {
                 ifs.close();
             }
 
-            auto mseg = std::make_unique<MemSegment>(origin, length, static_cast<MemSegment::access_t>(access), sname.str(), buf);
-            add_memsegment(std::move(mseg), nullptr, 0);
+            auto mseg = std::make_unique<MemSegment>(origin, length, static_cast<MemSegment::access_t>(access), sname.str(), nullptr);
+            add_memsegment(mseg, buf, fsize);
         }
     }
-
-    return RETURNCODE::NOERROR;
 }
 
-etiss::int8 SimpleMemSystem::load_elf(const char *elf_file)
+void SimpleMemSystem::load_elf()
 {
+    if (!etiss::cfg().isSet("vp.elf_file")) return;
+
+    std::string elf_file = etiss::cfg().get<std::string>("vp.elf_file", "");
+
     ELFIO::elfio reader;
 
     if (!reader.load(elf_file))
     {
-        etiss::log(etiss::ERROR, "ELF reader could not process file");
-        return -1;
+        etiss::log(etiss::FATALERROR, "ELF reader could not process file");
     }
 
     if (etiss::cfg().isSet("arch.cpu")) {
         std::stringstream ss;
-        ss << "Assuming CPU architecture " << etiss::cfg().get<std::string>("arch.cpu", nullptr) << " as set in configuration file. ELF architecture field will be ignored";
+        ss << "Assuming CPU architecture " << etiss::cfg().get<std::string>("arch.cpu", "") << " as set in configuration file. ELF architecture field will be ignored";
         etiss::log(etiss::INFO, ss.str());
     } else {
         // set architecture automatically
@@ -170,8 +178,7 @@ etiss::int8 SimpleMemSystem::load_elf(const char *elf_file)
                 etiss::cfg().set<std::string>("arch.cpu", "RISCV");
             // add conditions
             } else {
-                etiss::log(etiss::ERROR, "System architecture is neither 64 nor 32 bit!");
-                return -1;
+                etiss::log(etiss::FATALERROR, "System architecture is neither 64 nor 32 bit!");
             }
         }
         else if (reader.get_machine() == EM_OPENRISC)
@@ -179,14 +186,13 @@ etiss::int8 SimpleMemSystem::load_elf(const char *elf_file)
             if ((reader.get_class() == ELFCLASS32))
                 etiss::cfg().set<std::string>("arch.cpu", "OR1K");
             if ((reader.get_class() == ELFCLASS64))
-                std::cout << "OR1k 64 is not supported ";
+                etiss::log(etiss::FATALERROR, "OR1k 64 is not supported");
         }
         else
         {
             std::stringstream ss;
             ss << "Target architecture with code 0x" << std::hex << std::setw(2) << std::setfill('0') << reader.get_machine() << " was not automatically recognized, please set the arch.cpu parameter manually!";
-            etiss::log(etiss::ERROR, ss.str());
-            return -1;
+            etiss::log(etiss::FATALERROR, ss.str());
         }
         std::stringstream ss;
         ss << "Set ETISS architecture to " << etiss::cfg().get<std::string>("arch.cpu", "") << " as specified in ELF-file.";
@@ -219,72 +225,51 @@ etiss::int8 SimpleMemSystem::load_elf(const char *elf_file)
               << "[0x" << std::hex << std::setfill('0') << std::setw(sizeof(etiss::uint64) * 2) << start_addr + size - 1 << " - "
               << "0x" << std::hex << std::setfill('0') << std::setw(sizeof(etiss::uint64) * 2) << start_addr << "]";
 
-        bool mapped = false;
+        auto mseg_it = std::find_if(msegs_.begin(), msegs_.end(), find_fitting_mseg(start_addr, size));
 
-        for (const auto &mseg_it: msegs_)
-        {
-            if (mseg_it->payload_in_range(start_addr, size))
-            {
-                mseg_it->name_ = sname.str();
-                mseg_it->mode_ = static_cast<MemSegment::access_t>(mode);
+        if (mseg_it != msegs_.end()) {
+            auto & mseg = *mseg_it;
 
-                mseg_it->load(seg->get_data() + (mseg_it->start_addr_ - start_addr), file_size);
+            mseg->name_ = sname.str();
+            mseg->mode_ = static_cast<MemSegment::access_t>(mode);
 
-                std::stringstream msg;
-                msg << "Initialized the memory segment " << mseg_it->name_ << " from ELF-file";
-                etiss::log(etiss::INFO, msg.str());
+            mseg->load(seg->get_data() + (mseg->start_addr_ - start_addr), file_size);
 
-                mapped = true;
-                break;
-            }
+            std::stringstream msg;
+            msg << "Initialized the memory segment " << mseg->name_ << " from ELF-file";
+            etiss::log(etiss::INFO, msg.str());
+
+            continue;
         }
-
-        if (mapped) continue;
 
         std::stringstream msg;
         msg << "Found no matching memory segments at 0x" << std::hex << std::setfill('0') << std::setw(8) << start_addr;
 
         if (error_on_seg_mismatch_) {
             msg << "! As you turned on error_on_seg_mismatch, ETISS will now terminate.";
-            etiss::log(etiss::ERROR, msg.str());
-            return -1;
+            etiss::log(etiss::FATALERROR, msg.str());
         } else {
             msg << ", creating one. WARNING: the segment will be created with the size information present in the ELF-file, the resulting segment may be too small to fit dynamic data (cache, heap)!";
             etiss::log(etiss::WARNING, msg.str());
         }
 
         auto mseg = std::make_unique<MemSegment>(start_addr, size, static_cast<MemSegment::access_t>(mode), sname.str());
-        add_memsegment(std::move(mseg), seg->get_data(), file_size);
+        add_memsegment(mseg, seg->get_data(), file_size);
     }
 
     // read start or rather program boot address from ELF
     start_addr_ = reader.get_entry();
-
-    return 0;
 }
 
-etiss::int8 SimpleMemSystem::add_memsegment(std::unique_ptr<MemSegment> mseg, const void *raw_data, size_t file_size_bytes)
+void SimpleMemSystem::add_memsegment(std::unique_ptr<MemSegment>& mseg, const void *raw_data, size_t file_size_bytes)
 {
-
-    // sorted insert (0 < start_addr_ < ...)
-    size_t i_seg = 0;
-    for (i_seg = 0; i_seg < msegs_.size(); ++i_seg)
-    {
-        if ((mseg->start_addr_ <= msegs_[i_seg]->start_addr_))
-        {
-            break;
-        }
-    }
-    msegs_.insert(msegs_.begin() + i_seg, std::move(mseg));
-
-    // init data
-    msegs_[i_seg]->load(raw_data, file_size_bytes);
-
     std::stringstream msg;
-    msg << "New Memory segment added: " << msegs_[i_seg]->name_;
+    msg << "New Memory segment added: " << mseg->name_;
     etiss::log(etiss::INFO, msg.str().c_str());
 
-    return 0;
+    mseg->load(raw_data, file_size_bytes);
+
+    msegs_.push_back(std::move(mseg));
 }
 
 SimpleMemSystem::SimpleMemSystem() : error_on_seg_mismatch_(etiss::cfg().get<bool>("simple_mem_system.error_on_seg_mismatch", false))
@@ -304,10 +289,8 @@ SimpleMemSystem::SimpleMemSystem() : error_on_seg_mismatch_(etiss::cfg().get<boo
 
 etiss::int32 SimpleMemSystem::iread(ETISS_CPU *, etiss::uint64 addr, etiss::uint32 len)
 {
-    for (auto &it : msegs_)
-    {
-        if (it->payload_in_range(addr, len)) return RETURNCODE::NOERROR;
-    }
+    auto it = std::find_if(msegs_.begin(), msegs_.end(), find_fitting_mseg(addr, len));
+    if (it != msegs_.end()) return RETURNCODE::NOERROR;
 
     std::stringstream ss;
     ss << "Error during ibus read at address 0x" << std::hex << std::setw(8) << std::setfill('0') << addr << " with length " << len;
@@ -340,72 +323,55 @@ static void trace(ETISS_CPU *cpu, etiss::uint64 addr, etiss::uint32 len, bool is
         std::cout << text.str();
 }
 
-etiss::int32 SimpleMemSystem::dread(ETISS_CPU *cpu, etiss::uint64 addr, etiss::uint8 *buf, etiss::uint32 len)
-{
+etiss::int32 SimpleMemSystem::dbus_access(ETISS_CPU *cpu, etiss::uint64 addr, etiss::uint8 *buf, etiss::uint32 len, bool write) {
     uint64 pc = cpu ? cpu->instructionPointer : 0;
 
-    for(auto& mseg : msegs_) {
-        if (mseg->payload_in_range(addr, len)) {
-            if (!(mseg->mode_ & MemSegment::READ)) {
-                std::stringstream ss;
+    auto mseg_it = std::find_if(msegs_.begin(), msegs_.end(), find_fitting_mseg(addr, len));
 
-                ss << "dbus read forbidden, PC = 0x" << std::hex << std::setw(8) << std::setfill('0') << pc
-                   << ", address 0x" << std::hex << std::setw(8) << std::setfill('0') << addr << ", length " << len;
+    MemSegment::access_t access = write ? MemSegment::WRITE : MemSegment::READ;
+    std::string mode = write ? "write" : "read";
 
-                etiss::log(etiss::WARNING, ss.str());
-            }
+    if (mseg_it != msegs_.end()) {
+        auto & mseg = *mseg_it;
+        if (!(mseg->mode_ & access)) {
+            std::stringstream ss;
 
-            size_t offset = addr - mseg->start_addr_;
-            memcpy(buf, mseg->mem_ + offset, len);
+            ss << "dbus " << mode << " forbidden, PC = 0x" << std::hex << std::setw(8) << std::setfill('0') << pc
+                << ", address 0x" << std::hex << std::setw(8) << std::setfill('0') << addr << ", length " << len;
 
-            if (_print_dbus_access) trace(cpu, addr, len, false, _print_to_file, trace_file_dbus_);
-
-            return RETURNCODE::NOERROR;
+            etiss::log(etiss::WARNING, ss.str());
         }
+
+        size_t offset = addr - mseg->start_addr_;
+
+        void * dest = write ? mseg->mem_ + offset : buf;
+        const void * src = write ? buf : mseg->mem_ + offset;
+
+        memcpy(dest, src, len);
+
+        if (_print_dbus_access) trace(cpu, addr, len, write, _print_to_file, trace_file_dbus_);
+
+        return RETURNCODE::NOERROR;
     }
 
     std::stringstream ss;
 
-    ss << "dbus read error, PC = 0x" << std::hex << std::setw(8) << std::setfill('0') << pc
+    ss << "dbus " << mode << " error, PC = 0x" << std::hex << std::setw(8) << std::setfill('0') << pc
        << ", address 0x" << std::hex << std::setw(8) << std::setfill('0') << addr << ", length " << len;
 
     etiss::log(etiss::ERROR, ss.str());
 
-    return RETURNCODE::DBUS_READ_ERROR;
+    return write ? RETURNCODE::DBUS_WRITE_ERROR : RETURNCODE::DBUS_READ_ERROR;
+}
+
+etiss::int32 SimpleMemSystem::dread(ETISS_CPU *cpu, etiss::uint64 addr, etiss::uint8 *buf, etiss::uint32 len)
+{
+    return dbus_access(cpu, addr, buf, len, false);
 }
 
 etiss::int32 SimpleMemSystem::dwrite(ETISS_CPU *cpu, etiss::uint64 addr, etiss::uint8 *buf, etiss::uint32 len)
 {
-    uint64 pc = cpu ? cpu->instructionPointer : 0;
-
-    for(auto& mseg : msegs_) {
-        if (mseg->payload_in_range(addr, len)) {
-            if (!(mseg->mode_ & MemSegment::WRITE)) {
-                std::stringstream ss;
-
-                ss << "dbus write forbidden, PC = 0x" << std::hex << std::setw(8) << std::setfill('0') << pc
-                   << ", address 0x" << std::hex << std::setw(8) << std::setfill('0') << addr << ", length " << len;
-
-                etiss::log(etiss::WARNING, ss.str());
-            }
-
-            size_t offset = addr - mseg->start_addr_;
-            memcpy(mseg->mem_ + offset, buf, len);
-
-            if (_print_dbus_access) trace(cpu, addr, len, true, _print_to_file, trace_file_dbus_);
-
-            return RETURNCODE::NOERROR;
-        }
-    }
-
-    std::stringstream ss;
-
-    ss << "dbus write error, PC = 0x" << std::hex << std::setw(8) << std::setfill('0') << pc
-       << ", address 0x" << std::hex << std::setw(8) << std::setfill('0') << addr << ", length " << len;
-
-    etiss::log(etiss::ERROR, ss.str());
-
-    return RETURNCODE::DBUS_WRITE_ERROR;
+    return dbus_access(cpu, addr, buf, len, true);
 }
 
 etiss::int32 SimpleMemSystem::dbg_read(etiss::uint64 addr, etiss::uint8 *buf, etiss::uint32 len)
