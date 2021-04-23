@@ -71,7 +71,7 @@ class MemSegment
         UNSET = 0,
         READ = 1,
         WRITE = 2,
-        EXEC = 3
+        EXEC = 4
     };
     /*
     typedef enum ACCESS
