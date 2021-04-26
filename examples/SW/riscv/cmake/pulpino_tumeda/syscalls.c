@@ -106,7 +106,7 @@ ssize_t _write(int file, const void *ptr, size_t len)
     {
         *(volatile char *)(ETISS_LOGGER_ADDR) = bptr[i];
     }
-    return 0;
+    return (ssize_t)len;
 }
 
 // EXIT
