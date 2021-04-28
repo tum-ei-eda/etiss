@@ -94,8 +94,8 @@ int main(int argc, const char *argv[])
     std::cout << "  Setting up CPUCore" << std::endl;
     // create a cpu core named core0 with the or1k architecture
     std::string CPUArchName = etiss::cfg().get<std::string>("arch.cpu", "");
-	etiss::uint64 startAddress = dsys.get_startaddr();
-	std::cout << "  ELF start address: 0x" << std::hex << startAddress << std::dec << std::endl;
+    etiss::uint64 sa = etiss::cfg().get<uint64_t>("vp.entry_point", dsys.get_startaddr());
+	std::cout << "  CPU start address: 0x" << std::hex << sa << std::dec << std::endl;
     std::shared_ptr<etiss::CPUCore> cpu = etiss::CPUCore::create(CPUArchName, "core0");
     if (!cpu)
     {
@@ -106,8 +106,6 @@ int main(int argc, const char *argv[])
     cpu->setTimer(false);
 
     // reset CPU with a manual start address
-    etiss::uint64 sa = etiss::cfg().get<uint64_t>("vp.entry_point", startAddress);  // Where should PC pointer at beginning is
-                                                                                    // dependent layout of boot code
     cpu->reset(&sa);
 
     // add the virtual structure of the cpu to the VirtualStruct root. This allows
