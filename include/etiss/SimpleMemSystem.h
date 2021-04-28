@@ -171,7 +171,9 @@ class SimpleMemSystem : public System
 
   private:
     std::vector<std::unique_ptr<MemSegment>> msegs_{};
-    etiss::int32 dbus_access(ETISS_CPU *cpu, etiss::uint64 addr, etiss::uint8 *buf, etiss::uint32 len, bool write);
+
+    template <bool write>
+    etiss::int32 dbus_access(ETISS_CPU *cpu, etiss::uint64 addr, etiss::uint8 *buf, etiss::uint32 len);
 
     etiss::uint64 start_addr_{ 0 };
 

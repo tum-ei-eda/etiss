@@ -323,7 +323,8 @@ static void trace(ETISS_CPU *cpu, etiss::uint64 addr, etiss::uint32 len, bool is
         std::cout << text.str();
 }
 
-etiss::int32 SimpleMemSystem::dbus_access(ETISS_CPU *cpu, etiss::uint64 addr, etiss::uint8 *buf, etiss::uint32 len, bool write) {
+template <bool write>
+etiss::int32 SimpleMemSystem::dbus_access(ETISS_CPU *cpu, etiss::uint64 addr, etiss::uint8 *buf, etiss::uint32 len) {
     uint64 pc = cpu ? cpu->instructionPointer : 0;
 
     auto mseg_it = std::find_if(msegs_.begin(), msegs_.end(), find_fitting_mseg(addr, len));
@@ -366,12 +367,12 @@ etiss::int32 SimpleMemSystem::dbus_access(ETISS_CPU *cpu, etiss::uint64 addr, et
 
 etiss::int32 SimpleMemSystem::dread(ETISS_CPU *cpu, etiss::uint64 addr, etiss::uint8 *buf, etiss::uint32 len)
 {
-    return dbus_access(cpu, addr, buf, len, false);
+    return dbus_access<false>(cpu, addr, buf, len);
 }
 
 etiss::int32 SimpleMemSystem::dwrite(ETISS_CPU *cpu, etiss::uint64 addr, etiss::uint8 *buf, etiss::uint32 len)
 {
-    return dbus_access(cpu, addr, buf, len, true);
+    return dbus_access<true>(cpu, addr, buf, len);
 }
 
 etiss::int32 SimpleMemSystem::dbg_read(etiss::uint64 addr, etiss::uint8 *buf, etiss::uint32 len)
