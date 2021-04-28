@@ -66,6 +66,11 @@ int main(int argc, const char *argv[])
     etiss::SimpleMemSystem dsys;
     dsys.init_memory();
 
+    if (!etiss::cfg().isSet("arch.cpu")) {
+        std::cout << "  CPU architecture was not set anywhere! Please set it manually using the arch.cpu configuration option!";
+        return 3;
+    }
+
     if (false)
     {
         std::list<etiss::uint32> instructions;
