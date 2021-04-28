@@ -224,7 +224,7 @@ etiss::int32 RISCVArch::handleException(etiss::int32 cause, ETISS_CPU *cpu)
         break;
 
     case etiss::RETURNCODE::RESET:
-        handledCause = handle(0, 0x80);
+        handledCause = handle(0, etiss::cfg().get<uint64_t>("vp.entry_point", 0));
         break;
 
     case etiss::RETURNCODE::INSTR_PAGEFAULT:
