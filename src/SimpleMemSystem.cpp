@@ -285,22 +285,28 @@ SimpleMemSystem::SimpleMemSystem() : error_on_seg_mismatch_(etiss::cfg().get<boo
     }
 }
 
-etiss::int32 SimpleMemSystem::iread(ETISS_CPU *, etiss::uint64 addr, etiss::uint32 len)
+void access_error(ETISS_CPU *cpu, etiss::uint64 addr, etiss::uint32 len, std::string error, etiss::Verbosity verbosity) {
+    uint64 pc = cpu ? cpu->instructionPointer : 0;
+    std::stringstream ss;
+
+    ss << error << ", PC = 0x" << std::hex << std::setw(8) << std::setfill('0') << pc
+        << ", address 0x" << std::hex << std::setw(8) << std::setfill('0') << addr << ", length " << len;
+
+    etiss::log(verbosity, ss.str());
+}
+
+etiss::int32 SimpleMemSystem::iread(ETISS_CPU *cpu, etiss::uint64 addr, etiss::uint32 len)
 {
     auto it = std::find_if(msegs_.begin(), msegs_.end(), find_fitting_mseg(addr, len));
     if (it != msegs_.end()) return RETURNCODE::NOERROR;
 
-    std::stringstream ss;
-    ss << "Error during ibus read at address 0x" << std::hex << std::setw(8) << std::setfill('0') << addr << " with length " << len;
-    etiss::log(etiss::ERROR, ss.str());
+    access_error(cpu, addr, len, "ibus read error", etiss::ERROR);
     return RETURNCODE::IBUS_READ_ERROR;
 }
 
-etiss::int32 SimpleMemSystem::iwrite(ETISS_CPU *, etiss::uint64 addr, etiss::uint8 *buf, etiss::uint32 len)
+etiss::int32 SimpleMemSystem::iwrite(ETISS_CPU *cpu, etiss::uint64 addr, etiss::uint8 *buf, etiss::uint32 len)
 {
-    std::stringstream ss;
-    ss << "Blocked instruction bus write at address 0x" << std::hex << std::setw(8) << std::setfill('0') << addr << " with length" << len;
-    etiss::log(etiss::ERROR, ss.str());
+    access_error(cpu, addr, len, "ibus write blocked", etiss::ERROR);
     return RETURNCODE::IBUS_WRITE_ERROR;
 }
 
@@ -323,22 +329,14 @@ static void trace(ETISS_CPU *cpu, etiss::uint64 addr, etiss::uint32 len, bool is
 
 template <bool write>
 etiss::int32 SimpleMemSystem::dbus_access(ETISS_CPU *cpu, etiss::uint64 addr, etiss::uint8 *buf, etiss::uint32 len) {
-    uint64 pc = cpu ? cpu->instructionPointer : 0;
-
     auto mseg_it = std::find_if(msegs_.begin(), msegs_.end(), find_fitting_mseg(addr, len));
-
-    MemSegment::access_t access = write ? MemSegment::WRITE : MemSegment::READ;
-    std::string mode = write ? "write" : "read";
 
     if (mseg_it != msegs_.end()) {
         auto & mseg = *mseg_it;
+        MemSegment::access_t access = write ? MemSegment::WRITE : MemSegment::READ;
+
         if (!(mseg->mode_ & access)) {
-            std::stringstream ss;
-
-            ss << "dbus " << mode << " forbidden, PC = 0x" << std::hex << std::setw(8) << std::setfill('0') << pc
-                << ", address 0x" << std::hex << std::setw(8) << std::setfill('0') << addr << ", length " << len;
-
-            etiss::log(etiss::WARNING, ss.str());
+            access_error(cpu, addr, len, std::string("dbus ") + (write ? "write" : "read") + " forbidden", etiss::WARNING);
         }
 
         size_t offset = addr - mseg->start_addr_;
@@ -353,12 +351,7 @@ etiss::int32 SimpleMemSystem::dbus_access(ETISS_CPU *cpu, etiss::uint64 addr, et
         return RETURNCODE::NOERROR;
     }
 
-    std::stringstream ss;
-
-    ss << "dbus " << mode << " error, PC = 0x" << std::hex << std::setw(8) << std::setfill('0') << pc
-       << ", address 0x" << std::hex << std::setw(8) << std::setfill('0') << addr << ", length " << len;
-
-    etiss::log(etiss::ERROR, ss.str());
+    access_error(cpu, addr, len, std::string("dbus ") + (write ? "write" : "read") + " error", etiss::ERROR);
 
     return write ? RETURNCODE::DBUS_WRITE_ERROR : RETURNCODE::DBUS_READ_ERROR;
 }
