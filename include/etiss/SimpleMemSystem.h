@@ -138,7 +138,6 @@ class MemSegment
 class SimpleMemSystem : public System
 {
   public:
-    //SimpleMemSystem(uint32_t rom_start, uint32_t rom_size, uint32_t ram_start, uint32_t ram_size);
     SimpleMemSystem(void);
 
     virtual ~SimpleMemSystem(void)
@@ -153,15 +152,9 @@ class SimpleMemSystem : public System
     etiss::int32 dwrite(ETISS_CPU *cpu, etiss::uint64 addr, etiss::uint8 *buf, etiss::uint32 len);
     etiss::int32 dbg_read(etiss::uint64 addr, etiss::uint8 *buf, etiss::uint32 len);
     etiss::int32 dbg_write(etiss::uint64 addr, etiss::uint8 *buf, etiss::uint32 len);
+
     // sync time
     void syncTime(ETISS_CPU *cpu);
-    /**
-            @brief loads a binary image from a file to the given address
-    */
-    // bool load(etiss::uint64 addr,const char * file);
-    // bool loadRom(const char *file);
-    // bool loadRam(const char *file);
-    // void swapEndian(unsigned align = 4);
 
     void init_memory();
     void load_elf();
@@ -184,24 +177,14 @@ class SimpleMemSystem : public System
         uint64 addr, size;
     };
 
-    /*
-    std::vector<uint8> ram_mem_{};
-    std::vector<uint8> rom_mem_{};
-
-    const etiss::uint64 rom_start_;
-    const etiss::uint64 ram_start_;
-    const etiss::uint64 rom_size_;
-    const etiss::uint64 ram_size_;
-    */
-
-    bool _print_ibus_access;
-    bool _print_dbus_access;
-    bool _print_dbgbus_access;
-    bool _print_to_file;
+    bool print_ibus_access_;
+    bool print_dbus_access_;
+    bool print_dbgbus_access_;
+    bool print_to_file_;
 
     bool error_on_seg_mismatch_;
 
-    int message_max_cnt;
+    int message_max_cnt_;
 
     std::ofstream trace_file_dbus_;
 

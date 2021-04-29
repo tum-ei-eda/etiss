@@ -270,15 +270,15 @@ void SimpleMemSystem::add_memsegment(std::unique_ptr<MemSegment>& mseg, const vo
     msegs_.push_back(std::move(mseg));
 }
 
-SimpleMemSystem::SimpleMemSystem() : error_on_seg_mismatch_(etiss::cfg().get<bool>("simple_mem_system.error_on_seg_mismatch", false))
+SimpleMemSystem::SimpleMemSystem() :
+    print_ibus_access_(etiss::cfg().get<bool>("simple_mem_system.print_ibus_access", false)),
+    print_dbus_access_(etiss::cfg().get<bool>("simple_mem_system.print_dbus_access", false)),
+    print_dbgbus_access_(etiss::cfg().get<bool>("simple_mem_system.print_dbgbus_access", false)),
+    print_to_file_(etiss::cfg().get<bool>("simple_mem_system.print_to_file", false)),
+    error_on_seg_mismatch_(etiss::cfg().get<bool>("simple_mem_system.error_on_seg_mismatch", false)),
+    message_max_cnt_(etiss::cfg().get<int>("simple_mem_system.message_max_cnt", 100))
 {
-    _print_ibus_access = etiss::cfg().get<bool>("simple_mem_system.print_ibus_access", false);
-    _print_dbus_access = etiss::cfg().get<bool>("simple_mem_system.print_dbus_access", false);
-    _print_dbgbus_access = etiss::cfg().get<bool>("simple_mem_system.print_dbgbus_access", false);
-    _print_to_file = etiss::cfg().get<bool>("simple_mem_system.print_to_file", false);
-    message_max_cnt = etiss::cfg().get<int>("simple_mem_system.message_max_cnt", 100);
-
-    if (_print_dbus_access)
+    if (print_dbus_access_)
     {
         trace_file_dbus_.open(etiss::cfg().get<std::string>("etiss.output_path_prefix", "") + "dBusAccess.csv",
                               std::ios::binary);
@@ -346,7 +346,7 @@ etiss::int32 SimpleMemSystem::dbus_access(ETISS_CPU *cpu, etiss::uint64 addr, et
 
         memcpy(dest, src, len);
 
-        if (_print_dbus_access) trace(cpu, addr, len, write, _print_to_file, trace_file_dbus_);
+        if (print_dbus_access_) trace(cpu, addr, len, write, print_to_file_, trace_file_dbus_);
 
         return RETURNCODE::NOERROR;
     }
