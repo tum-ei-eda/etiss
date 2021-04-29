@@ -129,9 +129,8 @@ void SimpleMemSystem::load_segments() {
 
             if (image != "")
             {
-                std::ifstream ifs;
-                ifs.open(image, std::ifstream::binary | std::ifstream::ate);
-                if (!ifs.good()) {
+                std::ifstream ifs(image, std::ifstream::binary | std::ifstream::ate);
+                if (!ifs) {
                     std::stringstream msg;
                     msg << "Error during read of segment image file " << image << "!";
                     etiss::log(etiss::FATALERROR, msg.str());
@@ -142,7 +141,6 @@ void SimpleMemSystem::load_segments() {
                 buf = new etiss::uint8[fsize];
 
                 ifs.read((char*)buf, fsize);
-                ifs.close();
             }
 
             auto mseg = std::make_unique<MemSegment>(origin, length, static_cast<MemSegment::access_t>(access), sname.str(), nullptr);
