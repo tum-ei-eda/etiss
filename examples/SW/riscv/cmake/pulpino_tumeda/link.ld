@@ -20,8 +20,8 @@ VAR_rom_start = DEFINED(PULPINO_ROM_START) ? PULPINO_ROM_START : 0x0;
 VAR_rom_size = DEFINED(PULPINO_ROM_SIZE) ? PULPINO_ROM_SIZE : 0x80000;
 VAR_ram_start = DEFINED(PULPINO_RAM_START) ? PULPINO_RAM_START : 0x80000;
 VAR_ram_size = DEFINED(PULPINO_RAM_SIZE) ? PULPINO_RAM_SIZE : 0x80000;
-VAR_stack_size = DEFINED(PULPINO_STACK_SIZE) ? PULPINO_STACK_SIZE : 0x4000;
-VAR_heap_size = DEFINED(PULPINO_HEAP_SIZE) ? PULPINO_HEAP_SIZE : 0x4000;
+VAR_min_stack = DEFINED(PULPINO_MIN_STACK_SIZE) ? PULPINO_MIN_STACK_SIZE : 0x4000;
+VAR_min_heap = DEFINED(PULPINO_MIN_HEAP_SIZE) ? PULPINO_MIN_HEAP_SIZE : 0x4000;
 
 MEMORY
 {
@@ -30,8 +30,8 @@ MEMORY
 }
 
 /* Stack information variables */
-_min_stack     = VAR_stack_size;   /* minimum stack space to reserve */
-_min_heap      = VAR_heap_size;    /* minimum heap space to reserve */
+_min_stack     = VAR_min_stack;   /* minimum stack space to reserve */
+_min_heap      = VAR_min_heap;    /* minimum heap space to reserve */
 _heap_start    = _bss_end;
 _heap_end      = _stack_start;
 
