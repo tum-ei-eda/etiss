@@ -300,7 +300,7 @@ etiss::int32 SimpleMemSystem::iwrite(ETISS_CPU *, etiss::uint64 addr, etiss::uin
 {
     std::stringstream ss;
     ss << "Blocked instruction bus write at address 0x" << std::hex << std::setw(8) << std::setfill('0') << addr << " with length" << len;
-    etiss::log(etiss::VERBOSE, ss.str());
+    etiss::log(etiss::ERROR, ss.str());
     return RETURNCODE::IBUS_WRITE_ERROR;
 }
 
