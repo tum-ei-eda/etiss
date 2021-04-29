@@ -122,7 +122,10 @@ int main(int argc, const char *argv[])
     initializer.loadIniPlugins(cpu);
     initializer.loadIniJIT(cpu);
     // here own developped plug-ins can be added with:
-    // cpu->addPlugin(std::shared_ptr<etiss::Plugin>(new TracePrinter(0x88888)));
+    if (etiss::cfg().get<bool>("etiss.log_pc", false)) {
+      cpu->addPlugin(std::shared_ptr<etiss::Plugin>(new TracePrinter(0x8888, true)));
+    }
+    
     std::cout << "=== Setting up plug-ins ===" << std::endl << std::endl;
 
     // Simulation start
