@@ -18,6 +18,17 @@ Check README in `../SW` to assure all prerequisites are fullfilled (e.g.
 setting up path to toolchain, getting required libraries, ...). You also 
 find the detailed instructrions to compile SW in respective directories
 
+After checking all prerequisites, execute the following commands to build
+the example software:
+
+	$ cd ../SW/<or1k>|<riscv>/
+	$ mkdir build && cd build
+	$ cmake ..
+
+### LINUX SYSTEM
+
+	$ make
+
 After SW compilation, we can build and run the simulation with the following script:
 
 	$ mkdir build && cd build
@@ -29,6 +40,19 @@ After SW compilation, we can build and run the simulation with the following scr
 
   > NOTE: This script simply adds environment variables and starts the main executable
   with ETISS.ini as parameter.
+
+### WINDOWS SYSTEM
+
+	$ cmake --build . --config $BUILD_TYPE
+
+Set the PATH variable to include files in the build/installed/lib/ folder and then run the program by passing required architecture, jit and plugins. An example is shown here. Please use --help to display all configurations supported. 
+
+	$ $Env:Path="X:/path/to/lib;"+$Env:Path
+	$ cd build/$BUILD_TYPE 
+  
+  > NOTE: $BUILD_TYPE is either Release or Debug depending on how it was compiled.)
+	
+	$ main --vp.elf_file=X:/path/to/build/installed/examples/SW/riscv/build/riscv_example --arch.cpu=RISCV --jit.type=TCCJIT --etiss.loglevel=4 -pLogger
 
 ## Debugging
 
