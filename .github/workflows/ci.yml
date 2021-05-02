@@ -134,3 +134,8 @@ jobs:
         PATH=$PATH:/d/a/etiss/install/lib/
         cd $BUILD_TYPE
         ./main.exe --vp.elf_file=../../../SW/riscv/build/riscv_example --arch.cpu=RISCV --jit.type=TCCJIT --etiss.loglevel=4 -pLogger
+        ./main.exe --vp.elf_file=../../../SW/riscv/build/riscv_example --arch.cpu=RISCV --jit.type=LLVMJIT --etiss.loglevel=4 -pLogger
+        ./main.exe --vp.elf_file=../../../SW/riscv_cpp/build/riscv_example --arch.cpu=RISCV --jit.type=TCCJIT --etiss.loglevel=4 -pLogger
+        ./main.exe --vp.elf_file=../../../SW/riscv_cpp/build/riscv_example --arch.cpu=RISCV --jit.type=LLVMJIT --etiss.loglevel=4 -pLogger
+        ./main.exe --vp.elf_file=../../../SW/riscv/build64/riscv_example --arch.cpu=RISCV --jit.type=TCCJIT --etiss.loglevel=4 -pLogger
+        ./main.exe --vp.elf_file=../../../SW/riscv_cpp/build64/riscv_example --arch.cpu=RISCV --jit.type=TCCJIT --etiss.loglevel=4 -pLogger
