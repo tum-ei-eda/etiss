@@ -54,7 +54,7 @@ int main(int argc, const char *argv[])
     // ./main [-o<option> <value>] [-f[no]<flag>] [-i<additionalinifile>]
     // All arguments with this format will be evaluated by the Initializer.
     std::cout << "=== Setting up configurations ===" << std::endl;
-    std::list<std::string> iniFiles;
+    //std::list<std::string> iniFiles;
     // iniFiles.push_back("../ETISS.ini"); // will be loaded within the run.sh
     // iniFiles.push_back("additional.ini");
     etiss::Initializer initializer(argc, argv); //add &iniFiles as the first argument if .ini files are loaded explicitly here
@@ -122,7 +122,11 @@ int main(int argc, const char *argv[])
     initializer.loadIniPlugins(cpu);
     initializer.loadIniJIT(cpu);
     // here own developped plug-ins can be added with:
-    // cpu->addPlugin(std::shared_ptr<etiss::Plugin>(new TracePrinter(0x88888)));
+    if (etiss::cfg().get<bool>("etiss.log_pc", false)) {
+      etiss::cfg().set<int>("etiss.max_block_size", 1);
+      cpu->addPlugin(std::shared_ptr<etiss::Plugin>(new TracePrinter(0x88888)));
+    }	
+    
     std::cout << "=== Setting up plug-ins ===" << std::endl << std::endl;
 
     // Simulation start
