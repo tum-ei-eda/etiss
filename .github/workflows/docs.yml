@@ -1,0 +1,46 @@
+name: Doxygen - GitHub Pages
+
+on: [workflow_dispatch]
+
+jobs:
+  doxygen:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Requirements
+      run: |
+        sudo apt-get install libboost-system-dev libboost-filesystem-dev libboost-program-options-dev doxygen graphviz
+
+    - name: LLVM
+      working-directory: ${{runner.workspace}}
+      shell: bash
+      run: |
+        LLVM_NAME="clang+llvm-11.0.0-x86_64-linux-gnu-ubuntu-20.04"
+        wget https://github.com/llvm/llvm-project/releases/download/llvmorg-11.0.0/$LLVM_NAME.tar.xz
+        tar xf $LLVM_NAME.tar.xz
+        mv $LLVM_NAME llvm-lib
+    - name: Create Build Environment
+      run: cmake -E make_directory ${{runner.workspace}}/build
+
+    - name: Configure CMake
+      shell: bash
+      working-directory: ${{runner.workspace}}/build
+      run: |
+        export LLVM_DIR=${{runner.workspace}}/llvm-lib
+        cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_INSTALL_PREFIX=../install -DETISS_BUILD_MANUAL_DOC=ON
+
+    - name: Generate docs
+      working-directory: ${{runner.workspace}}/build
+      shell: bash
+      run: cmake --build . --config $BUILD_TYPE --target doc
+
+    - name: Deploy to pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ${{runner.workspace}}/build/doc/html
+        user_name: 'github-actions[bot]'
+        user_email: 'github-actions[bot]@users.noreply.github.com'
+        force_orphan: true
+        publish_branch: gh-pages
