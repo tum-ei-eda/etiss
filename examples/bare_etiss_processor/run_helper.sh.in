@@ -29,10 +29,6 @@ fi
 TARGETSW_PATH_ELF=$1
 TARGET_ELFFILE=$(basename -- "$TARGETSW_PATH_ELF")
 TARGET_ELFDIR=$(dirname -- "$TARGETSW_PATH_ELF")
-echo -e \
-  "[StringConfigurations]\n" \
-  "vp.elf_file=$TARGETSW_PATH_ELF\n" \
-    >> $DYN_INI
 
 VP_EXE="${ETISS_DIR}/examples/bare_etiss_processor/build/main"
 
@@ -78,16 +74,27 @@ do
     shift
 done
 
-echo -e "[BoolConfigurations]\n etiss.enable_dmi=${ENABLE_DMI}" >> $DYN_INI
-echo -e "[BoolConfigurations]\n etiss.log_pc=${LOG_PC}" >> $DYN_INI
-echo -e "[IntConfigurations]\n etiss.loglevel=${LOG_LEVEL}" >> $DYN_INI
+echo -e "[StringConfigurations]\n" >> $DYN_INI
+echo -e "vp.elf_file=$TARGETSW_PATH_ELF" >> $DYN_INI
+echo -e "jit.type=${JIT}" >> $DYN_INI
+
+echo -e "\n[BoolConfigurations]\n" >> $DYN_INI
+echo -e "etiss.enable_dmi=${ENABLE_DMI}" >> $DYN_INI
+echo -e "etiss.log_pc=${LOG_PC}" >> $DYN_INI
+
 if [ "${DO_TRACE}" -eq 1 ]; then
-    echo -e "[BoolConfigurations]\n simple_mem_system.print_dbus_access=true" >> $DYN_INI
-    echo -e "[BoolConfigurations]\n simple_mem_system.print_to_file=true" >> $DYN_INI
+    echo -e "simple_mem_system.print_dbus_access=true" >> $DYN_INI
+    echo -e "simple_mem_system.print_to_file=true" >> $DYN_INI
 fi
 
-echo -e "[StringConfigurations]\n jit.type=${JIT}" >> $DYN_INI
+echo -e "\n[IntConfigurations]\n" >> $DYN_INI
+echo -e "etiss.loglevel=${LOG_LEVEL}" >> $DYN_INI
 
+echo -e "simple_mem_system.memseg_origin_00=0x00000000" >> $DYN_INI
+echo -e "simple_mem_system.memseg_length_00=0x00080000" >> $DYN_INI
+
+echo -e "simple_mem_system.memseg_origin_01=0x00080000" >> $DYN_INI
+echo -e "simple_mem_system.memseg_length_01=0x00080000" >> $DYN_INI
 
 # Call
 ARGS="-i${ETISS_DIR}/examples/bare_etiss_processor/base.ini -i${DYN_INI}"

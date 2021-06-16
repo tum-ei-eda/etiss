@@ -117,14 +117,14 @@ jobs:
       if: matrix.config.name == 'Linux'
       shell: bash
       run: |
-        ./run_helper.sh ../SW/riscv/build/riscv_example
-        ./run_helper.sh ../SW/riscv/build/riscv_example gcc
-        ./run_helper.sh ../SW/riscv/build/riscv_example llvm
-        ./run_helper.sh ../SW/riscv_cpp/build/riscv_example
-        ./run_helper.sh ../SW/riscv_cpp/build/riscv_example gcc
-        ./run_helper.sh ../SW/riscv_cpp/build/riscv_example llvm
-        ./run_helper.sh ../SW/riscv/build64/riscv_example
-        ./run_helper.sh ../SW/riscv_cpp/build64/riscv_example
+        ./run_helper.sh ../SW/riscv/build/riscv_example.elf
+        ./run_helper.sh ../SW/riscv/build/riscv_example.elf gcc
+        ./run_helper.sh ../SW/riscv/build/riscv_example.elf llvm
+        ./run_helper.sh ../SW/riscv_cpp/build/riscv_example.elf
+        ./run_helper.sh ../SW/riscv_cpp/build/riscv_example.elf gcc
+        ./run_helper.sh ../SW/riscv_cpp/build/riscv_example.elf llvm
+        ./run_helper.sh ../SW/riscv/build64/riscv_example.elf
+        ./run_helper.sh ../SW/riscv_cpp/build64/riscv_example.elf
 
     - name: Test (Windows)
       working-directory: ${{runner.workspace}}/install/examples/bare_etiss_processor/build
@@ -133,9 +133,9 @@ jobs:
       run: |
         PATH=$PATH:/d/a/etiss/install/lib/
         cd $BUILD_TYPE
-        ./main.exe --vp.elf_file=../../../SW/riscv/build/riscv_example --arch.cpu=RISCV --jit.type=TCCJIT --etiss.loglevel=4 -pLogger
-        ./main.exe --vp.elf_file=../../../SW/riscv/build/riscv_example --arch.cpu=RISCV --jit.type=LLVMJIT --etiss.loglevel=4 -pLogger
-        ./main.exe --vp.elf_file=../../../SW/riscv_cpp/build/riscv_example --arch.cpu=RISCV --jit.type=TCCJIT --etiss.loglevel=4 -pLogger
-        ./main.exe --vp.elf_file=../../../SW/riscv_cpp/build/riscv_example --arch.cpu=RISCV --jit.type=LLVMJIT --etiss.loglevel=4 -pLogger
-        ./main.exe --vp.elf_file=../../../SW/riscv/build64/riscv_example --arch.cpu=RISCV --jit.type=TCCJIT --etiss.loglevel=4 -pLogger
-        ./main.exe --vp.elf_file=../../../SW/riscv_cpp/build64/riscv_example --arch.cpu=RISCV --jit.type=TCCJIT --etiss.loglevel=4 -pLogger
+        ./main.exe --vp.elf_file=../../../SW/riscv/build/riscv_example.elf --arch.cpu=RISCV --jit.type=TCCJIT --etiss.loglevel=4 -i../../../SW/riscv/memsegs.ini -pLogger
+        ./main.exe --vp.elf_file=../../../SW/riscv/build/riscv_example.elf --arch.cpu=RISCV --jit.type=LLVMJIT --etiss.loglevel=4 -i../../../SW/riscv/memsegs.ini -pLogger
+        ./main.exe --vp.elf_file=../../../SW/riscv_cpp/build/riscv_example.elf --arch.cpu=RISCV --jit.type=TCCJIT --etiss.loglevel=4 -i../../../SW/riscv_cpp/memsegs.ini -pLogger
+        ./main.exe --vp.elf_file=../../../SW/riscv_cpp/build/riscv_example.elf --arch.cpu=RISCV --jit.type=LLVMJIT --etiss.loglevel=4 -i../../../SW/riscv_cpp/memsegs.ini -pLogger
+        ./main.exe --vp.elf_file=../../../SW/riscv/build64/riscv_example.elf --arch.cpu=RISCV --jit.type=TCCJIT --etiss.loglevel=4 -i../../../SW/riscv/memsegs.ini -pLogger
+        ./main.exe --vp.elf_file=../../../SW/riscv_cpp/build64/riscv_example.elf --arch.cpu=RISCV --jit.type=TCCJIT --etiss.loglevel=4 -i../../../SW/riscv_cpp/memsegs.ini -pLogger

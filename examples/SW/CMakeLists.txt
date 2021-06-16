@@ -64,9 +64,9 @@ install(FILES "${PROJECT_BINARY_DIR}/tobeinstalled/or1k/Makefile"
 		DESTINATION examples/SW/or1k
 )
 
-install(FILES riscv/CMakeLists.txt
+install(FILES riscv/CMakeLists.txt riscv/memsegs.ini
     DESTINATION examples/SW/riscv
 )
-install(FILES riscv_cpp/CMakeLists.txt
+install(FILES riscv_cpp/CMakeLists.txt riscv/memsegs.ini
     DESTINATION examples/SW/riscv_cpp
 )

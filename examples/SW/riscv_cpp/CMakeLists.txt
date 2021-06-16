@@ -7,4 +7,4 @@ include(../riscv/cmake/PulpinoTarget.cmake)
 
 ADD_DEFINITIONS(-DPULPINO_NO_GPIO)
 
-ADD_EXECUTABLE_PULPINO(riscv_example main.cpp)
+ADD_EXECUTABLE_PULPINO(riscv_example.elf main.cpp)

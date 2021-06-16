@@ -57,6 +57,7 @@
 #include <cstring>
 #include <iostream>
 #include <memory>
+#include <map>
 
 namespace etiss
 {
@@ -66,19 +67,26 @@ class MemSegment
     bool self_allocated_{ false };
 
   public:
+    enum access_t {
+        UNSET = 0,
+        READ = 1,
+        WRITE = 2,
+        EXEC = 4
+    };
+    /*
     typedef enum ACCESS
     {
         READ,
         WRITE,
     } access_t;
-
+    */
     etiss::uint8 *mem_;
 
-    const std::string name_;
+    std::string name_;
     const etiss::uint64 start_addr_;
     const etiss::uint64 end_addr_;
     const etiss::uint64 size_;
-    const access_t mode_;
+    access_t mode_;
 
     MemSegment(etiss::uint64 start_addr, etiss::uint64 size, access_t mode, const std::string name,
                etiss::uint8 *mem = nullptr)
@@ -130,7 +138,6 @@ class MemSegment
 class SimpleMemSystem : public System
 {
   public:
-    SimpleMemSystem(uint32_t rom_start, uint32_t rom_size, uint32_t ram_start, uint32_t ram_size);
     SimpleMemSystem(void);
 
     virtual ~SimpleMemSystem(void)
@@ -145,41 +152,43 @@ class SimpleMemSystem : public System
     etiss::int32 dwrite(ETISS_CPU *cpu, etiss::uint64 addr, etiss::uint8 *buf, etiss::uint32 len);
     etiss::int32 dbg_read(etiss::uint64 addr, etiss::uint8 *buf, etiss::uint32 len);
     etiss::int32 dbg_write(etiss::uint64 addr, etiss::uint8 *buf, etiss::uint32 len);
+
     // sync time
     void syncTime(ETISS_CPU *cpu);
-    /**
-            @brief loads a binary image from a file to the given address
-    */
-    // bool load(etiss::uint64 addr,const char * file);
-    // bool loadRom(const char *file);
-    // bool loadRam(const char *file);
-    // void swapEndian(unsigned align = 4);
 
-    etiss::int8 load_elf(const char *file);
+    void init_memory();
+    void load_elf();
+    void load_segments(void);
     etiss::uint64 get_startaddr(void) { return (start_addr_); }
-    etiss::int8 add_memsegment(std::unique_ptr<MemSegment> mseg, const void *raw_data, size_t file_size_bytes);
+    void add_memsegment(std::unique_ptr<MemSegment>& mseg, const void *raw_data, size_t file_size_bytes);
 
   private:
     std::vector<std::unique_ptr<MemSegment>> msegs_{};
 
+    template <bool write>
+    etiss::int32 dbus_access(ETISS_CPU *cpu, etiss::uint64 addr, etiss::uint8 *buf, etiss::uint32 len);
+
     etiss::uint64 start_addr_{ 0 };
 
-    std::vector<uint8> ram_mem_{};
-    std::vector<uint8> rom_mem_{};
+    struct find_fitting_mseg {
+        find_fitting_mseg(uint64 addr, uint64 size) : addr(addr), size(size) {}
+        bool operator() (const std::unique_ptr<MemSegment> & mseg) { return mseg->payload_in_range(addr, size); }
+    private:
+        uint64 addr, size;
+    };
 
-    const etiss::uint64 rom_start_;
-    const etiss::uint64 ram_start_;
-    const etiss::uint64 rom_size_;
-    const etiss::uint64 ram_size_;
+    bool print_ibus_access_;
+    bool print_dbus_access_;
+    bool print_dbgbus_access_;
+    bool print_to_file_;
 
-    bool _print_ibus_access;
-    bool _print_dbus_access;
-    bool _print_dbgbus_access;
-    bool _print_to_file;
+    bool error_on_seg_mismatch_;
 
-    int message_max_cnt;
+    int message_max_cnt_;
 
     std::ofstream trace_file_dbus_;
+
+    std::map<etiss::uint64, etiss::uint64> configured_address_spaces_;
 };
 
 } // namespace etiss
