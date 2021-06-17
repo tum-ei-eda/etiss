@@ -402,11 +402,8 @@ void etiss_loadIni(std::string fileName)
 
     SI_Error rc = po_simpleIni->LoadFile(fileName.c_str());
     if (rc < 0)
-    {
         std::cout << "Initializer::loadIni(): Failed to load Ini: " << fileName << std::endl;
-        return;
-    }
-        else
+    else
         std::cout << "Initializer::loadIni(): Ini sucessfully loaded " << fileName << std::endl;
 }
 
@@ -422,13 +419,9 @@ void etiss::Initializer::loadIni(std::list<std::string> *files)
     // load file
     for (auto it_files : *files)
     {
- // the check above is sufficient no need for this / checked for previous cases false and last true gives true not the case based on files structure
+        // the check above is sufficient no need for this / checked for previous cases false and last true gives true not the case based on files structure
         etiss_loadIni(it_files);
-
     }
-
-
-
 }
 
 void etiss_loadIniConfigs()

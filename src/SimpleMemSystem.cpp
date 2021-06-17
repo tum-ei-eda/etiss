@@ -220,8 +220,8 @@ void SimpleMemSystem::load_elf()
 
         std::stringstream sname;
         sname << seg->get_index() << " - " << modestr
-              << "[0x" << std::hex << std::setfill('0') << std::setw(sizeof(etiss::uint64) * 2) << start_addr + size - 1 << " - "
-              << "0x" << std::hex << std::setfill('0') << std::setw(sizeof(etiss::uint64) * 2) << start_addr << "]";
+              << "[0x" << std::hex << std::setfill('0') << std::setw(sizeof(etiss::uint64) * 2) << start_addr << " - "
+              << "0x" << std::hex << std::setfill('0') << std::setw(sizeof(etiss::uint64) * 2) << start_addr + size - 1 << "]";
 
         auto mseg_it = std::find_if(msegs_.begin(), msegs_.end(), find_fitting_mseg(start_addr, size));
 
