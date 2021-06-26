@@ -102,8 +102,6 @@ TCCJIT::TCCJIT() : JIT("tcc")
 {
 #if ETISS_USE_GETPROC
     addAllSymbols(extsymbols);
-    for (const auto &jitPath : etiss::jitExtLibPaths())
-        etiss::LibraryInterface::AddSearchPath(jitPath);
 #endif
 }
 
@@ -143,6 +141,8 @@ void *TCCJIT::translate(std::string code, std::set<std::string> headerpaths, std
     {
         tcc_add_symbol(s, sym.first.c_str(), sym.second);
     }
+    for (const auto &jitPath : etiss::jitExtLibPaths())
+        etiss::LibraryInterface::AddSearchPath(etiss::jitFiles() + jitPath);
 #endif
 
     // init libs
