@@ -366,14 +366,6 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
        if(it != "") libloc.insert(etiss::jitFiles() + it);
     }
 
-    static bool once = true;
-    if (once) {
-        once = false;
-        for (auto& it : libloc) {
-            printf("LIBLOC: %s\n", it.c_str());
-        }
-    }
-
     std::set<std::string> libs;
     //libs.insert("ETISS");
     libs.insert("resources");
