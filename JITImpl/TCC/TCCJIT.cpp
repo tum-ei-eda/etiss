@@ -102,6 +102,8 @@ TCCJIT::TCCJIT() : JIT("tcc")
 {
 #if ETISS_USE_GETPROC
     addAllSymbols(extsymbols);
+    for (const auto &jitPath : etiss::jitExtLibPaths())
+        etiss::LibraryInterface::AddSearchPath(jitPath);
 #endif
 }
 
