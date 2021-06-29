@@ -1,0 +1,6 @@
+<map id="etiss::fault::Injector::acceleratedTrigger" name="etiss::fault::Injector::acceleratedTrigger">
+<area shape="rect" id="node1" title=" " alt="" coords="5,27,156,69"/>
+<area shape="rect" id="node2" href="$namespaceetiss.html#afd320e98bf6a5e2c0d8ffde5dd28dd35" title="write log message at the given level." alt="" coords="235,5,316,32"/>
+<area shape="rect" id="node4" href="$classetiss_1_1fault_1_1Trigger.html#a01a021e80230fb967bacfc2446f61508" title="operator&lt;&lt; can be used." alt="" coords="204,57,347,98"/>
+<area shape="rect" id="node3" href="$namespaceetiss.html#a5d23a51a17c09f1b863c601d4454f99b" title="conversion of type T to std::string." alt="" coords="395,5,507,32"/>
+</map>

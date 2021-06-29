@@ -1,0 +1,6 @@
+<map id="etiss::instr::operator&lt;&lt;" name="etiss::instr::operator&lt;&lt;">
+<area shape="rect" id="node1" title="allow printing of bit arrays (always hex)" alt="" coords="5,78,180,105"/>
+<area shape="rect" id="node2" href="$classetiss_1_1instr_1_1BitArray.html#a6fbe30057aa82313c3f9f593a0867d9b" title=" " alt="" coords="228,5,379,47"/>
+<area shape="rect" id="node3" href="$classetiss_1_1instr_1_1BitArray.html#afb55f99dcf81d76c2e4fceff4c666373" title="returns a reference to the word at the given index." alt="" coords="228,71,379,112"/>
+<area shape="rect" id="node4" href="$classetiss_1_1instr_1_1BitArray.html#a9da79af12cfddd5b1a8e821d9f74a897" title=" " alt="" coords="228,136,379,177"/>
+</map>

@@ -1,0 +1,6 @@
+<map id="etiss::instr::BitArray::recoverFromEndianness" name="etiss::instr::BitArray::recoverFromEndianness">
+<area shape="rect" id="node1" title="changes byte positions as needed to resove endiannes incompabilities after using the internal buffer ..." alt="" coords="5,23,192,65"/>
+<area shape="rect" id="node2" href="$namespaceetiss.html#ac13036cc1551f0b79ff2a933b940b6c7" title="evaluates the endianness of the current build as a constexpr." alt="" coords="240,5,396,32"/>
+<area shape="rect" id="node3" href="$namespaceetiss.html#afd320e98bf6a5e2c0d8ffde5dd28dd35" title="write log message at the given level." alt="" coords="277,56,359,83"/>
+<area shape="rect" id="node4" href="$namespaceetiss.html#a5d23a51a17c09f1b863c601d4454f99b" title="conversion of type T to std::string." alt="" coords="444,56,556,83"/>
+</map>

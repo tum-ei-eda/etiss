@@ -1,0 +1,4 @@
+<map id="_mm_storer_ps" name="_mm_storer_ps">
+<area shape="rect" id="node1" title="Stores float values from a 128&#45;bit vector of [4 x float] to an aligned memory location in reverse ord..." alt="" coords="5,5,128,32"/>
+<area shape="rect" id="node2" href="$xmmintrin_8h.html#a8d02b3bc78acab3963556b2802c4fa2f" title="Stores a 128&#45;bit vector of [4 x float] into an aligned memory location." alt="" coords="176,5,293,32"/>
+</map>

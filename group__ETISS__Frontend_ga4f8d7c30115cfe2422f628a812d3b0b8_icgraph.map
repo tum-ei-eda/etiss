@@ -1,0 +1,4 @@
+<map id="etiss::getPlugin" name="etiss::getPlugin">
+<area shape="rect" id="node1" title="Get a present Plugin plug&#45;in by name." alt="" coords="176,13,299,39"/>
+<area shape="rect" id="node2" href="$classetiss_1_1Initializer.html#a680f42f4c7effbc0b4b5bc2b4eaae21f" title="loads the plugins given with the previous loaded .ini files" alt="" coords="5,5,128,47"/>
+</map>

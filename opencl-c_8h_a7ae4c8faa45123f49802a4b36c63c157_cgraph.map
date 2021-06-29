@@ -1,0 +1,5 @@
+<map id="sinh" name="sinh">
+<area shape="rect" id="node1" title="Compute hyperbolic sine." alt="" coords="5,5,55,32"/>
+<area shape="rect" id="node2" href="$____clang__cuda__math_8h.html#a78effc6b0c92a6b266521fc45562c246" title=" " alt="" coords="103,5,157,32"/>
+<area shape="rect" id="node3" href="$____clang__cuda__libdevice__declares_8h.html#af2a9aa74d6265017e735a7567e4f3c9b" title=" " alt="" coords="205,5,296,32"/>
+</map>

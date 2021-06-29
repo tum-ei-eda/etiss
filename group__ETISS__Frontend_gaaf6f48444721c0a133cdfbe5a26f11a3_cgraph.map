@@ -1,0 +1,13 @@
+<map id="etiss::getCPUArch" name="etiss::getCPUArch">
+<area shape="rect" id="node1" title="Get a present CPUArch plug&#45;in by name." alt="" coords="5,176,144,202"/>
+<area shape="rect" id="node2" href="$classetiss_1_1LibraryInterface.html#adeeb1230d89fdbd47c4155fd1398dce7" title=" " alt="" coords="404,42,568,83"/>
+<area shape="rect" id="node3" href="$classetiss_1_1LibraryInterface.html#a0e5ab9890bf8cced1b3634dd10f5f8ad" title=" " alt="" coords="192,38,356,79"/>
+<area shape="rect" id="node4" href="$classetiss_1_1LibraryInterface.html#a77aef864ac1587d8a8381997f67d6ca6" title=" " alt="" coords="192,103,356,144"/>
+<area shape="rect" id="node5" href="$classetiss_1_1LibraryInterface.html#af73afb77133e95b115b9ce0245f60812" title=" " alt="" coords="192,168,356,210"/>
+<area shape="rect" id="node6" href="$classetiss_1_1LibraryInterface.html#a08e5c418f0348e81ab5f20c5ba5f88df" title="returns true if this library provides nothing" alt="" coords="192,234,356,275"/>
+<area shape="rect" id="node9" href="$namespaceetiss.html#afd320e98bf6a5e2c0d8ffde5dd28dd35" title="write log message at the given level." alt="" coords="233,300,315,326"/>
+<area shape="rect" id="node11" href="$classetiss_1_1LibraryInterface.html#ac93e0c698db41f56491acbfd7acdffa4" title=" " alt="" coords="192,351,356,392"/>
+<area shape="rect" id="node7" href="$classetiss_1_1LibraryInterface.html#aafee4ce8209c4fd13fc5592ec34b89c7" title=" " alt="" coords="404,168,568,210"/>
+<area shape="rect" id="node8" href="$classetiss_1_1LibraryInterface.html#a2183f0c58870a27f0c6b0e7c64cb17c3" title=" " alt="" coords="404,234,568,275"/>
+<area shape="rect" id="node10" href="$namespaceetiss.html#a5d23a51a17c09f1b863c601d4454f99b" title="conversion of type T to std::string." alt="" coords="430,300,542,326"/>
+</map>

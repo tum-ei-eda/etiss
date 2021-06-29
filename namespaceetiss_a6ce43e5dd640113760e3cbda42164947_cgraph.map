@@ -1,0 +1,6 @@
+<map id="etiss::GetCurrentModulePath" name="etiss::GetCurrentModulePath">
+<area shape="rect" id="node1" title="Returns the abolute path with filename to the own dynamic library." alt="" coords="5,31,213,57"/>
+<area shape="rect" id="node2" href="$namespaceetiss.html#afd63577f1d06fa9888d3fe94f2094837" title="Returns the module handle to the own dynamic library." alt="" coords="261,5,441,32"/>
+<area shape="rect" id="node4" href="$namespaceetiss.html#a9a7481f8ea2a2063f76f8b6ba4753c45" title=" " alt="" coords="271,56,431,83"/>
+<area shape="rect" id="node3" href="$namespaceetiss.html#a6c6c92eef70453c5a6be6dc7839ad4d3" title=" " alt="" coords="489,5,691,32"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="etiss::CPUCore::InterruptVectorWrapper::setBit" name="etiss::CPUCore::InterruptVectorWrapper::setBit">
+<area shape="rect" id="node1" title="set the bit of an interrupt line to state (true = raised)" alt="" coords="5,39,188,80"/>
+<area shape="rect" id="node2" href="$classetiss_1_1Plugin.html#a8c7681b6d161b0c6756164798b02dfc8" title=" " alt="" coords="236,5,423,47"/>
+<area shape="rect" id="node3" href="$classetiss_1_1InterruptListenerPlugin.html#a54b3dcb13fb3424ac0e27bd33c61068c" title="gets called whenever an external write to the interrrupt vector takes place" alt="" coords="245,71,414,112"/>
+</map>

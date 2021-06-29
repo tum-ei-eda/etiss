@@ -1,0 +1,4 @@
+<map id="RISCVArch::resetCPU" name="RISCVArch::resetCPU">
+<area shape="rect" id="node1" title="reset cpu (structure)" alt="" coords="204,5,361,32"/>
+<area shape="rect" id="node2" href="$classRISCVArch.html#a1646f763d086af4e999295e5c5552584" title="allocate new cpu structure" alt="" coords="5,5,156,32"/>
+</map>

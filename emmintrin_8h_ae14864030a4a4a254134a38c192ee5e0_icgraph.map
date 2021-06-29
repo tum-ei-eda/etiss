@@ -1,0 +1,5 @@
+<map id="_mm_set1_epi16" name="_mm_set1_epi16">
+<area shape="rect" id="node1" title="Initializes all values in a 128&#45;bit vector of [8 x i16] with the specified 16&#45;bit value." alt="" coords="236,31,369,57"/>
+<area shape="rect" id="node2" href="$avx512vlbwintrin_8h.html#a89a3be6367782f84995110978241ebb7" title=" " alt="" coords="9,5,185,32"/>
+<area shape="rect" id="node3" href="$avx512vlbwintrin_8h.html#a471e7727ca0f4a6d6d0da48a4bc52eae" title=" " alt="" coords="5,56,188,83"/>
+</map>

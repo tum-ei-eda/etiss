@@ -1,0 +1,52 @@
+<map id="/home/runner/work/etiss/etiss/include/etiss/CodePart.h" name="/home/runner/work/etiss/etiss/include/etiss/CodePart.h">
+<area shape="rect" id="node1" title="classes to hold code and additional information used for optimization of instruction translations" alt="" coords="4785,5,5002,47"/>
+<area shape="rect" id="node2" href="$build_2include_2etiss_2CPUArch_8h.html" title="contains neccesary interfaces for instruction translation." alt="" coords="4280,199,4456,225"/>
+<area shape="rect" id="node3" href="$build_2include_2etiss_2Instruction_8h.html" title="contains container classes to store instruction definitions + translation functions and build a trans..." alt="" coords="5382,102,5571,129"/>
+<area shape="rect" id="node4" href="$build_2include_2etiss_2Plugin_8h.html" title="plugins for extensions to code translation and instruction execution" alt="" coords="5595,102,5755,129"/>
+<area shape="rect" id="node5" href="$build_2include_2etiss_2Translation_8h.html" title=" " alt="" coords="5630,303,5821,329"/>
+<area shape="rect" id="node6" href="$etiss_2include_2etiss_2CPUArch_8h.html" title="contains neccesary interfaces for instruction translation." alt="" coords="4786,191,5001,233"/>
+<area shape="rect" id="node21" href="$etiss_2include_2etiss_2Translation_8h.html" title=" " alt="" coords="3476,295,3706,337"/>
+<area shape="rect" id="node29" href="$etiss_2include_2etiss_2Instruction_8h.html" title="contains container classes to store instruction definitions + translation functions and build a trans..." alt="" coords="4558,95,4786,136"/>
+<area shape="rect" id="node35" href="$etiss_2include_2etiss_2Plugin_8h.html" title="plugins for extensions to code translation and instruction execution" alt="" coords="2594,95,2793,136"/>
+<area shape="rect" id="node50" href="$CodePart_8cpp.html" title="implementation of etiss/CodePart.h" alt="" coords="5780,95,5960,136"/>
+<area shape="rect" id="node7" href="$build_2include_2etiss_2CPUCore_8h.html" title="defines main cpu core interface" alt="" coords="3268,511,3445,537"/>
+<area shape="rect" id="node8" href="$build_2include_2etiss_2helper_2CPUArchLibrary_8h.html" title="defines the functions needed for a library that provides etiss::CPUArch implementations" alt="" coords="3832,295,3982,337"/>
+<area shape="rect" id="node9" href="$build_2include_2etiss_2IntegratedLibrary_2gdb_2GDBServer_8h.html" title=" " alt="" coords="2364,295,2546,337"/>
+<area shape="rect" id="node10" href="$build_2include_2etiss_2InterruptHandler_8h.html" title="interrupt checking and signaling" alt="" coords="2903,407,3130,433"/>
+<area shape="rect" id="node11" href="$build_2include_2etiss_2LibraryInterface_8h.html" title="class for simple library access. Libraries can be integrated or loaded at runtime fom a dynamic libra..." alt="" coords="2570,303,2793,329"/>
+<area shape="rect" id="node12" href="$etiss_2include_2etiss_2CPUCore_8h.html" title="defines main cpu core interface" alt="" coords="3512,503,3728,545"/>
+<area shape="rect" id="node13" href="$CPUArch_8cpp.html" title="implementation of etiss/CPUArch.h" alt="" coords="4382,607,4562,649"/>
+<area shape="rect" id="node14" href="$IntegratedLibrary_2errorInjection_2Plugin_8cpp.html" title="implementation of etiss/IntegratedLibrary/errorInjection/Plugin.h" alt="" coords="3522,600,3718,656"/>
+<area shape="rect" id="node17" href="$etiss_2include_2etiss_2helper_2CPUArchLibrary_8h.html" title="defines the functions needed for a library that provides etiss::CPUArch implementations" alt="" coords="4006,288,4194,344"/>
+<area shape="rect" id="node18" href="$etiss_2include_2etiss_2IntegratedLibrary_2gdb_2GDBServer_8h.html" title=" " alt="" coords="2817,288,3032,344"/>
+<area shape="rect" id="node19" href="$etiss_2include_2etiss_2InterruptHandler_8h.html" title="interrupt checking and signaling" alt="" coords="3255,392,3458,448"/>
+<area shape="rect" id="node20" href="$etiss_2include_2etiss_2LibraryInterface_8h.html" title="class for simple library access. Libraries can be integrated or loaded at runtime fom a dynamic libra..." alt="" coords="3107,288,3299,344"/>
+<area shape="rect" id="node22" href="$PrintInstruction_8cpp.html" title="implementation of etiss/IntegratedLibrary/PrintInstruction.h" alt="" coords="4218,288,4414,344"/>
+<area shape="rect" id="node23" href="$SimpleMemSystem_8cpp.html" title="implementation of etiss/SimpleMemSystem.h" alt="" coords="4438,295,4677,337"/>
+<area shape="rect" id="node24" href="$OR1KArch_8h.html" title="class definition of the CPUArch implementation for an or1k processor" alt="" coords="5110,295,5350,337"/>
+<area shape="rect" id="node25" href="$RISCVArch_8h.html" title=" " alt="" coords="5374,288,5554,344"/>
+<area shape="rect" id="node26" href="$RISCV64Arch_8h.html" title=" " alt="" coords="4676,392,4856,448"/>
+<area shape="rect" id="node27" href="$RISCV64Timer_8h.html" title=" " alt="" coords="4804,288,4984,344"/>
+<area shape="rect" id="node28" href="$RISCV64Timer_8cpp.html" title=" " alt="" coords="4880,392,5060,448"/>
+<area shape="rect" id="node15" href="$InstructionAccurateCallback_8cpp.html" title=" " alt="" coords="2210,600,2444,656"/>
+<area shape="rect" id="node16" href="$VariableValueLogger_8cpp.html" title=" " alt="" coords="5181,600,5377,656"/>
+<area shape="rect" id="node30" href="$build_2include_2etiss_2IntegratedLibrary_2InstructionSpecificAddressCallback_8h.html" title="contains a simple plugin to print instructions" alt="" coords="3627,184,3870,240"/>
+<area shape="rect" id="node31" href="$build_2include_2etiss_2Timing_8h.html" title=" " alt="" coords="3438,199,3603,225"/>
+<area shape="rect" id="node32" href="$etiss_2include_2etiss_2IntegratedLibrary_2InstructionSpecificAddressCallback_8h.html" title="contains a simple plugin to print instructions" alt="" coords="3894,184,4205,240"/>
+<area shape="rect" id="node33" href="$etiss_2include_2etiss_2Timing_8h.html" title=" " alt="" coords="3209,191,3413,233"/>
+<area shape="rect" id="node34" href="$Instruction_8cpp.html" title=" " alt="" coords="4582,191,4762,233"/>
+<area shape="rect" id="node36" href="$build_2include_2etiss_2helper_2PluginLibrary_8h.html" title="defines the functions needed for a library that provides etiss::CPUArch implementations" alt="" coords="2832,191,2982,233"/>
+<area shape="rect" id="node37" href="$build_2include_2etiss_2IntegratedLibrary_2errorInjection_2Plugin_8h.html" title=" " alt="" coords="72,184,246,240"/>
+<area shape="rect" id="node38" href="$build_2include_2etiss_2IntegratedLibrary_2fault_2SwitchSystem_8h.html" title=" " alt="" coords="270,191,480,233"/>
+<area shape="rect" id="node39" href="$build_2include_2etiss_2IntegratedLibrary_2InstructionAccurateCallback_8h.html" title=" " alt="" coords="556,191,821,233"/>
+<area shape="rect" id="node40" href="$build_2include_2etiss_2IntegratedLibrary_2Logger_8h.html" title=" " alt="" coords="845,191,1020,233"/>
+<area shape="rect" id="node41" href="$build_2include_2etiss_2IntegratedLibrary_2MemoryDevice_8h.html" title=" " alt="" coords="1044,191,1226,233"/>
+<area shape="rect" id="node42" href="$build_2include_2etiss_2IntegratedLibrary_2PrintInstruction_8h.html" title="contains a simple plugin to print instructions" alt="" coords="1302,191,1485,233"/>
+<area shape="rect" id="node43" href="$build_2include_2etiss_2IntegratedLibrary_2VariableValueLogger_8h.html" title=" " alt="" coords="1509,191,1724,233"/>
+<area shape="rect" id="node44" href="$build_2include_2etiss_2mm_2DMMUWrapper_8h.html" title="Wrapper class to wrap aroud data MMU." alt="" coords="1748,199,1996,225"/>
+<area shape="rect" id="node45" href="$build_2include_2etiss_2mm_2MMU_8h.html" title="Modeling hardware memory management for virtual memory &#45;&gt; physical memory translation and protection...." alt="" coords="2020,199,2204,225"/>
+<area shape="rect" id="node46" href="$etiss_2include_2etiss_2helper_2PluginLibrary_8h.html" title="defines the functions needed for a library that provides etiss::CPUArch implementations" alt="" coords="2229,184,2417,240"/>
+<area shape="rect" id="node47" href="$etiss_2include_2etiss_2IntegratedLibrary_2errorInjection_2Plugin_8h.html" title=" " alt="" coords="2705,496,2920,552"/>
+<area shape="rect" id="node48" href="$etiss_2include_2etiss_2IntegratedLibrary_2fault_2SwitchSystem_8h.html" title=" " alt="" coords="2441,184,2656,240"/>
+<area shape="rect" id="node49" href="$etiss_2include_2etiss_2IntegratedLibrary_2InstructionAccurateCallback_8h.html" title=" " alt="" coords="962,496,1228,552"/>
+</map>

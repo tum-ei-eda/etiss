@@ -1,0 +1,14 @@
+<map id="_mm256_undefined_si256" name="_mm256_undefined_si256">
+<area shape="rect" id="node1" title="Create a 256&#45;bit integer vector with undefined values." alt="" coords="253,259,445,285"/>
+<area shape="rect" id="node2" href="$avx512bwintrin_8h.html#ac724a38ef28701035d87491eb0e004b9" title=" " alt="" coords="17,5,194,32"/>
+<area shape="rect" id="node3" href="$avx512fintrin_8h.html#a06bf9b5aadf2977d2133071873a88ec1" title=" " alt="" coords="13,56,198,83"/>
+<area shape="rect" id="node4" href="$avx512fintrin_8h.html#ab108cc3b24c5b5f3e9d8f75af790ea75" title=" " alt="" coords="13,107,198,133"/>
+<area shape="rect" id="node5" href="$avx512bf16intrin_8h.html#abd0e911486b1b1845757d828cfa89d6c" title="Convert Packed Single Data to Packed BF16 Data." alt="" coords="21,157,189,184"/>
+<area shape="rect" id="node6" href="$avx512fintrin_8h.html#a84ce08b9d8e79fa5ff11e9c754b857fe" title=" " alt="" coords="23,208,188,235"/>
+<area shape="rect" id="node7" href="$avx512fintrin_8h.html#a556d5d04284e9f823ba6b0a892cba16f" title=" " alt="" coords="21,259,190,285"/>
+<area shape="rect" id="node8" href="$avx512fintrin_8h.html#abd88c8259aad464d828387dfb75ce864" title=" " alt="" coords="9,309,201,336"/>
+<area shape="rect" id="node9" href="$avx512fintrin_8h.html#af1a5da48c34526a103cfc1bc905f22b4" title=" " alt="" coords="9,360,201,387"/>
+<area shape="rect" id="node10" href="$avx512fintrin_8h.html#a159e236ceb01e4ca612036725acc6be5" title=" " alt="" coords="18,411,193,437"/>
+<area shape="rect" id="node11" href="$avx512fintrin_8h.html#a8d572e91f1faa793fb6cd8b522f717be" title=" " alt="" coords="5,461,205,488"/>
+<area shape="rect" id="node12" href="$avx512fintrin_8h.html#a66d97ba20110595986e1a53f33df3760" title=" " alt="" coords="5,512,205,539"/>
+</map>

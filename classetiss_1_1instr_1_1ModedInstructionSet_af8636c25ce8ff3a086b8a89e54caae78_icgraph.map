@@ -1,0 +1,10 @@
+<map id="etiss::instr::ModedInstructionSet::foreach" name="etiss::instr::ModedInstructionSet::foreach">
+<area shape="rect" id="node1" title=" " alt="" coords="293,209,504,251"/>
+<area shape="rect" id="node2" href="$classetiss_1_1plugin_1_1InstructionAccurateCallback.html#a8e2f99eab05454fe3f848b8a2449338c" title="called after all instructions have been added to allow last changes" alt="" coords="5,5,245,47"/>
+<area shape="rect" id="node3" href="$classetiss_1_1plugin_1_1PrintInstruction.html#a7a00191b97394fa3ed15aa9781fdf45c" title="called after all instructions have been added to allow last changes" alt="" coords="21,71,229,112"/>
+<area shape="rect" id="node4" href="$classetiss_1_1plugin_1_1VariableValueLogger.html#ae78ddff9a4e6c535823404e79accdeb6" title="called after all instructions have been added to allow last changes" alt="" coords="26,136,225,177"/>
+<area shape="rect" id="node5" href="$classetiss_1_1plugin_1_1InstructionSpecificAddressCallback.html#a4cf95f9946c7c7507db79367d14024b9" title="called after all instructions have been added to allow last changes" alt="" coords="35,202,215,258"/>
+<area shape="rect" id="node6" href="$classetiss_1_1plugin_1_1gdb_1_1Server.html#a81863c312386bc253ee9bd749d8c8ca0" title="called after all instructions have been added to allow last changes" alt="" coords="37,283,214,324"/>
+<area shape="rect" id="node7" href="$classetiss_1_1CPUArch.html#af58f087b803dd678dd5b7700d92cadc4" title="the default behavior of this function of a cpu arch is to add &quot;cpu&#45;&gt;cpuTime_ps += cpu&#45;&gt;cpuCycleTime_p..." alt="" coords="39,348,211,389"/>
+<area shape="rect" id="node8" href="$classetiss_1_1DataSheetAccurateTiming.html#a380719b9dd4b78acd21197f80592d6fe" title="performs lookups for instructions that are in the modded instruction set to add timing code (e...." alt="" coords="32,413,219,455"/>
+</map>

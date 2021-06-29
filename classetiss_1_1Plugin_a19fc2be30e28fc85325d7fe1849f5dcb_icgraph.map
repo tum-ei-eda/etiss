@@ -1,0 +1,6 @@
+<map id="etiss::Plugin::setCorrespondingCPUCoreName" name="etiss::Plugin::setCorrespondingCPUCoreName">
+<area shape="rect" id="node1" title=" " alt="" coords="415,31,637,72"/>
+<area shape="rect" id="node2" href="$classetiss_1_1CPUCore.html#a97bd4fd5ed1a74d4c24c0d18cc0077ed" title="Adds a plug&#45;in to the core simulator." alt="" coords="176,13,367,39"/>
+<area shape="rect" id="node4" href="$classetiss_1_1CPUArch.html#a4b3974a660232e47dc0aaa3014da6394" title=" " alt="" coords="181,63,362,90"/>
+<area shape="rect" id="node3" href="$classetiss_1_1Initializer.html#a680f42f4c7effbc0b4b5bc2b4eaae21f" title="loads the plugins given with the previous loaded .ini files" alt="" coords="5,5,128,47"/>
+</map>

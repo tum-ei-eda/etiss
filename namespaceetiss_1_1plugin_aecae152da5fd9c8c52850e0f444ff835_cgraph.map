@@ -1,0 +1,5 @@
+<map id="etiss::plugin::iwrite" name="etiss::plugin::iwrite">
+<area shape="rect" id="node1" title=" " alt="" coords="5,31,152,57"/>
+<area shape="rect" id="node2" href="$opencl-c_8h.html#a33dd08f08ca9bd0ca06b1cb16a07281e" title="Return the length of vector p, i.e., sqrt(p.x2 + p.y 2 + ...)" alt="" coords="259,5,322,32"/>
+<area shape="rect" id="node3" href="$classetiss_1_1plugin_1_1Logger.html#a8a714bcc80bfe8ebf59795f69c18bfa9" title="this function writes the content of buf with length len to std::cout." alt="" coords="200,56,381,83"/>
+</map>

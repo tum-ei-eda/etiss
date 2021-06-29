@@ -1,0 +1,4 @@
+<map id="_mm_set1_epi8" name="_mm_set1_epi8">
+<area shape="rect" id="node1" title="Initializes all values in a 128&#45;bit vector of [16 x i8] with the specified 8&#45;bit value." alt="" coords="5,5,131,32"/>
+<area shape="rect" id="node2" href="$emmintrin_8h.html#ac58eca2ca4b1af8f1b8185619fcf1f0f" title="Initializes the 8&#45;bit values in a 128&#45;bit vector of [16 x i8] with the specified 8&#45;bit integer values..." alt="" coords="179,5,296,32"/>
+</map>

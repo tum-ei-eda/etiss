@@ -1,0 +1,4 @@
+<map id="etiss::plugin::gdb::GDBCore::getInstructionPointer" name="etiss::plugin::gdb::GDBCore::getInstructionPointer">
+<area shape="rect" id="node1" title="allows to calculate the index of the instruction to be executed for breakpoint checks." alt="" coords="280,5,513,47"/>
+<area shape="rect" id="node2" href="$classetiss_1_1plugin_1_1gdb_1_1Server.html#af2d20da879692be332064d7e082f2833" title=" " alt="" coords="5,5,232,47"/>
+</map>

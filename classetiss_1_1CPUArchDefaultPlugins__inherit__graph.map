@@ -1,0 +1,7 @@
+<map id="etiss::CPUArchDefaultPlugins" name="etiss::CPUArchDefaultPlugins">
+<area shape="rect" id="node1" title="provides common basic plugins" alt="" coords="64,5,276,32"/>
+<area shape="rect" id="node2" href="$classetiss_1_1CPUArch.html" title="the interface to translate instructions of and processor architecture" alt="" coords="111,80,229,107"/>
+<area shape="rect" id="node3" href="$classOR1KArch.html" title="TODO: implement opt_hostendianess for store/load instructions." alt="" coords="5,155,92,181"/>
+<area shape="rect" id="node4" href="$classRISCV64Arch.html" title=" " alt="" coords="117,155,223,181"/>
+<area shape="rect" id="node5" href="$classRISCVArch.html" title=" " alt="" coords="248,155,337,181"/>
+</map>

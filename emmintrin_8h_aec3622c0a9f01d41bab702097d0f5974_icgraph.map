@@ -1,0 +1,5 @@
+<map id="_mm_add_epi16" name="_mm_add_epi16">
+<area shape="rect" id="node1" title="Adds the corresponding elements of two 128&#45;bit vectors of [8 x i16], saving the lower 16 bits of each..." alt="" coords="232,31,361,57"/>
+<area shape="rect" id="node2" href="$avx512vlbwintrin_8h.html#acba9ba547d7c42e8d9d3f02352a5736e" title=" " alt="" coords="9,5,181,32"/>
+<area shape="rect" id="node3" href="$avx512vlbwintrin_8h.html#a295c43387ca7745ce8ef1bf7e7b860d8" title=" " alt="" coords="5,56,184,83"/>
+</map>

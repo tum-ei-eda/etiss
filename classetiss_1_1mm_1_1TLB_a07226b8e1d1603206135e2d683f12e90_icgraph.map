@@ -1,0 +1,4 @@
+<map id="etiss::mm::TLB::DumpEntry" name="etiss::mm::TLB::DumpEntry">
+<area shape="rect" id="node1" title="Dump the PTE details according to the given VPN." alt="" coords="211,13,411,39"/>
+<area shape="rect" id="node2" href="$classetiss_1_1mm_1_1TLB.html#a1a5959dd644c7151ffd7db9dc2d371c7" title="Dump all PTEs in TLB and TLB details." alt="" coords="5,5,163,47"/>
+</map>

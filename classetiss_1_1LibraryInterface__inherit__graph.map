@@ -1,0 +1,4 @@
+<map id="etiss::LibraryInterface" name="etiss::LibraryInterface">
+<area shape="rect" id="node1" title="interface class for libraries." alt="" coords="5,5,169,32"/>
+<area shape="rect" id="node2" href="$classIntegratedLibrary.html" title="LibraryInterface implementation for integrated JIT/CPUArch/Plugin implementations." alt="" coords="20,80,155,107"/>
+</map>

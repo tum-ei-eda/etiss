@@ -1,0 +1,5 @@
+<map id="_mm256_set1_epi16" name="_mm256_set1_epi16">
+<area shape="rect" id="node1" title="Constructs a 256&#45;bit integer vector of [16 x i16], with each of the 16&#45;bit integral vector elements s..." alt="" coords="260,31,417,57"/>
+<area shape="rect" id="node2" href="$avx512vlbwintrin_8h.html#adeeb6f3cc53094357bf418d09a217152" title=" " alt="" coords="9,5,209,32"/>
+<area shape="rect" id="node3" href="$avx512vlbwintrin_8h.html#a722a9d193bc06fc38b6bb274108766d1" title=" " alt="" coords="5,56,212,83"/>
+</map>

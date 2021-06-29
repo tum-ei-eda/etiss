@@ -1,0 +1,12 @@
+<map id="etiss::LLVMJIT::translate" name="etiss::LLVMJIT::translate">
+<area shape="rect" id="node1" title="translate C code to executable code and return a handle/pointer that identifies the compilation resul..." alt="" coords="5,81,181,108"/>
+<area shape="rect" id="node2" href="$classOrcJit.html#a674c984519b0cb28f14cc4a976112b2b" title=" " alt="" coords="229,5,367,32"/>
+<area shape="rect" id="node3" href="$classOrcJit.html#a15fcfa4a360e2d8b68949e966857377c" title=" " alt="" coords="229,56,367,83"/>
+<area shape="rect" id="node4" href="$namespaceetiss.html#a168c0e84fcf327b17c974b8d630195d2" title="Get ETISS JIT files path." alt="" coords="246,107,350,133"/>
+<area shape="rect" id="node10" href="$classOrcJit.html#a7a7cc09de22dc72bc3dd5ae793cfbe90" title=" " alt="" coords="242,157,354,184"/>
+<area shape="rect" id="node5" href="$namespaceetiss.html#a761a0deca67e861a7993543b22fd7ca8" title="Get ETISS installation directory." alt="" coords="415,107,535,133"/>
+<area shape="rect" id="node6" href="$namespaceetiss.html#a6ce43e5dd640113760e3cbda42164947" title="Returns the abolute path with filename to the own dynamic library." alt="" coords="583,107,791,133"/>
+<area shape="rect" id="node7" href="$namespaceetiss.html#afd63577f1d06fa9888d3fe94f2094837" title="Returns the module handle to the own dynamic library." alt="" coords="839,81,1019,108"/>
+<area shape="rect" id="node9" href="$namespaceetiss.html#a9a7481f8ea2a2063f76f8b6ba4753c45" title=" " alt="" coords="849,132,1009,159"/>
+<area shape="rect" id="node8" href="$namespaceetiss.html#a6c6c92eef70453c5a6be6dc7839ad4d3" title=" " alt="" coords="1067,81,1268,108"/>
+</map>

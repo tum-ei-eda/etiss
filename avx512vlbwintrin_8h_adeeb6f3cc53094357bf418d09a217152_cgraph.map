@@ -1,0 +1,5 @@
+<map id="_mm256_mask_set1_epi16" name="_mm256_mask_set1_epi16">
+<area shape="rect" id="node1" title=" " alt="" coords="5,5,205,32"/>
+<area shape="rect" id="node2" href="$avxintrin_8h.html#ae8d893843588361d5f830a6e98b2ada6" title="Constructs a 256&#45;bit integer vector of [16 x i16], with each of the 16&#45;bit integral vector elements s..." alt="" coords="253,5,411,32"/>
+<area shape="rect" id="node3" href="$avxintrin_8h.html#ab0f0d98555faae75275a902750300378" title="Constructs a 256&#45;bit integer vector initialized with the specified 16&#45;bit integral values." alt="" coords="459,5,608,32"/>
+</map>

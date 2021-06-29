@@ -1,0 +1,5 @@
+<map id="_mm_maddubs_epi16" name="_mm_maddubs_epi16">
+<area shape="rect" id="node1" title="Multiplies corresponding pairs of packed 8&#45;bit unsigned integer values contained in the first source ..." alt="" coords="268,31,433,57"/>
+<area shape="rect" id="node2" href="$avx512vlbwintrin_8h.html#a17689acfb44246e11d42fe4aea21f020" title=" " alt="" coords="9,5,217,32"/>
+<area shape="rect" id="node3" href="$avx512vlbwintrin_8h.html#ab8304cd7b0c29455f1d8b768b70c1f16" title=" " alt="" coords="5,56,220,83"/>
+</map>

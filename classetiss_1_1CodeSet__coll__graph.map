@@ -1,0 +1,13 @@
+<map id="etiss::CodeSet" name="etiss::CodeSet">
+<area shape="rect" id="node1" title="A set of CodeParts." alt="" coords="244,749,359,776"/>
+<area shape="rect" id="node2" title=" " alt="" coords="203,587,400,613"/>
+<area shape="rect" id="node3" href="$classetiss_1_1CodePart.html" title="Contains a small code snipped." alt="" coords="242,497,361,524"/>
+<area shape="rect" id="node4" href="$classetiss_1_1RegisterSet.html" title="set of register parts." alt="" coords="71,393,207,420"/>
+<area shape="rect" id="node5" title=" " alt="" coords="53,275,232,331"/>
+<area shape="rect" id="node6" href="$classetiss_1_1RegisterPart.html" title="abstract description of needed or affected register bits." alt="" coords="74,185,214,212"/>
+<area shape="rect" id="node7" title=" " alt="" coords="5,96,80,123"/>
+<area shape="rect" id="node8" title="STL class." alt="" coords="234,96,321,123"/>
+<area shape="rect" id="node9" title="STL class." alt="" coords="208,5,347,47"/>
+<area shape="rect" id="node10" title=" " alt="" coords="105,96,186,123"/>
+<area shape="rect" id="node11" title=" " alt="" coords="339,393,389,420"/>
+</map>

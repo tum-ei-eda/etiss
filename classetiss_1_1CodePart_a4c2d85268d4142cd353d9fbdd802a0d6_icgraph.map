@@ -1,0 +1,41 @@
+<map id="etiss::CodePart::code" name="etiss::CodePart::code">
+<area shape="rect" id="node1" title=" " alt="" coords="807,406,965,433"/>
+<area shape="rect" id="node2" href="$classetiss_1_1plugin_1_1InstructionAccurateCallback.html#a8e2f99eab05454fe3f848b8a2449338c" title="called after all instructions have been added to allow last changes" alt="" coords="519,5,759,47"/>
+<area shape="rect" id="node3" href="$classetiss_1_1plugin_1_1VariableValueLogger.html#ae78ddff9a4e6c535823404e79accdeb6" title="called after all instructions have been added to allow last changes" alt="" coords="539,71,738,112"/>
+<area shape="rect" id="node4" href="$OR1KArch__fpu_8cpp.html#aecfa80ec51a765ed7114d9555be773c8" title=" " alt="" coords="539,137,739,163"/>
+<area shape="rect" id="node5" href="$OR1KArch__fpu_8cpp.html#afc90d7c591af0617f10aa14b6d2607c0" title="translates floating point instructions" alt="" coords="328,162,436,189"/>
+<area shape="rect" id="node6" href="$OR1KArch_8h.html#ab4fc6199881d970908acc9bf5220220e" title=" " alt="" coords="569,238,708,265"/>
+<area shape="rect" id="node7" href="$classetiss_1_1DataSheetAccurateTiming.html#a31c30a45640628d306ca96b1fcc65cb9" title="simple template function that adds the given number of cycles to the cpu time if the related rule mat..." alt="" coords="535,289,742,331"/>
+<area shape="rect" id="node8" href="$OR1KCommonLocal_8hpp.html#a51d0731071041c3e4ca441d0b04a1be2" title=" " alt="" coords="616,355,661,382"/>
+<area shape="rect" id="node9" href="$ORBIS32__I_8cpp.html#ad5481f10069d5ae0e065e2a56accffb3" title=" " alt="" coords="599,406,678,433"/>
+<area shape="rect" id="node10" href="$ORBIS32__II_8cpp.html#a9214dac5df9fbc7592bca9781beed62d" title=" " alt="" coords="579,457,698,483"/>
+<area shape="rect" id="node11" href="$ORBIS32__II_8cpp.html#af007e96c6eb580427dc0738be792ef79" title=" " alt="" coords="583,507,694,534"/>
+<area shape="rect" id="node12" href="$GDBServer_8cpp.html#a8addabd4f79ea3ea37c5d5a180bddbb8" title=" " alt="" coords="555,558,723,585"/>
+<area shape="rect" id="node14" href="$ORBIS32__I_8cpp.html#a2d5f2790dd49b8f421397a8463950877" title=" " alt="" coords="613,609,664,635"/>
+<area shape="rect" id="node37" href="$ORBIS32__I_8cpp.html#ab24f4115c5554df1a2f3e7dc45e9f2a9" title=" " alt="" coords="574,659,703,686"/>
+<area shape="rect" id="node38" href="$ORBIS32__I_8cpp.html#a9030cfa6deafcd0bce4af4a6c311c1ed" title=" " alt="" coords="577,710,701,737"/>
+<area shape="rect" id="node39" href="$OR1KCommonLocal_8hpp.html#a95e8d6be9dd7579c70ac724f2c1a5de7" title=" " alt="" coords="594,761,683,787"/>
+<area shape="rect" id="node13" href="$classetiss_1_1plugin_1_1gdb_1_1Server.html#a81863c312386bc253ee9bd749d8c8ca0" title="called after all instructions have been added to allow last changes" alt="" coords="293,547,471,588"/>
+<area shape="rect" id="node15" href="$____clang__cuda__device__functions_8h.html#aec5ab3ef66bb90a742744642d223c5c1" title=" " alt="" coords="328,613,436,639"/>
+<area shape="rect" id="node16" href="$____clang__cuda__device__functions_8h.html#aaedcff17999d7632baf23102bfaae67b" title=" " alt="" coords="145,131,241,158"/>
+<area shape="rect" id="node17" href="$____clang__cuda__device__functions_8h.html#a498861d7cb3ea484c77f5f44ede30023" title=" " alt="" coords="145,182,241,209"/>
+<area shape="rect" id="node18" href="$____clang__cuda__device__functions_8h.html#a60a8e2ec7ff91311afb1516b700ac369" title=" " alt="" coords="142,233,245,259"/>
+<area shape="rect" id="node19" href="$____clang__cuda__device__functions_8h.html#a36c19ecba70a8aaab8e85b9aa0d961c6" title=" " alt="" coords="142,283,245,310"/>
+<area shape="rect" id="node20" href="$____clang__cuda__device__functions_8h.html#a83977eb93b8ab0263876ea8a9fbd8d34" title=" " alt="" coords="141,334,245,361"/>
+<area shape="rect" id="node21" href="$____clang__cuda__device__functions_8h.html#ac571bca67c9233c9394c0c1c14f9ac8c" title=" " alt="" coords="141,385,245,411"/>
+<area shape="rect" id="node22" href="$____clang__cuda__device__functions_8h.html#a77fd135cc2764304c619ec8a3392dd93" title=" " alt="" coords="143,435,243,462"/>
+<area shape="rect" id="node24" href="$____clang__cuda__device__functions_8h.html#a3a1c00f635ee67c54cb71f776dc4c7cb" title=" " alt="" coords="143,486,243,513"/>
+<area shape="rect" id="node25" href="$____clang__cuda__device__functions_8h.html#a0c7e9f6ccdd934c069bbbe850862e1f1" title=" " alt="" coords="143,537,244,563"/>
+<area shape="rect" id="node26" href="$____clang__cuda__device__functions_8h.html#a4e395a4f0cd7e4d3d96797d59a1451cf" title=" " alt="" coords="143,587,244,614"/>
+<area shape="rect" id="node27" href="$____clang__cuda__device__functions_8h.html#a5e65028d196d0a7d4d04dfb3cbc6ec37" title=" " alt="" coords="144,638,243,665"/>
+<area shape="rect" id="node28" href="$____clang__cuda__device__functions_8h.html#a1f6b8e4aad6307579b954956e0855e3f" title=" " alt="" coords="144,689,243,715"/>
+<area shape="rect" id="node29" href="$____clang__cuda__device__functions_8h.html#a93b8c7ab95c1391c5ac11669c3cee764" title=" " alt="" coords="143,739,243,766"/>
+<area shape="rect" id="node30" href="$____clang__cuda__device__functions_8h.html#aa22199ea284b5b9170bfc8b060168a3c" title=" " alt="" coords="143,790,243,817"/>
+<area shape="rect" id="node31" href="$____clang__cuda__device__functions_8h.html#a4977ad07ec4d159fcc0159d13bd2e979" title=" " alt="" coords="145,841,241,867"/>
+<area shape="rect" id="node32" href="$____clang__cuda__device__functions_8h.html#afa1f4cbae93558ac253ad16bf90ffa4f" title=" " alt="" coords="145,891,241,918"/>
+<area shape="rect" id="node33" href="$____clang__cuda__device__functions_8h.html#a07b1291163ce32043f8199160803a6c9" title=" " alt="" coords="145,942,242,969"/>
+<area shape="rect" id="node34" href="$____clang__cuda__device__functions_8h.html#afb44c3ec63d25710c14379b818745107" title=" " alt="" coords="145,993,242,1019"/>
+<area shape="rect" id="node35" href="$____clang__cuda__device__functions_8h.html#abb6b162ee2e8c1faf5ee65f8553e6ef0" title=" " alt="" coords="145,1043,241,1070"/>
+<area shape="rect" id="node36" href="$____clang__cuda__device__functions_8h.html#a62782cd6d797e2245ddc0de09abf1743" title=" " alt="" coords="145,1094,241,1121"/>
+<area shape="rect" id="node23" href="$____clang__cuda__device__functions_8h.html#a694974b724605db05137125493ae1fa7" title=" " alt="" coords="5,435,93,462"/>
+</map>

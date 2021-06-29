@@ -1,0 +1,5 @@
+<map id="_mm_maskz_subs_epi8" name="_mm_maskz_subs_epi8">
+<area shape="rect" id="node1" title=" " alt="" coords="5,31,183,57"/>
+<area shape="rect" id="node2" href="$emmintrin_8h.html#af05c05652224e219f9c5d8dc67f467e6" title="Creates a 128&#45;bit integer vector initialized to zero." alt="" coords="231,5,383,32"/>
+<area shape="rect" id="node3" href="$emmintrin_8h.html#a54b7eff7b7edd6b2763a0c9c8baad1bc" title="Subtracts corresponding 8&#45;bit signed integer values in the input and returns the differences in the c..." alt="" coords="243,56,370,83"/>
+</map>

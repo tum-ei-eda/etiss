@@ -1,0 +1,5 @@
+<map id="_mm_mullo_epi16" name="_mm_mullo_epi16">
+<area shape="rect" id="node1" title="Multiplies the corresponding elements of two signed [8 x i16] vectors, saving the lower 16 bits of ea..." alt="" coords="245,31,388,57"/>
+<area shape="rect" id="node2" href="$avx512vlbwintrin_8h.html#aafb3274f7f950b8f7202efc1166d2fe0" title=" " alt="" coords="9,5,194,32"/>
+<area shape="rect" id="node3" href="$avx512vlbwintrin_8h.html#a0fe27506db8318578d8ce7883c6b6ea5" title=" " alt="" coords="5,56,197,83"/>
+</map>

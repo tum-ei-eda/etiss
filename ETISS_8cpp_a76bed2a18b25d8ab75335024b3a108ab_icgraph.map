@@ -1,0 +1,4 @@
+<map id="etiss_check_shutdown" name="etiss_check_shutdown">
+<area shape="rect" id="node1" title="check if etiss::shutdown() was called before exiting main." alt="" coords="244,13,412,39"/>
+<area shape="rect" id="node2" href="$classhelper__class__etiss__3.html#a100e5f7852d4fe3bf5ac2ca7f0c75e99" title=" " alt="" coords="5,5,196,47"/>
+</map>

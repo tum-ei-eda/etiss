@@ -1,0 +1,4 @@
+<map id="_mm_setr_pi16" name="_mm_setr_pi16">
+<area shape="rect" id="node1" title="Constructs a 64&#45;bit integer vector, initialized in reverse order with the specified 16&#45;bit integer va..." alt="" coords="5,5,128,32"/>
+<area shape="rect" id="node2" href="$mmintrin_8h.html#a889fbe32d231065cefc95a774d0a95f3" title="Constructs a 64&#45;bit integer vector initialized with the specified 16&#45;bit integer values." alt="" coords="176,5,293,32"/>
+</map>

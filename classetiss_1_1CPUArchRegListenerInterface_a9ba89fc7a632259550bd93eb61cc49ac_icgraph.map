@@ -1,0 +1,6 @@
+<map id="etiss::CPUArchRegListenerInterface::signalChangedRegisterValue" name="etiss::CPUArchRegListenerInterface::signalChangedRegisterValue">
+<area shape="rect" id="node1" title="call this function to inform RegisterDevicePlugins about changed special register values." alt="" coords="515,35,789,76"/>
+<area shape="rect" id="node2" href="$CPUArch_8cpp.html#a084690341960c5de42da6f920dbb0f7e" title=" " alt="" coords="252,5,467,47"/>
+<area shape="rect" id="node3" href="$OR1KArch_8cpp.html#aec7c3654a84d7539de84b32bc78ef5e7" title=" " alt="" coords="293,71,425,98"/>
+<area shape="rect" id="node4" href="$classanonymous__namespace_02OR1KArch_8cpp_03_1_1SPRField.html#a7183f32f087b0c5fd6e0aa90f7ae1f55" title="override this function to implement writes in case of AccessMode::VIRTUAL / AccessMode::PREFER_LAMBDA" alt="" coords="5,57,204,113"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="_mm_movedup_pd" name="_mm_movedup_pd">
+<area shape="rect" id="node1" title="Moves and duplicates the double&#45;precision value in the lower bits of a 128&#45;bit vector of [2 x double]..." alt="" coords="249,31,396,57"/>
+<area shape="rect" id="node2" href="$avx512vlintrin_8h.html#aacc1f5835fc7b778f6955d2dc38360ff" title=" " alt="" coords="9,5,198,32"/>
+<area shape="rect" id="node3" href="$avx512vlintrin_8h.html#a5d8ed57db96622ec1b58725a58c0767a" title=" " alt="" coords="5,56,201,83"/>
+</map>

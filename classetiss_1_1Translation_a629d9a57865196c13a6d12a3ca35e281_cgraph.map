@@ -1,0 +1,6 @@
+<map id="etiss::Translation::unloadBlocks" name="etiss::Translation::unloadBlocks">
+<area shape="rect" id="node1" title=" " alt="" coords="5,23,137,65"/>
+<area shape="rect" id="node2" href="$classetiss_1_1BlockLink.html#a5d75299063f1f299496b7d8dd1c2b72a" title="decrease reference count to a BlockLink and delete the instance if no other references exist" alt="" coords="193,5,376,32"/>
+<area shape="rect" id="node3" href="$classetiss_1_1BlockLink.html#a1ced1f1fce9298dc04ed67a0a7c9013d" title="change the value of a BlockLink pointer." alt="" coords="185,56,384,83"/>
+<area shape="rect" id="node4" href="$classetiss_1_1BlockLink.html#ab471983345198083ff7087ab886c5de4" title="increase reference count to a BlockLink" alt="" coords="432,56,611,83"/>
+</map>

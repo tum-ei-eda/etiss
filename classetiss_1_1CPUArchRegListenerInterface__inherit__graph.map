@@ -1,0 +1,7 @@
+<map id="etiss::CPUArchRegListenerInterface" name="etiss::CPUArchRegListenerInterface">
+<area shape="rect" id="node1" title="allows to inform plugins about changes to a register that is present in the cpu structure." alt="" coords="73,5,267,47"/>
+<area shape="rect" id="node2" href="$classetiss_1_1CPUArch.html" title="the interface to translate instructions of and processor architecture" alt="" coords="111,95,229,121"/>
+<area shape="rect" id="node3" href="$classOR1KArch.html" title="TODO: implement opt_hostendianess for store/load instructions." alt="" coords="5,169,92,196"/>
+<area shape="rect" id="node4" href="$classRISCV64Arch.html" title=" " alt="" coords="117,169,223,196"/>
+<area shape="rect" id="node5" href="$classRISCVArch.html" title=" " alt="" coords="248,169,337,196"/>
+</map>

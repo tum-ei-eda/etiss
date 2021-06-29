@@ -1,0 +1,6 @@
+<map id="cos" name="cos">
+<area shape="rect" id="node1" title="Compute cosine." alt="" coords="5,31,49,57"/>
+<area shape="rect" id="node2" href="$____clang__cuda__math_8h.html#a45bca2b465964f5c13c7e7adc968d62b" title=" " alt="" coords="97,31,147,57"/>
+<area shape="rect" id="node3" href="$____clang__cuda__libdevice__declares_8h.html#acd0f502c59a28732682dbfc41f43888a" title=" " alt="" coords="211,5,297,32"/>
+<area shape="rect" id="node4" href="$____clang__cuda__libdevice__declares_8h.html#a11bdfadd2514d248de11892fffb8badd" title=" " alt="" coords="195,56,313,83"/>
+</map>

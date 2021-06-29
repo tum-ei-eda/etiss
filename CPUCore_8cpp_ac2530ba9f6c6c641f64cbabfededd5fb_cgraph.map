@@ -1,0 +1,10 @@
+<map id="etiss_CPUCore_handleException" name="etiss_CPUCore_handleException">
+<area shape="rect" id="node1" title="small helper function to handle exceptions." alt="" coords="5,56,237,83"/>
+<area shape="rect" id="node2" href="$classetiss_1_1CPUArch.html#af7f949bf98cf21778e678ce64c7d16a7" title="translate/process exceptions that occur at runtime" alt="" coords="285,5,519,32"/>
+<area shape="rect" id="node3" href="$namespaceetiss.html#afd320e98bf6a5e2c0d8ffde5dd28dd35" title="write log message at the given level." alt="" coords="361,56,443,83"/>
+<area shape="rect" id="node5" href="$classetiss_1_1Translation.html#a629d9a57865196c13a6d12a3ca35e281" title=" " alt="" coords="336,107,468,149"/>
+<area shape="rect" id="node4" href="$namespaceetiss.html#a5d23a51a17c09f1b863c601d4454f99b" title="conversion of type T to std::string." alt="" coords="610,56,722,83"/>
+<area shape="rect" id="node6" href="$classetiss_1_1BlockLink.html#a5d75299063f1f299496b7d8dd1c2b72a" title="decrease reference count to a BlockLink and delete the instance if no other references exist" alt="" coords="575,111,757,137"/>
+<area shape="rect" id="node7" href="$classetiss_1_1BlockLink.html#a1ced1f1fce9298dc04ed67a0a7c9013d" title="change the value of a BlockLink pointer." alt="" coords="567,161,765,188"/>
+<area shape="rect" id="node8" href="$classetiss_1_1BlockLink.html#ab471983345198083ff7087ab886c5de4" title="increase reference count to a BlockLink" alt="" coords="813,161,992,188"/>
+</map>

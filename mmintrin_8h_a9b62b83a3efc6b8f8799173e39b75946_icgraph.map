@@ -1,0 +1,5 @@
+<map id="_mm_set_pi32" name="_mm_set_pi32">
+<area shape="rect" id="node1" title="Constructs a 64&#45;bit integer vector initialized with the specified 32&#45;bit integer values." alt="" coords="179,31,296,57"/>
+<area shape="rect" id="node2" href="$mmintrin_8h.html#a51ee22a75ef079a12e95dd7431705822" title="Constructs a 64&#45;bit integer vector of [2 x i32], with each of the 32&#45;bit integer vector elements set ..." alt="" coords="5,5,131,32"/>
+<area shape="rect" id="node3" href="$mmintrin_8h.html#a907d080dfb5e37ac9f740d925f9e51c1" title="Constructs a 64&#45;bit integer vector, initialized in reverse order with the specified 32&#45;bit integer va..." alt="" coords="7,56,129,83"/>
+</map>

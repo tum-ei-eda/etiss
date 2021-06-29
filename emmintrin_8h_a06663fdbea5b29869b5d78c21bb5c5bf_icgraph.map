@@ -1,0 +1,7 @@
+<map id="_mm_set_epi16" name="_mm_set_epi16">
+<area shape="rect" id="node1" title="Initializes the 16&#45;bit values in a 128&#45;bit vector of [8 x i16] with the specified 16&#45;bit integer valu..." alt="" coords="417,56,543,83"/>
+<area shape="rect" id="node2" href="$emmintrin_8h.html#ae14864030a4a4a254134a38c192ee5e0" title="Initializes all values in a 128&#45;bit vector of [8 x i16] with the specified 16&#45;bit value." alt="" coords="236,31,369,57"/>
+<area shape="rect" id="node5" href="$emmintrin_8h.html#ac300ad54a527641ca09a43de57033d46" title="Constructs a 128&#45;bit integer vector, initialized in reverse order with the specified 16&#45;bit integral ..." alt="" coords="237,81,368,108"/>
+<area shape="rect" id="node3" href="$avx512vlbwintrin_8h.html#a89a3be6367782f84995110978241ebb7" title=" " alt="" coords="9,5,185,32"/>
+<area shape="rect" id="node4" href="$avx512vlbwintrin_8h.html#a471e7727ca0f4a6d6d0da48a4bc52eae" title=" " alt="" coords="5,56,188,83"/>
+</map>

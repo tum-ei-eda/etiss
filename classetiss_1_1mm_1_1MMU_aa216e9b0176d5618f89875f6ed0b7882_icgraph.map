@@ -1,0 +1,4 @@
+<map id="etiss::mm::MMU::AddTLBEntryMap" name="etiss::mm::MMU::AddTLBEntryMap">
+<area shape="rect" id="node1" title="Keep a record of mapping between cached PTE with its physical address." alt="" coords="269,5,517,32"/>
+<area shape="rect" id="node2" href="$classRISCV64MMU.html#a82dbbd7df295610e2753c953083d2086" title="Page table walking is required to translate virtual address to physical address if TLB miss occurs." alt="" coords="5,5,221,32"/>
+</map>

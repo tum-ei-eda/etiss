@@ -1,0 +1,4 @@
+<map id="etiss::plugin::gdb::GDBCore" name="etiss::plugin::gdb::GDBCore">
+<area shape="rect" id="node1" title="provides to architecture dependent registers as defined by gdb" alt="" coords="5,95,139,136"/>
+<area shape="rect" id="node2" title=" " alt="" coords="31,5,113,32"/>
+</map>

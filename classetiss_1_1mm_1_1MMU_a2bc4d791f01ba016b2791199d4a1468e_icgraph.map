@@ -1,0 +1,5 @@
+<map id="etiss::mm::MMU::GetName" name="etiss::mm::MMU::GetName">
+<area shape="rect" id="node1" title=" " alt="" coords="269,31,468,57"/>
+<area shape="rect" id="node2" href="$classetiss_1_1mm_1_1MMU.html#a3c0402ae45e53144a0f227822d877156" title="Whenever the MMU control register changes, the MMU has to be notified with the updated control regist..." alt="" coords="8,5,219,32"/>
+<area shape="rect" id="node3" href="$classRISCV64MMU.html#a82dbbd7df295610e2753c953083d2086" title="Page table walking is required to translate virtual address to physical address if TLB miss occurs." alt="" coords="5,56,221,83"/>
+</map>

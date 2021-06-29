@@ -1,0 +1,5 @@
+<map id="_mm_srli_epi64" name="_mm_srli_epi64">
+<area shape="rect" id="node1" title="Right&#45;shifts each of 64&#45;bit values in the 128&#45;bit integer vector operand by the specified number of b..." alt="" coords="228,31,353,57"/>
+<area shape="rect" id="node2" href="$avx512vlintrin_8h.html#a470bbdab0b6c6e1cd20bbe90763516d7" title=" " alt="" coords="9,5,177,32"/>
+<area shape="rect" id="node3" href="$avx512vlintrin_8h.html#aa4e275e12fa696fba22f3ad11821b32e" title=" " alt="" coords="5,56,180,83"/>
+</map>

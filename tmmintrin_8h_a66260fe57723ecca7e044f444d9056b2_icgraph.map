@@ -1,0 +1,5 @@
+<map id="_mm_mulhrs_epi16" name="_mm_mulhrs_epi16">
+<area shape="rect" id="node1" title="Multiplies packed 16&#45;bit signed integer values, truncates the 32&#45;bit products to the 18 most signific..." alt="" coords="253,31,404,57"/>
+<area shape="rect" id="node2" href="$avx512vlbwintrin_8h.html#a942ab5c31d501354210f6512aec917a0" title=" " alt="" coords="9,5,202,32"/>
+<area shape="rect" id="node3" href="$avx512vlbwintrin_8h.html#a55fe948dfcd37b2940344dee85560365" title=" " alt="" coords="5,56,205,83"/>
+</map>

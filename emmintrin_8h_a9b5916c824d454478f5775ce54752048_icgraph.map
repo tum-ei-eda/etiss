@@ -1,0 +1,5 @@
+<map id="_mm_max_epi16" name="_mm_max_epi16">
+<area shape="rect" id="node1" title="Compares corresponding elements of two 128&#45;bit signed [8 x i16] vectors, saving the greater value fro..." alt="" coords="237,31,372,57"/>
+<area shape="rect" id="node2" href="$avx512vlbwintrin_8h.html#ae69f1399f616d47110792c407095c258" title=" " alt="" coords="9,5,186,32"/>
+<area shape="rect" id="node3" href="$avx512vlbwintrin_8h.html#a80532f9af3141d2af6bde960a938258d" title=" " alt="" coords="5,56,189,83"/>
+</map>

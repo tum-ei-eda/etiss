@@ -1,0 +1,6 @@
+<map id="etiss::error::Error" name="etiss::error::Error">
+<area shape="rect" id="node1" title="base error class for simple handling of errors" alt="" coords="190,5,321,32"/>
+<area shape="rect" id="node2" href="$classetiss_1_1error_1_1BitFlip.html" title=" " alt="" coords="5,80,148,107"/>
+<area shape="rect" id="node3" href="$classetiss_1_1error_1_1StuckHigh.html" title=" " alt="" coords="172,80,339,107"/>
+<area shape="rect" id="node4" href="$classetiss_1_1error_1_1StuckLow.html" title=" " alt="" coords="363,80,526,107"/>
+</map>

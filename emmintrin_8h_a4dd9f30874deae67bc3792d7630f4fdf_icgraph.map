@@ -1,0 +1,5 @@
+<map id="_mm_srl_epi16" name="_mm_srl_epi16">
+<area shape="rect" id="node1" title="Right&#45;shifts each of 16&#45;bit values in the 128&#45;bit integer vector operand by the specified number of b..." alt="" coords="224,31,345,57"/>
+<area shape="rect" id="node2" href="$avx512vlbwintrin_8h.html#aec43e3cbd0dbc99f200073e0f593e450" title=" " alt="" coords="9,5,173,32"/>
+<area shape="rect" id="node3" href="$avx512vlbwintrin_8h.html#aed99472c84809b5e4bbab2a8296bd4dd" title=" " alt="" coords="5,56,176,83"/>
+</map>

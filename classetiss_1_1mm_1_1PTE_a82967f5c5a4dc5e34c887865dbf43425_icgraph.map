@@ -1,0 +1,11 @@
+<map id="etiss::mm::PTE::GetPPN" name="etiss::mm::PTE::GetPPN">
+<area shape="rect" id="node1" title=" " alt="" coords="699,132,875,159"/>
+<area shape="rect" id="node2" href="$classetiss_1_1mm_1_1MMU.html#ad037264296f22dfa51f99887e27fb14e" title="Conduct the actual translation according to the format set by PTEFormatBuilder." alt="" coords="455,132,651,159"/>
+<area shape="rect" id="node3" href="$namespaceetiss_1_1mm.html#a5cfb5b8fc556bf0143bed68ef4034ee7" title=" " alt="" coords="250,5,405,32"/>
+<area shape="rect" id="node5" href="$namespaceetiss_1_1mm.html#a37eaf6058c75b96cafc13f0a630ba5a3" title=" " alt="" coords="248,56,407,83"/>
+<area shape="rect" id="node6" href="$namespaceetiss_1_1mm.html#afa95c2ef3f023300fd2beca374ba3c1a" title=" " alt="" coords="261,107,393,133"/>
+<area shape="rect" id="node7" href="$namespaceetiss_1_1mm.html#adb34ae9516ba47e1276989a3d6f422e0" title=" " alt="" coords="259,157,395,184"/>
+<area shape="rect" id="node8" href="$namespaceetiss_1_1mm.html#ac3cfa50897d8a501cf8ffb7d3279fdfe" title=" " alt="" coords="263,208,391,235"/>
+<area shape="rect" id="node9" href="$namespaceetiss_1_1mm.html#a9a4e2994a05acfba135a3df6aa21ee7c" title=" " alt="" coords="261,259,393,285"/>
+<area shape="rect" id="node4" href="$classetiss_1_1mm_1_1DMMUWrapper.html#ab8ada30257c1b95a5f2b1281b1f43b51" title="SystemWrapperPlugin interface to wrap around original ETISS_System." alt="" coords="5,125,200,166"/>
+</map>

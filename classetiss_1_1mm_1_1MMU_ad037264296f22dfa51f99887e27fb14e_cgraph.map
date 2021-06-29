@@ -1,0 +1,13 @@
+<map id="etiss::mm::MMU::Translate" name="etiss::mm::MMU::Translate">
+<area shape="rect" id="node1" title="Conduct the actual translation according to the format set by PTEFormatBuilder." alt="" coords="5,195,201,221"/>
+<area shape="rect" id="node2" href="$classetiss_1_1mm_1_1MMU.html#a273ddd19e3796455e70cc7e61984659c" title="MMU is enabled in certain mode." alt="" coords="249,5,528,32"/>
+<area shape="rect" id="node3" href="$classetiss_1_1mm_1_1MMU.html#a8261bd94e8b5370779a1fe67f3014ac4" title="Memory protection is architecture&#45;dependent, which should be implemented with architecture model." alt="" coords="267,56,510,83"/>
+<area shape="rect" id="node4" href="$classetiss_1_1mm_1_1MMU.html#ae8522e93f54efc4c3ee89cd54e567562" title="Dump the details of the MMU, when page fault cannot be handled." alt="" coords="301,107,477,133"/>
+<area shape="rect" id="node5" href="$classetiss_1_1mm_1_1PTEFormat.html#ad0ab182aeac397dcdfd73cc5d7a11307" title=" " alt="" coords="306,158,471,199"/>
+<area shape="rect" id="node6" href="$classetiss_1_1mm_1_1PTE.html#a82967f5c5a4dc5e34c887865dbf43425" title=" " alt="" coords="301,224,477,251"/>
+<area shape="rect" id="node7" href="$classetiss_1_1mm_1_1PTEFormat.html#a44f08a1ac748d09952051195e0899e63" title="Get the singleton instance." alt="" coords="306,275,471,317"/>
+<area shape="rect" id="node9" href="$namespaceetiss.html#afd320e98bf6a5e2c0d8ffde5dd28dd35" title="write log message at the given level." alt="" coords="348,341,429,368"/>
+<area shape="rect" id="node11" href="$classetiss_1_1mm_1_1MMU.html#a94bd0d53c264b0245dc1ec796bc6463d" title="Reserved for some MMU that might update PTE when translating." alt="" coords="267,392,510,419"/>
+<area shape="rect" id="node8" href="$classetiss_1_1mm_1_1PTEFormat.html#ae068b0618e664a789fbfbef7b0d869d9" title=" " alt="" coords="576,275,741,317"/>
+<area shape="rect" id="node10" href="$namespaceetiss.html#a5d23a51a17c09f1b863c601d4454f99b" title="conversion of type T to std::string." alt="" coords="603,341,715,368"/>
+</map>

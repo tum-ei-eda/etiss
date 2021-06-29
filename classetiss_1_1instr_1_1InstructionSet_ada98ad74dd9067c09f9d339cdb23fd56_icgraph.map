@@ -1,0 +1,12 @@
+<map id="etiss::instr::InstructionSet::foreach" name="etiss::instr::InstructionSet::foreach">
+<area shape="rect" id="node1" title=" " alt="" coords="519,195,685,236"/>
+<area shape="rect" id="node2" href="$CPUArch_8cpp.html#a3dade4e78decdde1d782af7443dbe5eb" title=" " alt="" coords="259,13,442,39"/>
+<area shape="rect" id="node4" href="$classetiss_1_1plugin_1_1PrintInstruction.html#a7a00191b97394fa3ed15aa9781fdf45c" title="called after all instructions have been added to allow last changes" alt="" coords="247,64,455,105"/>
+<area shape="rect" id="node5" href="$classetiss_1_1plugin_1_1InstructionAccurateCallback.html#a8e2f99eab05454fe3f848b8a2449338c" title="called after all instructions have been added to allow last changes" alt="" coords="231,129,471,171"/>
+<area shape="rect" id="node6" href="$classetiss_1_1plugin_1_1VariableValueLogger.html#ae78ddff9a4e6c535823404e79accdeb6" title="called after all instructions have been added to allow last changes" alt="" coords="251,195,450,236"/>
+<area shape="rect" id="node7" href="$classetiss_1_1plugin_1_1InstructionSpecificAddressCallback.html#a4cf95f9946c7c7507db79367d14024b9" title="called after all instructions have been added to allow last changes" alt="" coords="261,261,441,317"/>
+<area shape="rect" id="node8" href="$classetiss_1_1DataSheetAccurateTiming.html#a380719b9dd4b78acd21197f80592d6fe" title="performs lookups for instructions that are in the modded instruction set to add timing code (e...." alt="" coords="257,341,444,383"/>
+<area shape="rect" id="node9" href="$GDBServer_8cpp.html#a8addabd4f79ea3ea37c5d5a180bddbb8" title=" " alt="" coords="267,407,435,434"/>
+<area shape="rect" id="node3" href="$classetiss_1_1CPUArch.html#af58f087b803dd678dd5b7700d92cadc4" title="the default behavior of this function of a cpu arch is to add &quot;cpu&#45;&gt;cpuTime_ps += cpu&#45;&gt;cpuCycleTime_p..." alt="" coords="8,5,180,47"/>
+<area shape="rect" id="node10" href="$classetiss_1_1plugin_1_1gdb_1_1Server.html#a81863c312386bc253ee9bd749d8c8ca0" title="called after all instructions have been added to allow last changes" alt="" coords="5,400,183,441"/>
+</map>

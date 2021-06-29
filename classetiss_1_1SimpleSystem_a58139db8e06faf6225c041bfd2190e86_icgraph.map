@@ -1,0 +1,6 @@
+<map id="etiss::SimpleSystem::write" name="etiss::SimpleSystem::write">
+<area shape="rect" id="node1" title=" " alt="" coords="208,71,363,112"/>
+<area shape="rect" id="node2" href="$classetiss_1_1SimpleSystem.html#a88d67d37ffae8d364e494eca07e41b9c" title="Debug write operation." alt="" coords="5,5,160,47"/>
+<area shape="rect" id="node3" href="$classetiss_1_1SimpleSystem.html#a494b18b4365e6dc591f6a70537e6014d" title="Data write operation." alt="" coords="5,71,160,112"/>
+<area shape="rect" id="node4" href="$classetiss_1_1SimpleSystem.html#ad32d74433e0495a633de44483250b9bb" title="Instruction write operation." alt="" coords="5,136,160,177"/>
+</map>

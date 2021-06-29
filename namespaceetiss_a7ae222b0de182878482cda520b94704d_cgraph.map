@@ -1,0 +1,7 @@
+<map id="etiss::log" name="etiss::log">
+<area shape="rect" id="node1" title="additional objects will be converted to a string with toString and are added to the message" alt="" coords="5,56,87,83"/>
+<area shape="rect" id="node2" href="$namespaceetiss.html#afd320e98bf6a5e2c0d8ffde5dd28dd35" title="write log message at the given level." alt="" coords="161,5,243,32"/>
+<area shape="rect" id="node4" href="$namespaceetiss.html#af75223f0cc96b37ee25e0e67f7051504" title="Format the string representation of a value for the log output." alt="" coords="135,56,269,83"/>
+<area shape="rect" id="node5" href="$namespaceetiss.html#af82042fec449ee53e958bbc741bb794f" title="Get log level reference." alt="" coords="141,107,263,133"/>
+<area shape="rect" id="node3" href="$namespaceetiss.html#a5d23a51a17c09f1b863c601d4454f99b" title="conversion of type T to std::string." alt="" coords="317,31,429,57"/>
+</map>

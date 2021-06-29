@@ -1,0 +1,7 @@
+<map id="etiss::plugin::gdb::Server::createTCPServer" name="etiss::plugin::gdb::Server::createTCPServer">
+<area shape="rect" id="node1" title=" " alt="" coords="5,89,192,131"/>
+<area shape="rect" id="node2" href="$classetiss_1_1plugin_1_1gdb_1_1Connection.html#afaf437711ece66ec1bb12c37447997ff" title=" " alt="" coords="240,5,467,47"/>
+<area shape="rect" id="node3" href="$namespaceetiss.html#afd320e98bf6a5e2c0d8ffde5dd28dd35" title="write log message at the given level." alt="" coords="313,71,394,98"/>
+<area shape="rect" id="node4" href="$namespaceetiss.html#a5d23a51a17c09f1b863c601d4454f99b" title="conversion of type T to std::string." alt="" coords="515,97,627,123"/>
+<area shape="rect" id="node5" href="$classetiss_1_1plugin_1_1gdb_1_1Server.html#a77f8e46aff1b52dc71b45c57311c45f0" title=" " alt="" coords="287,173,420,215"/>
+</map>

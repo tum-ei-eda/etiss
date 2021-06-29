@@ -1,0 +1,52 @@
+<map id="/home/runner/work/etiss/etiss/include/etiss/fault/Defs.h" name="/home/runner/work/etiss/etiss/include/etiss/fault/Defs.h">
+<area shape="rect" id="node1" title="contains general definitions used by other fault library code" alt="" coords="1974,5,2154,61"/>
+<area shape="rect" id="node2" href="$build_2include_2etiss_2fault_2Action_8h.html" title="contains an action class that describes actions associated with a fault" alt="" coords="801,518,940,559"/>
+<area shape="rect" id="node3" href="$build_2include_2etiss_2fault_2Fault_8h.html" title="contains the fault container class that stores triggers and actions for fault injection" alt="" coords="2106,414,2245,455"/>
+<area shape="rect" id="node4" href="$build_2include_2etiss_2fault_2InjectorAddress_8h.html" title="contains a simple class that represents and resolves injector addresses as used by triggers (" alt="" coords="2045,206,2184,247"/>
+<area shape="rect" id="node5" href="$build_2include_2etiss_2fault_2XML_8h.html" title="contains XML related functions. pugixml is used as a backend for parsing." alt="" coords="2309,109,2448,151"/>
+<area shape="rect" id="node6" href="$etiss_2include_2etiss_2fault_2Action_8h.html" title="contains an action class that describes actions associated with a fault" alt="" coords="1884,303,2064,359"/>
+<area shape="rect" id="node7" href="$etiss_2include_2etiss_2fault_2Fault_8h.html" title="contains the fault container class that stores triggers and actions for fault injection" alt="" coords="1495,407,1675,463"/>
+<area shape="rect" id="node46" href="$etiss_2include_2etiss_2fault_2InjectorAddress_8h.html" title="contains a simple class that represents and resolves injector addresses as used by triggers (" alt="" coords="1739,199,1919,255"/>
+<area shape="rect" id="node49" href="$etiss_2include_2etiss_2fault_2XML_8h.html" title="contains XML related functions. pugixml is used as a backend for parsing." alt="" coords="1606,109,1828,151"/>
+<area shape="rect" id="node45" href="$Action_8cpp.html" title=" " alt="" coords="1896,414,2082,455"/>
+<area shape="rect" id="node8" href="$build_2include_2etiss_2fault_2Injector_8h.html" title="contains the fault injector interface class." alt="" coords="1537,518,1676,559"/>
+<area shape="rect" id="node9" href="$build_2include_2etiss_2fault_2Stressor_8h.html" title="contains the stressor class that loads and activates faults." alt="" coords="1169,518,1308,559"/>
+<area shape="rect" id="node10" href="$etiss_2include_2etiss_2fault_2Injector_8h.html" title="contains the fault injector interface class." alt="" coords="1332,511,1512,567"/>
+<area shape="rect" id="node38" href="$Fault_8cpp.html" title=" " alt="" coords="1794,622,1974,663"/>
+<area shape="rect" id="node43" href="$etiss_2include_2etiss_2fault_2Stressor_8h.html" title="contains the stressor class that loads and activates faults." alt="" coords="964,511,1144,567"/>
+<area shape="rect" id="node11" href="$build_2include_2etiss_2VirtualStruct_8h.html" title=" " alt="" coords="1356,629,1558,656"/>
+<area shape="rect" id="node12" href="$etiss_2include_2etiss_2VirtualStruct_8h.html" title=" " alt="" coords="1142,615,1332,671"/>
+<area shape="rect" id="node39" href="$Injector_8cpp.html" title=" " alt="" coords="924,622,1118,663"/>
+<area shape="rect" id="node40" href="$InjectorAddress_8cpp.html" title=" " alt="" coords="1998,622,2244,663"/>
+<area shape="rect" id="node41" href="$Stressor_8cpp.html" title=" " alt="" coords="702,622,900,663"/>
+<area shape="rect" id="node42" href="$Trigger_8cpp.html" title=" " alt="" coords="1582,622,1770,663"/>
+<area shape="rect" id="node13" href="$build_2include_2etiss_2CPUArch_8h.html" title="contains neccesary interfaces for instruction translation." alt="" coords="216,733,392,760"/>
+<area shape="rect" id="node14" href="$build_2include_2etiss_2IntegratedLibrary_2fault_2SwitchSystem_8h.html" title=" " alt="" coords="416,726,626,767"/>
+<area shape="rect" id="node15" href="$build_2include_2etiss_2IntegratedLibrary_2VirtualStructMemory_8h.html" title=" " alt="" coords="650,726,866,767"/>
+<area shape="rect" id="node16" href="$etiss_2include_2etiss_2CPUArch_8h.html" title="contains neccesary interfaces for instruction translation." alt="" coords="891,726,1106,767"/>
+<area shape="rect" id="node33" href="$etiss_2include_2etiss_2IntegratedLibrary_2fault_2SwitchSystem_8h.html" title=" " alt="" coords="1130,719,1344,775"/>
+<area shape="rect" id="node34" href="$etiss_2include_2etiss_2IntegratedLibrary_2VirtualStructMemory_8h.html" title=" " alt="" coords="1369,719,1585,775"/>
+<area shape="rect" id="node35" href="$CVirtualStruct_8cpp.html" title=" " alt="" coords="1610,726,1811,767"/>
+<area shape="rect" id="node36" href="$VirtualStruct_8cpp.html" title=" " alt="" coords="1836,726,2028,767"/>
+<area shape="rect" id="node37" href="$OR1KArch_8cpp.html" title=" " alt="" coords="2052,726,2307,767"/>
+<area shape="rect" id="node17" href="$build_2include_2etiss_2CPUCore_8h.html" title="defines main cpu core interface" alt="" coords="128,1038,306,1065"/>
+<area shape="rect" id="node18" href="$build_2include_2etiss_2helper_2CPUArchLibrary_8h.html" title="defines the functions needed for a library that provides etiss::CPUArch implementations" alt="" coords="980,830,1129,871"/>
+<area shape="rect" id="node19" href="$build_2include_2etiss_2IntegratedLibrary_2gdb_2GDBServer_8h.html" title=" " alt="" coords="1153,830,1334,871"/>
+<area shape="rect" id="node20" href="$build_2include_2etiss_2InterruptHandler_8h.html" title="interrupt checking and signaling" alt="" coords="628,941,854,968"/>
+<area shape="rect" id="node21" href="$build_2include_2etiss_2LibraryInterface_8h.html" title="class for simple library access. Libraries can be integrated or loaded at runtime fom a dynamic libra..." alt="" coords="1359,837,1582,864"/>
+<area shape="rect" id="node22" href="$build_2include_2etiss_2Translation_8h.html" title=" " alt="" coords="1606,837,1796,864"/>
+<area shape="rect" id="node23" href="$etiss_2include_2etiss_2CPUCore_8h.html" title="defines main cpu core interface" alt="" coords="388,1031,604,1072"/>
+<area shape="rect" id="node24" href="$CPUArch_8cpp.html" title="implementation of etiss/CPUArch.h" alt="" coords="242,1127,422,1169"/>
+<area shape="rect" id="node25" href="$IntegratedLibrary_2errorInjection_2Plugin_8cpp.html" title="implementation of etiss/IntegratedLibrary/errorInjection/Plugin.h" alt="" coords="562,1120,758,1176"/>
+<area shape="rect" id="node26" href="$etiss_2include_2etiss_2helper_2CPUArchLibrary_8h.html" title="defines the functions needed for a library that provides etiss::CPUArch implementations" alt="" coords="1820,823,2008,879"/>
+<area shape="rect" id="node27" href="$etiss_2include_2etiss_2IntegratedLibrary_2gdb_2GDBServer_8h.html" title=" " alt="" coords="2032,823,2247,879"/>
+<area shape="rect" id="node28" href="$etiss_2include_2etiss_2InterruptHandler_8h.html" title="interrupt checking and signaling" alt="" coords="300,927,502,983"/>
+<area shape="rect" id="node29" href="$etiss_2include_2etiss_2LibraryInterface_8h.html" title="class for simple library access. Libraries can be integrated or loaded at runtime fom a dynamic libra..." alt="" coords="494,823,686,879"/>
+<area shape="rect" id="node30" href="$etiss_2include_2etiss_2Translation_8h.html" title=" " alt="" coords="44,934,275,975"/>
+<area shape="rect" id="node31" href="$PrintInstruction_8cpp.html" title="implementation of etiss/IntegratedLibrary/PrintInstruction.h" alt="" coords="2271,823,2467,879"/>
+<area shape="rect" id="node32" href="$SimpleMemSystem_8cpp.html" title="implementation of etiss/SimpleMemSystem.h" alt="" coords="2491,830,2730,871"/>
+<area shape="rect" id="node44" href="$ETISS_8cpp.html" title="Implementation of etiss/ETISS.h except for etiss::preloadLibraries." alt="" coords="498,622,678,663"/>
+<area shape="rect" id="node47" href="$build_2include_2etiss_2fault_2Trigger_8h.html" title="contains the Trigger class that defines conditions under which actions of a Fault need to be applied." alt="" coords="1414,310,1553,351"/>
+<area shape="rect" id="node48" href="$etiss_2include_2etiss_2fault_2Trigger_8h.html" title="contains the Trigger class that defines conditions under which actions of a Fault need to be applied." alt="" coords="1628,303,1808,359"/>
+<area shape="rect" id="node50" href="$XML_8cpp.html" title=" " alt="" coords="1483,206,1663,247"/>
+</map>

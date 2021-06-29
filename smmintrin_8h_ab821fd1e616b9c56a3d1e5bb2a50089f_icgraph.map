@@ -1,0 +1,5 @@
+<map id="_mm_max_epu16" name="_mm_max_epu16">
+<area shape="rect" id="node1" title="Compares the corresponding elements of two 128&#45;bit vectors of [8 x u16] and returns a 128&#45;bit vector ..." alt="" coords="241,31,380,57"/>
+<area shape="rect" id="node2" href="$avx512vlbwintrin_8h.html#a4f674016fbc6810727c4bb6474ef9426" title=" " alt="" coords="9,5,190,32"/>
+<area shape="rect" id="node3" href="$avx512vlbwintrin_8h.html#ab7969dec57b7ee96eaae61d68eaf71ce" title=" " alt="" coords="5,56,193,83"/>
+</map>

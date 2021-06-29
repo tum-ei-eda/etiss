@@ -1,0 +1,7 @@
+<map id="etiss::JIT::getName" name="etiss::JIT::getName">
+<area shape="rect" id="node1" title="returns the JIT instance name previously passed to the constructor" alt="" coords="481,35,625,61"/>
+<area shape="rect" id="node2" href="$classetiss_1_1CPUCore.html#a3abad91e823939228f7db1596e040c19" title="Start the simulation of the CPU core for the system model." alt="" coords="243,8,421,35"/>
+<area shape="rect" id="node4" href="$classetiss_1_1CPUCore.html#a5c790dfb670fdea03fa1f33c1bd96295" title="Get the name of the JIT plug&#45;in used by the CPUCore instance." alt="" coords="231,60,433,87"/>
+<area shape="rect" id="node3" href="$classetiss_1_1CPUCore.html#a2ab7000206ed432b59457ce57b9182f6" title="Start the simulation of the CPU core for the system model." alt="" coords="5,5,183,32"/>
+<area shape="rect" id="node5" href="$classetiss_1_1Initializer.html#acdf27d4056057a91dccd86abfa43a8b1" title="sets the JIT given with the previous loaded .ini files" alt="" coords="33,57,155,98"/>
+</map>

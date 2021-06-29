@@ -1,0 +1,5 @@
+<map id="_mm512_dpbf16_ps" name="_mm512_dpbf16_ps">
+<area shape="rect" id="node1" title="Dot Product of BF16 Pairs Accumulated into Packed Single Precision." alt="" coords="256,31,409,57"/>
+<area shape="rect" id="node2" href="$avx512bf16intrin_8h.html#a2b2c7674c726d99a757d20e166d245f3" title="Dot Product of BF16 Pairs Accumulated into Packed Single Precision." alt="" coords="9,5,205,32"/>
+<area shape="rect" id="node3" href="$avx512bf16intrin_8h.html#a1367c32b7ac8e04e3a3f3bf8cdb76378" title="Dot Product of BF16 Pairs Accumulated into Packed Single Precision." alt="" coords="5,56,208,83"/>
+</map>

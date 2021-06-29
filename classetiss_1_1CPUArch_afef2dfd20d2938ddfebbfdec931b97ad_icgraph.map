@@ -1,0 +1,11 @@
+<map id="etiss::CPUArch::getName" name="etiss::CPUArch::getName">
+<area shape="rect" id="node1" title="returns the name of this architecture." alt="" coords="1096,81,1281,108"/>
+<area shape="rect" id="node2" href="$classetiss_1_1CPUArch.html#a7bd60623486b146d3a5061803a6597f2" title="do not override. maps to getName()." alt="" coords="816,5,1048,32"/>
+<area shape="rect" id="node3" href="$group__ETISS__Frontend.html#ga5323880df3b7e36556c9d4fc1ee845ae" title="Get the error message for an error code for a specific CPUArch plug&#45;in." alt="" coords="857,56,1007,83"/>
+<area shape="rect" id="node4" href="$classetiss_1_1CPUArch.html#a34011e70c796236fb850a63b0b8bfd32" title="returns a path that will be used to look up header files" alt="" coords="821,107,1043,133"/>
+<area shape="rect" id="node9" href="$classetiss_1_1Translation.html#ac02e73b182ab60738e243911d823919e" title=" " alt="" coords="636,161,768,202"/>
+<area shape="rect" id="node5" href="$classetiss_1_1Translation.html#ad60fccfe679e82069b2255aac748ed52" title=" " alt="" coords="636,95,768,137"/>
+<area shape="rect" id="node6" href="$classetiss_1_1Translation.html#a8a71d620ec906f57f2f2dfc4c6565bd8" title="CALL THIS function NOT getBlock(...) since getBlock will not check next/branch references." alt="" coords="456,98,588,139"/>
+<area shape="rect" id="node7" href="$classetiss_1_1CPUCore.html#a3abad91e823939228f7db1596e040c19" title="Start the simulation of the CPU core for the system model." alt="" coords="231,136,408,163"/>
+<area shape="rect" id="node8" href="$classetiss_1_1CPUCore.html#a2ab7000206ed432b59457ce57b9182f6" title="Start the simulation of the CPU core for the system model." alt="" coords="5,136,183,163"/>
+</map>

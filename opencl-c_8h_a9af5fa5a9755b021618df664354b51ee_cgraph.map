@@ -1,0 +1,5 @@
+<map id="ceil" name="ceil">
+<area shape="rect" id="node1" title="Round to integral value using the round to positive infinity rounding mode." alt="" coords="5,5,51,32"/>
+<area shape="rect" id="node2" href="$____clang__cuda__math_8h.html#a6271655275867feace67cf2bbbd06c6f" title=" " alt="" coords="99,5,149,32"/>
+<area shape="rect" id="node3" href="$____clang__cuda__libdevice__declares_8h.html#a345937974571e37e697186bb81f0f5c8" title=" " alt="" coords="197,5,284,32"/>
+</map>

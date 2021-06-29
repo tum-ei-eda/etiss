@@ -1,0 +1,5 @@
+<map id="_mm_subs_epu16" name="_mm_subs_epu16">
+<area shape="rect" id="node1" title="Subtracts corresponding 16&#45;bit unsigned integer values in the input and returns the differences in th..." alt="" coords="243,31,381,57"/>
+<area shape="rect" id="node2" href="$avx512vlbwintrin_8h.html#a328abaafba927c8a647c0cb469843cb9" title=" " alt="" coords="9,5,191,32"/>
+<area shape="rect" id="node3" href="$avx512vlbwintrin_8h.html#a98f9ffedd3ece43502bfd6e60a25603b" title=" " alt="" coords="5,56,195,83"/>
+</map>

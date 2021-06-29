@@ -1,0 +1,4 @@
+<map id="etiss::CPUCore::set" name="etiss::CPUCore::set">
+<area shape="rect" id="node1" title="Set the JIT plug&#45;in used for execution." alt="" coords="176,13,323,39"/>
+<area shape="rect" id="node2" href="$classetiss_1_1Initializer.html#acdf27d4056057a91dccd86abfa43a8b1" title="sets the JIT given with the previous loaded .ini files" alt="" coords="5,5,128,47"/>
+</map>

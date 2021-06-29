@@ -1,0 +1,12 @@
+<map id="if" name="if">
+<area shape="rect" id="node1" title=" " alt="" coords="837,107,876,133"/>
+<area shape="rect" id="node2" href="$MMU_8cpp.html#ab40d3dc4e5c000decf0b0816375a9f58" title=" " alt="" coords="575,5,729,32"/>
+<area shape="rect" id="node3" href="$classRISCVArch.html#ac984aa0e1c086f4460b30644b69bda42" title="This function is called during CPUArch initialization." alt="" coords="568,56,736,83"/>
+<area shape="rect" id="node4" href="$classRISCV64Arch.html#a4b479437ae53be96d92b30aa50c28155" title="This function is called during CPUArch initialization." alt="" coords="559,107,745,133"/>
+<area shape="rect" id="node5" href="$classOR1KTimer.html#ae278f5fb96a0f27e1855e8f28377c5c4" title=" " alt="" coords="575,158,729,199"/>
+<area shape="rect" id="node7" href="$classetiss_1_1CPUArchRegListenerInterface.html#a9ba89fc7a632259550bd93eb61cc49ac" title="call this function to inform RegisterDevicePlugins about changed special register values." alt="" coords="515,223,789,265"/>
+<area shape="rect" id="node6" href="$classOR1KTimer.html#af82794bd9e863835f0b15c88d673a71f" title="called before a block and may act in the same way as a block" alt="" coords="282,165,437,192"/>
+<area shape="rect" id="node8" href="$CPUArch_8cpp.html#a084690341960c5de42da6f920dbb0f7e" title=" " alt="" coords="252,219,467,261"/>
+<area shape="rect" id="node9" href="$OR1KArch_8cpp.html#aec7c3654a84d7539de84b32bc78ef5e7" title=" " alt="" coords="293,285,425,312"/>
+<area shape="rect" id="node10" href="$classanonymous__namespace_02OR1KArch_8cpp_03_1_1SPRField.html#a7183f32f087b0c5fd6e0aa90f7ae1f55" title="override this function to implement writes in case of AccessMode::VIRTUAL / AccessMode::PREFER_LAMBDA" alt="" coords="5,271,204,327"/>
+</map>

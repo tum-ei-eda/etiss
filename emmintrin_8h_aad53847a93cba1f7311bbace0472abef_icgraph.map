@@ -1,0 +1,4 @@
+<map id="_mm_loadu_si128" name="_mm_loadu_si128">
+<area shape="rect" id="node1" title="Moves packed integer values from an unaligned 128&#45;bit memory location to elements in a 128&#45;bit intege..." alt="" coords="232,5,372,32"/>
+<area shape="rect" id="node2" href="$avxintrin_8h.html#ab62695c6d26f2ff4f381ce80201e9eae" title="Loads two 128&#45;bit integer vectors from unaligned memory locations and constructs a 256&#45;bit integer ve..." alt="" coords="5,5,184,32"/>
+</map>

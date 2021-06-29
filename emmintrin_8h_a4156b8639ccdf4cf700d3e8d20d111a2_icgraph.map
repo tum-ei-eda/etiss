@@ -1,0 +1,4 @@
+<map id="_mm_cmpgt_epi8" name="_mm_cmpgt_epi8">
+<area shape="rect" id="node1" title="Compares each of the corresponding signed 8&#45;bit values of the 128&#45;bit integer vectors to determine if..." alt="" coords="188,5,327,32"/>
+<area shape="rect" id="node2" href="$emmintrin_8h.html#ab9f1a51494ab524a0f37cf646d131f18" title="Compares each of the corresponding signed 8&#45;bit values of the 128&#45;bit integer vectors to determine if..." alt="" coords="5,5,140,32"/>
+</map>

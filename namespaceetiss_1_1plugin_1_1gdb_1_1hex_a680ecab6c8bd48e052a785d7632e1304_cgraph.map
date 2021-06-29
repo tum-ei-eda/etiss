@@ -1,0 +1,4 @@
+<map id="etiss::plugin::gdb::hex::fromByte" name="etiss::plugin::gdb::hex::fromByte">
+<area shape="rect" id="node1" title="converts a byte to hexadecimal representation and appends it to the passed string" alt="" coords="5,5,139,47"/>
+<area shape="rect" id="node2" href="$namespaceetiss_1_1plugin_1_1gdb_1_1hex.html#af65b0fb98ddba08fe3943a809f17c1b3" title="converts the lower 4 bits to a representing char" alt="" coords="187,5,320,47"/>
+</map>

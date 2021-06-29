@@ -1,0 +1,5 @@
+<map id="_mm_sub_epi16" name="_mm_sub_epi16">
+<area shape="rect" id="node1" title="Subtracts the corresponding 16&#45;bit integer values in the operands." alt="" coords="232,31,360,57"/>
+<area shape="rect" id="node2" href="$avx512vlbwintrin_8h.html#a36f31e227be6d170c16630faba3e7e2a" title=" " alt="" coords="9,5,180,32"/>
+<area shape="rect" id="node3" href="$avx512vlbwintrin_8h.html#a1db4d4f50b544bc7c230acdcf1877075" title=" " alt="" coords="5,56,184,83"/>
+</map>

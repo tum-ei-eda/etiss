@@ -1,0 +1,12 @@
+<map id="etiss::plugin::Logger::wrap" name="etiss::plugin::Logger::wrap">
+<area shape="rect" id="node1" title="change/wrap the passed system structure." alt="" coords="5,150,159,191"/>
+<area shape="rect" id="node2" href="$namespaceetiss_1_1plugin.html#a048308ef429d7654aa33329debd2d393" title=" " alt="" coords="208,157,377,184"/>
+<area shape="rect" id="node5" href="$namespaceetiss_1_1plugin.html#a78a6d57024381f7a74f6eb00305a7b91" title=" " alt="" coords="226,209,359,250"/>
+<area shape="rect" id="node6" href="$namespaceetiss_1_1plugin.html#ac3745bd705f8c9b98b7e6e7f3bcb2f8e" title=" " alt="" coords="219,5,366,32"/>
+<area shape="rect" id="node7" href="$namespaceetiss_1_1plugin.html#a2d640f876a7c440eab7d6a38e5295fe3" title=" " alt="" coords="217,275,368,301"/>
+<area shape="rect" id="node8" href="$namespaceetiss_1_1plugin.html#a2cf202f49d080aac4d5741f97919befe" title=" " alt="" coords="221,56,364,83"/>
+<area shape="rect" id="node9" href="$namespaceetiss_1_1plugin.html#aecae152da5fd9c8c52850e0f444ff835" title=" " alt="" coords="219,107,366,133"/>
+<area shape="rect" id="node10" href="$namespaceetiss_1_1plugin.html#a0b50cfedae52dad0bf2623df0e6da472" title=" " alt="" coords="207,325,379,352"/>
+<area shape="rect" id="node3" href="$opencl-c_8h.html#a33dd08f08ca9bd0ca06b1cb16a07281e" title="Return the length of vector p, i.e., sqrt(p.x2 + p.y 2 + ...)" alt="" coords="486,107,549,133"/>
+<area shape="rect" id="node4" href="$classetiss_1_1plugin_1_1Logger.html#a8a714bcc80bfe8ebf59795f69c18bfa9" title="this function writes the content of buf with length len to std::cout." alt="" coords="427,157,608,184"/>
+</map>

@@ -1,0 +1,14 @@
+<map id="etiss::plugin::VariableValueLogger::finalizeInstrSet" name="etiss::plugin::VariableValueLogger::finalizeInstrSet">
+<area shape="rect" id="node1" title="called after all instructions have been added to allow last changes" alt="" coords="5,239,204,280"/>
+<area shape="rect" id="node2" href="$classetiss_1_1instr_1_1Instruction.html#a1ce37a20ceb4ee8e5cdfbc606e83c0ae" title=" " alt="" coords="279,5,445,47"/>
+<area shape="rect" id="node5" href="$classetiss_1_1CodeSet.html#a7236f0032933e60e6d9671d155da209d" title=" " alt="" coords="277,71,447,98"/>
+<area shape="rect" id="node6" href="$classetiss_1_1CodePart.html#a4c2d85268d4142cd353d9fbdd802a0d6" title=" " alt="" coords="283,122,441,149"/>
+<area shape="rect" id="node7" href="$classetiss_1_1instr_1_1InstructionSet.html#ada98ad74dd9067c09f9d339cdb23fd56" title=" " alt="" coords="279,173,445,215"/>
+<area shape="rect" id="node8" href="$classetiss_1_1instr_1_1VariableInstructionSet.html#a1a6f5b6c0e65baa4a8195698a90268a3" title=" " alt="" coords="252,239,472,280"/>
+<area shape="rect" id="node9" href="$classetiss_1_1instr_1_1ModedInstructionSet.html#af8636c25ce8ff3a086b8a89e54caae78" title=" " alt="" coords="257,304,467,345"/>
+<area shape="rect" id="node10" href="$classetiss_1_1TranslationPlugin.html#a6ba6e1b9951a3ed6fed50bfb7686e19c" title="returns a C code expression that allows to get or assign a pointer to the variable assigned to this t..." alt="" coords="276,369,448,411"/>
+<area shape="rect" id="node11" href="$classetiss_1_1CodePart.html#a69ec97bf939bcf32a1669357e908f9cf" title=" " alt="" coords="261,435,463,476"/>
+<area shape="rect" id="node12" href="$classetiss_1_1CPUCore.html#ade229c2b8c8c3f0eddeea217799151fc" title="Get the virtual structure of this CPUCore instance." alt="" coords="269,501,455,527"/>
+<area shape="rect" id="node3" href="$namespaceetiss.html#afd320e98bf6a5e2c0d8ffde5dd28dd35" title="write log message at the given level." alt="" coords="520,97,601,123"/>
+<area shape="rect" id="node4" href="$namespaceetiss.html#a5d23a51a17c09f1b863c601d4454f99b" title="conversion of type T to std::string." alt="" coords="649,97,761,123"/>
+</map>

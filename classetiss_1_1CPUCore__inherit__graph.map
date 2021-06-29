@@ -1,0 +1,5 @@
+<map id="etiss::CPUCore" name="etiss::CPUCore">
+<area shape="rect" id="node1" title="CPUCore is responsible for the simulation of a CPU core in ETISS." alt="" coords="130,80,249,107"/>
+<area shape="rect" id="node2" href="$classetiss_1_1VirtualStructSupport.html" title=" " alt="" coords="5,5,197,32"/>
+<area shape="rect" id="node3" href="$classetiss_1_1ToString.html" title="Marker interface for toString() support." alt="" coords="222,5,335,32"/>
+</map>

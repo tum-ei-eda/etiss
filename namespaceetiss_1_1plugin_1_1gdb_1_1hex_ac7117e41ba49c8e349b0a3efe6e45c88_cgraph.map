@@ -1,0 +1,5 @@
+<map id="etiss::plugin::gdb::hex::fromInt" name="etiss::plugin::gdb::hex::fromInt">
+<area shape="rect" id="node1" title="converts an integer type variable to a hexadecimal representation with the given endianness" alt="" coords="5,5,139,47"/>
+<area shape="rect" id="node2" href="$namespaceetiss_1_1plugin_1_1gdb_1_1hex.html#a199aa405e76330d38089639790c11a7d" title="converts a byte to a hex string (without &quot;0x&quot; prefix);" alt="" coords="187,5,320,47"/>
+<area shape="rect" id="node3" href="$namespaceetiss_1_1plugin_1_1gdb_1_1hex.html#af65b0fb98ddba08fe3943a809f17c1b3" title="converts the lower 4 bits to a representing char" alt="" coords="368,5,501,47"/>
+</map>

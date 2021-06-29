@@ -1,0 +1,14 @@
+<map id="etiss::VirtualStruct::applyAction" name="etiss::VirtualStruct::applyAction">
+<area shape="rect" id="node1" title=" " alt="" coords="5,169,148,211"/>
+<area shape="rect" id="node2" href="$classetiss_1_1VirtualStruct_1_1Field.html#a42526c23837dd485d25b53c4e19a826e" title="advanced fault injection. Field must have the A flag to use this." alt="" coords="197,5,343,47"/>
+<area shape="rect" id="node3" href="$classetiss_1_1VirtualStruct_1_1Field.html#ab65c0c522a82466a6cd0f800a864915c" title="function to write a bitflip to a field" alt="" coords="199,71,341,112"/>
+<area shape="rect" id="node4" href="$classetiss_1_1fault_1_1Injector.html#a57966ed6c48589e00395bcf03c0360ed" title="returns the path of the current object." alt="" coords="196,136,344,177"/>
+<area shape="rect" id="node10" href="$classetiss_1_1fault_1_1Action.html#af381112e7d963493adec0d9a2757360b" title="BITFLIP only." alt="" coords="200,201,340,243"/>
+<area shape="rect" id="node11" href="$classetiss_1_1fault_1_1Action.html#a94a8a904e3eeeda8c52f9645576805f4" title="BITFLIP only." alt="" coords="200,267,340,308"/>
+<area shape="rect" id="node12" href="$classetiss_1_1fault_1_1Action.html#a82af010cf4175905daf0d0436bdc934e" title=" " alt="" coords="200,332,340,373"/>
+<area shape="rect" id="node5" href="$classetiss_1_1fault_1_1Injector.html#a33d55e2a68ca361dff94e85d55e0bfac" title="get a the parent injector (root returns 0)." alt="" coords="392,37,540,79"/>
+<area shape="rect" id="node6" href="$classetiss_1_1fault_1_1Injector.html#a8b5174ca0f103853448747d4e7750472" title="get a sub injector." alt="" coords="392,103,540,144"/>
+<area shape="rect" id="node7" href="$classetiss_1_1fault_1_1Injector.html#a917bd4788efe18c05f2035edc7f8f418" title="list all sub injectors." alt="" coords="392,168,540,209"/>
+<area shape="rect" id="node8" href="$namespaceetiss.html#afd320e98bf6a5e2c0d8ffde5dd28dd35" title="write log message at the given level." alt="" coords="425,234,507,261"/>
+<area shape="rect" id="node9" href="$namespaceetiss.html#a5d23a51a17c09f1b863c601d4454f99b" title="conversion of type T to std::string." alt="" coords="588,234,700,261"/>
+</map>

@@ -1,0 +1,20 @@
+<map id="etiss::mm::PTEFormat::Instance" name="etiss::mm::PTEFormat::Instance">
+<area shape="rect" id="node1" title="Get the singleton instance." alt="" coords="801,173,967,215"/>
+<area shape="rect" id="node2" href="$classetiss_1_1mm_1_1PTE.html#a5213bc8cecaa9373b11d22d9fe85f49f" title="Clear the bit field value with its name." alt="" coords="543,5,732,47"/>
+<area shape="rect" id="node3" href="$classetiss_1_1mm_1_1PTE.html#ad2d269f73a68beb3265d471bee4535fe" title="Dump the details of the PTE entry." alt="" coords="277,71,444,98"/>
+<area shape="rect" id="node4" href="$classetiss_1_1mm_1_1PTE.html#a5855218c209b87341032b75da01077c9" title="Get the bit field value with its name." alt="" coords="534,122,741,149"/>
+<area shape="rect" id="node7" href="$classetiss_1_1mm_1_1PTEFormatBuilder.html#affe57ce997f8a2933224ca8768a53373" title="Get the singleton instance." alt="" coords="532,173,743,215"/>
+<area shape="rect" id="node8" href="$classetiss_1_1mm_1_1PTE.html#ae33da9afe78d6a4dff7db5fc448b19ab" title="Set the bit field value with its name." alt="" coords="521,239,753,266"/>
+<area shape="rect" id="node9" href="$classetiss_1_1mm_1_1MMU.html#ad037264296f22dfa51f99887e27fb14e" title="Conduct the actual translation according to the format set by PTEFormatBuilder." alt="" coords="539,425,735,451"/>
+<area shape="rect" id="node17" href="$classetiss_1_1mm_1_1PTE.html#ae45a07db71a0a44699817dee8b65d9cf" title="Update the PTE with a new value." alt="" coords="550,290,725,317"/>
+<area shape="rect" id="node5" href="$classRISCV64MMU.html#adf34f487fb51829dce6acb49fa84a4b6" title="Memory protection is architecture&#45;dependent, which should be implemented with architecture model." alt="" coords="248,122,473,149"/>
+<area shape="rect" id="node6" href="$classRISCV64MMU.html#a82dbbd7df295610e2753c953083d2086" title="Page table walking is required to translate virtual address to physical address if TLB miss occurs." alt="" coords="253,189,469,215"/>
+<area shape="rect" id="node10" href="$namespaceetiss_1_1mm.html#a5cfb5b8fc556bf0143bed68ef4034ee7" title=" " alt="" coords="283,425,438,451"/>
+<area shape="rect" id="node12" href="$namespaceetiss_1_1mm.html#a37eaf6058c75b96cafc13f0a630ba5a3" title=" " alt="" coords="281,475,440,502"/>
+<area shape="rect" id="node13" href="$namespaceetiss_1_1mm.html#afa95c2ef3f023300fd2beca374ba3c1a" title=" " alt="" coords="295,526,427,553"/>
+<area shape="rect" id="node14" href="$namespaceetiss_1_1mm.html#adb34ae9516ba47e1276989a3d6f422e0" title=" " alt="" coords="293,577,429,603"/>
+<area shape="rect" id="node15" href="$namespaceetiss_1_1mm.html#ac3cfa50897d8a501cf8ffb7d3279fdfe" title=" " alt="" coords="297,323,425,350"/>
+<area shape="rect" id="node16" href="$namespaceetiss_1_1mm.html#a9a4e2994a05acfba135a3df6aa21ee7c" title=" " alt="" coords="295,374,427,401"/>
+<area shape="rect" id="node11" href="$classetiss_1_1mm_1_1DMMUWrapper.html#ab8ada30257c1b95a5f2b1281b1f43b51" title="SystemWrapperPlugin interface to wrap around original ETISS_System." alt="" coords="5,443,200,484"/>
+<area shape="rect" id="node18" href="$classetiss_1_1mm_1_1PTE.html#a031c4a4e7667216c2bcf9c2158812b44" title=" " alt="" coords="285,273,436,299"/>
+</map>

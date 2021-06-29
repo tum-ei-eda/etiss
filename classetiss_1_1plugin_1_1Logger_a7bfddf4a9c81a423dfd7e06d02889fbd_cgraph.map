@@ -1,0 +1,5 @@
+<map id="etiss::plugin::Logger::Logger" name="etiss::plugin::Logger::Logger">
+<area shape="rect" id="node1" title=" " alt="" coords="5,5,159,47"/>
+<area shape="rect" id="node2" href="$namespaceetiss.html#afd320e98bf6a5e2c0d8ffde5dd28dd35" title="write log message at the given level." alt="" coords="207,13,288,39"/>
+<area shape="rect" id="node3" href="$namespaceetiss.html#a5d23a51a17c09f1b863c601d4454f99b" title="conversion of type T to std::string." alt="" coords="336,13,448,39"/>
+</map>

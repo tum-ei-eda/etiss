@@ -1,0 +1,5 @@
+<map id="_mm_mul_epi32" name="_mm_mul_epi32">
+<area shape="rect" id="node1" title="Multiplies corresponding even&#45;indexed elements of two 128&#45;bit vectors of [4 x i32] and returns a 128&#45;..." alt="" coords="233,31,364,57"/>
+<area shape="rect" id="node2" href="$avx512vlintrin_8h.html#a57caa4c60d89b5c5772182f2318e5c33" title=" " alt="" coords="9,5,182,32"/>
+<area shape="rect" id="node3" href="$avx512vlintrin_8h.html#a8666f06e1fd9b9e1d746742151aa1f2e" title=" " alt="" coords="5,56,185,83"/>
+</map>

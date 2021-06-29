@@ -1,0 +1,6 @@
+<map id="etiss::mm::PTE::GetByName" name="etiss::mm::PTE::GetByName">
+<area shape="rect" id="node1" title="Get the bit field value with its name." alt="" coords="279,56,485,83"/>
+<area shape="rect" id="node2" href="$classRISCV64MMU.html#adf34f487fb51829dce6acb49fa84a4b6" title="Memory protection is architecture&#45;dependent, which should be implemented with architecture model." alt="" coords="5,5,231,32"/>
+<area shape="rect" id="node3" href="$classetiss_1_1mm_1_1PTE.html#ad2d269f73a68beb3265d471bee4535fe" title="Dump the details of the PTE entry." alt="" coords="35,56,201,83"/>
+<area shape="rect" id="node4" href="$classRISCV64MMU.html#a82dbbd7df295610e2753c953083d2086" title="Page table walking is required to translate virtual address to physical address if TLB miss occurs." alt="" coords="10,107,226,133"/>
+</map>

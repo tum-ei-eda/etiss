@@ -1,0 +1,4 @@
+<map id="_mm_store1_pd" name="_mm_store1_pd">
+<area shape="rect" id="node1" title="Moves the lower 64 bits of a 128&#45;bit vector of [2 x double] twice to the upper and lower 64 bits of a..." alt="" coords="5,5,132,32"/>
+<area shape="rect" id="node2" href="$emmintrin_8h.html#aab4fef3a9562678e7944d1835c67294d" title="Moves packed double&#45;precision values from a 128&#45;bit vector of [2 x double] to a memory location." alt="" coords="180,5,299,32"/>
+</map>

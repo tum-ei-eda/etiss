@@ -1,0 +1,5 @@
+<map id="_mm_sub_epi64" name="_mm_sub_epi64">
+<area shape="rect" id="node1" title="Subtracts the corresponding elements of two [2 x i64] vectors." alt="" coords="232,31,360,57"/>
+<area shape="rect" id="node2" href="$avx512vlintrin_8h.html#a37567fd278eaad2305b59ad805ac7041" title=" " alt="" coords="9,5,180,32"/>
+<area shape="rect" id="node3" href="$avx512vlintrin_8h.html#a18a29e680d340bd603c1519a0960d6ba" title=" " alt="" coords="5,56,184,83"/>
+</map>

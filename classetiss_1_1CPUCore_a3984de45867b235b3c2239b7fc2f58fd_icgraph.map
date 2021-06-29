@@ -1,0 +1,4 @@
+<map id="etiss::CPUCore::getMMU" name="etiss::CPUCore::getMMU">
+<area shape="rect" id="node1" title="Get the Memory Management Unit(MMU) of this CPUCore instance." alt="" coords="208,5,389,32"/>
+<area shape="rect" id="node2" href="$MMU_8cpp.html#ab40d3dc4e5c000decf0b0816375a9f58" title=" " alt="" coords="5,5,160,32"/>
+</map>

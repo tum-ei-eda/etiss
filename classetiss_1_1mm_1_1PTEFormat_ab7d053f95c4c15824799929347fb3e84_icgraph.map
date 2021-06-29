@@ -1,0 +1,11 @@
+<map id="etiss::mm::PTEFormat::Dump" name="etiss::mm::PTEFormat::Dump">
+<area shape="rect" id="node1" title="Dump the details of the whole PTE format." alt="" coords="559,89,724,131"/>
+<area shape="rect" id="node2" href="$classetiss_1_1mm_1_1PTE.html#a5213bc8cecaa9373b11d22d9fe85f49f" title="Clear the bit field value with its name." alt="" coords="300,5,489,47"/>
+<area shape="rect" id="node3" href="$classetiss_1_1mm_1_1PTE.html#a5855218c209b87341032b75da01077c9" title="Get the bit field value with its name." alt="" coords="291,71,498,98"/>
+<area shape="rect" id="node7" href="$classetiss_1_1mm_1_1PTE.html#ae33da9afe78d6a4dff7db5fc448b19ab" title="Set the bit field value with its name." alt="" coords="279,122,511,149"/>
+<area shape="rect" id="node8" href="$classetiss_1_1mm_1_1PTE.html#ae45a07db71a0a44699817dee8b65d9cf" title="Update the PTE with a new value." alt="" coords="307,173,482,199"/>
+<area shape="rect" id="node4" href="$classRISCV64MMU.html#adf34f487fb51829dce6acb49fa84a4b6" title="Memory protection is architecture&#45;dependent, which should be implemented with architecture model." alt="" coords="5,21,231,47"/>
+<area shape="rect" id="node5" href="$classetiss_1_1mm_1_1PTE.html#ad2d269f73a68beb3265d471bee4535fe" title="Dump the details of the PTE entry." alt="" coords="35,71,201,98"/>
+<area shape="rect" id="node6" href="$classRISCV64MMU.html#a82dbbd7df295610e2753c953083d2086" title="Page table walking is required to translate virtual address to physical address if TLB miss occurs." alt="" coords="10,122,226,149"/>
+<area shape="rect" id="node9" href="$classetiss_1_1mm_1_1PTE.html#a031c4a4e7667216c2bcf9c2158812b44" title=" " alt="" coords="43,173,193,199"/>
+</map>

@@ -1,0 +1,8 @@
+<map id="etiss::plugin::gdb::PacketProtocol::available" name="etiss::plugin::gdb::PacketProtocol::available">
+<area shape="rect" id="node1" title=" " alt="" coords="712,71,905,112"/>
+<area shape="rect" id="node2" href="$classetiss_1_1plugin_1_1gdb_1_1Server.html#ae641aef3a8187459a89c40a473d6ab0a" title=" " alt="" coords="296,71,463,112"/>
+<area shape="rect" id="node6" href="$classetiss_1_1plugin_1_1gdb_1_1PacketProtocol.html#a47a5284b39fbee7259d6d55163e400aa" title=" " alt="" coords="511,100,664,141"/>
+<area shape="rect" id="node3" href="$classetiss_1_1plugin_1_1gdb_1_1Server.html#a2ba2d82e0e6e80ea1fb528ac7b686af3" title="called before a block and may act in the same way as a block" alt="" coords="60,5,193,47"/>
+<area shape="rect" id="node4" href="$classetiss_1_1plugin_1_1gdb_1_1Server.html#a1714053bd746a2746ae52f621523f427" title=" " alt="" coords="5,71,248,112"/>
+<area shape="rect" id="node5" href="$classetiss_1_1plugin_1_1gdb_1_1Server.html#af2d20da879692be332064d7e082f2833" title=" " alt="" coords="13,136,240,177"/>
+</map>

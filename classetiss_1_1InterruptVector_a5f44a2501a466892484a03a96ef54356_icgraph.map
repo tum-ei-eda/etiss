@@ -1,0 +1,6 @@
+<map id="etiss::InterruptVector::width" name="etiss::InterruptVector::width">
+<area shape="rect" id="node1" title="number of interrupt bits" alt="" coords="428,39,587,80"/>
+<area shape="rect" id="node2" href="$classetiss_1_1InterruptVector.html#a58d4ec0c5b1eebb6955c873a0d0ccd2e" title="sets every bit to false" alt="" coords="221,5,380,47"/>
+<area shape="rect" id="node3" href="$classetiss_1_1InterruptVector.html#a75040c52c54b43cc28fbc33d08503e2b" title=" " alt="" coords="221,71,380,112"/>
+<area shape="rect" id="node4" href="$classetiss_1_1InterruptHandler.html#a50cf8993261a07ca47a529151058bed8" title="apply interrupt changes to the InterruptVector" alt="" coords="5,71,173,112"/>
+</map>

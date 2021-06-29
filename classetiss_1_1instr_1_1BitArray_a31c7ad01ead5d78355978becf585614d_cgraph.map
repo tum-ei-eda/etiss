@@ -1,0 +1,4 @@
+<map id="etiss::instr::BitArray::getBitSetCount" name="etiss::instr::BitArray::getBitSetCount">
+<area shape="rect" id="node1" title="returns the number of consecutive bits set upwards from given address." alt="" coords="5,5,156,47"/>
+<area shape="rect" id="node2" href="$classetiss_1_1instr_1_1BitArray.html#a26ab7bc74a62ff6494fd6365f2e49c33" title=" " alt="" coords="204,13,383,39"/>
+</map>

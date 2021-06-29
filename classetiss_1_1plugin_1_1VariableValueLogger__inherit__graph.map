@@ -1,0 +1,6 @@
+<map id="etiss::plugin::VariableValueLogger" name="etiss::plugin::VariableValueLogger">
+<area shape="rect" id="node1" title="writes the value of a field before each instruction" alt="" coords="5,229,204,271"/>
+<area shape="rect" id="node2" href="$classetiss_1_1TranslationPlugin.html" title="allows to add code to the translation of instructions" alt="" coords="19,155,191,181"/>
+<area shape="rect" id="node3" href="$classetiss_1_1Plugin.html" title="base plugin class that provides access to different plugin functions if present" alt="" coords="54,80,155,107"/>
+<area shape="rect" id="node4" href="$classetiss_1_1ToString.html" title="Marker interface for toString() support." alt="" coords="48,5,161,32"/>
+</map>

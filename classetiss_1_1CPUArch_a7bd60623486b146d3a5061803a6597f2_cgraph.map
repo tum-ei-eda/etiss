@@ -1,0 +1,5 @@
+<map id="etiss::CPUArch::_getPluginName" name="etiss::CPUArch::_getPluginName">
+<area shape="rect" id="node1" title="do not override. maps to getName()." alt="" coords="5,5,237,32"/>
+<area shape="rect" id="node2" href="$classetiss_1_1CPUArch.html#afef2dfd20d2938ddfebbfdec931b97ad" title="returns the name of this architecture." alt="" coords="285,5,471,32"/>
+<area shape="rect" id="node3" href="$classetiss_1_1CPUArch.html#ab18054a0c010ec14c632918ecce6339a" title="returns the name of this architecture." alt="" coords="519,5,733,32"/>
+</map>

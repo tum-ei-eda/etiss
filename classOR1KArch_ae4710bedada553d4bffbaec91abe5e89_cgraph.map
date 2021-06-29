@@ -1,0 +1,5 @@
+<map id="OR1KArch::handleException" name="OR1KArch::handleException">
+<area shape="rect" id="node1" title="translate/process exceptions that occur at runtime" alt="" coords="5,5,208,32"/>
+<area shape="rect" id="node2" href="$namespaceetiss.html#afd320e98bf6a5e2c0d8ffde5dd28dd35" title="write log message at the given level." alt="" coords="256,5,337,32"/>
+<area shape="rect" id="node3" href="$namespaceetiss.html#a5d23a51a17c09f1b863c601d4454f99b" title="conversion of type T to std::string." alt="" coords="385,5,497,32"/>
+</map>

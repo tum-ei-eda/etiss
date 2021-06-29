@@ -1,0 +1,4 @@
+<map id="_mm256_setr_ps" name="_mm256_setr_ps">
+<area shape="rect" id="node1" title="Constructs a 256&#45;bit floating&#45;point vector of [8 x float], initialized in reverse order with the spec..." alt="" coords="5,5,139,32"/>
+<area shape="rect" id="node2" href="$avxintrin_8h.html#ad62451adf36fc36097731bfd2d1d2278" title="Constructs a 256&#45;bit floating&#45;point vector of [8 x float] initialized with the specified single&#45;preci..." alt="" coords="187,5,315,32"/>
+</map>

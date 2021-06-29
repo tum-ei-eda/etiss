@@ -1,0 +1,5 @@
+<map id="_mm256_loadu2_m128i" name="_mm256_loadu2_m128i">
+<area shape="rect" id="node1" title="Loads two 128&#45;bit integer vectors from unaligned memory locations and constructs a 256&#45;bit integer ve..." alt="" coords="5,31,184,57"/>
+<area shape="rect" id="node2" href="$avxintrin_8h.html#ad0b4bb9f99cb2b56a5f3fa4f7a0469b8" title="Constructs a 256&#45;bit integer vector from a 128&#45;bit integer vector." alt="" coords="232,5,423,32"/>
+<area shape="rect" id="node3" href="$emmintrin_8h.html#aad53847a93cba1f7311bbace0472abef" title="Moves packed integer values from an unaligned 128&#45;bit memory location to elements in a 128&#45;bit intege..." alt="" coords="257,56,397,83"/>
+</map>

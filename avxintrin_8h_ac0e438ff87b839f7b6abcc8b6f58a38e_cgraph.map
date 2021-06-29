@@ -1,0 +1,4 @@
+<map id="_mm256_setr_m128" name="_mm256_setr_m128">
+<area shape="rect" id="node1" title="Constructs a 256&#45;bit floating&#45;point vector of [8 x float] by concatenating two 128&#45;bit floating&#45;point..." alt="" coords="5,5,160,32"/>
+<area shape="rect" id="node2" href="$avxintrin_8h.html#a017c558da8e15b61af30935bb65fa0bd" title="Constructs a 256&#45;bit floating&#45;point vector of [8 x float] by concatenating two 128&#45;bit floating&#45;point..." alt="" coords="208,5,359,32"/>
+</map>

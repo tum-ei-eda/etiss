@@ -1,0 +1,6 @@
+<map id="etiss::ExpandingNativeStack&lt; T, stackallocatedsize &gt;" name="etiss::ExpandingNativeStack&lt; T, stackallocatedsize &gt;">
+<area shape="rect" id="node1" title="implements a stack that may only grow (if needed) and can only contain native types since no destruct..." alt="" coords="129,109,337,151"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,5,149,32"/>
+<area shape="rect" id="node3" title=" " alt="" coords="174,5,293,32"/>
+<area shape="rect" id="node4" title=" " alt="" coords="317,5,355,32"/>
+</map>

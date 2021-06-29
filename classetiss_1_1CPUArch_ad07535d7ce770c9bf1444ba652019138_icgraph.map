@@ -1,0 +1,4 @@
+<map id="etiss::CPUArch::getMaximumInstructionSizeInBytes" name="etiss::CPUArch::getMaximumInstructionSizeInBytes">
+<area shape="rect" id="node1" title="used for variable instruction size and delay slots" alt="" coords="275,5,487,47"/>
+<area shape="rect" id="node2" href="$classetiss_1_1CPUArch.html#a51f2d2f8f3c8ecb199938156ce5553e1" title="maximum number of instructions in a meta instruction" alt="" coords="5,5,227,47"/>
+</map>

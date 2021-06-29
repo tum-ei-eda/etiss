@@ -1,0 +1,5 @@
+<map id="_mm256_storeu2_m128" name="_mm256_storeu2_m128">
+<area shape="rect" id="node1" title="Stores the upper and lower 128 bits of a 256&#45;bit floating&#45;point vector of [8 x float] into two differ..." alt="" coords="5,31,184,57"/>
+<area shape="rect" id="node2" href="$avxintrin_8h.html#a27bd9b0fe0ed1c7f081596b04c083bf5" title="Returns the lower 128 bits of a 256&#45;bit floating&#45;point vector of [8 x float] as a 128&#45;bit floating&#45;po..." alt="" coords="232,5,431,32"/>
+<area shape="rect" id="node3" href="$xmmintrin_8h.html#a5f33c94e86a0f3f9f636d4f15d627652" title="Stores a 128&#45;bit vector of [4 x float] to an unaligned memory location." alt="" coords="269,56,394,83"/>
+</map>

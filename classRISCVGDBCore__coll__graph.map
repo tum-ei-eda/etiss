@@ -1,0 +1,5 @@
+<map id="RISCVGDBCore" name="RISCVGDBCore">
+<area shape="rect" id="node1" title="This class is the brige between RISCV architecture and gdbserver." alt="" coords="12,185,132,212"/>
+<area shape="rect" id="node2" href="$classetiss_1_1plugin_1_1gdb_1_1GDBCore.html" title="provides to architecture dependent registers as defined by gdb" alt="" coords="5,95,139,136"/>
+<area shape="rect" id="node3" title=" " alt="" coords="31,5,113,32"/>
+</map>

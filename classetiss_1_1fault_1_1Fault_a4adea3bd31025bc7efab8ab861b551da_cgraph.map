@@ -1,0 +1,6 @@
+<map id="etiss::fault::Fault::Fault" name="etiss::fault::Fault::Fault">
+<area shape="rect" id="node1" title="Constructor: Generates a new Fault with unique ID." alt="" coords="5,23,136,65"/>
+<area shape="rect" id="node2" href="$namespaceetiss.html#afd320e98bf6a5e2c0d8ffde5dd28dd35" title="write log message at the given level." alt="" coords="237,5,318,32"/>
+<area shape="rect" id="node4" href="$namespaceetiss_1_1fault.html#a279a53099e1c050ff1c16d14042cb596" title=" " alt="" coords="184,56,371,83"/>
+<area shape="rect" id="node3" href="$namespaceetiss.html#a5d23a51a17c09f1b863c601d4454f99b" title="conversion of type T to std::string." alt="" coords="419,5,531,32"/>
+</map>

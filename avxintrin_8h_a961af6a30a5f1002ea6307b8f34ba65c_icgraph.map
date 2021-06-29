@@ -1,0 +1,5 @@
+<map id="_mm256_or_ps" name="_mm256_or_ps">
+<area shape="rect" id="node1" title="Performs a bitwise OR of two 256&#45;bit vectors of [8 x float]." alt="" coords="224,31,345,57"/>
+<area shape="rect" id="node2" href="$avx512vldqintrin_8h.html#ac33c04c06996f76ee6e70e3c4674020e" title=" " alt="" coords="9,5,173,32"/>
+<area shape="rect" id="node3" href="$avx512vldqintrin_8h.html#a75dd55719d00eccc3e328306503c7887" title=" " alt="" coords="5,56,176,83"/>
+</map>

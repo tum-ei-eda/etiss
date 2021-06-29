@@ -1,0 +1,10 @@
+<map id="etiss::plugin::gdb::PacketProtocol::snd" name="etiss::plugin::gdb::PacketProtocol::snd">
+<area shape="rect" id="node1" title=" " alt="" coords="5,129,161,171"/>
+<area shape="rect" id="node2" href="$classetiss_1_1plugin_1_1gdb_1_1Connection.html#ad615c9946953781d332bc2eb73aa58fe" title=" " alt="" coords="229,5,400,47"/>
+<area shape="rect" id="node3" href="$namespaceetiss_1_1plugin_1_1gdb_1_1hex.html#a199aa405e76330d38089639790c11a7d" title="converts a byte to a hex string (without &quot;0x&quot; prefix);" alt="" coords="248,71,381,112"/>
+<area shape="rect" id="node5" href="$GDBConnection_8cpp.html#aa038d1d4b0f985e4bfda1fbf4b4bf2c7" title=" " alt="" coords="209,137,420,163"/>
+<area shape="rect" id="node7" href="$classetiss_1_1plugin_1_1gdb_1_1Connection.html#ac711c912da2f2c5e62a95bf3ab161cfd" title=" " alt="" coords="248,188,381,229"/>
+<area shape="rect" id="node8" href="$classetiss_1_1plugin_1_1gdb_1_1Connection.html#aeaba2fdc2a059e2f6db8b11619e9e92a" title=" " alt="" coords="247,253,382,295"/>
+<area shape="rect" id="node4" href="$namespaceetiss_1_1plugin_1_1gdb_1_1hex.html#af65b0fb98ddba08fe3943a809f17c1b3" title="converts the lower 4 bits to a representing char" alt="" coords="485,71,618,112"/>
+<area shape="rect" id="node6" href="$GDBConnection_8cpp.html#a6572eb9068c6f29e6607f55e35d4daf0" title=" " alt="" coords="468,137,635,163"/>
+</map>

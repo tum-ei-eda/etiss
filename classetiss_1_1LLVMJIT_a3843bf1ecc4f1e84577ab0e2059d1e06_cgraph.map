@@ -1,0 +1,4 @@
+<map id="etiss::LLVMJIT::getFunction" name="etiss::LLVMJIT::getFunction">
+<area shape="rect" id="node1" title="returns a function pointer to a compiled function from the handle returned by etiss::JIT::translate" alt="" coords="5,5,200,32"/>
+<area shape="rect" id="node2" href="$classOrcJit.html#aa3c7900ad3588540e93d4aa2d414959b" title=" " alt="" coords="248,5,356,32"/>
+</map>

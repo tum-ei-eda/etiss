@@ -1,0 +1,3 @@
+<map id="etiss::fault::Trigger::isResolved" name="etiss::fault::Trigger::isResolved">
+<area shape="rect" id="node1" title="returns if the translation from TIMERELATIVE to TIME trigger has taken place" alt="" coords="5,29,148,71"/>
+</map>

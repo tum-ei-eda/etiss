@@ -1,0 +1,8 @@
+<map id="etiss::VirtualStruct::Field::read" name="etiss::VirtualStruct::Field::read">
+<area shape="rect" id="node1" title="function to read bits/a value from the Field." alt="" coords="475,90,617,131"/>
+<area shape="rect" id="node2" href="$namespaceetiss.html#a3b2d7df9db33ee4dc056ad8e00678c48" title="copies all fields with the same name from the source to the destination structure." alt="" coords="285,5,377,32"/>
+<area shape="rect" id="node4" href="$classetiss_1_1plugin_1_1VirtualStructMemory.html#a2a9a081000ccfcc3092088da059b42ae" title=" " alt="" coords="236,57,427,98"/>
+<area shape="rect" id="node5" href="$classetiss_1_1VirtualStruct.html#a05eccbd451e51a7c72f0b43bdbb323cc" title="read the value of a field" alt="" coords="260,122,403,163"/>
+<area shape="rect" id="node6" href="$classetiss_1_1plugin_1_1VirtualStructMemory.html#a428620e639f402a99ba7301954c77bdc" title=" " alt="" coords="236,187,427,229"/>
+<area shape="rect" id="node3" href="$classpugi_1_1xpath__variable.html#acaedec0610338a1165bbcd0658db34f9" title=" " alt="" coords="5,5,188,32"/>
+</map>

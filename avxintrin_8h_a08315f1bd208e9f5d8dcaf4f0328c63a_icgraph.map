@@ -1,0 +1,6 @@
+<map id="_mm256_castsi256_ps" name="_mm256_castsi256_ps">
+<area shape="rect" id="node1" title="Casts a 256&#45;bit integer vector into a 256&#45;bit floating&#45;point vector of [8 x float]." alt="" coords="256,56,427,83"/>
+<area shape="rect" id="node2" href="$avx512vlbf16intrin_8h.html#a6f08c1701d358cb91b7d52babcd9e12e" title="Convert Packed BF16 Data to Packed float Data." alt="" coords="31,5,183,32"/>
+<area shape="rect" id="node3" href="$avx512vlbf16intrin_8h.html#a93bacd8a624fad1094a8d9d0b3c0b91e" title="Convert Packed BF16 Data to Packed float Data using merging mask." alt="" coords="9,56,204,83"/>
+<area shape="rect" id="node4" href="$avx512vlbf16intrin_8h.html#a9890778e2a6cd71851205c73eb2fb3f4" title="Convert Packed BF16 Data to Packed float Data using zeroing mask." alt="" coords="5,107,208,133"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="_mm256_storeu2_m128i" name="_mm256_storeu2_m128i">
+<area shape="rect" id="node1" title="Stores the upper and lower 128 bits of a 256&#45;bit integer vector into two different unaligned memory l..." alt="" coords="5,31,188,57"/>
+<area shape="rect" id="node2" href="$avxintrin_8h.html#ac90c048314a5f571d1001f86d7e41ee7" title="Truncates a 256&#45;bit integer vector into a 128&#45;bit integer vector." alt="" coords="236,5,427,32"/>
+<area shape="rect" id="node3" href="$emmintrin_8h.html#af1db1db26a53da3585e47b9997276b61" title="Stores a 128&#45;bit integer vector to an unaligned memory location." alt="" coords="259,56,404,83"/>
+</map>

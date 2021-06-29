@@ -1,0 +1,4 @@
+<map id="etiss::Plugin::removedFromCPUCore" name="etiss::Plugin::removedFromCPUCore">
+<area shape="rect" id="node1" title="called as soon a plugin has been removed from its CPUCore." alt="" coords="269,5,469,47"/>
+<area shape="rect" id="node2" href="$classetiss_1_1CPUCore.html#acf52860f166ecf18ae54379010898715" title="Remove a plug&#45;in from the core simulator." alt="" coords="5,13,221,39"/>
+</map>

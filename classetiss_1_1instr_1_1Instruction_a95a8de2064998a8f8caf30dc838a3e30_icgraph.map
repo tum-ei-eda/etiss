@@ -1,0 +1,5 @@
+<map id="etiss::instr::Instruction::printASM" name="etiss::instr::Instruction::printASM">
+<area shape="rect" id="node1" title=" " alt="" coords="261,39,428,80"/>
+<area shape="rect" id="node2" href="$classetiss_1_1Translation.html#a129ecf66a99a82d1c5238e476f33a158" title=" " alt="" coords="43,5,175,47"/>
+<area shape="rect" id="node3" href="$classetiss_1_1plugin_1_1PrintInstruction.html#a7a00191b97394fa3ed15aa9781fdf45c" title="called after all instructions have been added to allow last changes" alt="" coords="5,71,213,112"/>
+</map>

@@ -1,0 +1,52 @@
+<map id="etiss::mm::DMMUWrapperSystem" name="etiss::mm::DMMUWrapperSystem">
+<area shape="rect" id="node1" title=" " alt="" coords="2876,1329,3119,1356"/>
+<area shape="rect" id="node2" href="$classetiss_1_1mm_1_1DMMUWrapper.html" title=" " alt="" coords="2552,1005,2747,1032"/>
+<area shape="rect" id="node3" href="$classetiss_1_1SystemWrapperPlugin.html" title="this plugin allows to wrap the ETISS_System interface" alt="" coords="620,260,825,287"/>
+<area shape="rect" id="node4" href="$classetiss_1_1Plugin.html" title="base plugin class that provides access to different plugin functions if present" alt="" coords="1059,421,1160,448"/>
+<area shape="rect" id="node6" href="$classetiss_1_1InterruptListenerPlugin.html" title=" " alt="" coords="1422,205,1591,246"/>
+<area shape="rect" id="node12" href="$classetiss_1_1RegisterDevicePlugin.html" title="RegisterDevicePlugin::changedRegister is called if a supported register has been changed." alt="" coords="1407,489,1607,516"/>
+<area shape="rect" id="node13" href="$classetiss_1_1CoroutinePlugin.html" title="this plugin will be called before a block is executed." alt="" coords="1425,271,1589,297"/>
+<area shape="rect" id="node18" href="$classetiss_1_1TranslationPlugin.html" title="allows to add code to the translation of instructions" alt="" coords="1421,439,1593,465"/>
+<area shape="rect" id="node35" title=" " alt="" coords="1424,322,1589,363"/>
+<area shape="rect" id="node5" href="$classetiss_1_1ToString.html" title="Marker interface for toString() support." alt="" coords="666,324,779,351"/>
+<area shape="rect" id="node24" href="$classetiss_1_1CPUCore.html" title="CPUCore is responsible for the simulation of a CPU core in ETISS." alt="" coords="2590,1056,2709,1083"/>
+<area shape="rect" id="node29" title=" " alt="" coords="1988,146,2168,187"/>
+<area shape="rect" id="node7" href="$structETISS__CPU.html" title="basic cpu state structure needed for execution of any cpu architecture." alt="" coords="677,716,769,743"/>
+<area shape="rect" id="node39" href="$classetiss_1_1mm_1_1MMU.html" title=" " alt="" coords="1835,1223,1964,1249"/>
+<area shape="rect" id="node8" title=" " alt="" coords="252,1397,419,1424"/>
+<area shape="rect" id="node42" title=" " alt="" coords="647,1393,798,1434"/>
+<area shape="rect" id="node44" title=" " alt="" coords="647,1463,798,1505"/>
+<area shape="rect" id="node9" title=" " alt="" coords="310,665,361,692"/>
+<area shape="rect" id="node10" title=" " alt="" coords="284,716,387,743"/>
+<area shape="rect" id="node11" title=" " alt="" coords="305,767,366,793"/>
+<area shape="rect" id="node14" href="$classetiss_1_1CPUArch.html" title="the interface to translate instructions of and processor architecture" alt="" coords="1841,729,1958,756"/>
+<area shape="rect" id="node50" title=" " alt="" coords="2205,806,2371,847"/>
+<area shape="rect" id="node15" href="$classetiss_1_1CPUArchRegListenerInterface.html" title="allows to inform plugins about changes to a register that is present in the cpu structure." alt="" coords="1409,806,1604,847"/>
+<area shape="rect" id="node16" href="$classetiss_1_1CPUArchCPUManipulation.html" title="interface for cpu structure access." alt="" coords="1392,653,1621,680"/>
+<area shape="rect" id="node17" href="$classetiss_1_1CPUArchDefaultPlugins.html" title="provides common basic plugins" alt="" coords="1401,704,1613,731"/>
+<area shape="rect" id="node19" title="STL class." alt="" coords="679,831,766,857"/>
+<area shape="rect" id="node31" href="$classetiss_1_1JIT.html" title="compiler interface for just in time compilation of generated C code" alt="" coords="1071,849,1148,876"/>
+<area shape="rect" id="node20" title="STL class." alt="" coords="266,823,405,865"/>
+<area shape="rect" id="node21" href="$classetiss_1_1plugin_1_1gdb_1_1GDBCore.html" title="provides to architecture dependent registers as defined by gdb" alt="" coords="453,941,586,982"/>
+<area shape="rect" id="node22" title=" " alt="" coords="5,1100,87,1127"/>
+<area shape="rect" id="node41" href="$classetiss_1_1mm_1_1TLB.html" title=" " alt="" coords="1031,1285,1188,1312"/>
+<area shape="rect" id="node43" href="$classetiss_1_1mm_1_1PTE.html" title="Page Table Entry (PTE) defines the composition of Page Frame Number (PFN) and relavant flags." alt="" coords="276,1448,395,1475"/>
+<area shape="rect" id="node23" title=" " alt="" coords="643,431,803,457"/>
+<area shape="rect" id="node26" href="$classetiss_1_1CPUCore_1_1InterruptVectorWrapper.html" title=" " alt="" coords="2906,1041,3089,1082"/>
+<area shape="rect" id="node37" title=" " alt="" coords="2919,1142,3075,1183"/>
+<area shape="rect" id="node25" href="$classetiss_1_1VirtualStructSupport.html" title=" " alt="" coords="2192,1097,2384,1124"/>
+<area shape="rect" id="node27" href="$classetiss_1_1InterruptVector.html" title="interface to set interrupt bits" alt="" coords="2209,1396,2367,1423"/>
+<area shape="rect" id="node28" title=" " alt="" coords="697,1529,748,1556"/>
+<area shape="rect" id="node33" href="$classetiss_1_1VirtualStruct.html" title="abstract representation of an module of a simulation which could be a embedded device of the cpu of a..." alt="" coords="1038,1585,1181,1612"/>
+<area shape="rect" id="node30" title=" " alt="" coords="1645,923,1811,965"/>
+<area shape="rect" id="node32" title=" " alt="" coords="1424,1586,1589,1627"/>
+<area shape="rect" id="node34" title=" " alt="" coords="1993,321,2163,362"/>
+<area shape="rect" id="node36" title=" " alt="" coords="3232,1239,3420,1281"/>
+<area shape="rect" id="node38" title=" " alt="" coords="2205,1031,2371,1073"/>
+<area shape="rect" id="node40" title=" " alt="" coords="1424,1278,1589,1319"/>
+<area shape="rect" id="node45" href="$structETISS__System.html" title="memory access and time synchronization functions." alt="" coords="665,1109,780,1136"/>
+<area shape="rect" id="node46" title=" " alt="" coords="310,1129,361,1156"/>
+<area shape="rect" id="node47" title=" " alt="" coords="292,1069,379,1096"/>
+<area shape="rect" id="node48" title="STL class." alt="" coords="2242,1148,2334,1175"/>
+<area shape="rect" id="node49" title=" " alt="" coords="2269,1207,2307,1233"/>
+</map>

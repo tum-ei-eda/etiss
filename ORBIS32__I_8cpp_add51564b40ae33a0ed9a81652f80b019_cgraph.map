@@ -1,0 +1,7 @@
+<map id="storeinstr" name="storeinstr">
+<area shape="rect" id="node1" title=" " alt="" coords="5,93,89,120"/>
+<area shape="rect" id="node2" href="$classetiss_1_1CodeSet.html#a7236f0032933e60e6d9671d155da209d" title=" " alt="" coords="148,5,319,32"/>
+<area shape="rect" id="node3" href="$classetiss_1_1instr_1_1BitArrayRange.html#ac4b0a05b20a0daa0a1f9152e9a20c71e" title="reads bits from the range to the return value starting at the lsb." alt="" coords="137,57,329,98"/>
+<area shape="rect" id="node4" href="$pugixml_8cpp.html#aab8f818e90a34b18c1da140588eca88d" title=" " alt="" coords="205,123,261,149"/>
+<area shape="rect" id="node5" href="$namespaceetiss.html#a5d23a51a17c09f1b863c601d4454f99b" title="conversion of type T to std::string." alt="" coords="177,173,289,200"/>
+</map>

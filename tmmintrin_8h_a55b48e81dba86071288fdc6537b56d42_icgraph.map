@@ -1,0 +1,5 @@
+<map id="_mm_abs_epi8" name="_mm_abs_epi8">
+<area shape="rect" id="node1" title="Computes the absolute value of each of the packed 8&#45;bit signed integers in the source operand and sto..." alt="" coords="224,31,344,57"/>
+<area shape="rect" id="node2" href="$avx512vlbwintrin_8h.html#ab208cfaf1cea4a76dfc297127bb24588" title=" " alt="" coords="9,5,172,32"/>
+<area shape="rect" id="node3" href="$avx512vlbwintrin_8h.html#a12624372446a94a10f280cf26fa673ef" title=" " alt="" coords="5,56,176,83"/>
+</map>

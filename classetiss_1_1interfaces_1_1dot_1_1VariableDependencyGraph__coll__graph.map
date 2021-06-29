@@ -1,0 +1,11 @@
+<map id="etiss::interfaces::dot::VariableDependencyGraph" name="etiss::interfaces::dot::VariableDependencyGraph">
+<area shape="rect" id="node1" title=" " alt="" coords="888,218,1112,259"/>
+<area shape="rect" id="node2" title=" " alt="" coords="495,5,773,149"/>
+<area shape="rect" id="node3" title=" " alt="" coords="227,57,371,98"/>
+<area shape="rect" id="node4" title=" " alt="" coords="484,174,784,303"/>
+<area shape="rect" id="node5" title=" " alt="" coords="227,275,370,317"/>
+<area shape="rect" id="node6" title=" " alt="" coords="49,283,100,309"/>
+<area shape="rect" id="node7" title=" " alt="" coords="539,327,729,457"/>
+<area shape="rect" id="node8" title="STL class." alt="" coords="255,404,342,431"/>
+<area shape="rect" id="node9" title="STL class." alt="" coords="5,397,144,438"/>
+</map>

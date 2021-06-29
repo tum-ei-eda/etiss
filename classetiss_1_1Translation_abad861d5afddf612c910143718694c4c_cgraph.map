@@ -1,0 +1,23 @@
+<map id="etiss::Translation::translateBlock" name="etiss::Translation::translateBlock">
+<area shape="rect" id="node1" title=" " alt="" coords="5,374,137,415"/>
+<area shape="rect" id="node2" href="$classetiss_1_1CodeSet.html#a7236f0032933e60e6d9671d155da209d" title=" " alt="" coords="205,5,376,32"/>
+<area shape="rect" id="node3" href="$classetiss_1_1CodeBlock.html#acf8fc45fed862fc86d4393183e69b93b" title=" " alt="" coords="197,56,384,83"/>
+<area shape="rect" id="node4" href="$classetiss_1_1instr_1_1BitArray.html#a6fbe30057aa82313c3f9f593a0867d9b" title=" " alt="" coords="215,107,366,149"/>
+<area shape="rect" id="node5" href="$namespaceetiss.html#abea8444fc010e2490f2486e2ededde88" title="Get reference of the global ETISS configuration object." alt="" coords="497,289,578,316"/>
+<area shape="rect" id="node8" href="$classetiss_1_1CPUArch.html#ad1ecb5fa556dbda8dd34a0acbf79b65f" title="this function should compensate for any endianess on a BitArray so that bit 0 is always the LSB." alt="" coords="188,173,393,214"/>
+<area shape="rect" id="node11" href="$classetiss_1_1Configuration.html#ad8c43846d16752474dfab08a50e135ad" title="template function to read the value of a configuration key." alt="" coords="449,239,626,265"/>
+<area shape="rect" id="node12" href="$classetiss_1_1instr_1_1InstructionSet.html#a57482ece7b5c14b0869ad3491876c20d" title=" " alt="" coords="207,341,374,382"/>
+<area shape="rect" id="node13" href="$classetiss_1_1instr_1_1ModedInstructionSet.html#ace6e14638621794d2a2f894ac2930af1" title=" " alt="" coords="185,406,396,447"/>
+<area shape="rect" id="node14" href="$classetiss_1_1CodeBlock_1_1Line.html#a885f42cfcea9f3bc9c63c169a975e841" title=" " alt="" coords="208,471,373,513"/>
+<area shape="rect" id="node15" href="$classetiss_1_1instr_1_1InstructionSet.html#a3a6d35a40a119ba41b1a55fb9b8078f7" title=" " alt="" coords="207,537,374,578"/>
+<area shape="rect" id="node16" href="$classetiss_1_1instr_1_1BitArray.html#a4b20425e1cd6711386611c1c01826d83" title="get the internal buffer" alt="" coords="215,602,366,643"/>
+<area shape="rect" id="node17" href="$classetiss_1_1instr_1_1InstructionSet.html#a7ea2db8cdb5e83cae16b95bae0617a84" title=" " alt="" coords="207,667,374,709"/>
+<area shape="rect" id="node20" href="$classetiss_1_1instr_1_1Instruction.html#a3d24dad1dbf0330018175115c51f8960" title=" " alt="" coords="207,733,374,774"/>
+<area shape="rect" id="node21" href="$classetiss_1_1instr_1_1BitArray.html#a86c0d6b4dc37c7e878e27e444c88670c" title=" " alt="" coords="215,798,366,839"/>
+<area shape="rect" id="node6" href="$namespaceetiss.html#afd320e98bf6a5e2c0d8ffde5dd28dd35" title="write log message at the given level." alt="" coords="734,264,815,291"/>
+<area shape="rect" id="node7" href="$namespaceetiss.html#a5d23a51a17c09f1b863c601d4454f99b" title="conversion of type T to std::string." alt="" coords="919,264,1031,291"/>
+<area shape="rect" id="node9" href="$classetiss_1_1instr_1_1BitArray.html#a147cd9aa8af04b59c2de3f65cd8a88de" title="changes byte positions as needed to resove endiannes incompabilities after using the internal buffer ..." alt="" coords="444,173,631,214"/>
+<area shape="rect" id="node10" href="$namespaceetiss.html#ac13036cc1551f0b79ff2a933b940b6c7" title="evaluates the endianness of the current build as a constexpr." alt="" coords="697,180,853,207"/>
+<area shape="rect" id="node18" href="$classetiss_1_1instr_1_1Node.html#a62dbb3b5ca71ec98b434b4b0bcdc2c1e" title="performs a lookup for the matching Instruction for the passed instruction in the bit array." alt="" coords="471,515,603,557"/>
+<area shape="rect" id="node19" href="$classetiss_1_1instr_1_1BitArrayRange.html#ac4b0a05b20a0daa0a1f9152e9a20c71e" title="reads bits from the range to the return value starting at the lsb." alt="" coords="679,515,871,557"/>
+</map>

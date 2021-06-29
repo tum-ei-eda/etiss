@@ -1,0 +1,9 @@
+<map id="etiss::DataSheetAccurateTiming::handleMatch_cycles" name="etiss::DataSheetAccurateTiming::handleMatch_cycles">
+<area shape="rect" id="node1" title="simple template function that adds the given number of cycles to the cpu time if the related rule mat..." alt="" coords="5,115,212,156"/>
+<area shape="rect" id="node2" href="$classetiss_1_1instr_1_1Instruction.html#a1ce37a20ceb4ee8e5cdfbc606e83c0ae" title=" " alt="" coords="278,5,445,47"/>
+<area shape="rect" id="node4" href="$namespaceetiss.html#a5d23a51a17c09f1b863c601d4454f99b" title="conversion of type T to std::string." alt="" coords="640,46,752,73"/>
+<area shape="rect" id="node5" href="$classetiss_1_1CodePart.html#a4c2d85268d4142cd353d9fbdd802a0d6" title=" " alt="" coords="282,122,441,149"/>
+<area shape="rect" id="node6" href="$classetiss_1_1CodePart.html#a8d1bed67b6a39781bfc51fa93b0ced29" title=" " alt="" coords="260,173,463,215"/>
+<area shape="rect" id="node7" href="$classetiss_1_1CodeSet.html#ad05559d4785f68ba862363659e4bddc7" title=" " alt="" coords="273,239,449,266"/>
+<area shape="rect" id="node3" href="$namespaceetiss.html#afd320e98bf6a5e2c0d8ffde5dd28dd35" title="write log message at the given level." alt="" coords="511,17,592,43"/>
+</map>

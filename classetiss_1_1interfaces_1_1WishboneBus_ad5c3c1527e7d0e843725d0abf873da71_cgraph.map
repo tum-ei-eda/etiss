@@ -1,0 +1,10 @@
+<map id="etiss::interfaces::WishboneBus::update" name="etiss::interfaces::WishboneBus::update">
+<area shape="rect" id="node1" title="Update signals to CPU or read/write from/to bus." alt="" coords="5,165,168,207"/>
+<area shape="rect" id="node2" href="$namespaceetiss_1_1interfaces.html#a28f99991bbe380fbdae6d6038ea0ca88" title="general helper function to read an address; needs to be implemented as needed" alt="" coords="216,5,351,47"/>
+<area shape="rect" id="node3" href="$namespaceetiss_1_1interfaces.html#a826928ddc3a300297181ac00bd3b047d" title="general helper function to read a signal; needs to be implemented as needed" alt="" coords="216,71,351,112"/>
+<area shape="rect" id="node4" href="$namespaceetiss_1_1interfaces.html#ac11cbe7bb179cb0f02f1fcb40c663b22" title="general helper function to read a vector signal; needs to be implemented as needed" alt="" coords="216,136,351,177"/>
+<area shape="rect" id="node5" href="$namespaceetiss_1_1py.html#abaa18fc45827d0fd272a058f9bf02fd6" title=" " alt="" coords="231,202,336,229"/>
+<area shape="rect" id="node6" href="$namespaceetiss.html#afd320e98bf6a5e2c0d8ffde5dd28dd35" title="write log message at the given level." alt="" coords="243,253,324,279"/>
+<area shape="rect" id="node8" href="$namespaceetiss_1_1interfaces.html#abd76fb5f6eb04da6b09171c90dd5dc41" title="general helper function to set a signal; needs to be implemented as needed" alt="" coords="216,304,351,345"/>
+<area shape="rect" id="node7" href="$namespaceetiss.html#a5d23a51a17c09f1b863c601d4454f99b" title="conversion of type T to std::string." alt="" coords="399,253,511,279"/>
+</map>

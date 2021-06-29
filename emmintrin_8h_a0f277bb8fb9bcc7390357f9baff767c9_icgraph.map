@@ -1,0 +1,5 @@
+<map id="_mm_packus_epi16" name="_mm_packus_epi16">
+<area shape="rect" id="node1" title="Converts 16&#45;bit signed integers from both 128&#45;bit integer vector operands into 8&#45;bit unsigned integer..." alt="" coords="253,31,404,57"/>
+<area shape="rect" id="node2" href="$avx512vlbwintrin_8h.html#a318b6f95b5975ef2a5adf6af1a491a61" title=" " alt="" coords="9,5,202,32"/>
+<area shape="rect" id="node3" href="$avx512vlbwintrin_8h.html#a8448e3ed5c7c070b1f0005c4626c89a4" title=" " alt="" coords="5,56,205,83"/>
+</map>

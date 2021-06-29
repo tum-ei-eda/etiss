@@ -1,0 +1,4 @@
+<map id="etiss::mm::MMU::GetMMUControlReg" name="etiss::mm::MMU::GetMMUControlReg">
+<area shape="rect" id="node1" title=" " alt="" coords="269,5,536,32"/>
+<area shape="rect" id="node2" href="$classRISCV64MMU.html#a82dbbd7df295610e2753c953083d2086" title="Page table walking is required to translate virtual address to physical address if TLB miss occurs." alt="" coords="5,5,221,32"/>
+</map>

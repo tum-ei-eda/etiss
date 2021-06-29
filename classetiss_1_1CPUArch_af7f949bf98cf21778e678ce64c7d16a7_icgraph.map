@@ -1,0 +1,6 @@
+<map id="etiss::CPUArch::handleException" name="etiss::CPUArch::handleException">
+<area shape="rect" id="node1" title="translate/process exceptions that occur at runtime" alt="" coords="736,5,969,32"/>
+<area shape="rect" id="node2" href="$CPUCore_8cpp.html#ac2530ba9f6c6c641f64cbabfededd5fb" title="small helper function to handle exceptions." alt="" coords="456,5,688,32"/>
+<area shape="rect" id="node3" href="$classetiss_1_1CPUCore.html#a3abad91e823939228f7db1596e040c19" title="Start the simulation of the CPU core for the system model." alt="" coords="231,5,408,32"/>
+<area shape="rect" id="node4" href="$classetiss_1_1CPUCore.html#a2ab7000206ed432b59457ce57b9182f6" title="Start the simulation of the CPU core for the system model." alt="" coords="5,5,183,32"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="_mm_and_pd" name="_mm_and_pd">
+<area shape="rect" id="node1" title="Performs a bitwise AND of two 128&#45;bit vectors of [2 x double]." alt="" coords="212,31,321,57"/>
+<area shape="rect" id="node2" href="$avx512vldqintrin_8h.html#ac74406b80c70d6460f1c99e13c615e84" title=" " alt="" coords="9,5,161,32"/>
+<area shape="rect" id="node3" href="$avx512vldqintrin_8h.html#ab3edf08a25788814466cdfac8424ab0a" title=" " alt="" coords="5,56,164,83"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="_mm_mask_mul_epi32" name="_mm_mask_mul_epi32">
+<area shape="rect" id="node1" title=" " alt="" coords="5,5,179,32"/>
+<area shape="rect" id="node2" href="$smmintrin_8h.html#aec12a99a00635712612cb9276fe12226" title="Multiplies corresponding even&#45;indexed elements of two 128&#45;bit vectors of [4 x i32] and returns a 128&#45;..." alt="" coords="227,5,357,32"/>
+</map>

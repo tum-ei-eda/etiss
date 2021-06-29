@@ -1,0 +1,5 @@
+<map id="_mm_maskz_mulhi_epi16" name="_mm_maskz_mulhi_epi16">
+<area shape="rect" id="node1" title=" " alt="" coords="5,31,197,57"/>
+<area shape="rect" id="node2" href="$emmintrin_8h.html#a8f11621f59c7886c8bcf0707b0f2b459" title="Multiplies the corresponding elements of two signed [8 x i16] vectors, saving the upper 16 bits of ea..." alt="" coords="250,5,393,32"/>
+<area shape="rect" id="node3" href="$emmintrin_8h.html#af05c05652224e219f9c5d8dc67f467e6" title="Creates a 128&#45;bit integer vector initialized to zero." alt="" coords="245,56,397,83"/>
+</map>

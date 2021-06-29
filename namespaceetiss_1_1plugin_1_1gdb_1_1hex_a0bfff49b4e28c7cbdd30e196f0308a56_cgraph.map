@@ -1,0 +1,4 @@
+<map id="etiss::plugin::gdb::hex::toByte" name="etiss::plugin::gdb::hex::toByte">
+<area shape="rect" id="node1" title="converts 2 hex characters to a byte" alt="" coords="5,5,139,47"/>
+<area shape="rect" id="node2" href="$namespaceetiss_1_1plugin_1_1gdb_1_1hex.html#ac7090e6054a3b3c729c8f64d15e0df86" title="convert a character to the hex value it represents(0&#45;15)" alt="" coords="187,5,320,47"/>
+</map>

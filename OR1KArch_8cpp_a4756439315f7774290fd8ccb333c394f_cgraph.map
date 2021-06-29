@@ -1,0 +1,8 @@
+<map id="OR1KArch_createCPUArch" name="OR1KArch_createCPUArch">
+<area shape="rect" id="node1" title=" " alt="" coords="5,85,196,112"/>
+<area shape="rect" id="node2" href="$namespaceetiss.html#abea8444fc010e2490f2486e2ededde88" title="Get reference of the global ETISS configuration object." alt="" coords="292,5,373,32"/>
+<area shape="rect" id="node3" href="$namespaceetiss.html#afd320e98bf6a5e2c0d8ffde5dd28dd35" title="write log message at the given level." alt="" coords="469,56,551,83"/>
+<area shape="rect" id="node5" href="$classetiss_1_1Configuration.html#a019c117a9e5c775ca4dd03bf567f6c98" title="access to the configuration key value map" alt="" coords="259,107,407,149"/>
+<area shape="rect" id="node6" href="$classetiss_1_1Configuration.html#ad8c43846d16752474dfab08a50e135ad" title="template function to read the value of a configuration key." alt="" coords="244,173,421,200"/>
+<area shape="rect" id="node4" href="$namespaceetiss.html#a5d23a51a17c09f1b863c601d4454f99b" title="conversion of type T to std::string." alt="" coords="599,56,711,83"/>
+</map>

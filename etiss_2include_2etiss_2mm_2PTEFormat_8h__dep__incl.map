@@ -1,0 +1,52 @@
+<map id="/home/runner/work/etiss/etiss/include/etiss/mm/PTEFormat.h" name="/home/runner/work/etiss/etiss/include/etiss/mm/PTEFormat.h">
+<area shape="rect" id="node1" title=" " alt="" coords="263,5,443,61"/>
+<area shape="rect" id="node2" href="$build_2include_2etiss_2mm_2PTE_8h.html" title=" " alt="" coords="5,221,180,247"/>
+<area shape="rect" id="node3" href="$build_2include_2etiss_2mm_2PTEFormatBuilder_8h.html" title=" " alt="" coords="415,117,623,158"/>
+<area shape="rect" id="node4" href="$etiss_2include_2etiss_2mm_2PTE_8h.html" title=" " alt="" coords="497,213,710,255"/>
+<area shape="rect" id="node46" href="$RISCV64MMU_8cpp.html" title=" " alt="" coords="237,585,417,641"/>
+<area shape="rect" id="node49" href="$etiss_2include_2etiss_2mm_2PTEFormatBuilder_8h.html" title=" " alt="" coords="109,109,289,165"/>
+<area shape="rect" id="node50" href="$PTEFormat_8cpp.html" title=" " alt="" coords="647,117,858,158"/>
+<area shape="rect" id="node5" href="$build_2include_2etiss_2mm_2MMU_8h.html" title="Modeling hardware memory management for virtual memory &#45;&gt; physical memory translation and protection...." alt="" coords="738,399,922,426"/>
+<area shape="rect" id="node6" href="$build_2include_2etiss_2mm_2TLB_8h.html" title="Modeling Tranlation Look&#45;up Table (TLB)" alt="" coords="416,310,591,337"/>
+<area shape="rect" id="node7" href="$etiss_2include_2etiss_2mm_2MMU_8h.html" title="Modeling hardware memory management for virtual memory &#45;&gt; physical memory translation and protection...." alt="" coords="947,392,1169,433"/>
+<area shape="rect" id="node45" href="$RISCV64MMU_8h.html" title=" " alt="" coords="383,481,563,537"/>
+<area shape="rect" id="node47" href="$etiss_2include_2etiss_2mm_2TLB_8h.html" title="Modeling Tranlation Look&#45;up Table (TLB)" alt="" coords="870,303,1083,344"/>
+<area shape="rect" id="node48" href="$PTE_8cpp.html" title=" " alt="" coords="615,303,795,344"/>
+<area shape="rect" id="node8" href="$build_2include_2etiss_2CPUArch_8h.html" title="contains neccesary interfaces for instruction translation." alt="" coords="970,496,1146,523"/>
+<area shape="rect" id="node9" href="$build_2include_2etiss_2CPUCore_8h.html" title="defines main cpu core interface" alt="" coords="3237,1113,3415,1139"/>
+<area shape="rect" id="node10" href="$build_2include_2etiss_2mm_2DMMUWrapper_8h.html" title="Wrapper class to wrap aroud data MMU." alt="" coords="1325,1016,1573,1043"/>
+<area shape="rect" id="node11" href="$etiss_2include_2etiss_2CPUArch_8h.html" title="contains neccesary interfaces for instruction translation." alt="" coords="1749,489,1964,530"/>
+<area shape="rect" id="node17" href="$etiss_2include_2etiss_2CPUCore_8h.html" title="defines main cpu core interface" alt="" coords="2459,801,2675,842"/>
+<area shape="rect" id="node20" href="$etiss_2include_2etiss_2mm_2DMMUWrapper_8h.html" title="Wrapper class to wrap aroud data MMU." alt="" coords="2851,1001,3031,1057"/>
+<area shape="rect" id="node23" href="$PageFaultVector_8cpp.html" title=" " alt="" coords="2010,1009,2253,1050"/>
+<area shape="rect" id="node29" href="$MMU_8cpp.html" title="Modeling hardware memory management for virtual memory &#45;&gt; physical memory translation and protection...." alt="" coords="3211,905,3391,946"/>
+<area shape="rect" id="node12" href="$build_2include_2etiss_2helper_2CPUArchLibrary_8h.html" title="defines the functions needed for a library that provides etiss::CPUArch implementations" alt="" coords="3419,593,3569,634"/>
+<area shape="rect" id="node13" href="$build_2include_2etiss_2IntegratedLibrary_2gdb_2GDBServer_8h.html" title=" " alt="" coords="967,593,1149,634"/>
+<area shape="rect" id="node14" href="$build_2include_2etiss_2InterruptHandler_8h.html" title="interrupt checking and signaling" alt="" coords="2029,704,2255,731"/>
+<area shape="rect" id="node15" href="$build_2include_2etiss_2LibraryInterface_8h.html" title="class for simple library access. Libraries can be integrated or loaded at runtime fom a dynamic libra..." alt="" coords="1631,600,1853,627"/>
+<area shape="rect" id="node16" href="$build_2include_2etiss_2Translation_8h.html" title=" " alt="" coords="1877,600,2068,627"/>
+<area shape="rect" id="node24" href="$CPUArch_8cpp.html" title="implementation of etiss/CPUArch.h" alt="" coords="1105,905,1285,946"/>
+<area shape="rect" id="node25" href="$IntegratedLibrary_2errorInjection_2Plugin_8cpp.html" title="implementation of etiss/IntegratedLibrary/errorInjection/Plugin.h" alt="" coords="1369,897,1565,953"/>
+<area shape="rect" id="node33" href="$etiss_2include_2etiss_2helper_2CPUArchLibrary_8h.html" title="defines the functions needed for a library that provides etiss::CPUArch implementations" alt="" coords="2092,585,2280,641"/>
+<area shape="rect" id="node34" href="$etiss_2include_2etiss_2IntegratedLibrary_2gdb_2GDBServer_8h.html" title=" " alt="" coords="1525,793,1740,849"/>
+<area shape="rect" id="node35" href="$etiss_2include_2etiss_2InterruptHandler_8h.html" title="interrupt checking and signaling" alt="" coords="3341,689,3543,745"/>
+<area shape="rect" id="node36" href="$etiss_2include_2etiss_2LibraryInterface_8h.html" title="class for simple library access. Libraries can be integrated or loaded at runtime fom a dynamic libra..." alt="" coords="3153,585,3345,641"/>
+<area shape="rect" id="node37" href="$etiss_2include_2etiss_2Translation_8h.html" title=" " alt="" coords="2752,697,2983,738"/>
+<area shape="rect" id="node38" href="$PrintInstruction_8cpp.html" title="implementation of etiss/IntegratedLibrary/PrintInstruction.h" alt="" coords="2304,585,2500,641"/>
+<area shape="rect" id="node39" href="$SimpleMemSystem_8cpp.html" title="implementation of etiss/SimpleMemSystem.h" alt="" coords="2524,593,2763,634"/>
+<area shape="rect" id="node40" href="$OR1KArch_8h.html" title="class definition of the CPUArch implementation for an or1k processor" alt="" coords="2787,593,3027,634"/>
+<area shape="rect" id="node41" href="$RISCVArch_8h.html" title=" " alt="" coords="1879,793,2059,849"/>
+<area shape="rect" id="node42" href="$RISCV64Arch_8h.html" title=" " alt="" coords="752,689,932,745"/>
+<area shape="rect" id="node43" href="$RISCV64Timer_8h.html" title=" " alt="" coords="1173,585,1353,641"/>
+<area shape="rect" id="node44" href="$RISCV64Timer_8cpp.html" title=" " alt="" coords="1199,689,1379,745"/>
+<area shape="rect" id="node18" href="$build_2include_2etiss_2ETISS_8h.html" title="Header file of the ETISS library." alt="" coords="2979,912,3135,939"/>
+<area shape="rect" id="node19" href="$etiss_2include_2etiss_2ETISS_8h.html" title="Header file of the ETISS library." alt="" coords="2709,905,2903,946"/>
+<area shape="rect" id="node22" href="$CPUCore_8cpp.html" title="implementation of etiss/CPUCore.h" alt="" coords="2484,1009,2664,1050"/>
+<area shape="rect" id="node26" href="$GDBServer_8cpp.html" title="implementation of etiss/IntegratedLibrary/gdb/GDBServer.h" alt="" coords="1641,897,1837,953"/>
+<area shape="rect" id="node27" href="$InstructionAccurateCallback_8cpp.html" title=" " alt="" coords="2450,897,2685,953"/>
+<area shape="rect" id="node28" href="$VariableValueLogger_8cpp.html" title=" " alt="" coords="2179,897,2375,953"/>
+<area shape="rect" id="node30" href="$RISCVArchSpecificImp_8h.html" title=" " alt="" coords="1923,897,2103,953"/>
+<area shape="rect" id="node31" href="$RISCV64ArchSpecificImp_8h.html" title=" " alt="" coords="798,897,995,953"/>
+<area shape="rect" id="node21" href="$DMMUWrapper_8cpp.html" title="Wrapper class to wrap aroud data MMU." alt="" coords="2821,1105,3060,1147"/>
+<area shape="rect" id="node32" href="$RISCV64Arch_8cpp.html" title=" " alt="" coords="727,1001,907,1057"/>
+</map>

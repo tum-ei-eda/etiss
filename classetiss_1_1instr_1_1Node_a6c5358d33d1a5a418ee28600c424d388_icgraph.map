@@ -1,0 +1,4 @@
+<map id="etiss::instr::Node::isInstruction" name="etiss::instr::Node::isInstruction">
+<area shape="rect" id="node1" title="returns true if this object is an instance of etiss::instr::Instruction" alt="" coords="185,5,317,47"/>
+<area shape="rect" id="node2" href="$classetiss_1_1instr_1_1Node.html#a7dda6466ab87e4f4199cc4d4702583e5" title="dtor" alt="" coords="5,5,137,47"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="_mm_packs_epi16" name="_mm_packs_epi16">
+<area shape="rect" id="node1" title="Converts 16&#45;bit signed integers from both 128&#45;bit integer vector operands into 8&#45;bit signed integers,..." alt="" coords="247,31,389,57"/>
+<area shape="rect" id="node2" href="$avx512vlbwintrin_8h.html#a46d46881eb2286019a25f5fb87a381ab" title=" " alt="" coords="9,5,195,32"/>
+<area shape="rect" id="node3" href="$avx512vlbwintrin_8h.html#a73433d9e996143566f342ed3c9351ab5" title=" " alt="" coords="5,56,199,83"/>
+</map>

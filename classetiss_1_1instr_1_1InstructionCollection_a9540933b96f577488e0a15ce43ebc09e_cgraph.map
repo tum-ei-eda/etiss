@@ -1,0 +1,14 @@
+<map id="etiss::instr::InstructionCollection::addTo" name="etiss::instr::InstructionCollection::addTo">
+<area shape="rect" id="node1" title=" " alt="" coords="5,161,172,203"/>
+<area shape="rect" id="node2" href="$classetiss_1_1instr_1_1InstructionClass.html#a3d4c825b320dead140adb63e7099914d" title=" " alt="" coords="242,128,409,169"/>
+<area shape="rect" id="node10" href="$classetiss_1_1instr_1_1ModedInstructionSet.html#a9ab91eaf635587c39162987d76b610b7" title=" " alt="" coords="220,193,431,235"/>
+<area shape="rect" id="node3" href="$classetiss_1_1instr_1_1InstructionGroup.html#a49454a183fab081c558c8de41ec1ed83" title=" " alt="" coords="505,63,672,104"/>
+<area shape="rect" id="node7" href="$classetiss_1_1instr_1_1VariableInstructionSet.html#a318689a9ecbfe801cdb122a49ec0f916" title=" " alt="" coords="479,128,699,169"/>
+<area shape="rect" id="node4" href="$classetiss_1_1instr_1_1InstructionSet.html#ade1beb277ea98ad471fdcb623f73373c" title=" " alt="" coords="773,5,940,47"/>
+<area shape="rect" id="node5" href="$namespaceetiss.html#afd320e98bf6a5e2c0d8ffde5dd28dd35" title="write log message at the given level." alt="" coords="1015,42,1096,69"/>
+<area shape="rect" id="node6" href="$namespaceetiss.html#a5d23a51a17c09f1b863c601d4454f99b" title="conversion of type T to std::string." alt="" coords="1144,42,1256,69"/>
+<area shape="rect" id="node8" href="$classetiss_1_1instr_1_1VariableInstructionSet.html#a7ef20b306b0591d24839d51496dc0968" title=" " alt="" coords="747,125,967,167"/>
+<area shape="rect" id="node9" href="$classetiss_1_1instr_1_1VariableInstructionSet.html#a3fc1a9b2dbc000c31d2bcc15bdca931d" title=" " alt="" coords="747,191,967,232"/>
+<area shape="rect" id="node11" href="$classetiss_1_1instr_1_1ModedInstructionSet.html#a68118cc10aa53c48c898f143742ef261" title=" " alt="" coords="483,193,694,235"/>
+<area shape="rect" id="node12" href="$classetiss_1_1instr_1_1ModedInstructionSet.html#ace6e14638621794d2a2f894ac2930af1" title=" " alt="" coords="483,259,694,300"/>
+</map>

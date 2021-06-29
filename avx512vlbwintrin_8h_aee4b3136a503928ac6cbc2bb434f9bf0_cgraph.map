@@ -1,0 +1,5 @@
+<map id="_mm256_maskz_broadcastw_epi16" name="_mm256_maskz_broadcastw_epi16">
+<area shape="rect" id="node1" title=" " alt="" coords="5,23,216,65"/>
+<area shape="rect" id="node2" href="$avx2intrin_8h.html#ab7f81e03d536bf939f44b377b365f102" title=" " alt="" coords="264,5,468,32"/>
+<area shape="rect" id="node3" href="$avxintrin_8h.html#abc4c4d2f32d4977649a32827a36416e8" title="Constructs a 256&#45;bit integer vector initialized to zero." alt="" coords="278,56,454,83"/>
+</map>

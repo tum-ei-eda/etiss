@@ -1,0 +1,13 @@
+<map id="etiss::plugin::gdb::hex::toHex" name="etiss::plugin::gdb::hex::toHex">
+<area shape="rect" id="node1" title="converts the lower 4 bits to a representing char" alt="" coords="1339,199,1472,240"/>
+<area shape="rect" id="node2" href="$namespaceetiss_1_1plugin_1_1gdb_1_1hex.html#a199aa405e76330d38089639790c11a7d" title="converts a byte to a hex string (without &quot;0x&quot; prefix);" alt="" coords="1157,329,1291,371"/>
+<area shape="rect" id="node11" href="$namespaceetiss_1_1plugin_1_1gdb_1_1hex.html#ab37231e41456f4a9f7f5abfd439c2b97" title="converts a sequence of bytes to a representing hex string (without &quot;0x&quot; prefix)" alt="" coords="742,5,875,47"/>
+<area shape="rect" id="node3" href="$namespaceetiss_1_1plugin_1_1gdb_1_1hex.html#ac7117e41ba49c8e349b0a3efe6e45c88" title="converts an integer type variable to a hexadecimal representation with the given endianness" alt="" coords="521,493,654,535"/>
+<area shape="rect" id="node4" href="$classetiss_1_1plugin_1_1gdb_1_1Server.html#ae641aef3a8187459a89c40a473d6ab0a" title=" " alt="" coords="296,304,463,345"/>
+<area shape="rect" id="node6" href="$classetiss_1_1plugin_1_1gdb_1_1Server.html#a1714053bd746a2746ae52f621523f427" title=" " alt="" coords="5,165,248,207"/>
+<area shape="rect" id="node7" href="$classetiss_1_1plugin_1_1gdb_1_1Server.html#af2d20da879692be332064d7e082f2833" title=" " alt="" coords="13,435,240,476"/>
+<area shape="rect" id="node8" href="$classetiss_1_1plugin_1_1gdb_1_1PacketProtocol.html#a197b158da05621146982c6275867b063" title=" " alt="" coords="953,275,1109,316"/>
+<area shape="rect" id="node5" href="$classetiss_1_1plugin_1_1gdb_1_1Server.html#a2ba2d82e0e6e80ea1fb528ac7b686af3" title="called before a block and may act in the same way as a block" alt="" coords="60,304,193,345"/>
+<area shape="rect" id="node9" href="$classetiss_1_1plugin_1_1gdb_1_1PacketProtocol.html#a7ebfd4afe2d4d7f708c86468a48bc6ae" title=" " alt="" coords="712,275,905,316"/>
+<area shape="rect" id="node10" href="$classetiss_1_1plugin_1_1gdb_1_1PacketProtocol.html#a47a5284b39fbee7259d6d55163e400aa" title=" " alt="" coords="511,275,664,316"/>
+</map>

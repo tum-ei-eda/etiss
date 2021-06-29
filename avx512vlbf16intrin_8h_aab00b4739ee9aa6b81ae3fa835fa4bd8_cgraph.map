@@ -1,0 +1,5 @@
+<map id="_mm256_maskz_dpbf16_ps" name="_mm256_maskz_dpbf16_ps">
+<area shape="rect" id="node1" title="Dot Product of BF16 Pairs Accumulated into Packed Single Precision." alt="" coords="5,31,208,57"/>
+<area shape="rect" id="node2" href="$avx512vlbf16intrin_8h.html#adfec675a7c19dc66b604c94544facfa4" title="Dot Product of BF16 Pairs Accumulated into Packed Single Precision." alt="" coords="267,5,421,32"/>
+<area shape="rect" id="node3" href="$avxintrin_8h.html#abc4c4d2f32d4977649a32827a36416e8" title="Constructs a 256&#45;bit integer vector initialized to zero." alt="" coords="256,56,432,83"/>
+</map>

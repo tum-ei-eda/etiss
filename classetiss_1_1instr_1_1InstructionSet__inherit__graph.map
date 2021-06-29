@@ -1,0 +1,4 @@
+<map id="etiss::instr::InstructionSet" name="etiss::instr::InstructionSet">
+<area shape="rect" id="node1" title="holds etiss::instr::Instruction instances and handles automatic instruction tree creation." alt="" coords="5,80,193,107"/>
+<area shape="rect" id="node2" href="$classetiss_1_1ToString.html" title="Marker interface for toString() support." alt="" coords="43,5,156,32"/>
+</map>

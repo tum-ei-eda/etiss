@@ -1,0 +1,4 @@
+<map id="_mm_mask_adds_epi16" name="_mm_mask_adds_epi16">
+<area shape="rect" id="node1" title=" " alt="" coords="5,5,184,32"/>
+<area shape="rect" id="node2" href="$emmintrin_8h.html#a8706fb3dfc1447a60cb330ad6f19cbda" title="Adds, with saturation, the corresponding elements of two 128&#45;bit signed [8 x i16] vectors,..." alt="" coords="232,5,368,32"/>
+</map>

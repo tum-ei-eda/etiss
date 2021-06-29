@@ -1,0 +1,6 @@
+<map id="etiss::copy" name="etiss::copy">
+<area shape="rect" id="node1" title="copies all fields with the same name from the source to the destination structure." alt="" coords="5,78,97,105"/>
+<area shape="rect" id="node2" href="$classetiss_1_1VirtualStruct.html#a4f2100cd82b385a1e898a908e162395b" title=" " alt="" coords="145,5,288,47"/>
+<area shape="rect" id="node3" href="$classetiss_1_1VirtualStruct.html#acf48ae699dd7de775301f14d73e467d2" title=" " alt="" coords="145,71,288,112"/>
+<area shape="rect" id="node4" href="$classetiss_1_1VirtualStruct_1_1Field.html#ad7b93038d37b6279f8955935afc9553e" title="function to read bits/a value from the Field." alt="" coords="145,136,288,177"/>
+</map>

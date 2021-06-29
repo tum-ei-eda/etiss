@@ -1,0 +1,5 @@
+<map id="_mm_abs_epi16" name="_mm_abs_epi16">
+<area shape="rect" id="node1" title="Computes the absolute value of each of the packed 16&#45;bit signed integers in the source operand and st..." alt="" coords="232,31,360,57"/>
+<area shape="rect" id="node2" href="$avx512vlbwintrin_8h.html#ac57cbe525d69723e56e11474d4cdc56f" title=" " alt="" coords="9,5,180,32"/>
+<area shape="rect" id="node3" href="$avx512vlbwintrin_8h.html#a32435d11975a0cf5dcc132af2091ebed" title=" " alt="" coords="5,56,184,83"/>
+</map>

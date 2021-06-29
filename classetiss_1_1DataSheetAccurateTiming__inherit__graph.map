@@ -1,0 +1,6 @@
+<map id="etiss::DataSheetAccurateTiming" name="etiss::DataSheetAccurateTiming">
+<area shape="rect" id="node1" title=" " alt="" coords="5,229,192,271"/>
+<area shape="rect" id="node2" href="$classetiss_1_1TranslationPlugin.html" title="allows to add code to the translation of instructions" alt="" coords="13,155,185,181"/>
+<area shape="rect" id="node3" href="$classetiss_1_1Plugin.html" title="base plugin class that provides access to different plugin functions if present" alt="" coords="48,80,149,107"/>
+<area shape="rect" id="node4" href="$classetiss_1_1ToString.html" title="Marker interface for toString() support." alt="" coords="42,5,155,32"/>
+</map>

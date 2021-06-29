@@ -1,0 +1,5 @@
+<map id="etiss::instr::Instruction" name="etiss::instr::Instruction">
+<area shape="rect" id="node1" title="holds information and translation callbacks for an instruction." alt="" coords="61,80,228,107"/>
+<area shape="rect" id="node2" href="$classetiss_1_1instr_1_1Node.html" title="base class that is used to build the instruction translation tree within an InstructionSet object" alt="" coords="5,5,137,32"/>
+<area shape="rect" id="node3" href="$classetiss_1_1ToString.html" title="Marker interface for toString() support." alt="" coords="161,5,275,32"/>
+</map>

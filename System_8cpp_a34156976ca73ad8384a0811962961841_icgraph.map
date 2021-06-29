@@ -1,0 +1,5 @@
+<map id="system_call_syncTime" name="system_call_syncTime">
+<area shape="rect" id="node1" title=" " alt="" coords="372,5,543,32"/>
+<area shape="rect" id="node2" href="$namespaceetiss.html#af59cc5db7ebb8232109dff7b49be389f" title="wraps a etiss::System in a ETISS_System structure." alt="" coords="231,5,324,32"/>
+<area shape="rect" id="node3" href="$classetiss_1_1CPUCore.html#a2ab7000206ed432b59457ce57b9182f6" title="Start the simulation of the CPU core for the system model." alt="" coords="5,5,183,32"/>
+</map>

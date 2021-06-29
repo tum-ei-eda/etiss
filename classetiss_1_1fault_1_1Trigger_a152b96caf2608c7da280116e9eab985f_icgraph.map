@@ -1,0 +1,10 @@
+<map id="etiss::fault::Trigger::ensure" name="etiss::fault::Trigger::ensure">
+<area shape="rect" id="node1" title=" " alt="" coords="407,200,549,241"/>
+<area shape="rect" id="node2" href="$classetiss_1_1fault_1_1Trigger.html#a1b568d94d2b230a2b72699a2671ba5c0" title=" " alt="" coords="216,200,359,241"/>
+<area shape="rect" id="node3" href="$classetiss_1_1fault_1_1Trigger.html#a0309471573b1d7011f010f46f633344d" title=" " alt="" coords="15,29,158,71"/>
+<area shape="rect" id="node4" href="$classetiss_1_1fault_1_1Trigger.html#a34202fd2ea6b79655586883497f550ef" title=" " alt="" coords="5,119,168,160"/>
+<area shape="rect" id="node5" href="$classetiss_1_1fault_1_1Trigger.html#aee1104c285ed3b6bee025ffe6d1c44cc" title=" " alt="" coords="15,387,158,428"/>
+<area shape="rect" id="node8" href="$classetiss_1_1fault_1_1Trigger.html#a44839b12255ed9b286af90c43ad2f9c7" title=" " alt="" coords="216,317,359,359"/>
+<area shape="rect" id="node6" href="$classetiss_1_1fault_1_1Trigger.html#af19148c595ed91da1756205a0037c6a9" title="returns if the translation from TIMERELATIVE to TIME trigger has taken place" alt="" coords="15,297,158,339"/>
+<area shape="rect" id="node7" href="$classetiss_1_1fault_1_1Trigger.html#af19351133886d3301c88b7f1091cea14" title="this function calculates in case of a TIMERELATIVE Trigger a constant TIME trigger" alt="" coords="15,208,158,249"/>
+</map>

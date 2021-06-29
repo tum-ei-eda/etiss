@@ -1,0 +1,9 @@
+<map id="etiss::plugin::Logger::log" name="etiss::plugin::Logger::log">
+<area shape="rect" id="node1" title="this function writes the content of buf with length len to std::cout." alt="" coords="424,123,605,149"/>
+<area shape="rect" id="node2" href="$namespaceetiss_1_1plugin.html#a048308ef429d7654aa33329debd2d393" title=" " alt="" coords="207,5,376,32"/>
+<area shape="rect" id="node4" href="$namespaceetiss_1_1plugin.html#a78a6d57024381f7a74f6eb00305a7b91" title=" " alt="" coords="225,57,358,98"/>
+<area shape="rect" id="node5" href="$namespaceetiss_1_1plugin.html#a2d640f876a7c440eab7d6a38e5295fe3" title=" " alt="" coords="216,123,367,149"/>
+<area shape="rect" id="node6" href="$namespaceetiss_1_1plugin.html#a2cf202f49d080aac4d5741f97919befe" title=" " alt="" coords="220,173,363,200"/>
+<area shape="rect" id="node7" href="$namespaceetiss_1_1plugin.html#aecae152da5fd9c8c52850e0f444ff835" title=" " alt="" coords="218,224,365,251"/>
+<area shape="rect" id="node3" href="$classetiss_1_1plugin_1_1Logger.html#af46678df04c563d5d96e4074400358e0" title="change/wrap the passed system structure." alt="" coords="5,115,159,157"/>
+</map>

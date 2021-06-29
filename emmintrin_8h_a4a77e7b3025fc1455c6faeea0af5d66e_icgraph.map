@@ -1,0 +1,5 @@
+<map id="_mm_xor_pd" name="_mm_xor_pd">
+<area shape="rect" id="node1" title="Performs a bitwise XOR of two 128&#45;bit vectors of [2 x double]." alt="" coords="208,31,313,57"/>
+<area shape="rect" id="node2" href="$avx512vldqintrin_8h.html#ad2619e5d3d3982c14fd91f4c2a0823c7" title=" " alt="" coords="9,5,157,32"/>
+<area shape="rect" id="node3" href="$avx512vldqintrin_8h.html#a3b358062882e3e3db173c9554e71d4ca" title=" " alt="" coords="5,56,160,83"/>
+</map>

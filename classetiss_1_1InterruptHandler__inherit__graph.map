@@ -1,0 +1,6 @@
+<map id="etiss::InterruptHandler" name="etiss::InterruptHandler">
+<area shape="rect" id="node1" title="class that handles interrupt signaling and checking." alt="" coords="5,229,173,256"/>
+<area shape="rect" id="node2" href="$classetiss_1_1CoroutinePlugin.html" title="this plugin will be called before a block is executed." alt="" coords="7,155,171,181"/>
+<area shape="rect" id="node3" href="$classetiss_1_1Plugin.html" title="base plugin class that provides access to different plugin functions if present" alt="" coords="39,80,140,107"/>
+<area shape="rect" id="node4" href="$classetiss_1_1ToString.html" title="Marker interface for toString() support." alt="" coords="33,5,146,32"/>
+</map>

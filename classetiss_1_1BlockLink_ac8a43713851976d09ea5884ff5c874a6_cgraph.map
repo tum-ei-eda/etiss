@@ -1,0 +1,4 @@
+<map id="etiss::BlockLink::~BlockLink" name="etiss::BlockLink::~BlockLink">
+<area shape="rect" id="node1" title=" " alt="" coords="5,5,137,47"/>
+<area shape="rect" id="node2" href="$classetiss_1_1BlockLink.html#a5d75299063f1f299496b7d8dd1c2b72a" title="decrease reference count to a BlockLink and delete the instance if no other references exist" alt="" coords="185,13,368,39"/>
+</map>

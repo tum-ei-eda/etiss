@@ -1,0 +1,17 @@
+<map id="etiss::CPUCore::getStruct" name="etiss::CPUCore::getStruct">
+<area shape="rect" id="node1" title="Get the virtual structure of this CPUCore instance." alt="" coords="865,177,1051,203"/>
+<area shape="rect" id="node2" href="$classetiss_1_1plugin_1_1InstructionAccurateCallback.html#aeb45cf2090c8af6a06030614c5c79314" title=" " alt="" coords="591,5,769,47"/>
+<area shape="rect" id="node4" href="$classetiss_1_1plugin_1_1errorInjection_1_1BlockAccurateHandler.html#a75f8a77ca8fcf968b96334cfc47b879c" title="call to apply errors" alt="" coords="563,71,797,112"/>
+<area shape="rect" id="node5" href="$classetiss_1_1plugin_1_1VariableValueLogger.html#ae78ddff9a4e6c535823404e79accdeb6" title="called after all instructions have been added to allow last changes" alt="" coords="581,136,779,177"/>
+<area shape="rect" id="node6" href="$classetiss_1_1plugin_1_1gdb_1_1Server.html#ae641aef3a8187459a89c40a473d6ab0a" title=" " alt="" coords="597,201,763,243"/>
+<area shape="rect" id="node10" href="$classetiss_1_1CPUArchRegListenerInterface.html#a9ba89fc7a632259550bd93eb61cc49ac" title="call this function to inform RegisterDevicePlugins about changed special register values." alt="" coords="543,267,817,308"/>
+<area shape="rect" id="node14" href="$classetiss_1_1plugin_1_1VariableValueLogger.html#a8cd6b52a5ab56f78e38a07aae0de1f8c" title="Calls the function specified with writer_ to log the variable." alt="" coords="581,357,779,399"/>
+<area shape="rect" id="node3" href="$InstructionAccurateCallback_8cpp.html#a10a1191eddeb50c0d5a20a2c25995e0f" title=" " alt="" coords="285,5,461,47"/>
+<area shape="rect" id="node7" href="$classetiss_1_1plugin_1_1gdb_1_1Server.html#a2ba2d82e0e6e80ea1fb528ac7b686af3" title="called before a block and may act in the same way as a block" alt="" coords="307,71,440,112"/>
+<area shape="rect" id="node8" href="$classetiss_1_1plugin_1_1gdb_1_1Server.html#a1714053bd746a2746ae52f621523f427" title=" " alt="" coords="252,136,495,177"/>
+<area shape="rect" id="node9" href="$classetiss_1_1plugin_1_1gdb_1_1Server.html#af2d20da879692be332064d7e082f2833" title=" " alt="" coords="260,201,487,243"/>
+<area shape="rect" id="node11" href="$CPUArch_8cpp.html#a084690341960c5de42da6f920dbb0f7e" title=" " alt="" coords="266,267,481,308"/>
+<area shape="rect" id="node12" href="$OR1KArch_8cpp.html#aec7c3654a84d7539de84b32bc78ef5e7" title=" " alt="" coords="307,333,439,359"/>
+<area shape="rect" id="node13" href="$classanonymous__namespace_02OR1KArch_8cpp_03_1_1SPRField.html#a7183f32f087b0c5fd6e0aa90f7ae1f55" title="override this function to implement writes in case of AccessMode::VIRTUAL / AccessMode::PREFER_LAMBDA" alt="" coords="5,318,204,374"/>
+<area shape="rect" id="node15" href="$VariableValueLogger_8cpp.html#aed93f8a19dee4d0783ca0e374576065f" title=" " alt="" coords="275,384,471,425"/>
+</map>

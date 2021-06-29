@@ -1,0 +1,4 @@
+<map id="etiss::InterruptListenerPlugin::interruptWrite" name="etiss::InterruptListenerPlugin::interruptWrite">
+<area shape="rect" id="node1" title="gets called whenever an external write to the interrrupt vector takes place" alt="" coords="236,5,405,47"/>
+<area shape="rect" id="node2" href="$classetiss_1_1CPUCore_1_1InterruptVectorWrapper.html#a08f68c5d489d11056f07f8ac6d345439" title="set the bit of an interrupt line to state (true = raised)" alt="" coords="5,5,188,47"/>
+</map>

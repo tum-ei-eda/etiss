@@ -1,0 +1,4 @@
+<map id="_mm256_mask_cvtne2ps_pbh" name="_mm256_mask_cvtne2ps_pbh">
+<area shape="rect" id="node1" title="Convert Two Packed Single Data to One Packed BF16 Data." alt="" coords="5,5,224,32"/>
+<area shape="rect" id="node2" href="$avx512vlbf16intrin_8h.html#ac1ca9f05bbbf8634480550b208e2d092" title="Convert Two Packed Single Data to One Packed BF16 Data." alt="" coords="272,5,448,32"/>
+</map>

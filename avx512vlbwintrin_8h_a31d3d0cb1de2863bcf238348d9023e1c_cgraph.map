@@ -1,0 +1,5 @@
+<map id="_mm_maskz_packus_epi32" name="_mm_maskz_packus_epi32">
+<area shape="rect" id="node1" title=" " alt="" coords="5,31,205,57"/>
+<area shape="rect" id="node2" href="$smmintrin_8h.html#a85c28c54ebb63347941d71695e99a472" title="Converts 32&#45;bit signed integers from both 128&#45;bit integer vector operands into 16&#45;bit unsigned intege..." alt="" coords="254,5,405,32"/>
+<area shape="rect" id="node3" href="$emmintrin_8h.html#af05c05652224e219f9c5d8dc67f467e6" title="Creates a 128&#45;bit integer vector initialized to zero." alt="" coords="253,56,405,83"/>
+</map>

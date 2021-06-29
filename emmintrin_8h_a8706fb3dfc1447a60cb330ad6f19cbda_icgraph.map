@@ -1,0 +1,5 @@
+<map id="_mm_adds_epi16" name="_mm_adds_epi16">
+<area shape="rect" id="node1" title="Adds, with saturation, the corresponding elements of two 128&#45;bit signed [8 x i16] vectors,..." alt="" coords="240,31,376,57"/>
+<area shape="rect" id="node2" href="$avx512vlbwintrin_8h.html#a1d80431b70807bebe48170f90d2429a9" title=" " alt="" coords="9,5,188,32"/>
+<area shape="rect" id="node3" href="$avx512vlbwintrin_8h.html#a8905fea011aed532d877c9461f37b38e" title=" " alt="" coords="5,56,192,83"/>
+</map>

@@ -1,0 +1,8 @@
+<map id="ETISS_signalChangedRegisterValue" name="ETISS_signalChangedRegisterValue">
+<area shape="rect" id="node1" title=" " alt="" coords="5,49,220,90"/>
+<area shape="rect" id="node2" href="$classetiss_1_1CPUArchRegListenerInterface.html#a9ba89fc7a632259550bd93eb61cc49ac" title="call this function to inform RegisterDevicePlugins about changed special register values." alt="" coords="268,49,543,90"/>
+<area shape="rect" id="node3" href="$classetiss_1_1CPUCore.html#ade229c2b8c8c3f0eddeea217799151fc" title="Get the virtual structure of this CPUCore instance." alt="" coords="591,5,776,32"/>
+<area shape="rect" id="node4" href="$build_2include_2etiss_2fault_2xml_2CMakeLists_8txt.html#a38af4d231b198c371fd0846566c9ffe6" title=" " alt="" coords="664,56,703,83"/>
+<area shape="rect" id="node5" href="$namespaceetiss.html#afd320e98bf6a5e2c0d8ffde5dd28dd35" title="write log message at the given level." alt="" coords="643,107,724,133"/>
+<area shape="rect" id="node6" href="$namespaceetiss.html#a5d23a51a17c09f1b863c601d4454f99b" title="conversion of type T to std::string." alt="" coords="824,107,936,133"/>
+</map>

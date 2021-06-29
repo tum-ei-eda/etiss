@@ -1,0 +1,13 @@
+<map id="etiss::getPlugin" name="etiss::getPlugin">
+<area shape="rect" id="node1" title="Get a present Plugin plug&#45;in by name." alt="" coords="5,177,128,203"/>
+<area shape="rect" id="node2" href="$classetiss_1_1LibraryInterface.html#a2183f0c58870a27f0c6b0e7c64cb17c3" title=" " alt="" coords="388,43,552,84"/>
+<area shape="rect" id="node3" href="$classetiss_1_1LibraryInterface.html#a27b53fe3c3cb4c5e49da18061e671dec" title=" " alt="" coords="176,39,340,80"/>
+<area shape="rect" id="node4" href="$classetiss_1_1LibraryInterface.html#a07a587c67ff3b3e6a266cadd0a6aa826" title=" " alt="" coords="176,104,340,145"/>
+<area shape="rect" id="node5" href="$classetiss_1_1LibraryInterface.html#af73afb77133e95b115b9ce0245f60812" title=" " alt="" coords="176,169,340,211"/>
+<area shape="rect" id="node6" href="$classetiss_1_1LibraryInterface.html#a08e5c418f0348e81ab5f20c5ba5f88df" title="returns true if this library provides nothing" alt="" coords="176,235,340,276"/>
+<area shape="rect" id="node9" href="$namespaceetiss.html#afd320e98bf6a5e2c0d8ffde5dd28dd35" title="write log message at the given level." alt="" coords="217,301,299,327"/>
+<area shape="rect" id="node11" href="$classetiss_1_1LibraryInterface.html#ae0cada480a2f78fcd09d6b9bb352efa1" title=" " alt="" coords="176,352,340,393"/>
+<area shape="rect" id="node7" href="$classetiss_1_1LibraryInterface.html#adeeb1230d89fdbd47c4155fd1398dce7" title=" " alt="" coords="388,169,552,211"/>
+<area shape="rect" id="node8" href="$classetiss_1_1LibraryInterface.html#aafee4ce8209c4fd13fc5592ec34b89c7" title=" " alt="" coords="388,235,552,276"/>
+<area shape="rect" id="node10" href="$namespaceetiss.html#a5d23a51a17c09f1b863c601d4454f99b" title="conversion of type T to std::string." alt="" coords="414,301,526,327"/>
+</map>

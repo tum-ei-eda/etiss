@@ -1,0 +1,8 @@
+<map id="etiss::CPUCore::addPlugin" name="etiss::CPUCore::addPlugin">
+<area shape="rect" id="node1" title="Adds a plug&#45;in to the core simulator." alt="" coords="5,81,196,108"/>
+<area shape="rect" id="node2" href="$classetiss_1_1Plugin.html#aedae6217db0a6f080aea880ca5ea980d" title="called as soon a plugin has been added to its CPUCore." alt="" coords="245,5,465,32"/>
+<area shape="rect" id="node3" href="$classetiss_1_1CPUCore.html#af1d90411144afa63f772cc75991809af" title="Get the name of the CPUCore instance." alt="" coords="262,56,449,83"/>
+<area shape="rect" id="node4" href="$namespaceetiss.html#afd320e98bf6a5e2c0d8ffde5dd28dd35" title="write log message at the given level." alt="" coords="315,107,396,133"/>
+<area shape="rect" id="node6" href="$classetiss_1_1Plugin.html#a19fc2be30e28fc85325d7fe1849f5dcb" title=" " alt="" coords="244,158,467,199"/>
+<area shape="rect" id="node5" href="$namespaceetiss.html#a5d23a51a17c09f1b863c601d4454f99b" title="conversion of type T to std::string." alt="" coords="515,107,627,133"/>
+</map>

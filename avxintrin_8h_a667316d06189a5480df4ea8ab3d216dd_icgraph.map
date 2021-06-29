@@ -1,0 +1,5 @@
+<map id="_mm256_set_pd" name="_mm256_set_pd">
+<area shape="rect" id="node1" title="Constructs a 256&#45;bit floating&#45;point vector of [4 x double] initialized with the specified double&#45;prec..." alt="" coords="191,31,320,57"/>
+<area shape="rect" id="node2" href="$avxintrin_8h.html#a45c6df21816f361bc317fcdf81dede26" title="Constructs a 256&#45;bit floating&#45;point vector of [4 x double], with each of the four double&#45;precision fl..." alt="" coords="5,5,143,32"/>
+<area shape="rect" id="node3" href="$avxintrin_8h.html#afd4b1130106fc1ab1dde8404f5ee5a9c" title="Constructs a 256&#45;bit floating&#45;point vector of [4 x double], initialized in reverse order with the spe..." alt="" coords="7,56,141,83"/>
+</map>

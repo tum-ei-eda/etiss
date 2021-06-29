@@ -1,0 +1,5 @@
+<map id="etiss::fault::Injector::getParentInjector" name="etiss::fault::Injector::getParentInjector">
+<area shape="rect" id="node1" title="get a the parent injector (root returns 0)." alt="" coords="392,5,540,47"/>
+<area shape="rect" id="node2" href="$classetiss_1_1fault_1_1Injector.html#a57966ed6c48589e00395bcf03c0360ed" title="returns the path of the current object." alt="" coords="196,5,344,47"/>
+<area shape="rect" id="node3" href="$classetiss_1_1VirtualStruct.html#a5a3bc215715abe8f112e65a8b38a64ad" title=" " alt="" coords="5,5,148,47"/>
+</map>

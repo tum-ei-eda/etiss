@@ -1,0 +1,10 @@
+<map id="OR1KArch::newCPU" name="OR1KArch::newCPU">
+<area shape="rect" id="node1" title="allocate new cpu structure" alt="" coords="5,85,155,112"/>
+<area shape="rect" id="node2" href="$classOR1KArch.html#a16a93f236f127e4b7b9ad0cb3325c09e" title="reset cpu (structure)" alt="" coords="203,85,357,112"/>
+<area shape="rect" id="node3" href="$namespaceetiss.html#abea8444fc010e2490f2486e2ededde88" title="Get reference of the global ETISS configuration object." alt="" coords="473,5,554,32"/>
+<area shape="rect" id="node6" href="$classetiss_1_1Configuration.html#ad8c43846d16752474dfab08a50e135ad" title="template function to read the value of a configuration key." alt="" coords="425,56,602,83"/>
+<area shape="rect" id="node7" href="$classetiss_1_1Plugin.html#a64b4a268058ced1d0eae94cb19448c69" title=" " alt="" coords="405,107,621,149"/>
+<area shape="rect" id="node8" href="$____clang__cuda__device__functions_8h.html#a49709260eb058623bbc31b82aa8d6ed7" title=" " alt="" coords="475,173,551,200"/>
+<area shape="rect" id="node4" href="$namespaceetiss.html#afd320e98bf6a5e2c0d8ffde5dd28dd35" title="write log message at the given level." alt="" coords="669,31,751,57"/>
+<area shape="rect" id="node5" href="$namespaceetiss.html#a5d23a51a17c09f1b863c601d4454f99b" title="conversion of type T to std::string." alt="" coords="799,31,911,57"/>
+</map>

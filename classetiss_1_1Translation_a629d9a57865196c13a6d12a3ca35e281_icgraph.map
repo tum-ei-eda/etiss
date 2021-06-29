@@ -1,0 +1,7 @@
+<map id="etiss::Translation::unloadBlocks" name="etiss::Translation::unloadBlocks">
+<area shape="rect" id="node1" title=" " alt="" coords="736,27,868,69"/>
+<area shape="rect" id="node2" href="$CPUCore_8cpp.html#ac2530ba9f6c6c641f64cbabfededd5fb" title="small helper function to handle exceptions." alt="" coords="456,5,688,32"/>
+<area shape="rect" id="node5" href="$classetiss_1_1Translation.html#a07db008284ed93356b7b13f4aba5b24a" title=" " alt="" coords="506,57,638,98"/>
+<area shape="rect" id="node3" href="$classetiss_1_1CPUCore.html#a3abad91e823939228f7db1596e040c19" title="Start the simulation of the CPU core for the system model." alt="" coords="231,5,408,32"/>
+<area shape="rect" id="node4" href="$classetiss_1_1CPUCore.html#a2ab7000206ed432b59457ce57b9182f6" title="Start the simulation of the CPU core for the system model." alt="" coords="5,5,183,32"/>
+</map>

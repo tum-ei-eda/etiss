@@ -1,0 +1,9 @@
+<map id="etiss::JIT::getFunction" name="etiss::JIT::getFunction">
+<area shape="rect" id="node1" title="returns a function pointer to a compiled function from the handle returned by etiss::JIT::translate" alt="" coords="839,71,999,98"/>
+<area shape="rect" id="node2" href="$classetiss_1_1Translation.html#ad60fccfe679e82069b2255aac748ed52" title=" " alt="" coords="659,5,791,47"/>
+<area shape="rect" id="node6" href="$CPUCore_8cpp.html#ac5dbba2d75187157f2e3b1aedde816fa" title="generates test code to check alignment of structures in the just in time compiler" alt="" coords="456,71,611,98"/>
+<area shape="rect" id="node7" href="$CPUCore_8cpp.html#ae51fb769d341f02e0d1e4990e73eaee6" title="generates and compiles test code for the just in time compiler to check size of basic types" alt="" coords="666,122,783,149"/>
+<area shape="rect" id="node3" href="$classetiss_1_1Translation.html#a8a71d620ec906f57f2f2dfc4c6565bd8" title="CALL THIS function NOT getBlock(...) since getBlock will not check next/branch references." alt="" coords="467,5,599,47"/>
+<area shape="rect" id="node4" href="$classetiss_1_1CPUCore.html#a3abad91e823939228f7db1596e040c19" title="Start the simulation of the CPU core for the system model." alt="" coords="231,71,408,98"/>
+<area shape="rect" id="node5" href="$classetiss_1_1CPUCore.html#a2ab7000206ed432b59457ce57b9182f6" title="Start the simulation of the CPU core for the system model." alt="" coords="5,71,183,98"/>
+</map>

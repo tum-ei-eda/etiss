@@ -1,0 +1,5 @@
+<map id="_mm_permutevar_ps" name="_mm_permutevar_ps">
+<area shape="rect" id="node1" title="Copies the values stored in a 128&#45;bit vector of [4 x float] as specified by the 128&#45;bit integer vecto..." alt="" coords="264,31,424,57"/>
+<area shape="rect" id="node2" href="$avx512vlintrin_8h.html#aed1309470fced45e07fb1b123735d7ed" title=" " alt="" coords="9,5,212,32"/>
+<area shape="rect" id="node3" href="$avx512vlintrin_8h.html#a913de2440f39c376b524f2687f89db03" title=" " alt="" coords="5,56,216,83"/>
+</map>

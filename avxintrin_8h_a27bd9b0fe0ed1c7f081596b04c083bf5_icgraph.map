@@ -1,0 +1,4 @@
+<map id="_mm256_castps256_ps128" name="_mm256_castps256_ps128">
+<area shape="rect" id="node1" title="Returns the lower 128 bits of a 256&#45;bit floating&#45;point vector of [8 x float] as a 128&#45;bit floating&#45;po..." alt="" coords="232,5,431,32"/>
+<area shape="rect" id="node2" href="$avxintrin_8h.html#af2fca050a4cfffd5fc9ea5454c1af226" title="Stores the upper and lower 128 bits of a 256&#45;bit floating&#45;point vector of [8 x float] into two differ..." alt="" coords="5,5,184,32"/>
+</map>

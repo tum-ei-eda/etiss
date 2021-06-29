@@ -1,0 +1,5 @@
+<map id="etiss::InterruptVector::getBit" name="etiss::InterruptVector::getBit">
+<area shape="rect" id="node1" title="get the bit of an interrupt line" alt="" coords="428,5,587,47"/>
+<area shape="rect" id="node2" href="$classetiss_1_1InterruptVector.html#a75040c52c54b43cc28fbc33d08503e2b" title=" " alt="" coords="221,5,380,47"/>
+<area shape="rect" id="node3" href="$classetiss_1_1InterruptHandler.html#a50cf8993261a07ca47a529151058bed8" title="apply interrupt changes to the InterruptVector" alt="" coords="5,5,173,47"/>
+</map>

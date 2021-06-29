@@ -1,0 +1,12 @@
+<map id="ETISSINCLUDED_createPlugin" name="ETISSINCLUDED_createPlugin">
+<area shape="rect" id="node1" title=" " alt="" coords="5,148,220,175"/>
+<area shape="rect" id="node2" href="$namespaceetiss.html#abea8444fc010e2490f2486e2ededde88" title="Get reference of the global ETISS configuration object." alt="" coords="348,5,429,32"/>
+<area shape="rect" id="node3" href="$namespaceetiss.html#afd320e98bf6a5e2c0d8ffde5dd28dd35" title="write log message at the given level." alt="" coords="636,119,717,145"/>
+<area shape="rect" id="node5" href="$classetiss_1_1Configuration.html#a019c117a9e5c775ca4dd03bf567f6c98" title="access to the configuration key value map" alt="" coords="315,107,463,149"/>
+<area shape="rect" id="node6" href="$classetiss_1_1plugin_1_1gdb_1_1Server.html#aee81956708e40ee2a41746b64e57097c" title=" " alt="" coords="295,173,482,214"/>
+<area shape="rect" id="node7" href="$classetiss_1_1Configuration.html#ad8c43846d16752474dfab08a50e135ad" title="template function to read the value of a configuration key." alt="" coords="300,239,477,265"/>
+<area shape="rect" id="node8" href="$classetiss_1_1plugin_1_1errorInjection_1_1BlockAccurateHandler.html#a930b1c57be88d7568c996abd2b91cfbd" title="reads a file and adds the errors." alt="" coords="268,290,509,331"/>
+<area shape="rect" id="node4" href="$namespaceetiss.html#a5d23a51a17c09f1b863c601d4454f99b" title="conversion of type T to std::string." alt="" coords="844,119,956,145"/>
+<area shape="rect" id="node9" href="$IntegratedLibrary_2errorInjection_2Plugin_8cpp.html#a02d20de7010f45cabac2feb6c02c84a5" title=" " alt="" coords="557,272,796,299"/>
+<area shape="rect" id="node10" href="$opencl-c_8h.html#a1b66ea7b0c0b95a8154b5c0641848db6" title=" " alt="" coords="648,323,705,349"/>
+</map>

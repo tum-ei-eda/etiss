@@ -1,0 +1,4 @@
+<map id="etiss::CPUCore::getJITName" name="etiss::CPUCore::getJITName">
+<area shape="rect" id="node1" title="Get the name of the JIT plug&#45;in used by the CPUCore instance." alt="" coords="5,5,208,32"/>
+<area shape="rect" id="node2" href="$classetiss_1_1JIT.html#a77d311b36ddcc02ff396c378393b9565" title="returns the JIT instance name previously passed to the constructor" alt="" coords="256,5,400,32"/>
+</map>

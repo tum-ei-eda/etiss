@@ -1,0 +1,4 @@
+<map id="etiss::instr::InstructionDefinition" name="etiss::instr::InstructionDefinition">
+<area shape="rect" id="node1" title="maps to Instruction" alt="" coords="5,80,172,121"/>
+<area shape="rect" id="node2" href="$classetiss_1_1ToString.html" title="Marker interface for toString() support." alt="" coords="32,5,145,32"/>
+</map>

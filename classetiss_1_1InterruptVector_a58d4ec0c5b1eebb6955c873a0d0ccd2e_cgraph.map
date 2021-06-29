@@ -1,0 +1,5 @@
+<map id="etiss::InterruptVector::clear" name="etiss::InterruptVector::clear">
+<area shape="rect" id="node1" title="sets every bit to false" alt="" coords="5,39,164,80"/>
+<area shape="rect" id="node2" href="$classetiss_1_1InterruptVector.html#abe2ad40c32d77e4a824766d9f41c981b" title="set the bit of an interrupt line to state (true = raised)" alt="" coords="212,5,371,47"/>
+<area shape="rect" id="node3" href="$classetiss_1_1InterruptVector.html#a5f44a2501a466892484a03a96ef54356" title="number of interrupt bits" alt="" coords="212,71,371,112"/>
+</map>

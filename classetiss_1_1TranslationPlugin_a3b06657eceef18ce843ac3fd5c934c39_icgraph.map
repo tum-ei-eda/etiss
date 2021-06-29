@@ -1,0 +1,8 @@
+<map id="etiss::TranslationPlugin::finalizeCodeBlock" name="etiss::TranslationPlugin::finalizeCodeBlock">
+<area shape="rect" id="node1" title="called after all instructions have been translated for the code block" alt="" coords="855,39,1027,80"/>
+<area shape="rect" id="node2" href="$namespaceetiss.html#a9a6fcec002d48c32a5131f5d12b58770" title=" " alt="" coords="636,5,807,47"/>
+<area shape="rect" id="node3" href="$namespaceetiss.html#aee33012f7eee57858b610543b0686c22" title=" " alt="" coords="636,71,807,112"/>
+<area shape="rect" id="node4" href="$classetiss_1_1Translation.html#ac02e73b182ab60738e243911d823919e" title=" " alt="" coords="456,71,588,112"/>
+<area shape="rect" id="node5" href="$classetiss_1_1CPUCore.html#a3abad91e823939228f7db1596e040c19" title="Start the simulation of the CPU core for the system model." alt="" coords="231,78,408,105"/>
+<area shape="rect" id="node6" href="$classetiss_1_1CPUCore.html#a2ab7000206ed432b59457ce57b9182f6" title="Start the simulation of the CPU core for the system model." alt="" coords="5,78,183,105"/>
+</map>

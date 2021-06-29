@@ -1,0 +1,5 @@
+<map id="etiss::RegisterSet::add" name="etiss::RegisterSet::add">
+<area shape="rect" id="node1" title=" " alt="" coords="5,13,173,39"/>
+<area shape="rect" id="node2" href="$classetiss_1_1RegisterSet.html#a71f6c06c15ba6f84e449f243e38b28ff" title="add a registerPart to the set or just its relevant bits if a register with the same name is already p..." alt="" coords="221,13,389,39"/>
+<area shape="rect" id="node3" href="$classetiss_1_1RegisterPart.html#abd602509a42be4fa3bd052b87caf3549" title="true if unnamed or no relevant bits" alt="" coords="437,5,577,47"/>
+</map>

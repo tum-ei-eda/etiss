@@ -1,0 +1,13 @@
+<map id="etiss::instr::Instruction::addCallback" name="etiss::instr::Instruction::addCallback">
+<area shape="rect" id="node1" title=" " alt="" coords="519,275,685,316"/>
+<area shape="rect" id="node2" href="$classetiss_1_1instr_1_1InstructionDefinition.html#a1537216307ece80c4dfb09cd4c4ee067" title=" " alt="" coords="267,5,434,47"/>
+<area shape="rect" id="node3" href="$classetiss_1_1plugin_1_1PrintInstruction.html#a7a00191b97394fa3ed15aa9781fdf45c" title="called after all instructions have been added to allow last changes" alt="" coords="247,71,455,112"/>
+<area shape="rect" id="node4" href="$classetiss_1_1plugin_1_1InstructionAccurateCallback.html#a8e2f99eab05454fe3f848b8a2449338c" title="called after all instructions have been added to allow last changes" alt="" coords="231,136,471,177"/>
+<area shape="rect" id="node5" href="$classetiss_1_1plugin_1_1VariableValueLogger.html#ae78ddff9a4e6c535823404e79accdeb6" title="called after all instructions have been added to allow last changes" alt="" coords="251,201,450,243"/>
+<area shape="rect" id="node6" href="$classetiss_1_1plugin_1_1InstructionSpecificAddressCallback.html#a4cf95f9946c7c7507db79367d14024b9" title="called after all instructions have been added to allow last changes" alt="" coords="261,267,441,323"/>
+<area shape="rect" id="node7" href="$OR1KArch_8h.html#ab4fc6199881d970908acc9bf5220220e" title=" " alt="" coords="281,347,420,374"/>
+<area shape="rect" id="node8" href="$classetiss_1_1DataSheetAccurateTiming.html#a31c30a45640628d306ca96b1fcc65cb9" title="simple template function that adds the given number of cycles to the cpu time if the related rule mat..." alt="" coords="247,399,454,440"/>
+<area shape="rect" id="node9" href="$classetiss_1_1instr_1_1InstructionSet.html#a7da6ceac9a10d5ac5d0a059b5b3e9828" title=" " alt="" coords="267,464,434,505"/>
+<area shape="rect" id="node10" href="$GDBServer_8cpp.html#a8addabd4f79ea3ea37c5d5a180bddbb8" title=" " alt="" coords="267,530,435,557"/>
+<area shape="rect" id="node11" href="$classetiss_1_1plugin_1_1gdb_1_1Server.html#a81863c312386bc253ee9bd749d8c8ca0" title="called after all instructions have been added to allow last changes" alt="" coords="5,523,183,564"/>
+</map>

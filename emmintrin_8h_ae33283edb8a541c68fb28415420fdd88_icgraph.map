@@ -1,0 +1,5 @@
+<map id="_mm_avg_epu8" name="_mm_avg_epu8">
+<area shape="rect" id="node1" title="Computes the rounded averages of corresponding elements of two 128&#45;bit unsigned [16 x i8] vectors,..." alt="" coords="228,31,353,57"/>
+<area shape="rect" id="node2" href="$avx512vlbwintrin_8h.html#a104ca130feb33f3813c9fabef9b4268b" title=" " alt="" coords="9,5,177,32"/>
+<area shape="rect" id="node3" href="$avx512vlbwintrin_8h.html#a9a20497696dee20b341b3a2f2750e487" title=" " alt="" coords="5,56,180,83"/>
+</map>

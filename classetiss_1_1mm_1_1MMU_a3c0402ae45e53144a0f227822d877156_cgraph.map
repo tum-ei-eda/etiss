@@ -1,0 +1,8 @@
+<map id="etiss::mm::MMU::SignalMMU" name="etiss::mm::MMU::SignalMMU">
+<area shape="rect" id="node1" title="Whenever the MMU control register changes, the MMU has to be notified with the updated control regist..." alt="" coords="5,81,216,108"/>
+<area shape="rect" id="node2" href="$classetiss_1_1mm_1_1MMU.html#a2bc4d791f01ba016b2791199d4a1468e" title=" " alt="" coords="267,5,465,32"/>
+<area shape="rect" id="node3" href="$classetiss_1_1mm_1_1MMU.html#a2545200a9de678bdadfe8fcc6454cb0f" title=" " alt="" coords="276,56,456,83"/>
+<area shape="rect" id="node4" href="$namespaceetiss.html#afd320e98bf6a5e2c0d8ffde5dd28dd35" title="write log message at the given level." alt="" coords="325,107,407,133"/>
+<area shape="rect" id="node6" href="$classetiss_1_1mm_1_1MMU.html#a663ad2edb84332e9d0ccf4d02e84c8c5" title=" " alt="" coords="264,157,468,184"/>
+<area shape="rect" id="node5" href="$namespaceetiss.html#a5d23a51a17c09f1b863c601d4454f99b" title="conversion of type T to std::string." alt="" coords="516,107,628,133"/>
+</map>

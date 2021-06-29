@@ -1,0 +1,15 @@
+<map id="etiss::TranslationPlugin" name="etiss::TranslationPlugin">
+<area shape="rect" id="node1" title="allows to add code to the translation of instructions" alt="" coords="316,245,488,272"/>
+<area shape="rect" id="node4" href="$classetiss_1_1CPUArch.html" title="the interface to translate instructions of and processor architecture" alt="" coords="581,56,699,83"/>
+<area shape="rect" id="node8" href="$classetiss_1_1DataSheetAccurateTiming.html" title=" " alt="" coords="547,107,733,149"/>
+<area shape="rect" id="node9" href="$classetiss_1_1plugin_1_1gdb_1_1Server.html" title="gdb server implementation that is used as a plugin in etiss" alt="" coords="573,173,707,214"/>
+<area shape="rect" id="node10" href="$classetiss_1_1plugin_1_1InstructionAccurateCallback.html" title="writes the value of a field before each instruction" alt="" coords="551,238,729,279"/>
+<area shape="rect" id="node11" href="$classetiss_1_1plugin_1_1InstructionSpecificAddressCallback.html" title="a simple plugin that prints the instruction and address when an instruction is executed" alt="" coords="550,303,730,345"/>
+<area shape="rect" id="node12" href="$classetiss_1_1plugin_1_1PrintInstruction.html" title="a simple plugin that prints the instruction and address when an instruction is executed" alt="" coords="536,369,744,396"/>
+<area shape="rect" id="node13" href="$classetiss_1_1plugin_1_1VariableValueLogger.html" title="writes the value of a field before each instruction" alt="" coords="541,421,739,462"/>
+<area shape="rect" id="node2" href="$classetiss_1_1Plugin.html" title="base plugin class that provides access to different plugin functions if present" alt="" coords="167,245,268,272"/>
+<area shape="rect" id="node3" href="$classetiss_1_1ToString.html" title="Marker interface for toString() support." alt="" coords="5,245,119,272"/>
+<area shape="rect" id="node5" href="$classOR1KArch.html" title="TODO: implement opt_hostendianess for store/load instructions." alt="" coords="802,5,889,32"/>
+<area shape="rect" id="node6" href="$classRISCV64Arch.html" title=" " alt="" coords="792,56,899,83"/>
+<area shape="rect" id="node7" href="$classRISCVArch.html" title=" " alt="" coords="801,107,890,133"/>
+</map>

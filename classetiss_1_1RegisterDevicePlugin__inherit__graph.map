@@ -1,0 +1,6 @@
+<map id="etiss::RegisterDevicePlugin" name="etiss::RegisterDevicePlugin">
+<area shape="rect" id="node1" title="RegisterDevicePlugin::changedRegister is called if a supported register has been changed." alt="" coords="5,155,205,181"/>
+<area shape="rect" id="node4" href="$classOR1KTimer.html" title=" " alt="" coords="58,229,153,256"/>
+<area shape="rect" id="node2" href="$classetiss_1_1Plugin.html" title="base plugin class that provides access to different plugin functions if present" alt="" coords="55,80,156,107"/>
+<area shape="rect" id="node3" href="$classetiss_1_1ToString.html" title="Marker interface for toString() support." alt="" coords="49,5,162,32"/>
+</map>

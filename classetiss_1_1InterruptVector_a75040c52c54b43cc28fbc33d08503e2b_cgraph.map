@@ -1,0 +1,5 @@
+<map id="etiss::InterruptVector::isActive" name="etiss::InterruptVector::isActive">
+<area shape="rect" id="node1" title=" " alt="" coords="5,39,164,80"/>
+<area shape="rect" id="node2" href="$classetiss_1_1InterruptVector.html#aa5a49db4de674b0b20931c77d20c4e79" title="get the bit of an interrupt line" alt="" coords="212,5,371,47"/>
+<area shape="rect" id="node3" href="$classetiss_1_1InterruptVector.html#a5f44a2501a466892484a03a96ef54356" title="number of interrupt bits" alt="" coords="212,71,371,112"/>
+</map>

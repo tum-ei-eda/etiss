@@ -1,0 +1,5 @@
+<map id="_mm256_movedup_pd" name="_mm256_movedup_pd">
+<area shape="rect" id="node1" title="Moves and duplicates double&#45;precision floating point values from a 256&#45;bit vector of [4 x double] to ..." alt="" coords="273,31,444,57"/>
+<area shape="rect" id="node2" href="$avx512vlintrin_8h.html#a48bf4519f1f6187037fca8ab8e143b80" title=" " alt="" coords="9,5,222,32"/>
+<area shape="rect" id="node3" href="$avx512vlintrin_8h.html#a1a8fecb14de0cbb80230a32b11e80bbe" title=" " alt="" coords="5,56,225,83"/>
+</map>

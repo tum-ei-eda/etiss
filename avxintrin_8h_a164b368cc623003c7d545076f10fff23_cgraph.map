@@ -1,0 +1,4 @@
+<map id="_mm256_set1_ps" name="_mm256_set1_ps">
+<area shape="rect" id="node1" title="Constructs a 256&#45;bit floating&#45;point vector of [8 x float], with each of the eight single&#45;precision fl..." alt="" coords="5,5,141,32"/>
+<area shape="rect" id="node2" href="$avxintrin_8h.html#ad62451adf36fc36097731bfd2d1d2278" title="Constructs a 256&#45;bit floating&#45;point vector of [8 x float] initialized with the specified single&#45;preci..." alt="" coords="189,5,317,32"/>
+</map>

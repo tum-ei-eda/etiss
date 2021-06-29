@@ -1,0 +1,10 @@
+<map id="etiss::SystemWrapperPlugin" name="etiss::SystemWrapperPlugin">
+<area shape="rect" id="node1" title="this plugin allows to wrap the ETISS_System interface" alt="" coords="316,123,521,149"/>
+<area shape="rect" id="node4" href="$classetiss_1_1mm_1_1DMMUWrapper.html" title=" " alt="" coords="576,5,771,32"/>
+<area shape="rect" id="node5" href="$classetiss_1_1plugin_1_1gdb_1_1Server.html" title="gdb server implementation that is used as a plugin in etiss" alt="" coords="607,57,740,98"/>
+<area shape="rect" id="node6" href="$classetiss_1_1plugin_1_1Logger.html" title="simple logger implementation." alt="" coords="597,123,750,149"/>
+<area shape="rect" id="node7" href="$classetiss_1_1plugin_1_1MemoryDeviceMapper.html" title=" " alt="" coords="569,174,777,215"/>
+<area shape="rect" id="node8" href="$classRISCV64Timer.html" title=" " alt="" coords="616,240,731,267"/>
+<area shape="rect" id="node2" href="$classetiss_1_1Plugin.html" title="base plugin class that provides access to different plugin functions if present" alt="" coords="167,123,268,149"/>
+<area shape="rect" id="node3" href="$classetiss_1_1ToString.html" title="Marker interface for toString() support." alt="" coords="5,123,119,149"/>
+</map>

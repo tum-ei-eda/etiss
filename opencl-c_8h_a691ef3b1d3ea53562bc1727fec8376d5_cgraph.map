@@ -1,0 +1,5 @@
+<map id="tan" name="tan">
+<area shape="rect" id="node1" title="Compute tangent." alt="" coords="5,5,48,32"/>
+<area shape="rect" id="node2" href="$____clang__cuda__math_8h.html#a20f61882ae704d4b907e71cf2a9cdb34" title=" " alt="" coords="96,5,144,32"/>
+<area shape="rect" id="node3" href="$____clang__cuda__libdevice__declares_8h.html#ae6d74853e2718691db285e907f385671" title=" " alt="" coords="192,5,277,32"/>
+</map>

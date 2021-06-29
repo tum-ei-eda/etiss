@@ -1,0 +1,8 @@
+<map id="OR1K_l_mulX" name="OR1K_l_mulX">
+<area shape="rect" id="node1" title=" " alt="" coords="5,89,116,115"/>
+<area shape="rect" id="node2" href="$classetiss_1_1RegisterSet.html#a71f6c06c15ba6f84e449f243e38b28ff" title="add a registerPart to the set or just its relevant bits if a register with the same name is already p..." alt="" coords="181,13,349,39"/>
+<area shape="rect" id="node4" href="$classetiss_1_1CodeSet.html#a7236f0032933e60e6d9671d155da209d" title=" " alt="" coords="180,63,351,90"/>
+<area shape="rect" id="node5" href="$classetiss_1_1CodePart.html#a4c2d85268d4142cd353d9fbdd802a0d6" title=" " alt="" coords="186,114,345,141"/>
+<area shape="rect" id="node6" href="$classetiss_1_1CodePart.html#a8d1bed67b6a39781bfc51fa93b0ced29" title=" " alt="" coords="164,165,367,207"/>
+<area shape="rect" id="node3" href="$classetiss_1_1RegisterPart.html#abd602509a42be4fa3bd052b87caf3549" title="true if unnamed or no relevant bits" alt="" coords="415,5,555,47"/>
+</map>

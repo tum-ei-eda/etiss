@@ -1,0 +1,6 @@
+<map id="etiss::mm::PTEFormat::AddBitField" name="etiss::mm::PTEFormat::AddBitField">
+<area shape="rect" id="node1" title="Called only by PTEFormatBuilder." alt="" coords="264,71,429,112"/>
+<area shape="rect" id="node2" href="$classetiss_1_1mm_1_1PTEFormatBuilder.html#a2f393c163ebef0a364f51a9c6d61bf55" title="Add optional bit field for protection flag in PTE." alt="" coords="5,5,216,47"/>
+<area shape="rect" id="node3" href="$classetiss_1_1mm_1_1PTEFormatBuilder.html#ae01fc732c9aacdf64971100fed973317" title="Add mandatory bit field for page size offset (Not included in PTE neither in PTE format)" alt="" coords="5,71,216,112"/>
+<area shape="rect" id="node4" href="$classetiss_1_1mm_1_1PTEFormatBuilder.html#afabef6d7c48022d7ab2be91484e5d0bf" title="Add mandatory bit field, Physical Page Number (PPN), for PTE." alt="" coords="5,136,216,177"/>
+</map>

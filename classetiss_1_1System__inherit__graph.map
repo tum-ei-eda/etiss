@@ -1,0 +1,6 @@
+<map id="etiss::System" name="etiss::System">
+<area shape="rect" id="node1" title="System Interface for the basic system IO operations and time synchronization." alt="" coords="141,5,252,32"/>
+<area shape="rect" id="node2" href="$classetiss_1_1SimpleMemSystem.html" title="simple etiss:System implementation for testing" alt="" coords="5,80,193,107"/>
+<area shape="rect" id="node3" href="$classetiss_1_1SimpleSystem.html" title="A simple system, that implements the etiss::System interface." alt="" coords="218,80,373,107"/>
+<area shape="rect" id="node4" href="$classetiss_1_1plugin_1_1VirtualStructMemory.html" title="allows to read/write to a virtual structure as if it is a memory." alt="" coords="200,155,391,196"/>
+</map>

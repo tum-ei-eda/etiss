@@ -1,0 +1,5 @@
+<map id="floor" name="floor">
+<area shape="rect" id="node1" title="Round to integral value using the round to &#45;ve infinity rounding mode." alt="" coords="5,5,56,32"/>
+<area shape="rect" id="node2" href="$____clang__cuda__math_8h.html#a5e660c190f1961c9bd2fe3a42db1b6ce" title=" " alt="" coords="104,5,160,32"/>
+<area shape="rect" id="node3" href="$____clang__cuda__libdevice__declares_8h.html#a6b3eb4d7f8416e5065528c11c50eafb3" title=" " alt="" coords="208,5,301,32"/>
+</map>

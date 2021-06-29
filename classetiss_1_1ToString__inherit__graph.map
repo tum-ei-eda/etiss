@@ -1,0 +1,40 @@
+<map id="etiss::ToString" name="etiss::ToString">
+<area shape="rect" id="node1" title="Marker interface for toString() support." alt="" coords="5,339,119,365"/>
+<area shape="rect" id="node2" href="$classetiss_1_1Benchmark.html" title=" " alt="" coords="167,5,373,32"/>
+<area shape="rect" id="node3" href="$classetiss_1_1CPUCore.html" title="CPUCore is responsible for the simulation of a CPU core in ETISS." alt="" coords="211,56,329,83"/>
+<area shape="rect" id="node4" href="$classetiss_1_1fault_1_1Action.html" title=" " alt="" coords="200,107,340,133"/>
+<area shape="rect" id="node5" href="$classetiss_1_1fault_1_1Fault.html" title=" " alt="" coords="205,157,335,184"/>
+<area shape="rect" id="node6" href="$classetiss_1_1fault_1_1InjectorAddress.html" title=" " alt="" coords="170,208,370,235"/>
+<area shape="rect" id="node7" href="$classetiss_1_1fault_1_1Trigger.html" title=" " alt="" coords="199,259,341,285"/>
+<area shape="rect" id="node8" href="$classetiss_1_1instr_1_1Instruction.html" title="holds information and translation callbacks for an instruction." alt="" coords="187,309,353,336"/>
+<area shape="rect" id="node9" href="$classetiss_1_1instr_1_1InstructionDefinition.html" title="maps to Instruction" alt="" coords="187,361,353,402"/>
+<area shape="rect" id="node10" href="$classetiss_1_1instr_1_1InstructionGroup.html" title="maps to InstructionSet" alt="" coords="187,426,353,467"/>
+<area shape="rect" id="node11" href="$classetiss_1_1instr_1_1InstructionSet.html" title="holds etiss::instr::Instruction instances and handles automatic instruction tree creation." alt="" coords="176,492,364,519"/>
+<area shape="rect" id="node12" href="$classetiss_1_1instr_1_1OverlappedNode.html" title=" " alt="" coords="167,543,373,569"/>
+<area shape="rect" id="node13" href="$classetiss_1_1interfaces_1_1VCD.html" title=" " alt="" coords="189,593,351,620"/>
+<area shape="rect" id="node14" href="$classetiss_1_1Plugin.html" title="base plugin class that provides access to different plugin functions if present" alt="" coords="219,644,321,671"/>
+<area shape="rect" id="node38" href="$classetiss_1_1SourceCodeLocation.html" title="simple class that store source location information." alt="" coords="173,695,367,721"/>
+<area shape="rect" id="node15" href="$classetiss_1_1CoroutinePlugin.html" title="this plugin will be called before a block is executed." alt="" coords="442,495,606,521"/>
+<area shape="rect" id="node21" href="$classetiss_1_1InterruptListenerPlugin.html" title=" " alt="" coords="439,1070,609,1111"/>
+<area shape="rect" id="node23" href="$classetiss_1_1RegisterDevicePlugin.html" title="RegisterDevicePlugin::changedRegister is called if a supported register has been changed." alt="" coords="424,385,624,412"/>
+<area shape="rect" id="node24" href="$classetiss_1_1SystemWrapperPlugin.html" title="this plugin allows to wrap the ETISS_System interface" alt="" coords="421,644,627,671"/>
+<area shape="rect" id="node28" href="$classetiss_1_1TranslationPlugin.html" title="allows to add code to the translation of instructions" alt="" coords="438,892,610,919"/>
+<area shape="rect" id="node16" href="$classetiss_1_1InterruptHandler.html" title="class that handles interrupt signaling and checking." alt="" coords="695,469,863,496"/>
+<area shape="rect" id="node17" href="$classetiss_1_1plugin_1_1errorInjection_1_1BlockAccurateHandler.html" title="Register error injection class." alt="" coords="681,403,877,445"/>
+<area shape="rect" id="node18" href="$classetiss_1_1plugin_1_1gdb_1_1Server.html" title="gdb server implementation that is used as a plugin in etiss" alt="" coords="712,571,845,613"/>
+<area shape="rect" id="node19" href="$classOR1KTimer.html" title=" " alt="" coords="731,352,826,379"/>
+<area shape="rect" id="node20" href="$classRISCV64Timer.html" title=" " alt="" coords="721,520,836,547"/>
+<area shape="rect" id="node22" href="$classetiss_1_1plugin_1_1fault_1_1SwitchSystem.html" title=" " alt="" coords="709,1169,848,1210"/>
+<area shape="rect" id="node25" href="$classetiss_1_1mm_1_1DMMUWrapper.html" title=" " alt="" coords="681,703,876,729"/>
+<area shape="rect" id="node26" href="$classetiss_1_1plugin_1_1Logger.html" title="simple logger implementation." alt="" coords="702,753,855,780"/>
+<area shape="rect" id="node27" href="$classetiss_1_1plugin_1_1MemoryDeviceMapper.html" title=" " alt="" coords="675,637,883,678"/>
+<area shape="rect" id="node29" href="$classetiss_1_1CPUArch.html" title="the interface to translate instructions of and processor architecture" alt="" coords="720,921,837,948"/>
+<area shape="rect" id="node33" href="$classetiss_1_1DataSheetAccurateTiming.html" title=" " alt="" coords="685,973,872,1014"/>
+<area shape="rect" id="node34" href="$classetiss_1_1plugin_1_1InstructionAccurateCallback.html" title="writes the value of a field before each instruction" alt="" coords="689,1038,868,1079"/>
+<area shape="rect" id="node35" href="$classetiss_1_1plugin_1_1InstructionSpecificAddressCallback.html" title="a simple plugin that prints the instruction and address when an instruction is executed" alt="" coords="689,1103,869,1145"/>
+<area shape="rect" id="node36" href="$classetiss_1_1plugin_1_1PrintInstruction.html" title="a simple plugin that prints the instruction and address when an instruction is executed" alt="" coords="675,804,883,831"/>
+<area shape="rect" id="node37" href="$classetiss_1_1plugin_1_1VariableValueLogger.html" title="writes the value of a field before each instruction" alt="" coords="679,855,878,897"/>
+<area shape="rect" id="node30" href="$classOR1KArch.html" title="TODO: implement opt_hostendianess for store/load instructions." alt="" coords="941,871,1027,897"/>
+<area shape="rect" id="node31" href="$classRISCV64Arch.html" title=" " alt="" coords="931,921,1037,948"/>
+<area shape="rect" id="node32" href="$classRISCVArch.html" title=" " alt="" coords="939,972,1029,999"/>
+</map>

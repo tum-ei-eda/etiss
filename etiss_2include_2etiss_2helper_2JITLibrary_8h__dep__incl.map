@@ -1,0 +1,8 @@
+<map id="/home/runner/work/etiss/etiss/include/etiss/helper/JITLibrary.h" name="/home/runner/work/etiss/etiss/include/etiss/helper/JITLibrary.h">
+<area shape="rect" id="node1" title="defines the functions needed for a library that provides etiss::JIT implementations" alt="" coords="494,5,682,61"/>
+<area shape="rect" id="node2" href="$IntegratedLibrary_8cpp.html" title="example implementation of a dynamic library interface that is used to provide access to integrated pl..." alt="" coords="5,117,227,158"/>
+<area shape="rect" id="node3" href="$IntegratedLibraryHelper_8cpp.html" title="implements a LibraryInterface for the integrated library which is not loaded like other libraries but..." alt="" coords="251,109,447,165"/>
+<area shape="rect" id="node4" href="$GCCJITLIB_8cpp.html" title=" " alt="" coords="471,117,705,158"/>
+<area shape="rect" id="node5" href="$LLVMJITLIB_8cpp.html" title=" " alt="" coords="729,117,975,158"/>
+<area shape="rect" id="node6" href="$TCCJITLib_8cpp.html" title=" " alt="" coords="999,117,1225,158"/>
+</map>

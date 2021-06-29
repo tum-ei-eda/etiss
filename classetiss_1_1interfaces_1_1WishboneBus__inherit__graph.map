@@ -1,0 +1,4 @@
+<map id="etiss::interfaces::WishboneBus&lt; BOOLSIG, VECTORSIG, instrBus, flipEndianess, bytewidth, VECTORSIGSTORAGETYPE &gt;" name="etiss::interfaces::WishboneBus&lt; BOOLSIG, VECTORSIG, instrBus, flipEndianess, bytewidth, VECTORSIGSTORAGETYPE &gt;">
+<area shape="rect" id="node1" title="connects a wishbone bus interface implemented with the variables of WishboneSignalMap to a ETISS_Syst..." alt="" coords="5,95,216,180"/>
+<area shape="rect" id="node2" href="$classetiss_1_1interfaces_1_1Delegate.html" title=" " alt="" coords="43,5,178,47"/>
+</map>

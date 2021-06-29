@@ -1,0 +1,6 @@
+<map id="_mm_store_ps" name="_mm_store_ps">
+<area shape="rect" id="node1" title="Stores a 128&#45;bit vector of [4 x float] into an aligned memory location." alt="" coords="352,31,469,57"/>
+<area shape="rect" id="node2" href="$xmmintrin_8h.html#a4c0d96220375f075c5e26f4ea9d36cc6" title="Stores the lower 32 bits of a 128&#45;bit vector of [4 x float] into four contiguous elements in an align..." alt="" coords="179,5,304,32"/>
+<area shape="rect" id="node4" href="$xmmintrin_8h.html#a29a98f98124032bc339de1022b20ddcb" title="Stores float values from a 128&#45;bit vector of [4 x float] to an aligned memory location in reverse ord..." alt="" coords="180,56,303,83"/>
+<area shape="rect" id="node3" href="$xmmintrin_8h.html#aca094640bb28427d825c0b668a149cad" title="Stores the lower 32 bits of a 128&#45;bit vector of [4 x float] into four contiguous elements in an align..." alt="" coords="5,5,131,32"/>
+</map>

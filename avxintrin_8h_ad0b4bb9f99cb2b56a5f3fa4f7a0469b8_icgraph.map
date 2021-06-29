@@ -1,0 +1,4 @@
+<map id="_mm256_castsi128_si256" name="_mm256_castsi128_si256">
+<area shape="rect" id="node1" title="Constructs a 256&#45;bit integer vector from a 128&#45;bit integer vector." alt="" coords="232,5,423,32"/>
+<area shape="rect" id="node2" href="$avxintrin_8h.html#ab62695c6d26f2ff4f381ce80201e9eae" title="Loads two 128&#45;bit integer vectors from unaligned memory locations and constructs a 256&#45;bit integer ve..." alt="" coords="5,5,184,32"/>
+</map>

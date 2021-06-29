@@ -1,0 +1,10 @@
+<map id="etiss::CoroutinePlugin" name="etiss::CoroutinePlugin">
+<area shape="rect" id="node1" title="this plugin will be called before a block is executed." alt="" coords="316,129,480,156"/>
+<area shape="rect" id="node4" href="$classetiss_1_1InterruptHandler.html" title="class that handles interrupt signaling and checking." alt="" coords="542,5,710,32"/>
+<area shape="rect" id="node5" href="$classetiss_1_1plugin_1_1errorInjection_1_1BlockAccurateHandler.html" title="Register error injection class." alt="" coords="528,57,724,98"/>
+<area shape="rect" id="node6" href="$classetiss_1_1plugin_1_1gdb_1_1Server.html" title="gdb server implementation that is used as a plugin in etiss" alt="" coords="559,122,693,163"/>
+<area shape="rect" id="node7" href="$classOR1KTimer.html" title=" " alt="" coords="579,188,673,215"/>
+<area shape="rect" id="node8" href="$classRISCV64Timer.html" title=" " alt="" coords="569,239,683,265"/>
+<area shape="rect" id="node2" href="$classetiss_1_1Plugin.html" title="base plugin class that provides access to different plugin functions if present" alt="" coords="167,129,268,156"/>
+<area shape="rect" id="node3" href="$classetiss_1_1ToString.html" title="Marker interface for toString() support." alt="" coords="5,129,119,156"/>
+</map>

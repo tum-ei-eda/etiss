@@ -1,0 +1,4 @@
+<map id="etiss::interfaces::getAddr" name="etiss::interfaces::getAddr">
+<area shape="rect" id="node1" title="general helper function to read an address; needs to be implemented as needed" alt="" coords="216,5,351,47"/>
+<area shape="rect" id="node2" href="$classetiss_1_1interfaces_1_1WishboneBus.html#ad5c3c1527e7d0e843725d0abf873da71" title="Update signals to CPU or read/write from/to bus." alt="" coords="5,5,168,47"/>
+</map>

@@ -1,0 +1,9 @@
+<map id="/home/runner/work/etiss/etiss/include/etiss/IntegratedLibrary/gdb/GDBConnection.h" name="/home/runner/work/etiss/etiss/include/etiss/IntegratedLibrary/gdb/GDBConnection.h">
+<area shape="rect" id="node1" title=" " alt="" coords="225,5,440,61"/>
+<area shape="rect" id="node2" href="$build_2include_2etiss_2IntegratedLibrary_2gdb_2GDBServer_8h.html" title=" " alt="" coords="19,117,201,158"/>
+<area shape="rect" id="node3" href="$etiss_2include_2etiss_2IntegratedLibrary_2gdb_2GDBServer_8h.html" title=" " alt="" coords="225,109,440,165"/>
+<area shape="rect" id="node7" href="$GDBConnection_8cpp.html" title="implementation of etiss/IntegratedLibrary/gdb/GDBConnection.h" alt="" coords="464,109,660,165"/>
+<area shape="rect" id="node4" href="$GDBServer_8cpp.html" title="implementation of etiss/IntegratedLibrary/gdb/GDBServer.h" alt="" coords="5,213,201,269"/>
+<area shape="rect" id="node5" href="$GDBSystemWrapper_8cpp.html" title="implements a ETISS_System wrapper to enable breakpoints" alt="" coords="226,213,439,269"/>
+<area shape="rect" id="node6" href="$IntegratedLibrary_8cpp.html" title="example implementation of a dynamic library interface that is used to provide access to integrated pl..." alt="" coords="463,221,685,262"/>
+</map>

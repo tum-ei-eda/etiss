@@ -1,0 +1,6 @@
+<map id="etiss::interfaces::WishboneBus::sel2Length" name="etiss::interfaces::WishboneBus::sel2Length">
+<area shape="rect" id="node1" title="Calculates length and offset out of signal sel." alt="" coords="5,23,195,65"/>
+<area shape="rect" id="node2" href="$opencl-c_8h.html#a33dd08f08ca9bd0ca06b1cb16a07281e" title="Return the length of vector p, i.e., sqrt(p.x2 + p.y 2 + ...)" alt="" coords="252,5,315,32"/>
+<area shape="rect" id="node3" href="$namespaceetiss.html#afd320e98bf6a5e2c0d8ffde5dd28dd35" title="write log message at the given level." alt="" coords="243,56,324,83"/>
+<area shape="rect" id="node4" href="$namespaceetiss.html#a5d23a51a17c09f1b863c601d4454f99b" title="conversion of type T to std::string." alt="" coords="372,56,484,83"/>
+</map>

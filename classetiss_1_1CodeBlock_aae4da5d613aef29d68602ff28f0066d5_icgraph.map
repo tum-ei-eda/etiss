@@ -1,0 +1,15 @@
+<map id="etiss::CodeBlock::fileglobalCode" name="etiss::CodeBlock::fileglobalCode">
+<area shape="rect" id="node1" title=" " alt="" coords="917,274,1148,301"/>
+<area shape="rect" id="node2" href="$classetiss_1_1plugin_1_1gdb_1_1Server.html#aa9545fefde216fb9b2577fb41decacfb" title="called after all instructions have been translated for the code block" alt="" coords="655,5,851,47"/>
+<area shape="rect" id="node3" href="$classetiss_1_1Translation.html#ad60fccfe679e82069b2255aac748ed52" title=" " alt="" coords="687,71,819,112"/>
+<area shape="rect" id="node7" href="$classetiss_1_1plugin_1_1InstructionAccurateCallback.html#a4881a65473ae9df59b812d3a61e96cb5" title="called before instructions are translated for the code block" alt="" coords="636,136,869,177"/>
+<area shape="rect" id="node8" href="$classetiss_1_1plugin_1_1VariableValueLogger.html#a873b9feabca9ccb94ce6ebc1cef1d77d" title="called before instructions are translated for the code block" alt="" coords="653,201,852,243"/>
+<area shape="rect" id="node9" href="$classetiss_1_1plugin_1_1PrintInstruction.html#ad666480b059f03338752f6b106a5cc36" title="called before instructions are translated for the code block" alt="" coords="649,267,857,308"/>
+<area shape="rect" id="node10" href="$classOR1KArch.html#a5c04683e9df3a974ef48fc375bf7179f" title="called before instructions are translated for the code block" alt="" coords="660,333,845,359"/>
+<area shape="rect" id="node11" href="$classRISCVArch.html#a0966cad99ed72bb544b2ade34a186449" title="called before instructions are translated for the code block" alt="" coords="659,383,846,410"/>
+<area shape="rect" id="node12" href="$classetiss_1_1plugin_1_1InstructionSpecificAddressCallback.html#a296dc93b5c926a8bcf51aec3805bf406" title="called before instructions are translated for the code block" alt="" coords="663,434,843,490"/>
+<area shape="rect" id="node13" href="$classRISCV64Arch.html#a4d0af783e2692deb44a6f89dd30e685d" title="called before instructions are translated for the code block" alt="" coords="651,514,855,541"/>
+<area shape="rect" id="node4" href="$classetiss_1_1Translation.html#a8a71d620ec906f57f2f2dfc4c6565bd8" title="CALL THIS function NOT getBlock(...) since getBlock will not check next/branch references." alt="" coords="456,71,588,112"/>
+<area shape="rect" id="node5" href="$classetiss_1_1CPUCore.html#a3abad91e823939228f7db1596e040c19" title="Start the simulation of the CPU core for the system model." alt="" coords="231,78,408,105"/>
+<area shape="rect" id="node6" href="$classetiss_1_1CPUCore.html#a2ab7000206ed432b59457ce57b9182f6" title="Start the simulation of the CPU core for the system model." alt="" coords="5,78,183,105"/>
+</map>

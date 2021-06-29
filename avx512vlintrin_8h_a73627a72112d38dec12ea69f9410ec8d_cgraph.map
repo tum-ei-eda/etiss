@@ -1,0 +1,5 @@
+<map id="_mm_maskz_permutevar_pd" name="_mm_maskz_permutevar_pd">
+<area shape="rect" id="node1" title=" " alt="" coords="5,31,216,57"/>
+<area shape="rect" id="node2" href="$avxintrin_8h.html#ab6d5beaa4887a7f808b08cfaacdbff56" title="Copies the values in a 128&#45;bit vector of [2 x double] as specified by the 128&#45;bit integer vector oper..." alt="" coords="264,5,425,32"/>
+<area shape="rect" id="node3" href="$emmintrin_8h.html#abb21a22f10c4f15dab5aa34e9886c598" title="Constructs a 128&#45;bit floating&#45;point vector of [2 x double] initialized to zero." alt="" coords="278,56,411,83"/>
+</map>

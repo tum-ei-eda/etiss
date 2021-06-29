@@ -1,0 +1,6 @@
+<map id="etiss::instr::BitArray::get" name="etiss::instr::BitArray::get">
+<area shape="rect" id="node1" title=" " alt="" coords="599,13,777,39"/>
+<area shape="rect" id="node2" href="$classetiss_1_1instr_1_1BitArray.html#a31c7ad01ead5d78355978becf585614d" title="returns the number of consecutive bits set upwards from given address." alt="" coords="400,5,551,47"/>
+<area shape="rect" id="node3" href="$classetiss_1_1instr_1_1Node.html#aab28e33efbc20386bc870f2ab046e5d7" title="called by InstructionSet::compile() calls Node::compile() of sub nodes" alt="" coords="220,5,352,47"/>
+<area shape="rect" id="node4" href="$classetiss_1_1instr_1_1InstructionSet.html#a6a44d207f9d2197a8cd064e47327ebd3" title=" " alt="" coords="5,5,172,47"/>
+</map>

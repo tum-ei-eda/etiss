@@ -1,0 +1,7 @@
+<map id="RISCV64Timer" name="RISCV64Timer">
+<area shape="rect" id="node1" title=" " alt="" coords="134,229,249,256"/>
+<area shape="rect" id="node2" href="$classetiss_1_1CoroutinePlugin.html" title="this plugin will be called before a block is executed." alt="" coords="5,155,169,181"/>
+<area shape="rect" id="node3" href="$classetiss_1_1Plugin.html" title="base plugin class that provides access to different plugin functions if present" alt="" coords="141,80,242,107"/>
+<area shape="rect" id="node5" href="$classetiss_1_1SystemWrapperPlugin.html" title="this plugin allows to wrap the ETISS_System interface" alt="" coords="194,155,399,181"/>
+<area shape="rect" id="node4" href="$classetiss_1_1ToString.html" title="Marker interface for toString() support." alt="" coords="135,5,248,32"/>
+</map>

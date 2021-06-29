@@ -1,0 +1,6 @@
+<map id="etiss::plugin::errorInjection::BlockAccurateHandler" name="etiss::plugin::errorInjection::BlockAccurateHandler">
+<area shape="rect" id="node1" title="Register error injection class." alt="" coords="5,229,201,271"/>
+<area shape="rect" id="node2" href="$classetiss_1_1CoroutinePlugin.html" title="this plugin will be called before a block is executed." alt="" coords="21,155,185,181"/>
+<area shape="rect" id="node3" href="$classetiss_1_1Plugin.html" title="base plugin class that provides access to different plugin functions if present" alt="" coords="53,80,154,107"/>
+<area shape="rect" id="node4" href="$classetiss_1_1ToString.html" title="Marker interface for toString() support." alt="" coords="47,5,160,32"/>
+</map>

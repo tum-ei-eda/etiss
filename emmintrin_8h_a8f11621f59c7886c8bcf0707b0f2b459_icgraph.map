@@ -1,0 +1,5 @@
+<map id="_mm_mulhi_epi16" name="_mm_mulhi_epi16">
+<area shape="rect" id="node1" title="Multiplies the corresponding elements of two signed [8 x i16] vectors, saving the upper 16 bits of ea..." alt="" coords="245,31,388,57"/>
+<area shape="rect" id="node2" href="$avx512vlbwintrin_8h.html#a6278a8aff15fd631e810ef722a477f8c" title=" " alt="" coords="9,5,194,32"/>
+<area shape="rect" id="node3" href="$avx512vlbwintrin_8h.html#a0f5a740d6f0d0eb1f4ef8b5cdc75791d" title=" " alt="" coords="5,56,197,83"/>
+</map>

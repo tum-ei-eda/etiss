@@ -1,0 +1,4 @@
+<map id="_mm256_setr_epi16" name="_mm256_setr_epi16">
+<area shape="rect" id="node1" title="Constructs a 256&#45;bit integer vector, initialized in reverse order with the specified 16&#45;bit integral ..." alt="" coords="5,5,160,32"/>
+<area shape="rect" id="node2" href="$avxintrin_8h.html#ab0f0d98555faae75275a902750300378" title="Constructs a 256&#45;bit integer vector initialized with the specified 16&#45;bit integral values." alt="" coords="208,5,357,32"/>
+</map>

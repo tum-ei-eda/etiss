@@ -1,0 +1,5 @@
+<map id="_mm_unpackhi_epi8" name="_mm_unpackhi_epi8">
+<area shape="rect" id="node1" title="Unpacks the high&#45;order (index 8&#45;15) values from two 128&#45;bit vectors of [16 x i8] and interleaves them..." alt="" coords="260,31,416,57"/>
+<area shape="rect" id="node2" href="$avx512vlbwintrin_8h.html#aec059ac82cb429e202785fe39e9f53d5" title=" " alt="" coords="9,5,208,32"/>
+<area shape="rect" id="node3" href="$avx512vlbwintrin_8h.html#a2188efb2742060f97a9720087a8a17d4" title=" " alt="" coords="5,56,212,83"/>
+</map>

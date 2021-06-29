@@ -1,0 +1,4 @@
+<map id="_mm256_setr_m128i" name="_mm256_setr_m128i">
+<area shape="rect" id="node1" title="Constructs a 256&#45;bit integer vector by concatenating two 128&#45;bit integer vectors." alt="" coords="5,5,164,32"/>
+<area shape="rect" id="node2" href="$avxintrin_8h.html#aa861f2975b501b81b9e0fca5ceed2e6c" title="Constructs a 256&#45;bit integer vector by concatenating two 128&#45;bit integer vectors." alt="" coords="212,5,367,32"/>
+</map>

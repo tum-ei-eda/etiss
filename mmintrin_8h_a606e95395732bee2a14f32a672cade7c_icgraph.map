@@ -1,0 +1,5 @@
+<map id="_mm_packs_pi32" name="_mm_packs_pi32">
+<area shape="rect" id="node1" title="Converts 32&#45;bit signed integers from both 64&#45;bit integer vector parameters of [2 x i32] into 16&#45;bit s..." alt="" coords="357,5,492,32"/>
+<area shape="rect" id="node2" href="$xmmintrin_8h.html#ae1813b0efe9a7690fec29bc81281ee40" title="Converts each single&#45;precision floating&#45;point element of a 128&#45;bit floating&#45;point vector of [4 x floa..." alt="" coords="177,5,309,32"/>
+<area shape="rect" id="node3" href="$xmmintrin_8h.html#a3d366cb305d28071f94128f119fd6074" title="Converts each single&#45;precision floating&#45;point element of a 128&#45;bit floating&#45;point vector of [4 x floa..." alt="" coords="5,5,129,32"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="etiss::instr::Node" name="etiss::instr::Node">
+<area shape="rect" id="node1" title="base class that is used to build the instruction translation tree within an InstructionSet object" alt="" coords="128,5,260,32"/>
+<area shape="rect" id="node2" href="$classetiss_1_1instr_1_1Instruction.html" title="holds information and translation callbacks for an instruction." alt="" coords="5,80,172,107"/>
+<area shape="rect" id="node3" href="$classetiss_1_1instr_1_1OverlappedNode.html" title=" " alt="" coords="196,80,403,107"/>
+</map>

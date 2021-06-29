@@ -1,0 +1,10 @@
+<map id="_mm_set_epi64x" name="_mm_set_epi64x">
+<area shape="rect" id="node1" title="Initializes both 64&#45;bit values in a 128&#45;bit vector of [2 x i64] with the specified 64&#45;bit integer val..." alt="" coords="433,132,567,159"/>
+<area shape="rect" id="node2" href="$emmintrin_8h.html#ae179f6bcfa4da66b9833da96fec21c2c" title="Initializes both values in a 128&#45;bit integer vector with the specified 64&#45;bit integer value." alt="" coords="244,81,385,108"/>
+<area shape="rect" id="node6" href="$emmintrin_8h.html#ac6cb7fc69fa4b429c7f9778dd5a833d5" title="Initializes both 64&#45;bit values in a 128&#45;bit vector of [2 x i64] with the specified 64&#45;bit integer val..." alt="" coords="252,157,377,184"/>
+<area shape="rect" id="node3" href="$avx512vlcdintrin_8h.html#a815ea2b4272c9a0a46605fc0de0e31cc" title=" " alt="" coords="5,5,196,32"/>
+<area shape="rect" id="node4" href="$avx512vlintrin_8h.html#a1c3de7ae47249dbe1b642ea87e4f270f" title=" " alt="" coords="13,56,189,83"/>
+<area shape="rect" id="node5" href="$avx512vlintrin_8h.html#a5f28187c00a6ada85acb911faea3087f" title=" " alt="" coords="9,107,192,133"/>
+<area shape="rect" id="node7" href="$emmintrin_8h.html#ac6311390fc9cd4cb98df8f306c7788a3" title="Initializes both values in a 128&#45;bit vector of [2 x i64] with the specified 64&#45;bit value." alt="" coords="34,157,167,184"/>
+<area shape="rect" id="node8" href="$emmintrin_8h.html#a01359e73f16e6c367de5909e4e2d6f36" title="Constructs a 128&#45;bit integer vector, initialized in reverse order with the specified 64&#45;bit integral ..." alt="" coords="35,208,166,235"/>
+</map>

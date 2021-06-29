@@ -1,0 +1,4 @@
+<map id="_mm256_mask_sub_pd" name="_mm256_mask_sub_pd">
+<area shape="rect" id="node1" title=" " alt="" coords="5,5,180,32"/>
+<area shape="rect" id="node2" href="$avxintrin_8h.html#aa81311a68fdb80f67c4cd42c5b05b016" title="Subtracts two 256&#45;bit vectors of [4 x double]." alt="" coords="228,5,360,32"/>
+</map>

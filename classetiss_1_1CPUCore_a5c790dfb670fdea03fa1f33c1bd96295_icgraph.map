@@ -1,0 +1,4 @@
+<map id="etiss::CPUCore::getJITName" name="etiss::CPUCore::getJITName">
+<area shape="rect" id="node1" title="Get the name of the JIT plug&#45;in used by the CPUCore instance." alt="" coords="176,13,379,39"/>
+<area shape="rect" id="node2" href="$classetiss_1_1Initializer.html#acdf27d4056057a91dccd86abfa43a8b1" title="sets the JIT given with the previous loaded .ini files" alt="" coords="5,5,128,47"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="_mm_set1_epi64" name="_mm_set1_epi64">
+<area shape="rect" id="node1" title="Initializes both values in a 128&#45;bit vector of [2 x i64] with the specified 64&#45;bit value." alt="" coords="5,5,139,32"/>
+<area shape="rect" id="node2" href="$emmintrin_8h.html#ac6cb7fc69fa4b429c7f9778dd5a833d5" title="Initializes both 64&#45;bit values in a 128&#45;bit vector of [2 x i64] with the specified 64&#45;bit integer val..." alt="" coords="187,5,312,32"/>
+<area shape="rect" id="node3" href="$emmintrin_8h.html#abc8a393dd9aedb1396d0a706e840fc8d" title="Initializes both 64&#45;bit values in a 128&#45;bit vector of [2 x i64] with the specified 64&#45;bit integer val..." alt="" coords="360,5,493,32"/>
+</map>

@@ -1,0 +1,12 @@
+<map id="etiss::plugin::gdb::PacketProtocol::_available" name="etiss::plugin::gdb::PacketProtocol::_available">
+<area shape="rect" id="node1" title=" " alt="" coords="5,71,205,112"/>
+<area shape="rect" id="node2" href="$classetiss_1_1plugin_1_1gdb_1_1Connection.html#ad615c9946953781d332bc2eb73aa58fe" title=" " alt="" coords="281,5,452,47"/>
+<area shape="rect" id="node3" href="$classetiss_1_1plugin_1_1gdb_1_1Connection.html#ac711c912da2f2c5e62a95bf3ab161cfd" title=" " alt="" coords="300,71,433,112"/>
+<area shape="rect" id="node4" href="$classetiss_1_1plugin_1_1gdb_1_1PacketProtocol.html#a9bfacf5954fabcf35438d3ba5b160540" title=" " alt="" coords="253,136,480,177"/>
+<area shape="rect" id="node5" href="$classetiss_1_1plugin_1_1gdb_1_1Connection.html#a88e86354ac91b1743cb2ae776b05861c" title=" " alt="" coords="538,19,725,60"/>
+<area shape="rect" id="node6" href="$GDBConnection_8cpp.html#a6572eb9068c6f29e6607f55e35d4daf0" title=" " alt="" coords="548,85,715,111"/>
+<area shape="rect" id="node7" href="$classetiss_1_1plugin_1_1gdb_1_1Connection.html#abab97df0e7b431c1c4d3ee9234c8d0e8" title=" " alt="" coords="528,136,735,177"/>
+<area shape="rect" id="node8" href="$classetiss_1_1plugin_1_1gdb_1_1Connection.html#aeaba2fdc2a059e2f6db8b11619e9e92a" title=" " alt="" coords="564,201,699,243"/>
+<area shape="rect" id="node9" href="$namespaceetiss_1_1plugin_1_1gdb_1_1hex.html#a0bfff49b4e28c7cbdd30e196f0308a56" title="converts 2 hex characters to a byte" alt="" coords="565,267,698,308"/>
+<area shape="rect" id="node10" href="$namespaceetiss_1_1plugin_1_1gdb_1_1hex.html#ac7090e6054a3b3c729c8f64d15e0df86" title="convert a character to the hex value it represents(0&#45;15)" alt="" coords="783,267,916,308"/>
+</map>

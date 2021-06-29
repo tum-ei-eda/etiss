@@ -1,0 +1,5 @@
+<map id="CSimpleIniTempl&lt; SI_CHAR, SI_STRLESS, SI_CONVERTER &gt;::FileWriter" name="CSimpleIniTempl&lt; SI_CHAR, SI_STRLESS, SI_CONVERTER &gt;::FileWriter">
+<area shape="rect" id="node1" title="OutputWriter class to write the INI data to a file." alt="" coords="95,124,290,180"/>
+<area shape="rect" id="node2" href="$classCSimpleIniTempl_1_1OutputWriter.html" title="interface definition for the OutputWriter object to pass to Save() in order to output the INI file da..." alt="" coords="5,5,220,61"/>
+<area shape="rect" id="node3" title=" " alt="" coords="244,20,304,47"/>
+</map>

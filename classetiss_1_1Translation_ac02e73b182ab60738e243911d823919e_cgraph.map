@@ -1,0 +1,17 @@
+<map id="etiss::Translation::init" name="etiss::Translation::init">
+<area shape="rect" id="node1" title=" " alt="" coords="5,275,137,316"/>
+<area shape="rect" id="node2" href="$namespaceetiss.html#aee33012f7eee57858b610543b0686c22" title=" " alt="" coords="205,8,376,49"/>
+<area shape="rect" id="node4" href="$namespaceetiss.html#ad10f6255918242d6792fed63a2dd7f0f" title=" " alt="" coords="191,81,391,107"/>
+<area shape="rect" id="node6" href="$classetiss_1_1instr_1_1ModedInstructionSet.html#a11e34354ba3d04d12d322c5ca454f0ff" title=" " alt="" coords="185,136,396,177"/>
+<area shape="rect" id="node8" href="$namespaceetiss.html#afd320e98bf6a5e2c0d8ffde5dd28dd35" title="write log message at the given level." alt="" coords="712,202,793,229"/>
+<area shape="rect" id="node9" href="$namespaceetiss.html#a5d23a51a17c09f1b863c601d4454f99b" title="conversion of type T to std::string." alt="" coords="841,227,953,254"/>
+<area shape="rect" id="node10" href="$classetiss_1_1TranslationPlugin.html#a330795165b5b1c4f5ed83b45e9f93e13" title="called after all instructions have been added to allow last changes" alt="" coords="205,304,377,345"/>
+<area shape="rect" id="node11" href="$classetiss_1_1CPUArch.html#afef2dfd20d2938ddfebbfdec931b97ad" title="returns the name of this architecture." alt="" coords="198,370,383,397"/>
+<area shape="rect" id="node13" href="$classetiss_1_1TranslationPlugin.html#ad35e0ee4d19fe3977b436f9a357c5718" title="called to get the handle that is available in translated code via getPoinerCode()...." alt="" coords="205,421,377,463"/>
+<area shape="rect" id="node14" href="$classetiss_1_1Plugin.html#a3363a09962310ceb9e1bafefa10b15d7" title=" " alt="" coords="190,487,391,528"/>
+<area shape="rect" id="node15" href="$classetiss_1_1TranslationPlugin.html#a69308a8f7a1bff3115038e20802f631e" title="called to add instructions to the instruction set" alt="" coords="205,552,377,593"/>
+<area shape="rect" id="node3" href="$classetiss_1_1TranslationPlugin.html#a3b06657eceef18ce843ac3fd5c934c39" title="called after all instructions have been translated for the code block" alt="" coords="468,5,640,47"/>
+<area shape="rect" id="node5" href="$classetiss_1_1TranslationPlugin.html#a2aadada06ec498ac2b0805c55731257a" title="called before instructions are translated for the code block" alt="" coords="468,71,640,112"/>
+<area shape="rect" id="node7" href="$classetiss_1_1instr_1_1VariableInstructionSet.html#aa1565f073ad9d25111e059d9885bc4f8" title=" " alt="" coords="444,136,664,177"/>
+<area shape="rect" id="node12" href="$classetiss_1_1CPUArch.html#ab18054a0c010ec14c632918ecce6339a" title="returns the name of this architecture." alt="" coords="447,370,661,397"/>
+</map>

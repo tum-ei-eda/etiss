@@ -1,0 +1,13 @@
+<map id="etiss::LibraryInterface::countCPUArchs" name="etiss::LibraryInterface::countCPUArchs">
+<area shape="rect" id="node1" title=" " alt="" coords="1069,53,1233,94"/>
+<area shape="rect" id="node2" href="$group__ETISS__Frontend.html#gaaf6f48444721c0a133cdfbe5a26f11a3" title="Get a present CPUArch plug&#45;in by name." alt="" coords="671,31,809,57"/>
+<area shape="rect" id="node4" href="$classetiss_1_1LibraryInterface.html#a08e5c418f0348e81ab5f20c5ba5f88df" title="returns true if this library provides nothing" alt="" coords="857,82,1021,123"/>
+<area shape="rect" id="node3" href="$classetiss_1_1CPUCore.html#a804f3252302d7ae49f7918da2871f6ba" title="Create a CPUCore instance." alt="" coords="456,5,623,32"/>
+<area shape="rect" id="node5" href="$group__ETISS__Frontend.html#gaa5e8c6d44d5e6b27cb4384e60c557283" title="Get a present JIT plug&#45;in by name." alt="" coords="691,89,789,116"/>
+<area shape="rect" id="node10" href="$group__ETISS__Frontend.html#ga4f8d7c30115cfe2422f628a812d3b0b8" title="Get a present Plugin plug&#45;in by name." alt="" coords="679,147,801,173"/>
+<area shape="rect" id="node6" href="$group__ETISS__Frontend.html#ga03edc9a6d65e4853824c46ba162e9f4c" title="Get the default JIT implementation." alt="" coords="466,56,613,83"/>
+<area shape="rect" id="node9" href="$classetiss_1_1Initializer.html#acdf27d4056057a91dccd86abfa43a8b1" title="sets the JIT given with the previous loaded .ini files" alt="" coords="478,107,601,149"/>
+<area shape="rect" id="node7" href="$classetiss_1_1CPUCore.html#a3abad91e823939228f7db1596e040c19" title="Start the simulation of the CPU core for the system model." alt="" coords="231,56,408,83"/>
+<area shape="rect" id="node8" href="$classetiss_1_1CPUCore.html#a2ab7000206ed432b59457ce57b9182f6" title="Start the simulation of the CPU core for the system model." alt="" coords="5,56,183,83"/>
+<area shape="rect" id="node11" href="$classetiss_1_1Initializer.html#a680f42f4c7effbc0b4b5bc2b4eaae21f" title="loads the plugins given with the previous loaded .ini files" alt="" coords="478,173,601,214"/>
+</map>

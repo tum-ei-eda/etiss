@@ -1,0 +1,4 @@
+<map id="_mm256_broadcast_pd" name="_mm256_broadcast_pd">
+<area shape="rect" id="node1" title="Loads the data from a 128&#45;bit vector of [2 x double] from the specified address pointed to by __a and..." alt="" coords="5,5,179,32"/>
+<area shape="rect" id="node2" href="$emmintrin_8h.html#a1fd43b0704e7cb896b9dfabf9fa0929c" title="Loads a 128&#45;bit floating&#45;point vector of [2 x double] from an unaligned memory location." alt="" coords="227,5,348,32"/>
+</map>

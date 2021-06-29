@@ -1,0 +1,8 @@
+<map id="etiss::plugin::gdb::Server" name="etiss::plugin::gdb::Server">
+<area shape="rect" id="node1" title="gdb server implementation that is used as a plugin in etiss" alt="" coords="213,229,346,271"/>
+<area shape="rect" id="node2" href="$classetiss_1_1CoroutinePlugin.html" title="this plugin will be called before a block is executed." alt="" coords="5,155,169,181"/>
+<area shape="rect" id="node3" href="$classetiss_1_1Plugin.html" title="base plugin class that provides access to different plugin functions if present" alt="" coords="229,80,330,107"/>
+<area shape="rect" id="node5" href="$classetiss_1_1TranslationPlugin.html" title="allows to add code to the translation of instructions" alt="" coords="193,155,365,181"/>
+<area shape="rect" id="node6" href="$classetiss_1_1SystemWrapperPlugin.html" title="this plugin allows to wrap the ETISS_System interface" alt="" coords="390,155,595,181"/>
+<area shape="rect" id="node4" href="$classetiss_1_1ToString.html" title="Marker interface for toString() support." alt="" coords="223,5,336,32"/>
+</map>

@@ -1,0 +1,6 @@
+<map id="etiss::plugin::InstructionSpecificAddressCallback" name="etiss::plugin::InstructionSpecificAddressCallback">
+<area shape="rect" id="node1" title="a simple plugin that prints the instruction and address when an instruction is executed" alt="" coords="5,229,185,271"/>
+<area shape="rect" id="node2" href="$classetiss_1_1TranslationPlugin.html" title="allows to add code to the translation of instructions" alt="" coords="9,155,181,181"/>
+<area shape="rect" id="node3" href="$classetiss_1_1Plugin.html" title="base plugin class that provides access to different plugin functions if present" alt="" coords="45,80,146,107"/>
+<area shape="rect" id="node4" href="$classetiss_1_1ToString.html" title="Marker interface for toString() support." alt="" coords="39,5,152,32"/>
+</map>

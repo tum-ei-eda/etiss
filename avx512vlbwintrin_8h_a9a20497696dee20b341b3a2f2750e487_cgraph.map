@@ -1,0 +1,5 @@
+<map id="_mm_maskz_avg_epu8" name="_mm_maskz_avg_epu8">
+<area shape="rect" id="node1" title=" " alt="" coords="5,31,180,57"/>
+<area shape="rect" id="node2" href="$emmintrin_8h.html#ae33283edb8a541c68fb28415420fdd88" title="Computes the rounded averages of corresponding elements of two 128&#45;bit unsigned [16 x i8] vectors,..." alt="" coords="241,5,367,32"/>
+<area shape="rect" id="node3" href="$emmintrin_8h.html#af05c05652224e219f9c5d8dc67f467e6" title="Creates a 128&#45;bit integer vector initialized to zero." alt="" coords="228,56,380,83"/>
+</map>

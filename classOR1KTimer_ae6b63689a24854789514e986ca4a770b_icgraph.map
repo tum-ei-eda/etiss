@@ -1,0 +1,5 @@
+<map id="OR1KTimer::regs_to_internal_state" name="OR1KTimer::regs_to_internal_state">
+<area shape="rect" id="node1" title=" " alt="" coords="265,23,416,65"/>
+<area shape="rect" id="node2" href="$classOR1KTimer.html#aa027fda98b3e9e6f8088bea1d1b36642" title="called when an observable register has been changed" alt="" coords="5,5,217,32"/>
+<area shape="rect" id="node3" href="$classOR1KTimer.html#af82794bd9e863835f0b15c88d673a71f" title="called before a block and may act in the same way as a block" alt="" coords="34,56,189,83"/>
+</map>

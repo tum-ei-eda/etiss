@@ -1,0 +1,4 @@
+<map id="_mm_cvtness_sbh" name="_mm_cvtness_sbh">
+<area shape="rect" id="node1" title="Convert One Single float Data to One BF16 Data." alt="" coords="5,5,148,32"/>
+<area shape="rect" id="node2" href="$emmintrin_8h.html#a745e2e4ca5292bf5f9ba85e0e1e34de1" title="Generates a 128&#45;bit vector of [4 x i32] with unspecified content." alt="" coords="196,5,364,32"/>
+</map>

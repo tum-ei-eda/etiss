@@ -1,0 +1,52 @@
+<map id="xml_allocator::allocate_string" name="xml_allocator::allocate_string">
+<area shape="rect" id="node1" title=" " alt="" coords="2012,560,2183,601"/>
+<area shape="rect" id="node2" href="$pugixml_8cpp.html#ab9527027631039c4e2361e30f2c0788e" title=" " alt="" coords="1859,567,1964,594"/>
+<area shape="rect" id="node3" href="$classpugi_1_1xml__text.html#ab31930ff4f5ad568549f85dbb697e60e" title=" " alt="" coords="1641,67,1785,94"/>
+<area shape="rect" id="node5" href="$classpugi_1_1xml__attribute.html#ae8ffb5ef48338f27015337a6f57b6595" title=" " alt="" coords="1640,260,1787,301"/>
+<area shape="rect" id="node16" href="$classpugi_1_1xml__node.html#a9d688489fcf0960e945a12480419e434" title=" " alt="" coords="1616,567,1811,594"/>
+<area shape="rect" id="node43" href="$classpugi_1_1xml__attribute.html#af2ca1f0d13ee8f661bc17524bedc13d7" title=" " alt="" coords="1399,129,1546,171"/>
+<area shape="rect" id="node45" href="$classpugi_1_1xml__node.html#a160f1fa7a0eda1e5ad9d19d45f6b0e4e" title=" " alt="" coords="1638,619,1789,660"/>
+<area shape="rect" id="node46" href="$pugixml_8cpp.html#ab5661e636fc32d2d065fb10a58fedd10" title=" " alt="" coords="1648,685,1779,711"/>
+<area shape="rect" id="node50" href="$pugixml_8cpp.html#aae5ad520a997bd3b9350f264be945d59" title=" " alt="" coords="1643,735,1784,762"/>
+<area shape="rect" id="node4" href="$classpugi_1_1xml__text.html#a0b895996d14f50afca11b9a82276038d" title=" " alt="" coords="1377,13,1568,39"/>
+<area shape="rect" id="node6" href="$classpugi_1_1xml__node.html#a417eb03f034b432bb2800e54e38022aa" title=" " alt="" coords="1383,64,1562,105"/>
+<area shape="rect" id="node10" href="$classpugi_1_1xml__node.html#a74ab20fa84dffde317f8899af628f041" title=" " alt="" coords="1389,195,1556,236"/>
+<area shape="rect" id="node12" href="$classpugi_1_1xml__node.html#a742898bc2342d943a4c49916ac3a64b8" title=" " alt="" coords="1389,260,1556,301"/>
+<area shape="rect" id="node14" href="$classpugi_1_1xml__node.html#a7d70631d6cb3624cdfc4cf9ef4abad06" title=" " alt="" coords="1381,325,1564,367"/>
+<area shape="rect" id="node7" href="$classpugi_1_1xml__node.html#a4c151e6665c6bfa614fe80d177fd5396" title=" " alt="" coords="1111,13,1327,39"/>
+<area shape="rect" id="node9" href="$namespaceetiss_1_1fault_1_1xml.html#a29eea8718a44bc25bfa14958f754a754" title=" " alt="" coords="1153,64,1285,105"/>
+<area shape="rect" id="node8" href="$classpugi_1_1xml__document.html#a4230de3de88f4fe481c4c3d5312aa5cf" title=" " alt="" coords="905,5,1060,47"/>
+<area shape="rect" id="node11" href="$classpugi_1_1xml__node.html#ab5fd2ccada30141544b12c6ef554d8f4" title=" " alt="" coords="1135,195,1302,236"/>
+<area shape="rect" id="node13" href="$classpugi_1_1xml__node.html#ac81f8aded4b53a9b8c98d131986cb535" title=" " alt="" coords="1135,260,1302,301"/>
+<area shape="rect" id="node15" href="$classpugi_1_1xml__node.html#abd0f80e4d5bc938a27b50d37a0c7865b" title=" " alt="" coords="1108,326,1329,353"/>
+<area shape="rect" id="node17" href="$classpugi_1_1xml__node.html#a190f4851bb4bc4bb61c89fffb663a9af" title=" " alt="" coords="1383,495,1562,536"/>
+<area shape="rect" id="node34" href="$classpugi_1_1xml__node.html#a4dd8d25c02560a2692c43cc4779fb7e3" title=" " alt="" coords="1389,625,1556,667"/>
+<area shape="rect" id="node37" href="$classpugi_1_1xml__node.html#afe89f53c01eac8209b06f9fe7f84e7c1" title=" " alt="" coords="1389,756,1556,797"/>
+<area shape="rect" id="node40" href="$classpugi_1_1xml__node.html#a9e0a6dddfe1fefc74bb2b7689376989c" title=" " alt="" coords="1381,887,1564,928"/>
+<area shape="rect" id="node18" href="$classpugi_1_1xml__node.html#a448342425806a4ad8068bf98fd4ff462" title=" " alt="" coords="1129,377,1308,419"/>
+<area shape="rect" id="node19" href="$classpugi_1_1xml__node.html#a17971e2b69c4dd4f45c461ebffe96732" title=" " alt="" coords="1111,443,1327,470"/>
+<area shape="rect" id="node20" href="$classetiss_1_1fault_1_1Fault.html#a6295347f3e3bbdc4ee9f5411ae2da338" title="operator&lt;&lt; can be used." alt="" coords="1153,495,1284,536"/>
+<area shape="rect" id="node33" href="$classetiss_1_1fault_1_1Action.html#a49f3bfd2e62df6346634f33e2bf5a684" title="operator&lt;&lt; can be used." alt="" coords="1149,560,1289,601"/>
+<area shape="rect" id="node21" href="$classetiss_1_1fault_1_1Action.html#a795595425d04c5d73b98cd776669c88e" title="injects a fault. this is especially usefull with Triggers of type TIMERELATIVE" alt="" coords="913,463,1053,504"/>
+<area shape="rect" id="node22" href="$classetiss_1_1fault_1_1Stressor.html#a41c783d0594cf51b8746e7ea2caaa889" title="adds a fault to a static map that can be accessed by static std::map&lt;int32_t,Fault&gt; &amp; faults()." alt="" coords="907,528,1059,569"/>
+<area shape="rect" id="node23" href="$classetiss_1_1fault_1_1Stressor.html#af6bb7d8e283e6f087285f6bcaea92090" title="Checks if the given trigger is valid and calls applyAction." alt="" coords="705,484,857,525"/>
+<area shape="rect" id="node26" href="$classetiss_1_1fault_1_1Stressor.html#a2b282d4fe687a08d02cbc22213a9ac87" title="extracts faults out of the given xml file." alt="" coords="705,560,857,601"/>
+<area shape="rect" id="node24" href="$classetiss_1_1fault_1_1Injector.html#aea938d7cb3d769b1ec0abb19960176df" title=" " alt="" coords="480,481,657,523"/>
+<area shape="rect" id="node25" href="$classetiss_1_1fault_1_1Injector.html#abacecb231c4dde896f31a23290dd3d83" title=" " alt="" coords="220,477,432,519"/>
+<area shape="rect" id="node27" href="$ETISS_8cpp.html#af4642ca3a304b515f095fc31cb5b7826" title=" " alt="" coords="511,589,627,615"/>
+<area shape="rect" id="node28" href="$group__ETISS__Internals.html#ga371c5786faafe2084636cbc2d02d451d" title="Force the initialization of ETISS." alt="" coords="239,594,413,621"/>
+<area shape="rect" id="node31" href="$group__ETISS__Frontend.html#gae0d82705849faff133052591c19f3039" title="Initialize and configure ETISS." alt="" coords="267,649,385,675"/>
+<area shape="rect" id="node29" href="$group__ETISS__Frontend.html#gac9dbcc30c0d390f4b6ffe05257b32807" title="Add a LibraryInterface to the ETISS environment." alt="" coords="23,543,154,570"/>
+<area shape="rect" id="node30" href="$classetiss_1_1CPUCore.html#a804f3252302d7ae49f7918da2871f6ba" title="Create a CPUCore instance." alt="" coords="5,594,172,621"/>
+<area shape="rect" id="node32" href="$classetiss_1_1Initializer.html#a343675aa8ed683e826e1f43dd6eaf949" title="Constructor that initializes ETISS." alt="" coords="27,645,150,687"/>
+<area shape="rect" id="node35" href="$classpugi_1_1xml__node.html#a778c2246fef9964b2d947253a86f2982" title=" " alt="" coords="1135,625,1302,667"/>
+<area shape="rect" id="node36" href="$classpugi_1_1xml__node.html#a106a600eac7d08608f797d034b331fa8" title=" " alt="" coords="1135,691,1302,732"/>
+<area shape="rect" id="node38" href="$classpugi_1_1xml__node.html#a70fa68762aed11c82a1b913571df4394" title=" " alt="" coords="1135,756,1302,797"/>
+<area shape="rect" id="node39" href="$classpugi_1_1xml__node.html#a21134448747e00888df7ecfb174032d3" title=" " alt="" coords="1135,821,1302,863"/>
+<area shape="rect" id="node41" href="$classpugi_1_1xml__node.html#afa78286431f99a0f35b18185e11e28e8" title=" " alt="" coords="1127,887,1310,928"/>
+<area shape="rect" id="node42" href="$classpugi_1_1xml__node.html#a29cc787ee2270e3a71e1d511164621e6" title=" " alt="" coords="1108,953,1329,979"/>
+<area shape="rect" id="node44" href="$classpugi_1_1xml__attribute.html#a957f7613ba25623fa3bdf1c50346b869" title=" " alt="" coords="1145,129,1292,171"/>
+<area shape="rect" id="node47" href="$pugixml_8cpp.html#a376292f4d74bfb179f38bd30dd66c2e4" title=" " alt="" coords="1402,1003,1543,1030"/>
+<area shape="rect" id="node48" href="$classpugi_1_1xml__text.html#a66ebe5bd62e843197305ed68661b0a26" title=" " alt="" coords="1147,1003,1291,1030"/>
+<area shape="rect" id="node49" href="$classpugi_1_1xml__attribute.html#aa9fcffccebda6ae6169e4d17265bd39a" title=" " alt="" coords="1145,1055,1292,1096"/>
+</map>

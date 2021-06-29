@@ -1,0 +1,22 @@
+<map id="etiss::SimpleMemSystem::init_memory" name="etiss::SimpleMemSystem::init_memory">
+<area shape="rect" id="node1" title=" " alt="" coords="5,192,193,233"/>
+<area shape="rect" id="node2" href="$classetiss_1_1SimpleMemSystem.html#a291417b0c79753369b12833f6e01ec0a" title=" " alt="" coords="241,192,429,233"/>
+<area shape="rect" id="node11" href="$classetiss_1_1SimpleMemSystem.html#aefc686bc2032a649710e983be10a1889" title=" " alt="" coords="477,83,665,124"/>
+<area shape="rect" id="node13" href="$pugixml_8cpp.html#a422d054a9e9fa1f5546a8365cd1d757b" title=" " alt="" coords="312,401,359,427"/>
+<area shape="rect" id="node3" href="$classetiss_1_1SimpleMemSystem.html#a6b36fe69207d5c7f17653ee871dfbe93" title=" " alt="" coords="713,5,901,47"/>
+<area shape="rect" id="node6" href="$namespaceetiss.html#afd320e98bf6a5e2c0d8ffde5dd28dd35" title="write log message at the given level." alt="" coords="1003,198,1084,225"/>
+<area shape="rect" id="node8" href="$namespaceetiss.html#abea8444fc010e2490f2486e2ededde88" title="Get reference of the global ETISS configuration object." alt="" coords="767,223,848,250"/>
+<area shape="rect" id="node9" href="$classetiss_1_1Configuration.html#ad8c43846d16752474dfab08a50e135ad" title="template function to read the value of a configuration key." alt="" coords="719,173,896,199"/>
+<area shape="rect" id="node10" href="$classetiss_1_1Configuration.html#a8ff4ddfe1936f2edbda7f85c60a78180" title="template function to set the value of a configuration key." alt="" coords="483,274,659,301"/>
+<area shape="rect" id="node4" href="$classetiss_1_1MemSegment.html#a95eb8359827ed7784c0eb549d6e35705" title=" " alt="" coords="949,13,1137,39"/>
+<area shape="rect" id="node5" href="$____clang__cuda__device__functions_8h.html#a9029c71f6180d7be8232d136ddc4bbb1" title=" " alt="" coords="1202,13,1281,39"/>
+<area shape="rect" id="node7" href="$namespaceetiss.html#a5d23a51a17c09f1b863c601d4454f99b" title="conversion of type T to std::string." alt="" coords="1185,198,1297,225"/>
+<area shape="rect" id="node12" href="$opencl-c_8h.html#a33dd08f08ca9bd0ca06b1cb16a07281e" title="Return the length of vector p, i.e., sqrt(p.x2 + p.y 2 + ...)" alt="" coords="776,71,839,98"/>
+<area shape="rect" id="node14" href="$pugixml_8cpp.html#a54bf2719c7797e72531b07a644adb3d1" title=" " alt="" coords="516,375,627,402"/>
+<area shape="rect" id="node16" href="$pugixml_8cpp.html#a499b0ece1124e9db443c633394439b0c" title=" " alt="" coords="536,477,607,503"/>
+<area shape="rect" id="node20" href="$pugixml_8cpp.html#aba284a56e212323a9d1c44fef9a804e5" title=" " alt="" coords="533,426,610,453"/>
+<area shape="rect" id="node15" href="$pugixml_8cpp.html#a707f8b52c3f96c1fe49c8d4117873139" title=" " alt="" coords="742,375,873,402"/>
+<area shape="rect" id="node17" href="$pugixml_8cpp.html#aed4d651cf1c41b688ffc70804b49c6b0" title=" " alt="" coords="768,527,847,554"/>
+<area shape="rect" id="node19" href="$opencl-c_8h.html#a6b49812536c8306c3faf55c476285b35" title="Returns 0.0 if x &lt; edge, otherwise it returns 1.0." alt="" coords="782,477,833,503"/>
+<area shape="rect" id="node18" href="$pugixml_8cpp.html#aab8f818e90a34b18c1da140588eca88d" title=" " alt="" coords="1015,477,1071,503"/>
+</map>

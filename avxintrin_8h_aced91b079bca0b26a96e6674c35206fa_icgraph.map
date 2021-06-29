@@ -1,0 +1,8 @@
+<map id="_mm256_set_epi32" name="_mm256_set_epi32">
+<area shape="rect" id="node1" title="Constructs a 256&#45;bit integer vector initialized with the specified 32&#45;bit integral values." alt="" coords="465,97,615,123"/>
+<area shape="rect" id="node2" href="$avxintrin_8h.html#af4aae99a61d0c026b106cf4550691dca" title="Constructs a 256&#45;bit integer vector of [8 x i32], with each of the 32&#45;bit integral vector elements se..." alt="" coords="260,71,417,98"/>
+<area shape="rect" id="node6" href="$avxintrin_8h.html#aa5d611580cf021e18c1029f1fdc04130" title="Constructs a 256&#45;bit integer vector, initialized in reverse order with the specified 32&#45;bit integral ..." alt="" coords="261,122,416,149"/>
+<area shape="rect" id="node3" href="$avx512vlcdintrin_8h.html#ada3385e70e8afbf74a722842c8a2f23a" title=" " alt="" coords="21,5,196,47"/>
+<area shape="rect" id="node4" href="$avx512vlintrin_8h.html#a398023c0837445a4081834325af3040f" title=" " alt="" coords="9,71,209,98"/>
+<area shape="rect" id="node5" href="$avx512vlintrin_8h.html#a7942ad8d6f31d664a39f7e046240ae53" title=" " alt="" coords="5,122,212,149"/>
+</map>

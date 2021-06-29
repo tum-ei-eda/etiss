@@ -1,0 +1,3 @@
+<map id="etiss::fault::Trigger::resolveTime" name="etiss::fault::Trigger::resolveTime">
+<area shape="rect" id="node1" title="this function calculates in case of a TIMERELATIVE Trigger a constant TIME trigger" alt="" coords="5,29,148,71"/>
+</map>

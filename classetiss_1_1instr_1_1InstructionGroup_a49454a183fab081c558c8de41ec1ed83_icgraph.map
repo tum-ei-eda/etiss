@@ -1,0 +1,8 @@
+<map id="etiss::instr::InstructionGroup::addTo" name="etiss::instr::InstructionGroup::addTo">
+<area shape="rect" id="node1" title=" " alt="" coords="668,49,835,90"/>
+<area shape="rect" id="node2" href="$classetiss_1_1instr_1_1InstructionClass.html#a3d4c825b320dead140adb63e7099914d" title=" " alt="" coords="453,49,620,90"/>
+<area shape="rect" id="node3" href="$classetiss_1_1instr_1_1InstructionCollection.html#a9540933b96f577488e0a15ce43ebc09e" title=" " alt="" coords="239,49,405,90"/>
+<area shape="rect" id="node4" href="$classOR1KArch.html#a15d284f69a3a0db548e75063c48ff145" title="called to add instructions to the instruction set" alt="" coords="15,5,181,32"/>
+<area shape="rect" id="node5" href="$classRISCVArch.html#ac984aa0e1c086f4460b30644b69bda42" title="This function is called during CPUArch initialization." alt="" coords="14,56,182,83"/>
+<area shape="rect" id="node6" href="$classRISCV64Arch.html#a4b479437ae53be96d92b30aa50c28155" title="This function is called during CPUArch initialization." alt="" coords="5,107,191,133"/>
+</map>

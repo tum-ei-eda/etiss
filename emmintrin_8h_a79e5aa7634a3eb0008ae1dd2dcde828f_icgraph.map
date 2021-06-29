@@ -1,0 +1,5 @@
+<map id="_mm_madd_epi16" name="_mm_madd_epi16">
+<area shape="rect" id="node1" title="Multiplies the corresponding elements of two 128&#45;bit signed [8 x i16] vectors, producing eight interm..." alt="" coords="245,31,388,57"/>
+<area shape="rect" id="node2" href="$avx512vlbwintrin_8h.html#a5a4ace3fc3b9687eeaf14bdaa8e5175a" title=" " alt="" coords="9,5,194,32"/>
+<area shape="rect" id="node3" href="$avx512vlbwintrin_8h.html#ae42d59a996ce7e22465a54de105deac1" title=" " alt="" coords="5,56,197,83"/>
+</map>

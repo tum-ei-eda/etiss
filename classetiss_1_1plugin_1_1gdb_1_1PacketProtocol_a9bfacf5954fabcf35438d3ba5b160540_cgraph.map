@@ -1,0 +1,9 @@
+<map id="etiss::plugin::gdb::PacketProtocol::tryReadPacket" name="etiss::plugin::gdb::PacketProtocol::tryReadPacket">
+<area shape="rect" id="node1" title=" " alt="" coords="5,123,232,164"/>
+<area shape="rect" id="node2" href="$classetiss_1_1plugin_1_1gdb_1_1Connection.html#a88e86354ac91b1743cb2ae776b05861c" title=" " alt="" coords="290,5,477,47"/>
+<area shape="rect" id="node3" href="$GDBConnection_8cpp.html#a6572eb9068c6f29e6607f55e35d4daf0" title=" " alt="" coords="300,71,467,98"/>
+<area shape="rect" id="node4" href="$classetiss_1_1plugin_1_1gdb_1_1Connection.html#abab97df0e7b431c1c4d3ee9234c8d0e8" title=" " alt="" coords="280,123,487,164"/>
+<area shape="rect" id="node5" href="$classetiss_1_1plugin_1_1gdb_1_1Connection.html#aeaba2fdc2a059e2f6db8b11619e9e92a" title=" " alt="" coords="316,188,451,229"/>
+<area shape="rect" id="node6" href="$namespaceetiss_1_1plugin_1_1gdb_1_1hex.html#a0bfff49b4e28c7cbdd30e196f0308a56" title="converts 2 hex characters to a byte" alt="" coords="317,253,450,295"/>
+<area shape="rect" id="node7" href="$namespaceetiss_1_1plugin_1_1gdb_1_1hex.html#ac7090e6054a3b3c729c8f64d15e0df86" title="convert a character to the hex value it represents(0&#45;15)" alt="" coords="535,253,668,295"/>
+</map>

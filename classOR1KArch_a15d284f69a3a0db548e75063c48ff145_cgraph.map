@@ -1,0 +1,15 @@
+<map id="OR1KArch::initInstrSet" name="OR1KArch::initInstrSet">
+<area shape="rect" id="node1" title="called to add instructions to the instruction set" alt="" coords="5,169,172,195"/>
+<area shape="rect" id="node2" href="$classetiss_1_1instr_1_1InstructionCollection.html#a9540933b96f577488e0a15ce43ebc09e" title=" " alt="" coords="220,161,387,203"/>
+<area shape="rect" id="node3" href="$classetiss_1_1instr_1_1InstructionClass.html#a3d4c825b320dead140adb63e7099914d" title=" " alt="" coords="457,128,623,169"/>
+<area shape="rect" id="node11" href="$classetiss_1_1instr_1_1ModedInstructionSet.html#a9ab91eaf635587c39162987d76b610b7" title=" " alt="" coords="435,193,645,235"/>
+<area shape="rect" id="node4" href="$classetiss_1_1instr_1_1InstructionGroup.html#a49454a183fab081c558c8de41ec1ed83" title=" " alt="" coords="720,63,887,104"/>
+<area shape="rect" id="node8" href="$classetiss_1_1instr_1_1VariableInstructionSet.html#a318689a9ecbfe801cdb122a49ec0f916" title=" " alt="" coords="693,128,913,169"/>
+<area shape="rect" id="node5" href="$classetiss_1_1instr_1_1InstructionSet.html#ade1beb277ea98ad471fdcb623f73373c" title=" " alt="" coords="988,5,1155,47"/>
+<area shape="rect" id="node6" href="$namespaceetiss.html#afd320e98bf6a5e2c0d8ffde5dd28dd35" title="write log message at the given level." alt="" coords="1229,42,1311,69"/>
+<area shape="rect" id="node7" href="$namespaceetiss.html#a5d23a51a17c09f1b863c601d4454f99b" title="conversion of type T to std::string." alt="" coords="1359,42,1471,69"/>
+<area shape="rect" id="node9" href="$classetiss_1_1instr_1_1VariableInstructionSet.html#a7ef20b306b0591d24839d51496dc0968" title=" " alt="" coords="961,125,1181,167"/>
+<area shape="rect" id="node10" href="$classetiss_1_1instr_1_1VariableInstructionSet.html#a3fc1a9b2dbc000c31d2bcc15bdca931d" title=" " alt="" coords="961,191,1181,232"/>
+<area shape="rect" id="node12" href="$classetiss_1_1instr_1_1ModedInstructionSet.html#a68118cc10aa53c48c898f143742ef261" title=" " alt="" coords="698,193,909,235"/>
+<area shape="rect" id="node13" href="$classetiss_1_1instr_1_1ModedInstructionSet.html#ace6e14638621794d2a2f894ac2930af1" title=" " alt="" coords="698,259,909,300"/>
+</map>

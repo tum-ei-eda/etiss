@@ -1,0 +1,6 @@
+<map id="translate_fpu" name="translate_fpu">
+<area shape="rect" id="node1" title="translates floating point instructions" alt="" coords="5,31,113,57"/>
+<area shape="rect" id="node2" href="$classetiss_1_1CodeSet.html#a7236f0032933e60e6d9671d155da209d" title=" " alt="" coords="409,5,580,32"/>
+<area shape="rect" id="node3" href="$classetiss_1_1CodePart.html#a4c2d85268d4142cd353d9fbdd802a0d6" title=" " alt="" coords="415,68,574,95"/>
+<area shape="rect" id="node4" href="$OR1KArch__fpu_8cpp.html#aecfa80ec51a765ed7114d9555be773c8" title=" " alt="" coords="161,31,361,57"/>
+</map>

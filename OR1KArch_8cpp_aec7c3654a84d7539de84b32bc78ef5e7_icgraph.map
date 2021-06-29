@@ -1,0 +1,4 @@
+<map id="OR1KArch_mtspr" name="OR1KArch_mtspr">
+<area shape="rect" id="node1" title=" " alt="" coords="252,20,384,47"/>
+<area shape="rect" id="node2" href="$classanonymous__namespace_02OR1KArch_8cpp_03_1_1SPRField.html#a7183f32f087b0c5fd6e0aa90f7ae1f55" title="override this function to implement writes in case of AccessMode::VIRTUAL / AccessMode::PREFER_LAMBDA" alt="" coords="5,5,204,61"/>
+</map>

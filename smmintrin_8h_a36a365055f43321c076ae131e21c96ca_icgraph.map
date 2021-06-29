@@ -1,0 +1,5 @@
+<map id="_mm_min_epi8" name="_mm_min_epi8">
+<area shape="rect" id="node1" title="Compares the corresponding elements of two 128&#45;bit vectors of [16 x i8] and returns a 128&#45;bit vector ..." alt="" coords="225,31,348,57"/>
+<area shape="rect" id="node2" href="$avx512vlbwintrin_8h.html#af636ce59a2cde9b877ae4275cbcc6c15" title=" " alt="" coords="9,5,174,32"/>
+<area shape="rect" id="node3" href="$avx512vlbwintrin_8h.html#adb0aa9732b1510e755209bc73a5a47bb" title=" " alt="" coords="5,56,177,83"/>
+</map>

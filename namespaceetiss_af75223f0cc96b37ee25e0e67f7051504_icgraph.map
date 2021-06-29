@@ -1,0 +1,5 @@
+<map id="etiss::toLogString" name="etiss::toLogString">
+<area shape="rect" id="node1" title="Format the string representation of a value for the log output." alt="" coords="188,31,323,57"/>
+<area shape="rect" id="node2" href="$namespaceetiss.html#a7ae222b0de182878482cda520b94704d" title="additional objects will be converted to a string with toString and are added to the message" alt="" coords="32,5,113,32"/>
+<area shape="rect" id="node3" href="$namespaceetiss.html#ae862d179536926b6caba4a74d86149de" title="Format a list of arguments for the log output." alt="" coords="5,56,140,83"/>
+</map>
