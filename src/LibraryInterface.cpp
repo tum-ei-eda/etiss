@@ -601,3 +601,17 @@ std::shared_ptr<LibraryInterface> LibraryInterface::openSharedLibrary(std::strin
     return nullptr;
 #endif
 }
+
+
+void LibraryInterface::AddSearchPath(const std::string &path)
+{
+#if ETISS_USE_GETPROC
+    int len = (int)path.length() + 1;
+    int newlen = MultiByteToWideChar(CP_ACP, 0, path.c_str(), len, 0, 0);
+    std::vector<wchar_t> buf(newlen);
+    MultiByteToWideChar(CP_ACP, 0, path.c_str(), len, buf.data(), newlen);
+
+    SetDefaultDllDirectories(LOAD_LIBRARY_SEARCH_DEFAULT_DIRS);
+    AddDllDirectory(buf.data());
+#endif
+}
