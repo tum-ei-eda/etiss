@@ -141,6 +141,8 @@ class LibraryInterface
 
     static unsigned getCurrentLibraryVersion();
 
+    static void addSearchPath(const std::string &path);
+
   private:
     std::string name_;
 };

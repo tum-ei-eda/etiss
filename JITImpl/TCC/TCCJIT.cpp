@@ -141,6 +141,10 @@ void *TCCJIT::translate(std::string code, std::set<std::string> headerpaths, std
     {
         tcc_add_symbol(s, sym.first.c_str(), sym.second);
     }
+    for (const auto &jitPath : etiss::jitExtLibPaths())
+    {
+        etiss::LibraryInterface::addSearchPath(etiss::jitFiles() + jitPath);
+    }
 #endif
 
     // init libs
