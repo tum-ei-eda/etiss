@@ -603,7 +603,7 @@ std::shared_ptr<LibraryInterface> LibraryInterface::openSharedLibrary(std::strin
 }
 
 
-void LibraryInterface::AddSearchPath(const std::string &path)
+void LibraryInterface::addSearchPath(const std::string &path)
 {
 #if ETISS_USE_GETPROC
     int len = (int)path.length() + 1;
