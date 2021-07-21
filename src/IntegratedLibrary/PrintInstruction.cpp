@@ -42,7 +42,7 @@ extern "C"
 #include "etiss/CPUArch.h"
 
 //set to 1 if cycles should be printed for each instructions, set to 0 otherwise
-#define WITH_CYCLES 1
+#define WITH_CYCLES 0
 
 using namespace etiss::plugin;
 
