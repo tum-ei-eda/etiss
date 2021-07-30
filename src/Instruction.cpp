@@ -599,7 +599,13 @@ static void HandleCollision(Instruction *instr, Node *&node)
                     if (replInstr) {
                         otherNode->m_delegateNode = new OverlappedNode(replInstr, instr);
                     } else {
-                        etiss::log(etiss::FATALERROR, "OverlappedNode delegate must not be a plain Node");
+                        auto replSpecNode = dynamic_cast<OverlappedNode *>(replacedNode);
+                        if (replSpecNode)
+                        {
+                            otherNode->m_delegateNode = new OverlappedNode(replSpecNode->m_matchInstr, replSpecNode);
+                        } else {
+                            etiss::log(etiss::FATALERROR, "OverlappedNode delegate must not be a plain Node");
+                        }
                     }
                 } else {
                     otherNode->m_delegateNode = new OverlappedNode(instr, replacedNode);
