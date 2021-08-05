@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import os
 import sys
 import csv
 import humanize
@@ -127,16 +128,20 @@ if __name__ == "__main__":
     mems = [d, h, s]
 
     traceFile = sys.argv[2] if len(sys.argv) > 2 else "dBusAccess.csv"
-    with open(traceFile) as f:
-        reader = csv.reader(f, skipinitialspace=True, delimiter=';')
-        for r in reader:
-            adr = int(r[2], 16)
-            for mem in mems:
-                if mem.contains(adr):
-                    mem.trace(adr)
 
-    for mem in mems:
-        print(mem.stats())
+    trace_available = False
+    if os.path.exists(traceFile):
+        trace_available = True
+        with open(traceFile) as f:
+            reader = csv.reader(f, skipinitialspace=True, delimiter=';')
+            for r in reader:
+                adr = int(r[2], 16)
+                for mem in mems:
+                    if mem.contains(adr):
+                        mem.trace(adr)
+
+        for mem in mems:
+            print(mem.stats())
 
     romsize = sum([staticSizes[k] for k in staticSizes if k.startswith("rom_")])
     ramsize = sum([staticSizes[k] for k in staticSizes if k.startswith("ram_")])
@@ -147,8 +152,8 @@ if __name__ == "__main__":
     print("  read-only data: " + printSz(staticSizes["rom_rodata"]))
     print("  code:           " + printSz(staticSizes["rom_code"]))
     print("  other required: " + printSz(staticSizes["rom_misc"]))
-    print("RAM usage:        " + printSz(ramsize))
+    print("RAM usage:        " + (printSz(ramsize) if trace_available else ">= " + printSz(ramsize) + " [Warning: stack and heap usage not included]"))
     print("  data:           " + printSz(staticSizes["ram_data"]))
     print("  zero-init data: " + printSz(staticSizes["ram_zdata"]))
-    print("  stack:          " + printSz(s.usage()))
-    print("  heap:           " + printSz(h.usage()))
+    print("  stack:          " + (printSz(s.usage()) if trace_available else "unknown (missing trace file)"))
+    print("  heap:           " + (printSz(h.usage()) if trace_available else "unknown (missing trace file)"))
