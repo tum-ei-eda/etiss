@@ -4,7 +4,7 @@
 extern "C"
 {
     uint32_t handleResources(uint32_t *resource_time, 
-							 uint32_t (*resources)[ETISS_MAX_RESOURCES],
+							 uint32_t (*resources)[2],
 							 uint32_t num_stages,
                              uint32_t *num_resources, ETISS_CPU *cpu)
     {

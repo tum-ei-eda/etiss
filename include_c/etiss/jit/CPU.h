@@ -56,7 +56,7 @@
 
 #include "etiss/jit/types.h"
 
-#define ETISS_MAX_RESOURCES ((int)100)
+#define ETISS_MAX_RESOURCES ((int)10)
 
 #ifdef __cplusplus
 extern "C"

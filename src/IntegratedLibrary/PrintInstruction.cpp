@@ -135,8 +135,8 @@ extern "C"
         //Check if resource calculation is turned on by computing max resources
         etiss_uint64 max = 0;
         etiss_uint64 max_resource1 = 0;
-        for (int i = 0; i < 100; i++)
-        //change 100 to ETISS_MAX_RESOURCES
+        for (int i = 0; i < 10; i++)
+        //change 10 to ETISS_MAX_RESOURCES
         {
             if (resources[i])
             {
@@ -179,8 +179,8 @@ extern "C"
         //find out when the instruction is fully executed:
         //check what is the last resource that is being used, and when is it released
         etiss_uint64 max = 0;
-        for (int i = 0; i < 100; i++)
-        //change 100 to ETISS_MAX_RESOURCES
+        for (int i = 0; i < 10; i++)
+        //change 10 to ETISS_MAX_RESOURCES
         {
             if (resources[i])
             {

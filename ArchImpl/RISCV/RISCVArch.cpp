@@ -283,17 +283,17 @@ static InstructionDefinition lui_rd_imm(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -338,17 +338,17 @@ static InstructionDefinition auipc_rd_imm(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -407,17 +407,17 @@ static InstructionDefinition jal_rd_imm(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -502,17 +502,17 @@ static InstructionDefinition jalr_rd_rs1_imm(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -611,17 +611,17 @@ static InstructionDefinition beq_rs1_rs2_imm(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -712,17 +712,17 @@ static InstructionDefinition lb_rd_imm_rs1_(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -815,17 +815,17 @@ static InstructionDefinition sb_rs2_imm_rs1_(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -913,17 +913,17 @@ static InstructionDefinition addi_rd_rs1_imm(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -1007,17 +1007,17 @@ static InstructionDefinition bne_rs1_rs2_imm(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -1108,17 +1108,17 @@ static InstructionDefinition lh_rd_imm_rs1_(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -1211,17 +1211,17 @@ static InstructionDefinition sh_rs2_imm_rs1_(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -1308,17 +1308,17 @@ static InstructionDefinition fence_i_(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -1364,17 +1364,17 @@ static InstructionDefinition csrrw_rd_csr_rs1(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -1715,17 +1715,17 @@ static InstructionDefinition blt_rs1_rs2_imm(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -1826,17 +1826,17 @@ static InstructionDefinition lbu_rd_imm_rs1_(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -1920,17 +1920,17 @@ static InstructionDefinition xori_rd_rs1_imm(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -2014,17 +2014,17 @@ static InstructionDefinition bge_rs1_rs2_imm(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -2125,17 +2125,17 @@ static InstructionDefinition lhu_rd_imm_rs1_(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -2218,17 +2218,17 @@ static InstructionDefinition csrrwi_rd_csr_zimm(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -2425,17 +2425,17 @@ static InstructionDefinition bltu_rs1_rs2_imm(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -2525,17 +2525,17 @@ static InstructionDefinition ori_rd_rs1_imm(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -2609,17 +2609,17 @@ static InstructionDefinition csrrsi_rd_csr_zimm(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -2825,17 +2825,17 @@ static InstructionDefinition bgeu_rs1_rs2_imm(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -2925,17 +2925,17 @@ static InstructionDefinition andi_rd_rs1_imm(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -3009,17 +3009,17 @@ static InstructionDefinition csrrci_rd_csr_zimm(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -3217,17 +3217,17 @@ static InstructionDefinition lw_rd_imm_rs1_(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -3320,17 +3320,17 @@ static InstructionDefinition sw_rs2_imm_rs1_(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -3418,17 +3418,17 @@ static InstructionDefinition slti_rd_rs1_imm(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -3524,17 +3524,17 @@ static InstructionDefinition csrrs_rd_csr_rs1(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -3736,17 +3736,17 @@ static InstructionDefinition flw_rd_imm_xrs1_(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -3850,17 +3850,17 @@ static InstructionDefinition fsw_rs2_imm_xrs1_(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -3948,17 +3948,17 @@ static InstructionDefinition sltiu_rd_rs1_imm(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -4054,17 +4054,17 @@ static InstructionDefinition csrrc_rd_csr_rs1(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -4266,17 +4266,17 @@ static InstructionDefinition fld_rd_imm_rs1_(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -4380,17 +4380,17 @@ static InstructionDefinition fsd_rs2_imm_rs1_(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -4484,17 +4484,17 @@ static InstructionDefinition fmadd_s_rd_frs1_frs2_frs3(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -4622,17 +4622,17 @@ static InstructionDefinition fmsub_s_rd_frs1_frs2_frs3(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -4760,17 +4760,17 @@ static InstructionDefinition fnmadd_s_rd_frs1_frs2_frs3(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -4898,17 +4898,17 @@ static InstructionDefinition fnmsub_s_rd_frs1_frs2_frs3(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -5036,17 +5036,17 @@ static InstructionDefinition fmadd_d_rd_frs1_frs2_frs3(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -5144,17 +5144,17 @@ static InstructionDefinition fmsub_d_rd_frs1_frs2_frs3(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -5252,17 +5252,17 @@ static InstructionDefinition fnmadd_d_rd_frs1_frs2_frs3(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -5360,17 +5360,17 @@ static InstructionDefinition fnmsub_d_rd_frs1_frs2_frs3(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -5463,17 +5463,17 @@ static InstructionDefinition slli_rd_rs1_shamt(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -5538,17 +5538,17 @@ static InstructionDefinition sll_rd_rs1_rs2(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {4, 5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {4, 5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 2, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 2, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {4, 5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {4, 5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 2, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 2, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -5604,17 +5604,17 @@ static InstructionDefinition srli_rd_rs1_shamt(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -5679,17 +5679,17 @@ static InstructionDefinition srl_rd_rs1_rs2(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -5745,17 +5745,17 @@ static InstructionDefinition add_rd_rs1_rs2(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -5806,17 +5806,17 @@ static InstructionDefinition slt_rd_rs1_rs2(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -5893,17 +5893,17 @@ static InstructionDefinition sltu_rd_rs1_rs2(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -5970,17 +5970,17 @@ static InstructionDefinition xor_rd_rs1_rs2(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -6031,17 +6031,17 @@ static InstructionDefinition or_rd_rs1_rs2(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -6092,17 +6092,17 @@ static InstructionDefinition and_rd_rs1_rs2(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -6138,17 +6138,17 @@ static InstructionDefinition uret_(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -6198,17 +6198,17 @@ static InstructionDefinition fadd_s_rd_frs1_frs2(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -6326,17 +6326,17 @@ static InstructionDefinition srai_rd_rs1_shamt(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -6401,17 +6401,17 @@ static InstructionDefinition sra_rd_rs1_rs2(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -6467,17 +6467,17 @@ static InstructionDefinition sub_rd_rs1_rs2(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -6525,17 +6525,17 @@ static InstructionDefinition fcvt_s_d_rd_frs1(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -6594,17 +6594,17 @@ static InstructionDefinition fence_(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -6637,17 +6637,17 @@ static InstructionDefinition ecall_(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -6678,17 +6678,17 @@ static InstructionDefinition ebreak_(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -6718,17 +6718,17 @@ static InstructionDefinition sret_(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -6764,17 +6764,17 @@ static InstructionDefinition wfi_(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -6820,17 +6820,17 @@ static InstructionDefinition fmul_s_rd_frs1_frs2(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -6933,17 +6933,17 @@ static InstructionDefinition mret_(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -6988,17 +6988,17 @@ static InstructionDefinition sfence_vma_(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -7050,17 +7050,17 @@ static InstructionDefinition fmul_d_rd_frs1_frs2(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -7153,17 +7153,17 @@ static InstructionDefinition mul_rd_rs1_rs2(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {3}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {3}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {8}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {8}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -7219,17 +7219,17 @@ static InstructionDefinition mulh_rd_rs1_rs2(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -7295,17 +7295,17 @@ static InstructionDefinition mulhsu_rd_rs1_rs2(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -7366,17 +7366,17 @@ static InstructionDefinition mulhu_rd_rs1_rs2(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -7432,17 +7432,17 @@ static InstructionDefinition div_rd_rs1_rs2(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -7545,17 +7545,17 @@ static InstructionDefinition divu_rd_rs1_rs2(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -7617,17 +7617,17 @@ static InstructionDefinition rem_rd_rs1_rs2(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -7730,17 +7730,17 @@ static InstructionDefinition remu_rd_rs1_rs2(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -7803,17 +7803,17 @@ static InstructionDefinition fadd_d_rd_frs1_frs2(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -7910,17 +7910,17 @@ static InstructionDefinition lr_w_rd_rs1(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -7998,17 +7998,17 @@ static InstructionDefinition sc_w_rd_rs1_rs2(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -8104,17 +8104,17 @@ static InstructionDefinition amoswap_w_rd_rs1_rs2_aqu_aq_rel_rl_(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -8203,17 +8203,17 @@ static InstructionDefinition amoadd_w_rd_rs1_rs2_aqu_aq_rel_rl_(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -8311,17 +8311,17 @@ static InstructionDefinition amoxor_w_rd_rs1_rs2_aqu_aq_rel_rl_(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -8419,17 +8419,17 @@ static InstructionDefinition amoand_w_rd_rs1_rs2_aqu_aq_rel_rl_(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -8527,17 +8527,17 @@ static InstructionDefinition amoor_w_rd_rs1_rs2_aqu_aq_rel_rl_(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -8635,17 +8635,17 @@ static InstructionDefinition amomin_w_rd_rs1_rs2_aqu_aq_rel_rl_(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -8769,17 +8769,17 @@ static InstructionDefinition amomax_w_rd_rs1_rs2_aqu_aq_rel_rl_(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -8903,17 +8903,17 @@ static InstructionDefinition amominu_w_rd_rs1_rs2_aqu_aq_rel_rl_(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -9027,17 +9027,17 @@ static InstructionDefinition amomaxu_w_rd_rs1_rs2_aqu_aq_rel_rl_(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -9143,17 +9143,17 @@ static InstructionDefinition fsub_s_rd_frs1_frs2(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -9272,17 +9272,17 @@ static InstructionDefinition fdiv_s_rd_frs1_frs2(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -9397,17 +9397,17 @@ static InstructionDefinition fsqrt_s_rd_frs1(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -9517,17 +9517,17 @@ static InstructionDefinition fsgnj_s_rd_frs1_frs2(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -9602,17 +9602,17 @@ static InstructionDefinition fsgnjn_s_rd_frs1_frs2(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -9687,17 +9687,17 @@ static InstructionDefinition fsgnjx_s_rd_frs1_frs2(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -9772,17 +9772,17 @@ static InstructionDefinition fmin_s_rd_frs1_frs2(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -9866,17 +9866,17 @@ static InstructionDefinition fmax_s_rd_frs1_frs2(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -9961,17 +9961,17 @@ static InstructionDefinition fcvt_w_s_rd_frs1(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -10051,17 +10051,17 @@ static InstructionDefinition fcvt_wu_s_rd_frs1(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -10141,17 +10141,17 @@ static InstructionDefinition feq_s_rd_frs1_frs2(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -10226,17 +10226,17 @@ static InstructionDefinition flt_s_rd_frs1_frs2(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -10315,17 +10315,17 @@ static InstructionDefinition fle_s_rd_frs1_frs2(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -10396,17 +10396,17 @@ static InstructionDefinition fclass_s_rd_frs1(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -10447,17 +10447,17 @@ static InstructionDefinition fmv_x_w_rd_frs1(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -10506,17 +10506,17 @@ static InstructionDefinition fcvt_s_w_rd_rs1(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -10581,17 +10581,17 @@ static InstructionDefinition fcvt_s_wu_rd_rs1(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -10653,17 +10653,17 @@ static InstructionDefinition fmv_w_x_rd_rs1(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -10727,17 +10727,17 @@ static InstructionDefinition fsub_d_rd_frs1_frs2(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -10831,17 +10831,17 @@ static InstructionDefinition fdiv_d_rd_frs1_frs2(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -10931,17 +10931,17 @@ static InstructionDefinition fsqrt_d_rd_frs1(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -11031,17 +11031,17 @@ static InstructionDefinition fsgnj_d_rd_frs1_frs2(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -11121,17 +11121,17 @@ static InstructionDefinition fsgnjn_d_rd_frs1_frs2(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -11211,17 +11211,17 @@ static InstructionDefinition fsgnjx_d_rd_frs1_frs2(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -11296,17 +11296,17 @@ static InstructionDefinition fmin_d_rd_frs1_frs2(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -11380,17 +11380,17 @@ static InstructionDefinition fmax_d_rd_frs1_frs2(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -11464,17 +11464,17 @@ static InstructionDefinition fcvt_d_s_rd_frs1(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -11540,17 +11540,17 @@ static InstructionDefinition feq_d_rd_frs1_frs2(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -11604,17 +11604,17 @@ static InstructionDefinition flt_d_rd_frs1_frs2(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -11668,17 +11668,17 @@ static InstructionDefinition fle_d_rd_frs1_frs2(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -11728,17 +11728,17 @@ static InstructionDefinition fclass_d_rd_frs1(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -11783,17 +11783,17 @@ static InstructionDefinition fcvt_w_d_rd_frs1(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -11852,17 +11852,17 @@ static InstructionDefinition fcvt_wu_d_rd_frs1(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -11921,17 +11921,17 @@ static InstructionDefinition fcvt_d_w_rd_rs1(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -12002,17 +12002,17 @@ static InstructionDefinition fcvt_d_wu_rd_rs1(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -12085,17 +12085,17 @@ static InstructionDefinition c_addi4spn_rd_imm(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -12146,17 +12146,17 @@ static InstructionDefinition c_addi_rs1_imm(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -12213,17 +12213,17 @@ static InstructionDefinition c_nop_(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -12252,17 +12252,17 @@ static InstructionDefinition dii_(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -12303,17 +12303,17 @@ static InstructionDefinition c_slli_rs1_shamt(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -12377,17 +12377,17 @@ static InstructionDefinition c_lw_8_rd_uimm_8_rs1_(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -12446,17 +12446,17 @@ static InstructionDefinition c_li_rd_imm(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -12531,17 +12531,17 @@ static InstructionDefinition c_lwsp_rd_sp_uimm(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -12608,17 +12608,17 @@ static InstructionDefinition c_sw_8_rs2_uimm_8_rs1_(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -12688,17 +12688,17 @@ static InstructionDefinition c_beqz_8_rs1_imm(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -12788,17 +12788,17 @@ static InstructionDefinition c_swsp_rs2_uimm_sp_(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -12873,17 +12873,17 @@ static InstructionDefinition c_jal_imm(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -12962,17 +12962,17 @@ static InstructionDefinition c_fld_rd_uimm_8_rs1_(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -13050,17 +13050,17 @@ static InstructionDefinition c_fldsp_rd_uimm_x2_(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -13135,17 +13135,17 @@ static InstructionDefinition c_lui_rd_imm(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -13226,17 +13226,17 @@ static InstructionDefinition c_addi16sp_imm(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -13313,17 +13313,17 @@ static InstructionDefinition c_flw_rd_uimm_8_rs1_(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -13401,17 +13401,17 @@ static InstructionDefinition c_flwsp_rd_uimm_x2_(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -13483,17 +13483,17 @@ static InstructionDefinition c_srli_8_rs1_shamt(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -13545,17 +13545,17 @@ static InstructionDefinition c_srai_8_rs1_shamt(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -13608,17 +13608,17 @@ static InstructionDefinition c_sub_8_rd_8_rs2(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -13666,17 +13666,17 @@ static InstructionDefinition c_xor_8_rd_8_rs2(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -13724,17 +13724,17 @@ static InstructionDefinition c_or_8_rd_8_rs2(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -13782,17 +13782,17 @@ static InstructionDefinition c_and_8_rd_8_rs2(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -13839,17 +13839,17 @@ static InstructionDefinition c_mv_rd_rs2(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -13886,17 +13886,17 @@ static InstructionDefinition c_jr_rs1(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -13942,17 +13942,17 @@ static InstructionDefinition c_andi_8_rs1_imm(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -14025,17 +14025,17 @@ static InstructionDefinition c_add_rd_rs2(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -14073,17 +14073,17 @@ static InstructionDefinition c_jalr_rs1(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -14121,17 +14121,17 @@ static InstructionDefinition c_ebreak_(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -14186,17 +14186,17 @@ static InstructionDefinition c_j_imm(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -14271,17 +14271,17 @@ static InstructionDefinition c_fsd_rs2_uimm_8_rs1_(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -14343,17 +14343,17 @@ static InstructionDefinition c_fsdsp_rs2_uimm_x2_(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -14423,17 +14423,17 @@ static InstructionDefinition c_bnez_8_rs1_imm(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -14529,17 +14529,17 @@ static InstructionDefinition c_fsw_rs2_uimm_8_rs1_(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -14601,17 +14601,17 @@ static InstructionDefinition c_fswsp_rs2_uimm_x2_(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -14675,17 +14675,17 @@ static InstructionDefinition add8_rs2_rs1_rd(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -14846,17 +14846,17 @@ static InstructionDefinition sub8_rs2_rs1_rd(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -15018,17 +15018,17 @@ static InstructionDefinition smaqa_rs2_rs1_rd(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -15194,17 +15194,17 @@ static InstructionDefinition sll8_rs2_rs1_rd(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -15365,17 +15365,17 @@ static InstructionDefinition smin8_rs2_rs1_rd(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -15597,17 +15597,17 @@ static InstructionDefinition smax8_rs2_rs1_rd(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -15829,17 +15829,17 @@ static InstructionDefinition smax16_rs2_rs1_rd(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
@@ -15981,17 +15981,17 @@ static InstructionDefinition scmple8_rs2_rs1_rd(
  			"etiss_uint32 temp = 0;\n"
  			"etiss_uint8 * tmpbuf = (etiss_uint8 *)&temp;\n"
 			#if RISCV_Pipeline1
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 			#if RISCV_Pipeline2
-			"etiss_uint32 resource_time [100] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
-			"etiss_uint32 resources [100][100] = {{0, 1}, {2}, {5}, {6, 7}};\n"
+			"etiss_uint32 resource_time [10] = {1, 1, 1, 3, 1, 1, 1, 1, 4};\n"
+			"etiss_uint32 resources [4][2] = {{0, 1}, {2}, {5}, {6, 7}};\n"
 			"etiss_uint32 num_stages = 4;\n"
-			"etiss_uint32 num_resources[100] = {2, 1, 1, 2};\n"
+			"etiss_uint32 num_resources [4] = {2, 1, 1, 2};\n"
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
