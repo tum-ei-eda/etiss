@@ -1,7 +1,7 @@
 #
-#	Copyright 2018 Infineon Technologies AG
+#	Copyright 2018 Chair of Electronic Design Automation, TUM
 #
-#	This file is part of ETISS tool, see <https://github.com/tum-ei-eda/etiss>
+#	This file is part of ETISS tool, see <https://gitlab.lrz.de/de-tum-ei-eda-open/etiss>
 #
 #	The initial version of this software has been created with the funding support by the German Federal
 #	Ministry of Education and Research(BMBF) in the project EffektiV under grant 01IS13022.
@@ -28,14 +28,29 @@
 #	POSSIBILITY OF SUCH DAMAGE.
 #
 #
-#	Author: Marc Greim <marc.greim@mytum.de>, Chair of Electronic Design Automation, TUM
+#	Author: Chair of Electronic Design Automation, TUM
 #
 #	Version 0.1
 #
 
+# This file was generated on Thu Jul 12 13:49:55 CEST 2018
+# If necessary please modify this file according to the instructions
+# Contact: eda@tum
 
-#ADD_SUBDIRECTORY(ARMv6M)
-ADD_SUBDIRECTORY(OR1K)
-ADD_SUBDIRECTORY(RISCV)
-ADD_SUBDIRECTORY(RISCV64)
-ADD_SUBDIRECTORY(RV64GCV)
+
+PROJECT(RV64GCV)
+
+ADD_LIBRARY(${PROJECT_NAME} SHARED
+    Encoding.h
+    RV64GCV.h
+    RV64GCVArch.cpp
+    RV64GCVArch.h
+    RV64GCVArchLib.cpp
+    RV64GCVArchSpecificImp.h
+    RV64GCVGDBCore.h
+    RV64GCVMMU.cpp
+    RV64GCVMMU.h
+    RV64GCVTimer.cpp
+    RV64GCVTimer.h
+)
+ETISSPluginArch(${PROJECT_NAME})
