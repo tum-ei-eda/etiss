@@ -3,6 +3,8 @@
 import os
 import sys
 import csv
+import argparse
+import configparser
 import humanize
 import elftools.elf.elffile as elffile
 from elftools.elf.constants import SH_FLAGS
@@ -18,9 +20,13 @@ To produce the memory trace:
 - A file "pulpino_soc.dmem_memtrace.csv" should have been created
 
 Then run this script:
-> ./get_metrics.py ../bin/TARGET_ELF_FILE
+> ./get_metrics.py ../bin/TARGET_ELF_FILE [-i memsegs.ini]
 '''
 
+# Feel free to overwrite these defaults for your needs
+DEFAULT_RAM_START = 0x80000
+DEFAULT_RAM_SIZE = 0x80000
+DEFAULT_STACK_SIZE = 0x4000
 
 class MemRange:
     def __init__(self, name, min, max):
@@ -67,9 +73,6 @@ def parseElf(inFile):
     with open(inFile, "rb") as f:
         e = elffile.ELFFile(f)
 
-        ramStart = e.get_segment(1)['p_paddr']
-        ramSize = e.get_segment(1)['p_memsz']
-
         for s in e.iter_sections():
             if s.name.startswith(".text"):
                 m["rom_code"] += s.data_size
@@ -98,12 +101,10 @@ def parseElf(inFile):
                 for sym in s.iter_symbols():
                     if sym.name == "_heap_start":
                         heapStart = sym["st_value"]
-                    elif sym.name == "_min_stack":
-                        stackSize = sym["st_value"]
             else:
                 print("warning: ignored: " + s.name + " / size: " + str(s.data_size))
 
-    return m, ramStart, ramSize, heapStart, stackSize
+    return m, heapStart
 
 
 def printSz(sz):
@@ -111,12 +112,52 @@ def printSz(sz):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print("Too few arguments\nUsage: " + sys.argv[0] + " elfFile [traceFile]")
-        exit(1)
+    parser = argparse.ArgumentParser()
+    parser.add_argument('elf', metavar='ELF', type=str, nargs=1,
+                    help='The target ELF file')
+    parser.add_argument('--trace', '-t', default="dBusAccess.csv", type=str,
+            help="Path to CSV trace file of memory accesses (default: %(default)s)")
+    parser.add_argument('--ini', '-i', default="", type=str,
+            help="Path to INI file containing simple_mem_system layout (optional)")
+    args = parser.parse_args()
 
-    elfFile = sys.argv[1]
-    staticSizes, ramStart, ramSize, heapStart, stackSize = parseElf(elfFile)
+    elfFile = args.elf[0]
+    traceFile = args.trace
+    memIni = args.ini
+
+    ramStart = DEFAULT_RAM_START
+    ramSize = DEFAULT_RAM_SIZE
+    stackSize = DEFAULT_STACK_SIZE
+
+    if len(memIni) > 0:
+        # Overwrite the default memory layout by parsing the specified INI file
+        #
+        # Example configuration file `memsegs.ini`:
+        #
+        # [IntConfigurations]
+        # simple_mem_system.memseg_origin_00=0x0
+        # simple_mem_system.memseg_length_00=0x100000
+        # simple_mem_system.memseg_origin_01=0x100000
+        # simple_mem_system.memseg_length_01=0x5000000
+        #
+        config = configparser.ConfigParser()
+        config.read(memIni)
+
+        if "IntConfigurations" not in config:
+            raise RuntimeError("Section [IntConfigurations] does not exist in config file " + memCfg)
+
+        cfg = config["IntConfigurations"]
+
+        if len(cfg) != 4:
+            raise RuntimeError("Only 2 memory segments are supported (ROM + RAM)")
+
+        # ROM Start/Size is currently not used
+        # romStart = cfg["simple_mem_system.memseg_origin_00"]
+        # romSize = cfg["simple_mem_system.memseg_length_00"]
+        ramStart = int(cfg["simple_mem_system.memseg_origin_01"], 0)
+        ramSize = int(cfg["simple_mem_system.memseg_length_01"], 0)
+
+    staticSizes, heapStart = parseElf(elfFile)
     if not heapStart:
         raise RuntimeError("did not find heap start")
 
@@ -126,8 +167,6 @@ if __name__ == "__main__":
     h = MemRange("Heap", heapStart, ramStart + ramSize - stackSize)
     s = MemRange("Stack", ramStart + ramSize - stackSize, ramStart + ramSize)
     mems = [d, h, s]
-
-    traceFile = sys.argv[2] if len(sys.argv) > 2 else "dBusAccess.csv"
 
     trace_available = False
     if os.path.exists(traceFile):
