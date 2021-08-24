@@ -107,7 +107,9 @@ def parseElf(inFile):
     return m, heapStart
 
 
-def printSz(sz):
+def printSz(sz, unknown_msg=""):
+    if sz is None:
+            return f"unknown [{unknown_msg}]" if unknown_msg else "unknown"
     return humanize.naturalsize(sz) + " (" + hex(sz) + ")"
 
 
@@ -119,11 +121,14 @@ if __name__ == "__main__":
             help="Path to CSV trace file of memory accesses (default: %(default)s)")
     parser.add_argument('--ini', '-i', default="", type=str,
             help="Path to INI file containing simple_mem_system layout (optional)")
+    parser.add_argument('--out', '-o', metavar='FILE', type=str,
+                        default="", help='''Output CSV file (default: -)''')
     args = parser.parse_args()
 
     elfFile = args.elf[0]
     traceFile = args.trace
     memIni = args.ini
+    csvFile = args.out
 
     ramStart = DEFAULT_RAM_START
     ramSize = DEFAULT_RAM_SIZE
@@ -182,17 +187,35 @@ if __name__ == "__main__":
         for mem in mems:
             print(mem.stats())
 
-    romsize = sum([staticSizes[k] for k in staticSizes if k.startswith("rom_")])
-    ramsize = sum([staticSizes[k] for k in staticSizes if k.startswith("ram_")])
-    ramsize += s.usage() + h.usage()
+    romSize = sum([staticSizes[k] for k in staticSizes if k.startswith("rom_")])
+    ramSize = sum([staticSizes[k] for k in staticSizes if k.startswith("ram_")])
+
+    results = {
+        "rom": romSize,
+        "rom_rodata": staticSizes["rom_rodata"],
+        "rom_code": staticSizes["rom_code"],
+        "rom_misc": staticSizes["rom_misc"],
+        "ram": ramSize + s.usage() + h.usage() if trace_available else ramSize,
+        "ram_data": staticSizes["ram_data"],
+        "ram_zdata": staticSizes["ram_zdata"],
+        "ram_stack": s.usage() if trace_available else None,
+        "ram_heap": h.usage() if trace_available else None
+    }
 
     print("=== Results ===")
-    print("ROM usage:        " + printSz(romsize))
-    print("  read-only data: " + printSz(staticSizes["rom_rodata"]))
-    print("  code:           " + printSz(staticSizes["rom_code"]))
-    print("  other required: " + printSz(staticSizes["rom_misc"]))
-    print("RAM usage:        " + (printSz(ramsize) if trace_available else ">= " + printSz(ramsize) + " [Warning: stack and heap usage not included]"))
-    print("  data:           " + printSz(staticSizes["ram_data"]))
-    print("  zero-init data: " + printSz(staticSizes["ram_zdata"]))
-    print("  stack:          " + (printSz(s.usage()) if trace_available else "unknown (missing trace file)"))
-    print("  heap:           " + (printSz(h.usage()) if trace_available else "unknown (missing trace file)"))
+    print("ROM usage:        " + printSz(results["rom"]))
+    print("  read-only data: " + printSz(results["rom_rodata"]))
+    print("  code:           " + printSz(results["rom_code"]))
+    print("  other required: " + printSz(results["rom_misc"]))
+    print("RAM usage:        " + printSz(results["ram"]) + ("" if trace_available else " [stack and heap usage not included]"))
+    print("  data:           " + printSz(results["ram_data"]))
+    print("  zero-init data: " + printSz(results["ram_zdata"]))
+    print("  stack:          " + printSz(results["ram_stack"], unknown_msg="missing trace file"))
+    print("  heap:           " + printSz(results["ram_heap"], unknown_msg="missing trace file"))
+
+    # Write metrics to file
+    if csvFile:
+        with open(csvFile, 'w') as f:
+            writer = csv.DictWriter(f, fieldnames=results.keys())
+            writer.writeheader()
+            writer.writerow(results)
