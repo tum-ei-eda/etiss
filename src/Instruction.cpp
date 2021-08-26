@@ -549,6 +549,16 @@ public:
         return m_delegateNode->resolve(instr);
     }
 
+    std::string print(std::string indent, I pos, unsigned pfillwidth, bool printunused) override
+    {
+        std::stringstream ss;
+        ss.fill('0');
+        ss << indent << "@0x" << std::hex << std::setw(pfillwidth) << pos << std::dec << " OverlappedNode\n";
+        ss << m_matchInstr->print(indent + "\t", pos, pfillwidth, printunused);
+        ss << m_delegateNode->print(indent + "\t", pos, pfillwidth, printunused);
+        return ss.str();
+    }
+
     Instruction *m_matchInstr;
     Node *m_delegateNode;
 };
@@ -602,7 +612,7 @@ static void HandleCollision(Instruction *instr, Node *&node)
                         auto replSpecNode = dynamic_cast<OverlappedNode *>(replacedNode);
                         if (replSpecNode)
                         {
-                            otherNode->m_delegateNode = new OverlappedNode(replSpecNode->m_matchInstr, replSpecNode);
+                            otherNode->m_delegateNode = new OverlappedNode(instr, replSpecNode);
                         } else {
                             etiss::log(etiss::FATALERROR, "OverlappedNode delegate must not be a plain Node");
                         }
