@@ -23,6 +23,7 @@
 #define __ETISS_SOFTVECTOR_H__
 
 #include "stdint.h"
+#include "softvector.h"
 
 struct ETISS_System;
 struct ETISS_CPU;

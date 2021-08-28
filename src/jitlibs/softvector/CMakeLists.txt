@@ -3,8 +3,6 @@ SET(ETISS_PREFIX ${PROJECT_SOURCE_DIR})
 PROJECT(etiss_softvector)
 
 SET(TARGET_PLATFORM_NAME "riscv")
-SET(INCLUDE_TESTS 0)
-SET(TARGET_ARCH "RV64GCV")
 
 include(FetchContent)
 FetchContent_Declare(softvector_srcs
@@ -17,7 +15,7 @@ if(NOT softvector_srcs_POPULATED)
 	FetchContent_GetProperties(softvector_srcs)
 	set(EXTERNAL_INSTALL_LOCATION ${softvector_srcs_SOURCE_DIR})
 	INSTALL(
-		FILES ${softvector_srcs_SOURCE_DIR}/include/target/${TARGET_PLATFORM_NAME}/softvector.h 
+		FILES ${softvector_srcs_SOURCE_DIR}/include/target/${TARGET_PLATFORM_NAME}/softvector.h
 		DESTINATION include/jit/etiss/jit)
 	SET(SOFTVECTOR_BUILD_DOC OFF)
 endif()
