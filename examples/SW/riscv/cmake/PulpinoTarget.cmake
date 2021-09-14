@@ -36,11 +36,14 @@ MACRO(ADD_EXECUTABLE_PULPINO_INTERNAL TARGET_NAME ADD_PLATFORM_FILES)
     # to forbid cmake running a RISCV program on host for initial compiler-probe
     SET(CMAKE_TRY_COMPILE_TARGET_TYPE "STATIC_LIBRARY")
 
-    SET(CMAKE_EXE_LINKER_FLAGS
-        "${CMAKE_EXE_LINKER_FLAGS} -nostartfiles \
-        -L ${PULPINO_LIB}/ref/ \
-        -T ${PULPINO_LIB_TUMEDA}/link.ld"
-    )
+    # prevent linker argument duplicates when calling macro for multiple targets
+    IF(NOT PULPINO_MACRO_ALREADY_EXECUTED)
+        SET(CMAKE_EXE_LINKER_FLAGS
+            "${CMAKE_EXE_LINKER_FLAGS} -nostartfiles \
+            -L ${PULPINO_LIB}/ref/ \
+            -T ${PULPINO_LIB_TUMEDA}/link.ld"
+        )
+    ENDIF()
 
     SET(CMAKE_TOOLCHAIN_FILE
         "${PULPINO_LIB_TUMEDA}/toolchain.cmake"
@@ -73,13 +76,17 @@ MACRO(ADD_EXECUTABLE_PULPINO_INTERNAL TARGET_NAME ADD_PLATFORM_FILES)
     IF(NOT PULPINO_HEAP_SIZE)
         SET(PULPINO_HEAP_SIZE 0x4000)
     ENDIF()
-    SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} \
-        -Xlinker --defsym=PULPINO_ROM_START=${PULPINO_ROM_START} \
-        -Xlinker --defsym=PULPINO_ROM_SIZE=${PULPINO_ROM_SIZE} \
-        -Xlinker --defsym=PULPINO_RAM_START=${PULPINO_RAM_START} \
-        -Xlinker --defsym=PULPINO_RAM_SIZE=${PULPINO_RAM_SIZE} \
-        -Xlinker --defsym=PULPINO_STACK_SIZE=${PULPINO_STACK_SIZE} \
-    ")
+    # prevent linker argument duplicates when calling macro for multiple targets
+    IF(NOT PULPINO_MACRO_ALREADY_EXECUTED)
+        SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} \
+            -Xlinker --defsym=PULPINO_ROM_START=${PULPINO_ROM_START} \
+            -Xlinker --defsym=PULPINO_ROM_SIZE=${PULPINO_ROM_SIZE} \
+            -Xlinker --defsym=PULPINO_RAM_START=${PULPINO_RAM_START} \
+            -Xlinker --defsym=PULPINO_RAM_SIZE=${PULPINO_RAM_SIZE} \
+            -Xlinker --defsym=PULPINO_STACK_SIZE=${PULPINO_STACK_SIZE} \
+        ")
+        SET(PULPINO_MACRO_ALREADY_EXECUTED ON)
+    ENDIF()
     MATH(EXPR DD_ARG_SKIP "${PULPINO_RAM_START}" OUTPUT_FORMAT DECIMAL)
 
     SET(ARGS "${ARGN}")
