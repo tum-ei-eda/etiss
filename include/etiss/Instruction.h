@@ -987,7 +987,7 @@ class InstructionDefinition : public etiss::ToString
             etiss_log(
                 FATALERROR,
                 (std::string(
-                     "Instruction defined without a function callback. This instruction definition will be ignored: ") +
+                     "Instruction defined without a function callback: ") +
                  name));
             return;
         }
