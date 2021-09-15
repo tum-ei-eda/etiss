@@ -4,3 +4,4 @@ ENDMACRO()
 
 ADD_SUBDIRECTORY(softfloat)
 ADD_SUBDIRECTORY(resources)
+ADD_SUBDIRECTORY(softvector)
