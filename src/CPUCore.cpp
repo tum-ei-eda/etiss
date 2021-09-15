@@ -54,6 +54,8 @@
 
 using namespace etiss;
 
+
+
 /**
         @see etiss/CPUArch.h
 */
@@ -708,7 +710,8 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
 
     // start execution loop
 
-    float startTime = (float)clock() / CLOCKS_PER_SEC; // TESTING
+
+    startTime = (float)clock() / CLOCKS_PER_SEC; // TESTING
 
     BlockLink *blptr = 0; // pointer to the current block
 
@@ -833,7 +836,8 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
 
 loopexit:
 
-    float endTime = (float)clock() / CLOCKS_PER_SEC;
+    endTime = (float)clock() / CLOCKS_PER_SEC;
+
 
     // execute coroutines end
     for (auto &cor_plugin : cor_array)
@@ -917,3 +921,5 @@ loopexit:
 
     return exception;
 }
+
+
