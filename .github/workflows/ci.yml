@@ -11,7 +11,7 @@ jobs:
       matrix:
         config:
           - {name: "Linux", os: ubuntu-latest, cmakegen: "", llvm: "linux-gnu-ubuntu-20.04", llvm-ext: ".tar.xz", tc: "linux-ubuntu14", tc-ext: ".tar.gz", unpack: "tar xf"}
-          - {name: "Windows", os: windows-latest, cmakegen: "-G \"Unix Makefiles\" -DCMAKE_MAKE_PROGRAM=make", llvm: "", llvm-ext: "", tc: "w64-mingw32", tc-ext: ".zip", unpack: "unzip"}
+          #- {name: "Windows", os: windows-latest, cmakegen: "-G \"Unix Makefiles\" -DCMAKE_MAKE_PROGRAM=make", llvm: "", llvm-ext: "", tc: "w64-mingw32", tc-ext: ".zip", unpack: "unzip"}
           - {name: "Mac", os: macOS-latest, cmakegen: "", llvm: "apple-darwin", llvm-ext: ".tar.xz", tc: "apple-darwin", tc-ext: ".tar.gz", unpack: "tar xf"}
 
     runs-on: ${{ matrix.config.os }}
@@ -38,7 +38,6 @@ jobs:
       if: matrix.config.name == 'Mac'
       run: |
         brew install boost coreutils
-
     - name: Requirements (Linux/Mac)
       if: matrix.config.name == 'Linux' || matrix.config.name == 'Mac'
       working-directory: ${{runner.workspace}}
@@ -48,7 +47,6 @@ jobs:
         wget https://github.com/llvm/llvm-project/releases/download/llvmorg-11.0.0/$LLVM_NAME${{ matrix.config.llvm-ext }}
         ${{ matrix.config.unpack }} $LLVM_NAME${{ matrix.config.llvm-ext }}
         mv $LLVM_NAME llvm-lib
-
     - name: Requirements
       shell: bash
       working-directory: ${{runner.workspace}}
@@ -57,7 +55,6 @@ jobs:
         wget https://static.dev.sifive.com/dev-tools/$TC_NAME${{ matrix.config.tc-ext }}
         ${{ matrix.config.unpack }} $TC_NAME${{ matrix.config.tc-ext }}
         mv $TC_NAME riscv-tc
-
     - name: Create Build Environment
       run: cmake -E make_directory ${{runner.workspace}}/build
 
@@ -67,7 +64,6 @@ jobs:
       run: |
         export LLVM_DIR=${{runner.workspace}}/llvm-lib
         cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_INSTALL_PREFIX=../install
-
     - name: Build
       working-directory: ${{runner.workspace}}/build
       shell: bash
@@ -106,14 +102,51 @@ jobs:
         cmake .. -DRISCV_ELF_GCC_PREFIX=../../../../../riscv-tc -DRISCV_ELF_GCC_BASENAME=riscv64-unknown-elf -DRISCV_ARCH=rv64gc -DRISCV_ABI=lp64d ${{matrix.config.cmakegen}}
         cmake --build . --config $BUILD_TYPE
         cd -
+        cmake -E make_directory ${{runner.workspace}}/install/examples/SW/riscv_dhry/build
+        cd SW/riscv_dhry/build
+        cmake .. -DRISCV_ELF_GCC_PREFIX=../../../../../riscv-tc -DRISCV_ELF_GCC_BASENAME=riscv64-unknown-elf
+        cmake --build . --config $BUILD_TYPE
+        cd -
         cd bare_etiss_processor
         cd build
         cmake ..
         cmake --build . --config $BUILD_TYPE
+    - name: Compress Compiled System
+      run: tar -C ${{runner.workspace}} -cvf ${{runner.workspace}}/etiss.tar install
+
+    - name: Upload Compiled System
+      uses: actions/upload-artifact@v2
+      with:
+        name: etiss-${{matrix.config.name}}.tar
+        path: ${{runner.workspace}}/etiss.tar
+
+
+
+  test:
+    strategy:
+      matrix:
+        config:
+          - {name: "Linux", os: ubuntu-20.04, cmakegen: "", llvm: "linux-gnu-ubuntu-20.04", llvm-ext: ".tar.xz", tc: "linux-ubuntu14", tc-ext: ".tar.gz", unpack: "tar xf"}
+          #- {name: "Windows", os: windows-latest, cmakegen: "-G \"MinGW Makefiles\"", llvm: "", llvm-ext: "", tc: "w64-mingw32", tc-ext: ".zip", unpack: "unzip"}
+          - {name: "Mac", os: macOS-latest, cmakegen: "", llvm: "apple-darwin", llvm-ext: ".tar.xz", tc: "apple-darwin", tc-ext: ".tar.gz", unpack: "tar xf"}
+
+    needs: build
+    runs-on: ${{ matrix.config.os }}
+    name: ${{ matrix.config.name }}
+
+    steps:
+    - name: Fetch Compiled System
+      uses: actions/download-artifact@v2
+      with:
+        name: etiss-${{matrix.config.name}}.tar
+        path: ${{runner.workspace}}
+
+    - name: Unpack Compiled System
+      working-directory: ${{runner.workspace}}
+      run: tar -xf etiss.tar
 
     - name: Test (Linux/Mac)
       working-directory: ${{runner.workspace}}/install/examples/bare_etiss_processor
-      #if: matrix.config.name == 'Linux' || matrix.config.name == 'Mac'
       if: matrix.config.name == 'Linux'
       shell: bash
       run: |
@@ -139,3 +172,258 @@ jobs:
         ./main.exe --vp.elf_file=../../../SW/riscv_cpp/build/riscv_example.elf --jit.type=LLVMJIT --etiss.loglevel=4 -i../../../SW/riscv_cpp/memsegs.ini -pLogger
         ./main.exe --vp.elf_file=../../../SW/riscv/build64/riscv_example.elf --jit.type=TCCJIT --etiss.loglevel=4 -i../../../SW/riscv/memsegs.ini -pLogger
         ./main.exe --vp.elf_file=../../../SW/riscv_cpp/build64/riscv_example.elf --jit.type=TCCJIT --etiss.loglevel=4 -i../../../SW/riscv_cpp/memsegs.ini -pLogger
+
+
+  benchmark:
+    strategy:
+      matrix:
+        run-no: [1, 2, 3, 4, 5]
+        jit-engine: ["tcc", "gcc", "llvm"]
+
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Fetch Compiled System
+      uses: actions/download-artifact@v2
+      with:
+        name: etiss-Linux.tar
+        path: ${{runner.workspace}}
+
+    - name: Unpack Compiled System
+      working-directory: ${{runner.workspace}}
+      run: tar -xf etiss.tar
+
+    - name: create directory to store results
+      working-directory: ${{runner.workspace}}
+      run: mkdir ${{runner.workspace}}/results
+
+    - name: Run Benchmarks
+      working-directory: ${{runner.workspace}}/install/examples/bare_etiss_processor
+      run: |
+        ./run_helper.sh ../SW/riscv_dhry/build/riscv_example ${{matrix.jit-engine}} --vp.stats_file_path=${{runner.workspace}}/results/run.json
+        mv ${{runner.workspace}}/results/run.json ${{runner.workspace}}/results/run_${{matrix.jit-engine}}_${{matrix.run-no}}.json
+
+    - name: Save Benchmark Results
+      uses: actions/upload-artifact@v2
+      with:
+        name: run_${{matrix.jit-engine}}_${{matrix.run-no}}.json
+        path: ${{runner.workspace}}/results/run_${{matrix.jit-engine}}_${{matrix.run-no}}.json
+
+
+
+
+  compare_mips:
+    needs: benchmark
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - uses: actions/checkout@v2
+
+      - name: Fetch results
+        uses: actions/download-artifact@v2
+        with:
+          path: artifacts
+
+      - name: Prepare files
+        run: |
+          rm -rf benchmark_results_new
+          mkdir benchmark_results_new
+          find artifacts -type f -name '*.json' -exec mv {} benchmark_results_new \;
+          find artifacts -type f -name '*.tar' -exec mv {} . \;
+
+      - name: install dependencies
+        run: pip install -r script/requirements.txt
+
+      - name: get old benchmark results
+        uses: actions/checkout@v2
+        with:
+          ref: benchmark_results
+          path: benchmark_results_old
+
+      - name: creating a directory results_ for storing wiki text, issue text and the graph
+        run: |
+            ls benchmark_results_new
+            rm -rf results_
+            mkdir results_
+
+      - name: Run comparison (Push)
+        if: ${{github.event_name == 'push'}}
+        run: python3 script/compare.py benchmark_results_new/run_*.json -o benchmark_results_old/stats_file.json -i results_/issue.md -w results_/wiki.md -gr results_/performance_metrics.svg -g ${{ github.sha }} -r $GITHUB_REPOSITORY
+
+      - name: Run comparison (PR)
+        if: ${{github.event_name == 'pull_request'}}
+        run: python3 script/compare.py benchmark_results_new/run_*.json -o benchmark_results_old/stats_file.json -i results_/issue.md -w results_/wiki.md -gr results_/performance_metrics.svg -g ${{ github.event.pull_request.head.sha }} -r $GITHUB_REPOSITORY
+
+      - name: Deploy results to git
+        if: ${{github.event_name == 'push'}}
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./benchmark_results_old
+          publish_branch: benchmark_results
+          enable_jekyll: true
+
+      - name: uploading benchmark_results
+        uses: actions/upload-artifact@v2
+        with:
+          name: stats_file.json
+
+          path: benchmark_results_old/stats_file.json
+
+      - name: uploading image
+        uses: actions/upload-artifact@v2
+        with:
+          name: performance_metrics.svg
+          path: results_/performance_metrics.svg
+
+      - name: Upload comment text
+        uses: actions/upload-artifact@v2
+        with:
+          name: issue.md
+
+          path: results_/issue.md
+
+      - name: Upload wiki text
+        uses: actions/upload-artifact@v2
+        with:
+          name: wiki.md
+          path: results_/wiki.md
+
+
+
+  display-push:
+    needs: compare_mips
+    runs-on: ubuntu-latest
+    if: ${{github.event_name == 'push'}}
+
+    steps:
+      - name: Get comment text
+        uses: actions/download-artifact@v2
+        with:
+          name: issue.md
+
+      - name: Load comment body
+        id: get-comment-body
+        run: |
+          body=$(cat issue.md)
+          body="${body//'%'/'%25'}"
+          body="${body//$'\n'/'%0A'}"
+          body="${body//$'\r'/'%0D'}"
+          echo ::set-output name=body::$body
+      - name: Find Comment
+        uses: peter-evans/find-comment@v1
+        id: fc
+        with:
+          issue-number: 19
+
+          body-includes: This comment was created automatically, please do not change!
+
+      - name: Create comment
+        if: ${{ steps.fc.outputs.comment-id == 0 }}
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          issue-number: 19
+          edit-mode: replace
+          body: ${{ steps.get-comment-body.outputs.body }}
+
+      - name: Update comment
+        if: ${{ steps.fc.outputs.comment-id != 0 }}
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          comment-id: ${{ steps.fc.outputs.comment-id }}
+          edit-mode: replace
+          body: ${{ steps.get-comment-body.outputs.body }}
+
+  display-pr:
+    needs: compare_mips
+    runs-on: ubuntu-latest
+    if: ${{github.event_name == 'pull_request'}}
+
+    steps:
+      - name: Get comment text
+        uses: actions/download-artifact@v2
+        with:
+          name: issue.md
+
+      - name: Load comment body
+        id: get-comment-body
+        run: |
+          body=$(cat issue.md)
+          body="${body//'%'/'%25'}"
+          body="${body//$'\n'/'%0A'}"
+          body="${body//$'\r'/'%0D'}"
+          echo ::set-output name=body::$body
+      - name: Find Comment
+        uses: peter-evans/find-comment@v1
+        id: fc
+        with:
+          issue-number: ${{github.event.number}}
+          body-includes: This comment was created automatically, please do not change!
+
+      - name: Create comment
+        if: ${{ steps.fc.outputs.comment-id == 0 }}
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          issue-number: ${{github.event.number}}
+          edit-mode: replace
+          body: ${{ steps.get-comment-body.outputs.body }}
+
+      - name: Update comment
+        if: ${{ steps.fc.outputs.comment-id != 0 }}
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          comment-id: ${{ steps.fc.outputs.comment-id }}
+          edit-mode: replace
+          body: ${{ steps.get-comment-body.outputs.body }}
+
+
+
+  display-wiki:
+    needs: compare_mips
+    runs-on: ubuntu-latest
+    if: ${{github.event_name == 'push'}}
+
+    steps:
+      - name: Get comment text
+        uses: actions/download-artifact@v2
+        with:
+          name: wiki.md
+
+      - name: Get performance_metrics.svg
+        uses: actions/download-artifact@v2
+        with:
+          name: performance_metrics.svg
+
+      - name: Update wiki
+        run: |
+          echo "Cloning wiki repo https://github.com/$GITHUB_REPOSITORY.wiki.git"
+          git clone "https://$GITHUB_ACTOR:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY.wiki.git" "wiki"
+          cd wiki
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+          rm -rf ./performance_metrics.svg
+          cp ../wiki.md ./Performance_Metrics.md
+          cp ../performance_metrics.svg ./performance_metrics.svg
+          git add Performance_Metrics.md performance_metrics.svg
+          git commit -m "update perf"
+          git push
+
+
+  delete-artifact:
+    if: always()
+    needs: [display-wiki, display-push, display-pr]
+    runs-on: ubuntu-latest
+    continue-on-error: true
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Delete Artifact
+        uses: jimschubert/delete-artifacts-action@v1
+        with:
+          min_bytes: '0'
+
