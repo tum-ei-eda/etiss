@@ -153,9 +153,6 @@ if __name__ == "__main__":
 
         cfg = config["IntConfigurations"]
 
-        if len(cfg) != 4:
-            raise RuntimeError("Only 2 memory segments are supported (ROM + RAM)")
-
         # ROM Start/Size is currently not used
         # romStart = cfg["simple_mem_system.memseg_origin_00"]
         # romSize = cfg["simple_mem_system.memseg_length_00"]
@@ -195,7 +192,7 @@ if __name__ == "__main__":
         "rom_rodata": staticSizes["rom_rodata"],
         "rom_code": staticSizes["rom_code"],
         "rom_misc": staticSizes["rom_misc"],
-        "ram": ramSize + s.usage() + h.usage() if trace_available else ramSize,
+        "ram": (ramSize + s.usage() + h.usage()) if trace_available else ramSize,
         "ram_data": staticSizes["ram_data"],
         "ram_zdata": staticSizes["ram_zdata"],
         "ram_stack": s.usage() if trace_available else None,
