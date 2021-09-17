@@ -1,6 +1,6 @@
 # ETISS (Extendable Translating Instruction Set Simulator)
 
-[![Build Status](https://travis-ci.org/tum-ei-eda/etiss.svg?branch=master)](https://travis-ci.org/tum-ei-eda/etiss)
+[![Build Status](https://github.com/tum-ei-eda/etiss/workflows/CI/badge.svg)](https://github.com/tum-ei-eda/etiss/blob/master/.github/workflows/ci.yml)
 
 ETISS is a C++ ISS (Instruction Set Simulator), which is designed to
 simulate instructions for a target core on a host computer. It translates
