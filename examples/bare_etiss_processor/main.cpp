@@ -208,7 +208,6 @@ void writeFileJson(float cpu_time, float simulation_time, float cpu_cycle, float
 
      std::ofstream json_output(valid_json_output_path);
      json_output << "{\"mips\": " << mips << ", \"Simulation_Time\": " << simulation_time << ", \"CPU_Time\": " << cpu_time << ", \"CPU_cycle\": " << cpu_cycle << "}" << std::endl;
-     json_output.close();
 
 }
 
