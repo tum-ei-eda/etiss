@@ -1,8 +1,13 @@
-# RISC-V Software Compilation for C++
+# Dhrystone benchmark for evaluating RISC-V compilers' performance
 
-This file contains ctr0, linker script, Makefile (originally from pulpino
-project) for simple RISC-V software compilation using C++. For instructions and more details, see `../riscv/README.md`.
+Header and modules present:
 
-### RISC-V target software
+  dhry.h
+  dhry_1.c
+  dhry_2.c
 
-The target software runs some basic C++ specific tests. Binary code and elf file will be located at `./build`.
+See: https://github.com/Keith-S-Thompson/dhrystone/tree/master/v2.1
+
+# Compilers whose performances are to be analyzed:
+
+GCC, TCC and LLVM

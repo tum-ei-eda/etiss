@@ -43,7 +43,7 @@
 #include "TracePrinter.h"
 #include "etiss/SimpleMemSystem.h"
 #include "etiss/ETISS.h"
-void writeFileJson(float cpu_time, float simulation_time, float cpu_cycle, float mips, std::string valid_json_output_path);// Save the information in JSON format
+
 
 int main(int argc, const char *argv[])
 {
@@ -96,8 +96,6 @@ int main(int argc, const char *argv[])
     std::cout << "  Setting up CPUCore" << std::endl;
     // create a cpu core named core0 with the or1k architecture
     std::string CPUArchName = etiss::cfg().get<std::string>("arch.cpu", "");
-    std::string valid_json_output_path = etiss::cfg().get<std::string>("vp.stats_file_path", "");
-    bool output_json =   etiss::cfg().isSet("vp.stats_file_path");
     etiss::uint64 sa = etiss::cfg().get<uint64_t>("vp.entry_point", dsys.get_startaddr());
 	std::cout << "  CPU start address: 0x" << std::hex << sa << std::dec << std::endl;
     std::shared_ptr<etiss::CPUCore> cpu = etiss::CPUCore::create(CPUArchName, "core0");
@@ -142,21 +140,6 @@ int main(int argc, const char *argv[])
     //float endTime = (float)clock() / CLOCKS_PER_SEC;
     std::cout << "=== Simulation end ===" << std::endl << std::endl;
 
-     //calculations for json file output
-
-    ETISS_CPU *cpu_state = cpu->getState();
-
-    float cpu_time = cpu_state->cpuTime_ps / 1.0E12;
-    float simulation_time = cpu->endTime - cpu->startTime;
-    float cpu_cycle = cpu_state->cpuTime_ps / (float)cpu_state->cpuCycleTime_ps;
-    float mips = (cpu_state->cpuTime_ps / (float)cpu_state->cpuCycleTime_ps / simulation_time / 1.0E6);
-
-   //print out the simulation calculations via json file
-
-    if(output_json==true)
-    {
-        writeFileJson(cpu_time, simulation_time, cpu_cycle, mips, valid_json_output_path);
-    }
 
     // print the exception code returned by the cpu core
     std::cout << "CPU0 exited with exception: 0x" << std::hex << exception << std::dec << ": "
@@ -203,13 +186,5 @@ int main(int argc, const char *argv[])
         break;
     }
 }
-void writeFileJson(float cpu_time, float simulation_time, float cpu_cycle, float mips, std::string valid_json_output_path)// Save the information in JSON format
-{
-
-     std::ofstream json_output(valid_json_output_path);
-     json_output << "{\"mips\": " << mips << ", \"Simulation_Time\": " << simulation_time << ", \"CPU_Time\": " << cpu_time << ", \"CPU_cycle\": " << cpu_cycle << "}" << std::endl;
-
-}
-
 
 
