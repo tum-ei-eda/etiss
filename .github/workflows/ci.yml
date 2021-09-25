@@ -11,11 +11,11 @@ jobs:
       matrix:
         config:
           - {name: "Linux", os: ubuntu-latest, cmakegen: "", llvm: "linux-gnu-ubuntu-20.04", llvm-ext: ".tar.xz", tc: "linux-ubuntu14", tc-ext: ".tar.gz", unpack: "tar xf"}
-          #- {name: "Windows", os: windows-latest, cmakegen: "-G \"Unix Makefiles\" -DCMAKE_MAKE_PROGRAM=make", llvm: "", llvm-ext: "", tc: "w64-mingw32", tc-ext: ".zip", unpack: "unzip"}
-          - {name: "Mac", os: macOS-latest, cmakegen: "", llvm: "apple-darwin", llvm-ext: ".tar.xz", tc: "apple-darwin", tc-ext: ".tar.gz", unpack: "tar xf"}
+          - {name: "Windows", os: windows-latest, cmakegen: "-G \"Unix Makefiles\" -DCMAKE_MAKE_PROGRAM=make", llvm: "", llvm-ext: "", tc: "w64-mingw32", tc-ext: ".zip", unpack: "unzip"}
+          - {name: "Mac", os: macos-10.15, cmakegen: "", llvm: "apple-darwin", llvm-ext: ".tar.xz", tc: "apple-darwin", tc-ext: ".tar.gz", unpack: "tar xf"}
 
     runs-on: ${{ matrix.config.os }}
-    name: ${{ matrix.config.name }}
+    name: ${{ matrix.config.name }}_build
 
     steps:
     - uses: actions/checkout@v2
@@ -81,6 +81,7 @@ jobs:
         cmake -E make_directory ${{runner.workspace}}/install/examples/SW/riscv_cpp/build
         cmake -E make_directory ${{runner.workspace}}/install/examples/SW/riscv_cpp/build64
         cmake -E make_directory ${{runner.workspace}}/install/examples/bare_etiss_processor/build
+        cmake -E make_directory ${{runner.workspace}}/install/examples/SW/riscv_dhry/build
 
     - name: Setup tests
       working-directory: ${{runner.workspace}}/install/examples
@@ -102,15 +103,14 @@ jobs:
         cmake .. -DRISCV_ELF_GCC_PREFIX=../../../../../riscv-tc -DRISCV_ELF_GCC_BASENAME=riscv64-unknown-elf -DRISCV_ARCH=rv64gc -DRISCV_ABI=lp64d ${{matrix.config.cmakegen}}
         cmake --build . --config $BUILD_TYPE
         cd -
-        cmake -E make_directory ${{runner.workspace}}/install/examples/SW/riscv_dhry/build
         cd SW/riscv_dhry/build
-        cmake .. -DRISCV_ELF_GCC_PREFIX=../../../../../riscv-tc -DRISCV_ELF_GCC_BASENAME=riscv64-unknown-elf
+        cmake .. -DRISCV_ELF_GCC_PREFIX=../../../../../riscv-tc -DRISCV_ELF_GCC_BASENAME=riscv64-unknown-elf ${{matrix.config.cmakegen}}
         cmake --build . --config $BUILD_TYPE
         cd -
-        cd bare_etiss_processor
-        cd build
+        cd bare_etiss_processor/build
         cmake ..
         cmake --build . --config $BUILD_TYPE
+
     - name: Compress Compiled System
       run: tar -C ${{runner.workspace}} -cvf ${{runner.workspace}}/etiss.tar install
 
@@ -120,19 +120,17 @@ jobs:
         name: etiss-${{matrix.config.name}}.tar
         path: ${{runner.workspace}}/etiss.tar
 
-
-
   test:
     strategy:
       matrix:
         config:
           - {name: "Linux", os: ubuntu-20.04, cmakegen: "", llvm: "linux-gnu-ubuntu-20.04", llvm-ext: ".tar.xz", tc: "linux-ubuntu14", tc-ext: ".tar.gz", unpack: "tar xf"}
-          #- {name: "Windows", os: windows-latest, cmakegen: "-G \"MinGW Makefiles\"", llvm: "", llvm-ext: "", tc: "w64-mingw32", tc-ext: ".zip", unpack: "unzip"}
-          - {name: "Mac", os: macOS-latest, cmakegen: "", llvm: "apple-darwin", llvm-ext: ".tar.xz", tc: "apple-darwin", tc-ext: ".tar.gz", unpack: "tar xf"}
+          - {name: "Windows", os: windows-latest, cmakegen: "-G \"MinGW Makefiles\"", llvm: "", llvm-ext: "", tc: "w64-mingw32", tc-ext: ".zip", unpack: "unzip"}
+          - {name: "Mac", os: macos-10.15, cmakegen: "", llvm: "apple-darwin", llvm-ext: ".tar.xz", tc: "apple-darwin", tc-ext: ".tar.gz", unpack: "tar xf"}
 
     needs: build
     runs-on: ${{ matrix.config.os }}
-    name: ${{ matrix.config.name }}
+    name: ${{ matrix.config.name }}_test
 
     steps:
     - name: Fetch Compiled System
@@ -423,7 +421,8 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Delete Artifact
-        uses: jimschubert/delete-artifacts-action@v1
+        uses: geekyeggo/delete-artifact@1-glob-support
         with:
-          min_bytes: '0'
+          name: "*"
+          useGlob: true
 
