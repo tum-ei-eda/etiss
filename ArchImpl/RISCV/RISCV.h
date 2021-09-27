@@ -79,6 +79,7 @@ struct RISCV {
 	etiss_uint32 CSR[4096];
 	etiss_uint32 FENCE[4];
 	etiss_uint32 RES;
+	etiss_uint8 V[1025];
 };
 
 #pragma pack(pop) // undo changes
@@ -87,4 +88,3 @@ typedef struct RISCV RISCV; // convenient use of X instead of struct X in genera
 } // extern "C"
 #endif
 #endif
-
