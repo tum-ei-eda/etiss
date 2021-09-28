@@ -54,8 +54,6 @@
 
 using namespace etiss;
 
-void writeFileJson(float cpu_time, float simulation_time, float cpu_cycle, float mips, std::string valid_json_output_path);// Save the information in JSON format
-
 /**
         @see etiss/CPUArch.h
 */
@@ -858,11 +856,12 @@ loopexit:
 
     // declaring path of writing the json file contaiing performance metrics and the boolean which approves of writing the json output
     std::string valid_json_output_path = etiss::cfg().get<std::string>("vp.stats_file_path", "");
-    bool output_json =   etiss::cfg().isSet("vp.stats_file_path");
+    bool output_json = etiss::cfg().isSet("vp.stats_file_path");
 
     if(output_json==true)
     {
-        writeFileJson(cpu_time, simulation_time, cpu_cycle, mips, valid_json_output_path);
+        std::ofstream json_output(valid_json_output_path);
+        json_output << "{\"mips\": " << mips << ", \"Simulation_Time\": " << simulation_time << ", \"CPU_Time\": " << cpu_time << ", \"CPU_cycle\": " << cpu_cycle << "}" << std::endl;
     }
 
 
@@ -938,13 +937,5 @@ loopexit:
 }
 
 
-// Function to write the performance metrics of a run into a json file
-void writeFileJson(float cpu_time, float simulation_time, float cpu_cycle, float mips, std::string valid_json_output_path)// Save the information in JSON format
-{
-
-     std::ofstream json_output(valid_json_output_path);
-     json_output << "{\"mips\": " << mips << ", \"Simulation_Time\": " << simulation_time << ", \"CPU_Time\": " << cpu_time << ", \"CPU_cycle\": " << cpu_cycle << "}" << std::endl;
-
-}
 
 

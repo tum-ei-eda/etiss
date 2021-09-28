@@ -1,4 +1,4 @@
-# Dhrystone benchmark for evaluating RISC-V compilers' performance
+# Dhrystone benchmark for evaluating the simulator's performance
 
 Header and modules present:
 
