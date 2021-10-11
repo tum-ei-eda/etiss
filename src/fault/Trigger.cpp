@@ -117,6 +117,7 @@ Trigger &Trigger::operator=(const Trigger &cpy)
         fieldptr_ = 0;
         param1_ = cpy.param1_;
         break;
+    case TIMERELATIVE: [[fallthrough]];
     case TIME:
         inj_ = cpy.inj_;
         param1_ = cpy.param1_;
@@ -211,6 +212,10 @@ bool Trigger::fired(uint64_t time_ps, etiss::fault::Injector *target_injector)
         return val == param1_;
     }
     break;
+    case TIMERELATIVE:
+        etiss::log(etiss::WARNING, "Trigger::fired: Unresolved TIMERELATIVE  - resolving now", *this, inj_);
+        resolveTime(time_ps);
+        [[fallthrough]];
     case TIME:
         /* TODO: Why doing it like this ? this would always fire after time_ps has reached */
         // Possibly because might be called not exaclty but later than excact trigger time, then late triggering should
@@ -358,6 +363,9 @@ std::string Trigger::toString() const
         break;
     case TIME:
         ss << " type=TIME triggerTime=" << +param1_;
+        break;
+    case TIMERELATIVE:
+        ss << " type=TIMERELATIVE triggerTime=" << +param1_;
         break;
     case NOP:
         ss << " type=NOP";
