@@ -234,10 +234,12 @@ uint64_t fconv_f2d(uint32_t v1, uint8_t mode){
 uint64_t fadd_d(uint64_t v1, uint64_t v2, uint8_t mode) {
     bool nan = (v1&defaultNaNF32UI)==quiet_nan32;
     bool snan = softfloat_isSigNaNF32UI(v1);
-   float64_t v1f{v1},v2f{v2};
+    float64_t v1f{v1},v2f{v2};
     softfloat_roundingMode=rmm_map[mode&0x7];
     softfloat_exceptionFlags=0;
     float64_t r =f64_add(v1f, v2f);
+    (void) nan; //TODO: should there really be no check with nan/snan?
+    (void) snan;
     return r.v;
 }
 
