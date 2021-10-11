@@ -31,7 +31,7 @@ jobs:
       run: |
         choco install boost-msvc-14.2
         choco install wget unzip
-        choco install llvm --version=11.0.0
+        choco install llvm
         choco install make
 
     - name: Requirements (Mac)
