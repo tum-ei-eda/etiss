@@ -27,12 +27,16 @@ jobs:
 
     - name: Requirements (Windows)
       if: matrix.config.name == 'Windows'
+      working-directory: ${{runner.workspace}}
       shell: bash
       run: |
         choco install boost-msvc-14.2
         choco install wget unzip
-        choco install llvm
+        choco install llvm --version=11.0.0 --allow-downgrade
         choco install make
+        ls -lah "/c/ProgramData/Chocolatey/bin"
+        ls -lah "/c/Program Files/LLVM"
+        ln -s "/c/Program Files/LLVM" llvm-lib
 
     - name: Requirements (Mac)
       if: matrix.config.name == 'Mac'
