@@ -231,7 +231,7 @@ void SimpleMemSystem::load_elf()
             mseg->name_ = sname.str();
             mseg->mode_ = static_cast<MemSegment::access_t>(mode);
 
-            mseg->load(seg->get_data() + (mseg->start_addr_ - start_addr), file_size);
+            mseg->load(seg->get_data(), start_addr - mseg->start_addr_, file_size);
 
             std::stringstream msg;
             msg << "Initialized the memory segment " << mseg->name_ << " from ELF-file";
@@ -265,7 +265,7 @@ void SimpleMemSystem::add_memsegment(std::unique_ptr<MemSegment>& mseg, const vo
     msg << "New Memory segment added: " << mseg->name_;
     etiss::log(etiss::INFO, msg.str().c_str());
 
-    mseg->load(raw_data, file_size_bytes);
+    mseg->load(raw_data, 0, file_size_bytes);
 
     msegs_.push_back(std::move(mseg));
 }
