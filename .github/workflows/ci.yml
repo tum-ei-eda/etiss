@@ -34,8 +34,6 @@ jobs:
         choco install wget unzip
         choco install llvm --version=11.0.0 --allow-downgrade
         choco install make
-        ls -lah "/c/ProgramData/Chocolatey/bin"
-        ls -lah "/c/Program Files/LLVM"
         ln -s "/c/Program Files/LLVM" llvm-lib
 
     - name: Requirements (Mac)
