@@ -109,11 +109,11 @@ class MemSegment
             delete[] mem_;
     }
 
-    void load(const void *data, size_t file_size_bytes)
+    void load(const void *data, size_t offset, size_t file_size_bytes)
     {
-        if (data != nullptr && file_size_bytes <= size_)
+        if (data != nullptr && (offset + file_size_bytes) <= size_)
         {
-            memcpy(mem_, data, file_size_bytes);
+            memcpy(mem_ + offset, data, file_size_bytes);
         }
     }
 
