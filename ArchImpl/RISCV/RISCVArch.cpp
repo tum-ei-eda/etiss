@@ -168,7 +168,7 @@ void RISCVArch::resetCPU(ETISS_CPU * cpu,etiss::uint64 * startpointer)
 	riscvcpu->CSR[256] = 15;								
 	riscvcpu->CSR[768] = 15;								
 	riscvcpu->CSR[260] = 4294967295;								
-	riscvcpu->CSR[769] = 1315077;								
+	riscvcpu->CSR[769] = 0x4014112D;
 	riscvcpu->CSR[3088] = 3;								
 	for (int i = 0; i<4 ;i++){
 		riscvcpu->FENCE[i] = 0;
