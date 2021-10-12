@@ -435,7 +435,7 @@ void etiss_loadIniConfigs()
     // preload loglevel
     if (!etiss::cfg().isSet("etiss.loglevel"))
     {
-    etiss::cfg().set<int>("etiss.loglevel", po_simpleIni->GetLongValue("IntConfigurations", "etiss.loglevel", etiss::WARNING));
+        etiss::cfg().set<int>("etiss.loglevel", po_simpleIni->GetLongValue("IntConfigurations", "etiss.loglevel", etiss::WARNING));
     }
     {
         int ll = cfg().get<int>("etiss.loglevel", etiss::WARNING);
@@ -555,6 +555,16 @@ void etiss_loadIniConfigs()
 void etiss::Initializer::loadIniPlugins(std::shared_ptr<etiss::CPUCore> cpu)
 {
     std::map<std::string, std::string> options;
+    for (auto iter = pluginOptions.begin(); iter != pluginOptions.end(); iter++)
+    {
+        if (etiss::cfg().isSet(*iter))
+        {
+            options[*iter] = std::string(vm[std::string(*iter)].as<std::string>());
+            etiss::log(etiss::INFO, *iter + " written from command line\n" + "               options[" +
+                                        std::string(*iter) +
+                                        "] = " + std::string(vm[std::string(*iter)].as<std::string>()) + "\n");
+        }
+    }
     if (vm.count("pluginToLoad"))
     {
         const std::vector<std::string> pluginList = vm["pluginToLoad"].as<std::vector<std::string>>();
@@ -582,15 +592,6 @@ void etiss::Initializer::loadIniPlugins(std::shared_ptr<etiss::CPUCore> cpu)
             }
             etiss::log(etiss::INFO, "  Adding Plugin " + *pluginName + "\n");
             cpu->addPlugin(etiss::getPlugin(*pluginName, options));
-        }
-    }
-    for (auto iter = pluginOptions.begin(); iter != pluginOptions.end(); iter++)
-    {
-        if(etiss::cfg().isSet(*iter))
-        {
-            options[*iter] = std::string(vm[std::string(*iter)].as<std::string>());
-                etiss::log(etiss::INFO, *iter + " written from command line\n" +
-                            "               options[" + std::string(*iter) + "] = " + std::string(vm[std::string(*iter)].as<std::string>()) + "\n");
         }
     }
     if (!po_simpleIni)
