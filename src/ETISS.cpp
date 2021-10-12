@@ -433,7 +433,10 @@ void etiss_loadIniConfigs()
     std::cout << "  Load Configs from .ini files:" << std::endl;
 
     // preload loglevel
+    if (!etiss::cfg().isSet("etiss.loglevel"))
+    {
     etiss::cfg().set<int>("etiss.loglevel", po_simpleIni->GetLongValue("IntConfigurations", "etiss.loglevel", etiss::WARNING));
+    }
     {
         int ll = cfg().get<int>("etiss.loglevel", etiss::WARNING);
         if (ll >= 0 && ll <= etiss::VERBOSE)
