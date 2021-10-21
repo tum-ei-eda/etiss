@@ -36,10 +36,22 @@
 
 PROJECT(TCCJIT)
 
+set(ETISS_TCC_SELINUX OFF CACHE BOOL "Enable SELinux support in the TCC JIT engine")
+
 ### configure tcc architecture
 unset(TCCJIT_ARCH)
 if(UNIX)
     set(TCCJIT_ARCH unix)
+
+    # Try to detect SELinux and check if it is active
+    execute_process(
+        COMMAND getenforce
+        OUTPUT_VARIABLE ETISS_TCC_GETENFORCE_OUT
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    if(ETISS_TCC_GETENFORCE_OUT STREQUAL "Enforcing")
+        set(ETISS_TCC_SELINUX ON)
+    endif()
 elseif(WIN32)
     if( CMAKE_SIZEOF_VOID_P EQUAL 8 )
         set(TCCJIT_ARCH win64)
@@ -53,6 +65,11 @@ endif()
 SET( PREBUILT_TOOL_PKGS_DIR "${PROJECT_SOURCE_DIR}/../toolpkgs")
 
 SET(TCC_PKG tcc-0.9.27)
+
+set(ETISS_TCC_CONFIGURE_ARGS "")
+if(ETISS_TCC_SELINUX)
+    set(ETISS_TCC_CONFIGURE_ARGS ${ETISS_TCC_CONFIGURE_ARGS} --with-selinux)
+endif()
 #download and extract tcc (if neccessary)
 if (NOT EXISTS ${PROJECT_BINARY_DIR}/tcc_${TCCJIT_ARCH})
     if(${TCCJIT_ARCH} STREQUAL unix)
@@ -68,7 +85,7 @@ if (NOT EXISTS ${PROJECT_BINARY_DIR}/tcc_${TCCJIT_ARCH})
         file(REMOVE ${PROJECT_BINARY_DIR}/${TCC_PKG}.tar.bz2)
         file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/tcc_unix/build)
         set(ENV{CFLAGS} "-fPIC -Og -g -Wall")
-        execute_process(COMMAND ${PROJECT_BINARY_DIR}/tcc_unix/configure
+        execute_process(COMMAND ${PROJECT_BINARY_DIR}/tcc_unix/configure ${ETISS_TCC_CONFIGURE_ARGS}
                 WORKING_DIRECTORY ${PROJECT_BINARY_DIR}/tcc_unix/build)
         unset(ENV{CFLAGS})
         execute_process(COMMAND make
