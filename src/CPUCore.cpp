@@ -709,7 +709,7 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
     // start execution loop
 
 
-    startTime = (float)clock() / CLOCKS_PER_SEC; // TESTING
+    float startTime = (float)clock() / CLOCKS_PER_SEC; // TESTING
 
     BlockLink *blptr = 0; // pointer to the current block
 
@@ -834,7 +834,7 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
 
 loopexit:
 
-    endTime = (float)clock() / CLOCKS_PER_SEC;
+    float endTime = (float)clock() / CLOCKS_PER_SEC;
 
 
     // execute coroutines end
