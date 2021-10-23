@@ -173,7 +173,6 @@ jobs:
         ./main.exe --vp.elf_file=../../../SW/riscv/build64/riscv_example.elf --jit.type=TCCJIT --etiss.loglevel=4 -i../../../SW/riscv/memsegs.ini -pLogger
         ./main.exe --vp.elf_file=../../../SW/riscv_cpp/build64/riscv_example.elf --jit.type=TCCJIT --etiss.loglevel=4 -i../../../SW/riscv_cpp/memsegs.ini -pLogger
 
-
   benchmark:
     strategy:
       matrix:
@@ -184,7 +183,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-
     - name: Fetch Compiled System
       uses: actions/download-artifact@v2
       with:
@@ -211,15 +209,11 @@ jobs:
         name: run_${{matrix.jit-engine}}_${{matrix.run-no}}.json
         path: ${{runner.workspace}}/results/run_${{matrix.jit-engine}}_${{matrix.run-no}}.json
 
-
-
-
   compare_mips:
     needs: benchmark
     runs-on: ubuntu-latest
 
     steps:
-
       - uses: actions/checkout@v2
 
       - name: Fetch results
@@ -292,50 +286,48 @@ jobs:
           name: wiki.md
           path: results_/wiki.md
 
-
-
-  display-push:
-    needs: compare_mips
-    runs-on: ubuntu-latest
-    if: ${{github.event_name == 'push'}}
-
-    steps:
-      - name: Get comment text
-        uses: actions/download-artifact@v2
-        with:
-          name: issue.md
-
-      - name: Load comment body
-        id: get-comment-body
-        run: |
-          body=$(cat issue.md)
-          body="${body//'%'/'%25'}"
-          body="${body//$'\n'/'%0A'}"
-          body="${body//$'\r'/'%0D'}"
-          echo ::set-output name=body::$body
-      - name: Find Comment
-        uses: peter-evans/find-comment@v1
-        id: fc
-        with:
-          issue-number: 19
-
-          body-includes: This comment was created automatically, please do not change!
-
-      - name: Create comment
-        if: ${{ steps.fc.outputs.comment-id == 0 }}
-        uses: peter-evans/create-or-update-comment@v1
-        with:
-          issue-number: 19
-          edit-mode: replace
-          body: ${{ steps.get-comment-body.outputs.body }}
-
-      - name: Update comment
-        if: ${{ steps.fc.outputs.comment-id != 0 }}
-        uses: peter-evans/create-or-update-comment@v1
-        with:
-          comment-id: ${{ steps.fc.outputs.comment-id }}
-          edit-mode: replace
-          body: ${{ steps.get-comment-body.outputs.body }}
+#  display-push:
+#    needs: compare_mips
+#    runs-on: ubuntu-latest
+#    if: ${{github.event_name == 'push'}}
+#
+#    steps:
+#      - name: Get comment text
+#        uses: actions/download-artifact@v2
+#        with:
+#          name: issue.md
+#
+#      - name: Load comment body
+#        id: get-comment-body
+#        run: |
+#          body=$(cat issue.md)
+#          body="${body//'%'/'%25'}"
+#          body="${body//$'\n'/'%0A'}"
+#          body="${body//$'\r'/'%0D'}"
+#          echo ::set-output name=body::$body
+#      - name: Find Comment
+#        uses: peter-evans/find-comment@v1
+#        id: fc
+#        with:
+#          issue-number: 19
+#
+#          body-includes: This comment was created automatically, please do not change!
+#
+#      - name: Create comment
+#        if: ${{ steps.fc.outputs.comment-id == 0 }}
+#        uses: peter-evans/create-or-update-comment@v1
+#        with:
+#          issue-number: 19
+#          edit-mode: replace
+#          body: ${{ steps.get-comment-body.outputs.body }}
+#
+#      - name: Update comment
+#        if: ${{ steps.fc.outputs.comment-id != 0 }}
+#        uses: peter-evans/create-or-update-comment@v1
+#        with:
+#          comment-id: ${{ steps.fc.outputs.comment-id }}
+#          edit-mode: replace
+#          body: ${{ steps.get-comment-body.outputs.body }}
 
   display-pr:
     needs: compare_mips
@@ -414,7 +406,7 @@ jobs:
 
   delete-artifact:
     if: always()
-    needs: [display-wiki, display-push, display-pr]
+    needs: [display-wiki, display-pr]
     runs-on: ubuntu-latest
     continue-on-error: true
 
