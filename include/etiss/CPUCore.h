@@ -344,7 +344,6 @@ class CPUCore : public VirtualStructSupport, public etiss::ToString
      * @brief returns the list of all plugins.
      */
     inline std::list<std::shared_ptr<Plugin>> const *getPlugins() { return &plugins; };
-
   public:
     /**
      * @brief Create a CPUCore instance.

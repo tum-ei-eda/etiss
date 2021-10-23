@@ -63,6 +63,8 @@ do
         DO_TRACE=1
     elif [ "$arg" = "gcc" ]; then
         JIT="GCCJIT"
+    elif [ "$arg" = "tcc" ]; then
+        JIT="TCCJIT"
     elif [ "$arg" = "llvm" ]; then
         JIT="LLVMJIT"
     elif [ "$arg" = "vp" ]; then

@@ -708,6 +708,7 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
 
     // start execution loop
 
+
     float startTime = (float)clock() / CLOCKS_PER_SEC; // TESTING
 
     BlockLink *blptr = 0; // pointer to the current block
@@ -835,18 +836,35 @@ loopexit:
 
     float endTime = (float)clock() / CLOCKS_PER_SEC;
 
+
     // execute coroutines end
     for (auto &cor_plugin : cor_array)
     {
         cor_plugin->executionEnd(exception);
     }
 
-    // print some statistics
-    std::cout << "CPU Time: " << (cpu_->cpuTime_ps / 1.0E12) << "s    Simulation Time: " << (endTime - startTime) << "s"
+    // Defining the statistics of measurement and printing them
+    double cpu_time = cpu_->cpuTime_ps / 1.0E12;
+    double simulation_time = endTime - startTime;
+    double cpu_cycle = cpu_->cpuTime_ps / (float)cpu_->cpuCycleTime_ps;
+    double mips = cpu_->cpuTime_ps / (float)cpu_->cpuCycleTime_ps / simulation_time / 1.0E6;
+    std::cout << "CPU Time: " << (cpu_time) << "s    Simulation Time: " << (simulation_time) << "s"
               << std::endl;
-    std::cout << "CPU Cycles (estimated): " << (cpu_->cpuTime_ps / (float)cpu_->cpuCycleTime_ps) << std::endl;
-    std::cout << "MIPS (estimated): "
-              << (cpu_->cpuTime_ps / (float)cpu_->cpuCycleTime_ps / (endTime - startTime) / 1.0E6) << std::endl;
+    std::cout << "CPU Cycles (estimated): " << (cpu_cycle) << std::endl;
+    std::cout << "MIPS (estimated): " << (mips) << std::endl;
+
+
+    // declaring path of writing the json file contaiing performance metrics and the boolean which approves of writing the json output
+    std::string valid_json_output_path = etiss::cfg().get<std::string>("vp.stats_file_path", "");
+    bool output_json = etiss::cfg().isSet("vp.stats_file_path");
+
+    if(output_json==true)
+    {
+        std::ofstream json_output(valid_json_output_path);
+        json_output << "{\"mips\": " << mips << ", \"Simulation_Time\": " << simulation_time << ", \"CPU_Time\": " << cpu_time << ", \"CPU_cycle\": " << cpu_cycle << "}" << std::endl;
+    }
+
+
     etiss_uint64 max = 0;
     for (int i = 0; i < ETISS_MAX_RESOURCES; i++)
     {
@@ -917,3 +935,7 @@ loopexit:
 
     return exception;
 }
+
+
+
+
