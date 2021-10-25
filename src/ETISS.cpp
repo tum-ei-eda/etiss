@@ -62,6 +62,7 @@
 #include <boost/program_options/options_description.hpp>
 #include <boost/program_options/parsers.hpp>
 #include <boost/program_options/variables_map.hpp>
+#include <boost/algorithm/string.hpp>
 
 #if ETISS_USE_DLSYM
 #include <dlfcn.h>
@@ -512,15 +513,27 @@ void etiss_loadIniConfigs()
                     else if (std::string(iter_section.pItem) == "BoolConfigurations")
                     {
                         std::string itemval = iter_value.pItem;
+                        boost::algorithm::to_lower(itemval); // converts itemval to lower case string
                         bool val;
-                        std::istringstream(itemval) >> std::boolalpha >> val;
+
+                        if ((itemval == "true") | (itemval == "yes") | (itemval == "1") | (itemval == "T"))val = true;
+                        else if ((itemval == "false") | (itemval == "no") | (itemval == "0") | (itemval == "F"))val = false;
+                        else etiss::log(etiss::FATALERROR, "Configuration value name could not be parsed as a boolean");
+
                         etiss::cfg().set<bool>(iter_key.pItem, val);
                     }
                     else if (std::string(iter_section.pItem) == "IntConfigurations") // already load!
                     {
                         std::string itemval = iter_value.pItem;
                         std::size_t sz = 0;
-                        double val = std::stod(itemval, &sz);
+                        long long val;
+                        try{
+                            val = std::stoll(itemval, &sz, 0);
+                        }
+                        // catch invalid_argument exception.
+                        catch(const std::invalid_argument){
+                            etiss::log(etiss::FATALERROR, "Configuration value name could not be parsed as an integer");
+                        }
                         etiss::cfg().set<long long>(iter_key.pItem, val);
                         // we use double, as long could have only 32 Bit (e.g. on Windows)
                         // and long long is not offered by the ini library
