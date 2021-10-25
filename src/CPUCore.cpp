@@ -548,14 +548,8 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
     std::shared_ptr<JIT> jiti = jit_; // copy jit because it may change
     if (!jiti)                        // if not present fall back to first loaded jit implementation
     {
-        jiti = etiss::getDefaultJIT();
-        etiss::log(etiss::WARNING,
-                   std::string("Using default jit instance for CPUCore: ") + name_ + " - " + jiti->getName());
-        if (!jiti)
-        {
-            etiss::log(etiss::ERROR, std::string("No JIT available to ") + name_);
+            etiss::log(etiss::FATALERROR, std::string("No JIT available to ") + name_);
             return RETURNCODE::JITERROR;
-        }
     }
 
     // verify jit
