@@ -27,17 +27,20 @@ jobs:
 
     - name: Requirements (Windows)
       if: matrix.config.name == 'Windows'
+      working-directory: ${{runner.workspace}}
       shell: bash
       run: |
         choco install boost-msvc-14.2
         choco install wget unzip
         choco install llvm --version=11.0.0 --allow-downgrade
         choco install make
+        ln -s "/c/Program Files/LLVM" llvm-lib
 
     - name: Requirements (Mac)
       if: matrix.config.name == 'Mac'
       run: |
         brew install boost coreutils
+
     - name: Requirements (Linux/Mac)
       if: matrix.config.name == 'Linux' || matrix.config.name == 'Mac'
       working-directory: ${{runner.workspace}}
@@ -47,6 +50,7 @@ jobs:
         wget https://github.com/llvm/llvm-project/releases/download/llvmorg-11.0.0/$LLVM_NAME${{ matrix.config.llvm-ext }}
         ${{ matrix.config.unpack }} $LLVM_NAME${{ matrix.config.llvm-ext }}
         mv $LLVM_NAME llvm-lib
+
     - name: Requirements
       shell: bash
       working-directory: ${{runner.workspace}}
@@ -55,6 +59,7 @@ jobs:
         wget https://static.dev.sifive.com/dev-tools/$TC_NAME${{ matrix.config.tc-ext }}
         ${{ matrix.config.unpack }} $TC_NAME${{ matrix.config.tc-ext }}
         mv $TC_NAME riscv-tc
+
     - name: Create Build Environment
       run: cmake -E make_directory ${{runner.workspace}}/build
 
@@ -64,6 +69,7 @@ jobs:
       run: |
         export LLVM_DIR=${{runner.workspace}}/llvm-lib
         cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_INSTALL_PREFIX=../install
+
     - name: Build
       working-directory: ${{runner.workspace}}/build
       shell: bash
@@ -162,7 +168,7 @@ jobs:
     #   if: matrix.config.name == 'Windows'
     #   shell: bash
     #   run: |
-    #     PATH=$PATH:/d/a/etiss_new/install/lib/
+    #     PATH=$PATH:/d/a/etiss/install/lib/
     #     cd $BUILD_TYPE
     #     ./main.exe --vp.elf_file=../../../SW/riscv/build/riscv_example.elf --jit.type=TCCJIT --etiss.loglevel=4 -i../../../SW/riscv/memsegs.ini -pLogger
     #     ./main.exe --vp.elf_file=../../../SW/riscv/build/riscv_example.elf --jit.type=LLVMJIT --etiss.loglevel=4 -i../../../SW/riscv/memsegs.ini -pLogger
@@ -170,7 +176,6 @@ jobs:
     #     ./main.exe --vp.elf_file=../../../SW/riscv_cpp/build/riscv_example.elf --jit.type=LLVMJIT --etiss.loglevel=4 -i../../../SW/riscv_cpp/memsegs.ini -pLogger
     #     ./main.exe --vp.elf_file=../../../SW/riscv/build64/riscv_example.elf --jit.type=TCCJIT --etiss.loglevel=4 -i../../../SW/riscv/memsegs.ini -pLogger
     #     ./main.exe --vp.elf_file=../../../SW/riscv_cpp/build64/riscv_example.elf --jit.type=TCCJIT --etiss.loglevel=4 -i../../../SW/riscv_cpp/memsegs.ini -pLogger
-
 
   benchmark:
     strategy:
@@ -182,7 +187,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-
     - name: Fetch Compiled System
       uses: actions/download-artifact@v2
       with:
@@ -209,15 +213,11 @@ jobs:
         name: run_${{matrix.jit-engine}}_${{matrix.run-no}}.json
         path: ${{runner.workspace}}/results/run_${{matrix.jit-engine}}_${{matrix.run-no}}.json
 
-
-
-
   compare_mips:
     needs: benchmark
     runs-on: ubuntu-latest
 
     steps:
-
       - uses: actions/checkout@v2
 
       - name: Fetch results
@@ -290,50 +290,48 @@ jobs:
           name: wiki.md
           path: results_/wiki.md
 
-
-
-  display-push:
-    needs: compare_mips
-    runs-on: ubuntu-latest
-    if: ${{github.event_name == 'push'}}
-
-    steps:
-      - name: Get comment text
-        uses: actions/download-artifact@v2
-        with:
-          name: issue.md
-
-      - name: Load comment body
-        id: get-comment-body
-        run: |
-          body=$(cat issue.md)
-          body="${body//'%'/'%25'}"
-          body="${body//$'\n'/'%0A'}"
-          body="${body//$'\r'/'%0D'}"
-          echo ::set-output name=body::$body
-      - name: Find Comment
-        uses: peter-evans/find-comment@v1
-        id: fc
-        with:
-          issue-number: 19
-
-          body-includes: This comment was created automatically, please do not change!
-
-      - name: Create comment
-        if: ${{ steps.fc.outputs.comment-id == 0 }}
-        uses: peter-evans/create-or-update-comment@v1
-        with:
-          issue-number: 19
-          edit-mode: replace
-          body: ${{ steps.get-comment-body.outputs.body }}
-
-      - name: Update comment
-        if: ${{ steps.fc.outputs.comment-id != 0 }}
-        uses: peter-evans/create-or-update-comment@v1
-        with:
-          comment-id: ${{ steps.fc.outputs.comment-id }}
-          edit-mode: replace
-          body: ${{ steps.get-comment-body.outputs.body }}
+#  display-push:
+#    needs: compare_mips
+#    runs-on: ubuntu-latest
+#    if: ${{github.event_name == 'push'}}
+#
+#    steps:
+#      - name: Get comment text
+#        uses: actions/download-artifact@v2
+#        with:
+#          name: issue.md
+#
+#      - name: Load comment body
+#        id: get-comment-body
+#        run: |
+#          body=$(cat issue.md)
+#          body="${body//'%'/'%25'}"
+#          body="${body//$'\n'/'%0A'}"
+#          body="${body//$'\r'/'%0D'}"
+#          echo ::set-output name=body::$body
+#      - name: Find Comment
+#        uses: peter-evans/find-comment@v1
+#        id: fc
+#        with:
+#          issue-number: 19
+#
+#          body-includes: This comment was created automatically, please do not change!
+#
+#      - name: Create comment
+#        if: ${{ steps.fc.outputs.comment-id == 0 }}
+#        uses: peter-evans/create-or-update-comment@v1
+#        with:
+#          issue-number: 19
+#          edit-mode: replace
+#          body: ${{ steps.get-comment-body.outputs.body }}
+#
+#      - name: Update comment
+#        if: ${{ steps.fc.outputs.comment-id != 0 }}
+#        uses: peter-evans/create-or-update-comment@v1
+#        with:
+#          comment-id: ${{ steps.fc.outputs.comment-id }}
+#          edit-mode: replace
+#          body: ${{ steps.get-comment-body.outputs.body }}
 
   display-pr:
     needs: compare_mips
@@ -354,6 +352,7 @@ jobs:
           body="${body//$'\n'/'%0A'}"
           body="${body//$'\r'/'%0D'}"
           echo ::set-output name=body::$body
+
       - name: Find Comment
         uses: peter-evans/find-comment@v1
         id: fc
@@ -409,10 +408,9 @@ jobs:
           git commit -m "update perf"
           git push
 
-
   delete-artifact:
     if: always()
-    needs: [display-wiki, display-push, display-pr]
+    needs: [display-wiki, display-pr]
     runs-on: ubuntu-latest
     continue-on-error: true
 
@@ -425,4 +423,3 @@ jobs:
         with:
           name: "*"
           useGlob: true
-

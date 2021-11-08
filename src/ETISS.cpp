@@ -1,28 +1,18 @@
 /**
-
         @copyright
-
         <pre>
-
         Copyright 2018 Infineon Technologies AG
-
         This file is part of ETISS tool, see <https://github.com/tum-ei-eda/etiss>.
-
         The initial version of this software has been created with the funding support by the German Federal
         Ministry of Education and Research (BMBF) in the project EffektiV under grant 01IS13022.
-
         Redistribution and use in source and binary forms, with or without modification, are permitted
         provided that the following conditions are met:
-
         1. Redistributions of source code must retain the above copyright notice, this list of conditions and
         the following disclaimer.
-
         2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions
         and the following disclaimer in the documentation and/or other materials provided with the distribution.
-
         3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse
         or promote products derived from this software without specific prior written permission.
-
         THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
         WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
         PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY
@@ -31,24 +21,16 @@
         HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
         NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
         POSSIBILITY OF SUCH DAMAGE.
-
         </pre>
-
         @author Marc Greim <marc.greim@mytum.de>, Chair of Electronic Design Automation, TUM
-
         @date July 29, 2014
-
         @version 0.1
-
 */
 /**
         @file ETISS.cpp
-
         @brief Implementation of etiss/ETISS.h except for
    etiss::preloadLibraries
-
         @detail
-
 */
 
 #include "etiss/ETISS.h"
@@ -434,7 +416,10 @@ void etiss_loadIniConfigs()
     std::cout << "  Load Configs from .ini files:" << std::endl;
 
     // preload loglevel
-    etiss::cfg().set<int>("etiss.loglevel", po_simpleIni->GetLongValue("IntConfigurations", "etiss.loglevel", etiss::WARNING));
+    if (!etiss::cfg().isSet("etiss.loglevel"))
+    {
+        etiss::cfg().set<int>("etiss.loglevel", po_simpleIni->GetLongValue("IntConfigurations", "etiss.loglevel", etiss::WARNING));
+    }
     {
         int ll = cfg().get<int>("etiss.loglevel", etiss::WARNING);
         if (ll >= 0 && ll <= etiss::VERBOSE)
@@ -523,20 +508,13 @@ void etiss_loadIniConfigs()
                     {
                         std::string itemval = iter_value.pItem;
                         std::size_t sz = 0;
+                        long long val;
                         try{
-                            std::cout << std::stoll(itemval) << "\n";
+                            val = std::stoll(itemval, &sz, 0);
                         }
                         // catch invalid_argument exception.
                         catch(const std::invalid_argument){
-                            etiss::log(etiss::FATALERROR, "Configuration value name could not be parsed as a integer");
-                        }
-                        long long val = std::stoll(itemval, &sz, 0);
-                        try{
-                            std::cout << std::stoll(itemval, &sz, 0) << "\n";
-                        }
-                        // catch invalid_argument exception.
-                        catch(const std::invalid_argument){
-                            etiss::log(etiss::FATALERROR, "Configuration value name could not be parsed as a integer");
+                            etiss::log(etiss::FATALERROR, "Configuration value name could not be parsed as an integer");
                         }
                         etiss::cfg().set<long long>(iter_key.pItem, val);
                         // we use double, as long could have only 32 Bit (e.g. on Windows)
@@ -572,6 +550,16 @@ void etiss_loadIniConfigs()
 void etiss::Initializer::loadIniPlugins(std::shared_ptr<etiss::CPUCore> cpu)
 {
     std::map<std::string, std::string> options;
+    for (auto iter = pluginOptions.begin(); iter != pluginOptions.end(); iter++)
+    {
+        if (etiss::cfg().isSet(*iter))
+        {
+            options[*iter] = std::string(vm[std::string(*iter)].as<std::string>());
+            etiss::log(etiss::INFO, *iter + " written from command line\n" + "               options[" +
+                                        std::string(*iter) +
+                                        "] = " + std::string(vm[std::string(*iter)].as<std::string>()) + "\n");
+        }
+    }
     if (vm.count("pluginToLoad"))
     {
         const std::vector<std::string> pluginList = vm["pluginToLoad"].as<std::vector<std::string>>();
@@ -599,15 +587,6 @@ void etiss::Initializer::loadIniPlugins(std::shared_ptr<etiss::CPUCore> cpu)
             }
             etiss::log(etiss::INFO, "  Adding Plugin " + *pluginName + "\n");
             cpu->addPlugin(etiss::getPlugin(*pluginName, options));
-        }
-    }
-    for (auto iter = pluginOptions.begin(); iter != pluginOptions.end(); iter++)
-    {
-        if(etiss::cfg().isSet(*iter))
-        {
-            options[*iter] = std::string(vm[std::string(*iter)].as<std::string>());
-                etiss::log(etiss::INFO, *iter + " written from command line\n" +
-                            "               options[" + std::string(*iter) + "] = " + std::string(vm[std::string(*iter)].as<std::string>()) + "\n");
         }
     }
     if (!po_simpleIni)
