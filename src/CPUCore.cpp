@@ -336,6 +336,8 @@ static bool verifyJITSizeOf(std::string structname, etiss::int32 expected_size, 
                                             "sizeof(") +
                        structname + ");}";
 
+
+
     std::set<std::string> headers;
     headers.insert(etiss::jitFiles());
     // compile
@@ -546,11 +548,12 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
 
     // get JIT instance
     std::shared_ptr<JIT> jiti = jit_; // copy jit because it may change
-    if (!jiti)                        // if not present fall back to first loaded jit implementation
+    if (!jiti)
     {
-            etiss::log(etiss::FATALERROR, std::string("No JIT available to ") + name_);
-            return RETURNCODE::JITERROR;
+        etiss::log(etiss::ERROR, std::string("No JIT available to ") + name_);
+        return RETURNCODE::JITERROR;
     }
+
 
     // verify jit
     if (etiss::cfg().get<bool>("jit.verify", true))
@@ -929,7 +932,6 @@ loopexit:
 
     return exception;
 }
-
 
 
 
