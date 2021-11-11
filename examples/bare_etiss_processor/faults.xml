@@ -1,0 +1,37 @@
+<faults>
+	<fault name="meta">
+	    	<triggers>
+			<trigger type="META_COUNTER">
+		    		<count>1</count>
+				<trigger type="VARIABLEVALUE">
+					<injector>core%i%</injector>
+		    			<field>instructionPointer</field>
+		    			<value>b0</value>
+	    			</trigger>
+			</trigger>
+		</triggers>
+		<actions>
+			<action type="BITFLIP">
+				<injector>core%i%</injector>         
+				<field>R1</field>                    
+				<bit>1</bit>                         
+			</action>
+			<action type="INJECTION">
+		  		<fault name="injected_fault">
+					<triggers>
+						<trigger type="NOP"></trigger>
+						<trigger type="VARIABLEVALUE">
+							<injector>core%i%</injector>
+							<field>instructionPointer</field>
+							<value>b8</value>
+						</trigger>
+					</triggers>
+			  		<actions>
+				  		<action type="NOP">
+				  		</action>	
+			  		</actions>
+		  		</fault>
+	  		</action>
+		</actions>
+	</fault>
+</faults>

@@ -109,14 +109,10 @@ int main(int argc, const char *argv[])
     // reset CPU with a manual start address
     cpu->reset(&sa);
 
-    // add the virtual structure of the cpu to the VirtualStruct root. This allows
-    // to access the field of the cpu from a global context. See
-    // etiss::VirtualStruct::getVirtualStruct() and
-    // etiss::VirtualStruct::getResolvedField(). In this case e.g. the
-    // instructionPointer can be read from a global context by calling
-    // etiss::VirtualStruct::root()->getResolvedField("core0.instructionPointer")
-    // ->read().
-    etiss::VirtualStruct::root()->mountStruct("core0", cpu->getStruct());
+    // bind the cpu's VirtualStruct to etiss' root VirtualStruct and initialize faults
+    // if those where specified in config/cmdline
+    etiss::initialize_virtualstruct(cpu);
+
     std::cout << "=== Finished Setting up test system ===" << std::endl << std::endl;
 
     std::cout << "=== Setting up plug-ins ===" << std::endl;

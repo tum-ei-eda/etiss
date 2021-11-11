@@ -182,3 +182,54 @@ When utilizing **gdbserver** to debug target software.
 ### ETISS output in terminal
 
 ![](etissSnapshot.png "ETISS output in terminal")
+
+## Fault Injection Demo
+
+Usage:
+
+- ./run_helper.sh ELFFILE --faults.xml=/path/to/faults.xml
+
+`faults.xml` Example:
+
+- `[]` are optional attributes
+- `#` is a comment for this example
+
+```
+<faults>                                     # a faults.xml root
+  <fault [name="some name"]>                 # a <fault> has <triggers> and <actions>
+    <triggers>
+      <trigger type="META_COUNTER">          # a <trigger> must have a type of {META_COUNTER, VARIABLEVALUE, TIME, TIMERELATIVE, NOP}
+        <count>1</count>                     # the META_COUNTER here will trigger once its subtrigger fired <count> times
+        <trigger type="VARIABLEVALUE">       # a <trigger> can have a sub <trigger>, awesome!
+          <injector>core%i%</injector>       # the trigger type VARIABLEVALUE needs an <injector> that supplies the triggerable object, bare_etiss_processor constructs "core0" ETISS-FI will replace %i% to the core id "0" by default
+          <field>instructionPointer</field>  # the <field> of "core%i%" should be listened for, here, the instruction pointer
+          <value>b0</value>                  # the <value> that <field>'s value will be compared to as a hexadecimal
+        </trigger>
+      </trigger>
+    </triggers>
+    <actions>
+      <action type="COMMAND">                # an <action> must have a type of {BITFLIP, COMMAND, NOP, INJECTION}, here, Command
+        <injector>core%i%</injector>         # an <action> can have a different <injector> than its <trigger>s, which means, you could trigger on one VirtualStruct and inject into another
+        <command>test</command>              # the COMMAND type is a custom string encoded action the <injector> has to implement, by default no custom actions are supported. Set VirtualStructs::applyCustomAction member to a std::function of your choice and handle the passed string
+      </action>
+      <action type="BITFLIP">                # why not have more than one <action>, an additional "BITFLIP"
+        <injector>core%i%</injector>         # again we need the <injector>
+        <field>R1</field>                    # BITFLIP takes a <field>, here R1 aka X1 in RISC-V, with the CPUCore all ISA-GPRs and the PC are <fields>
+        <bit>1</bit>                         # the target <bit> number
+      </action>
+			<action type="INJECTION">              # now, we inject a new fault as our action.
+				<fault [name="some name"]>
+					<triggers>
+						<trigger type="NOP">
+						</trigger>
+					</triggers>
+					<actions>
+						<action type="NOP">
+						</action>
+					</actions>
+				</fault>
+			</action>
+    </actions>
+  </fault>
+</faults>
+```
