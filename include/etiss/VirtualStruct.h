@@ -217,7 +217,7 @@ class VirtualStruct : public std::enable_shared_from_this<VirtualStruct>, public
                                  ///< "SR" OR1K CPU register: SPR[0][17]
         const std::string prettyname_; ///< alternative/human readable name of the field. e.g. representing the "SR"
                                        ///< OR1K CPU register: "SR" or "SupervisorRegister"
-        const int flags_;       ///< read write flags as specified by the static const int parameters of Field: R,W,L
+        int flags_;             ///< read write flags as specified by the static const int parameters of Field: R,W,L
         const size_t width_;    ///< width in bytes (rounded up if neccessary)
         const size_t bitwidth_; ///< width in bits
         const AccessMode accessMode_;

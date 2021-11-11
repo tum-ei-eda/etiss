@@ -35,6 +35,7 @@
 
 #include "etiss/ETISS.h"
 #include "etiss/fault/Stressor.h"
+#include "etiss/IntegratedLibrary/InstructionAccurateCallback.h"
 
 #include <csignal>
 #include <cstring>
@@ -755,6 +756,7 @@ void etiss_initialize(const std::vector<std::string>& args, bool forced = false)
             ("vp.sw_binary_rom", po::value<std::string>(), "Path to binary file to be loaded into ROM.")
             ("vp.elf_file", po::value<std::string>(), "Load ELF file.")
             ("vp.stats_file_path", po::value<std::string>(), "Path where the output json file gets stored after bare processor is run.")
+            ("faults.xml", po::value<std::string>(), "Path to faults XML file.")
             ("simple_mem_system.print_dbus_access", po::value<bool>(), "Traces accesses to the data bus.")
             ("simple_mem_system.print_ibus_access", po::value<bool>(), "Traces accesses to the instruction bus.")
             ("simple_mem_system.print_dbgbus_access", po::value<bool>(), "Traces accesses to the debug bus.")
@@ -869,19 +871,6 @@ void etiss_initialize(const std::vector<std::string>& args, bool forced = false)
             }
         }
     }
-
-    // load fault files
-    {
-        std::string faults = cfg().get<std::string>("faults.xml", "");
-        if (!faults.empty())
-        {
-            std::list<std::string> ffs = etiss::split(faults, ';');
-            for (auto ff : ffs)
-            {
-                etiss::fault::Stressor::loadXML(ff);
-            }
-        }
-    }
 }
 
 void etiss::initialize(std::vector<std::string>& args)
@@ -916,6 +905,54 @@ static class helper_class_etiss_1
 } helper_class_etiss_1;
 
 bool etiss_shutdownOk = false;
+
+
+void etiss::initialize_virtualstruct(std::shared_ptr<etiss::CPUCore> cpu_core)
+{
+    auto mount_successful = etiss::VirtualStruct::root()->mountStruct(cpu_core->getName(), cpu_core->getStruct());
+
+    if(!mount_successful)
+    {
+        etiss::log(etiss::FATALERROR, std::string("Failed to mount ") + cpu_core->getName() + std::string("'s VirtualStruct, but failed: etiss::CPUCore not created!"));
+    }
+    else
+    {
+        etiss::log(etiss::VERBOSE, std::string("Mounted ") + cpu_core->getName() + std::string("'s VirtualStruct to root VirtualStruct"));
+
+        // load fault files
+        std::string faults = cfg().get<std::string>("faults.xml", "");
+        if (!faults.empty())
+        {
+            std::list<std::string> ffs = etiss::split(faults, ';');
+            for (auto ff : ffs)
+            {
+                auto stressor_successful = etiss::fault::Stressor::loadXML(ff, cpu_core->getID());
+                if (!stressor_successful)
+                {
+                    etiss::log(etiss::FATALERROR, std::string("Failed to load requested faults.xml \'") + ff + std::string("\' for ") + cpu_core->getName() + std::string("."));
+                }
+                else
+                {
+                    etiss::log(etiss::VERBOSE, std::string("Faults from \'") + ff + std::string("\' loaded for ") + cpu_core->getName() + std::string("."));
+                }
+            }
+
+            etiss::log(etiss::VERBOSE, std::string("Add InstructionAccurateCallback Plugin to ") + cpu_core->getName() + std::string(". Required for etiss::fault::Injector."));
+            cpu_core->addPlugin(std::shared_ptr<etiss::Plugin>(new etiss::plugin::InstructionAccurateCallback()));
+
+#if defined(ETISS_DEBUG)
+            // Add applyCustomAction to for self test, can be overwritten by reassigning applyCustomAction of cpu_core
+            cpu_core->getStruct()->applyCustomAction = [](const etiss::fault::Fault &fault, const etiss::fault::Action &action, std::string &errormsg) {
+                etiss::log(etiss::VERBOSE, std::string("Fault \'") + fault.name_ + std::string("\' Action: \'") + action.toString() + std::string("\'."));
+                return true;
+            };
+#endif // defined(ETISS_DEBUG)
+            cpu_core->getStruct()->foreachField([](std::shared_ptr<etiss::VirtualStruct::Field> f) {
+                f->flags_ |= VirtualStruct::Field::F;
+            }); // enable Bitflip actions for all fields in cpu, by default only R|W is enabled, if we want to do basic Fault Injection into any of them, we need the F flag
+        }
+    }
+}
 
 void etiss::shutdown()
 {
