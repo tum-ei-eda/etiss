@@ -158,7 +158,6 @@ bool Trigger::fired(uint64_t time_ps, etiss::fault::Injector *target_injector)
 {
     etiss::log(etiss::VERBOSE, std::string("etiss::fault::Trigger::fired(time_ps=") + std::to_string(time_ps) +
                                    std::string(", Injector*)"));
-    // std::cout << "Trigger::fired called at " << time_ps << " ps" << std::endl;
     switch (type_)
     {
     case META_COUNTER:
@@ -238,6 +237,7 @@ bool Trigger::fired(uint64_t time_ps, etiss::fault::Injector *target_injector)
         // return true;
         break;
     case NOP:
+        return true;
         break;
     }
 
@@ -461,7 +461,13 @@ bool parse<etiss::fault::Trigger *>(pugi::xml_node node, etiss::fault::Trigger *
             return false;
         }
         f = new Trigger(injector, count, true);
-        std::cout << "Injector2: " << f->getInjectorAddress().getInjectorPath() << std::endl;
+        etiss::log(etiss::VERBOSE, std::string("Injector2: ") + f->getInjectorAddress().getInjectorPath());
+        return true;
+    }
+
+    if (type == "NOP")
+    {
+        f = new Trigger();
         return true;
     }
 

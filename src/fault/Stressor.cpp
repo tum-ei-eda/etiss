@@ -166,29 +166,36 @@ bool Stressor::addFault(const Fault &f)
     // Iterate through triggers of the fault
     for (std::vector<Trigger>::const_iterator iter = f.triggers.begin(); iter != f.triggers.end(); ++iter)
     {
-        Injector::ptr iptr = iter->getInjector();
+        if(iter->getType() != etiss::fault::Trigger::NOP) // only add Trigger, if it is not a NOP
+        {
+            Injector::ptr iptr = iter->getInjector();
 
-        if (iptr)
-        {
+            if (iptr)
+            {
 #ifdef NO_ETISS
-            std::cout << "etiss::fault::Stressor::addFault: Added trigger: " << iter->toString() << std::endl;
+                std::cout << "etiss::fault::Stressor::addFault: Added trigger: " << iter->toString() << std::endl;
 #else
-            etiss::log(etiss::INFO, std::string("etiss::fault::Stressor::addFault:") + std::string(" Added trigger: "),
-                       *iter);
+                etiss::log(etiss::INFO, std::string("etiss::fault::Stressor::addFault:") + std::string(" Added trigger: "),
+                           *iter);
 #endif
-            iptr->addTrigger(*iter, f.id_);
+                iptr->addTrigger(*iter, f.id_);
+            }
+            else
+            {
+#ifdef NO_ETISS
+                std::cout << "etiss::fault::Stressor::addFault: Error: Injector not found for: " << iter->toString()
+                          << std::endl;
+#else
+                etiss::log(etiss::ERROR,
+                           std::string("etiss::fault::Stressor::addFault:") + std::string(" Injector not found for "),
+                           *iter);
+#endif
+                /// TODO signal error and roll back
+            }
         }
-        else
+        else // Trigger is of type NOP
         {
-#ifdef NO_ETISS
-            std::cout << "etiss::fault::Stressor::addFault: Error: Injector not found for: " << iter->toString()
-                      << std::endl;
-#else
-            etiss::log(etiss::ERROR,
-                       std::string("etiss::fault::Stressor::addFault:") + std::string(" Injector not found for "),
-                       *iter);
-#endif
-            /// TODO signal error and roll back
+            etiss::log(etiss::WARNING, std::string("etiss::fault::Stressor::addFault:") + std::string(" Trigger is a NOP and is not added."));
         }
     }
 
@@ -201,7 +208,7 @@ bool Stressor::firedTrigger(const Trigger &triggered, int32_t fault_id, Injector
 #if CXX0X_UP_SUPPORTED
     std::lock_guard<std::mutex> lock(faults_sync());
 #endif
-
+    bool ret = true;
     // find fault in fault-map
     std::map<int32_t, Fault>::iterator find = faults().find(fault_id);
     if (find != faults().end())
@@ -213,7 +220,12 @@ bool Stressor::firedTrigger(const Trigger &triggered, int32_t fault_id, Injector
             if (iter->getType() == etiss::fault::Action::INJECTION)
             {
                 /// TODO for time relative triggers resolve time must be called!
-                addFault(iter->getFault());
+                addFault(iter->getFault(), true);
+            }
+            else if(iter->getType() == etiss::fault::Action::NOP)
+            {
+                etiss::log(etiss::VERBOSE, std::string("Stressor::firedTrigger: Discarded - Action is NOP (do not care)."));
+                return true;
             }
             else
             {
@@ -234,7 +246,8 @@ bool Stressor::firedTrigger(const Trigger &triggered, int32_t fault_id, Injector
 #endif
                     }
                     std::string err;
-                    if (!iter->getInjectorAddress().getInjector()->applyAction(find->second, *iter, err))
+                    bool ret_applyaction = iter->getInjectorAddress().getInjector()->applyAction(find->second, *iter, err);
+                    if (!ret_applyaction)
                     {
 #ifdef NO_ETISS
                         std::cout << "Stressor::firedTrigger: Failed to apply action. Fault: " << fault_id << " ["
@@ -244,7 +257,7 @@ bool Stressor::firedTrigger(const Trigger &triggered, int32_t fault_id, Injector
                                    find->second, *iter, err);
 #endif
                     }
-                    return true; /// TODO: when returning true here. the next action will not be applied!
+                    ret = ret && ret_applyaction; // mask return value with ret_applyaction foreach(!) action, return false, if one fails
                 }
                 else
                 {
@@ -268,7 +281,7 @@ bool Stressor::firedTrigger(const Trigger &triggered, int32_t fault_id, Injector
 #endif
     }
 
-    return true;
+    return ret;
 }
 
 void Stressor::clear()
