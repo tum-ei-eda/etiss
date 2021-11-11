@@ -79,7 +79,7 @@ class Stressor
      * @param f the fault for adding to the map.
      * @return false if fault already exists in map.
      */
-    static bool addFault(const Fault &f);
+    static bool addFault(const Fault &f, bool injected_fault = false);
 
     /** @brief Checks if the given trigger is valid and calls applyAction.
      *

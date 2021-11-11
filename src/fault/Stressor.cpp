@@ -135,10 +135,11 @@ bool Stressor::loadXML(const std::string &file, const int coreID)
     return ok;
 }
 
-bool Stressor::addFault(const Fault &f)
+bool Stressor::addFault(const Fault &f, bool injected_fault)
 {
 #if CXX0X_UP_SUPPORTED
-    std::lock_guard<std::mutex> lock(faults_sync());
+    if(!injected_fault) // otherwise a deadlock from firedTrigger->addFault would occur
+        std::lock_guard<std::mutex> lock(faults_sync());
 #endif
 
 #ifdef NO_ETISS
