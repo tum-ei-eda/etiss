@@ -230,6 +230,12 @@ std::shared_ptr<etiss::JIT> getDefaultJIT();
  * ->read().
  */
 void initialize_virtualstruct(std::shared_ptr<etiss::CPUCore> cpu_core);
+/**
+ * @brief Extension of etiss::initialize_virtualstruct(
+ * std::shared_ptr<etiss::CPUCore>) to allow direct setting of custom action for
+ * \p cpu_core etiss::VirtualStruct with \p fcustom_action.
+ */
+void initialize_virtualstruct(std::shared_ptr<etiss::CPUCore> cpu_core, std::function<bool(const etiss::fault::Fault&, const etiss::fault::Action&, std::string& /*errormsg*/)> const & fcustom_action);
 
 /**
  * @brief Shutdown ETISS

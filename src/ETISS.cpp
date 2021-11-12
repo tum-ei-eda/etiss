@@ -906,7 +906,6 @@ static class helper_class_etiss_1
 
 bool etiss_shutdownOk = false;
 
-
 void etiss::initialize_virtualstruct(std::shared_ptr<etiss::CPUCore> cpu_core)
 {
     auto mount_successful = etiss::VirtualStruct::root()->mountStruct(cpu_core->getName(), cpu_core->getStruct());
@@ -940,18 +939,17 @@ void etiss::initialize_virtualstruct(std::shared_ptr<etiss::CPUCore> cpu_core)
             etiss::log(etiss::VERBOSE, std::string("Add InstructionAccurateCallback Plugin to ") + cpu_core->getName() + std::string(". Required for etiss::fault::Injector."));
             cpu_core->addPlugin(std::shared_ptr<etiss::Plugin>(new etiss::plugin::InstructionAccurateCallback()));
 
-#if defined(ETISS_DEBUG)
-            // Add applyCustomAction to for self test, can be overwritten by reassigning applyCustomAction of cpu_core
-            cpu_core->getStruct()->applyCustomAction = [](const etiss::fault::Fault &fault, const etiss::fault::Action &action, std::string &errormsg) {
-                etiss::log(etiss::VERBOSE, std::string("Fault \'") + fault.name_ + std::string("\' Action: \'") + action.toString() + std::string("\'."));
-                return true;
-            };
-#endif // defined(ETISS_DEBUG)
             cpu_core->getStruct()->foreachField([](std::shared_ptr<etiss::VirtualStruct::Field> f) {
                 f->flags_ |= VirtualStruct::Field::F;
             }); // enable Bitflip actions for all fields in cpu, by default only R|W is enabled, if we want to do basic Fault Injection into any of them, we need the F flag
         }
     }
+}
+
+void etiss::initialize_virtualstruct(std::shared_ptr<etiss::CPUCore> cpu_core, std::function<bool(const etiss::fault::Fault&, const etiss::fault::Action&, std::string& /*errormsg*/)> const & fcustom_action)
+{
+    etiss::initialize_virtualstruct(cpu_core);
+    cpu_core->getStruct()->applyCustomAction = fcustom_action;
 }
 
 void etiss::shutdown()
