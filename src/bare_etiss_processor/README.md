@@ -214,7 +214,7 @@ Usage:
       </action>
       <action type="BITFLIP">                # why not have more than one <action>, an additional "BITFLIP"
         <injector>core%i%</injector>         # again we need the <injector>
-        <field>R1</field>                    # BITFLIP takes a <field>, here R1 aka X1 in RISC-V, with the CPUCore all ISA-GPRs and the PC are <fields>
+        <field>R1</field>                    # BITFLIP takes a <field>, here R1 aka X1 in RISC-V, with the CPUCore all ISA-GPRs and the instructionPointer are <fields>
         <bit>1</bit>                         # the target <bit> number
       </action>
 			<action type="INJECTION">              # now, we inject a new fault as our action.
