@@ -53,32 +53,106 @@ namespace etiss
 namespace fault
 {
 
+bool maskop_fromstring(Action::MaskOp& out, const std::string& in)
+{
+    if (in == "AND" or in == "&")
+    {
+        out = Action::MaskOp::AND;
+    }
+    else if (in == "OR" or in == "|")
+    {
+        out = Action::MaskOp::OR;
+    }
+    else if (in == "XOR" or in == "^")
+    {
+        out = Action::MaskOp::XOR;
+    }
+    else if (in == "NAND" or in == "!&")
+    {
+        out = Action::MaskOp::NAND;
+    }
+    else if (in == "NOR" or in == "!|")
+    {
+        out = Action::MaskOp::NOR;
+    }
+    else
+    {
+        return false;
+    }
+    return true;
+}
+
+std::string maskop_tostring(Action::MaskOp in)
+{
+    switch(in)
+    {
+      case Action::MaskOp::AND:
+        return "AND";
+      case Action::MaskOp::OR:
+        return "OR";
+      case Action::MaskOp::XOR:
+        return "XOR";
+      case Action::MaskOp::NAND:
+        return "NAND";
+      case Action::MaskOp::NOR:
+        return "NOR";
+      default:
+        return "NOP";
+    }
+}
+
 void Action::ensure(Type t)
 {
     if (type_ != t)
         throw "wrong action type";
 }
 
-Action::Action() : type_(NOP)
+bool Action::is_action_on_field(void) const
+{
+    return ((type_ == BITFLIP || type_ == MASK) ? true : false);
+}
+
+Action::Action()
+  : type_(NOP)
 {
     etiss::log(etiss::VERBOSE, std::string("etiss::fault::Action::Action() called. "));
 }
 
-Action::Action(const InjectorAddress &inj, const std::string &command) : type_(COMMAND), inj_(inj), command_(command)
+Action::Action(const InjectorAddress &inj, const std::string &command)
+  : type_(COMMAND)
+  , inj_(inj)
+  , command_(command)
 {
     etiss::log(etiss::VERBOSE, std::string("etiss::fault::Action::Action(InjectorAddress &=") + inj.getInjectorPath() +
                                    std::string(", command=") + command + std::string(") called. "));
 }
 
 Action::Action(const InjectorAddress &inj, const std::string &field, unsigned bit)
-    : type_(BITFLIP), inj_(inj), field_(field), bit_(bit)
+  : type_(BITFLIP)
+  , inj_(inj)
+  , field_(field)
+  , bit_(bit)
 {
     etiss::log(etiss::VERBOSE, std::string("etiss::fault::Action::Action(InjectorAddress &=") + inj.getInjectorPath() +
                                    std::string(", field=") + field + std::string(", bit=") + std::to_string(bit) +
                                    std::string(") called. "));
 }
 
-Action::Action(const Fault &fault) : type_(INJECTION)
+Action::Action(const InjectorAddress &inj, const std::string &field, MaskOp mask_op, uint64_t mask_value)
+  : type_(MASK)
+  , inj_(inj)
+  , field_(field)
+  , mask_op_(mask_op)
+  , mask_value_(mask_value)
+{
+    etiss::log(etiss::VERBOSE, std::string("etiss::fault::Action::Action(InjectorAddress &=") + inj.getInjectorPath() +
+                                   std::string(", field=") + field + std::string(", mask_op=") + std::to_string(mask_op) +
+                                   std::string(", mask_value=") + std::to_string(mask_value) +
+                                   std::string(") called. "));
+}
+
+Action::Action(const Fault &fault)
+  : type_(INJECTION)
 {
     etiss::log(etiss::VERBOSE,
                std::string("etiss::fault::Action::Action(Fault &=") + fault.toString() + std::string(") called. "));
@@ -92,32 +166,54 @@ Action::Type Action::getType() const
 
 const InjectorAddress &Action::getInjectorAddress() const
 {
+    if(unlikely(!(type_ == BITFLIP || type_ == MASK || type_ == COMMAND)))
+        etiss::log(etiss::FATALERROR, std::string("etiss::fault::Action::TypeStruct::getInjectorAddress(): Requested Action::Type has no Injector"));
     return inj_;
 }
 
 /// COMMAND only
 const std::string &Action::getCommand() const
 {
+    if(unlikely(type_ != COMMAND))
+        etiss::log(etiss::FATALERROR, std::string("etiss::fault::Action::TypeStruct::getCommand(): Requested Action::Type has no Command"));
     return command_;
 }
 
-/// BITFLIP only
+/// is_action_on_field only
 const std::string &Action::getTargetField() const
 {
+    if(unlikely(!(type_ == BITFLIP || type_ == MASK)))
+        etiss::log(etiss::FATALERROR, std::string("etiss::fault::Action::TypeStruct::getTargetField(): Requested Action::Type has no TargetField"));
     return field_;
 }
 
 /// BITFLIP only
 unsigned Action::getTargetBit() const
 {
+    if(unlikely(type_ != BITFLIP))
+        etiss::log(etiss::FATALERROR, std::string("etiss::fault::Action::TypeStruct::getTargetBit(): Requested Action::Type has no TargetBit"));
     return bit_;
 }
 
 const Fault &Action::getFault() const
 {
-    if (type_ != INJECTION)
-        throw "Action doesn't have the type INJECTION: cannot call getFault()";
+    if(unlikely(type_ != INJECTION))
+        etiss::log(etiss::FATALERROR, std::string("etiss::fault::Action::TypeStruct::getFault(): Requested Action::Type has no injectable Fault"));
     return fault_.front();
+}
+
+Action::MaskOp Action::getMaskOp() const
+{
+    if(unlikely(type_ != MASK))
+        etiss::log(etiss::FATALERROR, std::string("etiss::fault::Action::TypeStruct::getMaskOp(): Requested Action::Type has no Mask"));
+    return mask_op_;
+}
+
+uint64_t Action::getMaskValue() const
+{
+    if(unlikely(type_ != MASK))
+        etiss::log(etiss::FATALERROR, std::string("etiss::fault::Action::TypeStruct::getMaskValue(): Requested Action::Type has no Mask"));
+    return mask_value_;
 }
 
 std::string Action::toString() const
@@ -164,20 +260,20 @@ bool parse<etiss::fault::Action>(pugi::xml_node node, etiss::fault::Action &f, D
             return true;
         if (!parse<etiss::fault::InjectorAddress>(findSingleNode(node, "injector", diag), inj, diag))
         {
-            diag.unexpectedNode(node, "Failed to parse target injector");
+            diag.unexpectedNode(node, "Failed to parse target <injector>");
             return false;
         }
         std::string field;
         if (!parse<std::string>(findSingleNode(node, "field", diag), field, diag))
         {
-            diag.unexpectedNode(node, "Failed to parse target field");
+            diag.unexpectedNode(node, "Failed to parse target <field>");
             return false;
         }
         setCoreName(field);
         unsigned bit;
         if (!parse<unsigned>(findSingleNode(node, "bit", diag), bit, diag))
         {
-            diag.unexpectedNode(node, "Failed to parse target bit");
+            diag.unexpectedNode(node, "Failed to parse target <bit>");
             return false;
         }
         f = Action(inj, field, bit);
@@ -188,13 +284,13 @@ bool parse<etiss::fault::Action>(pugi::xml_node node, etiss::fault::Action &f, D
         etiss::fault::InjectorAddress inj;
         if (!parse<etiss::fault::InjectorAddress>(findSingleNode(node, "injector", diag), inj, diag))
         {
-            diag.unexpectedNode(node, "Failed to parse target injector");
+            diag.unexpectedNode(node, "Failed to parse target <injector>");
             return false;
         }
         std::string command;
         if (!parse<std::string>(findSingleNode(node, "command", diag), command, diag))
         {
-            diag.unexpectedNode(node, "Failed to parse target command");
+            diag.unexpectedNode(node, "Failed to parse target <command>");
             return false;
         }
         f = Action(inj, command);
@@ -205,10 +301,46 @@ bool parse<etiss::fault::Action>(pugi::xml_node node, etiss::fault::Action &f, D
         etiss::fault::Fault inj;
         if (!parse<Fault>(findSingleNode(node, "fault", diag), inj, diag))
         {
-            diag.unexpectedNode(node, "Failed to parse fault to inject");
+            diag.unexpectedNode(node, "Failed to parse <fault> to inject");
             return false;
         }
         f = Action(inj);
+        return true;
+    }
+    else if (type == "MASK")
+    {
+        etiss::fault::InjectorAddress inj;
+        if (!parse<etiss::fault::InjectorAddress>(findSingleNode(node, "injector", diag), inj, diag))
+        {
+            diag.unexpectedNode(node, "Failed to parse target <injector>");
+            return false;
+        }
+        std::string field;
+        if (!parse<std::string>(findSingleNode(node, "field", diag), field, diag))
+        {
+            diag.unexpectedNode(node, "Failed to parse target <field>");
+            return false;
+        }
+        setCoreName(field);
+        std::string op_str;
+        etiss::fault::Action::MaskOp op;
+        if (!parse<std::string>(findSingleNode(node, "op", diag), op_str, diag))
+        {
+            diag.unexpectedNode(node, "Failed to parse mask operation <op>");
+            return false;
+        }
+        if (! etiss::fault::maskop_fromstring(op, op_str))
+        {
+            diag.unexpectedNode(node, "Failed to parse mask operation <op>");
+            return false;
+        }
+        uint64_t value;
+        if (!parse_hex(findSingleNode(node, "value", diag), value, diag))
+        {
+            diag.unexpectedNode(node, "Failed to parse mask operation <value>");
+            return false;
+        }
+        f = Action(inj, field, op, value);
         return true;
     }
     else
@@ -242,6 +374,13 @@ bool write<etiss::fault::Action>(pugi::xml_node node, const etiss::fault::Action
     case etiss::fault::Action::INJECTION:
         ok = ok & write_attr<std::string>(node, "type", "INJECTION", diag);
         ok = ok & write<Fault>(node.append_child("fault"), f.getFault(), diag);
+        break;
+    case etiss::fault::Action::MASK:
+        ok = ok & write_attr<std::string>(node, "type", "MASK", diag);
+        ok = ok & write(node.append_child("injector"), f.getInjectorAddress(), diag);
+        ok = ok & write<std::string>(node.append_child("field"), f.getTargetField(), diag);
+        ok = ok & write<std::string>(node.append_child("op"), etiss::fault::maskop_tostring(f.getMaskOp()), diag);
+        ok = ok & write<uint64_t>(node.append_child("value"), f.getMaskValue(), diag);
         break;
     }
     return false;

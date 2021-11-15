@@ -938,10 +938,6 @@ void etiss::initialize_virtualstruct(std::shared_ptr<etiss::CPUCore> cpu_core)
 
             etiss::log(etiss::VERBOSE, std::string("Add InstructionAccurateCallback Plugin to ") + cpu_core->getName() + std::string(". Required for etiss::fault::Injector."));
             cpu_core->addPlugin(std::shared_ptr<etiss::Plugin>(new etiss::plugin::InstructionAccurateCallback()));
-
-            cpu_core->getStruct()->foreachField([](std::shared_ptr<etiss::VirtualStruct::Field> f) {
-                f->flags_ |= VirtualStruct::Field::F;
-            }); // enable Bitflip actions for all fields in cpu, by default only R|W is enabled, if we want to do basic Fault Injection into any of them, we need the F flag
         }
     }
 }

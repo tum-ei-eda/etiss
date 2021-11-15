@@ -178,9 +178,9 @@ bool VirtualStruct::Field::applyBitflip(unsigned position, uint64_t fault_id)
 bool VirtualStruct::Field::applyAction(const etiss::fault::Fault &f, const etiss::fault::Action &a,
                                        std::string &errormsg)
 {
-    if (!(flags_ & A))
+    if (!(flags_ & (A|F)))
     {
-        errormsg = "field doesn't support advanced action handling";
+        errormsg = "field doesn't support action handling";
         return false;
     }
     return _applyAction(f, a, errormsg);
@@ -214,6 +214,38 @@ bool VirtualStruct::Field::_applyBitflip(unsigned position, uint64_t fault_id)
 bool VirtualStruct::Field::_applyAction(const etiss::fault::Fault &f, const etiss::fault::Action &a,
                                         std::string &errormsg)
 {
+    if(a.getType() == etiss::fault::Action::Type::MASK)
+    {
+        uint64_t mask_value = a.getMaskValue();
+        uint64_t val = read(), errval;
+        switch (a.getMaskOp())
+        {
+          case etiss::fault::Action::MaskOp::AND:
+            errval = (val & mask_value);
+            break;
+          case etiss::fault::Action::MaskOp::OR:
+            errval = (val | mask_value);
+            break;
+          case etiss::fault::Action::MaskOp::XOR:
+            errval = (val ^ mask_value);
+            break;
+          case etiss::fault::Action::MaskOp::NAND:
+            errval = ~(val & mask_value);
+            break;
+          case etiss::fault::Action::MaskOp::NOR:
+            errval = ~(val  | mask_value);
+            break;
+        }
+        write(errval);
+        std::stringstream ss;
+        ss << "Injected mask fault in " << name_ << " 0x" << std::hex << val << " " << etiss::fault::maskop_tostring(a.getMaskOp()) << " 0x" << mask_value << "->0x" << errval << std::dec;
+        etiss::log(etiss::INFO, ss.str());
+        return true;
+    }
+    else if(a.getType() == etiss::fault::Action::Type::BITFLIP)
+    {
+      return applyBitflip(a.getTargetBit(), f.id_);
+    }
     return false;
 }
 
@@ -476,6 +508,7 @@ bool VirtualStruct::applyAction(const etiss::fault::Fault &fault, const etiss::f
         }
         return applyCustomAction(fault, action, errormsg);
     }
+    case etiss::fault::Action::MASK: [[fallthrough]];
     case etiss::fault::Action::BITFLIP: // handle bitflip
     {
         Field *f;
@@ -502,19 +535,56 @@ bool VirtualStruct::applyAction(const etiss::fault::Fault &fault, const etiss::f
             errormsg = std::string("No such field: ") + getInjectorPath() + "." + action.getTargetField();
             return false;
         }
-        if (f->flags_ & Field::A)
+        if (f->flags_ & (Field::A | Field::F))
         {
             return f->applyAction(fault, action, errormsg);
-        }
-        else if (f->flags_ & Field::F)
-        {
-            return f->applyBitflip(action.getTargetBit(), fault.id_);
         }
     }
         return false;
     default:
         return false;
     }
+}
+
+bool VirtualStruct::update_field_access_rights(const std::string& field, etiss::fault::Action::Type type, std::string &errormsg)
+{
+    Field* f = nullptr;
+    auto find = fieldNames_.find(field);
+    if (find == fieldNames_.end())
+    {
+        find = fieldPrettyNames_.find(field);
+        if (find == fieldPrettyNames_.end())
+        {
+            f = 0;
+        }
+        else
+        {
+            f = find->second;
+        }
+    }
+    else
+    {
+        f = find->second;
+    }
+
+    if(f)
+    {
+        switch(type)
+        {
+            case etiss::fault::Action::Type::MASK: [[fallthrough]];
+            case etiss::fault::Action::Type::BITFLIP:
+                f->flags_ |= Field::F;
+                break;
+            default:
+                break;
+        }
+    }
+    else
+    {
+        errormsg = std::string("VirtualStruct:update_field_access_rights(): Required field not a field in VirtualStruct!");
+        return false;
+    }
+    return true;
 }
 
 VSSync::VSSync()

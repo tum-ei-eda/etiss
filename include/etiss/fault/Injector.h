@@ -155,6 +155,12 @@ class Injector
 
     virtual bool acceleratedTrigger(const etiss::fault::Trigger &, int32_t fault_id);
 
+    /**
+        @brief Update the \p field of injector with access rights to allow \p type actions.
+        @detail For example, if \p action is of etiss::fault::Action::BITFLIP, \p field requires F flag set
+    */
+    virtual bool update_field_access_rights(const std::string& field, etiss::fault::Action::Type type, std::string &errormsg) = 0;
+
   public: // static
     /**
     @param injectorPath the full path/name to/off an injector. in case of using ETISS/VirtualStruct please have a look

@@ -79,16 +79,31 @@ class Action : public etiss::ToString
   public:
     enum Type
     {
+        /// NO Operation. used by default constructor
+        NOP = 0,
         /// applies a bit flip to a bit in a specified field
         BITFLIP,
+        /// applies a mask type injection (field <op>= mask;) where <op> can be any MaskOp
+        MASK,
         /// commands are targetet at Injectors, not fields. in case a command is targetet at a certain field that
         /// information must be passed within the command string
         COMMAND,
-        /// NO Operation. used by default constructor
-        NOP,
         /// an action that injects a fault definition (trigger + actions)
         INJECTION
     };
+    enum MaskOp
+    {
+        AND,
+        OR,
+        XOR,
+        NAND,
+        NOR
+    };
+
+    /**
+     *	@brief returns true if type_ is an action on a Field
+     */
+    bool is_action_on_field(void) const;
 
     // Constructors
     /**
@@ -108,6 +123,12 @@ class Action : public etiss::ToString
      */
     Action(const InjectorAddress &inj, const std::string &field, unsigned bit);
     /**
+     *	@note Type: MASK
+     *
+     *	@brief applies a mask type injection (field op= mask;) where <op> can be bitwise AND, OR, XOR, NAND, NOR
+     */
+    Action(const InjectorAddress &inj, const std::string &field, MaskOp mask_op, uint64_t mask_value);
+    /**
      * @note Type: Injection
      *
      * @brief injects a fault. this is especially usefull with Triggers of type TIMERELATIVE
@@ -116,6 +137,7 @@ class Action : public etiss::ToString
 
     // Getters
     Type getType() const;
+
     const InjectorAddress &getInjectorAddress() const;
 
     /// COMMAND only
@@ -128,20 +150,36 @@ class Action : public etiss::ToString
     /// INJECTION only
     const Fault &getFault() const;
 
+    MaskOp getMaskOp() const;
+
+    uint64_t getMaskValue() const;
+
     // Members
     std::string toString() const; ///< operator<< can be used.
 
   private:      // Attributes
-    Type type_; ///< type of the Attribute
-    InjectorAddress inj_;
+    Type type_;                ///< type of the Attribute
+    InjectorAddress inj_;      ///< Address of Injector
     std::string command_;      ///< command e.g. for booting OR1KVCPU
     std::string field_;        ///< concerning Field (for fault injection)
     unsigned bit_;             ///< concerning Bit (for fault injection)
-    std::vector<Fault> fault_; ///< for other injections
+    MaskOp mask_op_;           ///< mask operation (for mask injection)
+    uint64_t mask_value_;      ///< mask value (for mask injection)
+    std::vector<Fault> fault_; ///< for fault injection
 
     // private Members
     void ensure(Type);
 };
+
+/**
+ *	@brief decode Action::MaskOp from string
+ */
+bool maskop_fromstring(Action::MaskOp& out, const std::string& in);
+/**
+ *	@brief encode Action::MaskOp to string
+ */
+std::string maskop_tostring(Action::MaskOp in);
+
 
 #if ETISS_FAULT_XML
 

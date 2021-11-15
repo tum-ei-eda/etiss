@@ -164,14 +164,16 @@ bool Stressor::addFault(const Fault &f, bool injected_fault)
     // insert fault into map
     faults().insert(std::pair<int32_t, Fault>(f.id_, f));
 
+    Injector::ptr iptr = nullptr;
+
     // Iterate through triggers of the fault
     for (std::vector<Trigger>::const_iterator iter = f.triggers.begin(); iter != f.triggers.end(); ++iter)
     {
         if(iter->getType() != etiss::fault::Trigger::NOP) // only add Trigger, if it is not a NOP
         {
-            Injector::ptr iptr = iter->getInjector();
+            iptr = iter->getInjector();
 
-            if (iptr)
+            if (iptr != nullptr)
             {
 #ifdef NO_ETISS
                 std::cout << "etiss::fault::Stressor::addFault: Added trigger: " << iter->toString() << std::endl;
@@ -179,6 +181,7 @@ bool Stressor::addFault(const Fault &f, bool injected_fault)
                 etiss::log(etiss::INFO, std::string("etiss::fault::Stressor::addFault:") + std::string(" Added trigger: "),
                            *iter);
 #endif
+                //TODO: iptr->enable_faulttype for requested field
                 iptr->addTrigger(*iter, f.id_);
             }
             else
@@ -197,6 +200,24 @@ bool Stressor::addFault(const Fault &f, bool injected_fault)
         else // Trigger is of type NOP
         {
             etiss::log(etiss::WARNING, std::string("etiss::fault::Stressor::addFault:") + std::string(" Trigger is a NOP and is not added."));
+        }
+    }
+
+    if(iptr != nullptr)
+    {
+        for ( const auto& it: f.actions)
+        {
+            if(it.is_action_on_field())
+            {
+                bool ret_update = false;
+                std::string errormsg;
+                ret_update = iptr->update_field_access_rights( it.getTargetField(), it.getType(), errormsg );
+                if (! ret_update)
+                {
+                    etiss::log(etiss::ERROR, std::string("etiss::fault::Stressor::addFault:") + errormsg);
+                }
+            }
+
         }
     }
 
