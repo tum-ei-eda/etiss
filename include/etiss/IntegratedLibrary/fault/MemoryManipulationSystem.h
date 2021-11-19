@@ -98,7 +98,7 @@ class MemoryWordManipulatorBase
         /// \brief Constructor takes string encoded memory operation \ref MemOpType
         MemOp(const std::string& memop_str);
     } /* class MemOp */;
-    
+
     ////////////////////////////////////////////////////////////////////////////////////////////
     /// \brief Memory operation type code
     enum class MemManipCmd {
@@ -109,7 +109,7 @@ class MemoryWordManipulatorBase
       , UNDEF
     };
     typedef etiss::fault::SmartType<MemManipCmd> mem_manip_cmd_t;
-    
+
     virtual etiss::int32 push(size_t address) = 0;
     virtual etiss::int32 pop(size_t address) = 0;
     virtual etiss::int32 rmw(size_t address, MemOp op, etiss::uint64 mod_val) = 0;
@@ -144,7 +144,7 @@ class MemoryWordManipulator : public MemoryWordManipulatorBase
     /// \return etiss::RETURNCODE encoded via \ref MemoryManipulationSystem::dbus_access
     virtual etiss::int32 rmw(size_t address, MemOp op, etiss::uint64 mod_val);
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    /// \brief read-readmodify-write memory word at \p dstsrc1_address with memory word at 
+    /// \brief read-readmodify-write memory word at \p dstsrc1_address with memory word at
     /// \p src2_address by bit-wise operation \p op
     /// \return etiss::RETURNCODE encoded via \ref MemoryManipulationSystem::dbus_access
     virtual etiss::int32 rrmw(size_t dstsrc1_address, MemOp op, size_t src2_address);

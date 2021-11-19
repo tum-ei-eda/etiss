@@ -67,7 +67,7 @@ void Trigger::ensure(Type type) const
     }
 }
 
-Trigger::Trigger() 
+Trigger::Trigger()
   : type_(Type::NOP)
 {
     etiss::log(etiss::VERBOSE, std::string("etiss::fault::Trigger::Trigger() : type_ (NOP)"));
@@ -107,7 +107,7 @@ Trigger::Trigger(const InjectorAddress &target_injector, uint64_t time_ps, bool 
              : etiss::log(etiss::VERBOSE, std::string("etiss::fault::Trigger::Trigger() : type_ (TIME)"));
 }
 
-Trigger::Trigger(const Trigger &cpy) 
+Trigger::Trigger(const Trigger &cpy)
   : type_(Type::NOP)
 {
     *this = cpy;
@@ -419,7 +419,7 @@ bool parse<etiss::fault::Trigger *>(pugi::xml_node node, etiss::fault::Trigger *
         return false;
     }
     etiss::fault::Trigger::type_t type(type_str);
-    
+
     switch(type)
     {
         case etiss::fault::Trigger::Type::META_COUNTER:
@@ -601,7 +601,7 @@ bool write<etiss::fault::Trigger>(pugi::xml_node node, const etiss::fault::Trigg
 
 
 template<>
-Trigger::type_t::map_t Trigger::type_t::TABLE = {  
+Trigger::type_t::map_t Trigger::type_t::TABLE = {
       {Trigger::Type::META_COUNTER, "META_COUNTER"}
     , {Trigger::Type::VARIABLEVALUE, "VARIABLEVALUE"}
     , {Trigger::Type::TIME, "TIME"}

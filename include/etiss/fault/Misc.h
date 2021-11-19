@@ -65,7 +65,7 @@ namespace etiss
 {
 namespace fault
 {
-  
+
 ////////////////////////////////////////////////////////////////////////////////////////////////
 /// \brief Action type class
 template<typename enum_t>
@@ -82,7 +82,7 @@ class SmartType : public etiss::ToString
     static bool fromString(const std::string& type_str, enum_t& out) {
       for(auto const& e: TABLE)
       {
-        if (type_str == e.second) 
+        if (type_str == e.second)
         {
           out = e.first;
           return true;
@@ -110,7 +110,7 @@ class SmartType : public etiss::ToString
     SmartType(const std::string& type_str) {
         auto ret = fromString(type_str, type_);
         if(!ret)
-            etiss::log(etiss::ERROR, std::string("SmartType<enum_t>: Unrecognized type string: \"") 
+            etiss::log(etiss::ERROR, std::string("SmartType<enum_t>: Unrecognized type string: \"")
                 + type_str + std::string("\" using default enum_t()"));
     }
     ////////////////////////////////////////////////////////////////////////////////////////////
@@ -118,7 +118,7 @@ class SmartType : public etiss::ToString
     operator enum_t() const { return type_; }
     ////////////////////////////////////////////////////////////////////////////////////////////
     /// \brief Typecast operator to \ref code_t
-    operator std::string() const { 
+    operator std::string() const {
         return toString();
     }
 } /* class SmartType */ ;
