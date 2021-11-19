@@ -63,9 +63,11 @@
 #include "etiss/Misc.h"
 #include "etiss/fault/InjectorAddress.h"
 #include "etiss/fault/XML.h"
+#include "etiss/fault/Misc.h"
 #else
 #include "fault/InjectorAddress.h"
 #include "fault/XML.h"
+#include "fault/Misc.h"
 #endif
 
 namespace etiss
@@ -84,22 +86,28 @@ typedef Injector *Injector_ptr;
 class Trigger : public etiss::ToString
 {
   public:
-    enum Type
+    enum class Type
     {
-        META_COUNTER,
-        VARIABLEVALUE,
-        TIME,
+          META_COUNTER
+        , VARIABLEVALUE
+        , TIME
         /// needs to be resolved. this can only be used in connection with an
         /// injection action
-        TIMERELATIVE,
-        NOP
+        , TIMERELATIVE
+        , ASAP
+        , NOP
     };
-
+    typedef SmartType<Type> type_t;
     // constructors
     /**
         Type: NOP (no operation)
     */
     Trigger();
+    // constructors
+    /**
+        Type: typed but empty constructor (used for ASAP)
+    */
+    Trigger(const InjectorAddress &target_injector);
     /**
      *	@note Type: META_COUNTER
      *
@@ -141,7 +149,7 @@ class Trigger : public etiss::ToString
     bool isNOP() const;
     const std::string &getTriggerField() const;
     const uint64_t &getTriggerFieldValue() const;
-    Type getType() const;
+    const type_t& getType() const;
 
     // Members
     /** @brief this function checks if the Trigger has just fired.
@@ -160,7 +168,7 @@ class Trigger : public etiss::ToString
     std::string toString() const; ///< operator<< can be used.
 
   private: // Attributes
-    Type type_;
+    type_t type_;
     std::string field_;
     Trigger *sub_;
     InjectorAddress inj_;
