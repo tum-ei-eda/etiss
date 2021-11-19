@@ -69,7 +69,7 @@ class InstructionAccurateCallback : public etiss::TranslationPlugin
     virtual std::string _getPluginName() const;
 
   public:
-    void call();
+    etiss_int32 call_on_entry();
 };
 
 } // namespace plugin

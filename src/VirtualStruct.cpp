@@ -235,10 +235,13 @@ bool VirtualStruct::Field::_applyAction(const etiss::fault::Fault &f, const etis
           case etiss::fault::Action::MaskOp::NOR:
             errval = ~(val  | mask_value);
             break;
+          case etiss::fault::Action::MaskOp::NOP:
+            errval = val;
+            break;
         }
         write(errval);
         std::stringstream ss;
-        ss << "Injected mask fault in " << name_ << " 0x" << std::hex << val << " " << etiss::fault::maskop_tostring(a.getMaskOp()) << " 0x" << mask_value << "->0x" << errval << std::dec;
+        ss << "Injected mask fault in " << name_ << " 0x" << std::hex << val << " " << std::string(a.getMaskOp()) << " 0x" << mask_value << "->0x" << errval << std::dec;
         etiss::log(etiss::INFO, ss.str());
         return true;
     }
@@ -508,8 +511,8 @@ bool VirtualStruct::applyAction(const etiss::fault::Fault &fault, const etiss::f
         }
         return applyCustomAction(fault, action, errormsg);
     }
-    case etiss::fault::Action::MASK: [[fallthrough]];
-    case etiss::fault::Action::BITFLIP: // handle bitflip
+    case etiss::fault::Action::Type::MASK: [[fallthrough]];
+    case etiss::fault::Action::Type::BITFLIP: // handle bitflip
     {
         Field *f;
         auto find = fieldNames_.find(action.getTargetField());

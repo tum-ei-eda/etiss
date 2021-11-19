@@ -77,6 +77,12 @@ static std::map<int32_t, Fault> &faults()
     return map;
 }
 
+#ifndef NO_ETISS
+etiss::int32 Stressor::event_code_;
+#else
+int Stressor::event_code_;
+#endif
+
 bool Stressor::loadXML(const std::string &file, const int coreID)
 {
 
@@ -169,7 +175,7 @@ bool Stressor::addFault(const Fault &f, bool injected_fault)
     // Iterate through triggers of the fault
     for (std::vector<Trigger>::const_iterator iter = f.triggers.begin(); iter != f.triggers.end(); ++iter)
     {
-        if(iter->getType() != etiss::fault::Trigger::NOP) // only add Trigger, if it is not a NOP
+        if(iter->getType() != etiss::fault::Trigger::Type::NOP) // only add Trigger, if it is not a NOP
         {
             iptr = iter->getInjector();
 
@@ -239,16 +245,24 @@ bool Stressor::firedTrigger(const Trigger &triggered, int32_t fault_id, Injector
         for (std::vector<etiss::fault::Action>::iterator iter = find->second.actions.begin();
              iter != find->second.actions.end(); ++iter)
         {
-            if (iter->getType() == etiss::fault::Action::INJECTION)
+            if (iter->getType() == etiss::fault::Action::Type::INJECTION)
             {
                 /// TODO for time relative triggers resolve time must be called!
                 addFault(iter->getFault(), true);
             }
-            else if(iter->getType() == etiss::fault::Action::NOP)
+            else if(iter->getType() == etiss::fault::Action::Type::NOP)
             {
                 etiss::log(etiss::VERBOSE, std::string("Stressor::firedTrigger: Discarded - Action is NOP (do not care)."));
                 return true;
             }
+#ifndef NO_ETISS
+            else if(iter->getType() == etiss::fault::Action::Type::EVENT)
+            {
+                etiss::log(etiss::VERBOSE, std::string("Stressor::firedTrigger: Action is EVENT"));
+                set_event(iter->getEvent());
+                return true;
+            }
+#endif
             else
             {
                 if (iter->getInjectorAddress().getInjector())
@@ -260,7 +274,7 @@ bool Stressor::firedTrigger(const Trigger &triggered, int32_t fault_id, Injector
 #endif
                     {
 #ifndef NO_ETISS
-                        etiss::log(etiss::WARNING,
+                        etiss::log(etiss::VERBOSE,
                                    std::string("etiss::fault::Stressor::firedTrigger: Action") +
                                        std::string(" injector is not the injector that triggered this event.") +
                                        std::string(" threadsafety must be ensured by user."),

@@ -55,6 +55,7 @@
 
 #ifndef NO_ETISS
 #include "etiss/fault/Fault.h"
+#include "etiss/jit/ReturnCode.h"
 #else
 #include "fault/Fault.h"
 #endif
@@ -68,6 +69,30 @@ namespace fault
 class Stressor
 {
   public:
+    enum Event {
+        TERMINATE = (1 << 0)
+#ifndef NO_ETISS
+        , ETISS_FLUSH_TRANSLATION_CACHE = (1 << 1)
+        , ETISS_RELOAD_TRANSLATION_BLOCK = (1 << 2)
+#else
+#endif
+    };
+
+#ifndef NO_ETISS
+  private:
+    static etiss::int32 event_code_;
+  public:
+    static etiss::int32 get_event(void) { return event_code_; }
+    static void set_event(etiss::int32 code) { event_code_ = code; }
+#else
+  private:
+    static int event_code_;
+  public:
+    static int get_event(void) { return event_code_; }
+    static void set_event(int code) { event_code_ = code; }
+    static void set_event_flag(Event flag) { event_code_ |= flag; }
+#endif
+    static void reset_event(void) {event_code_ = 0;}
     /** @brief extracts faults out of the given xml file.
      * @param file the xmlfile with fault triggers.
      * @return true if XML file could be loaded.
