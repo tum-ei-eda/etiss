@@ -501,7 +501,7 @@ bool VirtualStruct::applyAction(const etiss::fault::Fault &fault, const etiss::f
 {
     switch (action.getType())
     {
-    case etiss::fault::Action::COMMAND: // handle command
+    case etiss::fault::Action::Type::COMMAND: // handle command
     {
         if (!applyCustomAction)
         {

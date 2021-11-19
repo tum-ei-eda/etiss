@@ -66,7 +66,7 @@ class VSSync;
 
 /**
     abstract representation of an module of a simulation which could be a embedded device of the cpu of an embedded
-device. it is recommended to model and address the full hardware hirachy. e.g. <pre> device1
+device. it is recommended to model and address the full hardware hierachy. e.g. <pre> device1
             -> cpu
                 -> cache
             -> bus
@@ -450,6 +450,7 @@ class VirtualStructSupport
         @return may never be NULL
     */
     virtual std::shared_ptr<VirtualStruct> getStruct() = 0;
+    virtual const std::string &getName() = 0;
 };
 
 #define ETISS_VIRTUALSTRUCT_ADDFIELD(VIRTUALSTRUCT, STRUCT, FIELD, NAME, PRETTYNAME) \

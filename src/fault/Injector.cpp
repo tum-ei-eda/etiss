@@ -67,7 +67,7 @@ Injector::Injector()
 void Injector::freeFastFieldAccessPtr(void *)
 {
     etiss::log(etiss::VERBOSE, std::string("Called etiss::fault::Injector::freeFastFieldAccessPtr(void*)"));
-    etiss::log(etiss::INFO, std::string("etiss::fault::Injector::freeFastFieldAccessPtr(void*) not implemented"));
+    etiss::log(etiss::VERBOSE, std::string("etiss::fault::Injector::freeFastFieldAccessPtr(void*) not implemented"));
 }
 
 bool Injector::needsCallbacks()
