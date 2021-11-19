@@ -396,71 +396,71 @@ bool write<etiss::fault::Action>(pugi::xml_node node, const etiss::fault::Action
 #ifndef NO_ETISS
 bool returncode_fromstring(etiss::int32& out, const std::string& in)
 {
-    if (in == "NOERROR" or in == "RETURNCODE::NOERROR")
+    if ( (in == "NOERROR") || (in == "RETURNCODE::NOERROR") )
     {
         out = etiss::RETURNCODE::NOERROR;
     }
-    else if (in == "RELOADBLOCKS" or in == "RETURNCODE::RELOADBLOCKS")
+    else if ( (in == "RELOADBLOCKS") || (in == "RETURNCODE::RELOADBLOCKS") )
     {
         out =  etiss::RETURNCODE::RELOADBLOCKS;
     }
-    else if (in == "RELOADCURRENTBLOCK" or in == "RETURNCODE::RELOADCURRENTBLOCK")
+    else if ( (in == "RELOADCURRENTBLOCK") || (in == "RETURNCODE::RELOADCURRENTBLOCK") )
     {
         out =  etiss::RETURNCODE::RELOADCURRENTBLOCK;
     }
-    else if (in == "CPUFINISHED" or in == "RETURNCODE::CPUFINISHED")
+    else if ( (in == "CPUFINISHED") || (in == "RETURNCODE::CPUFINISHED") )
     {
         out =  etiss::RETURNCODE::CPUFINISHED;
     }
-    else if (in == "DBUS_WRITE_ERROR" or in == "RETURNCODE::DBUS_WRITE_ERROR")
+    else if ( (in == "DBUS_WRITE_ERROR") || (in == "RETURNCODE::DBUS_WRITE_ERROR") )
     {
         out = etiss::RETURNCODE::DBUS_WRITE_ERROR;
     }
-    else if (in == "IBUS_READ_ERROR" or in == "RETURNCODE::IBUS_READ_ERROR")
+    else if ( (in == "IBUS_READ_ERROR") || (in == "RETURNCODE::IBUS_READ_ERROR") )
     {
         out = etiss::RETURNCODE::IBUS_READ_ERROR;
     }
-    else if (in == "IBUS_WRITE_ERROR" or in == "RETURNCODE::IBUS_WRITE_ERROR")
+    else if ( (in == "IBUS_WRITE_ERROR") || (in == "RETURNCODE::IBUS_WRITE_ERROR") )
     {
         out = etiss::RETURNCODE::IBUS_WRITE_ERROR;
     }
-    else if (in == "INTERRUPT" or in == "RETURNCODE::INTERRUPT")
+    else if ( (in == "INTERRUPT") || (in == "RETURNCODE::INTERRUPT") )
     {
         out = etiss::RETURNCODE::INTERRUPT;
     }
-    else if (in == "RESET" or in == "RETURNCODE::RESET")
+    else if ( (in == "RESET") || (in == "RETURNCODE::RESET") )
     {
         out = etiss::RETURNCODE::RESET;
     }
-    else if (in == "ILLEGALINSTRUCTION" or in == "RETURNCODE::ILLEGALINSTRUCTION")
+    else if ( (in == "ILLEGALINSTRUCTION") || (in == "RETURNCODE::ILLEGALINSTRUCTION") )
     {
         out = etiss::RETURNCODE::ILLEGALINSTRUCTION;
     }
-    else if (in == "ILLEGALJUMP" or in == "RETURNCODE::ILLEGALJUMP")
+    else if ( (in == "ILLEGALJUMP") || (in == "RETURNCODE::ILLEGALJUMP") )
     {
         out = etiss::RETURNCODE::ILLEGALJUMP;
     }
-    else if (in == "INSTR_PAGEFAULT" or in == "RETURNCODE::INSTR_PAGEFAULT")
+    else if ( (in == "INSTR_PAGEFAULT") || in == ("RETURNCODE::INSTR_PAGEFAULT") )
     {
         out = etiss::RETURNCODE::INSTR_PAGEFAULT;
     }
-    else if (in == "LOAD_PAGEFAULT" or in == "RETURNCODE::LOAD_PAGEFAULT")
+    else if ( (in == "LOAD_PAGEFAULT") || (in == "RETURNCODE::LOAD_PAGEFAULT") )
     {
         out = etiss::RETURNCODE::LOAD_PAGEFAULT;
     }
-    else if (in == "STORE_PAGEFAULT" or in == "RETURNCODE::STORE_PAGEFAULT")
+    else if ( (in == "STORE_PAGEFAULT") || (in == "RETURNCODE::STORE_PAGEFAULT") )
     {
         out = etiss::RETURNCODE::STORE_PAGEFAULT;
     }
-    else if (in == "SYSCALL" or in == "RETURNCODE::SYSCALL")
+    else if ( (in == "SYSCALL") || (in == "RETURNCODE::SYSCALL") )
     {
         out = etiss::RETURNCODE::SYSCALL;
     }
-    else if (in == "PAGEFAULT" or in == "RETURNCODE::PAGEFAULT")
+    else if ( (in == "PAGEFAULT") || (in == "RETURNCODE::PAGEFAULT") )
     {
         out = etiss::RETURNCODE::PAGEFAULT;
     }
-    else if (in == "BREAKPOINT" or in == "RETURNCODE::BREAKPOINT")
+    else if ( (in == "BREAKPOINT") || (in == "RETURNCODE::BREAKPOINT") )
     {
         out = etiss::RETURNCODE::BREAKPOINT;
     }
@@ -531,7 +531,7 @@ Action::type_t::map_t Action::type_t::TABLE = {
 };
 
 template<>
-Action::mask_op_t::map_t Action::mask_op_t::TABLE = {  
+Action::mask_op_t::map_t Action::mask_op_t::TABLE = {
       {Action::MaskOp::AND, "AND"}
     , {Action::MaskOp::OR, "OR"}
     , {Action::MaskOp::XOR, "XOR"}
