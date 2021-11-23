@@ -1,28 +1,18 @@
 /**
-
         @copyright
-
         <pre>
-
         Copyright 2018 Infineon Technologies AG
-
         This file is part of ETISS tool, see <https://github.com/tum-ei-eda/etiss>.
-
         The initial version of this software has been created with the funding support by the German Federal
         Ministry of Education and Research (BMBF) in the project EffektiV under grant 01IS13022.
-
         Redistribution and use in source and binary forms, with or without modification, are permitted
         provided that the following conditions are met:
-
         1. Redistributions of source code must retain the above copyright notice, this list of conditions and
         the following disclaimer.
-
         2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions
         and the following disclaimer in the documentation and/or other materials provided with the distribution.
-
         3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse
         or promote products derived from this software without specific prior written permission.
-
         THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
         WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
         PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY
@@ -31,24 +21,16 @@
         HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
         NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
         POSSIBILITY OF SUCH DAMAGE.
-
         </pre>
-
         @author Marc Greim <marc.greim@mytum.de>, Chair of Electronic Design Automation, TUM
-
         @date July 29, 2014
-
         @version 0.1
-
 */
 /**
         @file ETISS.cpp
-
         @brief Implementation of etiss/ETISS.h except for
    etiss::preloadLibraries
-
         @detail
-
 */
 
 #include "etiss/ETISS.h"
@@ -62,6 +44,7 @@
 #include <boost/program_options/options_description.hpp>
 #include <boost/program_options/parsers.hpp>
 #include <boost/program_options/variables_map.hpp>
+#include <boost/algorithm/string.hpp>
 
 #if ETISS_USE_DLSYM
 #include <dlfcn.h>
@@ -512,15 +495,27 @@ void etiss_loadIniConfigs()
                     else if (std::string(iter_section.pItem) == "BoolConfigurations")
                     {
                         std::string itemval = iter_value.pItem;
+                        boost::algorithm::to_lower(itemval); // converts itemval to lower case string
                         bool val;
-                        std::istringstream(itemval) >> std::boolalpha >> val;
+
+                        if ((itemval == "true") | (itemval == "yes") | (itemval == "1") | (itemval == "t")) val = true;
+                        else if ((itemval == "false") | (itemval == "no") | (itemval == "0") | (itemval == "f")) val = false;
+                        else etiss::log(etiss::FATALERROR, std::string("Configuration value ") + iter_key.pItem + " could not be parsed as boolean");
+
                         etiss::cfg().set<bool>(iter_key.pItem, val);
                     }
                     else if (std::string(iter_section.pItem) == "IntConfigurations") // already load!
                     {
                         std::string itemval = iter_value.pItem;
                         std::size_t sz = 0;
-                        double val = std::stod(itemval, &sz);
+                        long long val;
+                        try {
+                            val = std::stoll(itemval, &sz, 0);
+                        }
+                        // catch invalid_argument exception.
+                        catch (std::invalid_argument const&){
+                            etiss::log(etiss::FATALERROR, std::string("Configuration value ") + iter_key.pItem + " could not be parsed as integer");
+                        }
                         etiss::cfg().set<long long>(iter_key.pItem, val);
                         // we use double, as long could have only 32 Bit (e.g. on Windows)
                         // and long long is not offered by the ini library
@@ -667,6 +662,7 @@ void etiss::Initializer::loadIniJIT(std::shared_ptr<etiss::CPUCore> cpu)
     if (!etiss::cfg().isSet("jit.type"))
     {
         etiss::log(etiss::INFO, "No JIT configured. Will use default JIT. \n");
+        cpu->set(etiss::getDefaultJIT());
         return;
     }
     if (cpu->getJITName() != "")
