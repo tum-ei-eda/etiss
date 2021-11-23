@@ -498,9 +498,9 @@ void etiss_loadIniConfigs()
                         boost::algorithm::to_lower(itemval); // converts itemval to lower case string
                         bool val;
 
-                        if ((itemval == "true") | (itemval == "yes") | (itemval == "1") | (itemval == "T"))val = true;
-                        else if ((itemval == "false") | (itemval == "no") | (itemval == "0") | (itemval == "F"))val = false;
-                        else etiss::log(etiss::FATALERROR, "Configuration value name could not be parsed as a boolean");
+                        if ((itemval == "true") | (itemval == "yes") | (itemval == "1") | (itemval == "t")) val = true;
+                        else if ((itemval == "false") | (itemval == "no") | (itemval == "0") | (itemval == "f")) val = false;
+                        else etiss::log(etiss::FATALERROR, std::string("Configuration value ") + iter_key.pItem + " could not be parsed as boolean");
 
                         etiss::cfg().set<bool>(iter_key.pItem, val);
                     }
@@ -509,12 +509,12 @@ void etiss_loadIniConfigs()
                         std::string itemval = iter_value.pItem;
                         std::size_t sz = 0;
                         long long val;
-                        try{
+                        try {
                             val = std::stoll(itemval, &sz, 0);
                         }
                         // catch invalid_argument exception.
-                        catch(const std::invalid_argument){
-                            etiss::log(etiss::FATALERROR, "Configuration value name could not be parsed as an integer");
+                        catch (std::invalid_argument const&){
+                            etiss::log(etiss::FATALERROR, std::string("Configuration value ") + iter_key.pItem + " could not be parsed as integer");
                         }
                         etiss::cfg().set<long long>(iter_key.pItem, val);
                         // we use double, as long could have only 32 Bit (e.g. on Windows)
