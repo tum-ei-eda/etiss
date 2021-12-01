@@ -59,31 +59,33 @@ using namespace etiss;
 
 std::shared_ptr<VirtualStruct> MemoryManipulationSystem::getStruct(void)
 {
-    if(!vsystem_)
+    if (!vsystem_)
     {
         vsystem_ = etiss::VirtualStruct::allocate(this, [](etiss::VirtualStruct::Field *f) { delete f; });
-
     }
     return vsystem_;
 }
 
 void MemoryManipulationSystem::init_manipulation(std::shared_ptr<etiss::VirtualStructSupport> vs_parent)
 {
-    auto mount_successful =  vs_parent->getStruct()->mountStruct(this->getName(), this->getStruct());
+    auto mount_successful = vs_parent->getStruct()->mountStruct(this->getName(), this->getStruct());
 
-    if(!mount_successful)
+    if (!mount_successful)
     {
-        etiss::log(etiss::FATALERROR, std::string("Failed to mount ") + this->getName() + std::string("'s VirtualStruct to ") + vs_parent->getName());
+        etiss::log(etiss::FATALERROR, std::string("Failed to mount ") + this->getName() +
+                                          std::string("'s VirtualStruct to ") + vs_parent->getName());
     }
     else
     {
         uint8_t arch_width = 0;
 
-        if (etiss::cfg().isSet("arch.cpu")) {
-            std::stringstream ss;
+        if (etiss::cfg().isSet("arch.cpu"))
+        {
             auto cpu_arch_str = etiss::cfg().get<std::string>("arch.cpu", "");
             arch_width = cpu_arch_str == "RISCV64" ? 64 : 32;
-        } else {
+        }
+        else
+        {
             // get architecture automatically
             std::string elf_file = etiss::cfg().get<std::string>("vp.elf_file", "");
             ELFIO::elfio reader;
@@ -94,11 +96,13 @@ void MemoryManipulationSystem::init_manipulation(std::shared_ptr<etiss::VirtualS
             arch_width = reader.get_class() == ELFCLASS64 ? 64 : 32;
         }
 
-        etiss::log(etiss::VERBOSE, std::string("Mounted ") + this->getName() + std::string("'s VirtualStruct to CPUCore ") + vs_parent->getName());
+        etiss::log(etiss::VERBOSE, std::string("Mounted ") + this->getName() +
+                                       std::string("'s VirtualStruct to CPUCore ") + vs_parent->getName());
 
         if (!etiss::cfg().isSet("vp.elf_file"))
         {
-            etiss::log(etiss::FATALERROR, std::string("MemoryManipulationSystem::initialize_virtualstruct: Requires \"vp.elf_file\" config to retrieve architecture bit-width."));
+            etiss::log(etiss::FATALERROR, std::string("MemoryManipulationSystem::initialize_virtualstruct: Requires "
+                                                      "\"vp.elf_file\" config to retrieve architecture bit-width."));
         }
 
         std::string elf_file = etiss::cfg().get<std::string>("vp.elf_file", "");
@@ -112,135 +116,135 @@ void MemoryManipulationSystem::init_manipulation(std::shared_ptr<etiss::VirtualS
 
         if (arch_width == 32)
         {
-            auto read = [this](size_t address, etiss::int32& return_code) {
-              etiss::uint32 x;
-              return_code = dbus_access<false>(nullptr, static_cast<etiss::uint64>(address), reinterpret_cast<etiss::uint8 *>(&x), sizeof(x));
-              return x;
+            auto read = [this](size_t address, etiss::int32 &return_code) {
+                etiss::uint32 x;
+                return_code = dbus_access<false>(nullptr, static_cast<etiss::uint64>(address),
+                                                 reinterpret_cast<etiss::uint8 *>(&x), sizeof(x));
+                return x;
             };
-            auto write = [this](size_t address, etiss::uint32 word, etiss::int32& return_code) {
-              return_code = dbus_access<true>(nullptr, static_cast<etiss::uint64>(address), reinterpret_cast<etiss::uint8 *>(&word), sizeof(word));
+            auto write = [this](size_t address, etiss::uint32 word, etiss::int32 &return_code) {
+                return_code = dbus_access<true>(nullptr, static_cast<etiss::uint64>(address),
+                                                reinterpret_cast<etiss::uint8 *>(&word), sizeof(word));
             };
             mem_manipulator_ = std::make_unique<MemoryWordManipulator<etiss::uint32>>(read, write);
         }
         else if (arch_width == 64)
         {
-            auto read = [this](size_t address, etiss::int32& return_code) {
-              etiss::uint64 x;
-              return_code = dbus_access<false>(nullptr, static_cast<etiss::uint64>(address), reinterpret_cast<etiss::uint8 *>(&x), sizeof(x));
-              return x;
+            auto read = [this](size_t address, etiss::int32 &return_code) {
+                etiss::uint64 x;
+                return_code = dbus_access<false>(nullptr, static_cast<etiss::uint64>(address),
+                                                 reinterpret_cast<etiss::uint8 *>(&x), sizeof(x));
+                return x;
             };
-            auto write = [this](size_t address, etiss::uint64 word, etiss::int32& return_code) {
-              return_code = dbus_access<true>(nullptr, static_cast<etiss::uint64>(address), reinterpret_cast<etiss::uint8 *>(&word), sizeof(word));
+            auto write = [this](size_t address, etiss::uint64 word, etiss::int32 &return_code) {
+                return_code = dbus_access<true>(nullptr, static_cast<etiss::uint64>(address),
+                                                reinterpret_cast<etiss::uint8 *>(&word), sizeof(word));
             };
             mem_manipulator_ = std::make_unique<MemoryWordManipulator<etiss::uint64>>(read, write);
         }
         else
         {
-            etiss::log(etiss::FATALERROR, std::string("Failed to initiliaze MemStack: Architecture bit width not set."));
+            etiss::log(etiss::FATALERROR,
+                       std::string("Failed to initiliaze MemStack: Architecture bit width not set."));
         }
 
-        getStruct()->applyCustomAction =  [this](const etiss::fault::Fault &fault, const etiss::fault::Action &action, std::string &errormsg) {
+        getStruct()->applyCustomAction = [this](const etiss::fault::Fault &fault, const etiss::fault::Action &action,
+                                                std::string &errormsg) {
             auto cmd = action.getCommand();
 
             size_t pos = 0;
             std::vector<std::string> split_cmd;
-            while ((pos = cmd.find(" ")) != std::string::npos) {
+            while ((pos = cmd.find(" ")) != std::string::npos)
+            {
                 split_cmd.push_back(cmd.substr(0, pos));
                 cmd.erase(0, pos + 1);
             }
             split_cmd.push_back(cmd);
             if (split_cmd.size() > 1)
             {
-                std::stringstream ss;
                 etiss::uint64 dst_address;
-                ss << std::hex << split_cmd[1];
-                ss >> dst_address;
                 etiss::int32 return_code;
+                dst_address = std::stoll(split_cmd[1], nullptr, 16);
 
                 MemoryWordManipulatorBase::mem_manip_cmd_t mem_manip_cmd(split_cmd[0]);
-                switch(mem_manip_cmd)
+                switch (mem_manip_cmd)
                 {
-                    case MemoryWordManipulatorBase::MemManipCmd::PUSH:
-                        return_code = mem_manipulator_->push(dst_address);
-                        break;
-                    case MemoryWordManipulatorBase::MemManipCmd::POP:
-                        return_code = mem_manipulator_->pop(dst_address);
-                        break;
-                    case MemoryWordManipulatorBase::MemManipCmd::RMW:
-                    {
-                        etiss::uint64 val;
-                        std::stringstream ssval;
-                        ssval << std::hex << split_cmd[3];
-                        ssval >> val;
-                        return_code = mem_manipulator_->rmw(dst_address, MemoryWordManipulatorBase::MemOp(split_cmd[2]), val);
-                        break;
-                    }
-                    case MemoryWordManipulatorBase::MemManipCmd::RRMW:
-                    {
-                        etiss::uint64 src2_addr;
-                        std::stringstream ssval;
-                        ssval << std::hex << split_cmd[3];
-                        ssval >> src2_addr;
-                        return_code = mem_manipulator_->rrmw(dst_address, MemoryWordManipulatorBase::MemOp(split_cmd[2]), src2_addr);
-                        break;
-                    }
-                    default: /* UNDEF */
-                        etiss::log(etiss::FATALERROR, std::string("MemoryManipulationSystem/VirtualStruct/applyCustomAction: \'")
-                            + action.getCommand() + std::string("\' unrecognized Action. Invalid memory manipulation command: ")
-                            + split_cmd[0] );
-                        return false;
+                case MemoryWordManipulatorBase::MemManipCmd::PUSH:
+                    return_code = mem_manipulator_->push(dst_address);
+                    break;
+                case MemoryWordManipulatorBase::MemManipCmd::POP:
+                    return_code = mem_manipulator_->pop(dst_address);
+                    break;
+                case MemoryWordManipulatorBase::MemManipCmd::RMW:
+                {
+                    etiss::uint64 val;
+                    val = std::stoll(split_cmd[3], nullptr, 16);
+                    return_code =
+                        mem_manipulator_->rmw(dst_address, MemoryWordManipulatorBase::MemOp(split_cmd[2]), val);
+                    break;
+                }
+                case MemoryWordManipulatorBase::MemManipCmd::RRMW:
+                {
+                    etiss::uint64 src2_addr;
+                    src2_addr = std::stoll(split_cmd[3], nullptr, 16);
+                    return_code =
+                        mem_manipulator_->rrmw(dst_address, MemoryWordManipulatorBase::MemOp(split_cmd[2]), src2_addr);
+                    break;
+                }
+                default: /* UNDEF */
+                    etiss::log(etiss::FATALERROR,
+                               std::string("MemoryManipulationSystem/VirtualStruct/applyCustomAction: \'") +
+                                   action.getCommand() +
+                                   std::string("\' unrecognized Action. Invalid memory manipulation command: ") +
+                                   split_cmd[0]);
+                    return false;
                 }
 
                 if (return_code != etiss::RETURNCODE::NOERROR)
                 {
-                    etiss::log(etiss::FATALERROR, std::string("MemoryManipulationSystem/VirtualStruct/applyCustomAction: \'") + action.getCommand() + std::string("\' memory access error") );
+                    etiss::log(etiss::FATALERROR,
+                               std::string("MemoryManipulationSystem/VirtualStruct/applyCustomAction: \'") +
+                                   action.getCommand() + std::string("\' memory access error"));
                     return false;
                 }
 
                 return true;
             }
 
-            etiss::log(etiss::FATALERROR, std::string("MemoryManipulationSystem/VirtualStruct/applyCustomAction: \'") + action.getCommand() + std::string("\' unrecognized Action") );
+            etiss::log(etiss::FATALERROR, std::string("MemoryManipulationSystem/VirtualStruct/applyCustomAction: \'") +
+                                              action.getCommand() + std::string("\' unrecognized Action"));
             return false;
         };
     }
 }
 
-MemoryManipulationSystem::MemoryManipulationSystem(const std::string& name)
-  : SimpleMemSystem()
-  , name_(name)
-  , vsystem_()
-  , mem_manipulator_()
+MemoryManipulationSystem::MemoryManipulationSystem(const std::string &name)
+    : SimpleMemSystem(), name_(name), vsystem_(), mem_manipulator_()
 {
-
 }
 
 /* MemoryWordManipulatorBase implementation */
 
-template<>
+template <>
 etiss::MemoryWordManipulatorBase::mem_op_t::map_t etiss::MemoryWordManipulatorBase::mem_op_t::TABLE = {
-      {MemoryWordManipulatorBase::MemOpType::COPY, "COPY"}
-    , {MemoryWordManipulatorBase::MemOpType::AND, "OR"}
-    , {MemoryWordManipulatorBase::MemOpType::OR, "OR"}
-    , {MemoryWordManipulatorBase::MemOpType::XOR, "XOR"}
-    , {MemoryWordManipulatorBase::MemOpType::NAND, "NAND"}
-    , {MemoryWordManipulatorBase::MemOpType::NOR, "NOR"}
-    , {MemoryWordManipulatorBase::MemOpType::UNDEF, "UNDEF"}
+    { MemoryWordManipulatorBase::MemOpType::COPY, "COPY" },  { MemoryWordManipulatorBase::MemOpType::AND, "OR" },
+    { MemoryWordManipulatorBase::MemOpType::OR, "OR" },      { MemoryWordManipulatorBase::MemOpType::XOR, "XOR" },
+    { MemoryWordManipulatorBase::MemOpType::NAND, "NAND" },  { MemoryWordManipulatorBase::MemOpType::NOR, "NOR" },
+    { MemoryWordManipulatorBase::MemOpType::UNDEF, "UNDEF" }
 };
 
-
-MemoryWordManipulatorBase::MemOp::MemOp(const std::string& memop_str)
-  : mem_op_t(memop_str)
+MemoryWordManipulatorBase::MemOp::MemOp(const std::string &memop_str) : mem_op_t(memop_str)
 {
-  if(*this == MemOpType::UNDEF)
-      etiss::log(etiss::FATALERROR, std::string("MemoryManipulationSystem/MemFaulter: Unrecognized op code: ") + memop_str );
+    if (*this == MemOpType::UNDEF)
+        etiss::log(etiss::FATALERROR,
+                   std::string("MemoryManipulationSystem/MemFaulter: Unrecognized op code: ") + memop_str);
 }
 
-template<>
+template <>
 etiss::MemoryWordManipulatorBase::mem_manip_cmd_t::map_t etiss::MemoryWordManipulatorBase::mem_manip_cmd_t::TABLE = {
-      {MemoryWordManipulatorBase::MemManipCmd::PUSH, "push"}
-    , {MemoryWordManipulatorBase::MemManipCmd::POP, "pop"}
-    , {MemoryWordManipulatorBase::MemManipCmd::RMW, "rmw"}
-    , {MemoryWordManipulatorBase::MemManipCmd::RRMW, "rrmw"}
-    , {MemoryWordManipulatorBase::MemManipCmd::UNDEF, "UNDEF"}
+    { MemoryWordManipulatorBase::MemManipCmd::PUSH, "push" },
+    { MemoryWordManipulatorBase::MemManipCmd::POP, "pop" },
+    { MemoryWordManipulatorBase::MemManipCmd::RMW, "rmw" },
+    { MemoryWordManipulatorBase::MemManipCmd::RRMW, "rrmw" },
+    { MemoryWordManipulatorBase::MemManipCmd::UNDEF, "UNDEF" }
 };

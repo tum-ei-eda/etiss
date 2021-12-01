@@ -143,18 +143,14 @@ bool parse_hex(pugi::xml_node node, uint64_t &dst, Diagnostics &diag)
         return false;
     }
     uint64_t val;
-    std::stringstream ss;
-    ss << std::hex << ret;
-    ss >> val;
+    val = std::stoll(ret, nullptr, 16);
     dst = val;
     return true;
 }
 template <>
 bool write<uint64_t>(pugi::xml_node node, const uint64_t &src, Diagnostics &diag)
 {
-    std::stringstream ss;
-    ss << src;
-    return write<std::string>(node, ss.str(), diag);
+    return write<std::string>(node, std::to_string(src), diag);
 }
 
 template <>
@@ -170,9 +166,7 @@ bool parse<unsigned>(pugi::xml_node node, unsigned &dst, Diagnostics &diag)
 template <>
 bool write<unsigned>(pugi::xml_node node, const unsigned &src, Diagnostics &diag)
 {
-    std::stringstream ss;
-    ss << src;
-    return write<std::string>(node, ss.str(), diag);
+    return write<std::string>(node, std::to_string(src), diag);
 }
 
 template <>
