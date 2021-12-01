@@ -551,14 +551,13 @@ bool VirtualStruct::applyAction(const etiss::fault::Fault &fault, const etiss::f
     }
 }
 
-bool VirtualStruct::update_field_access_rights(const std::string &field, etiss::fault::Action::Type type,
-                                               std::string &errormsg)
+bool VirtualStruct::update_field_access_rights(const etiss::fault::Action &action, std::string &errormsg)
 {
     Field *f = nullptr;
-    auto find = fieldNames_.find(field);
+    auto find = fieldNames_.find(action.getTargetField());
     if (find == fieldNames_.end())
     {
-        find = fieldPrettyNames_.find(field);
+        find = fieldPrettyNames_.find(action.getTargetField());
         if (find == fieldPrettyNames_.end())
         {
             f = 0;
@@ -575,7 +574,7 @@ bool VirtualStruct::update_field_access_rights(const std::string &field, etiss::
 
     if (f)
     {
-        switch (type)
+        switch (action.getType())
         {
         case etiss::fault::Action::Type::MASK:
             [[fallthrough]];

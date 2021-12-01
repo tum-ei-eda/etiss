@@ -53,9 +53,14 @@
 #define ETISS_INJECTOR_H_
 
 #ifndef NO_ETISS
-#include "etiss/fault/Fault.h"
+#include "etiss/Misc.h"
+#include "etiss/fault/Defs.h"
+#include "etiss/fault/XML.h"
+#include "etiss/fault/Misc.h"
 #else
-#include "fault/Fault.h"
+#include "fault/Defs.h"
+#include "fault/XML.h"
+#include "fault/Misc.h"
 #endif
 
 #if CXX0X_UP_SUPPORTED
@@ -73,6 +78,9 @@ namespace fault
 {
 
 class Stressor;
+class Fault;
+class Trigger;
+class Action;
 
 class Injector
 {
@@ -156,11 +164,10 @@ class Injector
     virtual bool acceleratedTrigger(const etiss::fault::Trigger &, int32_t fault_id);
 
     /**
-        @brief Update the \p field of injector with access rights to allow \p type actions.
+        @brief Update the \p field of injector with access rights to allow \p action (used to get type of action).
         @detail For example, if \p action is of etiss::fault::Action::BITFLIP, \p field requires F flag set
     */
-    virtual bool update_field_access_rights(const std::string &field, etiss::fault::Action::Type type,
-                                            std::string &errormsg) = 0;
+    virtual bool update_field_access_rights(const etiss::fault::Action &action, std::string &errormsg) = 0;
 
   public: // static
     /**

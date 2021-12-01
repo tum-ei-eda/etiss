@@ -42,11 +42,19 @@
 
 #ifndef NO_ETISS
 #include "etiss/fault/Stressor.h"
-#include "etiss/Misc.h"
 #include "etiss/fault/Injector.h"
+#include "etiss/fault/InjectorAddress.h"
+#include "etiss/fault/Trigger.h"
+#include "etiss/fault/Action.h"
+#include "etiss/fault/Fault.h"
+#include "etiss/Misc.h"
 #else
-#include "fault/Injector.h"
 #include "fault/Stressor.h"
+#include "fault/Injector.h"
+#include "fault/InjectorAddress.h"
+#include "fault/Trigger.h"
+#include "fault/Action.h"
+#include "fault/Fault.h"
 #endif
 
 #include <fstream>
@@ -218,7 +226,7 @@ bool Stressor::addFault(const Fault &f, bool injected_fault)
             {
                 bool ret_update = false;
                 std::string errormsg;
-                ret_update = iptr->update_field_access_rights(it.getTargetField(), it.getType(), errormsg);
+                ret_update = iptr->update_field_access_rights(it, errormsg);
                 if (!ret_update)
                 {
                     etiss::log(etiss::ERROR, std::string("etiss::fault::Stressor::addFault:") + errormsg);

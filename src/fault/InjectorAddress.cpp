@@ -43,9 +43,13 @@
 #ifndef NO_ETISS
 #include "etiss/fault/InjectorAddress.h"
 #include "etiss/fault/Injector.h"
+#include "etiss/fault/Trigger.h"
+#include "etiss/fault/Action.h"
 #else
-#include "fault/Injector.h"
 #include "fault/InjectorAddress.h"
+#include "fault/Injector.h"
+#include "fault/Trigger.h"
+#include "fault/Action.h"
 #endif
 
 namespace etiss

@@ -44,9 +44,15 @@
 #include "etiss/fault/Injector.h"
 #include "etiss/Misc.h"
 #include "etiss/fault/Stressor.h"
+#include "etiss/fault/Trigger.h"
+#include "etiss/fault/Action.h"
+#include "etiss/fault/Fault.h"
 #else
 #include "fault/Injector.h"
 #include "fault/Stressor.h"
+#include "fault/Trigger.h"
+#include "fault/Action.h"
+#include "fault/Fault.h"
 #endif
 
 #include <iostream>

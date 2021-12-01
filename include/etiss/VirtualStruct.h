@@ -55,6 +55,10 @@
 #include "etiss/Misc.h"
 #include "etiss/fault/Injector.h"
 
+#include "etiss/fault/Trigger.h"
+#include "etiss/fault/Action.h"
+#include "etiss/fault/Fault.h"
+
 #include <cstddef>
 
 #include <memory>
@@ -370,8 +374,7 @@ class VirtualStruct : public std::enable_shared_from_this<VirtualStruct>, public
     virtual bool readField(void *fastfieldaccessptr, uint64_t &val, std::string &errormsg);
     virtual bool applyAction(const etiss::fault::Fault &fault, const etiss::fault::Action &action,
                              std::string &errormsg);
-    virtual bool update_field_access_rights(const std::string &field, etiss::fault::Action::Type type,
-                                            std::string &errormsg);
+    virtual bool update_field_access_rights(const etiss::fault::Action &action, std::string &errormsg);
 
   public:
     /// set this function to handle custom commands passed by etiss::fault::Action of the type
