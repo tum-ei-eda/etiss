@@ -107,7 +107,7 @@ class SmartType : public etiss::ToString
     ////////////////////////////////////////////////////////////////////////////////////////////
     /// \brief Constructor takes \p type_str specifying action type string encoded
     /// \note If string does not match, default \ref enum_t() is used. Make sure to adapt
-    SmartType(const std::string &type_str)
+    SmartType(const std::string &type_str) : type_()
     {
         auto ret = fromString(type_str, type_);
         if (!ret)
