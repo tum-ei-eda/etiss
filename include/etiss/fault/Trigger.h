@@ -88,14 +88,15 @@ class Trigger : public etiss::ToString
   public:
     enum class Type
     {
-          META_COUNTER
-        , VARIABLEVALUE
-        , TIME
+        META_COUNTER,
+        VARIABLEVALUE,
+        TIME
         /// needs to be resolved. this can only be used in connection with an
         /// injection action
-        , TIMERELATIVE
-        , ASAP
-        , NOP
+        ,
+        TIMERELATIVE,
+        ASAP,
+        NOP
     };
     typedef SmartType<Type> type_t;
     // constructors
@@ -149,7 +150,7 @@ class Trigger : public etiss::ToString
     bool isNOP() const;
     const std::string &getTriggerField() const;
     const uint64_t &getTriggerFieldValue() const;
-    const type_t& getType() const;
+    const type_t &getType() const;
 
     // Members
     /** @brief this function checks if the Trigger has just fired.

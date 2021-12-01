@@ -82,25 +82,30 @@ class Action : public etiss::ToString
     enum class Type
     {
         NOP = 0 /// NO Operation. used by default constructor
-      , BITFLIP /// applies a bit flip to a bit in a specified field
-      , MASK /// applies a mask type injection (field <op>= mask;) where <op> can be any MaskOp
-      , COMMAND /// commands are targetet at Injectors, not fields. in case a command is targetet at a certain field that
-                /// information must be passed within the command string
-      , INJECTION /// an action that injects a fault definition (trigger + actions)
-      #ifndef NO_ETISS
-      /// an event that breaks the JIT-block and forces the simulation loop to handle the etiss::RETURNCODE exception
-      , EVENT
-      #endif
+        ,
+        BITFLIP /// applies a bit flip to a bit in a specified field
+        ,
+        MASK /// applies a mask type injection (field <op>= mask;) where <op> can be any MaskOp
+        ,
+        COMMAND /// commands are targetet at Injectors, not fields. in case a command is targetet at a certain field
+                /// that information must be passed within the command string
+        ,
+        INJECTION /// an action that injects a fault definition (trigger + actions)
+#ifndef NO_ETISS
+        /// an event that breaks the JIT-block and forces the simulation loop to handle the etiss::RETURNCODE exception
+        ,
+        EVENT
+#endif
     };
     typedef SmartType<Type> type_t;
     enum class MaskOp
     {
-      NOP,
-      AND,
-      OR,
-      XOR,
-      NAND,
-      NOR
+        NOP,
+        AND,
+        OR,
+        XOR,
+        NAND,
+        NOR
     };
     typedef SmartType<MaskOp> mask_op_t;
     /**
@@ -147,7 +152,7 @@ class Action : public etiss::ToString
     Action(const Fault &fault);
 
     // Getters
-    const type_t& getType() const;
+    const type_t &getType() const;
 
     const InjectorAddress &getInjectorAddress() const;
 
@@ -161,7 +166,7 @@ class Action : public etiss::ToString
     /// INJECTION only
     const Fault &getFault() const;
 
-    const mask_op_t& getMaskOp() const;
+    const mask_op_t &getMaskOp() const;
 
     uint64_t getMaskValue() const;
 #ifndef NO_ETISS
@@ -170,7 +175,7 @@ class Action : public etiss::ToString
     // Members
     std::string toString() const; ///< operator<< can be used.
 
-  private:      // Attributes
+  private:                     // Attributes
     type_t type_;              ///< type of the Attribute
     InjectorAddress inj_;      ///< Address of Injector
     std::string command_;      ///< command e.g. for booting OR1KVCPU
@@ -180,8 +185,8 @@ class Action : public etiss::ToString
     uint64_t mask_value_;      ///< mask value (for mask injection)
     std::vector<Fault> fault_; ///< for fault injection
 #ifndef NO_ETISS
-    etiss::int32 event_;   ///< exception, or rather etiss::RETURNCODE to
-                               /// to be injected into the simulation loop
+    etiss::int32 event_; ///< exception, or rather etiss::RETURNCODE to
+                         /// to be injected into the simulation loop
 #endif
     // private Members
     void ensure(Type);
@@ -191,7 +196,7 @@ class Action : public etiss::ToString
 /**
  *	@brief decode etiss::RETURNCODE from string
  */
-bool returncode_fromstring(etiss::int32& out, const std::string& in);
+bool returncode_fromstring(etiss::int32 &out, const std::string &in);
 /**
  *	@brief encode etiss::RETURNCODE to string
  */

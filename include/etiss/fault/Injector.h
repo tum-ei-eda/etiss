@@ -159,7 +159,8 @@ class Injector
         @brief Update the \p field of injector with access rights to allow \p type actions.
         @detail For example, if \p action is of etiss::fault::Action::BITFLIP, \p field requires F flag set
     */
-    virtual bool update_field_access_rights(const std::string& field, etiss::fault::Action::Type type, std::string &errormsg) = 0;
+    virtual bool update_field_access_rights(const std::string &field, etiss::fault::Action::Type type,
+                                            std::string &errormsg) = 0;
 
   public: // static
     /**

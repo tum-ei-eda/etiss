@@ -65,35 +65,27 @@ bool Action::is_action_on_field(void) const
     return ((type_ == Type::BITFLIP || type_ == Type::MASK) ? true : false);
 }
 
-Action::Action()
-  : type_(Type::NOP)
+Action::Action() : type_(Type::NOP)
 {
     etiss::log(etiss::VERBOSE, std::string("etiss::fault::Action::Action() called. "));
 }
 
 #ifndef NO_ETISS
-Action::Action(etiss::int32 event)
-  : type_(Type::EVENT)
-  , event_(event)
+Action::Action(etiss::int32 event) : type_(Type::EVENT), event_(event)
 {
     etiss::log(etiss::VERBOSE, std::string("etiss::fault::Action::Action(etiss::int32 exception) called. "));
 }
 #endif
 
 Action::Action(const InjectorAddress &inj, const std::string &command)
-  : type_(Type::COMMAND)
-  , inj_(inj)
-  , command_(command)
+    : type_(Type::COMMAND), inj_(inj), command_(command)
 {
     etiss::log(etiss::VERBOSE, std::string("etiss::fault::Action::Action(InjectorAddress &=") + inj.getInjectorPath() +
                                    std::string(", command=") + command + std::string(") called. "));
 }
 
 Action::Action(const InjectorAddress &inj, const std::string &field, unsigned bit)
-  : type_(Type::BITFLIP)
-  , inj_(inj)
-  , field_(field)
-  , bit_(bit)
+    : type_(Type::BITFLIP), inj_(inj), field_(field), bit_(bit)
 {
     etiss::log(etiss::VERBOSE, std::string("etiss::fault::Action::Action(InjectorAddress &=") + inj.getInjectorPath() +
                                    std::string(", field=") + field + std::string(", bit=") + std::to_string(bit) +
@@ -101,11 +93,7 @@ Action::Action(const InjectorAddress &inj, const std::string &field, unsigned bi
 }
 
 Action::Action(const InjectorAddress &inj, const std::string &field, MaskOp mask_op, uint64_t mask_value)
-  : type_(Type::MASK)
-  , inj_(inj)
-  , field_(field)
-  , mask_op_(mask_op)
-  , mask_value_(mask_value)
+    : type_(Type::MASK), inj_(inj), field_(field), mask_op_(mask_op), mask_value_(mask_value)
 {
     etiss::log(etiss::VERBOSE, std::string("etiss::fault::Action::Action(InjectorAddress &=") + inj.getInjectorPath() +
                                    std::string(", field=") + field + std::string(", mask_op=") + std::string(mask_op_) +
@@ -113,84 +101,94 @@ Action::Action(const InjectorAddress &inj, const std::string &field, MaskOp mask
                                    std::string(") called. "));
 }
 
-Action::Action(const Fault &fault)
-  : type_(Type::INJECTION)
+Action::Action(const Fault &fault) : type_(Type::INJECTION)
 {
     etiss::log(etiss::VERBOSE,
                std::string("etiss::fault::Action::Action(Fault &=") + fault.toString() + std::string(") called. "));
     fault_.push_back(fault);
 }
 
-const Action::type_t& Action::getType() const
+const Action::type_t &Action::getType() const
 {
     return type_;
 }
 
 const InjectorAddress &Action::getInjectorAddress() const
 {
-    if(unlikely(!(type_ == Type::BITFLIP || type_ == Type::MASK || type_ == Type::COMMAND)))
-        etiss::log(etiss::FATALERROR, std::string("etiss::fault::Action::TypeStruct::getInjectorAddress(): Requested Action::Type is not Injector"));
+    if (unlikely(!(type_ == Type::BITFLIP || type_ == Type::MASK || type_ == Type::COMMAND)))
+        etiss::log(
+            etiss::FATALERROR,
+            std::string(
+                "etiss::fault::Action::TypeStruct::getInjectorAddress(): Requested Action::Type is not Injector"));
     return inj_;
 }
 
 /// COMMAND only
 const std::string &Action::getCommand() const
 {
-    if(unlikely(type_ != Type::COMMAND))
-        etiss::log(etiss::FATALERROR, std::string("etiss::fault::Action::getCommand(): Requested Action::Type is not Command"));
+    if (unlikely(type_ != Type::COMMAND))
+        etiss::log(etiss::FATALERROR,
+                   std::string("etiss::fault::Action::getCommand(): Requested Action::Type is not Command"));
     return command_;
 }
 
 /// is_action_on_field only
 const std::string &Action::getTargetField() const
 {
-    if(unlikely(!(type_ == Type::BITFLIP || type_ == Type::MASK)))
-        etiss::log(etiss::FATALERROR, std::string("etiss::fault::Action::getTargetField(): Requested Action::Type is not TargetField"));
+    if (unlikely(!(type_ == Type::BITFLIP || type_ == Type::MASK)))
+        etiss::log(etiss::FATALERROR,
+                   std::string("etiss::fault::Action::getTargetField(): Requested Action::Type is not TargetField"));
     return field_;
 }
 
 /// BITFLIP only
 unsigned Action::getTargetBit() const
 {
-    if(unlikely(type_ != Type::BITFLIP))
-        etiss::log(etiss::FATALERROR, std::string("etiss::fault::Action::getTargetBit(): Requested Action::Type is not TargetBit"));
+    if (unlikely(type_ != Type::BITFLIP))
+        etiss::log(etiss::FATALERROR,
+                   std::string("etiss::fault::Action::getTargetBit(): Requested Action::Type is not TargetBit"));
     return bit_;
 }
 
 const Fault &Action::getFault() const
 {
-    if(unlikely(type_ != Type::INJECTION))
-        etiss::log(etiss::FATALERROR, std::string("etiss::fault::Action::getFault(): Requested Action::Type is not injectable Fault"));
+    if (unlikely(type_ != Type::INJECTION))
+        etiss::log(etiss::FATALERROR,
+                   std::string("etiss::fault::Action::getFault(): Requested Action::Type is not injectable Fault"));
     return fault_.front();
 }
 
-//Action::MaskOp Action::getMaskOp() const
-const Action::mask_op_t& Action::getMaskOp() const
+// Action::MaskOp Action::getMaskOp() const
+const Action::mask_op_t &Action::getMaskOp() const
 {
-    if(unlikely(type_ != Type::MASK))
-        etiss::log(etiss::FATALERROR, std::string("etiss::fault::Action::getMaskOp(): Requested Action::Type is not Mask"));
+    if (unlikely(type_ != Type::MASK))
+        etiss::log(etiss::FATALERROR,
+                   std::string("etiss::fault::Action::getMaskOp(): Requested Action::Type is not Mask"));
     return mask_op_;
 }
 
-//std::string Action::getMaskOpString() const
+// std::string Action::getMaskOpString() const
 //{
 //    if(unlikely(type_ != Type::MASK))
-//        etiss::log(etiss::FATALERROR, std::string("etiss::fault::Action::getMaskOp(): Requested Action::Type is not Mask"));
+//        etiss::log(etiss::FATALERROR, std::string("etiss::fault::Action::getMaskOp(): Requested Action::Type is not
+//        Mask"));
 //    return mask_op_;
 //}
 
 uint64_t Action::getMaskValue() const
 {
-    if(unlikely(type_ != Type::MASK))
-        etiss::log(etiss::FATALERROR, std::string("etiss::fault::Action::getMaskValue(): Requested Action::Type is not Mask"));
+    if (unlikely(type_ != Type::MASK))
+        etiss::log(etiss::FATALERROR,
+                   std::string("etiss::fault::Action::getMaskValue(): Requested Action::Type is not Mask"));
     return mask_value_;
 }
 
 #ifndef NO_ETISS
 etiss::int32 Action::getEvent() const
 {
-    if(unlikely(type_ != Type::EVENT))
-        etiss::log(etiss::FATALERROR, std::string("etiss::fault::Action::getEvent(): Requested Action::Type is not Event"));
+    if (unlikely(type_ != Type::EVENT))
+        etiss::log(etiss::FATALERROR,
+                   std::string("etiss::fault::Action::getEvent(): Requested Action::Type is not Event"));
     return event_;
 }
 #endif
@@ -308,7 +306,7 @@ bool parse<etiss::fault::Action>(pugi::xml_node node, etiss::fault::Action &f, D
             diag.unexpectedNode(node, "Failed to parse mask operation <op>");
             return false;
         }
-        if (! etiss::fault::Action::mask_op_t::fromString(op_str, op))
+        if (!etiss::fault::Action::mask_op_t::fromString(op_str, op))
         {
             diag.unexpectedNode(node, "Failed to parse mask operation <op>");
             return false;
@@ -332,9 +330,10 @@ bool parse<etiss::fault::Action>(pugi::xml_node node, etiss::fault::Action &f, D
             diag.unexpectedNode(node, "Failed to parse node of event type: <cause>");
             return false;
         }
-        if (! etiss::fault::returncode_fromstring(event, event_str))
+        if (!etiss::fault::returncode_fromstring(event, event_str))
         {
-            diag.unexpectedNode(node, "Failed to parse event <cause>. Supported values: {NOERROR, RELOADBLOCKS, RELOADCURRENTBLOCK, CPUFINISHED, EXCEPTION:[cause(hex)]}");
+            diag.unexpectedNode(node, "Failed to parse event <cause>. Supported values: {NOERROR, RELOADBLOCKS, "
+                                      "RELOADCURRENTBLOCK, CPUFINISHED, EXCEPTION:[cause(hex)]}");
             return false;
         }
         f = Action(event);
@@ -394,73 +393,73 @@ bool write<etiss::fault::Action>(pugi::xml_node node, const etiss::fault::Action
 #endif
 
 #ifndef NO_ETISS
-bool returncode_fromstring(etiss::int32& out, const std::string& in)
+bool returncode_fromstring(etiss::int32 &out, const std::string &in)
 {
-    if ( (in == "NOERROR") || (in == "RETURNCODE::NOERROR") )
+    if ((in == "NOERROR") || (in == "RETURNCODE::NOERROR"))
     {
         out = etiss::RETURNCODE::NOERROR;
     }
-    else if ( (in == "RELOADBLOCKS") || (in == "RETURNCODE::RELOADBLOCKS") )
+    else if ((in == "RELOADBLOCKS") || (in == "RETURNCODE::RELOADBLOCKS"))
     {
-        out =  etiss::RETURNCODE::RELOADBLOCKS;
+        out = etiss::RETURNCODE::RELOADBLOCKS;
     }
-    else if ( (in == "RELOADCURRENTBLOCK") || (in == "RETURNCODE::RELOADCURRENTBLOCK") )
+    else if ((in == "RELOADCURRENTBLOCK") || (in == "RETURNCODE::RELOADCURRENTBLOCK"))
     {
-        out =  etiss::RETURNCODE::RELOADCURRENTBLOCK;
+        out = etiss::RETURNCODE::RELOADCURRENTBLOCK;
     }
-    else if ( (in == "CPUFINISHED") || (in == "RETURNCODE::CPUFINISHED") )
+    else if ((in == "CPUFINISHED") || (in == "RETURNCODE::CPUFINISHED"))
     {
-        out =  etiss::RETURNCODE::CPUFINISHED;
+        out = etiss::RETURNCODE::CPUFINISHED;
     }
-    else if ( (in == "DBUS_WRITE_ERROR") || (in == "RETURNCODE::DBUS_WRITE_ERROR") )
+    else if ((in == "DBUS_WRITE_ERROR") || (in == "RETURNCODE::DBUS_WRITE_ERROR"))
     {
         out = etiss::RETURNCODE::DBUS_WRITE_ERROR;
     }
-    else if ( (in == "IBUS_READ_ERROR") || (in == "RETURNCODE::IBUS_READ_ERROR") )
+    else if ((in == "IBUS_READ_ERROR") || (in == "RETURNCODE::IBUS_READ_ERROR"))
     {
         out = etiss::RETURNCODE::IBUS_READ_ERROR;
     }
-    else if ( (in == "IBUS_WRITE_ERROR") || (in == "RETURNCODE::IBUS_WRITE_ERROR") )
+    else if ((in == "IBUS_WRITE_ERROR") || (in == "RETURNCODE::IBUS_WRITE_ERROR"))
     {
         out = etiss::RETURNCODE::IBUS_WRITE_ERROR;
     }
-    else if ( (in == "INTERRUPT") || (in == "RETURNCODE::INTERRUPT") )
+    else if ((in == "INTERRUPT") || (in == "RETURNCODE::INTERRUPT"))
     {
         out = etiss::RETURNCODE::INTERRUPT;
     }
-    else if ( (in == "RESET") || (in == "RETURNCODE::RESET") )
+    else if ((in == "RESET") || (in == "RETURNCODE::RESET"))
     {
         out = etiss::RETURNCODE::RESET;
     }
-    else if ( (in == "ILLEGALINSTRUCTION") || (in == "RETURNCODE::ILLEGALINSTRUCTION") )
+    else if ((in == "ILLEGALINSTRUCTION") || (in == "RETURNCODE::ILLEGALINSTRUCTION"))
     {
         out = etiss::RETURNCODE::ILLEGALINSTRUCTION;
     }
-    else if ( (in == "ILLEGALJUMP") || (in == "RETURNCODE::ILLEGALJUMP") )
+    else if ((in == "ILLEGALJUMP") || (in == "RETURNCODE::ILLEGALJUMP"))
     {
         out = etiss::RETURNCODE::ILLEGALJUMP;
     }
-    else if ( (in == "INSTR_PAGEFAULT") || in == ("RETURNCODE::INSTR_PAGEFAULT") )
+    else if ((in == "INSTR_PAGEFAULT") || in == ("RETURNCODE::INSTR_PAGEFAULT"))
     {
         out = etiss::RETURNCODE::INSTR_PAGEFAULT;
     }
-    else if ( (in == "LOAD_PAGEFAULT") || (in == "RETURNCODE::LOAD_PAGEFAULT") )
+    else if ((in == "LOAD_PAGEFAULT") || (in == "RETURNCODE::LOAD_PAGEFAULT"))
     {
         out = etiss::RETURNCODE::LOAD_PAGEFAULT;
     }
-    else if ( (in == "STORE_PAGEFAULT") || (in == "RETURNCODE::STORE_PAGEFAULT") )
+    else if ((in == "STORE_PAGEFAULT") || (in == "RETURNCODE::STORE_PAGEFAULT"))
     {
         out = etiss::RETURNCODE::STORE_PAGEFAULT;
     }
-    else if ( (in == "SYSCALL") || (in == "RETURNCODE::SYSCALL") )
+    else if ((in == "SYSCALL") || (in == "RETURNCODE::SYSCALL"))
     {
         out = etiss::RETURNCODE::SYSCALL;
     }
-    else if ( (in == "PAGEFAULT") || (in == "RETURNCODE::PAGEFAULT") )
+    else if ((in == "PAGEFAULT") || (in == "RETURNCODE::PAGEFAULT"))
     {
         out = etiss::RETURNCODE::PAGEFAULT;
     }
-    else if ( (in == "BREAKPOINT") || (in == "RETURNCODE::BREAKPOINT") )
+    else if ((in == "BREAKPOINT") || (in == "RETURNCODE::BREAKPOINT"))
     {
         out = etiss::RETURNCODE::BREAKPOINT;
     }
@@ -473,43 +472,43 @@ bool returncode_fromstring(etiss::int32& out, const std::string& in)
 
 std::string returncode_tostring(etiss::int32 in)
 {
-    switch(in)
+    switch (in)
     {
-      case etiss::RETURNCODE::NOERROR:
+    case etiss::RETURNCODE::NOERROR:
         return "NOERROR";
-      case etiss::RETURNCODE::RELOADBLOCKS:
+    case etiss::RETURNCODE::RELOADBLOCKS:
         return "RELOADBLOCKS";
-      case etiss::RETURNCODE::RELOADCURRENTBLOCK:
+    case etiss::RETURNCODE::RELOADCURRENTBLOCK:
         return "RELOADCURRENTBLOCK";
-      case etiss::RETURNCODE::INTERRUPT:
+    case etiss::RETURNCODE::INTERRUPT:
         return "INTERRUPT";
-      case etiss::RETURNCODE::DBUS_WRITE_ERROR:
+    case etiss::RETURNCODE::DBUS_WRITE_ERROR:
         return "DBUS_WRITE_ERROR";
-      case etiss::RETURNCODE::IBUS_READ_ERROR:
+    case etiss::RETURNCODE::IBUS_READ_ERROR:
         return "IBUS_READ_ERROR";
-      case etiss::RETURNCODE::IBUS_WRITE_ERROR:
+    case etiss::RETURNCODE::IBUS_WRITE_ERROR:
         return "IBUS_WRITE_ERROR";
-      case etiss::RETURNCODE::RESET:
+    case etiss::RETURNCODE::RESET:
         return "RESET";
-      case etiss::RETURNCODE::ILLEGALINSTRUCTION:
+    case etiss::RETURNCODE::ILLEGALINSTRUCTION:
         return "ILLEGALINSTRUCTION";
-      case etiss::RETURNCODE::ILLEGALJUMP:
+    case etiss::RETURNCODE::ILLEGALJUMP:
         return "ILLEGALJUMP";
-      case etiss::RETURNCODE::INSTR_PAGEFAULT:
+    case etiss::RETURNCODE::INSTR_PAGEFAULT:
         return "INSTR_PAGEFAULT";
-      case etiss::RETURNCODE::LOAD_PAGEFAULT:
+    case etiss::RETURNCODE::LOAD_PAGEFAULT:
         return "LOAD_PAGEFAULT";
-      case etiss::RETURNCODE::STORE_PAGEFAULT:
+    case etiss::RETURNCODE::STORE_PAGEFAULT:
         return "STORE_PAGEFAULT";
-      case etiss::RETURNCODE::SYSCALL:
+    case etiss::RETURNCODE::SYSCALL:
         return "SYSCALL";
-      case etiss::RETURNCODE::PAGEFAULT:
+    case etiss::RETURNCODE::PAGEFAULT:
         return "PAGEFAULT";
-      case etiss::RETURNCODE::BREAKPOINT:
+    case etiss::RETURNCODE::BREAKPOINT:
         return "BREAKPOINT";
-      case etiss::RETURNCODE::CPUFINISHED:
+    case etiss::RETURNCODE::CPUFINISHED:
         return "CPUFINISHED";
-      default:
+    default:
         std::stringstream ss;
         ss << "EXCEPTION:" << std::hex << in;
         return ss.str();
@@ -518,27 +517,22 @@ std::string returncode_tostring(etiss::int32 in)
 
 #endif
 
-template<>
-Action::type_t::map_t Action::type_t::TABLE = {
-      {Action::Type::NOP, "NOP"}
-    , {Action::Type::BITFLIP, "BITFLIP"}
-    , {Action::Type::MASK, "MASK"}
-    , {Action::Type::COMMAND, "COMMAND"}
-    , {Action::Type::INJECTION, "INJECTION"}
+template <>
+Action::type_t::map_t Action::type_t::TABLE = { { Action::Type::NOP, "NOP" },
+                                                { Action::Type::BITFLIP, "BITFLIP" },
+                                                { Action::Type::MASK, "MASK" },
+                                                { Action::Type::COMMAND, "COMMAND" },
+                                                { Action::Type::INJECTION, "INJECTION" }
 #ifndef NO_ETISS
-    , {Action::Type::EVENT, "EVENT"}
+                                                ,
+                                                { Action::Type::EVENT, "EVENT" }
 #endif
 };
 
-template<>
-Action::mask_op_t::map_t Action::mask_op_t::TABLE = {
-      {Action::MaskOp::AND, "AND"}
-    , {Action::MaskOp::OR, "OR"}
-    , {Action::MaskOp::XOR, "XOR"}
-    , {Action::MaskOp::NAND, "NAND"}
-    , {Action::MaskOp::NOR, "NOR"}
-    , {Action::MaskOp::NOP, "NOP"}
-};
+template <>
+Action::mask_op_t::map_t Action::mask_op_t::TABLE = { { Action::MaskOp::AND, "AND" }, { Action::MaskOp::OR, "OR" },
+                                                      { Action::MaskOp::XOR, "XOR" }, { Action::MaskOp::NAND, "NAND" },
+                                                      { Action::MaskOp::NOR, "NOR" }, { Action::MaskOp::NOP, "NOP" } };
 
 } // namespace fault
 

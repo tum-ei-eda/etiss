@@ -144,7 +144,7 @@ bool Stressor::loadXML(const std::string &file, const int coreID)
 bool Stressor::addFault(const Fault &f, bool injected_fault)
 {
 #if CXX0X_UP_SUPPORTED
-    if(!injected_fault) // otherwise a deadlock from firedTrigger->addFault would occur
+    if (!injected_fault) // otherwise a deadlock from firedTrigger->addFault would occur
         std::lock_guard<std::mutex> lock(faults_sync());
 #endif
 
@@ -175,7 +175,7 @@ bool Stressor::addFault(const Fault &f, bool injected_fault)
     // Iterate through triggers of the fault
     for (std::vector<Trigger>::const_iterator iter = f.triggers.begin(); iter != f.triggers.end(); ++iter)
     {
-        if(iter->getType() != etiss::fault::Trigger::Type::NOP) // only add Trigger, if it is not a NOP
+        if (iter->getType() != etiss::fault::Trigger::Type::NOP) // only add Trigger, if it is not a NOP
         {
             iptr = iter->getInjector();
 
@@ -184,10 +184,10 @@ bool Stressor::addFault(const Fault &f, bool injected_fault)
 #ifdef NO_ETISS
                 std::cout << "etiss::fault::Stressor::addFault: Added trigger: " << iter->toString() << std::endl;
 #else
-                etiss::log(etiss::INFO, std::string("etiss::fault::Stressor::addFault:") + std::string(" Added trigger: "),
-                           *iter);
+                etiss::log(etiss::INFO,
+                           std::string("etiss::fault::Stressor::addFault:") + std::string(" Added trigger: "), *iter);
 #endif
-                //TODO: iptr->enable_faulttype for requested field
+                // TODO: iptr->enable_faulttype for requested field
                 iptr->addTrigger(*iter, f.id_);
             }
             else
@@ -205,25 +205,25 @@ bool Stressor::addFault(const Fault &f, bool injected_fault)
         }
         else // Trigger is of type NOP
         {
-            etiss::log(etiss::WARNING, std::string("etiss::fault::Stressor::addFault:") + std::string(" Trigger is a NOP and is not added."));
+            etiss::log(etiss::WARNING, std::string("etiss::fault::Stressor::addFault:") +
+                                           std::string(" Trigger is a NOP and is not added."));
         }
     }
 
-    if(iptr != nullptr)
+    if (iptr != nullptr)
     {
-        for ( const auto& it: f.actions)
+        for (const auto &it : f.actions)
         {
-            if(it.is_action_on_field())
+            if (it.is_action_on_field())
             {
                 bool ret_update = false;
                 std::string errormsg;
-                ret_update = iptr->update_field_access_rights( it.getTargetField(), it.getType(), errormsg );
-                if (! ret_update)
+                ret_update = iptr->update_field_access_rights(it.getTargetField(), it.getType(), errormsg);
+                if (!ret_update)
                 {
                     etiss::log(etiss::ERROR, std::string("etiss::fault::Stressor::addFault:") + errormsg);
                 }
             }
-
         }
     }
 
@@ -250,13 +250,14 @@ bool Stressor::firedTrigger(const Trigger &triggered, int32_t fault_id, Injector
                 /// TODO for time relative triggers resolve time must be called!
                 addFault(iter->getFault(), true);
             }
-            else if(iter->getType() == etiss::fault::Action::Type::NOP)
+            else if (iter->getType() == etiss::fault::Action::Type::NOP)
             {
-                etiss::log(etiss::VERBOSE, std::string("Stressor::firedTrigger: Discarded - Action is NOP (do not care)."));
+                etiss::log(etiss::VERBOSE,
+                           std::string("Stressor::firedTrigger: Discarded - Action is NOP (do not care)."));
                 return true;
             }
 #ifndef NO_ETISS
-            else if(iter->getType() == etiss::fault::Action::Type::EVENT)
+            else if (iter->getType() == etiss::fault::Action::Type::EVENT)
             {
                 etiss::log(etiss::VERBOSE, std::string("Stressor::firedTrigger: Action is EVENT"));
                 set_event(iter->getEvent());
@@ -282,7 +283,8 @@ bool Stressor::firedTrigger(const Trigger &triggered, int32_t fault_id, Injector
 #endif
                     }
                     std::string err;
-                    bool ret_applyaction = iter->getInjectorAddress().getInjector()->applyAction(find->second, *iter, err);
+                    bool ret_applyaction =
+                        iter->getInjectorAddress().getInjector()->applyAction(find->second, *iter, err);
                     if (!ret_applyaction)
                     {
 #ifdef NO_ETISS
@@ -293,7 +295,8 @@ bool Stressor::firedTrigger(const Trigger &triggered, int32_t fault_id, Injector
                                    find->second, *iter, err);
 #endif
                     }
-                    ret = ret && ret_applyaction; // mask return value with ret_applyaction foreach(!) action, return false, if one fails
+                    ret = ret && ret_applyaction; // mask return value with ret_applyaction foreach(!) action, return
+                                                  // false, if one fails
                 }
                 else
                 {
