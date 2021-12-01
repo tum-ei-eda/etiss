@@ -557,7 +557,6 @@ bool VirtualStruct::update_field_access_rights(const etiss::fault::Action &actio
     auto find = fieldNames_.find(action.getTargetField());
     if (find == fieldNames_.end())
     {
-        find = fieldPrettyNames_.find(action.getTargetField());
         if (find == fieldPrettyNames_.end())
         {
             f = 0;
