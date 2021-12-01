@@ -61,11 +61,9 @@
 
 #ifndef NO_ETISS
 #include "etiss/Misc.h"
-#include "etiss/fault/InjectorAddress.h"
 #include "etiss/fault/XML.h"
 #include "etiss/fault/Misc.h"
 #else
-#include "fault/InjectorAddress.h"
 #include "fault/XML.h"
 #include "fault/Misc.h"
 #endif
@@ -76,6 +74,7 @@ namespace fault
 {
 
 class Injector;
+class InjectorAddress;
 
 #if CXX0X_UP_SUPPORTED
 typedef std::shared_ptr<Injector> Injector_ptr;
@@ -142,7 +141,6 @@ class Trigger : public etiss::ToString
 
     // Getter
     uint64_t getTriggerCount() const;
-    Trigger &getSubTrigger();
     const Trigger &getSubTrigger() const;
     uint64_t getTriggerTime() const;
     const InjectorAddress &getInjectorAddress() const;
@@ -170,12 +168,12 @@ class Trigger : public etiss::ToString
 
   private: // Attributes
     type_t type_;
-    std::string field_;
-    Trigger *sub_;
-    InjectorAddress inj_;
-    void *fieldptr_;
-    uint64_t param1_;
-    uint64_t param2_;
+    std::string field_{ "" };
+    std::unique_ptr<Trigger> sub_{ nullptr };
+    std::unique_ptr<InjectorAddress> inj_{ nullptr };
+    void *fieldptr_{ nullptr };
+    uint64_t param1_{ 0 };
+    uint64_t param2_{ 0 };
 
     // Private Members
     void ensure(Type type) const;

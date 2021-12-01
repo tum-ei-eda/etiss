@@ -43,12 +43,16 @@
 #ifndef NO_ETISS
 #include "etiss/fault/Fault.h"
 #include "etiss/fault/Trigger.h"
+#include "etiss/fault/Action.h"
 #include "etiss/fault/Injector.h"
+#include "etiss/fault/InjectorAddress.h"
 #include "etiss/fault/xml/pugixml.hpp"
 #else
 #include "fault/Fault.h"
 #include "fault/Trigger.h"
+#include "fault/Action.h"
 #include "fault/Injector.h"
+#include "fault/InjectorAddress.h"
 #include "fault/xml/pugixml.hpp"
 #endif
 
@@ -205,11 +209,40 @@ static int32_t uniqueFaultId()
     static int32_t cid = -1;
     return cid--;
 }
-Fault::Fault()
+
+Fault::Fault() : id_(uniqueFaultId())
 {
     etiss::log(etiss::VERBOSE, std::string("etiss::fault::Fault::Fault() called. "));
-    id_ = uniqueFaultId();
 }
+
+Fault::Fault(int nullid) : id_(nullid) {}
+
+Fault::Fault(const Fault &cpy)
+{
+    *this = cpy;
+}
+
+Fault &Fault::operator=(const Fault &cpy)
+{
+    name_ = cpy.name_;
+    id_ = cpy.id_;
+    triggers = cpy.triggers;
+    actions = cpy.actions;
+    return *this;
+}
+
+#if CXX0X_UP_SUPPORTED
+Fault::Fault(Fault &&cpy)
+{
+    operator=(cpy);
+}
+Fault &Fault::operator=(Fault &&cpy)
+{
+    operator=((const Fault &)cpy);
+    return *this;
+}
+#endif
+
 std::string Fault::toString() const
 {
 

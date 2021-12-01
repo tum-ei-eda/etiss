@@ -61,14 +61,11 @@
 #include <vector>
 
 #ifndef NO_ETISS
-#include "etiss/fault/Action.h"
+#include "etiss/Misc.h"
 #include "etiss/fault/Defs.h"
-#include "etiss/fault/Trigger.h"
 #include "etiss/fault/XML.h"
 #else
-#include "fault/Action.h"
 #include "fault/Defs.h"
-#include "fault/Trigger.h"
 #include "fault/XML.h"
 #endif
 
@@ -83,19 +80,27 @@ namespace fault
 typedef uint64_t INT;
 
 class Action;
+class Trigger;
 
 class Fault : public etiss::ToString
 {
   public:
-    Fault(); ///< Constructor: Generates a new Fault with unique ID
-
     std::string toString() const; ///< operator<< can be used.
 
     void resolveTime(uint64_t time); ///< Resolves time for all its Triggers.
     bool isResoved() const;          ///< check all Triggers if they are resolved.
 
+    Fault(); ///< Constructor: Generates a new Fault with unique ID
+    Fault(int nullid);
+    Fault(const Fault &cpy);
+    Fault &operator=(const Fault &cpy);
+#if CXX0X_UP_SUPPORTED
+    Fault(Fault &&cpy);
+    Fault &operator=(Fault &&cpy);
+#endif
+
   public:
-    std::string name_;
+    std::string name_{ "" };
     int32_t id_;                   ///< @attention negative ids are reserved
     std::vector<Trigger> triggers; ///< contains the triggers for this fault
     std::vector<Action> actions;   ///< contains the actions for this fault

@@ -56,15 +56,12 @@
 #include <stdint.h>
 
 #ifndef NO_ETISS
+#include "etiss/Misc.h"
 #include "etiss/fault/Defs.h"
-#include "etiss/fault/Fault.h"
-#include "etiss/fault/InjectorAddress.h"
 #include "etiss/fault/XML.h"
 #include "etiss/fault/Misc.h"
 #else
 #include "fault/Defs.h"
-#include "fault/Fault.h"
-#include "fault/InjectorAddress.h"
 #include "fault/XML.h"
 #include "fault/Misc.h"
 #endif
@@ -75,6 +72,7 @@ namespace fault
 {
 
 class Fault;
+class InjectorAddress;
 
 class Action : public etiss::ToString
 {
@@ -124,7 +122,7 @@ class Action : public etiss::ToString
      *
      *	@brief A etiss::RETURNCODE \p exception will be injected into the etiss simulation loop
      */
-    Action(etiss::int32 event);
+    Action(int32_t event);
 #endif
     /**
      *	@note Type: Command
@@ -151,6 +149,15 @@ class Action : public etiss::ToString
      */
     Action(const Fault &fault);
 
+    // Copy Constructors
+    Action(const Action &cpy);
+    Action &operator=(const Action &cpy);
+
+#if CXX0X_UP_SUPPORTED
+    Action(Action &&cpy);
+    Action &operator=(Action &&cpy);
+#endif
+
     // Getters
     const type_t &getType() const;
 
@@ -170,22 +177,22 @@ class Action : public etiss::ToString
 
     uint64_t getMaskValue() const;
 #ifndef NO_ETISS
-    etiss::int32 getEvent() const;
+    int32_t getEvent() const;
 #endif
     // Members
     std::string toString() const; ///< operator<< can be used.
 
-  private:                     // Attributes
-    type_t type_;              ///< type of the Attribute
-    InjectorAddress inj_;      ///< Address of Injector
-    std::string command_;      ///< command e.g. for booting OR1KVCPU
-    std::string field_;        ///< concerning Field (for fault injection)
-    unsigned bit_;             ///< concerning Bit (for fault injection)
-    mask_op_t mask_op_;        ///< mask operation (for mask injection)
-    uint64_t mask_value_;      ///< mask value (for mask injection)
-    std::vector<Fault> fault_; ///< for fault injection
+  private:                                            // Attributes
+    type_t type_;                                     ///< type of the Attribute
+    std::unique_ptr<InjectorAddress> inj_{ nullptr }; ///< Address of Injector
+    std::string command_{ "" };                       ///< command e.g. for booting OR1KVCPU
+    std::string field_{ "" };                         ///< concerning Field (for fault injection)
+    unsigned bit_ = { 0 };                            ///< concerning Bit (for fault injection)
+    mask_op_t mask_op_{ MaskOp::NOP };                ///< mask operation (for mask injection)
+    uint64_t mask_value_{ 0 };                        ///< mask value (for mask injection)
+    std::unique_ptr<Fault> fault_{ nullptr };         ///< for fault injection
 #ifndef NO_ETISS
-    etiss::int32 event_; ///< exception, or rather etiss::RETURNCODE to
+    int32_t event_{ 0 }; ///< exception, or rather etiss::RETURNCODE to
                          /// to be injected into the simulation loop
 #endif
     // private Members
@@ -196,11 +203,11 @@ class Action : public etiss::ToString
 /**
  *	@brief decode etiss::RETURNCODE from string
  */
-bool returncode_fromstring(etiss::int32 &out, const std::string &in);
+bool returncode_fromstring(int32_t &out, const std::string &in);
 /**
  *	@brief encode etiss::RETURNCODE to string
  */
-std::string returncode_tostring(etiss::int32 in);
+std::string returncode_tostring(int32_t in);
 #endif
 
 #if ETISS_FAULT_XML
