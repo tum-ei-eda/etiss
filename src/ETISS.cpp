@@ -937,7 +937,7 @@ void etiss::initialize_virtualstruct(std::shared_ptr<etiss::CPUCore> cpu_core)
             }
 
             etiss::log(etiss::VERBOSE, std::string("Add InstructionAccurateCallback Plugin to ") + cpu_core->getName() + std::string(". Required for etiss::fault::Injector."));
-            cpu_core->addPlugin(std::shared_ptr<etiss::Plugin>(new etiss::plugin::InstructionAccurateCallback()));
+            cpu_core->addPlugin(std::make_shared<etiss::plugin::InstructionAccurateCallback>());
         }
     }
 }

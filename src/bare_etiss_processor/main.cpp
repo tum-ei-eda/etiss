@@ -125,7 +125,7 @@ int main(int argc, const char *argv[])
     // here own developped plug-ins can be added with:
     if (etiss::cfg().get<bool>("etiss.log_pc", false)) {
       etiss::cfg().set<int>("etiss.max_block_size", 1);
-      cpu->addPlugin(std::shared_ptr<etiss::Plugin>(new TracePrinter(0x88888)));
+      cpu->addPlugin(std::make_shared<TracePrinter>(0x88888));
     }
 
     std::cout << "=== Setting up plug-ins ===" << std::endl << std::endl;
