@@ -175,7 +175,7 @@ const Action::type_t &Action::getType() const
 
 const InjectorAddress &Action::getInjectorAddress() const
 {
-    if (unlikely(!(type_ == Type::BITFLIP || type_ == Type::MASK || type_ == Type::COMMAND)))
+    if (!(type_ == Type::BITFLIP || type_ == Type::MASK || type_ == Type::COMMAND))
         etiss::log(
             etiss::FATALERROR,
             std::string(
@@ -186,7 +186,7 @@ const InjectorAddress &Action::getInjectorAddress() const
 /// COMMAND only
 const std::string &Action::getCommand() const
 {
-    if (unlikely(type_ != Type::COMMAND))
+    if (type_ != Type::COMMAND)
         etiss::log(etiss::FATALERROR,
                    std::string("etiss::fault::Action::getCommand(): Requested Action::Type is not Command"));
     return command_;
@@ -195,7 +195,7 @@ const std::string &Action::getCommand() const
 /// is_action_on_field only
 const std::string &Action::getTargetField() const
 {
-    if (unlikely(!(type_ == Type::BITFLIP || type_ == Type::MASK)))
+    if (!(type_ == Type::BITFLIP || type_ == Type::MASK))
         etiss::log(etiss::FATALERROR,
                    std::string("etiss::fault::Action::getTargetField(): Requested Action::Type is not TargetField"));
     return field_;
@@ -204,7 +204,7 @@ const std::string &Action::getTargetField() const
 /// BITFLIP only
 unsigned Action::getTargetBit() const
 {
-    if (unlikely(type_ != Type::BITFLIP))
+    if (type_ != Type::BITFLIP)
         etiss::log(etiss::FATALERROR,
                    std::string("etiss::fault::Action::getTargetBit(): Requested Action::Type is not TargetBit"));
     return bit_;
@@ -212,7 +212,7 @@ unsigned Action::getTargetBit() const
 
 const Fault &Action::getFault() const
 {
-    if (unlikely(type_ != Type::INJECTION))
+    if (type_ != Type::INJECTION)
         etiss::log(etiss::FATALERROR,
                    std::string("etiss::fault::Action::getFault(): Requested Action::Type is not injectable Fault"));
     return *fault_;
@@ -220,7 +220,7 @@ const Fault &Action::getFault() const
 
 const Action::mask_op_t &Action::getMaskOp() const
 {
-    if (unlikely(type_ != Type::MASK))
+    if (type_ != Type::MASK)
         etiss::log(etiss::FATALERROR,
                    std::string("etiss::fault::Action::getMaskOp(): Requested Action::Type is not Mask"));
     return mask_op_;
@@ -228,7 +228,7 @@ const Action::mask_op_t &Action::getMaskOp() const
 
 uint64_t Action::getMaskValue() const
 {
-    if (unlikely(type_ != Type::MASK))
+    if (type_ != Type::MASK)
         etiss::log(etiss::FATALERROR,
                    std::string("etiss::fault::Action::getMaskValue(): Requested Action::Type is not Mask"));
     return mask_value_;
@@ -237,7 +237,7 @@ uint64_t Action::getMaskValue() const
 #ifndef NO_ETISS
 int32_t Action::getEvent() const
 {
-    if (unlikely(type_ != Type::EVENT))
+    if (type_ != Type::EVENT)
         etiss::log(etiss::FATALERROR,
                    std::string("etiss::fault::Action::getEvent(): Requested Action::Type is not Event"));
     return event_;
