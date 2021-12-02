@@ -189,47 +189,74 @@ Usage:
 
 - ./run_helper.sh ELFFILE --faults.xml=/path/to/faults.xml
 
-`faults.xml` Example:
+`faults.xml` Example and explanations:
 
-- `[]` are optional attributes
-- `#` is a comment for this example
-
-```
-<faults>                                     # a faults.xml root
-  <fault [name="some name"]>                 # a <fault> has <triggers> and <actions>
-    <triggers>
-      <trigger type="META_COUNTER">          # a <trigger> must have a type of {META_COUNTER, VARIABLEVALUE, TIME, TIMERELATIVE, NOP}
-        <count>1</count>                     # the META_COUNTER here will trigger once its subtrigger fired <count> times
-        <trigger type="VARIABLEVALUE">       # a <trigger> can have a sub <trigger>, awesome!
-          <injector>core%i%</injector>       # the trigger type VARIABLEVALUE needs an <injector> that supplies the triggerable object, bare_etiss_processor constructs "core0" ETISS-FI will replace %i% to the core id "0" by default
-          <field>instructionPointer</field>  # the <field> of "core%i%" should be listened for, here, the instruction pointer
-          <value>b0</value>                  # the <value> that <field>'s value will be compared to as a hexadecimal
-        </trigger>
-      </trigger>
-    </triggers>
-    <actions>
-      <action type="COMMAND">                # an <action> must have a type of {BITFLIP, COMMAND, NOP, INJECTION}, here, Command
-        <injector>core%i%</injector>         # an <action> can have a different <injector> than its <trigger>s, which means, you could trigger on one VirtualStruct and inject into another
-        <command>test</command>              # the COMMAND type is a custom string encoded action the <injector> has to implement, by default no custom actions are supported. Set VirtualStructs::applyCustomAction member to a std::function of your choice and handle the passed string
-      </action>
-      <action type="BITFLIP">                # why not have more than one <action>, an additional "BITFLIP"
-        <injector>core%i%</injector>         # again we need the <injector>
-        <field>R1</field>                    # BITFLIP takes a <field>, here R1 aka X1 in RISC-V, with the CPUCore all ISA-GPRs and the instructionPointer are <fields>
-        <bit>1</bit>                         # the target <bit> number
-      </action>
-			<action type="INJECTION">              # now, we inject a new fault as our action.
-				<fault [name="some name"]>
-					<triggers>
-						<trigger type="NOP">
-						</trigger>
-					</triggers>
-					<actions>
-						<action type="NOP">
-						</action>
-					</actions>
-				</fault>
-			</action>
-    </actions>
-  </fault>
+```xml
+<faults> <!--a faults.xml root-->
+	<definitions> <!--faults are defined here and can be referenced with a <fault_ref> node-->
+		<fault name="meta"> <!--a <fault> has <triggers> and <actions>-->
+			<triggers>
+				<trigger type="META_COUNTER"> <!--a <trigger> must have a type of {META_COUNTER, VARIABLEVALUE, TIME, TIMERELATIVE, ASAP, NOP}-->
+					<count>1</count> <!--the META_COUNTER here will trigger once its subtrigger fired <count> times-->
+					<trigger type="VARIABLEVALUE"> <!--a <trigger> can have a sub <trigger>, awesome!-->
+						<injector>core%i%</injector> <!--the trigger type VARIABLEVALUE needs an <injector> that supplies the triggerable object, bare_etiss_processor constructs "core0" ETISS-FI will replace %i% to the core id "0" by default-->
+						<field>instructionPointer</field> <!--the <field> of "core%i%" should be listened for, here, the instruction pointer-->
+						<value>b0</value> <!--the <value> that <field>'s value will be compared to as a hexadecimal-->
+					</trigger>
+				</trigger>
+			</triggers>
+			<actions>
+				<action type="COMMAND"> <!--an <action> must have a type of {BITFLIP, MASK, COMMAND, NOP, INJECTION, EJECTION, EVENT}, here, COMMAND-->
+					<injector>core%i%</injector> <!--an <action> can have a different <injector> than its <trigger>s, which means, you could trigger on one Injector and inject into another-->
+					<command>some string</command> <!--the COMMAND type is a custom string encoded action the <injector> has to implement, by default no custom actions are supported. Set VirtualStructs::applyCustomAction member to a std::function of your choice and handle the passed string-->
+				</action>
+				<action type="BITFLIP"> <!--why not have more than one <action>: Here, an additional "BITFLIP"-->
+					<injector>core%i%</injector> <!--again we need an <injector>-->
+					<field>R1</field> <!--BITFLIP and MASK takes a <field>, here R1 aka X1 in RISC-V, with the CPUCore all ISA-GPRs and the instructionPointer are <fields>-->
+					<bit>1</bit> <!--the target <bit> number-->
+				</action>
+				<action type="INJECTION"> <!--now, we inject a new fault as our action.-->
+						<fault_ref name="injected_fault"></fault_ref> <!--INJECTION and EJECTION <actions> take a <fault>'s name as the fault reference-->
+				</action>
+				<action type="INJECTION"> <!--now, we inject another fault that will be responsible for removing the "injected_fault" as our action.-->
+						<fault_ref name="injected_fault_remove"></fault_ref> <!--"injected_fault_remove" will remove "injected_fault"-->
+				</action>
+			</actions>
+		</fault>
+		<fault name="injected_fault_remove"> <!-- here, we define the previously referenced (<fault_ref>) fault "injected_fault_remove"-->
+			<triggers>
+				<trigger type="META_COUNTER">
+					<count>10</count>
+					<trigger type="ASAP"> <!-- the "as soon as possible" <trigger> type ASAP does exactly this, it fires immediately the next time its <injector> checks all its <trigger>s-->
+						<injector>core%i%</injector>
+					</trigger>
+				</trigger>
+			</triggers>
+			<actions>
+					<action type="EJECTION"> <!-- the remover <action> is EJECTION, which is the antonym to the INJECTION type. Once applied all the referenced <fault>'s <trigger>s are deactivated-->
+						<fault_ref name="injected_fault"></fault_ref> <!-- the fault "injected_fault" is virtually removed (because its <trigger>s are deactivated)-->
+					</action>
+			</actions>
+		</fault>
+		<fault name="injected_fault"> <!-- "injected_fault_remove" already referenced "injected_fault", although the latter was not yet defined in the XML, this is allowed.-->
+			<triggers>
+				<trigger type="ASAP"> <!--ASAP can also be used to model permanent faults, because ASAP holds true until the fault is EJECTED. In our case, it is a semi-permanent fault as "injected_fault_remove" ejects "injected_fault" after 10 callbacks to core%i%'s injector'-->
+					<injector>core%i%</injector>
+				</trigger>
+			</triggers>
+			<actions>
+				<action type="MASK"> <!--MASK action is similar to BITFLIP as it takes a <field> as target, however, the manipulation is equal to "<field> = <field> <op> <value>" in C primitive.-->
+					<injector>core%i%</injector>
+					<field>R2</field>
+					<op>OR</op> <!-- the MASK operation can be either of {AND, OR, XOR, NAND, NOR}, e.g. use AND to reset a <field>'s bits, OR to set, XOR to flip, .. etc.-->
+					<value>0x55555555</value> <!--specify the mask <value> as hexadecimal-->
+				</action>
+			</actions>
+		</fault>
+	</definitions>
+	<initial> <!--these are the initial <fault>s that are added to the simulation on start. "meta" is the only one here, but it adds additional faults during the simulation.-->
+		<fault_ref name="meta"></fault_ref> <!-- like the INJECTION <action>, <initial> only takes <fault_ref>-->
+	</initial>
 </faults>
+
 ```

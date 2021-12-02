@@ -55,8 +55,12 @@
 
 #ifndef NO_ETISS
 #include "etiss/jit/ReturnCode.h"
+#include "etiss/fault/XML.h"
 #else
+#include "fault/XML.h"
 #endif
+
+#include <iostream>
 
 namespace etiss
 {
@@ -109,9 +113,22 @@ class Stressor
     /** @brief adds a fault to a static map that can be accessed
      *        by static std::map<int32_t,Fault> & faults().
      * @param f the fault for adding to the map.
-     * @return false if fault already exists in map.
+     * @return false if fault already exists in map faults().
+     */
+    static bool addFaultDefinition(const Fault &f);
+
+    /** @brief activates a fault's triggers in their injectors
+     * @param f the fault to activate
+     * @return false if refernced fault is not the static fault list faults().
      */
     static bool addFault(const Fault &f, bool injected_fault = false);
+
+    /** @brief removes a fault's active triggers from their injectors, thus,
+     *         deactivating the fault.
+     * @param f the fault for adding to the map.
+     * @return false if refernced fault is not the static fault list faults().
+     */
+    static bool removeFault(const Fault &f, bool injected_fault = false);
 
     /** @brief Checks if the given trigger is valid and calls applyAction.
      *
@@ -129,7 +146,14 @@ class Stressor
     /** @brief clears the fault map.
      */
     static void clear();
+    /** @brief static map with all referencable faults.
+     */
+    static std::map<int32_t, Fault> &faults();
 };
+
+/** @brief parse a XML document held in \p input stream and return as \p doc
+ */
+bool parseXML(pugi::xml_document &doc, std::istream &input, std::ostream &diagnostics_out = std::cout);
 
 } // namespace fault
 

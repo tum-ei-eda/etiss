@@ -71,7 +71,7 @@ namespace etiss
 namespace fault
 {
 
-class Fault;
+class FaultRef;
 class InjectorAddress;
 
 class Action : public etiss::ToString
@@ -89,10 +89,12 @@ class Action : public etiss::ToString
                 /// that information must be passed within the command string
         ,
         INJECTION /// an action that injects a fault definition (trigger + actions)
-#ifndef NO_ETISS
-        /// an event that breaks the JIT-block and forces the simulation loop to handle the etiss::RETURNCODE exception
         ,
-        EVENT
+        EJECTION /// an action that ejects a referenced fault (must exist)
+#ifndef NO_ETISS
+        ,
+        EVENT /// an event that breaks the JIT-block and forces the simulation loop to handle the etiss::RETURNCODE
+              /// exception
 #endif
     };
     typedef SmartType<Type> type_t;
@@ -147,7 +149,7 @@ class Action : public etiss::ToString
      *
      * @brief injects a fault. this is especially usefull with Triggers of type TIMERELATIVE
      */
-    Action(const Fault &fault);
+    Action(const FaultRef &fault_ref, type_t type);
 
     // Copy Constructors
     Action(const Action &cpy);
@@ -170,8 +172,8 @@ class Action : public etiss::ToString
     const std::string &getTargetField() const;
     unsigned getTargetBit() const;
 
-    /// INJECTION only
-    const Fault &getFault() const;
+    /// INJECTION and EJECTION only
+    const FaultRef &getFaultRef() const;
 
     const mask_op_t &getMaskOp() const;
 
@@ -190,7 +192,7 @@ class Action : public etiss::ToString
     unsigned bit_ = { 0 };                            ///< concerning Bit (for fault injection)
     mask_op_t mask_op_{ MaskOp::NOP };                ///< mask operation (for mask injection)
     uint64_t mask_value_{ 0 };                        ///< mask value (for mask injection)
-    std::unique_ptr<Fault> fault_{ nullptr };         ///< for fault injection
+    std::unique_ptr<FaultRef> fault_ref_{ nullptr };  ///< for fault injection
 #ifndef NO_ETISS
     int32_t event_{ 0 }; ///< exception, or rather etiss::RETURNCODE to
                          /// to be injected into the simulation loop

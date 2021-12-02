@@ -190,12 +190,16 @@ class Injector
     std::mutex sync;
 #endif
     volatile bool has_pending_triggers;
-    std::list<std::pair<Trigger, int32_t>> pending_triggers; ///> Triggers which were just added
-    std::list<std::pair<Trigger, int32_t>> unknown_triggers; ///> Triggers to look at in callbacks
+    volatile bool has_remove_triggers;
+    std::list<std::pair<Trigger, int32_t>> pending_triggers; ///< Triggers which were just added
+    std::list<std::pair<Trigger, int32_t>> unknown_triggers; ///< Triggers to look at in callbacks
+    std::list<std::pair<Trigger, int32_t>>
+        remove_triggers; ///< Triggers to synchronously remove on next callback (prio over pending)
     /// TODO specialized lists. e.g. time triggers should be sorted and only the earliest time should be checked
 
-  public: // interface fot stressor
+  public: // interface for Stressor
     void addTrigger(const Trigger &t, int32_t fault_id);
+    void removeTrigger(const Trigger &t, int32_t fault_id);
 };
 
 } // namespace fault

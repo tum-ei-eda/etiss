@@ -106,9 +106,33 @@ class Fault : public etiss::ToString
     std::vector<Action> actions;   ///< contains the actions for this fault
 };
 
+class FaultRef : public etiss::ToString
+{
+  private:
+    std::unique_ptr<Fault> fault_{ nullptr }; ///< referenced Fault
+    std::string name_{ "" };                  ///< string identifier, used to resolve actual reference via fault_
+
+  public:
+    std::string toString() const; ///< operator<< can be used.
+
+    FaultRef();
+    FaultRef(const FaultRef &cpy);
+    FaultRef &operator=(const FaultRef &cpy);
+#if CXX0X_UP_SUPPORTED
+    FaultRef(FaultRef &&cpy);
+    FaultRef &operator=(FaultRef &&cpy);
+#endif
+    bool is_set() const { return (fault_->name_ == name_); }
+    bool set_fault_reference(const std::string &identifier);
+    bool resolve_reference() const;
+    const Fault &get_fault() const { return *fault_; }
+    const std::string &get_name() const { return name_; }
+};
+
 #if ETISS_FAULT_XML
 
-bool parseXML(std::vector<Fault> &vec, std::istream &input, std::ostream &diagnostics_out = std::cout);
+bool parseXML(std::vector<Fault> &vec, const pugi::xml_document &doc, xml::Diagnostics &diag);
+bool parseXML(std::vector<FaultRef> &vec, const pugi::xml_document &doc, xml::Diagnostics &diag);
 
 bool writeXML(const std::vector<Fault> &vec, std::ostream &out, std::ostream &diagnostics_out = std::cout);
 
@@ -119,6 +143,10 @@ template <>
 bool parse<etiss::fault::Fault>(pugi::xml_node node, etiss::fault::Fault &f, Diagnostics &diag);
 template <>
 bool write<etiss::fault::Fault>(pugi::xml_node node, const etiss::fault::Fault &f, Diagnostics &diag);
+template <>
+bool parse<etiss::fault::FaultRef>(pugi::xml_node node, etiss::fault::FaultRef &fref, Diagnostics &diag);
+template <>
+bool write<etiss::fault::FaultRef>(pugi::xml_node node, const etiss::fault::FaultRef &fref, Diagnostics &diag);
 
 } // namespace xml
 

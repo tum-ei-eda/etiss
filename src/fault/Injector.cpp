@@ -90,7 +90,7 @@ bool Injector::cycleAccurateCallback(uint64_t time_ps)
                                    std::to_string(time_ps) + ")");
 #endif
     // copy pending triggers in a threadsafe manner to unknown triggers
-    if (has_pending_triggers)
+    if (unlikely(has_pending_triggers))
     {
 #if CXX0X_UP_SUPPORTED
         std::lock_guard<std::mutex> lock(sync);
@@ -98,34 +98,44 @@ bool Injector::cycleAccurateCallback(uint64_t time_ps)
         unknown_triggers.insert(unknown_triggers.end(), pending_triggers.begin(), pending_triggers.end());
         pending_triggers.clear();
     }
-    // check triggers
-    if (!unknown_triggers.empty())
+    if (unlikely(has_remove_triggers))
     {
+#if CXX0X_UP_SUPPORTED
+        std::lock_guard<std::mutex> lock(sync);
+#endif
         for (std::list<std::pair<Trigger, int32_t>>::iterator iter = unknown_triggers.begin();
              iter != unknown_triggers.end();)
-        {
-            if (iter->first.fired(time_ps, this))
-            { // trigger fired
-                // signal fired trigger
-                ret = true;
-                if (Stressor::firedTrigger(iter->first, iter->second, this, time_ps))
-                {
-                    // remove fired trigger
+            for (const auto &rm : remove_triggers)
+            {
+                if (iter->second == rm.second) // remove all triggers associated with the fault ids of rm
                     unknown_triggers.erase(iter++);
-                }
                 else
                 {
                     ++iter;
                 }
             }
-            else
-            {
-                ++iter;
+        remove_triggers.clear();
+        has_remove_triggers = false;
+    }
+    // check triggers
+    if (!unknown_triggers.empty())
+    {
+        for (auto &it : unknown_triggers)
+        {
+            if (it.first.fired(time_ps, this))
+            { // trigger fired
+                // signal fired trigger
+                ret = true;
+                if (Stressor::firedTrigger(it.first, it.second, this, time_ps))
+                {
+                    // explicitly remove triggers through Stressor::removeFault via Action::Type::EJECTION
+                }
             }
         }
     }
     return ret;
 }
+
 bool Injector::instructionAccurateCallback(uint64_t time_ps)
 {
 #if ETISS_DEBUG
@@ -226,6 +236,17 @@ void Injector::addTrigger(const Trigger &t, int32_t fault_id)
         pending_triggers.push_back(std::pair<Trigger, int32_t>(t, fault_id));
         has_pending_triggers = true;
     }
+}
+
+void Injector::removeTrigger(const Trigger &t, int32_t fault_id)
+{
+    etiss::log(etiss::VERBOSE, std::string("Called etiss::fault::Injector::removeTrigger(Trigger&=") + t.toString() +
+                                   ", fault_id=" + std::to_string(fault_id) + ")");
+#if CXX0X_UP_SUPPORTED
+    std::lock_guard<std::mutex> lock(sync);
+#endif
+    remove_triggers.push_back(std::pair<Trigger, int32_t>(t, fault_id));
+    has_remove_triggers = true;
 }
 
 bool Injector::acceleratedTrigger(const etiss::fault::Trigger &t, int32_t fault_id)

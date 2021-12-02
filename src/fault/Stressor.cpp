@@ -78,8 +78,8 @@ static std::mutex &faults_sync()
     return mu;
 }
 #endif
-// Map with all faults found in XML file
-static std::map<int32_t, Fault> &faults()
+// Map with all fault definitions found in XML file
+std::map<int32_t, Fault> &Stressor::faults()
 {
     static std::map<int32_t, Fault> map;
     return map;
@@ -103,7 +103,8 @@ bool Stressor::loadXML(const std::string &file, const int coreID)
     coreIDActuallXML = coreID;
 
     // Vector which gets the faults of the xml file
-    std::vector<Fault> faults;
+    std::vector<Fault> fault_definitions;
+    std::vector<FaultRef> initial_faults;
 
     // open and parse file
     std::ifstream in;
@@ -118,7 +119,9 @@ bool Stressor::loadXML(const std::string &file, const int coreID)
 #endif
         return false;
     }
-    if (!etiss::fault::parseXML(faults, in, std::cout))
+    pugi::xml_document doc;
+
+    if (!etiss::fault::parseXML(doc, in, std::cout))
     {
 #ifdef NO_ETISS
         std::cout << "etiss::fault::Stressor::loadXML: Failed parse file " << file << std::endl;
@@ -129,37 +132,79 @@ bool Stressor::loadXML(const std::string &file, const int coreID)
         return false;
     }
 
-    // add faults into a map ->  access with static std::map<int32_t,Fault> &
+    xml::Diagnostics diag;
+
+    if (!etiss::fault::parseXML(fault_definitions, doc, diag))
+    {
+        std::stringstream ss;
+        diag.print(ss);
+#ifdef NO_ETISS
+        std::cout << "etiss::fault::Stressor::loadXML: Failed parse Fault definitions " << ss << std::endl;
+#else
+        etiss::log(etiss::ERROR, std::string("etiss::fault::Stressor::loadXML:") +
+                                     std::string(" Failed parse Fault definitions ") + ss.str());
+#endif
+        return false;
+    }
+
+    // add fault_definitions into a map ->  access with static std::map<int32_t,Fault> &
     // faults()
     bool ok = true;
-    for (size_t i = 0; i < faults.size(); ++i)
+    for (const auto &fdef : fault_definitions)
     {
-        if (!addFault(faults[i]))
+        if (!addFaultDefinition(fdef))
         {
 #ifdef NO_ETISS
-            std::cout << "etiss::fault::Stressor::loadXML: Failed to add Fault: " << faults[i].name_ << std::endl;
+            std::cout << "etiss::fault::Stressor::loadXML: Failed to add Fault definitions: " << fdef.name_
+                      << std::endl;
 #else
             etiss::log(etiss::ERROR,
-                       std::string("etiss::fault::Stressor::loadXML:") + std::string(" Failed to add Fault "),
-                       faults[i]);
+                       std::string("etiss::fault::Stressor::loadXML:") +
+                           std::string(" Failed to add Fault definitions "),
+                       fdef);
 #endif
             ok = false;
         }
     }
+
+    if (!etiss::fault::parseXML(initial_faults, doc, diag))
+    {
+        std::stringstream ss;
+        diag.print(ss);
+#ifdef NO_ETISS
+        std::cout << "etiss::fault::Stressor::loadXML: Failed parse initial Faults " << ss << std::endl;
+#else
+        etiss::log(etiss::ERROR, std::string("etiss::fault::Stressor::loadXML:") +
+                                     std::string(" Failed parse initial Faults ") + ss.str());
+#endif
+        return false;
+    }
+
+    for (const auto &fref : initial_faults)
+    {
+        if (!addFault(fref.get_fault()))
+        {
+#ifdef NO_ETISS
+            std::cout << "etiss::fault::Stressor::loadXML: Failed to add initial Fault: " << fref.name_ << std::endl;
+#else
+            etiss::log(etiss::ERROR,
+                       std::string("etiss::fault::Stressor::loadXML:") + std::string(" Failed to add initial Fault "),
+                       fref);
+#endif
+            ok = false;
+        }
+    }
+
     return ok;
 }
 
-bool Stressor::addFault(const Fault &f, bool injected_fault)
+bool Stressor::addFaultDefinition(const Fault &f)
 {
-#if CXX0X_UP_SUPPORTED
-    if (!injected_fault) // otherwise a deadlock from firedTrigger->addFault would occur
-        std::lock_guard<std::mutex> lock(faults_sync());
-#endif
 
 #ifdef NO_ETISS
-    std::cout << "etiss::fault::Stressor::addFault called." << std::endl;
+    std::cout << "etiss::fault::Stressor::addFaultDefinition called." << std::endl;
 #else
-    etiss::log(etiss::INFO, std::string("etiss::fault::Stressor::addFault called. "));
+    etiss::log(etiss::INFO, std::string("etiss::fault::Stressor::addFaultDefinition called. "));
 #endif
 
     // check if fault already exists
@@ -167,46 +212,76 @@ bool Stressor::addFault(const Fault &f, bool injected_fault)
     if (find != faults().end())
     {
 #ifdef NO_ETISS
-        std::cout << "etiss::fault::Stressor::addFault:  Trigger already exists:" << f.toString() << std::endl;
+        std::cout << "etiss::fault::Stressor::addFaultDefinition: Fault definition already registered:" << f.toString()
+                  << std::endl;
 #else
         etiss::log(etiss::ERROR,
-                   std::string("etiss::fault::Stressor::addFault:") + std::string("  Trigger already exists. "), f);
+                   std::string("etiss::fault::Stressor::addFaultDefinition:") +
+                       std::string(" Fault definition already registered: "),
+                   f);
 #endif
         return false;
     }
 
-    // insert fault into map
+    // insert fault into the definitions map
     faults().insert(std::pair<int32_t, Fault>(f.id_, f));
+
+    return true;
+}
+
+bool Stressor::addFault(const Fault &f, bool injected_fault)
+{
+
+#if CXX0X_UP_SUPPORTED
+    if (!injected_fault) // otherwise a deadlock from firedTrigger->addFault would occur
+        std::lock_guard<std::mutex> lock(faults_sync());
+#endif
 
     Injector::ptr iptr = nullptr;
 
-    // Iterate through triggers of the fault
-    for (std::vector<Trigger>::const_iterator iter = f.triggers.begin(); iter != f.triggers.end(); ++iter)
+    // check if fault is registered in fault definitions table
+    std::map<int32_t, Fault>::iterator find = faults().find(f.id_);
+    if (find == faults().end())
     {
-        if (iter->getType() != etiss::fault::Trigger::Type::NOP) // only add Trigger, if it is not a NOP
+#ifdef NO_ETISS
+        std::cout << "etiss::fault::Stressor::addFault: Fault not registered in Fault definitions:" << f.toString()
+                  << std::endl;
+#else
+        etiss::log(etiss::ERROR,
+                   std::string("etiss::fault::Stressor::addFault:") +
+                       std::string(" Fault not registered in Fault definitions. "),
+                   f);
+#endif
+        return false;
+    }
+
+    // Iterate through triggers of the fault
+    for (const auto &trigger : f.triggers)
+    {
+
+        if (trigger.getType() != etiss::fault::Trigger::Type::NOP) // only add Trigger, if it is not a NOP
         {
-            iptr = iter->getInjector();
+            iptr = trigger.getInjector();
 
             if (iptr != nullptr)
             {
 #ifdef NO_ETISS
-                std::cout << "etiss::fault::Stressor::addFault: Added trigger: " << iter->toString() << std::endl;
+                std::cout << "etiss::fault::Stressor::addFault: Added trigger: " << trigger.toString() << std::endl;
 #else
                 etiss::log(etiss::INFO,
-                           std::string("etiss::fault::Stressor::addFault:") + std::string(" Added trigger: "), *iter);
+                           std::string("etiss::fault::Stressor::addFault:") + std::string(" Added trigger: "), trigger);
 #endif
-                // TODO: iptr->enable_faulttype for requested field
-                iptr->addTrigger(*iter, f.id_);
+                iptr->addTrigger(trigger, f.id_);
             }
             else
             {
 #ifdef NO_ETISS
-                std::cout << "etiss::fault::Stressor::addFault: Error: Injector not found for: " << iter->toString()
+                std::cout << "etiss::fault::Stressor::addFault: Error: Injector not found for: " << trigger.toString()
                           << std::endl;
 #else
                 etiss::log(etiss::ERROR,
                            std::string("etiss::fault::Stressor::addFault:") + std::string(" Injector not found for "),
-                           *iter);
+                           trigger);
 #endif
                 /// TODO signal error and roll back
             }
@@ -238,6 +313,76 @@ bool Stressor::addFault(const Fault &f, bool injected_fault)
     return true;
 }
 
+bool Stressor::removeFault(const Fault &f, bool injected_fault)
+{
+
+#if CXX0X_UP_SUPPORTED
+    if (!injected_fault) // otherwise a deadlock from firedTrigger->addFault would occur
+        std::lock_guard<std::mutex> lock(faults_sync());
+#endif
+
+    Injector::ptr iptr = nullptr;
+
+    // check if fault is registered in fault definitions table
+    std::map<int32_t, Fault>::iterator find = faults().find(f.id_);
+    if (find == faults().end())
+    {
+#ifdef NO_ETISS
+        std::cout << "etiss::fault::Stressor::addFault: Fault not registered in Fault definitions:" << f.toString()
+                  << std::endl;
+#else
+        etiss::log(etiss::ERROR,
+                   std::string("etiss::fault::Stressor::addFault:") +
+                       std::string(" Fault not registered in Fault definitions. "),
+                   f);
+#endif
+        return false;
+    }
+
+    // Iterate through triggers of the fault
+    for (const auto &trigger : f.triggers)
+    {
+
+        if (trigger.getType() != etiss::fault::Trigger::Type::NOP) // don't care
+        {
+            iptr = trigger.getInjector();
+
+            if (iptr != nullptr)
+            {
+#ifdef NO_ETISS
+                std::cout << "etiss::fault::Stressor::removeFault: Removed trigger: " << trigger.toString()
+                          << std::endl;
+#else
+                etiss::log(etiss::INFO,
+                           std::string("etiss::fault::Stressor::removeFault:") + std::string(" Removed trigger: "),
+                           trigger);
+#endif
+                iptr->removeTrigger(trigger, f.id_);
+            }
+            else
+            {
+#ifdef NO_ETISS
+                std::cout << "etiss::fault::Stressor::removeFault: Error: Injector not found for: "
+                          << trigger.toString() << std::endl;
+#else
+                etiss::log(etiss::ERROR,
+                           std::string("etiss::fault::Stressor::removeFault:") +
+                               std::string(" Injector not found for "),
+                           trigger);
+#endif
+                /// TODO signal error and roll back
+            }
+        }
+        else // Trigger is of type NOP
+        {
+            etiss::log(etiss::WARNING, std::string("etiss::fault::Stressor::removeFault:") +
+                                           std::string(" Trigger is a NOP and is does not need to be removed."));
+        }
+    }
+
+    return true;
+}
+
 bool Stressor::firedTrigger(const Trigger &triggered, int32_t fault_id, Injector *injector, uint64_t time_ps)
 {
     etiss::log(etiss::VERBOSE, std::string("etiss::fault::Stressor::firedTrigger() called. "));
@@ -253,26 +398,49 @@ bool Stressor::firedTrigger(const Trigger &triggered, int32_t fault_id, Injector
         for (std::vector<etiss::fault::Action>::iterator iter = find->second.actions.begin();
              iter != find->second.actions.end(); ++iter)
         {
-            if (iter->getType() == etiss::fault::Action::Type::INJECTION)
+            switch (iter->getType())
             {
-                /// TODO for time relative triggers resolve time must be called!
-                addFault(iter->getFault(), true);
-            }
-            else if (iter->getType() == etiss::fault::Action::Type::NOP)
-            {
+            case etiss::fault::Action::Type::INJECTION:
+                if (!iter->getFaultRef().is_set())
+                {
+                    // try to resolve the reference again
+                    if (!iter->getFaultRef().resolve_reference())
+                    {
+                        etiss::log(
+                            etiss::ERROR,
+                            std::string(
+                                "Stressor::firedTrigger: Injected Fault reference not found in fault definitions."),
+                            iter->getFaultRef());
+                    }
+                }
+                addFault(iter->getFaultRef().get_fault(), true);
+                break;
+            case etiss::fault::Action::Type::EJECTION:
+                if (!iter->getFaultRef().is_set())
+                {
+                    // try to resolve the reference again
+                    if (!iter->getFaultRef().resolve_reference())
+                    {
+                        etiss::log(
+                            etiss::ERROR,
+                            std::string(
+                                "Stressor::firedTrigger: Injected Fault reference not found in fault definitions."),
+                            iter->getFaultRef());
+                    }
+                }
+                removeFault(iter->getFaultRef().get_fault(), true);
+                break;
+            case etiss::fault::Action::Type::NOP:
                 etiss::log(etiss::VERBOSE,
                            std::string("Stressor::firedTrigger: Discarded - Action is NOP (do not care)."));
                 return true;
-            }
 #ifndef NO_ETISS
-            else if (iter->getType() == etiss::fault::Action::Type::EVENT)
-            {
+            case etiss::fault::Action::Type::EVENT:
                 etiss::log(etiss::VERBOSE, std::string("Stressor::firedTrigger: Action is EVENT"));
                 set_event(iter->getEvent());
                 return true;
-            }
 #endif
-            else
+            default: // on field actions
             {
                 if (iter->getInjectorAddress().getInjector())
                 {
@@ -317,6 +485,7 @@ bool Stressor::firedTrigger(const Trigger &triggered, int32_t fault_id, Injector
 #endif
                 }
             }
+            }
         }
     }
     else
@@ -337,6 +506,19 @@ void Stressor::clear()
     std::lock_guard<std::mutex> lock(faults_sync());
 #endif
     faults().clear();
+}
+
+bool parseXML(pugi::xml_document &doc, std::istream &input, std::ostream &diagnostics_out)
+{
+    pugi::xml_parse_result pr = doc.load(input); // load from stream
+
+    if (!pr)
+    { // load failure
+        diagnostics_out << "failed to load xml from stream: " << pr.description() << std::endl;
+        return false;
+    }
+
+    return true;
 }
 
 } // namespace fault

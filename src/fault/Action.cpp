@@ -111,10 +111,10 @@ Action::Action(const InjectorAddress &inj, const std::string &field, MaskOp mask
                                    std::string(") called. "));
 }
 
-Action::Action(const Fault &fault) : type_(Type::INJECTION), fault_(std::make_unique<Fault>(fault))
+Action::Action(const FaultRef &fault_ref, type_t type) : type_(type), fault_ref_(std::make_unique<FaultRef>(fault_ref))
 {
-    etiss::log(etiss::VERBOSE,
-               std::string("etiss::fault::Action::Action(Fault &=") + fault.toString() + std::string(") called. "));
+    etiss::log(etiss::VERBOSE, std::string("etiss::fault::Action::Action(FaultRef &=") + fault_ref.toString() +
+                                   std::string(") called. "));
 }
 
 Action::Action(const Action &cpy)
@@ -142,8 +142,10 @@ Action &Action::operator=(const Action &cpy)
         inj_ = std::make_unique<InjectorAddress>(cpy.getInjectorAddress());
         command_ = cpy.getCommand();
         break;
+    case Type::EJECTION:
+        [[fallthrough]];
     case Type::INJECTION:
-        fault_ = std::make_unique<Fault>(cpy.getFault());
+        fault_ref_ = std::make_unique<FaultRef>(cpy.getFaultRef());
         break;
 #ifndef NO_ETISS
     case Type::EVENT:
@@ -210,12 +212,12 @@ unsigned Action::getTargetBit() const
     return bit_;
 }
 
-const Fault &Action::getFault() const
+const FaultRef &Action::getFaultRef() const
 {
-    if (type_ != Type::INJECTION)
+    if (!((type_ == Type::INJECTION) || (type_ == Type::EJECTION)))
         etiss::log(etiss::FATALERROR,
                    std::string("etiss::fault::Action::getFault(): Requested Action::Type is not injectable Fault"));
-    return *fault_;
+    return *fault_ref_;
 }
 
 const Action::mask_op_t &Action::getMaskOp() const
@@ -324,15 +326,15 @@ bool parse<etiss::fault::Action>(pugi::xml_node node, etiss::fault::Action &f, D
         f = Action(inj, command);
         return true;
     }
-    else if (type == "INJECTION")
+    else if ((type == "INJECTION") || (type == "EJECTION"))
     {
-        etiss::fault::Fault fault;
-        if (!parse<Fault>(findSingleNode(node, "fault", diag), fault, diag))
+        etiss::fault::FaultRef fault_ref;
+        if (!parse<FaultRef>(findSingleNode(node, "fault_ref", diag), fault_ref, diag))
         {
-            diag.unexpectedNode(node, "Failed to parse <fault> to inject");
+            diag.unexpectedNode(node, "Failed to parse <fault_ref> to inject");
             return false;
         }
-        f = Action(fault);
+        f = Action(fault_ref, type);
         return true;
     }
     else if (type == "MASK")
@@ -421,7 +423,11 @@ bool write<etiss::fault::Action>(pugi::xml_node node, const etiss::fault::Action
         break;
     case etiss::fault::Action::Type::INJECTION:
         ok = ok & write_attr<std::string>(node, "type", "INJECTION", diag);
-        ok = ok & write<Fault>(node.append_child("fault"), f.getFault(), diag);
+        ok = ok & write<FaultRef>(node.append_child("fault_ref"), f.getFaultRef(), diag);
+        break;
+    case etiss::fault::Action::Type::EJECTION:
+        ok = ok & write_attr<std::string>(node, "type", "EJECTION", diag);
+        ok = ok & write<FaultRef>(node.append_child("fault_ref"), f.getFaultRef(), diag);
         break;
     case etiss::fault::Action::Type::MASK:
         ok = ok & write_attr<std::string>(node, "type", "MASK", diag);
@@ -573,7 +579,8 @@ Action::type_t::map_t Action::type_t::TABLE = { { Action::Type::NOP, "NOP" },
                                                 { Action::Type::BITFLIP, "BITFLIP" },
                                                 { Action::Type::MASK, "MASK" },
                                                 { Action::Type::COMMAND, "COMMAND" },
-                                                { Action::Type::INJECTION, "INJECTION" }
+                                                { Action::Type::INJECTION, "INJECTION" },
+                                                { Action::Type::EJECTION, "EJECTION" }
 #ifndef NO_ETISS
                                                 ,
                                                 { Action::Type::EVENT, "EVENT" }
