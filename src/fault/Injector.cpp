@@ -103,9 +103,9 @@ bool Injector::cycleAccurateCallback(uint64_t time_ps)
 #if CXX0X_UP_SUPPORTED
         std::lock_guard<std::mutex> lock(sync);
 #endif
-        for (std::list<std::pair<Trigger, int32_t>>::iterator iter = unknown_triggers.begin();
-             iter != unknown_triggers.end();)
-            for (const auto &rm : remove_triggers)
+        for (const auto &rm : remove_triggers)
+            for (std::list<std::pair<Trigger, int32_t>>::iterator iter = unknown_triggers.begin();
+                 iter != unknown_triggers.end();)
             {
                 if (iter->second == rm.second) // remove all triggers associated with the fault ids of rm
                     unknown_triggers.erase(iter++);
