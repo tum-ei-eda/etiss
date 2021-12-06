@@ -264,32 +264,6 @@ Fault::Fault() : id_(uniqueFaultId())
 
 Fault::Fault(int nullid) : id_(nullid) {}
 
-Fault::Fault(const Fault &cpy)
-{
-    *this = cpy;
-}
-
-Fault &Fault::operator=(const Fault &cpy)
-{
-    name_ = cpy.name_;
-    id_ = cpy.id_;
-    triggers = cpy.triggers;
-    actions = cpy.actions;
-    return *this;
-}
-
-#if CXX0X_UP_SUPPORTED
-Fault::Fault(Fault &&cpy)
-{
-    operator=(cpy);
-}
-Fault &Fault::operator=(Fault &&cpy)
-{
-    operator=((const Fault &)cpy);
-    return *this;
-}
-#endif
-
 std::string Fault::toString() const
 {
 
@@ -326,33 +300,6 @@ bool Fault::isResoved() const
     return true;
 }
 
-FaultRef::FaultRef() : fault_(std::make_unique<Fault>()) {}
-
-FaultRef::FaultRef(const FaultRef &cpy) : FaultRef()
-{
-    *this = cpy;
-}
-
-FaultRef &FaultRef::operator=(const FaultRef &cpy)
-{
-    name_ = cpy.get_name();
-    *fault_ = cpy.get_fault();
-
-    return *this;
-}
-
-#if CXX0X_UP_SUPPORTED
-FaultRef::FaultRef(FaultRef &&cpy)
-{
-    operator=(cpy);
-}
-FaultRef &FaultRef::operator=(FaultRef &&cpy)
-{
-    operator=((const FaultRef &)cpy);
-    return *this;
-}
-#endif
-
 std::string FaultRef::toString() const
 {
 
@@ -383,7 +330,7 @@ bool FaultRef::resolve_reference() const
     {
         if (it.second.name_ == name_)
         {
-            *fault_ = it.second;
+            fault_ = it.second;
             return true;
         }
     }

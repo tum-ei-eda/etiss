@@ -92,12 +92,6 @@ class Fault : public etiss::ToString
 
     Fault(); ///< Constructor: Generates a new Fault with unique ID
     Fault(int nullid);
-    Fault(const Fault &cpy);
-    Fault &operator=(const Fault &cpy);
-#if CXX0X_UP_SUPPORTED
-    Fault(Fault &&cpy);
-    Fault &operator=(Fault &&cpy);
-#endif
 
   public:
     std::string name_{ "" };
@@ -109,23 +103,16 @@ class Fault : public etiss::ToString
 class FaultRef : public etiss::ToString
 {
   private:
-    std::unique_ptr<Fault> fault_{ nullptr }; ///< referenced Fault
-    std::string name_{ "" };                  ///< string identifier, used to resolve actual reference via fault_
+    mutable Fault fault_;    ///< referenced Fault, needs to be resolved during sim. runtime
+    std::string name_{ "" }; ///< string identifier, used to resolve actual reference via fault_
 
   public:
     std::string toString() const; ///< operator<< can be used.
 
-    FaultRef();
-    FaultRef(const FaultRef &cpy);
-    FaultRef &operator=(const FaultRef &cpy);
-#if CXX0X_UP_SUPPORTED
-    FaultRef(FaultRef &&cpy);
-    FaultRef &operator=(FaultRef &&cpy);
-#endif
-    bool is_set() const { return (fault_->name_ == name_); }
+    bool is_set() const { return (fault_.name_ == name_); }
     bool set_fault_reference(const std::string &identifier);
     bool resolve_reference() const;
-    const Fault &get_fault() const { return *fault_; }
+    const Fault &get_fault() const { return fault_; }
     const std::string &get_name() const { return name_; }
 };
 
