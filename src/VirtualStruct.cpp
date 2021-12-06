@@ -444,10 +444,12 @@ bool VirtualStruct::isClosed()
 std::list<std::string> VirtualStruct::listFields()
 {
     std::list<std::string> ret;
-    foreachField([&ret](std::shared_ptr<Field> f) {
-        if (f)
-            ret.push_back(f->name_);
-    });
+    foreachField(
+        [&ret](std::shared_ptr<Field> f)
+        {
+            if (f)
+                ret.push_back(f->name_);
+        });
     return ret;
 }
 std::list<std::string> VirtualStruct::listSubInjectors()
@@ -557,11 +559,8 @@ bool VirtualStruct::update_field_access_rights(const etiss::fault::Action &actio
     auto find = fieldNames_.find(action.getTargetField());
     if (find == fieldNames_.end())
     {
-        if (find == fieldPrettyNames_.end())
-        {
-            f = 0;
-        }
-        else
+        find = fieldPrettyNames_.find(field);
+        if (find != fieldPrettyNames_.end())
         {
             f = find->second;
         }
@@ -618,55 +617,59 @@ void copy(VirtualStruct &dst, VirtualStruct &src, std::list<std::shared_ptr<Virt
 
     std::set<std::shared_ptr<VirtualStruct::Field>> dst_known;
 
-    src.foreachField([&](std::shared_ptr<VirtualStruct::Field> srcf) {
-        if (srcf->flags_ & VirtualStruct::Field::P)
+    src.foreachField(
+        [&](std::shared_ptr<VirtualStruct::Field> srcf)
         {
-            if (src_private)
-                src_private->push_back(srcf);
-            return;
-        }
+            if (srcf->flags_ & VirtualStruct::Field::P)
+            {
+                if (src_private)
+                    src_private->push_back(srcf);
+                return;
+            }
 
-        auto dstf = dst.findName(srcf->name_);
-        if (dstf == 0)
-        {
-            notPresent.push_back(srcf);
-            return;
-        }
+            auto dstf = dst.findName(srcf->name_);
+            if (dstf == 0)
+            {
+                notPresent.push_back(srcf);
+                return;
+            }
 
-        if (dstf->flags_ & VirtualStruct::Field::P)
-        {
-            notPresent.push_back(srcf);
-            return;
-        }
-
-        dst_known.insert(dstf);
-
-        if (!(dstf->flags_ & VirtualStruct::Field::W))
-        {
-            notWriteable.push_back(dstf);
-            return;
-        }
-
-        if (!pretend)
-            dstf->write(srcf->read()); // copy value
-    });
-
-    dst.foreachField([&](std::shared_ptr<VirtualStruct::Field> dstf) {
-        if (dst_known.find(dstf) == dst_known.end())
-        {
             if (dstf->flags_ & VirtualStruct::Field::P)
             {
-                if (dst_private)
+                notPresent.push_back(srcf);
+                return;
+            }
+
+            dst_known.insert(dstf);
+
+            if (!(dstf->flags_ & VirtualStruct::Field::W))
+            {
+                notWriteable.push_back(dstf);
+                return;
+            }
+
+            if (!pretend)
+                dstf->write(srcf->read()); // copy value
+        });
+
+    dst.foreachField(
+        [&](std::shared_ptr<VirtualStruct::Field> dstf)
+        {
+            if (dst_known.find(dstf) == dst_known.end())
+            {
+                if (dstf->flags_ & VirtualStruct::Field::P)
                 {
-                    dst_private->push_back(dstf);
+                    if (dst_private)
+                    {
+                        dst_private->push_back(dstf);
+                    }
+                }
+                else
+                {
+                    unknown.push_back(dstf);
                 }
             }
-            else
-            {
-                unknown.push_back(dstf);
-            }
-        }
-    });
+        });
 }
 
 std::shared_ptr<VirtualStruct> VirtualStruct::allocate(void *structure, std::function<void(Field *)> delete_)
