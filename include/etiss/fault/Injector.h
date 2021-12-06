@@ -189,8 +189,8 @@ class Injector
 #if CXX0X_UP_SUPPORTED
     std::mutex sync;
 #endif
-    volatile bool has_pending_triggers{false};
-    volatile bool has_remove_triggers{false};
+    bool has_pending_triggers{ false };
+    bool has_remove_triggers{ false };
     std::list<std::pair<Trigger, int32_t>> pending_triggers; ///< Triggers which were just added
     std::list<std::pair<Trigger, int32_t>> unknown_triggers; ///< Triggers to look at in callbacks
     std::list<std::pair<Trigger, int32_t>>
