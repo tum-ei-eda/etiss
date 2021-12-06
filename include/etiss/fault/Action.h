@@ -186,13 +186,13 @@ class Action : public etiss::ToString
 
   private:                                            // Attributes
     type_t type_;                                     ///< type of the Attribute
-    std::unique_ptr<InjectorAddress> inj_{ nullptr }; ///< Address of Injector
-    std::string command_{ "" };                       ///< command e.g. for booting OR1KVCPU
-    std::string field_{ "" };                         ///< concerning Field (for fault injection)
+    std::unique_ptr<InjectorAddress> inj_; ///< Address of Injector
+    std::string command_;                       ///< command e.g. for booting OR1KVCPU
+    std::string field_;                         ///< concerning Field (for fault injection)
     unsigned bit_ = { 0 };                            ///< concerning Bit (for fault injection)
     mask_op_t mask_op_{ MaskOp::NOP };                ///< mask operation (for mask injection)
     uint64_t mask_value_{ 0 };                        ///< mask value (for mask injection)
-    std::unique_ptr<FaultRef> fault_ref_{ nullptr };  ///< for fault injection
+    std::unique_ptr<FaultRef> fault_ref_;  ///< for fault injection
 #ifndef NO_ETISS
     int32_t event_{ 0 }; ///< exception, or rather etiss::RETURNCODE to
                          /// to be injected into the simulation loop

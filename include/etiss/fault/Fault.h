@@ -94,7 +94,7 @@ class Fault : public etiss::ToString
     Fault(int nullid);
 
   public:
-    std::string name_{ "" };
+    std::string name_;
     int32_t id_;                   ///< @attention negative ids are reserved
     std::vector<Trigger> triggers; ///< contains the triggers for this fault
     std::vector<Action> actions;   ///< contains the actions for this fault
@@ -104,7 +104,7 @@ class FaultRef : public etiss::ToString
 {
   private:
     mutable Fault fault_;    ///< referenced Fault, needs to be resolved during sim. runtime
-    std::string name_{ "" }; ///< string identifier, used to resolve actual reference via fault_
+    std::string name_; ///< string identifier, used to resolve actual reference via fault_
 
   public:
     std::string toString() const; ///< operator<< can be used.

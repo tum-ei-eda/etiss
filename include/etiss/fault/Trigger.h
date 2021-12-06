@@ -168,10 +168,10 @@ class Trigger : public etiss::ToString
 
   private: // Attributes
     type_t type_;
-    std::string field_{ "" };
-    std::unique_ptr<Trigger> sub_{ nullptr };
-    std::unique_ptr<InjectorAddress> inj_{ nullptr };
-    void *fieldptr_{ nullptr };
+    std::string field_;
+    std::unique_ptr<Trigger> sub_;
+    std::unique_ptr<InjectorAddress> inj_;
+    void *fieldptr_;
     uint64_t param1_{ 0 };
     uint64_t param2_{ 0 };
 
