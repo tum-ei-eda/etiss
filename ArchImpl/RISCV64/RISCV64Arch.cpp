@@ -1913,7 +1913,12 @@ static InstructionDefinition csrrw_rd_csr_rs1(
 		"((RISCV64*)cpu)->CSR[" + toString(csr) + "] = rs_val;\n"
 		#if RISCV64_DEBUG_CALL
 		"printf(\"((RISCV64*)cpu)->CSR[" + toString(csr) + "] = %#lx\\n\",((RISCV64*)cpu)->CSR[" + toString(csr) + "]); \n"
-		#endif	
+		#endif
+		// manualy added
+		"if(" + toString(csr) + " == 384)\n"
+		"{\n"
+            "ETISS_SIGNAL_MMU(cpu, rs_val); \n"
+        "}\n"	
 	"}\n"
 "}\n"
  			
@@ -2665,6 +2670,11 @@ static InstructionDefinition csrrwi_rd_csr_zimm(
 	#if RISCV64_DEBUG_CALL
 	"printf(\"((RISCV64*)cpu)->CSR[" + toString(csr) + "] = %#lx\\n\",((RISCV64*)cpu)->CSR[" + toString(csr) + "]); \n"
 	#endif	
+	// manualy added
+		"if(" + toString(csr) + " == 384)\n"
+		"{\n"
+            "ETISS_SIGNAL_MMU(cpu, (etiss_uint64)" + toString(zimm) + "; \n"
+        "}\n"
 "}\n"
  			
 		"cpu->instructionPointer = " +toString((uint64_t)(ic.current_address_+ 4 ))+"ULL; \n"
@@ -3070,7 +3080,12 @@ static InstructionDefinition csrrsi_rd_csr_zimm(
 		"((RISCV64*)cpu)->CSR[" + toString(csr) + "] = (res | (etiss_uint64)" + toString(zimm) + ");\n"
 		#if RISCV64_DEBUG_CALL
 		"printf(\"((RISCV64*)cpu)->CSR[" + toString(csr) + "] = %#lx\\n\",((RISCV64*)cpu)->CSR[" + toString(csr) + "]); \n"
-		#endif	
+		#endif
+		// manualy added
+		"if(" + toString(csr) + " == 384)\n"
+		"{\n"
+            "ETISS_SIGNAL_MMU(cpu, (res | (etiss_uint64)" + toString(zimm) + ")); \n"
+        "}\n"	
 	"}\n"
 "}\n"
 
@@ -3598,6 +3613,11 @@ static InstructionDefinition csrrci_rd_csr_zimm(
 		#if RISCV64_DEBUG_CALL
 		"printf(\"((RISCV64*)cpu)->CSR[" + toString(csr) + "] = %#lx\\n\",((RISCV64*)cpu)->CSR[" + toString(csr) + "]); \n"
 		#endif	
+		// manualy added
+		"if(" + toString(csr) + " == 384)\n"
+		"{\n"
+            "ETISS_SIGNAL_MMU(cpu, (res & ~(etiss_uint64)" + toString(zimm) + ")&0xffffffffffffffff); \n"
+        "}\n"
 	"}\n"
 "}\n"
 
@@ -4141,7 +4161,12 @@ static InstructionDefinition csrrs_rd_csr_rs1(
 		"((RISCV64*)cpu)->CSR[" + toString(csr) + "] = (xrd | xrs1);\n"
 		#if RISCV64_DEBUG_CALL
 		"printf(\"((RISCV64*)cpu)->CSR[" + toString(csr) + "] = %#lx\\n\",((RISCV64*)cpu)->CSR[" + toString(csr) + "]); \n"
-		#endif	
+		#endif
+		// manualy added
+		"if(" + toString(csr) + " == 384)\n"
+		"{\n"
+            "ETISS_SIGNAL_MMU(cpu, (xrd | xrs1)); \n"
+        "}\n"
 	"}\n"
 "}\n"
 
@@ -4698,6 +4723,11 @@ static InstructionDefinition csrrc_rd_csr_rs1(
 		#if RISCV64_DEBUG_CALL
 		"printf(\"((RISCV64*)cpu)->CSR[" + toString(csr) + "] = %#lx\\n\",((RISCV64*)cpu)->CSR[" + toString(csr) + "]); \n"
 		#endif	
+		// manualy added
+		"if(" + toString(csr) + " == 384)\n"
+		"{\n"
+            "ETISS_SIGNAL_MMU(cpu, (xrd & ~xrs1)&0xffffffffffffffff); \n"
+        "}\n"
 	"}\n"
 "}\n"
 
