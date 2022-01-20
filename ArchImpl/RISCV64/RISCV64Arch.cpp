@@ -2670,11 +2670,11 @@ static InstructionDefinition csrrwi_rd_csr_zimm(
 	#if RISCV64_DEBUG_CALL
 	"printf(\"((RISCV64*)cpu)->CSR[" + toString(csr) + "] = %#lx\\n\",((RISCV64*)cpu)->CSR[" + toString(csr) + "]); \n"
 	#endif	
-	// manualy added
-		"if(" + toString(csr) + " == 384)\n"
-		"{\n"
-            "ETISS_SIGNAL_MMU(cpu, (etiss_uint64)" + toString(zimm) + "; \n"
-        "}\n"
+	// manually added
+	"if(" + toString(csr) + " == 384)\n"
+	"{\n"
+        "ETISS_SIGNAL_MMU(cpu, (etiss_uint64)" + toString(zimm) + "; \n"
+    "}\n"
 "}\n"
  			
 		"cpu->instructionPointer = " +toString((uint64_t)(ic.current_address_+ 4 ))+"ULL; \n"
@@ -8317,6 +8317,7 @@ static InstructionDefinition sfence_vma_(
 #endif	
  			
 		"cpu->instructionPointer = " +toString((uint64_t)(ic.current_address_+ 4 ))+"ULL; \n"
+		// "return " signal tlb flush
 		
 ; 
 return true;
