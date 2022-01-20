@@ -473,6 +473,8 @@ static void etiss_CPUCore_handleException(ETISS_CPU *cpu, etiss::int32 &code, Bl
         return;
     case RETURNCODE::CPUFINISHED:
         return;
+    case RETURNCODE::JITCOMPILATIONERROR:
+        return;
     default:
         code = arch->handleException(code, cpu);
         return;
@@ -770,8 +772,13 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
                         stream << "CPU execution stopped: Cannot execute from instruction index " << std::hex
                                << cpu_->instructionPointer << std::dec << ": no translated code available" << std::endl;
                         etiss::log(etiss::WARNING, stream.str());
-                        exception = RETURNCODE::JITCOMPILATIONERROR;
-                        goto loopexit;
+                        // check transerror != NOERROR
+                        exception = translation.getTranslationerror();
+                        etiss_CPUCore_handleException(cpu_, exception, blptr, translation, arch_.get()); // handle exception
+                            if (unlikely(exception != RETURNCODE::NOERROR)) // check if exception handling failed
+                            {
+                                goto loopexit; // exception; terminate cpu
+                            }
                     }
                 }
                 else
