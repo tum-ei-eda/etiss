@@ -60,6 +60,8 @@ class RISCV64MMU : public etiss::mm::MMU
     RISCV64MMU(bool pid_enabled);
 
     ~RISCV64MMU() {}
+  
+    void SignalMMU(uint64_t control_reg_val_);
 
   private:
     int32_t WalkPageTable(uint64_t vma, etiss::mm::MM_ACCESS access);
@@ -69,6 +71,8 @@ class RISCV64MMU : public etiss::mm::MMU
     void UpdatePTEFlags(PTE &pte, etiss::mm::MM_ACCESS access) {}
 
     bool CheckPrivilegedMode() { return (((RISCV64 *)cpu_)->CSR[3088] == PRV_M) ? false : true; }
+
+    uint16_t prev_satp_mode_;
 };
 
 #endif
