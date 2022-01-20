@@ -12,6 +12,10 @@
 				</trigger>
 			</triggers>
 			<actions>
+				<action type="COMMAND">
+					<injector>core%i%::system</injector>
+					<command>rmw 0x80000 OR 0xFFFFFFFF</command>
+				</action>
 				<action type="COMMAND"> <!--an <action> must have a type of {BITFLIP, MASK, COMMAND, NOP, INJECTION, EJECTION, EVENT}, here, COMMAND-->
 					<injector>core%i%</injector> <!--an <action> can have a different <injector> than its <trigger>s, which means, you could trigger on one Injector and inject into another-->
 					<command>some string</command> <!--the COMMAND type is a custom string encoded action the <injector> has to implement, by default no custom actions are supported. Set VirtualStructs::applyCustomAction member to a std::function of your choice and handle the passed string-->
@@ -32,7 +36,7 @@
 		<fault name="injected_fault_remove"> <!-- here, we define the previously referenced (<fault_ref>) fault "injected_fault_remove"-->
 			<triggers>
 				<trigger type="META_COUNTER">
-					<count>10</count>
+					<count>9</count>
 					<trigger type="ASAP"> <!-- the "as soon as possible" <trigger> type ASAP does exactly this, it fires immediately the next time its <injector> checks all its <trigger>s-->
 						<injector>core%i%</injector>
 					</trigger>
@@ -55,7 +59,7 @@
 					<injector>core%i%</injector>
 					<field>R2</field>
 					<op>OR</op> <!-- the MASK operation can be either of {AND, OR, XOR, NAND, NOR}, e.g. use AND to reset a <field>'s bits, OR to set, XOR to flip, .. etc.-->
-					<value>0x55555555</value> <!--specify the mask <value> as hexadecimal-->
+					<value>0x1</value> <!--specify the mask <value> as hexadecimal-->
 				</action>
 			</actions>
 		</fault>
