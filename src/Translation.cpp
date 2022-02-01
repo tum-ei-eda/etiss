@@ -332,9 +332,9 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
 
     plugins_initCodeBlock_(plugins_array_, block);
 
-    etiss::int32 transerror = translateBlock(block);
+    translationerror = translateBlock(block);
 
-    if (transerror != ETISS_RETURNCODE_NOERROR)
+    if (translationerror != ETISS_RETURNCODE_NOERROR)
     {
         etiss::log(etiss::ERROR, "Failed to translate block");
         return nullptr;
@@ -437,7 +437,7 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
         }
     }
 
-    return 0;
+    return 0; // should this also set etiss::RETURNCODE::JITCOMPILATIONERROR ??
 }
 /// \note this function only does the instruction to C code translation. compilation (C code to function pointer) is
 /// done in getBlock()
@@ -487,6 +487,7 @@ etiss::int32 Translation::translateBlock(CodeBlock &cb)
             cb.endaddress_ += mainba.byteCount(); // update end address
             return etiss::RETURNCODE::NOERROR;
         }
+
         if (ret != etiss::RETURNCODE::NOERROR)
         {
             if (count == 0)
@@ -495,7 +496,7 @@ etiss::int32 Translation::translateBlock(CodeBlock &cb)
             }
             else
             {
-                break; // non empty block -> compile pending
+                break; // non empty block -> compile pending // even if we got a pagefault??
             }
         }
 
@@ -576,6 +577,7 @@ etiss::int32 Translation::translateBlock(CodeBlock &cb)
         count++;
     } while ((count < maxcount && !context.force_block_end_) || context.force_append_next_instr_);
 
+    // do we need to return a pagefault here as well?
     return etiss::RETURNCODE::NOERROR;
 }
 

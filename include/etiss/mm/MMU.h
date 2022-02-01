@@ -102,7 +102,7 @@ class MMU
      *		with the updated control register value.
      *
      */
-    void SignalMMU(uint64_t control_reg_val_);
+    virtual void SignalMMU(uint64_t control_reg_val_);
 
     /**
      * @brief Dump the details of the MMU, when page fault cannot be handled
@@ -176,12 +176,12 @@ class MMU
 
     bool cache_flush_pending;
 
+    std::shared_ptr<etiss::mm::TLB<0>> GetTLB() { return tlb_; }
+
   protected:
     ETISS_CPU *cpu_;
     ETISS_System *system_;
     bool mmu_enabled_;
-
-  private:
     // Resources in MMU
     std::shared_ptr<etiss::mm::TLB<0>> tlb_;
     // Map the virtual memory address (vma) of TLB entries to its own physical
@@ -191,10 +191,12 @@ class MMU
     std::map<uint64_t, PTE *> tlb_entry_map_;
 
     uint64_t mmu_control_reg_val_;
-    uint32_t pid_;
-    std::string name_;
 
     const bool pid_enabled_;
+
+  private:
+    uint32_t pid_;
+    std::string name_;
     const bool hw_page_table_walker_;
 };
 

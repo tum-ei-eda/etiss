@@ -76,7 +76,42 @@ RISCV64MMU::RISCV64MMU(bool pid_enabled) : MMU(true, "RISCV-sv39-MMU", pid_enabl
     REGISTER_PAGE_FAULT_HANDLER(PTEOVERLAP, tlb_overlap_handler);
 }
 
-int32_t RISCV64MMU::WalkPageTable(uint64_t vma, MM_ACCESS access)
+void RISCV64MMU::SignalMMU(uint64_t control_reg_val_)
+{   
+    // Enable/Disable MMU
+    uint8_t satp_mode = (control_reg_val_ & SATP64_MODE) >> 60;
+    if (satp_mode == SATP_MODE_OFF)
+        mmu_enabled_ = false;
+    else if (!mmu_enabled_)
+    {
+        mmu_enabled_ = true;
+        etiss::log(etiss::VERBOSE, GetName() + " : MMU is enabled.");
+    }
+    // Flush TLB and Cache, if ASID or PPN have changed, or if mode has been switched between SV39 and SV48
+    // but not if mmu was enabled/disabled
+    bool asidppn_changed = (control_reg_val_ & ~SATP_MODE_OFF) != (mmu_control_reg_val_ & ~SATP_MODE_OFF);
+    bool mode_switched = false;
+    if (unlikely(satp_mode != prev_satp_mode_)) // is this really necessary?
+    {
+        prev_satp_mode_ = satp_mode;
+        mode_switched = true;
+    }
+    if (asidppn_changed || mode_switched)
+    {
+        cache_flush_pending = true;
+        tlb_->Flush();
+        tlb_entry_map_.clear();
+        etiss::log(etiss::VERBOSE, GetName() + " : TLB flushed due to page directory update.");
+        if (pid_enabled_)
+            UpdatePid(GetPid(control_reg_val_));
+    }
+    if (mmu_control_reg_val_ != control_reg_val_)
+        mmu_control_reg_val_ = control_reg_val_;
+    else
+        etiss::log(etiss::WARNING, "Redundant MMU control register write");
+}
+
+int32_t RISCV64MMU::WalkPageTable(uint64_t vma, MM_ACCESS access) 
 {
 
     if (mmu_enabled_)
@@ -193,10 +228,43 @@ RETURN_PAGEFAULT:
 
 int32_t RISCV64MMU::CheckProtection(const PTE &pte, MM_ACCESS access)
 {
+    bool priv_violation = false;
+    auto priv = ((RISCV64*)cpu_)->CSR[3088];
+
+    // MPRV check
+    if(unlikely((((RISCV64*)cpu_)->CSR[CSR_MSTATUS] & MSTATUS_MPRV) && (access != X_ACCESS)))
+        priv = ((RISCV64*)cpu_)->CSR[CSR_MSTATUS] & MSTATUS_MPP >> 11;
+
+    // Check if current PRIV has access to page
+    switch (priv)
+    {
+    case PRV_S:
+        if ((pte.GetByName("U") == 1) && (((RISCV64*)cpu_)->CSR[CSR_SSTATUS] & SSTATUS_SUM) == 0)
+            priv_violation = true;
+        break;
+    case PRV_U:
+        if (pte.GetByName("U") != 1)
+            priv_violation = true; 
+        break;
+    }
+    
+    if (priv_violation)
+    {
+        switch (access)
+        {
+        case R_ACCESS:
+            return etiss::RETURNCODE::LOAD_PAGEFAULT;
+        case W_ACCESS:
+            return etiss::RETURNCODE::STORE_PAGEFAULT;
+        case X_ACCESS:
+            return etiss::RETURNCODE::INSTR_PAGEFAULT;
+        }
+    }
+    
     switch (access)
     {
     case R_ACCESS:
-        if (1 == pte.GetByName("R"))
+        if (1 == pte.GetByName("R") || (((RISCV64*)cpu_)->CSR[CSR_MSTATUS] & MSTATUS_MXR && (pte.GetByName("X") == 1)))
             break;
         return etiss::RETURNCODE::LOAD_PAGEFAULT;
     case W_ACCESS:

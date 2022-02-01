@@ -1775,6 +1775,11 @@ static InstructionDefinition csrrw_rd_csr_rs1(
 		#if RISCV64_DEBUG_CALL
 		"printf(\"((RISCV64*)cpu)->CSR[" + toString(csr) + "] = %#lx\\n\",((RISCV64*)cpu)->CSR[" + toString(csr) + "]); \n"
 		#endif	
+		// manualy added
+		"if(" + toString(csr) + " == 384)\n"
+		"{\n"
+            "ETISS_SIGNAL_MMU(cpu, rs_val); \n"
+        "}\n"
 	"}\n"
 	"*((RISCV64*)cpu)->X[" + toString(rd) + "] = csr_val;\n"
 	#if RISCV64_DEBUG_CALL
@@ -1913,7 +1918,12 @@ static InstructionDefinition csrrw_rd_csr_rs1(
 		"((RISCV64*)cpu)->CSR[" + toString(csr) + "] = rs_val;\n"
 		#if RISCV64_DEBUG_CALL
 		"printf(\"((RISCV64*)cpu)->CSR[" + toString(csr) + "] = %#lx\\n\",((RISCV64*)cpu)->CSR[" + toString(csr) + "]); \n"
-		#endif	
+		#endif
+		// manualy added
+		"if(" + toString(csr) + " == 384)\n"
+		"{\n"
+            "ETISS_SIGNAL_MMU(cpu, rs_val); \n"
+        "}\n"	
 	"}\n"
 "}\n"
  			
@@ -2665,6 +2675,11 @@ static InstructionDefinition csrrwi_rd_csr_zimm(
 	#if RISCV64_DEBUG_CALL
 	"printf(\"((RISCV64*)cpu)->CSR[" + toString(csr) + "] = %#lx\\n\",((RISCV64*)cpu)->CSR[" + toString(csr) + "]); \n"
 	#endif	
+	// manually added
+	"if(" + toString(csr) + " == 384)\n"
+	"{\n"
+        "ETISS_SIGNAL_MMU(cpu, ((RISCV64*)cpu)->CSR[" + toString(csr) + "]); \n"
+    "}\n"
 "}\n"
  			
 		"cpu->instructionPointer = " +toString((uint64_t)(ic.current_address_+ 4 ))+"ULL; \n"
@@ -3070,7 +3085,12 @@ static InstructionDefinition csrrsi_rd_csr_zimm(
 		"((RISCV64*)cpu)->CSR[" + toString(csr) + "] = (res | (etiss_uint64)" + toString(zimm) + ");\n"
 		#if RISCV64_DEBUG_CALL
 		"printf(\"((RISCV64*)cpu)->CSR[" + toString(csr) + "] = %#lx\\n\",((RISCV64*)cpu)->CSR[" + toString(csr) + "]); \n"
-		#endif	
+		#endif
+		// manualy added
+		"if(" + toString(csr) + " == 384)\n"
+		"{\n"
+            "ETISS_SIGNAL_MMU(cpu, ((RISCV64*)cpu)->CSR[" + toString(csr) + "]); \n"
+        "}\n"	
 	"}\n"
 "}\n"
 
@@ -3598,6 +3618,11 @@ static InstructionDefinition csrrci_rd_csr_zimm(
 		#if RISCV64_DEBUG_CALL
 		"printf(\"((RISCV64*)cpu)->CSR[" + toString(csr) + "] = %#lx\\n\",((RISCV64*)cpu)->CSR[" + toString(csr) + "]); \n"
 		#endif	
+		// manualy added
+		"if(" + toString(csr) + " == 384)\n"
+		"{\n"
+            "ETISS_SIGNAL_MMU(cpu, ((RISCV64*)cpu)->CSR[" + toString(csr) + "]); \n"
+        "}\n"
 	"}\n"
 "}\n"
 
@@ -4141,7 +4166,12 @@ static InstructionDefinition csrrs_rd_csr_rs1(
 		"((RISCV64*)cpu)->CSR[" + toString(csr) + "] = (xrd | xrs1);\n"
 		#if RISCV64_DEBUG_CALL
 		"printf(\"((RISCV64*)cpu)->CSR[" + toString(csr) + "] = %#lx\\n\",((RISCV64*)cpu)->CSR[" + toString(csr) + "]); \n"
-		#endif	
+		#endif
+		// manualy added
+		"if(" + toString(csr) + " == 384)\n"
+		"{\n"
+            "ETISS_SIGNAL_MMU(cpu, (xrd | xrs1)); \n"
+        "}\n"
 	"}\n"
 "}\n"
 
@@ -4698,6 +4728,11 @@ static InstructionDefinition csrrc_rd_csr_rs1(
 		#if RISCV64_DEBUG_CALL
 		"printf(\"((RISCV64*)cpu)->CSR[" + toString(csr) + "] = %#lx\\n\",((RISCV64*)cpu)->CSR[" + toString(csr) + "]); \n"
 		#endif	
+		// manualy added
+		"if(" + toString(csr) + " == 384)\n"
+		"{\n"
+            "ETISS_SIGNAL_MMU(cpu, ((RISCV64*)cpu)->CSR[" + toString(csr) + "]); \n"
+        "}\n"
 	"}\n"
 "}\n"
 
@@ -7266,8 +7301,12 @@ static InstructionDefinition uret_(
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
- 			
-"((RISCV64*)cpu)->CSR[3088] = 0;\n"//PRIVLV=0
+"etiss_int32 ret = 0;\n"
+"if (((RISCV64*)cpu)->CSR[3088] != 0)\n"//check if PRVLVL will change, therefore leading to context-switch
+"{\n"
+	"((RISCV64*)cpu)->CSR[3088] = 0;\n"//PRIVLV=0
+	"ret = -2;\n"//context-switch occured, flush etiss-translation-cache
+"}\n" 			
 "((RISCV64*)cpu)->CSR[0] ^= ((etiss_uint32)((((RISCV64*)cpu)->CSR[0] & 0x10)>>4)) ^ (((RISCV64*)cpu)->CSR[0] & 0x1);\n"//UIE=UPIE
 "cpu->instructionPointer = ((RISCV64*)cpu)->CSR[65];\n"//PC=UEPC
 "((RISCV64*)cpu)->CSR[768]= ((RISCV64*)cpu)->CSR[0];\n"//keep MSTATUS synchronous to USTATUS
@@ -7275,7 +7314,7 @@ static InstructionDefinition uret_(
  			
 		"cpu->instructionPointer = (uint64_t)cpu->instructionPointer; \n"
 		
-		"return 0;\n"
+		"return ret;\n"
 ; 
 return true;
 },
@@ -8005,8 +8044,12 @@ static InstructionDefinition sret_(
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
- 			
-"((RISCV64*)cpu)->CSR[3088] = (((RISCV64*)cpu)->CSR[256] & 0x100)>>8;\n"//PRIVLV=SPP
+"etiss_int32 ret = 0;\n"
+"if (((RISCV64*)cpu)->CSR[3088] != (((RISCV64*)cpu)->CSR[256] & 0x100)>>8)\n"//check if PRVLVL will change, therefore leading to context-switch
+"{\n"
+	"((RISCV64*)cpu)->CSR[3088] = (((RISCV64*)cpu)->CSR[256] & 0x100)>>8;\n"//PRIVLV=SPP
+	"ret = -2;\n"//context-switch occured, flush etiss-translation-cache
+"}\n" 			
 "((RISCV64*)cpu)->CSR[256] ^= (((RISCV64*)cpu)->CSR[256] & 0x100);\n"//SPP=0
 "((RISCV64*)cpu)->CSR[256] ^= ((etiss_uint32)((((RISCV64*)cpu)->CSR[256] & 0x20)>>4)) ^ (((RISCV64*)cpu)->CSR[256] & 0x2);\n"//SIE=SPIE
 "cpu->instructionPointer = ((RISCV64*)cpu)->CSR[321];\n"//PC=SEPC
@@ -8015,7 +8058,7 @@ static InstructionDefinition sret_(
  			
 		"cpu->instructionPointer = (uint64_t)cpu->instructionPointer; \n"
 		
-		"return 0;\n"
+		"return ret;\n"
 ; 
 return true;
 },
@@ -8221,8 +8264,12 @@ static InstructionDefinition mret_(
 			"handleResources(resource_time, resources, num_stages, num_resources, cpu);\n"
 			#endif
 
- 			
-"((RISCV64*)cpu)->CSR[3088] = (((RISCV64*)cpu)->CSR[768] & 0x1800)>>11;\n"//PRIVLV=MPP
+"etiss_int32 ret = 0;\n"
+"if (((RISCV64*)cpu)->CSR[3088] != (((RISCV64*)cpu)->CSR[768] & 0x1800)>>11)\n"//check if PRVLVL will change, therefore leading to context-switch
+"{\n"
+	"((RISCV64*)cpu)->CSR[3088] = (((RISCV64*)cpu)->CSR[768] & 0x1800)>>11;\n"//PRIVLV=MPP
+	"ret = -2;\n"//context-switch occured, flush etiss-translation-cache
+"}\n"		
 "((RISCV64*)cpu)->CSR[768] ^= (((RISCV64*)cpu)->CSR[768] & 0x1800);\n"//MPP=0
 "((RISCV64*)cpu)->CSR[768] ^= ((etiss_uint32)((((RISCV64*)cpu)->CSR[768] & 0x80)>>4)) ^ (((RISCV64*)cpu)->CSR[768] & 0x8);\n"//MIE=MPIE
 "cpu->instructionPointer = ((RISCV64*)cpu)->CSR[833];\n"//PC=MEPC
@@ -8231,7 +8278,7 @@ static InstructionDefinition mret_(
  			
 		"cpu->instructionPointer = (uint64_t)cpu->instructionPointer; \n"
 		
-		"return 0;\n"
+		"return ret;\n"
 ; 
 return true;
 },
@@ -8287,6 +8334,9 @@ static InstructionDefinition sfence_vma_(
 #endif	
  			
 		"cpu->instructionPointer = " +toString((uint64_t)(ic.current_address_+ 4 ))+"ULL; \n"
+		// manually added
+		"ETISS_SIGNAL_TLB_FLUSH(cpu);\n" // signal tlb flush to MMU
+		"return -2;\n" // return RELOADBLOCKS to flush translation cache
 		
 ; 
 return true;

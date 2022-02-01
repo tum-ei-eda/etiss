@@ -137,9 +137,8 @@ static etiss_int32 dbg_read(void *handle, etiss_uint64 addr, etiss_uint8 *buffer
 
     // vma to pma translation
     uint64_t pma = 0;
-    if (unlikely(exception = mmu->Translate(addr, &pma, MM_ACCESS::X_ACCESS)))
-        return etiss::RETURNCODE::PAGEFAULT;
-
+    if (unlikely((exception = mmu->Translate(addr, &pma, MM_ACCESS::X_ACCESS) != etiss::RETURNCODE::NOERROR)))
+        return exception;
     ETISS_System *sys = msys->orig;
     return sys->dbg_read(sys->handle, pma, buffer, length);
 }

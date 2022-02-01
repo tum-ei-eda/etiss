@@ -96,6 +96,7 @@ etiss::int32 RISCV64Arch::handleException(etiss::int32 cause, ETISS_CPU *cpu)
                                                                                   etiss_uint32 addr) {
         std::stringstream msg;
 
+        auto ret = etiss::RETURNCODE::NOERROR;
         msg << "Exception is captured with cause code: 0x" << std::hex << causeCode;
         msg << "  Exception message: " << etiss::RETURNCODE::getErrorMessages()[cause] << std::endl;
         msg << "Exception occurs at instruction address: 0x" << std::hex << cpu->instructionPointer << std::endl;
@@ -125,8 +126,15 @@ etiss::int32 RISCV64Arch::handleException(etiss::int32 cause, ETISS_CPU *cpu)
                 ((RISCV64 *)cpu)->CSR[CSR_SEPC] = cpu->instructionPointer - 4;
                 ((RISCV64 *)cpu)->CSR[CSR_SSTATUS] ^=
                     (((RISCV64 *)cpu)->CSR[3088] << 8) ^ (((RISCV64 *)cpu)->CSR[CSR_SSTATUS] & MSTATUS_SPP);
-                ((RISCV64 *)cpu)->CSR[3088] = PRV_S;
-                etiss::log(etiss::VERBOSE, "Privilege mode is changed to supervisor mdoe:" + etiss::toString(PRV_S));
+                // Switch hart into supervisor mode, if it isn't already in s mode
+                if (((RISCV64 *)cpu)->CSR[3088] != PRV_S)
+                {
+                    // This means that a context switch occured, therefore etiss-translation-cache must be flushed
+                    ret = etiss::RETURNCODE::RELOADBLOCKS;
+                    ((RISCV64 *)cpu)->CSR[3088] = PRV_S;
+                    etiss::log(etiss::VERBOSE, "Privilege mode is changed to supervisor mode:" + etiss::toString(PRV_S));
+                }
+                etiss::log(etiss::VERBOSE, "Privilege mode is already in supervisor mode:" + etiss::toString(PRV_S));
                 cpu->instructionPointer = ((RISCV64 *)cpu)->CSR[CSR_STVEC] & ~0x3;
             }
             else
@@ -136,8 +144,15 @@ etiss::int32 RISCV64Arch::handleException(etiss::int32 cause, ETISS_CPU *cpu)
                 ((RISCV64 *)cpu)->CSR[CSR_MEPC] = cpu->instructionPointer - 4;
                 (((RISCV64 *)cpu)->CSR[CSR_MSTATUS]) ^=
                     (((RISCV64 *)cpu)->CSR[3088] << 11) ^ ((((RISCV64 *)cpu)->CSR[CSR_MSTATUS]) & MSTATUS_MPP);
-                ((RISCV64 *)cpu)->CSR[3088] = PRV_M;
-                etiss::log(etiss::VERBOSE, "Privilege mode is changed to machine mdoe: " + etiss::toString(PRV_M));
+                // Switch hart into machine mode, if it isn't already in m mode
+                if (((RISCV64 *)cpu)->CSR[3088] != PRV_M)
+                {
+                    // This means that a context switch occured, therefore etiss-translation-cache must be flushed
+                    ret = etiss::RETURNCODE::RELOADBLOCKS;
+                    ((RISCV64 *)cpu)->CSR[3088] = PRV_M;
+                    etiss::log(etiss::VERBOSE, "Privilege mode is changed to machine mode: " + etiss::toString(PRV_M));
+                }
+                etiss::log(etiss::VERBOSE, "Privilege mode is already in machine mode: " + etiss::toString(PRV_M));
                 // Customized handler address other than specified in RISC-V ISA
                 // manual
                 if (addr)
@@ -163,8 +178,15 @@ etiss::int32 RISCV64Arch::handleException(etiss::int32 cause, ETISS_CPU *cpu)
                 ((RISCV64 *)cpu)->CSR[CSR_SEPC] = cpu->instructionPointer;
                 ((RISCV64 *)cpu)->CSR[CSR_SSTATUS] ^=
                     (((RISCV64 *)cpu)->CSR[3088] << 8) ^ (((RISCV64 *)cpu)->CSR[CSR_SSTATUS] & MSTATUS_SPP);
-                ((RISCV64 *)cpu)->CSR[3088] = PRV_S;
-                etiss::log(etiss::VERBOSE, "Privilege mode is changed to supervisor mdoe:" + etiss::toString(PRV_S));
+                // Switch hart into supervisor mode, if it isn't already in s mode
+                if (((RISCV64 *)cpu)->CSR[3088] != PRV_S)
+                {
+                    // This means that a context switch occured, therefore etiss-translation-cache must be flushed
+                    ret = etiss::RETURNCODE::RELOADBLOCKS;
+                    ((RISCV64 *)cpu)->CSR[3088] = PRV_S;
+                    etiss::log(etiss::VERBOSE, "Privilege mode is changed to supervisor mode:" + etiss::toString(PRV_S));
+                }
+                etiss::log(etiss::VERBOSE, "Privilege mode is already in supervisor mode:" + etiss::toString(PRV_S));
                 if (((RISCV64 *)cpu)->CSR[CSR_STVEC] & 0x1)
                     cpu->instructionPointer = (((RISCV64 *)cpu)->CSR[CSR_STVEC] & ~0x3) + causeCode * 4;
                 else
@@ -177,8 +199,15 @@ etiss::int32 RISCV64Arch::handleException(etiss::int32 cause, ETISS_CPU *cpu)
                 ((RISCV64 *)cpu)->CSR[CSR_MEPC] = cpu->instructionPointer;
                 (((RISCV64 *)cpu)->CSR[CSR_MSTATUS]) ^=
                     (((RISCV64 *)cpu)->CSR[3088] << 11) ^ ((((RISCV64 *)cpu)->CSR[CSR_MSTATUS]) & MSTATUS_MPP);
-                ((RISCV64 *)cpu)->CSR[3088] = PRV_M;
-                etiss::log(etiss::VERBOSE, "Privilege mode is changed to machine mdoe: " + etiss::toString(PRV_M));
+                // Switch hart into machine mode, if it isn't already in m mode
+                if (((RISCV64 *)cpu)->CSR[3088] != PRV_M)
+                {
+                    // This means that a context switch occured, therefore etiss-translation-cache must be flushed
+                    ret = etiss::RETURNCODE::RELOADBLOCKS;
+                    ((RISCV64 *)cpu)->CSR[3088] = PRV_M;
+                    etiss::log(etiss::VERBOSE, "Privilege mode is changed to machine mode: " + etiss::toString(PRV_M));
+                }
+                etiss::log(etiss::VERBOSE, "Privilege mode is already in machine mode: " + etiss::toString(PRV_M));
                 // Customized handler address other than specified in RISC-V ISA
                 // manual
                 if (addr)
@@ -196,7 +225,7 @@ etiss::int32 RISCV64Arch::handleException(etiss::int32 cause, ETISS_CPU *cpu)
 
         msg << "Program is redirected to address: 0x" << std::hex << cpu->instructionPointer << std::endl;
         etiss::log(etiss::VERBOSE, msg.str());
-        return etiss::RETURNCODE::NOERROR;
+        return ret;
     };
 
     switch (cause)
