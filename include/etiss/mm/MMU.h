@@ -176,6 +176,8 @@ class MMU
 
     bool cache_flush_pending;
 
+    std::shared_ptr<etiss::mm::TLB<0>> GetTLB() { return tlb_; }
+
   protected:
     ETISS_CPU *cpu_;
     ETISS_System *system_;
