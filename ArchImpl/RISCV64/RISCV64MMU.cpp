@@ -228,10 +228,43 @@ RETURN_PAGEFAULT:
 
 int32_t RISCV64MMU::CheckProtection(const PTE &pte, MM_ACCESS access)
 {
+    bool priv_violation = false;
+    auto priv = ((RISCV64*)cpu_)->CSR[3088];
+
+    // MPRV check
+    if(unlikely((((RISCV64*)cpu_)->CSR[CSR_MSTATUS] & MSTATUS_MPRV) && (access != X_ACCESS)))
+        priv = ((RISCV64*)cpu_)->CSR[CSR_MSTATUS] & MSTATUS_MPP >> 11;
+
+    // Check if current PRIV has access to page
+    switch (priv)
+    {
+    case PRV_S:
+        if ((pte.GetByName("U") == 1) && (((RISCV64*)cpu_)->CSR[CSR_SSTATUS] & SSTATUS_SUM) == 0)
+            priv_violation = true;
+        break;
+    case PRV_U:
+        if (pte.GetByName("U") != 1)
+            priv_violation = true; 
+        break;
+    }
+    
+    if (priv_violation)
+    {
+        switch (access)
+        {
+        case R_ACCESS:
+            return etiss::RETURNCODE::LOAD_PAGEFAULT;
+        case W_ACCESS:
+            return etiss::RETURNCODE::STORE_PAGEFAULT;
+        case X_ACCESS:
+            return etiss::RETURNCODE::INSTR_PAGEFAULT;
+        }
+    }
+    
     switch (access)
     {
     case R_ACCESS:
-        if (1 == pte.GetByName("R"))
+        if (1 == pte.GetByName("R") || (((RISCV64*)cpu_)->CSR[CSR_MSTATUS] & MSTATUS_MXR && (pte.GetByName("X") == 1)))
             break;
         return etiss::RETURNCODE::LOAD_PAGEFAULT;
     case W_ACCESS:
