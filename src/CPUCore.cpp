@@ -477,6 +477,12 @@ static void etiss_CPUCore_handleException(ETISS_CPU *cpu, etiss::int32 &code, Bl
         return;
     default:
         code = arch->handleException(code, cpu);
+        if (code == RETURNCODE::RELOADBLOCKS) // translation-cache-flushes need to be resolved
+        {
+            block_ptr = 0; // doesn't hold a reference and thus might become invalid
+            translator.unloadBlocks();
+            code = RETURNCODE::NOERROR;
+        }
         return;
     }
 }
@@ -738,17 +744,18 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
                         // translation.unloadBlocks(0,(uint64_t)((int64_t)-1));
                         mmu_->cache_flush_pending = false;
                         blptr = nullptr;
+                        translation.unloadBlocks();
                     }
-
-                    // If the exception could be handled by architecture, then continue translation
-                    while ((exception = mmu_->Translate(cpu_->instructionPointer, &pma, etiss::mm::X_ACCESS)))
-                    {
-                        //	translation.unloadBlocks();
-                        if ((exception = arch_->handleException(exception, cpu_)))
-                            goto loopexit;
-                        // Update pma, in case pc is redirected to physical address space
-                        pma = cpu_->instructionPointer;
-                    }
+                    
+                    /* This section of code should not be necessary for virtual caches */
+                    // // If the exception could be handled by architecture, then continue translation
+                    // while ((exception = mmu_->Translate(cpu_->instructionPointer, &pma, etiss::mm::X_ACCESS)))
+                    // {
+                    //     if ((exception = arch_->handleException(exception, cpu_)))
+                    //         goto loopexit;
+                    //     // Update pma, in case pc is redirected to physical address space
+                    //     pma = cpu_->instructionPointer;
+                    // }
                 }
 
                 // FIXME: cpu->instructionPointer contains virtual address, getBlockFast should use physical address
