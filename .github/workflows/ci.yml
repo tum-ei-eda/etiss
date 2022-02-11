@@ -86,7 +86,6 @@ jobs:
         cmake -E make_directory ${{runner.workspace}}/install/examples/SW/riscv/build64
         cmake -E make_directory ${{runner.workspace}}/install/examples/SW/riscv_cpp/build
         cmake -E make_directory ${{runner.workspace}}/install/examples/SW/riscv_cpp/build64
-        cmake -E make_directory ${{runner.workspace}}/install/examples/bare_etiss_processor/build
         cmake -E make_directory ${{runner.workspace}}/install/examples/SW/riscv_dhry/build
 
     - name: Setup tests
@@ -112,10 +111,7 @@ jobs:
         cd SW/riscv_dhry/build
         cmake .. -DRISCV_ELF_GCC_PREFIX=../../../../../riscv-tc -DRISCV_ELF_GCC_BASENAME=riscv64-unknown-elf ${{matrix.config.cmakegen}}
         cmake --build . --config $BUILD_TYPE
-        cd -
-        cd bare_etiss_processor/build
-        cmake ..
-        cmake --build . --config $BUILD_TYPE
+
 
     - name: Compress Compiled System
       run: tar -C ${{runner.workspace}} -cvf ${{runner.workspace}}/etiss.tar install
@@ -150,18 +146,18 @@ jobs:
       run: tar -xf etiss.tar
 
     - name: Test (Linux/Mac)
-      working-directory: ${{runner.workspace}}/install/examples/bare_etiss_processor
+      working-directory: ${{runner.workspace}}/install/bin
       if: matrix.config.name == 'Linux'
       shell: bash
       run: |
-        ./run_helper.sh ../SW/riscv/build/riscv_example.elf
-        ./run_helper.sh ../SW/riscv/build/riscv_example.elf gcc
-        ./run_helper.sh ../SW/riscv/build/riscv_example.elf llvm
-        ./run_helper.sh ../SW/riscv_cpp/build/riscv_example.elf
-        ./run_helper.sh ../SW/riscv_cpp/build/riscv_example.elf gcc
-        ./run_helper.sh ../SW/riscv_cpp/build/riscv_example.elf llvm
-        ./run_helper.sh ../SW/riscv/build64/riscv_example.elf
-        ./run_helper.sh ../SW/riscv_cpp/build64/riscv_example.elf
+        ./run_helper.sh ../examples/SW/riscv/build/riscv_example.elf
+        ./run_helper.sh ../examples/SW/riscv/build/riscv_example.elf gcc
+        ./run_helper.sh ../examples/SW/riscv/build/riscv_example.elf llvm
+        ./run_helper.sh ../examples/SW/riscv_cpp/build/riscv_example.elf
+        ./run_helper.sh ../examples/SW/riscv_cpp/build/riscv_example.elf gcc
+        ./run_helper.sh ../examples/SW/riscv_cpp/build/riscv_example.elf llvm
+        ./run_helper.sh ../examples/SW/riscv/build64/riscv_example.elf
+        ./run_helper.sh ../examples/SW/riscv_cpp/build64/riscv_example.elf
 
     # - name: Test (Windows)
     #   working-directory: ${{runner.workspace}}/install/examples/bare_etiss_processor/build
@@ -182,7 +178,7 @@ jobs:
       matrix:
         run-no: [1, 2, 3, 4, 5]
         jit-engine: ["tcc", "gcc", "llvm"]
-    
+
     if: (github.event_name == 'push' && github.ref == 'refs/heads/master') || github.event_name == 'pull_request'
     needs: build
     runs-on: ubuntu-latest
@@ -203,9 +199,9 @@ jobs:
       run: mkdir ${{runner.workspace}}/results
 
     - name: Run Benchmarks
-      working-directory: ${{runner.workspace}}/install/examples/bare_etiss_processor
+      working-directory: ${{runner.workspace}}/install/bin
       run: |
-        ./run_helper.sh ../SW/riscv_dhry/build/riscv_example ${{matrix.jit-engine}} --vp.stats_file_path=${{runner.workspace}}/results/run.json
+        ./run_helper.sh ../examples/SW/riscv_dhry/build/riscv_example ${{matrix.jit-engine}} --vp.stats_file_path=${{runner.workspace}}/results/run.json
         mv ${{runner.workspace}}/results/run.json ${{runner.workspace}}/results/run_${{matrix.jit-engine}}_${{matrix.run-no}}.json
 
     - name: Save Benchmark Results
@@ -411,7 +407,7 @@ jobs:
 
   delete-artifact:
     if: always()
-    needs: [display-wiki, display-pr]
+    needs: [display-wiki, display-pr, test]
     runs-on: ubuntu-latest
     continue-on-error: true
 
