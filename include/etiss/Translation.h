@@ -213,7 +213,7 @@ class Translation
 
     std::string disasm(uint8_t *buf, unsigned len, int &append);
 
-    inline etiss::int32 getTranslationerror() { return translationerror; }
+    inline etiss::int32 getTranslationError() { return translation_error_; }
 
   private:
     /// unique id used to generate unique function names across translation instances
@@ -221,7 +221,7 @@ class Translation
     /// countes translated blocks. needed to guarantee unique block function names
     uint64_t tblockcount;
     // transerror member + getter
-    etiss::int32 translationerror;
+    etiss::int32 translation_error_;
 };
 
 } // namespace etiss

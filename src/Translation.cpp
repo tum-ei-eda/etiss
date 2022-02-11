@@ -332,9 +332,9 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
 
     plugins_initCodeBlock_(plugins_array_, block);
 
-    translationerror = translateBlock(block);
+    translation_error_ = translateBlock(block);
 
-    if (translationerror != ETISS_RETURNCODE_NOERROR)
+    if (translation_error_ != ETISS_RETURNCODE_NOERROR)
     {
         etiss::log(etiss::ERROR, "Failed to translate block");
         return nullptr;

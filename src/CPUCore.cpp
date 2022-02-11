@@ -480,7 +480,7 @@ static void etiss_CPUCore_handleException(ETISS_CPU *cpu, etiss::int32 &code, Bl
         if (code == RETURNCODE::RELOADBLOCKS) // translation-cache-flushes need to be resolved
         {
             block_ptr = 0; // doesn't hold a reference and thus might become invalid
-            translator.unloadBlocks();
+            translator.unloadBlocks(); // flush ETISS-translation cache
             code = RETURNCODE::NOERROR;
         }
         return;
@@ -780,7 +780,7 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
                                << cpu_->instructionPointer << std::dec << ": no translated code available" << std::endl;
                         etiss::log(etiss::WARNING, stream.str());
                         // check transerror != NOERROR
-                        exception = translation.getTranslationerror();
+                        exception = translation.getTranslationError();
                         etiss_CPUCore_handleException(cpu_, exception, blptr, translation, arch_.get()); // handle exception
                             if (unlikely(exception != RETURNCODE::NOERROR)) // check if exception handling failed
                             {
