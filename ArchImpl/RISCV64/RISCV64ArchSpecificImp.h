@@ -128,7 +128,6 @@ etiss::int32 RISCV64Arch::handleException(etiss::int32 cause, ETISS_CPU *cpu)
                     (((RISCV64 *)cpu)->CSR[3088] << 8) ^ (((RISCV64 *)cpu)->CSR[CSR_SSTATUS] & MSTATUS_SPP);
                 // Since traps can only be delegated to S-mode, if it originated in S/U-mode, 
                 // trapframes can be accessed without context-switches. Those occur in the traphandler.
-                ret = etiss::RETURNCODE::RELOADBLOCKS;
                 ((RISCV64 *)cpu)->CSR[3088] = PRV_S;
                 etiss::log(etiss::VERBOSE, "Privilege mode is changed to supervisor mode:" + etiss::toString(PRV_S));
                 cpu->instructionPointer = ((RISCV64 *)cpu)->CSR[CSR_STVEC] & ~0x3;
@@ -176,7 +175,6 @@ etiss::int32 RISCV64Arch::handleException(etiss::int32 cause, ETISS_CPU *cpu)
                     (((RISCV64 *)cpu)->CSR[3088] << 8) ^ (((RISCV64 *)cpu)->CSR[CSR_SSTATUS] & MSTATUS_SPP);
                 // Since traps can only be delegated to S-mode, if it originated in S/U-mode, 
                 // trapframes can be accessed without context-switches. Those occur in the traphandler.
-                ret = etiss::RETURNCODE::RELOADBLOCKS;
                 ((RISCV64 *)cpu)->CSR[3088] = PRV_S;
                 etiss::log(etiss::VERBOSE, "Privilege mode is changed to supervisor mode:" + etiss::toString(PRV_S));
                 if (((RISCV64 *)cpu)->CSR[CSR_STVEC] & 0x1)
