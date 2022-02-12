@@ -1634,6 +1634,7 @@ static InstructionDefinition csrrw_rd_csr_rs1(
  			"etiss_uint64 rs_val = 0;\n"
  			"etiss_uint64 csr_val = 0;\n"
  			"etiss_int64 writeMaskM = 0;\n"
+			"etiss_int32 ret = 0;\n"
  			
 "rs_val = *((RISCV64*)cpu)->X[" + toString(rs1) + "];\n"
 #if RISCV64_DEBUG_CALL
@@ -1778,7 +1779,7 @@ static InstructionDefinition csrrw_rd_csr_rs1(
 		// manualy added
 		"if(" + toString(csr) + " == 384)\n"
 		"{\n"
-            "ETISS_SIGNAL_MMU(cpu, rs_val); \n"
+            "ret = ETISS_SIGNAL_MMU(cpu, rs_val); \n"
         "}\n"
 	"}\n"
 	"*((RISCV64*)cpu)->X[" + toString(rd) + "] = csr_val;\n"
@@ -1922,12 +1923,13 @@ static InstructionDefinition csrrw_rd_csr_rs1(
 		// manualy added
 		"if(" + toString(csr) + " == 384)\n"
 		"{\n"
-            "ETISS_SIGNAL_MMU(cpu, rs_val); \n"
+            "ret = ETISS_SIGNAL_MMU(cpu, rs_val); \n"
         "}\n"	
 	"}\n"
 "}\n"
  			
 		"cpu->instructionPointer = " +toString((uint64_t)(ic.current_address_+ 4 ))+"ULL; \n"
+		"if(ret) return ret; \n"
 		
 ; 
 return true;
@@ -2536,6 +2538,7 @@ static InstructionDefinition csrrwi_rd_csr_zimm(
  			"etiss_int64 writeMaskS = 0;\n"
  			"etiss_int64 uAddr = 0;\n"
  			"etiss_int64 writeMaskM = 0;\n"
+			"etiss_int32 ret = 0;\n"
  			
 "if(" + toString(rd) + " != 0)\n"
 "{\n"
@@ -2678,12 +2681,12 @@ static InstructionDefinition csrrwi_rd_csr_zimm(
 	// manually added
 	"if(" + toString(csr) + " == 384)\n"
 	"{\n"
-        "ETISS_SIGNAL_MMU(cpu, ((RISCV64*)cpu)->CSR[" + toString(csr) + "]); \n"
+        "ret = ETISS_SIGNAL_MMU(cpu, ((RISCV64*)cpu)->CSR[" + toString(csr) + "]); \n"
     "}\n"
 "}\n"
  			
 		"cpu->instructionPointer = " +toString((uint64_t)(ic.current_address_+ 4 ))+"ULL; \n"
-		
+		"if(ret) return ret; \n"
 ; 
 return true;
 },
@@ -2949,6 +2952,7 @@ static InstructionDefinition csrrsi_rd_csr_zimm(
  			"etiss_int64 writeMaskS = 0;\n"
  			"etiss_int64 uAddr = 0;\n"
  			"etiss_int64 writeMaskM = 0;\n"
+			"etiss_int32 ret = 0;\n"
  			
 "res = ((RISCV64*)cpu)->CSR[" + toString(csr) + "];\n"
 #if RISCV64_DEBUG_CALL
@@ -3089,7 +3093,7 @@ static InstructionDefinition csrrsi_rd_csr_zimm(
 		// manualy added
 		"if(" + toString(csr) + " == 384)\n"
 		"{\n"
-            "ETISS_SIGNAL_MMU(cpu, ((RISCV64*)cpu)->CSR[" + toString(csr) + "]); \n"
+            "ret = ETISS_SIGNAL_MMU(cpu, ((RISCV64*)cpu)->CSR[" + toString(csr) + "]); \n"
         "}\n"	
 	"}\n"
 "}\n"
@@ -3104,7 +3108,7 @@ static InstructionDefinition csrrsi_rd_csr_zimm(
 
  			
 		"cpu->instructionPointer = " +toString((uint64_t)(ic.current_address_+ 4 ))+"ULL; \n"
-		
+		"if(ret) return ret; \n"
 ; 
 return true;
 },
@@ -3473,6 +3477,7 @@ static InstructionDefinition csrrci_rd_csr_zimm(
  			"etiss_int64 writeMaskS = 0;\n"
  			"etiss_int64 uAddr = 0;\n"
  			"etiss_int64 writeMaskM = 0;\n"
+			"etiss_int64 ret = 0;\n"
  			
 "res = ((RISCV64*)cpu)->CSR[" + toString(csr) + "];\n"
 #if RISCV64_DEBUG_CALL
@@ -3621,14 +3626,14 @@ static InstructionDefinition csrrci_rd_csr_zimm(
 		// manualy added
 		"if(" + toString(csr) + " == 384)\n"
 		"{\n"
-            "ETISS_SIGNAL_MMU(cpu, ((RISCV64*)cpu)->CSR[" + toString(csr) + "]); \n"
+            "ret = ETISS_SIGNAL_MMU(cpu, ((RISCV64*)cpu)->CSR[" + toString(csr) + "]); \n"
         "}\n"
 	"}\n"
 "}\n"
 
  			
 		"cpu->instructionPointer = " +toString((uint64_t)(ic.current_address_+ 4 ))+"ULL; \n"
-		
+		"if(ret) return ret; \n"
 ; 
 return true;
 },
@@ -4018,6 +4023,7 @@ static InstructionDefinition csrrs_rd_csr_rs1(
  			"etiss_int64 uAddr = 0;\n"
  			"etiss_uint64 xrd = 0;\n"
  			"etiss_int64 writeMaskM = 0;\n"
+			"etiss_int32 ret = 0;\n"
  			
 "xrd = ((RISCV64*)cpu)->CSR[" + toString(csr) + "];\n"
 #if RISCV64_DEBUG_CALL
@@ -4170,14 +4176,14 @@ static InstructionDefinition csrrs_rd_csr_rs1(
 		// manualy added
 		"if(" + toString(csr) + " == 384)\n"
 		"{\n"
-            "ETISS_SIGNAL_MMU(cpu, (xrd | xrs1)); \n"
+            "ret = ETISS_SIGNAL_MMU(cpu, (xrd | xrs1)); \n"
         "}\n"
 	"}\n"
 "}\n"
 
  			
 		"cpu->instructionPointer = " +toString((uint64_t)(ic.current_address_+ 4 ))+"ULL; \n"
-		
+		"if(ret) return ret; \n"
 ; 
 return true;
 },
@@ -4579,6 +4585,7 @@ static InstructionDefinition csrrc_rd_csr_rs1(
  			"etiss_int64 uAddr = 0;\n"
  			"etiss_uint64 xrd = 0;\n"
  			"etiss_int64 writeMaskM = 0;\n"
+			"etiss_int32 ret = 0;\n"
  			
 "xrd = ((RISCV64*)cpu)->CSR[" + toString(csr) + "];\n"
 #if RISCV64_DEBUG_CALL
@@ -4731,14 +4738,14 @@ static InstructionDefinition csrrc_rd_csr_rs1(
 		// manualy added
 		"if(" + toString(csr) + " == 384)\n"
 		"{\n"
-            "ETISS_SIGNAL_MMU(cpu, ((RISCV64*)cpu)->CSR[" + toString(csr) + "]); \n"
+            "ret = ETISS_SIGNAL_MMU(cpu, ((RISCV64*)cpu)->CSR[" + toString(csr) + "]); \n"
         "}\n"
 	"}\n"
 "}\n"
 
  			
 		"cpu->instructionPointer = " +toString((uint64_t)(ic.current_address_+ 4 ))+"ULL; \n"
-		
+		"if(ret) return ret; \n"
 ; 
 return true;
 },

@@ -61,7 +61,7 @@ class RISCV64MMU : public etiss::mm::MMU
 
     ~RISCV64MMU() {}
   
-    void SignalMMU(uint64_t control_reg_val_);
+    int32_t SignalMMU(uint64_t control_reg_val_);
 
   private:
     int32_t WalkPageTable(uint64_t vma, etiss::mm::MM_ACCESS access);

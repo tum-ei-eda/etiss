@@ -102,7 +102,7 @@ class MMU
      *		with the updated control register value.
      *
      */
-    virtual void SignalMMU(uint64_t control_reg_val_);
+    virtual int32_t SignalMMU(uint64_t control_reg_val_);
 
     /**
      * @brief Dump the details of the MMU, when page fault cannot be handled

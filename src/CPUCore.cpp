@@ -730,33 +730,32 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
             //            std::cout << "instrcounter: " <<  instrcounter <<std::endl;
             for (unsigned bc = 0; bc < bcc_; bc++)
             {
-                // if not block internal jump // NOTE: removed since tests showed that this decreases performance
-                // if (!(blptr != 0 && blptr->valid && blptr->start<=cpu->instructionPointer && blptr->end >
-                // cpu->instructionPointer)){
-                // Transalte virtual address to physical address if MMU is enabled
-                uint64_t pma = cpu_->instructionPointer;
-                if (mmu_enabled_)
-                {
-                    if (mmu_->cache_flush_pending)
-                    {
-                        // FIXME: When flush required, current instruction cache has to be cleared. However, the
-                        // unloadBlocks is much too time-comsuming than expected. It should be optimized later on.
-                        // translation.unloadBlocks(0,(uint64_t)((int64_t)-1));
-                        mmu_->cache_flush_pending = false;
-                        blptr = nullptr;
-                        translation.unloadBlocks();
-                    }
+                // // if not block internal jump // NOTE: removed since tests showed that this decreases performance
+                // // if (!(blptr != 0 && blptr->valid && blptr->start<=cpu->instructionPointer && blptr->end >
+                // // cpu->instructionPointer)){
+                // // Transalte virtual address to physical address if MMU is enabled
+                // uint64_t pma = cpu_->instructionPointer;
+                // if (mmu_enabled_)
+                // {
+                //     if (mmu_->cache_flush_pending)
+                //     {
+                //         // FIXME: When flush required, current instruction cache has to be cleared. However, the
+                //         // unloadBlocks is much too time-comsuming than expected. It should be optimized later on.
+                //         // translation.unloadBlocks(0,(uint64_t)((int64_t)-1));
+                //         mmu_->cache_flush_pending = false;
+                //         blptr = nullptr;
+                //         translation.unloadBlocks();
+                //     }
                     
-                    /* This section of code should not be necessary for virtual caches */
-                    // // If the exception could be handled by architecture, then continue translation
-                    // while ((exception = mmu_->Translate(cpu_->instructionPointer, &pma, etiss::mm::X_ACCESS)))
-                    // {
-                    //     if ((exception = arch_->handleException(exception, cpu_)))
-                    //         goto loopexit;
-                    //     // Update pma, in case pc is redirected to physical address space
-                    //     pma = cpu_->instructionPointer;
-                    // }
-                }
+                //     // If the exception could be handled by architecture, then continue translation
+                //     while ((exception = mmu_->Translate(cpu_->instructionPointer, &pma, etiss::mm::X_ACCESS)))
+                //     {
+                //         if ((exception = arch_->handleException(exception, cpu_)))
+                //             goto loopexit;
+                //         // Update pma, in case pc is redirected to physical address space
+                //         pma = cpu_->instructionPointer;
+                //     }
+                // }
 
                 // FIXME: cpu->instructionPointer contains virtual address, getBlockFast should use physical address
                 // instead to realize physical cache.
@@ -782,10 +781,10 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
                         // check transerror != NOERROR
                         exception = translation.getTranslationError();
                         etiss_CPUCore_handleException(cpu_, exception, blptr, translation, arch_.get()); // handle exception
-                            if (unlikely(exception != RETURNCODE::NOERROR)) // check if exception handling failed
-                            {
-                                goto loopexit; // exception; terminate cpu
-                            }
+                        if (unlikely(exception != RETURNCODE::NOERROR)) // check if exception handling failed
+                        {
+                            goto loopexit; // exception; terminate cpu
+                        }
                     }
                 }
                 else
