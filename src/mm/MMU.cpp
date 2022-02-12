@@ -265,7 +265,7 @@ extern "C"
                                      "etiss::CPUCore::execute(). this should not happen and indicates a faultiy "
                                      "CPUArch (or Plugin) implementation. This function may have been called "
                                      "indirectly from ETISS_signalChangedRegisterValue()");
-            return;
+            return etiss::RETURNCODE::GENERALERROR;
         }
         return core->getMMU()->SignalMMU(mmu_signal_);
     }
