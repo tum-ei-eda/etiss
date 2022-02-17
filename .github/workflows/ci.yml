@@ -182,7 +182,7 @@ jobs:
       matrix:
         run-no: [1, 2, 3, 4, 5]
         jit-engine: ["tcc", "gcc", "llvm"]
-    
+
     if: (github.event_name == 'push' && github.ref == 'refs/heads/master') || github.event_name == 'pull_request'
     needs: build
     runs-on: ubuntu-latest
@@ -411,7 +411,7 @@ jobs:
 
   delete-artifact:
     if: always()
-    needs: [display-wiki, display-pr]
+    needs: [display-wiki, display-pr, test]
     runs-on: ubuntu-latest
     continue-on-error: true
 
