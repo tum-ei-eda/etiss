@@ -2,7 +2,7 @@
 set -e
 # Config
 
-ETISS_DIR=@ETISS_DIR@/
+ETISS_DIR=@ETISS_DIR@
 
 # Clear tmp file
 DYN_INI=$(mktemp /tmp/etiss_dynamic_XXXXXXXXXX.ini)
@@ -30,7 +30,7 @@ TARGETSW_PATH_ELF=$1
 TARGET_ELFFILE=$(basename -- "$TARGETSW_PATH_ELF")
 TARGET_ELFDIR=$(dirname -- "$TARGETSW_PATH_ELF")
 
-VP_EXE="${ETISS_DIR}bin/bare_etiss_processor"
+VP_EXE="${ETISS_DIR}/bin/bare_etiss_processor"
 
 
 CMD_OPTIONS=""
