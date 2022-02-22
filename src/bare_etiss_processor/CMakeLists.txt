@@ -35,9 +35,14 @@
 
 project(bare_etiss_processor)
 
+SET(CMAKE_INSTALL_RPATH "\$ORIGIN/../lib")
 
 add_executable(bare_etiss_processor main.cpp)
 target_link_libraries(bare_etiss_processor ETISS)
+
+# Set relative rpath to mimic runtime link behavior of windows (libs loadable from current dir)
+
+
 
 set(ETISS_DIR ${CMAKE_INSTALL_PREFIX} )
 configure_file(
