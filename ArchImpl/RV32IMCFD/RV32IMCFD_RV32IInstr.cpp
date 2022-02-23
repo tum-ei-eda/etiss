@@ -1,5 +1,5 @@
 /**
- * Generated on Tue, 15 Feb 2022 21:11:54 +0100.
+ * Generated on Wed, 23 Feb 2022 20:40:41 +0100.
  *
  * This file contains the instruction behavior models of the RV32I
  * instruction set for the RV32IMCFD core architecture.
@@ -332,7 +332,7 @@ partInit.code() += "exception = ETISS_RETURNCODE_IBUS_READ_ERROR;\n";
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + ((etiss_int16)((imm) << (3)) >> (3))) + ";\n";
 }
 partInit.code() += "}\n";
-partInit.code() += "return exception;\n";
+partInit.code() += "if (exception | cpu->instructionPointer != " + std::to_string(ic.current_address_ + 4) + ") return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getRegisterDependencies().add(reg_name[rs1], 32);
@@ -416,7 +416,7 @@ partInit.code() += "exception = ETISS_RETURNCODE_IBUS_READ_ERROR;\n";
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + ((etiss_int16)((imm) << (3)) >> (3))) + ";\n";
 }
 partInit.code() += "}\n";
-partInit.code() += "return exception;\n";
+partInit.code() += "if (exception | cpu->instructionPointer != " + std::to_string(ic.current_address_ + 4) + ") return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getRegisterDependencies().add(reg_name[rs1], 32);
@@ -500,7 +500,7 @@ partInit.code() += "exception = ETISS_RETURNCODE_IBUS_READ_ERROR;\n";
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + ((etiss_int16)((imm) << (3)) >> (3))) + ";\n";
 }
 partInit.code() += "}\n";
-partInit.code() += "return exception;\n";
+partInit.code() += "if (exception | cpu->instructionPointer != " + std::to_string(ic.current_address_ + 4) + ") return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getRegisterDependencies().add(reg_name[rs1], 32);
@@ -584,7 +584,7 @@ partInit.code() += "exception = ETISS_RETURNCODE_IBUS_READ_ERROR;\n";
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + ((etiss_int16)((imm) << (3)) >> (3))) + ";\n";
 }
 partInit.code() += "}\n";
-partInit.code() += "return exception;\n";
+partInit.code() += "if (exception | cpu->instructionPointer != " + std::to_string(ic.current_address_ + 4) + ") return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getRegisterDependencies().add(reg_name[rs1], 32);
@@ -668,7 +668,7 @@ partInit.code() += "exception = ETISS_RETURNCODE_IBUS_READ_ERROR;\n";
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + ((etiss_int16)((imm) << (3)) >> (3))) + ";\n";
 }
 partInit.code() += "}\n";
-partInit.code() += "return exception;\n";
+partInit.code() += "if (exception | cpu->instructionPointer != " + std::to_string(ic.current_address_ + 4) + ") return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getRegisterDependencies().add(reg_name[rs1], 32);
@@ -752,7 +752,7 @@ partInit.code() += "exception = ETISS_RETURNCODE_IBUS_READ_ERROR;\n";
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + ((etiss_int16)((imm) << (3)) >> (3))) + ";\n";
 }
 partInit.code() += "}\n";
-partInit.code() += "return exception;\n";
+partInit.code() += "if (exception | cpu->instructionPointer != " + std::to_string(ic.current_address_ + 4) + ") return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getRegisterDependencies().add(reg_name[rs1], 32);

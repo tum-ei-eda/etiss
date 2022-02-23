@@ -1,5 +1,5 @@
 /**
- * Generated on Tue, 15 Feb 2022 21:11:54 +0100.
+ * Generated on Wed, 23 Feb 2022 20:40:41 +0100.
  *
  * This file contains the function macros for the RV32IMCFD core architecture.
  */
@@ -24,7 +24,7 @@ if (csr == 1) {
 return *((RV32IMCFD*)cpu)->CSR[3] & 31;
 }
 if (csr == 2) {
-return (*((RV32IMCFD*)cpu)->CSR[3] >> 5) & 3;
+return (*((RV32IMCFD*)cpu)->CSR[3] >> 5) & 7;
 }
 return *((RV32IMCFD*)cpu)->CSR[csr];
 }
@@ -36,12 +36,16 @@ return *((RV32IMCFD*)cpu)->CSR[csr];
 static inline void csr_write (ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers, etiss_uint32 csr, etiss_uint32 val)
 {
 if (csr == 1) {
-*((RV32IMCFD*)cpu)->CSR[3] = val & 31;
+*((RV32IMCFD*)cpu)->CSR[3] = (*((RV32IMCFD*)cpu)->CSR[3] & (7 << 5)) | (val & 31);
 } else {
 if (csr == 2) {
-*((RV32IMCFD*)cpu)->CSR[3] = (val & 3) << 5;
+*((RV32IMCFD*)cpu)->CSR[3] = ((val & 7) << 5) | (*((RV32IMCFD*)cpu)->CSR[3] & 31);
+} else {
+if (csr == 3) {
+*((RV32IMCFD*)cpu)->CSR[3] = val & 255;
 } else {
 *((RV32IMCFD*)cpu)->CSR[csr] = val;
+}
 }
 }
 }

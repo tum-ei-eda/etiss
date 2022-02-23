@@ -1,5 +1,5 @@
 /**
- * Generated on Tue, 15 Feb 2022 21:11:54 +0100.
+ * Generated on Wed, 23 Feb 2022 20:40:41 +0100.
  *
  * This file contains the instruction behavior models of the tum_ret
  * instruction set for the RV32IMCFD core architecture.
@@ -42,7 +42,7 @@ partInit.code() += "*((RV32IMCFD*)cpu)->CSR[" + std::to_string(0) + "] = *((RV32
 partInit.code() += "cpu->instructionPointer = *((RV32IMCFD*)cpu)->CSR[" + std::to_string(65) + "];\n";
 partInit.code() += "*((RV32IMCFD*)cpu)->CSR[" + std::to_string(768) + "] = *((RV32IMCFD*)cpu)->CSR[" + std::to_string(0) + "];\n";
 partInit.code() += "*((RV32IMCFD*)cpu)->CSR[" + std::to_string(256) + "] = *((RV32IMCFD*)cpu)->CSR[" + std::to_string(0) + "];\n";
-partInit.code() += "return 0;\n";
+partInit.code() += "return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -93,7 +93,7 @@ partInit.code() += "*((RV32IMCFD*)cpu)->CSR[" + std::to_string(256) + "] = *((RV
 partInit.code() += "cpu->instructionPointer = *((RV32IMCFD*)cpu)->CSR[" + std::to_string(321) + "];\n";
 partInit.code() += "*((RV32IMCFD*)cpu)->CSR[" + std::to_string(768) + "] = *((RV32IMCFD*)cpu)->CSR[" + std::to_string(256) + "];\n";
 partInit.code() += "*((RV32IMCFD*)cpu)->CSR[" + std::to_string(0) + "] = *((RV32IMCFD*)cpu)->CSR[" + std::to_string(256) + "];\n";
-partInit.code() += "return 0;\n";
+partInit.code() += "return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -144,7 +144,7 @@ partInit.code() += "*((RV32IMCFD*)cpu)->CSR[" + std::to_string(768) + "] = *((RV
 partInit.code() += "cpu->instructionPointer = *((RV32IMCFD*)cpu)->CSR[" + std::to_string(833) + "];\n";
 partInit.code() += "*((RV32IMCFD*)cpu)->CSR[" + std::to_string(0) + "] = *((RV32IMCFD*)cpu)->CSR[" + std::to_string(768) + "];\n";
 partInit.code() += "*((RV32IMCFD*)cpu)->CSR[" + std::to_string(256) + "] = *((RV32IMCFD*)cpu)->CSR[" + std::to_string(768) + "];\n";
-partInit.code() += "return 0;\n";
+partInit.code() += "return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);

@@ -1,5 +1,5 @@
 /**
- * Generated on Tue, 15 Feb 2022 21:11:54 +0100.
+ * Generated on Wed, 23 Feb 2022 20:40:41 +0100.
  *
  * This file contains the instruction behavior models of the RV32IC
  * instruction set for the RV32IMCFD core architecture.
@@ -403,7 +403,7 @@ imm += R_imm_11.read(ba) << 11;
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 2) + ";\n";
 partInit.code() += "*((RV32IMCFD*)cpu)->X[" + std::to_string(1) + "] = " + std::to_string(ic.current_address_ + 2) + ";\n";
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + ((etiss_int16)((imm) << (4)) >> (4))) + ";\n";
-partInit.code() += "return 0;\n";
+partInit.code() += "return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add(reg_name[1], 32);
@@ -1176,7 +1176,7 @@ imm += R_imm_11.read(ba) << 11;
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 2) + ";\n";
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + ((etiss_int16)((imm) << (4)) >> (4))) + ";\n";
-partInit.code() += "return 0;\n";
+partInit.code() += "return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -1255,7 +1255,7 @@ partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_addr
 partInit.code() += "if (*((RV32IMCFD*)cpu)->X[" + std::to_string(rs1 + 8) + "] == " + std::to_string(0) + ") {\n";
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + ((etiss_int16)((imm) << (7)) >> (7))) + ";\n";
 partInit.code() += "}\n";
-partInit.code() += "return 0;\n";
+partInit.code() += "if (cpu->instructionPointer != " + std::to_string(ic.current_address_ + 2) + ") return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getRegisterDependencies().add(reg_name[rs1 + 8], 32);
@@ -1332,7 +1332,7 @@ partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_addr
 partInit.code() += "if (*((RV32IMCFD*)cpu)->X[" + std::to_string(rs1 + 8) + "] != " + std::to_string(0) + ") {\n";
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + ((etiss_int16)((imm) << (7)) >> (7))) + ";\n";
 partInit.code() += "}\n";
-partInit.code() += "return 0;\n";
+partInit.code() += "if (cpu->instructionPointer != " + std::to_string(ic.current_address_ + 2) + ") return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getRegisterDependencies().add(reg_name[rs1 + 8], 32);
@@ -1760,7 +1760,7 @@ partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_addr
 partInit.code() += "etiss_uint32 new_pc = *((RV32IMCFD*)cpu)->X[" + std::to_string(rs1) + "];\n";
 partInit.code() += "*((RV32IMCFD*)cpu)->X[" + std::to_string(1) + "] = " + std::to_string(ic.current_address_ + 2) + ";\n";
 partInit.code() += "cpu->instructionPointer = new_pc & " + std::to_string(~(1)) + ";\n";
-partInit.code() += "return 0;\n";
+partInit.code() += "return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getRegisterDependencies().add(reg_name[rs1], 32);

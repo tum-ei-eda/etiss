@@ -1,5 +1,5 @@
 /**
- * Generated on Tue, 15 Feb 2022 21:11:54 +0100.
+ * Generated on Wed, 23 Feb 2022 20:40:41 +0100.
  *
  * This file contains the instruction behavior models of the RV32F
  * instruction set for the RV32IMCFD core architecture.
@@ -122,8 +122,8 @@ imm += R_imm_5.read(ba) << 5;
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4) + ";\n";
 partInit.code() += "etiss_uint32 offs = *((RV32IMCFD*)cpu)->X[" + std::to_string(rs1) + "] + " + std::to_string(((etiss_int16)((imm) << (4)) >> (4))) + ";\n";
-partInit.code() += "etiss_uint64 mem_val_0 = ((RV32IMCFD*)cpu)->F[" + std::to_string(rs2) + "];\n";
-partInit.code() += "exception |= (*(system->dwrite))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_0, 8);\n";
+partInit.code() += "etiss_uint32 mem_val_0 = (etiss_uint32)(((RV32IMCFD*)cpu)->F[" + std::to_string(rs2) + "]);\n";
+partInit.code() += "exception |= (*(system->dwrite))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_0, 4);\n";
 
 partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
