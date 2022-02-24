@@ -173,7 +173,7 @@ void SimpleMemSystem::load_elf()
             if ((reader.get_class() == ELFCLASS64)) {
                 etiss::cfg().set<std::string>("arch.cpu", "RISCV64"); // RISCV and OR1K work as well
             } else if ((reader.get_class() == ELFCLASS32)) {
-                etiss::cfg().set<std::string>("arch.cpu", "RV32IMCFD");
+                etiss::cfg().set<std::string>("arch.cpu", "RV32IMACFD");
             // add conditions
             } else {
                 etiss::log(etiss::FATALERROR, "System architecture is neither 64 nor 32 bit!");

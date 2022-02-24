@@ -1,14 +1,14 @@
 /**
- * Generated on Wed, 23 Feb 2022 20:40:41 +0100.
+ * Generated on Thu, 24 Feb 2022 17:15:20 +0100.
  *
  * This file contains the instruction behavior models of the tum_csr
- * instruction set for the RV32IMCFD core architecture.
+ * instruction set for the RV32IMACFD core architecture.
  */
 
-#include "RV32IMCFDArch.h"
+#include "RV32IMACFDArch.h"
 
 #define ETISS_ARCH_STATIC_FN_ONLY
-#include "RV32IMCFDFuncs.h"
+#include "RV32IMACFDFuncs.h"
 
 using namespace etiss;
 using namespace etiss::instr;
@@ -16,7 +16,7 @@ using namespace etiss::instr;
 
 // CSRRW -----------------------------------------------------------------------
 static InstructionDefinition csrrw_rd_rs1_csr (
-	ISA32_RV32IMCFD,
+	ISA32_RV32IMACFD,
 	"csrrw",
 	(uint32_t) 0x001073,
 	(uint32_t) 0x00707f,
@@ -46,11 +46,11 @@ csr += R_csr_0.read(ba) << 0;
 
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4) + ";\n";
-partInit.code() += "etiss_uint32 xrs1 = *((RV32IMCFD*)cpu)->X[" + std::to_string(rs1) + "];\n";
+partInit.code() += "etiss_uint32 xrs1 = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1) + "];\n";
 if (rd != 0) {
 partInit.code() += "etiss_uint32 xrd = csr_read(cpu, system, plugin_pointers, " + std::to_string(csr) + ");\n";
 partInit.code() += "csr_write(cpu, system, plugin_pointers, " + std::to_string(csr) + ", xrs1);";
-partInit.code() += "*((RV32IMCFD*)cpu)->X[" + std::to_string(rd) + "] = xrd;\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd) + "] = xrd;\n";
 } else {
 partInit.code() += "csr_write(cpu, system, plugin_pointers, " + std::to_string(csr) + ", xrs1);";
 }
@@ -88,7 +88,7 @@ ss << "csrrw" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std:
 
 // CSRRS -----------------------------------------------------------------------
 static InstructionDefinition csrrs_rd_rs1_csr (
-	ISA32_RV32IMCFD,
+	ISA32_RV32IMACFD,
 	"csrrs",
 	(uint32_t) 0x002073,
 	(uint32_t) 0x00707f,
@@ -119,12 +119,12 @@ csr += R_csr_0.read(ba) << 0;
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4) + ";\n";
 partInit.code() += "etiss_uint32 xrd = csr_read(cpu, system, plugin_pointers, " + std::to_string(csr) + ");\n";
-partInit.code() += "etiss_uint32 xrs1 = *((RV32IMCFD*)cpu)->X[" + std::to_string(rs1) + "];\n";
+partInit.code() += "etiss_uint32 xrs1 = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1) + "];\n";
 if (rs1 != 0) {
 partInit.code() += "csr_write(cpu, system, plugin_pointers, " + std::to_string(csr) + ", xrd | xrs1);";
 }
 if (rd != 0) {
-partInit.code() += "*((RV32IMCFD*)cpu)->X[" + std::to_string(rd) + "] = xrd;\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd) + "] = xrd;\n";
 }
 // -----------------------------------------------------------------------------
 
@@ -160,7 +160,7 @@ ss << "csrrs" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std:
 
 // CSRRC -----------------------------------------------------------------------
 static InstructionDefinition csrrc_rd_rs1_csr (
-	ISA32_RV32IMCFD,
+	ISA32_RV32IMACFD,
 	"csrrc",
 	(uint32_t) 0x003073,
 	(uint32_t) 0x00707f,
@@ -191,12 +191,12 @@ csr += R_csr_0.read(ba) << 0;
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4) + ";\n";
 partInit.code() += "etiss_uint32 xrd = csr_read(cpu, system, plugin_pointers, " + std::to_string(csr) + ");\n";
-partInit.code() += "etiss_uint32 xrs1 = *((RV32IMCFD*)cpu)->X[" + std::to_string(rs1) + "];\n";
+partInit.code() += "etiss_uint32 xrs1 = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1) + "];\n";
 if (rs1 != 0) {
 partInit.code() += "csr_write(cpu, system, plugin_pointers, " + std::to_string(csr) + ", xrd & ~(xrs1));";
 }
 if (rd != 0) {
-partInit.code() += "*((RV32IMCFD*)cpu)->X[" + std::to_string(rd) + "] = xrd;\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd) + "] = xrd;\n";
 }
 // -----------------------------------------------------------------------------
 
@@ -232,7 +232,7 @@ ss << "csrrc" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std:
 
 // CSRRWI ----------------------------------------------------------------------
 static InstructionDefinition csrrwi_rd_zimm_csr (
-	ISA32_RV32IMCFD,
+	ISA32_RV32IMACFD,
 	"csrrwi",
 	(uint32_t) 0x005073,
 	(uint32_t) 0x00707f,
@@ -265,7 +265,7 @@ partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_addr
 partInit.code() += "etiss_uint32 xrd = csr_read(cpu, system, plugin_pointers, " + std::to_string(csr) + ");\n";
 partInit.code() += "csr_write(cpu, system, plugin_pointers, " + std::to_string(csr) + ", " + std::to_string((etiss_uint32)(zimm)) + ");";
 if (rd != 0) {
-partInit.code() += "*((RV32IMCFD*)cpu)->X[" + std::to_string(rd) + "] = xrd;\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd) + "] = xrd;\n";
 }
 // -----------------------------------------------------------------------------
 
@@ -300,7 +300,7 @@ ss << "csrrwi" << " # " << ba << (" [rd=" + std::to_string(rd) + " | zimm=" + st
 
 // CSRRSI ----------------------------------------------------------------------
 static InstructionDefinition csrrsi_rd_zimm_csr (
-	ISA32_RV32IMCFD,
+	ISA32_RV32IMACFD,
 	"csrrsi",
 	(uint32_t) 0x006073,
 	(uint32_t) 0x00707f,
@@ -335,7 +335,7 @@ if (zimm != 0) {
 partInit.code() += "csr_write(cpu, system, plugin_pointers, " + std::to_string(csr) + ", xrd | " + std::to_string((etiss_uint32)(zimm)) + ");";
 }
 if (rd != 0) {
-partInit.code() += "*((RV32IMCFD*)cpu)->X[" + std::to_string(rd) + "] = xrd;\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd) + "] = xrd;\n";
 }
 // -----------------------------------------------------------------------------
 
@@ -370,7 +370,7 @@ ss << "csrrsi" << " # " << ba << (" [rd=" + std::to_string(rd) + " | zimm=" + st
 
 // CSRRCI ----------------------------------------------------------------------
 static InstructionDefinition csrrci_rd_zimm_csr (
-	ISA32_RV32IMCFD,
+	ISA32_RV32IMACFD,
 	"csrrci",
 	(uint32_t) 0x007073,
 	(uint32_t) 0x00707f,
@@ -405,7 +405,7 @@ if (zimm != 0) {
 partInit.code() += "csr_write(cpu, system, plugin_pointers, " + std::to_string(csr) + ", xrd & " + std::to_string(~(((etiss_uint32)(zimm)))) + ");";
 }
 if (rd != 0) {
-partInit.code() += "*((RV32IMCFD*)cpu)->X[" + std::to_string(rd) + "] = xrd;\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd) + "] = xrd;\n";
 }
 // -----------------------------------------------------------------------------
 

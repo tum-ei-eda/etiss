@@ -1,14 +1,14 @@
 /**
- * Generated on Wed, 23 Feb 2022 20:40:41 +0100.
+ * Generated on Thu, 24 Feb 2022 17:15:20 +0100.
  *
  * This file contains the instruction behavior models of the RV32M
- * instruction set for the RV32IMCFD core architecture.
+ * instruction set for the RV32IMACFD core architecture.
  */
 
-#include "RV32IMCFDArch.h"
+#include "RV32IMACFDArch.h"
 
 #define ETISS_ARCH_STATIC_FN_ONLY
-#include "RV32IMCFDFuncs.h"
+#include "RV32IMACFDFuncs.h"
 
 using namespace etiss;
 using namespace etiss::instr;
@@ -16,7 +16,7 @@ using namespace etiss::instr;
 
 // MUL -------------------------------------------------------------------------
 static InstructionDefinition mul_rd_rs1_rs2 (
-	ISA32_RV32IMCFD,
+	ISA32_RV32IMACFD,
 	"mul",
 	(uint32_t) 0x2000033,
 	(uint32_t) 0xfe00707f,
@@ -47,8 +47,8 @@ rs2 += R_rs2_0.read(ba) << 0;
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4) + ";\n";
 if (rd != 0) {
-partInit.code() += "etiss_int64 res = (etiss_int64)((etiss_int32)(*((RV32IMCFD*)cpu)->X[" + std::to_string(rs1) + "])) * (etiss_int64)((etiss_int32)(*((RV32IMCFD*)cpu)->X[" + std::to_string(rs2) + "]));\n";
-partInit.code() += "*((RV32IMCFD*)cpu)->X[" + std::to_string(rd) + "] = (etiss_uint32)(res);\n";
+partInit.code() += "etiss_int64 res = (etiss_int64)((etiss_int32)(*((RV32IMACFD*)cpu)->X[" + std::to_string(rs1) + "])) * (etiss_int64)((etiss_int32)(*((RV32IMACFD*)cpu)->X[" + std::to_string(rs2) + "]));\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd) + "] = (etiss_uint32)(res);\n";
 }
 // -----------------------------------------------------------------------------
 
@@ -85,7 +85,7 @@ ss << "mul" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std::t
 
 // MULH ------------------------------------------------------------------------
 static InstructionDefinition mulh_rd_rs1_rs2 (
-	ISA32_RV32IMCFD,
+	ISA32_RV32IMACFD,
 	"mulh",
 	(uint32_t) 0x2001033,
 	(uint32_t) 0xfe00707f,
@@ -116,8 +116,8 @@ rs2 += R_rs2_0.read(ba) << 0;
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4) + ";\n";
 if (rd != 0) {
-partInit.code() += "etiss_int64 res = (etiss_int64)((etiss_int32)(*((RV32IMCFD*)cpu)->X[" + std::to_string(rs1) + "])) * (etiss_int64)((etiss_int32)(*((RV32IMCFD*)cpu)->X[" + std::to_string(rs2) + "]));\n";
-partInit.code() += "*((RV32IMCFD*)cpu)->X[" + std::to_string(rd) + "] = (etiss_uint32)((res >> " + std::to_string(32) + "));\n";
+partInit.code() += "etiss_int64 res = (etiss_int64)((etiss_int32)(*((RV32IMACFD*)cpu)->X[" + std::to_string(rs1) + "])) * (etiss_int64)((etiss_int32)(*((RV32IMACFD*)cpu)->X[" + std::to_string(rs2) + "]));\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd) + "] = (etiss_uint32)((res >> " + std::to_string(32) + "));\n";
 }
 // -----------------------------------------------------------------------------
 
@@ -154,7 +154,7 @@ ss << "mulh" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std::
 
 // MULHSU ----------------------------------------------------------------------
 static InstructionDefinition mulhsu_rd_rs1_rs2 (
-	ISA32_RV32IMCFD,
+	ISA32_RV32IMACFD,
 	"mulhsu",
 	(uint32_t) 0x2002033,
 	(uint32_t) 0xfe00707f,
@@ -185,8 +185,8 @@ rs2 += R_rs2_0.read(ba) << 0;
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4) + ";\n";
 if (rd != 0) {
-partInit.code() += "etiss_int64 res = (etiss_int64)((etiss_int32)(*((RV32IMCFD*)cpu)->X[" + std::to_string(rs1) + "])) * (etiss_uint64)(*((RV32IMCFD*)cpu)->X[" + std::to_string(rs2) + "]);\n";
-partInit.code() += "*((RV32IMCFD*)cpu)->X[" + std::to_string(rd) + "] = (etiss_uint32)((res >> " + std::to_string(32) + "));\n";
+partInit.code() += "etiss_int64 res = (etiss_int64)((etiss_int32)(*((RV32IMACFD*)cpu)->X[" + std::to_string(rs1) + "])) * (etiss_uint64)(*((RV32IMACFD*)cpu)->X[" + std::to_string(rs2) + "]);\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd) + "] = (etiss_uint32)((res >> " + std::to_string(32) + "));\n";
 }
 // -----------------------------------------------------------------------------
 
@@ -223,7 +223,7 @@ ss << "mulhsu" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std
 
 // MULHU -----------------------------------------------------------------------
 static InstructionDefinition mulhu_rd_rs1_rs2 (
-	ISA32_RV32IMCFD,
+	ISA32_RV32IMACFD,
 	"mulhu",
 	(uint32_t) 0x2003033,
 	(uint32_t) 0xfe00707f,
@@ -254,8 +254,8 @@ rs2 += R_rs2_0.read(ba) << 0;
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4) + ";\n";
 if (rd != 0) {
-partInit.code() += "etiss_uint64 res = (etiss_uint64)(*((RV32IMCFD*)cpu)->X[" + std::to_string(rs1) + "]) * (etiss_uint64)(*((RV32IMCFD*)cpu)->X[" + std::to_string(rs2) + "]);\n";
-partInit.code() += "*((RV32IMCFD*)cpu)->X[" + std::to_string(rd) + "] = (etiss_uint32)((res >> " + std::to_string(32) + "));\n";
+partInit.code() += "etiss_uint64 res = (etiss_uint64)(*((RV32IMACFD*)cpu)->X[" + std::to_string(rs1) + "]) * (etiss_uint64)(*((RV32IMACFD*)cpu)->X[" + std::to_string(rs2) + "]);\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd) + "] = (etiss_uint32)((res >> " + std::to_string(32) + "));\n";
 }
 // -----------------------------------------------------------------------------
 
@@ -292,7 +292,7 @@ ss << "mulhu" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std:
 
 // DIV -------------------------------------------------------------------------
 static InstructionDefinition div_rd_rs1_rs2 (
-	ISA32_RV32IMCFD,
+	ISA32_RV32IMACFD,
 	"div",
 	(uint32_t) 0x2004033,
 	(uint32_t) 0xfe00707f,
@@ -323,17 +323,17 @@ rs2 += R_rs2_0.read(ba) << 0;
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4) + ";\n";
 if (rd != 0) {
-partInit.code() += "if (*((RV32IMCFD*)cpu)->X[" + std::to_string(rs2) + "] != " + std::to_string(0) + ") {\n";
+partInit.code() += "if (*((RV32IMACFD*)cpu)->X[" + std::to_string(rs2) + "] != " + std::to_string(0) + ") {\n";
 etiss_uint32 MMIN = 1 << (32 - 1);
-partInit.code() += "if (*((RV32IMCFD*)cpu)->X[" + std::to_string(rs1) + "] == " + std::to_string(MMIN) + " && (etiss_int32)(*((RV32IMCFD*)cpu)->X[" + std::to_string(rs2) + "]) == " + std::to_string(-(1)) + ") {\n";
-partInit.code() += "*((RV32IMCFD*)cpu)->X[" + std::to_string(rd) + "] = " + std::to_string(MMIN) + ";\n";
+partInit.code() += "if (*((RV32IMACFD*)cpu)->X[" + std::to_string(rs1) + "] == " + std::to_string(MMIN) + " && (etiss_int32)(*((RV32IMACFD*)cpu)->X[" + std::to_string(rs2) + "]) == " + std::to_string(-(1)) + ") {\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd) + "] = " + std::to_string(MMIN) + ";\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
-partInit.code() += "*((RV32IMCFD*)cpu)->X[" + std::to_string(rd) + "] = (etiss_int32)(*((RV32IMCFD*)cpu)->X[" + std::to_string(rs1) + "]) / (etiss_int32)(*((RV32IMCFD*)cpu)->X[" + std::to_string(rs2) + "]);\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd) + "] = (etiss_int32)(*((RV32IMACFD*)cpu)->X[" + std::to_string(rs1) + "]) / (etiss_int32)(*((RV32IMACFD*)cpu)->X[" + std::to_string(rs2) + "]);\n";
 partInit.code() += "}\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
-partInit.code() += "*((RV32IMCFD*)cpu)->X[" + std::to_string(rd) + "] = " + std::to_string(-(1)) + ";\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd) + "] = " + std::to_string(-(1)) + ";\n";
 partInit.code() += "}\n";
 }
 // -----------------------------------------------------------------------------
@@ -371,7 +371,7 @@ ss << "div" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std::t
 
 // DIVU ------------------------------------------------------------------------
 static InstructionDefinition divu_rd_rs1_rs2 (
-	ISA32_RV32IMCFD,
+	ISA32_RV32IMACFD,
 	"divu",
 	(uint32_t) 0x2005033,
 	(uint32_t) 0xfe00707f,
@@ -402,11 +402,11 @@ rs2 += R_rs2_0.read(ba) << 0;
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4) + ";\n";
 if (rd != 0) {
-partInit.code() += "if (*((RV32IMCFD*)cpu)->X[" + std::to_string(rs2) + "] != " + std::to_string(0) + ") {\n";
-partInit.code() += "*((RV32IMCFD*)cpu)->X[" + std::to_string(rd) + "] = *((RV32IMCFD*)cpu)->X[" + std::to_string(rs1) + "] / *((RV32IMCFD*)cpu)->X[" + std::to_string(rs2) + "];\n";
+partInit.code() += "if (*((RV32IMACFD*)cpu)->X[" + std::to_string(rs2) + "] != " + std::to_string(0) + ") {\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd) + "] = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1) + "] / *((RV32IMACFD*)cpu)->X[" + std::to_string(rs2) + "];\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
-partInit.code() += "*((RV32IMCFD*)cpu)->X[" + std::to_string(rd) + "] = " + std::to_string(-(1)) + ";\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd) + "] = " + std::to_string(-(1)) + ";\n";
 partInit.code() += "}\n";
 }
 // -----------------------------------------------------------------------------
@@ -444,7 +444,7 @@ ss << "divu" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std::
 
 // REM -------------------------------------------------------------------------
 static InstructionDefinition rem_rd_rs1_rs2 (
-	ISA32_RV32IMCFD,
+	ISA32_RV32IMACFD,
 	"rem",
 	(uint32_t) 0x2006033,
 	(uint32_t) 0xfe00707f,
@@ -475,17 +475,17 @@ rs2 += R_rs2_0.read(ba) << 0;
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4) + ";\n";
 if (rd != 0) {
-partInit.code() += "if (*((RV32IMCFD*)cpu)->X[" + std::to_string(rs2) + "] != " + std::to_string(0) + ") {\n";
+partInit.code() += "if (*((RV32IMACFD*)cpu)->X[" + std::to_string(rs2) + "] != " + std::to_string(0) + ") {\n";
 etiss_uint32 MMIN = 1 << (32 - 1);
-partInit.code() += "if (*((RV32IMCFD*)cpu)->X[" + std::to_string(rs1) + "] == " + std::to_string(MMIN) + " && (etiss_int32)(*((RV32IMCFD*)cpu)->X[" + std::to_string(rs2) + "]) == " + std::to_string(-(1)) + ") {\n";
-partInit.code() += "*((RV32IMCFD*)cpu)->X[" + std::to_string(rd) + "] = " + std::to_string(0) + ";\n";
+partInit.code() += "if (*((RV32IMACFD*)cpu)->X[" + std::to_string(rs1) + "] == " + std::to_string(MMIN) + " && (etiss_int32)(*((RV32IMACFD*)cpu)->X[" + std::to_string(rs2) + "]) == " + std::to_string(-(1)) + ") {\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd) + "] = " + std::to_string(0) + ";\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
-partInit.code() += "*((RV32IMCFD*)cpu)->X[" + std::to_string(rd) + "] = (etiss_int32)(*((RV32IMCFD*)cpu)->X[" + std::to_string(rs1) + "]) % (etiss_int32)(*((RV32IMCFD*)cpu)->X[" + std::to_string(rs2) + "]);\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd) + "] = (etiss_int32)(*((RV32IMACFD*)cpu)->X[" + std::to_string(rs1) + "]) % (etiss_int32)(*((RV32IMACFD*)cpu)->X[" + std::to_string(rs2) + "]);\n";
 partInit.code() += "}\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
-partInit.code() += "*((RV32IMCFD*)cpu)->X[" + std::to_string(rd) + "] = *((RV32IMCFD*)cpu)->X[" + std::to_string(rs1) + "];\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd) + "] = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1) + "];\n";
 partInit.code() += "}\n";
 }
 // -----------------------------------------------------------------------------
@@ -523,7 +523,7 @@ ss << "rem" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std::t
 
 // REMU ------------------------------------------------------------------------
 static InstructionDefinition remu_rd_rs1_rs2 (
-	ISA32_RV32IMCFD,
+	ISA32_RV32IMACFD,
 	"remu",
 	(uint32_t) 0x2007033,
 	(uint32_t) 0xfe00707f,
@@ -554,11 +554,11 @@ rs2 += R_rs2_0.read(ba) << 0;
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4) + ";\n";
 if (rd != 0) {
-partInit.code() += "if (*((RV32IMCFD*)cpu)->X[" + std::to_string(rs2) + "] != " + std::to_string(0) + ") {\n";
-partInit.code() += "*((RV32IMCFD*)cpu)->X[" + std::to_string(rd) + "] = *((RV32IMCFD*)cpu)->X[" + std::to_string(rs1) + "] % *((RV32IMCFD*)cpu)->X[" + std::to_string(rs2) + "];\n";
+partInit.code() += "if (*((RV32IMACFD*)cpu)->X[" + std::to_string(rs2) + "] != " + std::to_string(0) + ") {\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd) + "] = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1) + "] % *((RV32IMACFD*)cpu)->X[" + std::to_string(rs2) + "];\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
-partInit.code() += "*((RV32IMCFD*)cpu)->X[" + std::to_string(rd) + "] = *((RV32IMCFD*)cpu)->X[" + std::to_string(rs1) + "];\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd) + "] = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1) + "];\n";
 partInit.code() += "}\n";
 }
 // -----------------------------------------------------------------------------

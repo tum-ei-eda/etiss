@@ -1,14 +1,14 @@
 /**
- * Generated on Thu, 24 Feb 2022 16:07:25 +0100.
+ * Generated on Thu, 24 Feb 2022 17:15:20 +0100.
  *
  * This file contains the instruction behavior models of the tum_rva
- * instruction set for the RV32IMCFD core architecture.
+ * instruction set for the RV32IMACFD core architecture.
  */
 
-#include "RV32IMCFDArch.h"
+#include "RV32IMACFDArch.h"
 
 #define ETISS_ARCH_STATIC_FN_ONLY
-#include "RV32IMCFDFuncs.h"
+#include "RV32IMACFDFuncs.h"
 
 using namespace etiss;
 using namespace etiss::instr;
@@ -16,7 +16,7 @@ using namespace etiss::instr;
 
 // LRW -------------------------------------------------------------------------
 static InstructionDefinition lrw_rd_rs1_rl_aq (
-	ISA32_RV32IMCFD,
+	ISA32_RV32IMACFD,
 	"lrw",
 	(uint32_t) 0x1000202f,
 	(uint32_t) 0xf9f0707f,
@@ -86,7 +86,7 @@ ss << "lrw" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std::t
 
 // SCW -------------------------------------------------------------------------
 static InstructionDefinition scw_rd_rs1_rs2_rl_aq (
-	ISA32_RV32IMCFD,
+	ISA32_RV32IMACFD,
 	"scw",
 	(uint32_t) 0x1800202f,
 	(uint32_t) 0xf800707f,

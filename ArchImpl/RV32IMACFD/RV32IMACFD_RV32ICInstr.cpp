@@ -1,14 +1,14 @@
 /**
- * Generated on Wed, 23 Feb 2022 20:40:41 +0100.
+ * Generated on Thu, 24 Feb 2022 17:15:20 +0100.
  *
  * This file contains the instruction behavior models of the RV32IC
- * instruction set for the RV32IMCFD core architecture.
+ * instruction set for the RV32IMACFD core architecture.
  */
 
-#include "RV32IMCFDArch.h"
+#include "RV32IMACFDArch.h"
 
 #define ETISS_ARCH_STATIC_FN_ONLY
-#include "RV32IMCFDFuncs.h"
+#include "RV32IMACFDFuncs.h"
 
 using namespace etiss;
 using namespace etiss::instr;
@@ -16,7 +16,7 @@ using namespace etiss::instr;
 
 // CADDI4SPN -------------------------------------------------------------------
 static InstructionDefinition caddi4spn_rd_imm (
-	ISA16_RV32IMCFD,
+	ISA16_RV32IMACFD,
 	"caddi4spn",
 	(uint16_t) 0x00,
 	(uint16_t) 0xe003,
@@ -50,7 +50,7 @@ imm += R_imm_4.read(ba) << 4;
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 2) + ";\n";
 if (imm) {
-partInit.code() += "*((RV32IMCFD*)cpu)->X[" + std::to_string(rd + 8) + "] = *((RV32IMCFD*)cpu)->X[" + std::to_string(2) + "] + " + std::to_string(imm) + ";\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd + 8) + "] = *((RV32IMACFD*)cpu)->X[" + std::to_string(2) + "] + " + std::to_string(imm) + ";\n";
 } else {
 partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
 }
@@ -92,7 +92,7 @@ ss << "caddi4spn" << " # " << ba << (" [rd=" + std::to_string(rd) + " | imm=" + 
 
 // CLW -------------------------------------------------------------------------
 static InstructionDefinition clw_rd_uimm_rs1 (
-	ISA16_RV32IMCFD,
+	ISA16_RV32IMACFD,
 	"clw",
 	(uint16_t) 0x4000,
 	(uint16_t) 0xe003,
@@ -126,10 +126,10 @@ uimm += R_uimm_3.read(ba) << 3;
 
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 2) + ";\n";
-partInit.code() += "etiss_uint32 load_address = *((RV32IMCFD*)cpu)->X[" + std::to_string(rs1 + 8) + "] + " + std::to_string(uimm) + ";\n";
+partInit.code() += "etiss_uint32 load_address = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 + 8) + "] + " + std::to_string(uimm) + ";\n";
 partInit.code() += "etiss_uint32 mem_val_0;\n";
 partInit.code() += "exception |= (*(system->dread))(system->handle, cpu, load_address, (etiss_uint8*)&mem_val_0, 4);\n";
-partInit.code() += "*((RV32IMCFD*)cpu)->X[" + std::to_string(rd + 8) + "] = (etiss_int32)(mem_val_0);\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd + 8) + "] = (etiss_int32)(mem_val_0);\n";
 partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
@@ -169,7 +169,7 @@ ss << "clw" << " # " << ba << (" [rd=" + std::to_string(rd) + " | uimm=" + std::
 
 // CSW -------------------------------------------------------------------------
 static InstructionDefinition csw_rs2_uimm_rs1 (
-	ISA16_RV32IMCFD,
+	ISA16_RV32IMACFD,
 	"csw",
 	(uint16_t) 0xc000,
 	(uint16_t) 0xe003,
@@ -203,8 +203,8 @@ uimm += R_uimm_3.read(ba) << 3;
 
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 2) + ";\n";
-partInit.code() += "etiss_uint32 load_address = *((RV32IMCFD*)cpu)->X[" + std::to_string(rs1 + 8) + "] + " + std::to_string(uimm) + ";\n";
-partInit.code() += "etiss_uint32 mem_val_0 = (etiss_int32)(*((RV32IMCFD*)cpu)->X[" + std::to_string(rs2 + 8) + "]);\n";
+partInit.code() += "etiss_uint32 load_address = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 + 8) + "] + " + std::to_string(uimm) + ";\n";
+partInit.code() += "etiss_uint32 mem_val_0 = (etiss_int32)(*((RV32IMACFD*)cpu)->X[" + std::to_string(rs2 + 8) + "]);\n";
 partInit.code() += "exception |= (*(system->dwrite))(system->handle, cpu, load_address, (etiss_uint8*)&mem_val_0, 4);\n";
 
 partInit.code() += "if (exception) return exception;\n";
@@ -246,7 +246,7 @@ ss << "csw" << " # " << ba << (" [rs2=" + std::to_string(rs2) + " | uimm=" + std
 
 // CADDI -----------------------------------------------------------------------
 static InstructionDefinition caddi_imm_rs1 (
-	ISA16_RV32IMCFD,
+	ISA16_RV32IMACFD,
 	"caddi",
 	(uint16_t) 0x01,
 	(uint16_t) 0xe003,
@@ -275,7 +275,7 @@ imm += R_imm_5.read(ba) << 5;
 
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 2) + ";\n";
-partInit.code() += "*((RV32IMCFD*)cpu)->X[" + std::to_string(rs1) + "] = *((RV32IMCFD*)cpu)->X[" + std::to_string(rs1) + "] + " + std::to_string(((etiss_int8)((imm) << (2)) >> (2))) + ";\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rs1) + "] = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1) + "] + " + std::to_string(((etiss_int8)((imm) << (2)) >> (2))) + ";\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getRegisterDependencies().add(reg_name[rs1], 32);
@@ -309,7 +309,7 @@ ss << "caddi" << " # " << ba << (" [imm=" + std::to_string(imm) + " | rs1=" + st
 
 // CNOP ------------------------------------------------------------------------
 static InstructionDefinition cnop_nzimm (
-	ISA16_RV32IMCFD,
+	ISA16_RV32IMACFD,
 	"cnop",
 	(uint16_t) 0x01,
 	(uint16_t) 0xef83,
@@ -363,7 +363,7 @@ ss << "cnop" << " # " << ba << (" [nzimm=" + std::to_string(nzimm) + "]");
 
 // CJAL ------------------------------------------------------------------------
 static InstructionDefinition cjal_imm (
-	ISA16_RV32IMCFD,
+	ISA16_RV32IMACFD,
 	"cjal",
 	(uint16_t) 0x2001,
 	(uint16_t) 0xe003,
@@ -401,7 +401,7 @@ imm += R_imm_11.read(ba) << 11;
 
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 2) + ";\n";
-partInit.code() += "*((RV32IMCFD*)cpu)->X[" + std::to_string(1) + "] = " + std::to_string(ic.current_address_ + 2) + ";\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(1) + "] = " + std::to_string(ic.current_address_ + 2) + ";\n";
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + ((etiss_int16)((imm) << (4)) >> (4))) + ";\n";
 partInit.code() += "return exception;\n";
 // -----------------------------------------------------------------------------
@@ -445,7 +445,7 @@ ss << "cjal" << " # " << ba << (" [imm=" + std::to_string(imm) + "]");
 
 // CLI -------------------------------------------------------------------------
 static InstructionDefinition cli_imm_rd (
-	ISA16_RV32IMCFD,
+	ISA16_RV32IMACFD,
 	"cli",
 	(uint16_t) 0x4001,
 	(uint16_t) 0xe003,
@@ -475,7 +475,7 @@ imm += R_imm_5.read(ba) << 5;
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 2) + ";\n";
 if (rd != 0) {
-partInit.code() += "*((RV32IMCFD*)cpu)->X[" + std::to_string(rd) + "] = " + std::to_string(((etiss_int8)((imm) << (2)) >> (2))) + ";\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd) + "] = " + std::to_string(((etiss_int8)((imm) << (2)) >> (2))) + ";\n";
 }
 // -----------------------------------------------------------------------------
 
@@ -509,7 +509,7 @@ ss << "cli" << " # " << ba << (" [imm=" + std::to_string(imm) + " | rd=" + std::
 
 // CLUI ------------------------------------------------------------------------
 static InstructionDefinition clui_imm_rd (
-	ISA16_RV32IMCFD,
+	ISA16_RV32IMACFD,
 	"clui",
 	(uint16_t) 0x6001,
 	(uint16_t) 0xe003,
@@ -542,7 +542,7 @@ if (imm == 0) {
 partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
 }
 if (rd != 0) {
-partInit.code() += "*((RV32IMCFD*)cpu)->X[" + std::to_string(rd) + "] = " + std::to_string(((etiss_int32)((imm) << (14)) >> (14))) + ";\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd) + "] = " + std::to_string(((etiss_int32)((imm) << (14)) >> (14))) + ";\n";
 }
 partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
@@ -577,7 +577,7 @@ ss << "clui" << " # " << ba << (" [imm=" + std::to_string(imm) + " | rd=" + std:
 
 // CADDI16SP -------------------------------------------------------------------
 static InstructionDefinition caddi16sp_nzimm (
-	ISA16_RV32IMCFD,
+	ISA16_RV32IMACFD,
 	"caddi16sp",
 	(uint16_t) 0x6101,
 	(uint16_t) 0xef83,
@@ -610,7 +610,7 @@ nzimm += R_nzimm_9.read(ba) << 9;
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 2) + ";\n";
 if (nzimm) {
-partInit.code() += "*((RV32IMCFD*)cpu)->X[" + std::to_string(2) + "] = *((RV32IMCFD*)cpu)->X[" + std::to_string(2) + "] + " + std::to_string(((etiss_int16)((nzimm) << (6)) >> (6))) + ";\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(2) + "] = *((RV32IMACFD*)cpu)->X[" + std::to_string(2) + "] + " + std::to_string(((etiss_int16)((nzimm) << (6)) >> (6))) + ";\n";
 } else {
 partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
 }
@@ -651,7 +651,7 @@ ss << "caddi16sp" << " # " << ba << (" [nzimm=" + std::to_string(nzimm) + "]");
 
 // __reserved_clui -------------------------------------------------------------
 static InstructionDefinition __reserved_clui_rd (
-	ISA16_RV32IMCFD,
+	ISA16_RV32IMACFD,
 	"__reserved_clui",
 	(uint16_t) 0x6001,
 	(uint16_t) 0xf07f,
@@ -703,7 +703,7 @@ ss << "__reserved_clui" << " # " << ba << (" [rd=" + std::to_string(rd) + "]");
 
 // CSRLI -----------------------------------------------------------------------
 static InstructionDefinition csrli_shamt_rs1 (
-	ISA16_RV32IMCFD,
+	ISA16_RV32IMACFD,
 	"csrli",
 	(uint16_t) 0x8001,
 	(uint16_t) 0xfc03,
@@ -731,7 +731,7 @@ rs1 += R_rs1_0.read(ba) << 0;
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 2) + ";\n";
 etiss_uint32 rs1_idx = rs1 + 8;
-partInit.code() += "*((RV32IMCFD*)cpu)->X[" + std::to_string(rs1_idx) + "] = *((RV32IMCFD*)cpu)->X[" + std::to_string(rs1_idx) + "] >> " + std::to_string(shamt) + ";\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rs1_idx) + "] = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1_idx) + "] >> " + std::to_string(shamt) + ";\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getRegisterDependencies().add(reg_name[rs1_idx], 32);
@@ -763,7 +763,7 @@ ss << "csrli" << " # " << ba << (" [shamt=" + std::to_string(shamt) + " | rs1=" 
 
 // CSRAI -----------------------------------------------------------------------
 static InstructionDefinition csrai_shamt_rs1 (
-	ISA16_RV32IMCFD,
+	ISA16_RV32IMACFD,
 	"csrai",
 	(uint16_t) 0x8401,
 	(uint16_t) 0xfc03,
@@ -792,10 +792,10 @@ rs1 += R_rs1_0.read(ba) << 0;
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 2) + ";\n";
 etiss_uint32 rs1_idx = rs1 + 8;
 if (shamt) {
-partInit.code() += "*((RV32IMCFD*)cpu)->X[" + std::to_string(rs1_idx) + "] = ((etiss_int32)(*((RV32IMCFD*)cpu)->X[" + std::to_string(rs1_idx) + "])) >> " + std::to_string(shamt) + ";\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rs1_idx) + "] = ((etiss_int32)(*((RV32IMACFD*)cpu)->X[" + std::to_string(rs1_idx) + "])) >> " + std::to_string(shamt) + ";\n";
 } else {
 if (32 == 128) {
-partInit.code() += "*((RV32IMCFD*)cpu)->X[" + std::to_string(rs1_idx) + "] = ((etiss_int32)(*((RV32IMCFD*)cpu)->X[" + std::to_string(rs1_idx) + "])) >> " + std::to_string(64) + ";\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rs1_idx) + "] = ((etiss_int32)(*((RV32IMACFD*)cpu)->X[" + std::to_string(rs1_idx) + "])) >> " + std::to_string(64) + ";\n";
 }
 }
 // -----------------------------------------------------------------------------
@@ -829,7 +829,7 @@ ss << "csrai" << " # " << ba << (" [shamt=" + std::to_string(shamt) + " | rs1=" 
 
 // CANDI -----------------------------------------------------------------------
 static InstructionDefinition candi_imm_rs1 (
-	ISA16_RV32IMCFD,
+	ISA16_RV32IMACFD,
 	"candi",
 	(uint16_t) 0x8801,
 	(uint16_t) 0xec03,
@@ -859,7 +859,7 @@ imm += R_imm_5.read(ba) << 5;
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 2) + ";\n";
 etiss_uint32 rs1_idx = rs1 + 8;
-partInit.code() += "*((RV32IMCFD*)cpu)->X[" + std::to_string(rs1_idx) + "] = *((RV32IMCFD*)cpu)->X[" + std::to_string(rs1_idx) + "] & " + std::to_string(((etiss_int8)((imm) << (2)) >> (2))) + ";\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rs1_idx) + "] = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1_idx) + "] & " + std::to_string(((etiss_int8)((imm) << (2)) >> (2))) + ";\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getRegisterDependencies().add(reg_name[rs1_idx], 32);
@@ -893,7 +893,7 @@ ss << "candi" << " # " << ba << (" [imm=" + std::to_string(imm) + " | rs1=" + st
 
 // CSUB ------------------------------------------------------------------------
 static InstructionDefinition csub_rs2_rd (
-	ISA16_RV32IMCFD,
+	ISA16_RV32IMACFD,
 	"csub",
 	(uint16_t) 0x8c01,
 	(uint16_t) 0xfc63,
@@ -921,7 +921,7 @@ rd += R_rd_0.read(ba) << 0;
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 2) + ";\n";
 etiss_uint32 rd_idx = rd + 8;
-partInit.code() += "*((RV32IMCFD*)cpu)->X[" + std::to_string(rd_idx) + "] = *((RV32IMCFD*)cpu)->X[" + std::to_string(rd_idx) + "] - *((RV32IMCFD*)cpu)->X[" + std::to_string(rs2 + 8) + "];\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd_idx) + "] = *((RV32IMACFD*)cpu)->X[" + std::to_string(rd_idx) + "] - *((RV32IMACFD*)cpu)->X[" + std::to_string(rs2 + 8) + "];\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getRegisterDependencies().add(reg_name[rd_idx], 32);
@@ -954,7 +954,7 @@ ss << "csub" << " # " << ba << (" [rs2=" + std::to_string(rs2) + " | rd=" + std:
 
 // CXOR ------------------------------------------------------------------------
 static InstructionDefinition cxor_rs2_rd (
-	ISA16_RV32IMCFD,
+	ISA16_RV32IMACFD,
 	"cxor",
 	(uint16_t) 0x8c21,
 	(uint16_t) 0xfc63,
@@ -982,7 +982,7 @@ rd += R_rd_0.read(ba) << 0;
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 2) + ";\n";
 etiss_uint32 rd_idx = rd + 8;
-partInit.code() += "*((RV32IMCFD*)cpu)->X[" + std::to_string(rd_idx) + "] = *((RV32IMCFD*)cpu)->X[" + std::to_string(rd_idx) + "] ^ *((RV32IMCFD*)cpu)->X[" + std::to_string(rs2 + 8) + "];\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd_idx) + "] = *((RV32IMACFD*)cpu)->X[" + std::to_string(rd_idx) + "] ^ *((RV32IMACFD*)cpu)->X[" + std::to_string(rs2 + 8) + "];\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getRegisterDependencies().add(reg_name[rd_idx], 32);
@@ -1015,7 +1015,7 @@ ss << "cxor" << " # " << ba << (" [rs2=" + std::to_string(rs2) + " | rd=" + std:
 
 // COR -------------------------------------------------------------------------
 static InstructionDefinition cor_rs2_rd (
-	ISA16_RV32IMCFD,
+	ISA16_RV32IMACFD,
 	"cor",
 	(uint16_t) 0x8c41,
 	(uint16_t) 0xfc63,
@@ -1043,7 +1043,7 @@ rd += R_rd_0.read(ba) << 0;
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 2) + ";\n";
 etiss_uint32 rd_idx = rd + 8;
-partInit.code() += "*((RV32IMCFD*)cpu)->X[" + std::to_string(rd_idx) + "] = *((RV32IMCFD*)cpu)->X[" + std::to_string(rd_idx) + "] | *((RV32IMCFD*)cpu)->X[" + std::to_string(rs2 + 8) + "];\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd_idx) + "] = *((RV32IMACFD*)cpu)->X[" + std::to_string(rd_idx) + "] | *((RV32IMACFD*)cpu)->X[" + std::to_string(rs2 + 8) + "];\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getRegisterDependencies().add(reg_name[rd_idx], 32);
@@ -1076,7 +1076,7 @@ ss << "cor" << " # " << ba << (" [rs2=" + std::to_string(rs2) + " | rd=" + std::
 
 // CAND ------------------------------------------------------------------------
 static InstructionDefinition cand_rs2_rd (
-	ISA16_RV32IMCFD,
+	ISA16_RV32IMACFD,
 	"cand",
 	(uint16_t) 0x8c61,
 	(uint16_t) 0xfc63,
@@ -1104,7 +1104,7 @@ rd += R_rd_0.read(ba) << 0;
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 2) + ";\n";
 etiss_uint32 rd_idx = rd + 8;
-partInit.code() += "*((RV32IMCFD*)cpu)->X[" + std::to_string(rd_idx) + "] = *((RV32IMCFD*)cpu)->X[" + std::to_string(rd_idx) + "] & *((RV32IMCFD*)cpu)->X[" + std::to_string(rs2 + 8) + "];\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd_idx) + "] = *((RV32IMACFD*)cpu)->X[" + std::to_string(rd_idx) + "] & *((RV32IMACFD*)cpu)->X[" + std::to_string(rs2 + 8) + "];\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getRegisterDependencies().add(reg_name[rd_idx], 32);
@@ -1137,7 +1137,7 @@ ss << "cand" << " # " << ba << (" [rs2=" + std::to_string(rs2) + " | rd=" + std:
 
 // CJ --------------------------------------------------------------------------
 static InstructionDefinition cj_imm (
-	ISA16_RV32IMCFD,
+	ISA16_RV32IMACFD,
 	"cj",
 	(uint16_t) 0xa001,
 	(uint16_t) 0xe003,
@@ -1217,7 +1217,7 @@ ss << "cj" << " # " << ba << (" [imm=" + std::to_string(imm) + "]");
 
 // CBEQZ -----------------------------------------------------------------------
 static InstructionDefinition cbeqz_imm_rs1 (
-	ISA16_RV32IMCFD,
+	ISA16_RV32IMACFD,
 	"cbeqz",
 	(uint16_t) 0xc001,
 	(uint16_t) 0xe003,
@@ -1252,7 +1252,7 @@ imm += R_imm_8.read(ba) << 8;
 
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 2) + ";\n";
-partInit.code() += "if (*((RV32IMCFD*)cpu)->X[" + std::to_string(rs1 + 8) + "] == " + std::to_string(0) + ") {\n";
+partInit.code() += "if (*((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 + 8) + "] == " + std::to_string(0) + ") {\n";
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + ((etiss_int16)((imm) << (7)) >> (7))) + ";\n";
 partInit.code() += "}\n";
 partInit.code() += "if (cpu->instructionPointer != " + std::to_string(ic.current_address_ + 2) + ") return exception;\n";
@@ -1294,7 +1294,7 @@ ss << "cbeqz" << " # " << ba << (" [imm=" + std::to_string(imm) + " | rs1=" + st
 
 // CBNEZ -----------------------------------------------------------------------
 static InstructionDefinition cbnez_imm_rs1 (
-	ISA16_RV32IMCFD,
+	ISA16_RV32IMACFD,
 	"cbnez",
 	(uint16_t) 0xe001,
 	(uint16_t) 0xe003,
@@ -1329,7 +1329,7 @@ imm += R_imm_8.read(ba) << 8;
 
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 2) + ";\n";
-partInit.code() += "if (*((RV32IMCFD*)cpu)->X[" + std::to_string(rs1 + 8) + "] != " + std::to_string(0) + ") {\n";
+partInit.code() += "if (*((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 + 8) + "] != " + std::to_string(0) + ") {\n";
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + ((etiss_int16)((imm) << (7)) >> (7))) + ";\n";
 partInit.code() += "}\n";
 partInit.code() += "if (cpu->instructionPointer != " + std::to_string(ic.current_address_ + 2) + ") return exception;\n";
@@ -1371,7 +1371,7 @@ ss << "cbnez" << " # " << ba << (" [imm=" + std::to_string(imm) + " | rs1=" + st
 
 // CSLLI -----------------------------------------------------------------------
 static InstructionDefinition cslli_nzuimm_rs1 (
-	ISA16_RV32IMCFD,
+	ISA16_RV32IMACFD,
 	"cslli",
 	(uint16_t) 0x02,
 	(uint16_t) 0xf003,
@@ -1399,7 +1399,7 @@ rs1 += R_rs1_0.read(ba) << 0;
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 2) + ";\n";
 if (nzuimm) {
-partInit.code() += "*((RV32IMCFD*)cpu)->X[" + std::to_string(rs1) + "] = *((RV32IMCFD*)cpu)->X[" + std::to_string(rs1) + "] << " + std::to_string(nzuimm) + ";\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rs1) + "] = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1) + "] << " + std::to_string(nzuimm) + ";\n";
 }
 // -----------------------------------------------------------------------------
 
@@ -1432,7 +1432,7 @@ ss << "cslli" << " # " << ba << (" [nzuimm=" + std::to_string(nzuimm) + " | rs1=
 
 // CLWSP -----------------------------------------------------------------------
 static InstructionDefinition clwsp_uimm_rd (
-	ISA16_RV32IMCFD,
+	ISA16_RV32IMACFD,
 	"clwsp",
 	(uint16_t) 0x4002,
 	(uint16_t) 0xe003,
@@ -1464,10 +1464,10 @@ uimm += R_uimm_5.read(ba) << 5;
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 2) + ";\n";
 if (rd) {
-partInit.code() += "etiss_uint32 offs = *((RV32IMCFD*)cpu)->X[" + std::to_string(2) + "] + " + std::to_string(uimm) + ";\n";
+partInit.code() += "etiss_uint32 offs = *((RV32IMACFD*)cpu)->X[" + std::to_string(2) + "] + " + std::to_string(uimm) + ";\n";
 partInit.code() += "etiss_uint32 mem_val_0;\n";
 partInit.code() += "exception |= (*(system->dread))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_0, 4);\n";
-partInit.code() += "*((RV32IMCFD*)cpu)->X[" + std::to_string(rd) + "] = (etiss_int32)(mem_val_0);\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd) + "] = (etiss_int32)(mem_val_0);\n";
 } else {
 partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
 }
@@ -1507,7 +1507,7 @@ ss << "clwsp" << " # " << ba << (" [uimm=" + std::to_string(uimm) + " | rd=" + s
 
 // CMV -------------------------------------------------------------------------
 static InstructionDefinition cmv_rs2_rd (
-	ISA16_RV32IMCFD,
+	ISA16_RV32IMACFD,
 	"cmv",
 	(uint16_t) 0x8002,
 	(uint16_t) 0xf003,
@@ -1535,7 +1535,7 @@ rd += R_rd_0.read(ba) << 0;
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 2) + ";\n";
 if (rd != 0) {
-partInit.code() += "*((RV32IMCFD*)cpu)->X[" + std::to_string(rd) + "] = *((RV32IMCFD*)cpu)->X[" + std::to_string(rs2) + "];\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd) + "] = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs2) + "];\n";
 }
 // -----------------------------------------------------------------------------
 
@@ -1568,7 +1568,7 @@ ss << "cmv" << " # " << ba << (" [rs2=" + std::to_string(rs2) + " | rd=" + std::
 
 // CJR -------------------------------------------------------------------------
 static InstructionDefinition cjr_rs1 (
-	ISA16_RV32IMCFD,
+	ISA16_RV32IMACFD,
 	"cjr",
 	(uint16_t) 0x8002,
 	(uint16_t) 0xf07f,
@@ -1593,7 +1593,7 @@ rs1 += R_rs1_0.read(ba) << 0;
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 2) + ";\n";
 if (rs1) {
-partInit.code() += "cpu->instructionPointer = *((RV32IMCFD*)cpu)->X[" + std::to_string(rs1) + "] & " + std::to_string(~(1)) + ";\n";
+partInit.code() += "cpu->instructionPointer = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1) + "] & " + std::to_string(~(1)) + ";\n";
 } else {
 partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
 }
@@ -1625,7 +1625,7 @@ ss << "cjr" << " # " << ba << (" [rs1=" + std::to_string(rs1) + "]");
 
 // __reserved_cmv --------------------------------------------------------------
 static InstructionDefinition __reserved_cmv_ (
-	ISA16_RV32IMCFD,
+	ISA16_RV32IMACFD,
 	"__reserved_cmv",
 	(uint16_t) 0x8002,
 	(uint16_t) 0xffff,
@@ -1671,7 +1671,7 @@ ss << "__reserved_cmv" << " # " << ba << (" []");
 
 // CADD ------------------------------------------------------------------------
 static InstructionDefinition cadd_rs2_rd (
-	ISA16_RV32IMCFD,
+	ISA16_RV32IMACFD,
 	"cadd",
 	(uint16_t) 0x9002,
 	(uint16_t) 0xf003,
@@ -1699,7 +1699,7 @@ rd += R_rd_0.read(ba) << 0;
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 2) + ";\n";
 if (rd != 0) {
-partInit.code() += "*((RV32IMCFD*)cpu)->X[" + std::to_string(rd) + "] = *((RV32IMCFD*)cpu)->X[" + std::to_string(rd) + "] + *((RV32IMCFD*)cpu)->X[" + std::to_string(rs2) + "];\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd) + "] = *((RV32IMACFD*)cpu)->X[" + std::to_string(rd) + "] + *((RV32IMACFD*)cpu)->X[" + std::to_string(rs2) + "];\n";
 }
 // -----------------------------------------------------------------------------
 
@@ -1733,7 +1733,7 @@ ss << "cadd" << " # " << ba << (" [rs2=" + std::to_string(rs2) + " | rd=" + std:
 
 // CJALR -----------------------------------------------------------------------
 static InstructionDefinition cjalr_rs1 (
-	ISA16_RV32IMCFD,
+	ISA16_RV32IMACFD,
 	"cjalr",
 	(uint16_t) 0x9002,
 	(uint16_t) 0xf07f,
@@ -1757,8 +1757,8 @@ rs1 += R_rs1_0.read(ba) << 0;
 
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 2) + ";\n";
-partInit.code() += "etiss_uint32 new_pc = *((RV32IMCFD*)cpu)->X[" + std::to_string(rs1) + "];\n";
-partInit.code() += "*((RV32IMCFD*)cpu)->X[" + std::to_string(1) + "] = " + std::to_string(ic.current_address_ + 2) + ";\n";
+partInit.code() += "etiss_uint32 new_pc = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1) + "];\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(1) + "] = " + std::to_string(ic.current_address_ + 2) + ";\n";
 partInit.code() += "cpu->instructionPointer = new_pc & " + std::to_string(~(1)) + ";\n";
 partInit.code() += "return exception;\n";
 // -----------------------------------------------------------------------------
@@ -1789,7 +1789,7 @@ ss << "cjalr" << " # " << ba << (" [rs1=" + std::to_string(rs1) + "]");
 
 // CEBREAK ---------------------------------------------------------------------
 static InstructionDefinition cebreak_ (
-	ISA16_RV32IMCFD,
+	ISA16_RV32IMACFD,
 	"cebreak",
 	(uint16_t) 0x9002,
 	(uint16_t) 0xffff,
@@ -1835,7 +1835,7 @@ ss << "cebreak" << " # " << ba << (" []");
 
 // CSWSP -----------------------------------------------------------------------
 static InstructionDefinition cswsp_rs2_uimm (
-	ISA16_RV32IMCFD,
+	ISA16_RV32IMACFD,
 	"cswsp",
 	(uint16_t) 0xc002,
 	(uint16_t) 0xe003,
@@ -1864,8 +1864,8 @@ uimm += R_uimm_2.read(ba) << 2;
 
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 2) + ";\n";
-partInit.code() += "etiss_uint32 offs = *((RV32IMCFD*)cpu)->X[" + std::to_string(2) + "] + " + std::to_string(uimm) + ";\n";
-partInit.code() += "etiss_uint32 mem_val_0 = (etiss_uint32)(*((RV32IMCFD*)cpu)->X[" + std::to_string(rs2) + "]);\n";
+partInit.code() += "etiss_uint32 offs = *((RV32IMACFD*)cpu)->X[" + std::to_string(2) + "] + " + std::to_string(uimm) + ";\n";
+partInit.code() += "etiss_uint32 mem_val_0 = (etiss_uint32)(*((RV32IMACFD*)cpu)->X[" + std::to_string(rs2) + "]);\n";
 partInit.code() += "exception |= (*(system->dwrite))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_0, 4);\n";
 
 partInit.code() += "if (exception) return exception;\n";
@@ -1902,7 +1902,7 @@ ss << "cswsp" << " # " << ba << (" [rs2=" + std::to_string(rs2) + " | uimm=" + s
 
 // DII -------------------------------------------------------------------------
 static InstructionDefinition dii_ (
-	ISA16_RV32IMCFD,
+	ISA16_RV32IMACFD,
 	"dii",
 	(uint16_t) 0x00,
 	(uint16_t) 0xffff,

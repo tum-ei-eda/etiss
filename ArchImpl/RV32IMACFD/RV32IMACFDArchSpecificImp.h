@@ -1,28 +1,28 @@
 /**
- * Generated on Wed, 23 Feb 2022 20:40:41 +0100.
+ * Generated on Thu, 24 Feb 2022 17:15:20 +0100.
  *
- * This file contains the architecture specific header for the RV32IMCFD
+ * This file contains the architecture specific header for the RV32IMACFD
  * core architecture.
  *
  * WARNING: This file contains user-added code, be mindful when overwriting this with
  * generated code!
  */
 
-#ifndef ETISS_RV32IMCFDArch_RV32IMCFDARCHSPECIFICIMP_H_
-#define ETISS_RV32IMCFDArch_RV32IMCFDARCHSPECIFICIMP_H_
+#ifndef ETISS_RV32IMACFDArch_RV32IMACFDARCHSPECIFICIMP_H_
+#define ETISS_RV32IMACFDArch_RV32IMACFDARCHSPECIFICIMP_H_
 
 /**
-	@brief VirtualStruct for RV32IMCFD architecture to faciliate register acess
+	@brief VirtualStruct for RV32IMACFD architecture to faciliate register acess
 
 	@details VirtualStruct enables user to access certain register via their name without knowning ETISS hierarchy of a core.
 				Further fiels might be needed to enable gdbserver etc.
 
 */
-class RegField_RV32IMCFD : public etiss::VirtualStruct::Field{
+class RegField_RV32IMACFD : public etiss::VirtualStruct::Field{
 private:
 	const unsigned gprid_;
 public:
-	RegField_RV32IMCFD(etiss::VirtualStruct & parent,unsigned gprid)
+	RegField_RV32IMACFD(etiss::VirtualStruct & parent,unsigned gprid)
 		: Field(parent,
 			std::string("X")+etiss::toString(gprid),
 			std::string("X")+etiss::toString(gprid),
@@ -32,7 +32,7 @@ public:
 		gprid_(gprid)
 	{}
 
-	RegField_RV32IMCFD(etiss::VirtualStruct & parent, std::string name, unsigned gprid)
+	RegField_RV32IMACFD(etiss::VirtualStruct & parent, std::string name, unsigned gprid)
 		: Field(parent,
 			name,
 			name,
@@ -42,22 +42,22 @@ public:
 		gprid_(gprid)
 	{}
 
-	virtual ~RegField_RV32IMCFD(){}
+	virtual ~RegField_RV32IMACFD(){}
 
 protected:
 	virtual uint64_t _read() const {
-		return (uint64_t) *((RV32IMCFD*)parent_.structure_)->X[gprid_];
+		return (uint64_t) *((RV32IMACFD*)parent_.structure_)->X[gprid_];
 	}
 
 	virtual void _write(uint64_t val) {
 		etiss::log(etiss::VERBOSE, "write to ETISS cpu state", name_, val);
-		*((RV32IMCFD*)parent_.structure_)->X[gprid_] = (etiss_uint32) val;
+		*((RV32IMACFD*)parent_.structure_)->X[gprid_] = (etiss_uint32) val;
 	}
 };
 
-class pcField_RV32IMCFD : public etiss::VirtualStruct::Field{
+class pcField_RV32IMACFD : public etiss::VirtualStruct::Field{
 public:
-	pcField_RV32IMCFD(etiss::VirtualStruct & parent)
+	pcField_RV32IMACFD(etiss::VirtualStruct & parent)
 		: Field(parent,
 			"instructionPointer",
 			"instructionPointer",
@@ -66,7 +66,7 @@ public:
 		)
 	{}
 
-	virtual ~pcField_RV32IMCFD(){}
+	virtual ~pcField_RV32IMACFD(){}
 
 protected:
 	virtual uint64_t _read() const {

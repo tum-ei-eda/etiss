@@ -1,14 +1,14 @@
 /**
- * Generated on Wed, 23 Feb 2022 20:40:41 +0100.
+ * Generated on Thu, 24 Feb 2022 17:15:20 +0100.
  *
- * This file contains the function macros for the RV32IMCFD core architecture.
+ * This file contains the function macros for the RV32IMACFD core architecture.
  */
 
-#ifndef __RV32IMCFD_FUNCS_H
-#define __RV32IMCFD_FUNCS_H
+#ifndef __RV32IMACFD_FUNCS_H
+#define __RV32IMACFD_FUNCS_H
 
 #ifndef ETISS_ARCH_STATIC_FN_ONLY
-#include "Arch/RV32IMCFD/RV32IMCFD.h"
+#include "Arch/RV32IMACFD/RV32IMACFD.h"
 #include "etiss/jit/CPU.h"
 #include "etiss/jit/System.h"
 #include "etiss/jit/ReturnCode.h"
@@ -21,12 +21,12 @@
 static inline etiss_uint32 csr_read (ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers, etiss_uint32 csr)
 {
 if (csr == 1) {
-return *((RV32IMCFD*)cpu)->CSR[3] & 31;
+return *((RV32IMACFD*)cpu)->CSR[3] & 31;
 }
 if (csr == 2) {
-return (*((RV32IMCFD*)cpu)->CSR[3] >> 5) & 7;
+return (*((RV32IMACFD*)cpu)->CSR[3] >> 5) & 7;
 }
-return *((RV32IMCFD*)cpu)->CSR[csr];
+return *((RV32IMACFD*)cpu)->CSR[csr];
 }
 
 #endif
@@ -36,15 +36,15 @@ return *((RV32IMCFD*)cpu)->CSR[csr];
 static inline void csr_write (ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers, etiss_uint32 csr, etiss_uint32 val)
 {
 if (csr == 1) {
-*((RV32IMCFD*)cpu)->CSR[3] = (*((RV32IMCFD*)cpu)->CSR[3] & (7 << 5)) | (val & 31);
+*((RV32IMACFD*)cpu)->CSR[3] = (*((RV32IMACFD*)cpu)->CSR[3] & (7 << 5)) | (val & 31);
 } else {
 if (csr == 2) {
-*((RV32IMCFD*)cpu)->CSR[3] = ((val & 7) << 5) | (*((RV32IMCFD*)cpu)->CSR[3] & 31);
+*((RV32IMACFD*)cpu)->CSR[3] = ((val & 7) << 5) | (*((RV32IMACFD*)cpu)->CSR[3] & 31);
 } else {
 if (csr == 3) {
-*((RV32IMCFD*)cpu)->CSR[3] = val & 255;
+*((RV32IMACFD*)cpu)->CSR[3] = val & 255;
 } else {
-*((RV32IMCFD*)cpu)->CSR[csr] = val;
+*((RV32IMACFD*)cpu)->CSR[csr] = val;
 }
 }
 }

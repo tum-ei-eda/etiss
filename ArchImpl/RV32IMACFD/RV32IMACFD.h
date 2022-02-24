@@ -1,11 +1,11 @@
 /**
- * Generated on Wed, 23 Feb 2022 20:40:41 +0100.
+ * Generated on Thu, 24 Feb 2022 17:15:20 +0100.
  *
- * This file contains the registers for the RV32IMCFD core architecture.
+ * This file contains the registers for the RV32IMACFD core architecture.
  */
 
-#ifndef ETISS_RV32IMCFDArch_RV32IMCFD_H_
-#define ETISS_RV32IMCFDArch_RV32IMCFD_H_
+#ifndef ETISS_RV32IMACFDArch_RV32IMACFD_H_
+#define ETISS_RV32IMACFDArch_RV32IMACFD_H_
 #include <stdio.h>
 #include "etiss/jit/CPU.h"
 
@@ -13,7 +13,7 @@
 extern "C" {
 #endif
 #pragma pack(push, 1)
-struct RV32IMCFD {
+struct RV32IMACFD {
 	ETISS_CPU cpu; // original cpu struct must be defined as the first field of the new structure. this allows to cast X * to ETISS_CPU * and vice vers
 	etiss_uint32 ZERO;
 	etiss_uint32 RA;
@@ -60,7 +60,7 @@ struct RV32IMCFD {
 };
 
 #pragma pack(pop) // undo changes
-typedef struct RV32IMCFD RV32IMCFD; // convenient use of X instead of struct X in generated C code
+typedef struct RV32IMACFD RV32IMACFD; // convenient use of X instead of struct X in generated C code
 #ifdef __cplusplus
 } // extern "C"
 #endif
