@@ -124,6 +124,20 @@ etiss::int32 RISCV64Arch::handleException(etiss::int32 cause, ETISS_CPU *cpu)
                 ((RISCV64 *)cpu)->CSR[CSR_SCAUSE] = causeCode;
                 // Redo the instruction encoutered exception after handling
                 ((RISCV64 *)cpu)->CSR[CSR_SEPC] = cpu->instructionPointer - 4;
+                switch (causeCode)
+                {
+                    case CAUSE_FETCH_PAGE_FAULT:
+                    case CAUSE_LOAD_PAGE_FAULT:
+                    case CAUSE_STORE_PAGE_FAULT:
+                    case CAUSE_FETCH_ACCESS:
+                    case CAUSE_LOAD_ACCESS:
+                    case CAUSE_STORE_ACCESS:
+                        ((RISCV64 *)cpu)->CSR[CSR_STVAL] = cpu->instructionPointer;
+                        break;
+                    default:
+                        ((RISCV64 *)cpu)->CSR[CSR_STVAL] = 0;
+                        break;
+                }
                 ((RISCV64 *)cpu)->CSR[CSR_SSTATUS] ^=
                     (((RISCV64 *)cpu)->CSR[3088] << 8) ^ (((RISCV64 *)cpu)->CSR[CSR_SSTATUS] & MSTATUS_SPP);
                 // Since traps can only be delegated to S-mode, if it originated in S/U-mode, 
