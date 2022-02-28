@@ -1,5 +1,5 @@
 /**
- * Generated on Thu, 24 Feb 2022 17:15:20 +0100.
+ * Generated on Tue, 01 Mar 2022 00:20:25 +0100.
  *
  * This file contains the registers for the RV32IMACFD core architecture.
  */
@@ -57,6 +57,7 @@ struct RV32IMACFD {
 	etiss_uint32 *CSR[4096];
 	etiss_uint32 ins_CSR[4096];
 	etiss_uint64 F[32];
+	etiss_uint32 RES_ADDR;
 };
 
 #pragma pack(pop) // undo changes

@@ -1,5 +1,5 @@
 /**
- * Generated on Thu, 24 Feb 2022 17:15:20 +0100.
+ * Generated on Tue, 01 Mar 2022 00:20:25 +0100.
  *
  * This file contains the architecture class for the RV32IMACFD core architecture.
  */
@@ -125,6 +125,7 @@ void RV32IMACFDArch::resetCPU(ETISS_CPU * cpu,etiss::uint64 * startpointer)
 	for (int i = 0; i < 32; ++i) {
 		rv32imacfdcpu->F[i] = 0;
 	}
+	rv32imacfdcpu->RES_ADDR = 0;
 
  	rv32imacfdcpu->X[0] = &rv32imacfdcpu->ZERO;
  	rv32imacfdcpu->X[1] = &rv32imacfdcpu->RA;
@@ -160,6 +161,8 @@ void RV32IMACFDArch::resetCPU(ETISS_CPU * cpu,etiss::uint64 * startpointer)
  	rv32imacfdcpu->X[31] = &rv32imacfdcpu->T6;
  	rv32imacfdcpu->CSR[3] = &rv32imacfdcpu->FCSR;
 
+ 	rv32imacfdcpu->PRIV = 3;
+ 	rv32imacfdcpu->DPC = 0;
  	*rv32imacfdcpu->CSR[0] = 11;
 	*rv32imacfdcpu->CSR[256] = 11;
 	*rv32imacfdcpu->CSR[768] = 11;
@@ -168,6 +171,7 @@ void RV32IMACFDArch::resetCPU(ETISS_CPU * cpu,etiss::uint64 * startpointer)
 	*rv32imacfdcpu->CSR[772] = 4294966203;
 	*rv32imacfdcpu->CSR[260] = 4294964019;
 	*rv32imacfdcpu->CSR[4] = 4294963473;
+ 	rv32imacfdcpu->RES_ADDR = -1;
 }
 
 void RV32IMACFDArch::deleteCPU(ETISS_CPU *cpu)
