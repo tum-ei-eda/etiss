@@ -585,19 +585,19 @@ void Translation::unloadBlocksAll()
 {
     for (auto &entry:blockmap_)
     {
-        for (std::list<BlockLink *>::iterator iter = entry.second.begin(); iter != entry.second.end(); ++iter)
-        {
-            BlockLink *bl = *iter;
-            bl->valid = false;
-            BlockLink::updateRef(bl->next, 0);
-            BlockLink::updateRef(bl->branch, 0);
-            entry.second.erase(iter);
-            BlockLink::decrRef(bl); // remove reference of map
-        }
+        entry.second.erase(std::remove(entry.second.begin(), entry.second.end(), 
+                            [](auto &bl)
+                            {
+                                bl->valid = false;
+                                BlockLink::updateRef(bl->next, 0);
+                                BlockLink::updateRef(bl->branch, 0);
+                                BlockLink::decrRef(bl); // remove reference of map
+                            }),
+                            entry.second.end());
     }
     blockmap_.clear();
-    
 }
+
 void Translation::unloadBlocks(etiss::uint64 startindex, etiss::uint64 endindex)
 {
     // Hotfix: if everything needs to be deleted, new function unloadBlocksAll()
