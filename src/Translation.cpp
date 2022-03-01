@@ -583,6 +583,9 @@ etiss::int32 Translation::translateBlock(CodeBlock &cb)
 
 void Translation::unloadBlocks(etiss::uint64 startindex, etiss::uint64 endindex)
 {
+    blockmap_.clear();
+    return;
+
     const etiss::uint64 startindexblock = startindex >> 9;
     const etiss::uint64 endindexblock = (endindex >> 9) + ((((endindex >> 9) << 9) == endindex) ? 0 : 1);
     for (etiss::uint64 block = startindexblock; block < endindexblock; block++)
