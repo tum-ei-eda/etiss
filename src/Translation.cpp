@@ -585,13 +585,14 @@ void Translation::unloadBlocksAll()
 {
     for (auto &entry:blockmap_)
     {
-        entry.second.erase(std::remove(entry.second.begin(), entry.second.end(), 
+        entry.second.erase(std::remove_if(entry.second.begin(), entry.second.end(), 
                             [](auto &bl)
                             {
                                 bl->valid = false;
                                 BlockLink::updateRef(bl->next, 0);
                                 BlockLink::updateRef(bl->branch, 0);
                                 BlockLink::decrRef(bl); // remove reference of map
+                                return true;
                             }),
                             entry.second.end());
     }
