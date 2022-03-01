@@ -209,6 +209,8 @@ class Translation
 
     etiss::int32 translateBlock(CodeBlock &cb);
 
+    void unloadBlocksAll();
+
     void unloadBlocks(etiss::uint64 startindex = 0, etiss::uint64 endindex = ((etiss::uint64)((etiss::int64)-1)));
 
     std::string disasm(uint8_t *buf, unsigned len, int &append);

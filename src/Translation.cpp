@@ -581,10 +581,31 @@ etiss::int32 Translation::translateBlock(CodeBlock &cb)
     return etiss::RETURNCODE::NOERROR;
 }
 
+void Translation::unloadBlocksAll()
+{
+    for (auto &entry:blockmap_)
+    {
+        for (std::list<BlockLink *>::iterator iter = entry.second.begin(); iter != entry.second.end(); ++iter)
+        {
+            BlockLink *bl = *iter;
+            bl->valid = false;
+            BlockLink::updateRef(bl->next, 0);
+            BlockLink::updateRef(bl->branch, 0);
+            entry.second.erase(iter);
+            BlockLink::decrRef(bl); // remove reference of map
+        }
+    }
+    blockmap_.clear();
+    
+}
 void Translation::unloadBlocks(etiss::uint64 startindex, etiss::uint64 endindex)
 {
-    blockmap_.clear();
-    return;
+    // Hotfix: if everything needs to be deleted, new function unloadBlocksAll()
+    if (startindex == 0 && endindex == ((etiss::uint64)((etiss::int64)-1)))
+    {
+        unloadBlocksAll();
+        return;
+    }
 
     const etiss::uint64 startindexblock = startindex >> 9;
     const etiss::uint64 endindexblock = (endindex >> 9) + ((((endindex >> 9) << 9) == endindex) ? 0 : 1);
