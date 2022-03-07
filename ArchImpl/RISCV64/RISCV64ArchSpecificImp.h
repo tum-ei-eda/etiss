@@ -121,20 +121,29 @@ etiss::int32 RISCV64Arch::handleException(etiss::int32 cause, ETISS_CPU *cpu)
                 // Pop MPIE to MIE
                 (((RISCV64 *)cpu)->CSR[CSR_MSTATUS]) ^=
                     (((((RISCV64 *)cpu)->CSR[CSR_MSTATUS]) & MSTATUS_MPIE) >> 4) ^ ((((RISCV64 *)cpu)->CSR[CSR_MSTATUS]) & MSTATUS_MIE);
-                ((RISCV64 *)cpu)->CSR[CSR_SCAUSE] = causeCode;
-                // Redo the instruction encoutered exception after handling
-                ((RISCV64 *)cpu)->CSR[CSR_SEPC] = cpu->instructionPointer - 4;
+                ((RISCV64 *)cpu)->CSR[CSR_SCAUSE] = causeCode;                
                 switch (causeCode)
                 {
                     case CAUSE_FETCH_PAGE_FAULT:    [[fallthrough]];
+                    case CAUSE_MISALIGNED_FETCH:    [[fallthrough]];
+                    case CAUSE_FETCH_ACCESS:
+                        // Redo the instruction encoutered exception after handling
+                        ((RISCV64 *)cpu)->CSR[CSR_SEPC] = cpu->instructionPointer;
+                        ((RISCV64 *)cpu)->CSR[CSR_STVAL] = cpu->instructionPointer;
+                        break;
                     case CAUSE_LOAD_PAGE_FAULT:     [[fallthrough]];
-                    case CAUSE_STORE_PAGE_FAULT:    [[fallthrough]];
-                    case CAUSE_FETCH_ACCESS:        [[fallthrough]];
                     case CAUSE_LOAD_ACCESS:         [[fallthrough]];
-                    case CAUSE_STORE_ACCESS:
+                    case CAUSE_MISALIGNED_LOAD:     [[fallthrough]];
+                    case CAUSE_STORE_PAGE_FAULT:    [[fallthrough]];            
+                    case CAUSE_STORE_ACCESS:        [[fallthrough]];
+                    case CAUSE_MISALIGNED_STORE:
+                        // Redo the instruction encoutered exception after handling
+                        ((RISCV64 *)cpu)->CSR[CSR_SEPC] = cpu->instructionPointer - 4;
                         ((RISCV64 *)cpu)->CSR[CSR_STVAL] = cpu->instructionPointer;
                         break;
                     default:
+                        // Redo the instruction encoutered exception after handling
+                        ((RISCV64 *)cpu)->CSR[CSR_SEPC] = cpu->instructionPointer - 4;
                         ((RISCV64 *)cpu)->CSR[CSR_STVAL] = 0;
                         break;
                 }
@@ -149,8 +158,31 @@ etiss::int32 RISCV64Arch::handleException(etiss::int32 cause, ETISS_CPU *cpu)
             else
             {
                 ((RISCV64 *)cpu)->CSR[CSR_MCAUSE] = causeCode;
-                // Redo the instruction encoutered exception after handling
-                ((RISCV64 *)cpu)->CSR[CSR_MEPC] = cpu->instructionPointer - 4;
+                switch (causeCode)
+                {
+                    case CAUSE_FETCH_PAGE_FAULT:    [[fallthrough]];
+                    case CAUSE_FETCH_ACCESS:        [[fallthrough]];
+                    case CAUSE_MISALIGNED_FETCH:
+                        // Redo the instruction encoutered exception after handling
+                        ((RISCV64 *)cpu)->CSR[CSR_MEPC] = cpu->instructionPointer;
+                        ((RISCV64 *)cpu)->CSR[CSR_MTVAL] = cpu->instructionPointer;
+                        break;
+                    case CAUSE_LOAD_PAGE_FAULT:     [[fallthrough]];
+                    case CAUSE_LOAD_ACCESS:         [[fallthrough]];
+                    case CAUSE_MISALIGNED_LOAD:     [[fallthrough]];
+                    case CAUSE_STORE_PAGE_FAULT:    [[fallthrough]];            
+                    case CAUSE_STORE_ACCESS:        [[fallthrough]];
+                    case CAUSE_MISALIGNED_STORE:
+                        // Redo the instruction encoutered exception after handling
+                        ((RISCV64 *)cpu)->CSR[CSR_MEPC] = cpu->instructionPointer - 4;
+                        ((RISCV64 *)cpu)->CSR[CSR_MTVAL] = cpu->instructionPointer;
+                        break;
+                    default:
+                        // Redo the instruction encoutered exception after handling
+                        ((RISCV64 *)cpu)->CSR[CSR_MEPC] = cpu->instructionPointer - 4;
+                        ((RISCV64 *)cpu)->CSR[CSR_MTVAL] = 0;
+                        break;
+                }
                 (((RISCV64 *)cpu)->CSR[CSR_MSTATUS]) ^=
                     (((RISCV64 *)cpu)->CSR[3088] << 11) ^ ((((RISCV64 *)cpu)->CSR[CSR_MSTATUS]) & MSTATUS_MPP);
                 // Switch hart into machine mode, if it isn't already in M-mode
