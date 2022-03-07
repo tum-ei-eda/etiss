@@ -126,11 +126,11 @@ etiss::int32 RISCV64Arch::handleException(etiss::int32 cause, ETISS_CPU *cpu)
                 ((RISCV64 *)cpu)->CSR[CSR_SEPC] = cpu->instructionPointer - 4;
                 switch (causeCode)
                 {
-                    case CAUSE_FETCH_PAGE_FAULT:
-                    case CAUSE_LOAD_PAGE_FAULT:
-                    case CAUSE_STORE_PAGE_FAULT:
-                    case CAUSE_FETCH_ACCESS:
-                    case CAUSE_LOAD_ACCESS:
+                    case CAUSE_FETCH_PAGE_FAULT:    [[fallthrough]];
+                    case CAUSE_LOAD_PAGE_FAULT:     [[fallthrough]];
+                    case CAUSE_STORE_PAGE_FAULT:    [[fallthrough]];
+                    case CAUSE_FETCH_ACCESS:        [[fallthrough]];
+                    case CAUSE_LOAD_ACCESS:         [[fallthrough]];
                     case CAUSE_STORE_ACCESS:
                         ((RISCV64 *)cpu)->CSR[CSR_STVAL] = cpu->instructionPointer;
                         break;
