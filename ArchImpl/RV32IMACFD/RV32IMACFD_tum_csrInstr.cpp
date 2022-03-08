@@ -1,5 +1,5 @@
 /**
- * Generated on Thu, 24 Feb 2022 17:15:20 +0100.
+ * Generated on Tue, 01 Mar 2022 12:43:46 +0100.
  *
  * This file contains the instruction behavior models of the tum_csr
  * instruction set for the RV32IMACFD core architecture.
@@ -45,9 +45,9 @@ csr += R_csr_0.read(ba) << 0;
 		partInit.code() = std::string("//CSRRW\n");
 
 // -----------------------------------------------------------------------------
-partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4) + ";\n";
+partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
 partInit.code() += "etiss_uint32 xrs1 = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1) + "];\n";
-if (rd != 0) {
+if (rd != 0U) {
 partInit.code() += "etiss_uint32 xrd = csr_read(cpu, system, plugin_pointers, " + std::to_string(csr) + ");\n";
 partInit.code() += "csr_write(cpu, system, plugin_pointers, " + std::to_string(csr) + ", xrs1);";
 partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd) + "] = xrd;\n";
@@ -117,13 +117,13 @@ csr += R_csr_0.read(ba) << 0;
 		partInit.code() = std::string("//CSRRS\n");
 
 // -----------------------------------------------------------------------------
-partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4) + ";\n";
+partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
 partInit.code() += "etiss_uint32 xrd = csr_read(cpu, system, plugin_pointers, " + std::to_string(csr) + ");\n";
 partInit.code() += "etiss_uint32 xrs1 = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1) + "];\n";
-if (rs1 != 0) {
+if (rs1 != 0U) {
 partInit.code() += "csr_write(cpu, system, plugin_pointers, " + std::to_string(csr) + ", xrd | xrs1);";
 }
-if (rd != 0) {
+if (rd != 0U) {
 partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd) + "] = xrd;\n";
 }
 // -----------------------------------------------------------------------------
@@ -189,13 +189,13 @@ csr += R_csr_0.read(ba) << 0;
 		partInit.code() = std::string("//CSRRC\n");
 
 // -----------------------------------------------------------------------------
-partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4) + ";\n";
+partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
 partInit.code() += "etiss_uint32 xrd = csr_read(cpu, system, plugin_pointers, " + std::to_string(csr) + ");\n";
 partInit.code() += "etiss_uint32 xrs1 = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1) + "];\n";
-if (rs1 != 0) {
+if (rs1 != 0U) {
 partInit.code() += "csr_write(cpu, system, plugin_pointers, " + std::to_string(csr) + ", xrd & ~(xrs1));";
 }
-if (rd != 0) {
+if (rd != 0U) {
 partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd) + "] = xrd;\n";
 }
 // -----------------------------------------------------------------------------
@@ -261,10 +261,10 @@ csr += R_csr_0.read(ba) << 0;
 		partInit.code() = std::string("//CSRRWI\n");
 
 // -----------------------------------------------------------------------------
-partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4) + ";\n";
+partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
 partInit.code() += "etiss_uint32 xrd = csr_read(cpu, system, plugin_pointers, " + std::to_string(csr) + ");\n";
 partInit.code() += "csr_write(cpu, system, plugin_pointers, " + std::to_string(csr) + ", " + std::to_string((etiss_uint32)(zimm)) + ");";
-if (rd != 0) {
+if (rd != 0U) {
 partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd) + "] = xrd;\n";
 }
 // -----------------------------------------------------------------------------
@@ -329,12 +329,12 @@ csr += R_csr_0.read(ba) << 0;
 		partInit.code() = std::string("//CSRRSI\n");
 
 // -----------------------------------------------------------------------------
-partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4) + ";\n";
+partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
 partInit.code() += "etiss_uint32 xrd = csr_read(cpu, system, plugin_pointers, " + std::to_string(csr) + ");\n";
-if (zimm != 0) {
+if (zimm != 0U) {
 partInit.code() += "csr_write(cpu, system, plugin_pointers, " + std::to_string(csr) + ", xrd | " + std::to_string((etiss_uint32)(zimm)) + ");";
 }
-if (rd != 0) {
+if (rd != 0U) {
 partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd) + "] = xrd;\n";
 }
 // -----------------------------------------------------------------------------
@@ -399,12 +399,12 @@ csr += R_csr_0.read(ba) << 0;
 		partInit.code() = std::string("//CSRRCI\n");
 
 // -----------------------------------------------------------------------------
-partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4) + ";\n";
+partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
 partInit.code() += "etiss_uint32 xrd = csr_read(cpu, system, plugin_pointers, " + std::to_string(csr) + ");\n";
-if (zimm != 0) {
+if (zimm != 0U) {
 partInit.code() += "csr_write(cpu, system, plugin_pointers, " + std::to_string(csr) + ", xrd & " + std::to_string(~(((etiss_uint32)(zimm)))) + ");";
 }
-if (rd != 0) {
+if (rd != 0U) {
 partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd) + "] = xrd;\n";
 }
 // -----------------------------------------------------------------------------

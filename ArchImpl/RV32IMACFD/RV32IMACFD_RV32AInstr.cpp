@@ -1,5 +1,5 @@
 /**
- * Generated on Thu, 24 Feb 2022 17:15:20 +0100.
+ * Generated on Tue, 01 Mar 2022 12:43:46 +0100.
  *
  * This file contains the instruction behavior models of the RV32A
  * instruction set for the RV32IMACFD core architecture.
@@ -51,9 +51,9 @@ aq += R_aq_0.read(ba) << 0;
 		partInit.code() = std::string("//AMOSWAPW\n");
 
 // -----------------------------------------------------------------------------
-partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4) + ";\n";
+partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
 partInit.code() += "etiss_uint32 offs = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1) + "];\n";
-if (rd != 0) {
+if (rd != 0U) {
 partInit.code() += "etiss_uint32 mem_val_0;\n";
 partInit.code() += "exception |= (*(system->dread))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_0, 4);\n";
 partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd) + "] = (etiss_int32)(mem_val_0);\n";
@@ -138,12 +138,12 @@ aq += R_aq_0.read(ba) << 0;
 		partInit.code() = std::string("//AMOADDW\n");
 
 // -----------------------------------------------------------------------------
-partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4) + ";\n";
+partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
 partInit.code() += "etiss_uint32 offs = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1) + "];\n";
 partInit.code() += "etiss_uint32 mem_val_0;\n";
 partInit.code() += "exception |= (*(system->dread))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_0, 4);\n";
 partInit.code() += "etiss_int32 res1 = mem_val_0;\n";
-if (rd != 0) {
+if (rd != 0U) {
 partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd) + "] = res1;\n";
 }
 partInit.code() += "etiss_uint32 res2 = res1 + *((RV32IMACFD*)cpu)->X[" + std::to_string(rs2) + "];\n";
@@ -227,12 +227,12 @@ aq += R_aq_0.read(ba) << 0;
 		partInit.code() = std::string("//AMOXORW\n");
 
 // -----------------------------------------------------------------------------
-partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4) + ";\n";
+partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
 partInit.code() += "etiss_uint32 offs = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1) + "];\n";
 partInit.code() += "etiss_uint32 mem_val_0;\n";
 partInit.code() += "exception |= (*(system->dread))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_0, 4);\n";
 partInit.code() += "etiss_int32 res1 = mem_val_0;\n";
-if (rd != 0) {
+if (rd != 0U) {
 partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd) + "] = res1;\n";
 }
 partInit.code() += "etiss_uint32 res2 = res1 ^ *((RV32IMACFD*)cpu)->X[" + std::to_string(rs2) + "];\n";
@@ -316,12 +316,12 @@ aq += R_aq_0.read(ba) << 0;
 		partInit.code() = std::string("//AMOANDW\n");
 
 // -----------------------------------------------------------------------------
-partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4) + ";\n";
+partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
 partInit.code() += "etiss_uint32 offs = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1) + "];\n";
 partInit.code() += "etiss_uint32 mem_val_0;\n";
 partInit.code() += "exception |= (*(system->dread))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_0, 4);\n";
 partInit.code() += "etiss_int32 res1 = mem_val_0;\n";
-if (rd != 0) {
+if (rd != 0U) {
 partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd) + "] = res1;\n";
 }
 partInit.code() += "etiss_uint32 res2 = res1 & *((RV32IMACFD*)cpu)->X[" + std::to_string(rs2) + "];\n";
@@ -405,12 +405,12 @@ aq += R_aq_0.read(ba) << 0;
 		partInit.code() = std::string("//AMOORW\n");
 
 // -----------------------------------------------------------------------------
-partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4) + ";\n";
+partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
 partInit.code() += "etiss_uint32 offs = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1) + "];\n";
 partInit.code() += "etiss_uint32 mem_val_0;\n";
 partInit.code() += "exception |= (*(system->dread))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_0, 4);\n";
 partInit.code() += "etiss_int32 res1 = mem_val_0;\n";
-if (rd != 0) {
+if (rd != 0U) {
 partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd) + "] = res1;\n";
 }
 partInit.code() += "etiss_uint32 res2 = res1 | *((RV32IMACFD*)cpu)->X[" + std::to_string(rs2) + "];\n";
@@ -494,12 +494,12 @@ aq += R_aq_0.read(ba) << 0;
 		partInit.code() = std::string("//AMOMINW\n");
 
 // -----------------------------------------------------------------------------
-partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4) + ";\n";
+partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
 partInit.code() += "etiss_uint32 offs = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1) + "];\n";
 partInit.code() += "etiss_uint32 mem_val_0;\n";
 partInit.code() += "exception |= (*(system->dread))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_0, 4);\n";
 partInit.code() += "etiss_int32 res1 = mem_val_0;\n";
-if (rd != 0) {
+if (rd != 0U) {
 partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd) + "] = res1;\n";
 }
 partInit.code() += "etiss_uint32 res2 = (res1 > (etiss_int32)(*((RV32IMACFD*)cpu)->X[" + std::to_string(rs2) + "])) ? (*((RV32IMACFD*)cpu)->X[" + std::to_string(rs2) + "]) : (res1);\n";
@@ -583,12 +583,12 @@ aq += R_aq_0.read(ba) << 0;
 		partInit.code() = std::string("//AMOMAXW\n");
 
 // -----------------------------------------------------------------------------
-partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4) + ";\n";
+partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
 partInit.code() += "etiss_uint32 offs = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1) + "];\n";
 partInit.code() += "etiss_uint32 mem_val_0;\n";
 partInit.code() += "exception |= (*(system->dread))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_0, 4);\n";
 partInit.code() += "etiss_int32 res1 = mem_val_0;\n";
-if (rd != 0) {
+if (rd != 0U) {
 partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd) + "] = res1;\n";
 }
 partInit.code() += "etiss_uint32 res2 = (res1 < (etiss_int32)(*((RV32IMACFD*)cpu)->X[" + std::to_string(rs2) + "])) ? (*((RV32IMACFD*)cpu)->X[" + std::to_string(rs2) + "]) : (res1);\n";
@@ -672,12 +672,12 @@ aq += R_aq_0.read(ba) << 0;
 		partInit.code() = std::string("//AMOMINUW\n");
 
 // -----------------------------------------------------------------------------
-partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4) + ";\n";
+partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
 partInit.code() += "etiss_uint32 offs = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1) + "];\n";
 partInit.code() += "etiss_uint32 mem_val_0;\n";
 partInit.code() += "exception |= (*(system->dread))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_0, 4);\n";
 partInit.code() += "etiss_uint32 res1 = mem_val_0;\n";
-if (rd != 0) {
+if (rd != 0U) {
 partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd) + "] = (etiss_int32)(res1);\n";
 }
 partInit.code() += "etiss_uint32 res2 = (res1 > *((RV32IMACFD*)cpu)->X[" + std::to_string(rs2) + "]) ? (*((RV32IMACFD*)cpu)->X[" + std::to_string(rs2) + "]) : (res1);\n";
@@ -761,12 +761,12 @@ aq += R_aq_0.read(ba) << 0;
 		partInit.code() = std::string("//AMOMAXUW\n");
 
 // -----------------------------------------------------------------------------
-partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4) + ";\n";
+partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
 partInit.code() += "etiss_uint32 offs = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1) + "];\n";
 partInit.code() += "etiss_uint32 mem_val_0;\n";
 partInit.code() += "exception |= (*(system->dread))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_0, 4);\n";
 partInit.code() += "etiss_uint32 res1 = mem_val_0;\n";
-if (rd != 0) {
+if (rd != 0U) {
 partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd) + "] = (etiss_int32)(res1);\n";
 }
 partInit.code() += "etiss_uint32 res2 = (res1 < *((RV32IMACFD*)cpu)->X[" + std::to_string(rs2) + "]) ? (*((RV32IMACFD*)cpu)->X[" + std::to_string(rs2) + "]) : (res1);\n";

@@ -1,5 +1,5 @@
 /**
- * Generated on Thu, 24 Feb 2022 17:15:20 +0100.
+ * Generated on Tue, 01 Mar 2022 12:43:46 +0100.
  *
  * This file contains the instruction behavior models of the Zifencei
  * instruction set for the RV32IMACFD core architecture.
@@ -46,7 +46,7 @@ imm += R_imm_0.read(ba) << 0;
 
 // -----------------------------------------------------------------------------
 partInit.code() += "exception = ETISS_RETURNCODE_RELOADBLOCKS;\n";
-partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4) + ";\n";
+partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
 partInit.code() += "((RV32IMACFD*)cpu)->FENCE[" + std::to_string(1) + "] = " + std::to_string(imm) + ";\n";
 partInit.code() += "return exception;\n";
 // -----------------------------------------------------------------------------

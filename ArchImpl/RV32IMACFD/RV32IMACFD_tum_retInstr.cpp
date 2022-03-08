@@ -1,5 +1,5 @@
 /**
- * Generated on Thu, 24 Feb 2022 17:15:20 +0100.
+ * Generated on Thu, 03 Mar 2022 12:13:52 +0100.
  *
  * This file contains the instruction behavior models of the tum_ret
  * instruction set for the RV32IMACFD core architecture.
@@ -36,12 +36,12 @@ static InstructionDefinition uret_ (
 		partInit.code() = std::string("//URET\n");
 
 // -----------------------------------------------------------------------------
-partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4) + ";\n";
-partInit.code() += "*((RV32IMACFD*)cpu)->CSR[" + std::to_string(3088) + "] = " + std::to_string(0) + ";\n";
-partInit.code() += "*((RV32IMACFD*)cpu)->CSR[" + std::to_string(0) + "] = *((RV32IMACFD*)cpu)->CSR[" + std::to_string(0) + "] ^ ((*((RV32IMACFD*)cpu)->CSR[" + std::to_string(0) + "] & " + std::to_string(16) + ") >> " + std::to_string(4) + ") ^ (*((RV32IMACFD*)cpu)->CSR[" + std::to_string(0) + "] & " + std::to_string(1) + ");\n";
-partInit.code() += "cpu->instructionPointer = *((RV32IMACFD*)cpu)->CSR[" + std::to_string(65) + "];\n";
-partInit.code() += "*((RV32IMACFD*)cpu)->CSR[" + std::to_string(768) + "] = *((RV32IMACFD*)cpu)->CSR[" + std::to_string(0) + "];\n";
-partInit.code() += "*((RV32IMACFD*)cpu)->CSR[" + std::to_string(256) + "] = *((RV32IMACFD*)cpu)->CSR[" + std::to_string(0) + "];\n";
+partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->CSR[" + std::to_string(3088U) + "] = 0U;\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->CSR[" + std::to_string(0U) + "] = *((RV32IMACFD*)cpu)->CSR[" + std::to_string(0U) + "] ^ ((*((RV32IMACFD*)cpu)->CSR[" + std::to_string(0U) + "] & 16U) >> 4U) ^ (*((RV32IMACFD*)cpu)->CSR[" + std::to_string(0U) + "] & 1U);\n";
+partInit.code() += "cpu->instructionPointer = *((RV32IMACFD*)cpu)->CSR[" + std::to_string(65U) + "];\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->CSR[" + std::to_string(768U) + "] = *((RV32IMACFD*)cpu)->CSR[" + std::to_string(0U) + "];\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->CSR[" + std::to_string(256U) + "] = *((RV32IMACFD*)cpu)->CSR[" + std::to_string(0U) + "];\n";
 partInit.code() += "return exception;\n";
 // -----------------------------------------------------------------------------
 
@@ -86,13 +86,13 @@ static InstructionDefinition sret_ (
 		partInit.code() = std::string("//SRET\n");
 
 // -----------------------------------------------------------------------------
-partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4) + ";\n";
-partInit.code() += "*((RV32IMACFD*)cpu)->CSR[" + std::to_string(3088) + "] = (*((RV32IMACFD*)cpu)->CSR[" + std::to_string(256) + "] & " + std::to_string(256) + ") >> " + std::to_string(8) + ";\n";
-partInit.code() += "*((RV32IMACFD*)cpu)->CSR[" + std::to_string(256) + "] = *((RV32IMACFD*)cpu)->CSR[" + std::to_string(256) + "] ^ (*((RV32IMACFD*)cpu)->CSR[" + std::to_string(256) + "] & " + std::to_string(256) + ");\n";
-partInit.code() += "*((RV32IMACFD*)cpu)->CSR[" + std::to_string(256) + "] = *((RV32IMACFD*)cpu)->CSR[" + std::to_string(256) + "] ^ ((*((RV32IMACFD*)cpu)->CSR[" + std::to_string(256) + "] & " + std::to_string(32) + ") >> " + std::to_string(4) + ") ^ (*((RV32IMACFD*)cpu)->CSR[" + std::to_string(256) + "] & " + std::to_string(2) + ");\n";
-partInit.code() += "cpu->instructionPointer = *((RV32IMACFD*)cpu)->CSR[" + std::to_string(321) + "];\n";
-partInit.code() += "*((RV32IMACFD*)cpu)->CSR[" + std::to_string(768) + "] = *((RV32IMACFD*)cpu)->CSR[" + std::to_string(256) + "];\n";
-partInit.code() += "*((RV32IMACFD*)cpu)->CSR[" + std::to_string(0) + "] = *((RV32IMACFD*)cpu)->CSR[" + std::to_string(256) + "];\n";
+partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->CSR[" + std::to_string(3088U) + "] = (*((RV32IMACFD*)cpu)->CSR[" + std::to_string(256U) + "] & 256U) >> 8U;\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->CSR[" + std::to_string(256U) + "] = *((RV32IMACFD*)cpu)->CSR[" + std::to_string(256U) + "] ^ (*((RV32IMACFD*)cpu)->CSR[" + std::to_string(256U) + "] & 256U);\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->CSR[" + std::to_string(256U) + "] = *((RV32IMACFD*)cpu)->CSR[" + std::to_string(256U) + "] ^ ((*((RV32IMACFD*)cpu)->CSR[" + std::to_string(256U) + "] & 32U) >> 4U) ^ (*((RV32IMACFD*)cpu)->CSR[" + std::to_string(256U) + "] & 2U);\n";
+partInit.code() += "cpu->instructionPointer = *((RV32IMACFD*)cpu)->CSR[" + std::to_string(321U) + "];\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->CSR[" + std::to_string(768U) + "] = *((RV32IMACFD*)cpu)->CSR[" + std::to_string(256U) + "];\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->CSR[" + std::to_string(0U) + "] = *((RV32IMACFD*)cpu)->CSR[" + std::to_string(256U) + "];\n";
 partInit.code() += "return exception;\n";
 // -----------------------------------------------------------------------------
 
@@ -137,13 +137,13 @@ static InstructionDefinition mret_ (
 		partInit.code() = std::string("//MRET\n");
 
 // -----------------------------------------------------------------------------
-partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4) + ";\n";
-partInit.code() += "*((RV32IMACFD*)cpu)->CSR[" + std::to_string(3088) + "] = (*((RV32IMACFD*)cpu)->CSR[" + std::to_string(768) + "] & " + std::to_string(6144) + ") >> " + std::to_string(11) + ";\n";
-partInit.code() += "*((RV32IMACFD*)cpu)->CSR[" + std::to_string(768) + "] = *((RV32IMACFD*)cpu)->CSR[" + std::to_string(768) + "] ^ (*((RV32IMACFD*)cpu)->CSR[" + std::to_string(768) + "] & " + std::to_string(6144) + ");\n";
-partInit.code() += "*((RV32IMACFD*)cpu)->CSR[" + std::to_string(768) + "] = *((RV32IMACFD*)cpu)->CSR[" + std::to_string(768) + "] ^ ((*((RV32IMACFD*)cpu)->CSR[" + std::to_string(768) + "] & " + std::to_string(128) + ") >> " + std::to_string(4) + ") ^ (*((RV32IMACFD*)cpu)->CSR[" + std::to_string(768) + "] & " + std::to_string(8) + ");\n";
-partInit.code() += "cpu->instructionPointer = *((RV32IMACFD*)cpu)->CSR[" + std::to_string(833) + "];\n";
-partInit.code() += "*((RV32IMACFD*)cpu)->CSR[" + std::to_string(0) + "] = *((RV32IMACFD*)cpu)->CSR[" + std::to_string(768) + "];\n";
-partInit.code() += "*((RV32IMACFD*)cpu)->CSR[" + std::to_string(256) + "] = *((RV32IMACFD*)cpu)->CSR[" + std::to_string(768) + "];\n";
+partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->CSR[" + std::to_string(3088U) + "] = (*((RV32IMACFD*)cpu)->CSR[" + std::to_string(768U) + "] & 6144U) >> 11U;\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->CSR[" + std::to_string(768U) + "] = *((RV32IMACFD*)cpu)->CSR[" + std::to_string(768U) + "] ^ (*((RV32IMACFD*)cpu)->CSR[" + std::to_string(768U) + "] & 6144U);\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->CSR[" + std::to_string(768U) + "] = *((RV32IMACFD*)cpu)->CSR[" + std::to_string(768U) + "] ^ ((*((RV32IMACFD*)cpu)->CSR[" + std::to_string(768U) + "] & 128U) >> 4U) ^ (*((RV32IMACFD*)cpu)->CSR[" + std::to_string(768U) + "] & 8U);\n";
+partInit.code() += "cpu->instructionPointer = *((RV32IMACFD*)cpu)->CSR[" + std::to_string(833U) + "];\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->CSR[" + std::to_string(0U) + "] = *((RV32IMACFD*)cpu)->CSR[" + std::to_string(768U) + "];\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->CSR[" + std::to_string(256U) + "] = *((RV32IMACFD*)cpu)->CSR[" + std::to_string(768U) + "];\n";
 partInit.code() += "return exception;\n";
 // -----------------------------------------------------------------------------
 

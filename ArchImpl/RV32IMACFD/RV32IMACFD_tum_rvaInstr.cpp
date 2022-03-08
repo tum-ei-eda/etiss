@@ -1,5 +1,5 @@
 /**
- * Generated on Tue, 01 Mar 2022 00:20:25 +0100.
+ * Generated on Thu, 03 Mar 2022 16:12:16 +0100.
  *
  * This file contains the instruction behavior models of the tum_rva
  * instruction set for the RV32IMACFD core architecture.
@@ -48,7 +48,7 @@ aq += R_aq_0.read(ba) << 0;
 		partInit.code() = std::string("//LRW\n");
 
 // -----------------------------------------------------------------------------
-partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4) + ";\n";
+partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
 partInit.code() += "etiss_uint32 offs = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1) + "];\n";
 partInit.code() += "etiss_uint32 mem_val_0;\n";
 partInit.code() += "exception |= (*(system->dread))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_0, 4);\n";
@@ -130,7 +130,7 @@ aq += R_aq_0.read(ba) << 0;
 		partInit.code() = std::string("//SCW\n");
 
 // -----------------------------------------------------------------------------
-partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4) + ";\n";
+partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
 partInit.code() += "etiss_uint32 offs = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1) + "];\n";
 partInit.code() += "if (((RV32IMACFD*)cpu)->RES_ADDR == offs) {\n";
 partInit.code() += "etiss_uint32 mem_val_0 = (etiss_int32)(*((RV32IMACFD*)cpu)->X[" + std::to_string(rs2) + "]);\n";
@@ -140,7 +140,7 @@ partInit.code() += "}\n";
 if (rd) {
 partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd) + "] = ((RV32IMACFD*)cpu)->RES_ADDR != offs;\n";
 }
-partInit.code() += "((RV32IMACFD*)cpu)->RES_ADDR = " + std::to_string(-(1)) + ";\n";
+partInit.code() += "((RV32IMACFD*)cpu)->RES_ADDR = -1U;\n";
 partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
