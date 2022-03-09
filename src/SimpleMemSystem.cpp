@@ -201,6 +201,7 @@ void SimpleMemSystem::load_elf()
     {
         etiss::uint64 start_addr = seg->get_physical_address();
         etiss::uint64 size = seg->get_memory_size();
+        if (size == 0) continue;
         size_t file_size = seg->get_file_size();
 
         int mode = 0;
