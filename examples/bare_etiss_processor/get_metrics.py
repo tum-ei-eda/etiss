@@ -33,6 +33,7 @@ class MemRange:
         self.name = name
         self.min = min
         self.max = max
+        assert self.min <= self.max, "Invalid MemRange"
         self.count = 0
         self.low = 0xffffffff
         self.high = 0
