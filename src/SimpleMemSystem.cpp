@@ -92,9 +92,7 @@ void SimpleMemSystem::load_segments() {
         ss << "simple_mem_system.memseg_length_" << std::setw(2) << std::setfill('0') << i;
         uint64_t length = etiss::cfg().get<uint64_t>(ss.str(), -1);
         if (length == 0) {
-            std::stringstream msg;
-            msg << "Empty memsegs are not allowed!";
-            etiss::log(etiss::FATALERROR, msg.str());
+            etiss::log(etiss::FATALERROR, "Empty memsegs are not allowed!");
         }
         std::stringstream().swap(ss);
 
