@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import os
-import sys
 import csv
 import argparse
 import configparser
@@ -11,7 +10,7 @@ from elftools.elf.constants import SH_FLAGS
 from elftools.elf.sections import SymbolTableSection
 
 
-'''
+"""
 Script to gather metrics on ROM,RAM,Stack and Heap usage.
 
 To produce the memory trace:
@@ -21,12 +20,13 @@ To produce the memory trace:
 
 Then run this script:
 > ./get_metrics.py ../bin/TARGET_ELF_FILE [-i memsegs.ini]
-'''
+"""
 
 # Feel free to overwrite these defaults for your needs
 DEFAULT_RAM_START = 0x80000
 DEFAULT_RAM_SIZE = 0x80000
 DEFAULT_STACK_SIZE = 0x4000
+
 
 class MemRange:
     def __init__(self, name, min, max):
@@ -35,7 +35,7 @@ class MemRange:
         self.max = max
         assert self.min <= self.max, "Invalid MemRange"
         self.count = 0
-        self.low = 0xffffffff
+        self.low = 0xFFFFFFFF
         self.high = 0
 
     def contains(self, adr):
@@ -83,8 +83,7 @@ def parseElf(inFile):
                 m["ram_data"] += s.data_size
             elif s.name == ".rodata":
                 m["rom_rodata"] += s.data_size
-            elif (s.name == ".vectors" or
-                s.name == ".init_array"):
+            elif s.name == ".vectors" or s.name == ".init_array":
                 m["rom_misc"] += s.data_size
             elif s.name == ".data":
                 m["ram_data"] += s.data_size
@@ -110,20 +109,24 @@ def parseElf(inFile):
 
 def printSz(sz, unknown_msg=""):
     if sz is None:
-            return f"unknown [{unknown_msg}]" if unknown_msg else "unknown"
+        return f"unknown [{unknown_msg}]" if unknown_msg else "unknown"
     return humanize.naturalsize(sz) + " (" + hex(sz) + ")"
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('elf', metavar='ELF', type=str, nargs=1,
-                    help='The target ELF file')
-    parser.add_argument('--trace', '-t', default="dBusAccess.csv", type=str,
-            help="Path to CSV trace file of memory accesses (default: %(default)s)")
-    parser.add_argument('--ini', '-i', default="", type=str,
-            help="Path to INI file containing simple_mem_system layout (optional)")
-    parser.add_argument('--out', '-o', metavar='FILE', type=str,
-                        default="", help='''Output CSV file (default: -)''')
+    parser.add_argument("elf", metavar="ELF", type=str, nargs=1, help="The target ELF file")
+    parser.add_argument(
+        "--trace",
+        "-t",
+        default="dBusAccess.csv",
+        type=str,
+        help="Path to CSV trace file of memory accesses (default: %(default)s)",
+    )
+    parser.add_argument(
+        "--ini", "-i", default="", type=str, help="Path to INI file containing simple_mem_system layout (optional)"
+    )
+    parser.add_argument("--out", "-o", metavar="FILE", type=str, default="", help="""Output CSV file (default: -)""")
     args = parser.parse_args()
 
     elfFile = args.elf[0]
@@ -175,7 +178,7 @@ if __name__ == "__main__":
     if os.path.exists(traceFile):
         trace_available = True
         with open(traceFile) as f:
-            reader = csv.reader(f, skipinitialspace=True, delimiter=';')
+            reader = csv.reader(f, skipinitialspace=True, delimiter=";")
             for r in reader:
                 adr = int(r[2], 16)
                 for mem in mems:
@@ -197,7 +200,7 @@ if __name__ == "__main__":
         "ram_data": staticSizes["ram_data"],
         "ram_zdata": staticSizes["ram_zdata"],
         "ram_stack": s.usage() if trace_available else None,
-        "ram_heap": h.usage() if trace_available else None
+        "ram_heap": h.usage() if trace_available else None,
     }
 
     print("=== Results ===")
@@ -205,7 +208,11 @@ if __name__ == "__main__":
     print("  read-only data: " + printSz(results["rom_rodata"]))
     print("  code:           " + printSz(results["rom_code"]))
     print("  other required: " + printSz(results["rom_misc"]))
-    print("RAM usage:        " + printSz(results["ram"]) + ("" if trace_available else " [stack and heap usage not included]"))
+    print(
+        "RAM usage:        "
+        + printSz(results["ram"])
+        + ("" if trace_available else " [stack and heap usage not included]")
+    )
     print("  data:           " + printSz(results["ram_data"]))
     print("  zero-init data: " + printSz(results["ram_zdata"]))
     print("  stack:          " + printSz(results["ram_stack"], unknown_msg="missing trace file"))
@@ -213,7 +220,7 @@ if __name__ == "__main__":
 
     # Write metrics to file
     if csvFile:
-        with open(csvFile, 'w') as f:
+        with open(csvFile, "w") as f:
             writer = csv.DictWriter(f, fieldnames=results.keys())
             writer.writeheader()
             writer.writerow(results)
