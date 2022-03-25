@@ -259,28 +259,12 @@ extern "C"
     int32_t ETISS_SIGNAL_MMU(ETISS_CPU *cpu, etiss_uint64 mmu_signal_)
     {
         CPUCore *core = (CPUCore *)cpu->_etiss_private_handle_;
-        if (!core)
-        {
-            etiss::log(etiss::ERROR, "CPUArchRegListenerInterface::signalChangedRegisterValue() called from outside "
-                                     "etiss::CPUCore::execute(). this should not happen and indicates a faultiy "
-                                     "CPUArch (or Plugin) implementation. This function may have been called "
-                                     "indirectly from ETISS_signalChangedRegisterValue()");
-            return etiss::RETURNCODE::GENERALERROR;
-        }
         return core->getMMU()->SignalMMU(mmu_signal_);
     }
 
     void ETISS_SIGNAL_TLB_FLUSH(ETISS_CPU *cpu)
     {
         CPUCore *core = (CPUCore *)cpu->_etiss_private_handle_;
-        if (!core)
-        {
-            etiss::log(etiss::ERROR, "CPUArchRegListenerInterface::signalChangedRegisterValue() called from outside "
-                                     "etiss::CPUCore::execute(). this should not happen and indicates a faultiy "
-                                     "CPUArch (or Plugin) implementation. This function may have been called "
-                                     "indirectly from ETISS_signalChangedRegisterValue()");
-            return;
-        }
         core->getMMU()->GetTLB()->Flush();
     }
 }

@@ -83,6 +83,11 @@ struct RISCV64 {
 
 #pragma pack(pop) // undo changes
 typedef struct RISCV64 RISCV64; // convenient use of X instead of struct X in generated C code
+
+// manually added
+extern int32_t ETISS_SIGNAL_MMU(ETISS_CPU *cpu, etiss_uint64 mmu_signal_);
+extern void ETISS_SIGNAL_TLB_FLUSH(ETISS_CPU *cpu);
+
 #ifdef __cplusplus
 } // extern "C"
 #endif
