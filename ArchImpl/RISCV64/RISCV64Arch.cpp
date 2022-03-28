@@ -880,7 +880,13 @@ static InstructionDefinition lb_rd_imm_rs1_(
  			
 		"cpu->instructionPointer = " +toString((uint64_t)(ic.current_address_+ 4 ))+"ULL; \n"
 		
-		"return exception;\n"
+		"if(exception)\n"
+		"{\n"
+			// set stval and mtval in case of exception
+			"((RISCV64*)cpu)->X[0x143] = offs;\n"
+			"((RISCV64*)cpu)->X[0x343] = offs;\n"
+			"return exception;\n"
+		"}\n"
 ; 
 return true;
 },
@@ -990,7 +996,13 @@ static InstructionDefinition sb_rs2_imm_rs1_(
  			
 		"cpu->instructionPointer = " +toString((uint64_t)(ic.current_address_+ 4 ))+"ULL; \n"
 		
-		"return exception;\n"
+		"if(exception)\n"
+		"{\n"
+			// set stval and mtval in case of exception
+			"((RISCV64*)cpu)->X[0x143] = offs;\n"
+			"((RISCV64*)cpu)->X[0x343] = offs;\n"
+			"return exception;\n"
+		"}\n"
 ; 
 return true;
 },
@@ -1411,7 +1423,13 @@ static InstructionDefinition lh_rd_imm_rs1_(
  			
 		"cpu->instructionPointer = " +toString((uint64_t)(ic.current_address_+ 4 ))+"ULL; \n"
 		
-		"return exception;\n"
+		"if(exception)\n"
+		"{\n"
+			// set stval and mtval in case of exception
+			"((RISCV64*)cpu)->X[0x143] = offs;\n"
+			"((RISCV64*)cpu)->X[0x343] = offs;\n"
+			"return exception;\n"
+		"}\n"
 ; 
 return true;
 },
@@ -1521,7 +1539,13 @@ static InstructionDefinition sh_rs2_imm_rs1_(
  			
 		"cpu->instructionPointer = " +toString((uint64_t)(ic.current_address_+ 4 ))+"ULL; \n"
 		
-		"return exception;\n"
+		"if(exception)\n"
+		"{\n"
+			// set stval and mtval in case of exception
+			"((RISCV64*)cpu)->X[0x143] = offs;\n"
+			"((RISCV64*)cpu)->X[0x343] = offs;\n"
+			"return exception;\n"
+		"}\n"
 ; 
 return true;
 },
@@ -2160,7 +2184,13 @@ static InstructionDefinition lbu_rd_imm_rs1_(
  			
 		"cpu->instructionPointer = " +toString((uint64_t)(ic.current_address_+ 4 ))+"ULL; \n"
 		
-		"return exception;\n"
+		"if(exception)\n"
+		"{\n"
+			// set stval and mtval in case of exception
+			"((RISCV64*)cpu)->X[0x143] = offs;\n"
+			"((RISCV64*)cpu)->X[0x343] = offs;\n"
+			"return exception;\n"
+		"}\n"
 ; 
 return true;
 },
@@ -2483,7 +2513,13 @@ static InstructionDefinition lhu_rd_imm_rs1_(
  			
 		"cpu->instructionPointer = " +toString((uint64_t)(ic.current_address_+ 4 ))+"ULL; \n"
 		
-		"return exception;\n"
+		"if(exception)\n"
+		"{\n"
+			// set stval and mtval in case of exception
+			"((RISCV64*)cpu)->X[0x143] = offs;\n"
+			"((RISCV64*)cpu)->X[0x343] = offs;\n"
+			"return exception;\n"
+		"}\n"
 ; 
 return true;
 },
@@ -3211,7 +3247,13 @@ static InstructionDefinition lwu_rd_imm_rs1_(
  			
 		"cpu->instructionPointer = " +toString((uint64_t)(ic.current_address_+ 4 ))+"ULL; \n"
 		
-		"return exception;\n"
+		"if(exception)\n"
+		"{\n"
+			// set stval and mtval in case of exception
+			"((RISCV64*)cpu)->X[0x143] = offs;\n"
+			"((RISCV64*)cpu)->X[0x343] = offs;\n"
+			"return exception;\n"
+		"}\n"
 ; 
 return true;
 },
@@ -3741,7 +3783,13 @@ static InstructionDefinition lw_rd_imm_rs1_(
  			
 		"cpu->instructionPointer = " +toString((uint64_t)(ic.current_address_+ 4 ))+"ULL; \n"
 		
-		"return exception;\n"
+		"if(exception)\n"
+		"{\n"
+			// set stval and mtval in case of exception
+			"((RISCV64*)cpu)->X[0x143] = offs;\n"
+			"((RISCV64*)cpu)->X[0x343] = offs;\n"
+			"return exception;\n"
+		"}\n"
 ; 
 return true;
 },
@@ -3851,7 +3899,13 @@ static InstructionDefinition sw_rs2_imm_rs1_(
  			
 		"cpu->instructionPointer = " +toString((uint64_t)(ic.current_address_+ 4 ))+"ULL; \n"
 		
-		"return exception;\n"
+		"if(exception)\n"
+		"{\n"
+			// set stval and mtval in case of exception
+			"((RISCV64*)cpu)->X[0x143] = offs;\n"
+			"((RISCV64*)cpu)->X[0x343] = offs;\n"
+			"return exception;\n"
+		"}\n"
 ; 
 return true;
 },
@@ -4853,7 +4907,13 @@ static InstructionDefinition ld_rd_imm_rs1_(
  			
 		"cpu->instructionPointer = " +toString((uint64_t)(ic.current_address_+ 4 ))+"ULL; \n"
 		
-		"return exception;\n"
+		"if(exception)\n"
+		"{\n"
+			// set stval and mtval in case of exception
+			"((RISCV64*)cpu)->X[0x143] = offs;\n"
+			"((RISCV64*)cpu)->X[0x343] = offs;\n"
+			"return exception;\n"
+		"}\n"
 ; 
 return true;
 },
@@ -4963,7 +5023,13 @@ static InstructionDefinition sd_rs2_imm_rs1_(
  			
 		"cpu->instructionPointer = " +toString((uint64_t)(ic.current_address_+ 4 ))+"ULL; \n"
 		
-		"return exception;\n"
+		"if(exception)\n"
+		"{\n"
+			// set stval and mtval in case of exception
+			"((RISCV64*)cpu)->X[0x143] = offs;\n"
+			"((RISCV64*)cpu)->X[0x343] = offs;\n"
+			"return exception;\n"
+		"}\n"
 ; 
 return true;
 },
