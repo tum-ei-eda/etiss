@@ -883,8 +883,8 @@ static InstructionDefinition lb_rd_imm_rs1_(
 		"if(exception)\n"
 		"{\n"
 			// set stval and mtval in case of exception
-			"*((RISCV64*)cpu)->X[0x143] = (etiss_int64)offs;\n"
-			"*((RISCV64*)cpu)->X[0x343] = (etiss_int64)offs;\n"
+			"((RISCV64*)cpu)->X[0x143] = (etiss_int64)offs;\n"
+			"((RISCV64*)cpu)->X[0x343] = (etiss_int64)offs;\n"
 			"return exception;\n"
 		"}\n"
 ; 
