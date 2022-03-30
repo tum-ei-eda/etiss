@@ -999,8 +999,8 @@ static InstructionDefinition sb_rs2_imm_rs1_(
 		"if(exception)\n"
 		"{\n"
 			// set stval and mtval in case of exception
-			"((RISCV64*)cpu)->X[0x143] = offs;\n"
-			"((RISCV64*)cpu)->X[0x343] = offs;\n"
+			"((RISCV64*)cpu)->CSR[0x143] = offs;\n"
+			"((RISCV64*)cpu)->CSR[0x343] = offs;\n"
 			"return exception;\n"
 		"}\n"
 ; 
@@ -1426,8 +1426,8 @@ static InstructionDefinition lh_rd_imm_rs1_(
 		"if(exception)\n"
 		"{\n"
 			// set stval and mtval in case of exception
-			"((RISCV64*)cpu)->X[0x143] = offs;\n"
-			"((RISCV64*)cpu)->X[0x343] = offs;\n"
+			"((RISCV64*)cpu)->CSR[0x143] = offs;\n"
+			"((RISCV64*)cpu)->CSR[0x343] = offs;\n"
 			"return exception;\n"
 		"}\n"
 ; 
@@ -1542,8 +1542,8 @@ static InstructionDefinition sh_rs2_imm_rs1_(
 		"if(exception)\n"
 		"{\n"
 			// set stval and mtval in case of exception
-			"((RISCV64*)cpu)->X[0x143] = offs;\n"
-			"((RISCV64*)cpu)->X[0x343] = offs;\n"
+			"((RISCV64*)cpu)->CSR[0x143] = offs;\n"
+			"((RISCV64*)cpu)->CSR[0x343] = offs;\n"
 			"return exception;\n"
 		"}\n"
 ; 
@@ -2187,8 +2187,8 @@ static InstructionDefinition lbu_rd_imm_rs1_(
 		"if(exception)\n"
 		"{\n"
 			// set stval and mtval in case of exception
-			"((RISCV64*)cpu)->X[0x143] = offs;\n"
-			"((RISCV64*)cpu)->X[0x343] = offs;\n"
+			"((RISCV64*)cpu)->CSR[0x143] = offs;\n"
+			"((RISCV64*)cpu)->CSR[0x343] = offs;\n"
 			"return exception;\n"
 		"}\n"
 ; 
@@ -2516,8 +2516,8 @@ static InstructionDefinition lhu_rd_imm_rs1_(
 		"if(exception)\n"
 		"{\n"
 			// set stval and mtval in case of exception
-			"((RISCV64*)cpu)->X[0x143] = offs;\n"
-			"((RISCV64*)cpu)->X[0x343] = offs;\n"
+			"((RISCV64*)cpu)->CSR[0x143] = offs;\n"
+			"((RISCV64*)cpu)->CSR[0x343] = offs;\n"
 			"return exception;\n"
 		"}\n"
 ; 
@@ -3250,8 +3250,8 @@ static InstructionDefinition lwu_rd_imm_rs1_(
 		"if(exception)\n"
 		"{\n"
 			// set stval and mtval in case of exception
-			"((RISCV64*)cpu)->X[0x143] = offs;\n"
-			"((RISCV64*)cpu)->X[0x343] = offs;\n"
+			"((RISCV64*)cpu)->CSR[0x143] = offs;\n"
+			"((RISCV64*)cpu)->CSR[0x343] = offs;\n"
 			"return exception;\n"
 		"}\n"
 ; 
@@ -3786,8 +3786,8 @@ static InstructionDefinition lw_rd_imm_rs1_(
 		"if(exception)\n"
 		"{\n"
 			// set stval and mtval in case of exception
-			"((RISCV64*)cpu)->X[0x143] = offs;\n"
-			"((RISCV64*)cpu)->X[0x343] = offs;\n"
+			"((RISCV64*)cpu)->CSR[0x143] = offs;\n"
+			"((RISCV64*)cpu)->CSR[0x343] = offs;\n"
 			"return exception;\n"
 		"}\n"
 ; 
@@ -3902,8 +3902,8 @@ static InstructionDefinition sw_rs2_imm_rs1_(
 		"if(exception)\n"
 		"{\n"
 			// set stval and mtval in case of exception
-			"((RISCV64*)cpu)->X[0x143] = offs;\n"
-			"((RISCV64*)cpu)->X[0x343] = offs;\n"
+			"((RISCV64*)cpu)->CSR[0x143] = offs;\n"
+			"((RISCV64*)cpu)->CSR[0x343] = offs;\n"
 			"return exception;\n"
 		"}\n"
 ; 
@@ -4910,8 +4910,8 @@ static InstructionDefinition ld_rd_imm_rs1_(
 		"if(exception)\n"
 		"{\n"
 			// set stval and mtval in case of exception
-			"((RISCV64*)cpu)->X[0x143] = offs;\n"
-			"((RISCV64*)cpu)->X[0x343] = offs;\n"
+			"((RISCV64*)cpu)->CSR[0x143] = offs;\n"
+			"((RISCV64*)cpu)->CSR[0x343] = offs;\n"
 			"return exception;\n"
 		"}\n"
 ; 
@@ -5026,8 +5026,8 @@ static InstructionDefinition sd_rs2_imm_rs1_(
 		"if(exception)\n"
 		"{\n"
 			// set stval and mtval in case of exception
-			"((RISCV64*)cpu)->X[0x143] = offs;\n"
-			"((RISCV64*)cpu)->X[0x343] = offs;\n"
+			"((RISCV64*)cpu)->CSR[0x143] = offs;\n"
+			"((RISCV64*)cpu)->CSR[0x343] = offs;\n"
 			"return exception;\n"
 		"}\n"
 ; 
