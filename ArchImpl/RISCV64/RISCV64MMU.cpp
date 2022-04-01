@@ -181,7 +181,7 @@ int32_t RISCV64MMU::WalkPageTable(uint64_t vma, MM_ACCESS access)
                 return fault;
         }
 
-        if ((0 == leaf_pte.GetByName("A")) && (W_ACCESS == access))
+        if ((0 == leaf_pte.GetByName("D")) && (W_ACCESS == access))
         {
             leaf_pte_val |= PTE_D;
             leaf_pte.Update(leaf_pte_val);
