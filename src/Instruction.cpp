@@ -202,10 +202,6 @@ std::string BitArray::to_string() const
     boost::to_string(bits, s);
     return s;
 }
-unsigned long BitArray::to_ulong() const
-{
-    return bits.to_ulong();
-}
 BitArray BitArray::operator|(const BitArray &o) const
 {
     BitArray ret;
@@ -448,10 +444,8 @@ InstructionSet::~InstructionSet()
         iter = instrmap_.begin();
         delete i;
     }
-    for(int i = 0; i < width_ / chunk_size; i++){
-        delete[] root_->nodes[i].nodes;
-    }
-    delete[] root_->nodes;
+    for(int i = 0; i < width_ / chunk_size; i++)
+        delete[] root_[i];
     delete root_;
 }
 
@@ -499,8 +493,7 @@ bool InstructionSet::compile()
 {
     delete root_; // cleanup
 
-    root_ = new Node;
-    root_->nodes = new Node[width_ / chunk_size]();  // depth: width_ / chunk_size
+    root_ = new Node*[width_ / chunk_size](); // depth: width_ / chunk_size
 
     bool ok = true;
 
@@ -517,16 +510,17 @@ bool InstructionSet::compile()
 
             indexes.clear();
             for (size_type i = 0; i < chunk_bits_mask.size(); ++i)
-                if (!chunk_bits_mask[i]) indexes.push_back(i);
+                if (!chunk_bits_mask[i]) indexes.push_back(i); // these indexed should be permutated since
+                                                                // they dont have associated mask bit
 
-            if(!(root_->nodes[i].nodes))
-                root_->nodes[i].nodes = new Node[(int)std::pow(2, chunk_size)]; // each depth has 2^chunksize nodes
+            if(!(root_[i]))
+                root_[i] = new Node[(int)std::pow(2, chunk_size)]; // each depth has 2^chunksize nodes
 
             auto permutated_chunk_codes = BitArray::permutate(chunk_bits_code, indexes); // put permutated codes
 
             for(const auto& permutated_chunk : permutated_chunk_codes){
                 auto val = permutated_chunk.to_ulong();
-                root_->nodes[i].nodes[val].instrs.insert(inst);
+                root_[i][val].instrs.insert(inst);
             }
         }
     }
@@ -539,12 +533,11 @@ Instruction *InstructionSet::resolve(BitArray &instr)
     for (size_type i = 0; i < instr.size() / chunk_size; ++i){
         auto chunk_bits_code = instr.get_range((i+1)*chunk_size-1, i*chunk_size);
 
-        auto depth = root_->nodes[i].nodes;
         auto val = chunk_bits_code.to_ulong();
-        auto instrs_in_node = depth[val].instrs; // val'th node
+        auto instrs_in_node = root_[i][val].instrs; // val'th node
 
         if(i==0) results = instrs_in_node;
-        else{
+        else{ // get intersected instrs on the nodes
             std::set<Instruction*> results_o;
             std::set_intersection(results.begin(), results.end(),
                 instrs_in_node.begin(), instrs_in_node.end(),
@@ -560,7 +553,6 @@ Instruction *InstructionSet::resolve(BitArray &instr)
             [](const Instruction* lhs, const Instruction* rhs) { return lhs->opc_.mask_.count() < rhs->opc_.mask_.count();});
         return *longest;
     }
-
 }
 
 std::string InstructionSet::print(std::string prefix, bool printunused)
