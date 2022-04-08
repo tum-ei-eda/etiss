@@ -81,6 +81,9 @@ typedef uint32_t I;
 
 class Instruction;
 
+/**
+Buffer for reading data from memory while instructions are being fetched
+*/
 class Buffer {
 public:
     I* d_;
@@ -141,8 +144,10 @@ public:
     void recoverFromEndianness(unsigned alignment, endian_t endianness);
 };
 
+/**
+ * Holding unique instruction sets code chunks after permutation.
+*/
 struct Node{
-    Node* nodes = nullptr;
     std::set<Instruction*> instrs;
 };
 
@@ -188,7 +193,7 @@ public:
     void shrink_size_from_tail(size_type N);
 
     std::string to_string() const;
-    inline unsigned long to_ulong() const;
+    inline unsigned long to_ulong() const{return bits.to_ulong();}
     /// bitwise or operator
     BitArray operator|(const BitArray &o) const;
     /// shift right operator
@@ -507,7 +512,7 @@ class InstructionSet : public etiss::ToString
   private:
     std::map<const OPCode *, Instruction *, etiss::instr::less> instrmap_;
 
-    Node* root_;
+    Node** root_;
 
     Instruction invalid;
 };
