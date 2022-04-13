@@ -163,20 +163,17 @@ int32_t MMU::AddTLBEntry(const uint64_t vpn, const PTE &pte)
     return NOERROR;
 }
 
-int32_t MMU::SignalMMU(uint64_t control_reg_val_)
+void MMU::SignalMMU(uint64_t control_reg_val_)
 {
-    int32_t ret = etiss::RETURNCODE::NOERROR;
     if (0 == control_reg_val_)
         mmu_enabled_ = false;
-    else if (control_reg_val_ && (!mmu_enabled_))
+    else if (!mmu_enabled_)
     {
         mmu_enabled_ = true;
         etiss::log(etiss::VERBOSE, GetName() + " : MMU is enabled.");
     }
     if (control_reg_val_ != mmu_control_reg_val_)
     {
-        ret = etiss::RETURNCODE::RELOADBLOCKS;
-        cache_flush_pending = true;
         tlb_->Flush();
         tlb_entry_map_.clear();
         etiss::log(etiss::VERBOSE, GetName() + " : TLB flushed due to page directory update.");
@@ -186,7 +183,6 @@ int32_t MMU::SignalMMU(uint64_t control_reg_val_)
     }
     else
         etiss::log(etiss::WARNING, "Redundant MMU control register write");
-    return ret;
 }
 
 void MMU::Dump()
@@ -256,15 +252,17 @@ using namespace etiss;
 
 extern "C"
 {
-    int32_t ETISS_SIGNAL_MMU(ETISS_CPU *cpu, etiss_uint64 mmu_signal_)
+    int32_t ETISS_SIGNAL_MMU(ETISS_CPU *cpu, ETISS_System * const system, void * const * const plugin_pointers, etiss_uint64 mmu_signal_)
     {
         CPUCore *core = (CPUCore *)cpu->_etiss_private_handle_;
-        return core->getMMU()->SignalMMU(mmu_signal_);
+        core->getMMU()->SignalMMU(mmu_signal_);
+        return etiss::RETURNCODE::NOERROR;
     }
 
-    void ETISS_SIGNAL_TLB_FLUSH(ETISS_CPU *cpu)
+    int32_t ETISS_TLB_FLUSH(ETISS_CPU *cpu, ETISS_System * const system, void * const * const plugin_pointers)
     {
         CPUCore *core = (CPUCore *)cpu->_etiss_private_handle_;
         core->getMMU()->GetTLB()->Flush();
+        return etiss::RETURNCODE::RELOADBLOCKS;
     }
 }

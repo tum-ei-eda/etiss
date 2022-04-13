@@ -102,7 +102,7 @@ class MMU
      *		with the updated control register value.
      *
      */
-    virtual int32_t SignalMMU(uint64_t control_reg_val_);
+    virtual void SignalMMU(uint64_t control_reg_val_);
 
     /**
      * @brief Dump the details of the MMU, when page fault cannot be handled
@@ -173,8 +173,6 @@ class MMU
     std::string GetName() const { return name_; }
 
     virtual int32_t GetPid(uint64_t control_reg_val_) { return 0; }
-
-    bool cache_flush_pending;
 
     std::shared_ptr<etiss::mm::TLB<0>> GetTLB() { return tlb_; }
 
