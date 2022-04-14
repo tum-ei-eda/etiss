@@ -79,7 +79,7 @@ MMU::MMU(bool hw_ptw, std::string name, bool pid_enabled)
     // REGISTER_PAGE_FAULT_HANDLER(TLBISFULL, tlb_full_handler);
 }
 
-int32_t MMU::Translate(const uint64_t vma, uint64_t *const pma_buf, MM_ACCESS access, uint64_t data)
+int32_t MMU::Translate(const uint64_t vma, uint64_t *const pma_buf, MM_ACCESS access, etiss_uint32 length, uint64_t data)
 {
 
     if (!mmu_enabled_)
@@ -130,6 +130,10 @@ int32_t MMU::Translate(const uint64_t vma, uint64_t *const pma_buf, MM_ACCESS ac
             etiss::log(etiss::FATALERROR, "TLB MISS is not correctly handled");
         }
     }
+
+    // Check if access to memory is overlapping a page-boundary
+    if ((fault = CheckPageOverlap(vma, pma_buf, access, length)))
+        return fault;
 
     if ((fault = CheckProtection(pte_buf, access)))
         return fault;

@@ -270,23 +270,23 @@ int32_t RISCV64MMU::CheckProtection(const PTE &pte, MM_ACCESS access)
     return etiss::RETURNCODE::NOERROR;
 }
 
-// int32_t RISCV64MMU::CheckPageOverlap(const uint64_t vma, uint64_t *const pma_buf, MM_ACCESS access, etiss_uint32 length)
-// {
-//     // Determine what page is used (ie. page, superpage, megapage)
-//     uint64_t page_size = PAGE_SIZE;
-//     uint64_t offset_mask = OFFSET_MASK;
+int32_t RISCV64MMU::CheckPageOverlap(const uint64_t vma, uint64_t *const pma_buf, MM_ACCESS access, etiss_uint32 length)
+{
+    // Determine what page is used (ie. page, superpage, megapage)
+    uint64_t page_size = PAGE_SIZE;
+    uint64_t offset_mask = OFFSET_MASK;
 
-//     uint64_t next_page_vma = (vma + page_size) & !offset_mask;
-//     if (unlikely(next_page_vma == 0))
-//         return etiss::RETURNCODE::PAGEFAULT;
-//     int64_t overlap = vma - next_page_vma + length;
-//     uint32_t fault = etiss::RETURNCODE::NOERROR;
+    uint64_t next_page_vma = (vma + page_size) & !offset_mask;
+    if (unlikely(next_page_vma == 0))
+        return etiss::RETURNCODE::PAGEFAULT;
+    int64_t overlap = vma - next_page_vma + length;
+    uint32_t fault = etiss::RETURNCODE::NOERROR;
 
-//     // Check if vma + length overlaps page-boundary
-//     if (likely(overlap <= 0))
-//         return fault;
+    // Check if vma + length overlaps page-boundary
+    if (likely(overlap <= 0))
+        return fault;
 
-//     // ensure next page is in memory
-//     fault = this->Translate(next_page_vma, pma_buf, access, overlap);
-//     return fault;
-// }
+    // ensure next page is in memory
+    fault = this->Translate(next_page_vma, pma_buf, access, overlap);
+    return fault;
+}

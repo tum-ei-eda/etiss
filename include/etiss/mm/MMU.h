@@ -95,7 +95,7 @@ class MMU
      *@see 	etiss::mm::PTEFormatBuilder and etiss::mm::PTEFormat
      *
      */
-    virtual int32_t Translate(const uint64_t vma, uint64_t *const pma_buf, MM_ACCESS access, uint64_t data = 0);
+    virtual int32_t Translate(const uint64_t vma, uint64_t *const pma_buf, MM_ACCESS access, etiss_uint32 length = 0, uint64_t data = 0);
 
     /**
      * @brief Whenever the MMU control register changes, the MMU has to be notified
@@ -175,6 +175,18 @@ class MMU
     virtual int32_t GetPid(uint64_t control_reg_val_) { return 0; }
 
     std::shared_ptr<etiss::mm::TLB<0>> GetTLB() { return tlb_; }
+
+    /**
+     * @brief Checks if memory access is overlapping page-boundary.
+     *    This is architecture specific and should be implemented by architecture.
+     * 
+     * @param vma 
+     * @param pma_buf 
+     * @param access 
+     * @param length 
+     * @return int32_t 
+     */
+    virtual int32_t CheckPageOverlap(const uint64_t vma, uint64_t *const pma_buf, MM_ACCESS access, etiss_uint32 length) { return etiss::RETURNCODE::NOERROR; }
 
   protected:
     ETISS_CPU *cpu_;
