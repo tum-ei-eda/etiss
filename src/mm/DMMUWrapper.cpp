@@ -65,7 +65,7 @@ static etiss_int32 iread(void *handle, ETISS_CPU *cpu, etiss_uint64 addr, etiss_
 
     // vma to pma translation
     uint64_t pma = 0;
-    if (unlikely(exception = mmu->Translate(addr, &pma, MM_ACCESS::R_ACCESS)))
+    if (unlikely(exception = mmu->Translate(addr, &pma, MM_ACCESS::R_ACCESS, length)))
         return exception;
     std::stringstream msg;
     msg << "Virtual memory: 0x" << std::hex << addr << " is translated into physical address 0x:" << std::hex << pma
@@ -84,7 +84,7 @@ static etiss_int32 iwrite(void *handle, ETISS_CPU *cpu, etiss_uint64 addr, etiss
 
     // vma to pma translation
     uint64_t pma = 0;
-    if (unlikely(exception = mmu->Translate(addr, &pma, MM_ACCESS::W_ACCESS)))
+    if (unlikely(exception = mmu->Translate(addr, &pma, MM_ACCESS::W_ACCESS, length)))
         return exception;
     std::stringstream msg;
     msg << "Virtual memory: 0x" << std::hex << addr << " is translated into physical address 0x:" << std::hex << pma
@@ -103,7 +103,7 @@ static etiss_int32 dread(void *handle, ETISS_CPU *cpu, etiss_uint64 addr, etiss_
 
     // vma to pma translation
     uint64_t pma = 0;
-    if (unlikely(exception = mmu->Translate(addr, &pma, MM_ACCESS::R_ACCESS)))
+    if (unlikely(exception = mmu->Translate(addr, &pma, MM_ACCESS::R_ACCESS, length)))
         return exception;
     std::stringstream msg;
 
@@ -120,7 +120,7 @@ static etiss_int32 dwrite(void *handle, ETISS_CPU *cpu, etiss_uint64 addr, etiss
 
     // vma to pma translation
     uint64_t pma = 0;
-    if (unlikely(exception = mmu->Translate(addr, &pma, MM_ACCESS::W_ACCESS)))
+    if (unlikely(exception = mmu->Translate(addr, &pma, MM_ACCESS::W_ACCESS, length)))
         return exception;
     std::stringstream msg;
 
@@ -137,7 +137,7 @@ static etiss_int32 dbg_read(void *handle, etiss_uint64 addr, etiss_uint8 *buffer
 
     // vma to pma translation
     uint64_t pma = 0;
-    if (unlikely((exception = mmu->Translate(addr, &pma, MM_ACCESS::X_ACCESS)) != etiss::RETURNCODE::NOERROR))
+    if (unlikely((exception = mmu->Translate(addr, &pma, MM_ACCESS::X_ACCESS, length)) != etiss::RETURNCODE::NOERROR))
         return exception;
     ETISS_System *sys = msys->orig;
     return sys->dbg_read(sys->handle, pma, buffer, length);
@@ -152,7 +152,7 @@ static etiss_int32 dbg_write(void *handle, etiss_uint64 addr, etiss_uint8 *buffe
 
     // vma to pma translation
     uint64_t pma = 0;
-    if (unlikely(exception = mmu->Translate(addr, &pma, MM_ACCESS::W_ACCESS)))
+    if (unlikely(exception = mmu->Translate(addr, &pma, MM_ACCESS::W_ACCESS, length)))
         return exception;
     std::stringstream msg;
     msg << "Virtual memory: 0x" << std::hex << addr << " is translated into physical address 0x:" << std::hex << pma
