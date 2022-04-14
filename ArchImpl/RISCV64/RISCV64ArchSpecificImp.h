@@ -129,7 +129,7 @@ etiss::int32 RISCV64Arch::handleException(etiss::int32 cause, ETISS_CPU *cpu)
                     case CAUSE_FETCH_ACCESS:
                         // Redo the instruction encoutered exception after handling
                         ((RISCV64 *)cpu)->CSR[CSR_SEPC] = cpu->instructionPointer;
-                        ((RISCV64 *)cpu)->CSR[CSR_STVAL] = cpu->instructionPointer;
+                        ((RISCV64 *)cpu)->CSR[CSR_MTVAL] = 0;
                         break;
                     case CAUSE_LOAD_PAGE_FAULT:     [[fallthrough]];
                     case CAUSE_LOAD_ACCESS:         [[fallthrough]];
@@ -145,6 +145,7 @@ etiss::int32 RISCV64Arch::handleException(etiss::int32 cause, ETISS_CPU *cpu)
                         // Redo the instruction encoutered exception after handling
                         ((RISCV64 *)cpu)->CSR[CSR_SEPC] = cpu->instructionPointer - 4;
                         ((RISCV64 *)cpu)->CSR[CSR_STVAL] = 0;
+                        ((RISCV64 *)cpu)->CSR[CSR_MTVAL] = 0;
                         break;
                 }
                 ((RISCV64 *)cpu)->CSR[CSR_SSTATUS] ^=
@@ -165,7 +166,7 @@ etiss::int32 RISCV64Arch::handleException(etiss::int32 cause, ETISS_CPU *cpu)
                     case CAUSE_MISALIGNED_FETCH:
                         // Redo the instruction encoutered exception after handling
                         ((RISCV64 *)cpu)->CSR[CSR_MEPC] = cpu->instructionPointer;
-                        ((RISCV64 *)cpu)->CSR[CSR_MTVAL] = cpu->instructionPointer;
+                        ((RISCV64 *)cpu)->CSR[CSR_STVAL] = 0;
                         break;
                     case CAUSE_LOAD_PAGE_FAULT:     [[fallthrough]];
                     case CAUSE_LOAD_ACCESS:         [[fallthrough]];
@@ -181,6 +182,7 @@ etiss::int32 RISCV64Arch::handleException(etiss::int32 cause, ETISS_CPU *cpu)
                         // Redo the instruction encoutered exception after handling
                         ((RISCV64 *)cpu)->CSR[CSR_MEPC] = cpu->instructionPointer - 4;
                         ((RISCV64 *)cpu)->CSR[CSR_MTVAL] = 0;
+                        ((RISCV64 *)cpu)->CSR[CSR_STVAL] = 0;
                         break;
                 }
                 (((RISCV64 *)cpu)->CSR[CSR_MSTATUS]) ^=
