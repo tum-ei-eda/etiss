@@ -278,16 +278,15 @@ int32_t RISCV64MMU::CheckPageOverlap(const uint64_t vma, uint64_t *const pma_buf
     uint64_t offset_mask = page_size - 1;
 
     uint64_t next_page_vma = (vma + page_size) & !offset_mask;
-    if (unlikely(next_page_vma == 0))
-        return etiss::RETURNCODE::PAGEFAULT;
     int64_t overlap = vma - next_page_vma + length;
     uint32_t fault = etiss::RETURNCODE::NOERROR;
 
     // Check if vma + length overlaps page-boundary
     if (likely(overlap <= 0))
-        return fault;
+        return etiss::RETURNCODE::NOERROR;
 
     // ensure next page is in memory
-    fault = this->Translate(next_page_vma, pma_buf, access, overlap);
-    return fault;
+    if (unlikely(next_page_vma == 0))
+        return etiss::RETURNCODE::PAGEFAULT;    // this should be etiss::RETURNCODE::MISALIGNED!
+    return this->Translate(next_page_vma, pma_buf, access, overlap);
 }
