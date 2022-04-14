@@ -279,7 +279,6 @@ int32_t RISCV64MMU::CheckPageOverlap(const uint64_t vma, uint64_t *const pma_buf
 
     uint64_t next_page_vma = (vma + page_size) & !offset_mask;
     int64_t overlap = vma - next_page_vma + length;
-    uint32_t fault = etiss::RETURNCODE::NOERROR;
 
     // Check if vma + length overlaps page-boundary
     if (likely(overlap <= 0))
