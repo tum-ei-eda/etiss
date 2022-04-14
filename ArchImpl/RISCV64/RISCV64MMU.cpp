@@ -275,9 +275,9 @@ int32_t RISCV64MMU::CheckPageOverlap(const uint64_t vma, uint64_t *const pma_buf
     // Determine what page level is used (ie. normal page, super-page, mega-page)
     uint32_t page_level = pte.GetLVL();
     uint64_t page_size = 1 << (PAGE_OFFSET + page_level * VPN_OFFSET);
-    uint64_t offset_mask = page_size - 1;
+    uint64_t offset_mask = ~(page_size - 1);
 
-    uint64_t next_page_vma = vma & ~offset_mask + page_size;
+    uint64_t next_page_vma = (vma & offset_mask) + page_size;
     int64_t overlap = vma - next_page_vma + length;
 
     // Check if vma + length overlaps page-boundary
