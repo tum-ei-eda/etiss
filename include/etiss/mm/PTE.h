@@ -72,6 +72,8 @@ class PTE
 
     PTE(uint64_t pte) { Update(pte, 0); }
 
+    PTE(uint64_t pte, uint32_t level) { Update(pte, level); }
+
     // PTE(const PTE & pte_cp_){
     // 	Update(pte_cp_.pte_val_);
 

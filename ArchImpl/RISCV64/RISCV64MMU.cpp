@@ -130,7 +130,7 @@ int32_t RISCV64MMU::WalkPageTable(uint64_t vma, MM_ACCESS access)
             if ((fault = system_->dread(system_->handle, cpu_, addr, buffer, PTESIZE)))
                 return fault;
             // A new leaf pte value is read from page directory
-            leaf_pte.Update(leaf_pte_val, i);
+            leaf_pte.Update(leaf_pte_val);
 
             if ((0 == leaf_pte.GetByName("V")) || ((0 == leaf_pte.GetByName("R")) && (1 == leaf_pte.GetByName("W"))))
             {
@@ -193,7 +193,7 @@ int32_t RISCV64MMU::WalkPageTable(uint64_t vma, MM_ACCESS access)
                 new_pte_val |= vma_pte.GetByName(vpn_name.str()) << ((VPN_OFFSET * tmp_i) + 10);
             }
         }
-        PTE new_pte = PTE(new_pte_val);
+        PTE new_pte = PTE(new_pte_val, i);
         AddTLBEntry(vma >> PAGE_OFFSET, new_pte);
         // Map TLB entry to physical address for write-through, because TLB is more or less a cache
         AddTLBEntryMap(addr, new_pte);
