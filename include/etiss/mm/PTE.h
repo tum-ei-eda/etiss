@@ -70,7 +70,7 @@ class PTE
   public:
     PTE(){};
 
-    PTE(uint64_t pte) { Update(pte); }
+    PTE(uint64_t pte) { Update(pte, 0); }
 
     // PTE(const PTE & pte_cp_){
     // 	Update(pte_cp_.pte_val_);
@@ -88,7 +88,14 @@ class PTE
      * @brief Update the PTE with a new value.
      *
      */
-    void Update(uint64_t new_pte, uint32_t level = 0);
+    void Update(uint64_t new_pte);
+
+    /**
+     * @brief Update the PTE with a new value
+     *    and a page table level.
+     *
+     */
+    void Update(uint64_t new_pte, uint32_t level);
 
     /**
      * @brief Get the bit field value with its name

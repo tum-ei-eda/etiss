@@ -59,6 +59,30 @@ namespace etiss
 namespace mm
 {
 
+void PTE::Update(uint64_t new_pte)
+{
+
+    if (PTEFormat::Instance().GetFormatMap().find(std::string("PPN")) == PTEFormat::Instance().GetFormatMap().end())
+    {
+        PTEFormat::Instance().Dump();
+        PTEFormat::Instance().Dump();
+        etiss::log(etiss::FATALERROR, "PPN not defined in PTE format");
+    }
+
+    std::pair<uint32_t, uint32_t> bit_field = PTEFormat::Instance().GetFormatMap().find(std::string("PPN"))->second;
+    if (new_pte & (~GenerateMask(PTEFormat::Instance().GetPTELength())))
+    {
+        std::stringstream msg;
+        msg << "PTE value: [0x" << std::hex << new_pte << "] exceed the format length " << std::dec
+            << PTEFormat::Instance().GetPTELength() << "." << std::endl;
+        PTEFormat::Instance().Dump();
+        etiss::log(etiss::FATALERROR, msg.str());
+    }
+
+    ppn_val_ = new_pte >> bit_field.second;
+    pte_val_ = new_pte;
+}
+
 void PTE::Update(uint64_t new_pte, uint32_t level)
 {
 
