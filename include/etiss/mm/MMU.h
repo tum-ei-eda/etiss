@@ -186,7 +186,7 @@ class MMU
      * @param length 
      * @return int32_t 
      */
-    virtual int32_t CheckPageOverlap(const uint64_t vma, uint64_t *const pma_buf, MM_ACCESS access, etiss_uint32 length) { return 0; }
+    virtual int32_t CheckPageOverlap(const uint64_t vma, uint64_t *const pma_buf, MM_ACCESS access, etiss_uint32 length, const PTE &pte) = 0;
 
   protected:
     ETISS_CPU *cpu_;

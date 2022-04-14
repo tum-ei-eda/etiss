@@ -130,7 +130,7 @@ int32_t RISCV64MMU::WalkPageTable(uint64_t vma, MM_ACCESS access)
             if ((fault = system_->dread(system_->handle, cpu_, addr, buffer, PTESIZE)))
                 return fault;
             // A new leaf pte value is read from page directory
-            leaf_pte.Update(leaf_pte_val);
+            leaf_pte.Update(leaf_pte_val, i);
 
             if ((0 == leaf_pte.GetByName("V")) || ((0 == leaf_pte.GetByName("R")) && (1 == leaf_pte.GetByName("W"))))
             {
@@ -270,11 +270,12 @@ int32_t RISCV64MMU::CheckProtection(const PTE &pte, MM_ACCESS access)
     return etiss::RETURNCODE::NOERROR;
 }
 
-int32_t RISCV64MMU::CheckPageOverlap(const uint64_t vma, uint64_t *const pma_buf, MM_ACCESS access, etiss_uint32 length)
+int32_t RISCV64MMU::CheckPageOverlap(const uint64_t vma, uint64_t *const pma_buf, MM_ACCESS access, etiss_uint32 length, const PTE &pte)
 {
-    // Determine what page is used (ie. page, superpage, megapage)
-    uint64_t page_size = PAGE_SIZE;
-    uint64_t offset_mask = OFFSET_MASK;
+    // Determine what page level is used (ie. normal page, super-page, mega-page)
+    uint32_t page_level = pte.GetLVL();
+    uint64_t page_size = 1 << (PAGE_OFFSET + page_level * VPN_OFFSET);
+    uint64_t offset_mask = page_size - 1;
 
     uint64_t next_page_vma = (vma + page_size) & !offset_mask;
     if (unlikely(next_page_vma == 0))

@@ -88,7 +88,7 @@ class PTE
      * @brief Update the PTE with a new value.
      *
      */
-    void Update(uint64_t new_pte);
+    void Update(uint64_t new_pte, uint32_t level = 0);
 
     /**
      * @brief Get the bit field value with its name
@@ -118,6 +118,8 @@ class PTE
 
     uint64_t GetPPN() const { return ppn_val_; }
 
+    uint32_t GetLVL() const { return pte_lvl_; }
+
   private:
     uint64_t GenerateMask(uint64_t len) const
     {
@@ -137,6 +139,7 @@ class PTE
 
     uint64_t ppn_val_;
     uint64_t pte_val_;
+    uint32_t pte_lvl_;
 };
 
 } // namespace mm

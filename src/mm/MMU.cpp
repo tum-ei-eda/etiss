@@ -135,7 +135,7 @@ int32_t MMU::Translate(const uint64_t vma, uint64_t *const pma_buf, MM_ACCESS ac
         return fault;
     
     // Check if access to memory is overlapping a page-boundary
-    if ((fault = CheckPageOverlap(vma, pma_buf, access, length)))
+    if ((fault = CheckPageOverlap(vma, pma_buf, access, length, pte_buf)))
         return fault;
 
     uint64_t offset_mask = (1 << (page_offset_msb_pos + 1)) - 1;
