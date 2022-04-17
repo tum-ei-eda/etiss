@@ -154,22 +154,6 @@ int32_t RISCV64MMU::WalkPageTable(uint64_t vma, MM_ACCESS access)
         {
         }
 
-        if (0 == leaf_pte.GetByName("A"))
-        {
-            leaf_pte_val |= PTE_A;
-            leaf_pte.Update(leaf_pte_val);
-            if ((fault = system_->dwrite(system_->handle, cpu_, addr, buffer, PTESIZE)))
-                return fault;
-        }
-
-        if ((0 == leaf_pte.GetByName("D")) && (W_ACCESS == access))
-        {
-            leaf_pte_val |= PTE_D;
-            leaf_pte.Update(leaf_pte_val);
-            if ((fault = system_->dwrite(system_->handle, cpu_, addr, buffer, PTESIZE)))
-                return fault;
-        }
-
         // TODO: PMA, PMP check should be implemented later on.
 
         uint64_t new_pte_val = leaf_pte.Get();
@@ -292,7 +276,7 @@ int32_t RISCV64MMU::UpdatePTEFlags(PTE &pte, etiss::mm::MM_ACCESS access)
         if ((fault = system_->dwrite(system_->handle, cpu_, pte_addr, buffer, PTESIZE)))
             return fault;
     }
-    
+
     return fault;
 }
 
