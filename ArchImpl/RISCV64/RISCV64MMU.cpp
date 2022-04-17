@@ -193,7 +193,7 @@ int32_t RISCV64MMU::WalkPageTable(uint64_t vma, MM_ACCESS access)
                 new_pte_val |= vma_pte.GetByName(vpn_name.str()) << ((VPN_OFFSET * tmp_i) + 10);
             }
         }
-        PTE new_pte = PTE(new_pte_val, i);
+        PTE new_pte = PTE(new_pte_val, i, addr);
         AddTLBEntry(vma >> PAGE_OFFSET, new_pte);
         // Map TLB entry to physical address for write-through, because TLB is more or less a cache
         AddTLBEntryMap(addr, new_pte);
@@ -268,6 +268,32 @@ int32_t RISCV64MMU::CheckProtection(const PTE &pte, MM_ACCESS access)
         return etiss::RETURNCODE::INSTR_PAGEFAULT;
     }
     return etiss::RETURNCODE::NOERROR;
+}
+
+int32_t RISCV64MMU::UpdatePTEFlags(PTE &pte, etiss::mm::MM_ACCESS access)
+{
+    uint64_t pte_val = pte.Get();
+    uint64_t pte_addr = pte.GetAddr();
+    unsigned char *buffer = (unsigned char *)(&pte_val);
+    int32_t fault = etiss::RETURNCODE::NOERROR;
+
+    if (0 == pte.GetByName("A"))
+    {
+        pte_val |= PTE_A;
+        pte.Update(pte_val);
+        if ((fault = system_->dwrite(system_->handle, cpu_, pte_addr, buffer, PTESIZE)))
+            return fault;
+    }
+
+    if ((0 == pte.GetByName("D")) && (W_ACCESS == access))
+    {
+        pte_val |= PTE_D;
+        pte.Update(pte_val);
+        if ((fault = system_->dwrite(system_->handle, cpu_, pte_addr, buffer, PTESIZE)))
+            return fault;
+    }
+    
+    return fault;
 }
 
 int32_t RISCV64MMU::CheckPageOverlap(const uint64_t vma, uint64_t *const pma_buf, MM_ACCESS access, etiss_uint32 length, const PTE &pte)

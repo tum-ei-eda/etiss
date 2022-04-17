@@ -83,7 +83,7 @@ void PTE::Update(uint64_t new_pte)
     pte_val_ = new_pte;
 }
 
-void PTE::Update(uint64_t new_pte, uint32_t level)
+void PTE::Update(uint64_t new_pte, uint32_t level, uint64_t phy_addr)
 {
 
     if (PTEFormat::Instance().GetFormatMap().find(std::string("PPN")) == PTEFormat::Instance().GetFormatMap().end())
@@ -106,6 +106,7 @@ void PTE::Update(uint64_t new_pte, uint32_t level)
     ppn_val_ = new_pte >> bit_field.second;
     pte_val_ = new_pte;
     pte_lvl_ = level;
+    pte_addr_ = phy_addr;
 }
 
 uint64_t PTE::GetByName(std::string const name) const
