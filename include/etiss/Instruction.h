@@ -147,9 +147,7 @@ public:
 /**
  * Holding unique instruction sets code chunks after permutation.
 */
-struct Node{
-    std::set<Instruction*> instrs;
-};
+typedef std::set<Instruction*> Node;
 
 class BitArray
 {

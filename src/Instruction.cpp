@@ -520,7 +520,7 @@ bool InstructionSet::compile()
 
             for(const auto& permutated_chunk : permutated_chunk_codes){
                 auto val = permutated_chunk.to_ulong();
-                root_[i][val].instrs.insert(inst);
+                root_[i][val].insert(inst);
             }
         }
     }
@@ -534,7 +534,7 @@ Instruction *InstructionSet::resolve(BitArray &instr)
         auto chunk_bits_code = instr.get_range((i+1)*chunk_size-1, i*chunk_size);
 
         auto val = chunk_bits_code.to_ulong();
-        auto instrs_in_node = root_[i][val].instrs; // val'th node
+        auto instrs_in_node = root_[i][val]; // val'th node
 
         if(i==0) results = instrs_in_node;
         else{ // get intersected instrs on the nodes
