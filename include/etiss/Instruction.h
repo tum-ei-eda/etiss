@@ -149,80 +149,61 @@ public:
 */
 typedef std::set<Instruction*> Node;
 
-class BitArray
+/**
+    @brief stores a bit vector
+*/
+class BitArray : public boost::dynamic_bitset<>
 {
-public:
-    typedef boost::dynamic_bitset<>::size_type size_type;
-    boost::dynamic_bitset<> bits;
 private:
-    size_type bw_;
-    size_type intcount_;
+    typedef boost::dynamic_bitset<> super;
 public:
+    using super::dynamic_bitset;
+    BitArray(const super& a) : super(a){} // hack for parent's explicit constructors
 
-    BitArray() = default;
-
-    BitArray(size_type width, unsigned long value = 0): bits(width, value){}
-
-    BitArray(boost::dynamic_bitset<> bits): bits(bits){}
-
-    template <typename BlockInputIterator>
-    BitArray(BlockInputIterator first, BlockInputIterator last): bits(first, last){}
-    // permutate the bit array at given indexes
-
-    template <typename CharT, typename Traits, typename Alloc>
-    BitArray(const std::basic_string<CharT, Traits, Alloc>& s,
-        typename std::basic_string<CharT, Traits, Alloc>::size_type pos = 0,
-        typename std::basic_string<CharT, Traits, Alloc>::size_type n = std::basic_string<CharT, Traits, Alloc>::npos):
-            bits(s, pos, n){}
-
+    /**
+        @return number of bytes stored in this array (rounded up if neccessary)
+    */
     unsigned byteCount() const;
+    /**
+        @return number of I's required to store the data
+    */
     unsigned intCount() const;
-
-    static std::vector<BitArray> permutate(const BitArray& input, std::vector<size_type> indexes);
+    /**
+        @brief change the value the object is holding
+    */
     void set_value(size_type width, unsigned long value);
     void set_value(unsigned long value);
-    void set_bits(boost::dynamic_bitset<> bits);
-    // find pos of most significant bit
-    size_type rfind_first() const;
-    inline size_type size() const {return bits.size();}
-    inline size_type count() const {return bits.count();}
-    inline void resize(size_type N);
-    BitArray get_range(size_type end, size_type start);
-    void shrink_size_from_tail(size_type N);
-
+    /**
+        @brief get the interval [end, start]
+    */
+    BitArray get_range(size_type end, size_type start) const;
+    /**
+        @brief set the value to the interval [end, start]
+    */
+    void set_range(unsigned long val, size_type end, size_type start);
+    /**
+        @brief permutates the given input at the specified indexes
+        @return List of BitArray
+    */
+    static std::vector<BitArray> permutate(const BitArray& input, std::vector<size_type> indexes);
+    /**
+        @brief string representation of the BitArray
+    */
     std::string to_string() const;
-    inline unsigned long to_ulong() const{return bits.to_ulong();}
-    /// bitwise or operator
-    BitArray operator|(const BitArray &o) const;
-    /// shift right operator
-    BitArray operator>>(size_type i) const;
-    /// shift left operator
-    BitArray operator<<(size_type i) const;
-    BitArray& operator<<=(size_type i);
-    BitArray& operator>>=(size_type i);
-    /// bitwise and operator
-    BitArray operator&(const BitArray &o) const;
-    /// bitwise not operator
-    BitArray operator~() const;
-    /// less than operator
-    bool operator<(const BitArray &o) const;
-    /// less than operator
-    bool operator>(const BitArray &o) const;
-    bool operator[](size_type i) const;
-    /// equals operator
-    bool operator==(const BitArray &o) const;
-    inline bool operator!=(const BitArray &o) const { return !((*this) == o); }
 };
 
-std::ostream &operator<<(std::ostream &os, const BitArray tf);
-
+/**
+ * Reading through it will only return bits within the range.
+ *
+ * The length of the range may not be larger than sizeof(I)*8.
+ */
 class BitArrayRange
 {
 public:
     etiss_del_como(BitArrayRange)
 private:
-        BitArray::size_type startpos;
-        BitArray::size_type endpos;
+    BitArray::size_type startpos;
+    BitArray::size_type endpos;
 public:
     /**
         @attention startindex_included MUST be the higher valued index. Only exception is for zero length ranges where
@@ -234,7 +215,11 @@ public:
         reads bits from the range to the return value starting at the lsb. higher
        bits are set to zero
     */
-    I read(BitArray ba);
+    I read(const BitArray& ba);
+    /**
+        write the bit from the passed value starting at the lsb to the range.
+    */
+    void write(BitArray &ba, I val);
     /**
         highest bit of the range (included)
     */

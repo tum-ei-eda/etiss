@@ -151,7 +151,7 @@ std::vector<BitArray> BitArray::permutate(const BitArray& input, std::vector<siz
     for(const auto& i : indexes){
         for(int j=0; j<(1<<count); j++){
             results.push_back(results[j]);
-            results[j].bits.flip(i);
+            results[j].flip(i);
             results.push_back(results[j]);
         }
         results.erase(results.begin(), results.begin() + (1<<count));
@@ -164,123 +164,54 @@ void BitArray::set_value(size_type width, unsigned long value){
     BitArray b(width, value);
     *this = b;
 }
+
 void BitArray::set_value(unsigned long value){
     set_value(size(), value);
 }
 
-size_type BitArray::rfind_first() const{
-    size_type first_idx = bits.find_first();
-    size_type current_idx = first_idx;
-    if (first_idx != bits.npos)
-    {
-        do{
-            current_idx = bits.find_next(current_idx);
-        } while (bits.find_next(current_idx) != bits.npos);
-        return current_idx;
-    }
-    return bits.npos;
-}
-
-void BitArray::shrink_size_from_tail(size_type N)
+BitArray BitArray::get_range(size_type end, size_type start) const
 {
-    resize(size()-N);
-}
-
-BitArray BitArray::get_range(size_type end, size_type start){
     BitArray ret = *this;
     ret >>= start;
     ret.resize(end-start+1);
     return ret;
 }
-void BitArray::resize(size_type N)
-{
-    bits.resize(N);
+
+void BitArray::set_range(unsigned long val, size_type end, size_type start){
+    auto len = end - start + 1;
+    BitArray range(len, val);
+    for(size_type i = 0; i < len; ++i)
+        (*this)[i+start] = range[i];
 }
+
 std::string BitArray::to_string() const
 {
     std::string s;
-    boost::to_string(bits, s);
+    boost::to_string(*this, s);
     return s;
-}
-BitArray BitArray::operator|(const BitArray &o) const
-{
-    BitArray ret;
-    ret.bits = bits | o.bits;
-    return ret;
-}
-BitArray BitArray::operator>>(size_type i) const
-{
-    BitArray ret;
-    ret.bits = bits >> i;
-    return ret;
-}
-BitArray BitArray::operator<<(size_type i) const
-{
-    BitArray ret;
-    ret.bits = bits << i;
-    return ret;
-}
-BitArray& BitArray::operator<<=(size_type i)
-{
-    bits <<= i;
-    return *this;
-}
-BitArray& BitArray::operator>>=(size_type i)
-{
-    bits >>= i;
-    return *this;
-}
-BitArray BitArray::operator&(const BitArray &o) const
-{
-    BitArray ret;
-    ret.bits = bits & o.bits;
-    return ret;
-}
-BitArray BitArray::operator~() const
-{
-    BitArray ret;
-    ret.bits = ~bits;
-    return ret;
-}
-bool BitArray::operator<(const BitArray &o) const
-{
-    return bits<o.bits;
-}
-bool BitArray::operator>(const BitArray &o) const
-{
-    return bits>o.bits;
-}
-bool BitArray::operator[](size_type i) const
-{
-    return bits[i];
-}
-bool BitArray::operator==(const BitArray &o) const
-{
-    return bits==o.bits;
-}
-
-std::ostream &operator<<(std::ostream &os, const BitArray tf)
-{
-    os << tf.bits;
-    return os;
 }
 
 BitArrayRange::BitArrayRange(unsigned endindex_included, unsigned startindex_included)
     : startpos(startindex_included), endpos(endindex_included) {}
 
-I BitArrayRange::read(BitArray ba)
+I BitArrayRange::read(const BitArray& ba)
 {
     assert(ba.size() > (endpos - startpos + 1) && "BitArrayRange outside of BitArray");
+    auto range = ba.get_range(endpos, startpos);
+    return range.to_ulong();
+}
 
-    ba >>= startpos;
-    ba.resize(endpos - startpos + 1);
-    return ba.to_ulong();
+void BitArrayRange::write(BitArray &ba, I val)
+{
+    assert(ba.size() > (endpos - startpos + 1) && "BitArrayRange outside of BitArray");
+    ba.set_range(val, endpos, startpos);
 }
 
 BitArray::size_type BitArrayRange::start()
 {
     return startpos;
 }
+
 BitArray::size_type BitArrayRange::end()
 {
     return endpos;
