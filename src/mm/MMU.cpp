@@ -79,7 +79,7 @@ MMU::MMU(bool hw_ptw, std::string name, bool pid_enabled)
     // REGISTER_PAGE_FAULT_HANDLER(TLBISFULL, tlb_full_handler);
 }
 
-int32_t MMU::Translate(const uint64_t vma, uint64_t *const pma_buf, MM_ACCESS access, uint32_t length, uint32_t* overlap)
+int32_t MMU::Translate(const uint64_t vma, uint64_t *const pma_buf, MM_ACCESS access, uint32_t* overlap, uint32_t length)
 {
 
     if (!mmu_enabled_)

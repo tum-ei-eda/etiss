@@ -65,7 +65,8 @@ static etiss_int32 iread(void *handle, ETISS_CPU *cpu, etiss_uint64 addr, etiss_
 
     // vma to pma translation
     uint64_t pma = 0;
-    if (unlikely(exception = mmu->Translate(addr, &pma, MM_ACCESS::R_ACCESS, length)))
+    uint32_t overlap = 0;
+    if (unlikely(exception = mmu->Translate(addr, &pma, MM_ACCESS::R_ACCESS, &overlap, length)))
         return exception;
     std::stringstream msg;
     msg << "Virtual memory: 0x" << std::hex << addr << " is translated into physical address 0x:" << std::hex << pma
@@ -84,7 +85,8 @@ static etiss_int32 iwrite(void *handle, ETISS_CPU *cpu, etiss_uint64 addr, etiss
 
     // vma to pma translation
     uint64_t pma = 0;
-    if (unlikely(exception = mmu->Translate(addr, &pma, MM_ACCESS::W_ACCESS, length)))
+    uint32_t overlap = 0;
+    if (unlikely(exception = mmu->Translate(addr, &pma, MM_ACCESS::W_ACCESS, &overlap, length)))
         return exception;
     std::stringstream msg;
     msg << "Virtual memory: 0x" << std::hex << addr << " is translated into physical address 0x:" << std::hex << pma
@@ -103,7 +105,8 @@ static etiss_int32 dread(void *handle, ETISS_CPU *cpu, etiss_uint64 addr, etiss_
 
     // vma to pma translation
     uint64_t pma = 0;
-    if (unlikely(exception = mmu->Translate(addr, &pma, MM_ACCESS::R_ACCESS, length)))
+    uint32_t overlap = 0;
+    if (unlikely(exception = mmu->Translate(addr, &pma, MM_ACCESS::R_ACCESS, &overlap, length)))
         return exception;
     std::stringstream msg;
 
@@ -120,7 +123,8 @@ static etiss_int32 dwrite(void *handle, ETISS_CPU *cpu, etiss_uint64 addr, etiss
 
     // vma to pma translation
     uint64_t pma = 0;
-    if (unlikely(exception = mmu->Translate(addr, &pma, MM_ACCESS::W_ACCESS, length)))
+    uint32_t overlap = 0;
+    if (unlikely(exception = mmu->Translate(addr, &pma, MM_ACCESS::W_ACCESS, &overlap, length)))
         return exception;
     std::stringstream msg;
 
@@ -137,8 +141,8 @@ static etiss_int32 dbg_read(void *handle, etiss_uint64 addr, etiss_uint8 *buffer
 
     // vma to pma translation
     uint64_t pma = 0;
-    uint32_t overlap = 0;
-    if (unlikely(exception = mmu->Translate(addr, &pma, MM_ACCESS::X_ACCESS, length, &overlap)))
+    uint32_t overlap;
+    if (unlikely(exception = mmu->Translate(addr, &pma, MM_ACCESS::X_ACCESS, &overlap, length)))
         return exception;
     
     // check for overlap
@@ -147,7 +151,8 @@ static etiss_int32 dbg_read(void *handle, etiss_uint64 addr, etiss_uint8 *buffer
         length -= overlap;
         uint64_t vma_2 = addr + length;
         uint64_t pma_2 = 0;
-        if (unlikely(exception = mmu->Translate(vma_2, &pma_2, MM_ACCESS::X_ACCESS)))
+        uint32_t tmp;
+        if (unlikely(exception = mmu->Translate(vma_2, &pma_2, MM_ACCESS::X_ACCESS, &tmp)))
             return exception;
         
         ETISS_System *sys = msys->orig;
@@ -169,7 +174,8 @@ static etiss_int32 dbg_write(void *handle, etiss_uint64 addr, etiss_uint8 *buffe
 
     // vma to pma translation
     uint64_t pma = 0;
-    if (unlikely(exception = mmu->Translate(addr, &pma, MM_ACCESS::W_ACCESS, length)))
+    uint32_t overlap = 0;
+    if (unlikely(exception = mmu->Translate(addr, &pma, MM_ACCESS::W_ACCESS, &overlap, length)))
         return exception;
     std::stringstream msg;
     msg << "Virtual memory: 0x" << std::hex << addr << " is translated into physical address 0x:" << std::hex << pma

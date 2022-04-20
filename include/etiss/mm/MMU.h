@@ -95,7 +95,7 @@ class MMU
      *@see 	etiss::mm::PTEFormatBuilder and etiss::mm::PTEFormat
      *
      */
-    virtual int32_t Translate(const uint64_t vma, uint64_t *const pma_buf, MM_ACCESS access, uint32_t length = 0, uint32_t* overlap = 0);
+    virtual int32_t Translate(const uint64_t vma, uint64_t *const pma_buf, MM_ACCESS access, uint32_t* overlap, uint32_t length = 0);
 
     /**
      * @brief Whenever the MMU control register changes, the MMU has to be notified
