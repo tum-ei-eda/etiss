@@ -79,7 +79,7 @@ MMU::MMU(bool hw_ptw, std::string name, bool pid_enabled)
     // REGISTER_PAGE_FAULT_HANDLER(TLBISFULL, tlb_full_handler);
 }
 
-int32_t MMU::Translate(const uint64_t vma, uint64_t *const pma_buf, MM_ACCESS access, uint64_t data)
+int32_t MMU::Translate(const uint64_t vma, uint64_t *const pma_buf, MM_ACCESS access, uint32_t* overlap, uint32_t length)
 {
 
     if (!mmu_enabled_)
@@ -133,11 +133,15 @@ int32_t MMU::Translate(const uint64_t vma, uint64_t *const pma_buf, MM_ACCESS ac
 
     if ((fault = CheckProtection(pte_buf, access)))
         return fault;
+    
+    // Check if access to memory is overlapping a page-boundary
+    *overlap = GetPageOverlap(vma, length, pte_buf);
 
     uint64_t offset_mask = (1 << (page_offset_msb_pos + 1)) - 1;
     *pma_buf = (pte_buf.GetPPN() << (page_offset_msb_pos + 1)) | (vma & offset_mask);
 
-    UpdatePTEFlags(pte_buf, access);
+    if ((fault = UpdatePTEFlags(pte_buf, access)))
+        return fault;
 
     // Check whether vma is trying to write the data cached in TLB, if so
     // evict the PTE entry in the TLB

@@ -154,22 +154,6 @@ int32_t RISCV64MMU::WalkPageTable(uint64_t vma, MM_ACCESS access)
         {
         }
 
-        if (0 == leaf_pte.GetByName("A"))
-        {
-            leaf_pte_val |= PTE_A;
-            leaf_pte.Update(leaf_pte_val);
-            if ((fault = system_->dwrite(system_->handle, cpu_, addr, buffer, PTESIZE)))
-                return fault;
-        }
-
-        if ((0 == leaf_pte.GetByName("D")) && (W_ACCESS == access))
-        {
-            leaf_pte_val |= PTE_D;
-            leaf_pte.Update(leaf_pte_val);
-            if ((fault = system_->dwrite(system_->handle, cpu_, addr, buffer, PTESIZE)))
-                return fault;
-        }
-
         // TODO: PMA, PMP check should be implemented later on.
 
         uint64_t new_pte_val = leaf_pte.Get();
@@ -193,7 +177,7 @@ int32_t RISCV64MMU::WalkPageTable(uint64_t vma, MM_ACCESS access)
                 new_pte_val |= vma_pte.GetByName(vpn_name.str()) << ((VPN_OFFSET * tmp_i) + 10);
             }
         }
-        PTE new_pte = PTE(new_pte_val);
+        PTE new_pte = PTE(new_pte_val, i, addr);
         AddTLBEntry(vma >> PAGE_OFFSET, new_pte);
         // Map TLB entry to physical address for write-through, because TLB is more or less a cache
         AddTLBEntryMap(addr, new_pte);
@@ -270,23 +254,48 @@ int32_t RISCV64MMU::CheckProtection(const PTE &pte, MM_ACCESS access)
     return etiss::RETURNCODE::NOERROR;
 }
 
-// int32_t RISCV64MMU::CheckPageOverlap(const uint64_t vma, uint64_t *const pma_buf, MM_ACCESS access, etiss_uint32 length)
-// {
-//     // Determine what page is used (ie. page, superpage, megapage)
-//     uint64_t page_size = PAGE_SIZE;
-//     uint64_t offset_mask = OFFSET_MASK;
+int32_t RISCV64MMU::UpdatePTEFlags(PTE &pte, etiss::mm::MM_ACCESS access)
+{
+    uint64_t pte_val = pte.Get();
+    uint64_t pte_addr = pte.GetAddr();
+    unsigned char *buffer = (unsigned char *)(&pte_val);
+    int32_t fault = etiss::RETURNCODE::NOERROR;
 
-//     uint64_t next_page_vma = (vma + page_size) & !offset_mask;
-//     if (unlikely(next_page_vma == 0))
-//         return etiss::RETURNCODE::PAGEFAULT;
-//     int64_t overlap = vma - next_page_vma + length;
-//     uint32_t fault = etiss::RETURNCODE::NOERROR;
+    if (0 == pte.GetByName("A"))
+    {
+        pte_val |= PTE_A;
+        pte.Update(pte_val);
+        if ((fault = system_->dwrite(system_->handle, cpu_, pte_addr, buffer, PTESIZE)))
+            return fault;
+    }
 
-//     // Check if vma + length overlaps page-boundary
-//     if (likely(overlap <= 0))
-//         return fault;
+    if ((0 == pte.GetByName("D")) && (W_ACCESS == access))
+    {
+        pte_val |= PTE_D;
+        pte.Update(pte_val);
+        if ((fault = system_->dwrite(system_->handle, cpu_, pte_addr, buffer, PTESIZE)))
+            return fault;
+    }
 
-//     // ensure next page is in memory
-//     fault = this->Translate(next_page_vma, pma_buf, access, overlap);
-//     return fault;
-// }
+    return fault;
+}
+
+uint32_t RISCV64MMU::GetPageOverlap(const uint64_t vma, etiss_uint32 length, const PTE &pte)
+{
+    // Quick return to enhance performance
+    if (length == 0)
+        return 0;
+    
+    // Determine what page level is used (ie. normal page, super-page, mega-page)
+    uint32_t page_level = pte.GetLVL();
+    uint64_t page_size = 1 << (PAGE_OFFSET + page_level * VPN_OFFSET);
+    uint64_t offset_mask = ~(page_size - 1);
+
+    // Check if vma + length overlaps page-boundary
+    uint64_t next_page_vma = (vma & offset_mask) + page_size;
+    int64_t overlap = vma - next_page_vma + length;
+
+    if (likely(overlap <= 0))
+        return 0;
+    return overlap;
+}

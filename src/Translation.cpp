@@ -496,7 +496,7 @@ etiss::int32 Translation::translateBlock(CodeBlock &cb)
             }
             else
             {
-                break; // non empty block -> compile pending // even if we got a pagefault??
+                break; // non empty block -> compile pending
             }
         }
 
