@@ -137,8 +137,25 @@ static etiss_int32 dbg_read(void *handle, etiss_uint64 addr, etiss_uint8 *buffer
 
     // vma to pma translation
     uint64_t pma = 0;
-    if (unlikely((exception = mmu->Translate(addr, &pma, MM_ACCESS::X_ACCESS, length)) != etiss::RETURNCODE::NOERROR))
+    uint32_t overlap = 0;
+    if (unlikely(exception = mmu->Translate(addr, &pma, MM_ACCESS::X_ACCESS, length, &overlap)))
         return exception;
+    
+    // check for overlap
+    if (unlikely(overlap))
+    {
+        length -= overlap;
+        uint64_t vma_2 = addr + length;
+        uint64_t pma_2 = 0;
+        if (unlikely(exception = mmu->Translate(vma_2, &pma_2, MM_ACCESS::X_ACCESS)))
+            return exception;
+        
+        ETISS_System *sys = msys->orig;
+        if (unlikely(exception = sys->dbg_read(sys->handle, pma, buffer, length)))
+            return exception;
+        return sys->dbg_read(sys->handle, pma_2, buffer + length, overlap);
+    }
+
     ETISS_System *sys = msys->orig;
     return sys->dbg_read(sys->handle, pma, buffer, length);
 }

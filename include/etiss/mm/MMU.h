@@ -95,7 +95,7 @@ class MMU
      *@see 	etiss::mm::PTEFormatBuilder and etiss::mm::PTEFormat
      *
      */
-    virtual int32_t Translate(const uint64_t vma, uint64_t *const pma_buf, MM_ACCESS access, etiss_uint32 length = 0, uint64_t data = 0);
+    virtual int32_t Translate(const uint64_t vma, uint64_t *const pma_buf, MM_ACCESS access, uint32_t length = 0, uint32_t* overlap = 0);
 
     /**
      * @brief Whenever the MMU control register changes, the MMU has to be notified
@@ -180,13 +180,13 @@ class MMU
      * @brief Checks if memory access is overlapping page-boundary.
      *    This is architecture specific and should be implemented by architecture.
      * 
-     * @param vma 
-     * @param pma_buf 
-     * @param access 
-     * @param length 
-     * @return int32_t 
+     * @param vma virtual memory address of the current page
+     * @param length legth of the memory access
+     * @param pte page-table-element pointing to the current page
+     * @return uint32_t overlap. Where overlap is the amount of bytes, the access overlaps
+     *    into the next page. If there is no overlap, the funtion returns 0.
      */
-    virtual int32_t CheckPageOverlap(const uint64_t vma, uint64_t *const pma_buf, MM_ACCESS access, etiss_uint32 length, const PTE &pte) = 0;
+    virtual uint32_t GetPageOverlap(const uint64_t vma, etiss_uint32 length, const PTE &pte) = 0;
 
   protected:
     ETISS_CPU *cpu_;

@@ -72,7 +72,7 @@ class RISCV64MMU : public etiss::mm::MMU
 
     bool CheckPrivilegedMode() { return (((RISCV64 *)cpu_)->CSR[3088] == PRV_M) ? false : true; }
 
-    int32_t CheckPageOverlap(const uint64_t vma, uint64_t *const pma_buf, MM_ACCESS access, etiss_uint32 length, const PTE &pte);
+    uint32_t GetPageOverlap(const uint64_t vma, etiss_uint32 length, const PTE &pte);
 };
 
 #endif

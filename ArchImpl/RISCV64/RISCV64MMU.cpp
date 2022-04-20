@@ -280,22 +280,22 @@ int32_t RISCV64MMU::UpdatePTEFlags(PTE &pte, etiss::mm::MM_ACCESS access)
     return fault;
 }
 
-int32_t RISCV64MMU::CheckPageOverlap(const uint64_t vma, uint64_t *const pma_buf, MM_ACCESS access, etiss_uint32 length, const PTE &pte)
+uint32_t RISCV64MMU::GetPageOverlap(const uint64_t vma, etiss_uint32 length, const PTE &pte)
 {
+    // Quick return to enhance performance
+    if (length == 0)
+        return 0;
+    
     // Determine what page level is used (ie. normal page, super-page, mega-page)
     uint32_t page_level = pte.GetLVL();
     uint64_t page_size = 1 << (PAGE_OFFSET + page_level * VPN_OFFSET);
     uint64_t offset_mask = ~(page_size - 1);
 
+    // Check if vma + length overlaps page-boundary
     uint64_t next_page_vma = (vma & offset_mask) + page_size;
     int64_t overlap = vma - next_page_vma + length;
 
-    // Check if vma + length overlaps page-boundary
     if (likely(overlap <= 0))
-        return etiss::RETURNCODE::NOERROR;
-
-    // ensure next page is in memory
-    if (unlikely(next_page_vma == 0))
-        return etiss::RETURNCODE::PAGEFAULT;    // this should be etiss::RETURNCODE::MISALIGNED!
-    return this->Translate(next_page_vma, pma_buf, access, overlap);
+        return 0;
+    return overlap;
 }
