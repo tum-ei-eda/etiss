@@ -267,6 +267,7 @@ extern "C"
     {
         CPUCore *core = (CPUCore *)cpu->_etiss_private_handle_;
         core->getMMU()->GetTLB()->Flush();
+        core->getMMU()->GetTLBEntryMap().clear();
         return etiss::RETURNCODE::RELOADBLOCKS;
     }
 

@@ -176,6 +176,8 @@ class MMU
 
     std::shared_ptr<etiss::mm::TLB<0>> GetTLB() { return tlb_; }
 
+    std::map<uint64_t, PTE *> GetTLBEntryMap() { return tlb_entry_map_; }
+
     /**
      * @brief Checks if memory access is overlapping page-boundary.
      *    This is architecture specific and should be implemented by architecture.

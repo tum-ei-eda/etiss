@@ -89,9 +89,9 @@ void RISCV64MMU::SignalMMU(uint64_t control_reg_val_)
     }
     if (control_reg_val_ != mmu_control_reg_val_)
     {
-        tlb_->Flush();
-        tlb_entry_map_.clear();
-        etiss::log(etiss::VERBOSE, GetName() + " : TLB flushed due to page directory update.");
+        // tlb_->Flush();
+        // tlb_entry_map_.clear();
+        // etiss::log(etiss::VERBOSE, GetName() + " : TLB flushed due to page directory update.");
         mmu_control_reg_val_ = control_reg_val_;
         if (pid_enabled_)
             UpdatePid(GetPid(control_reg_val_));
