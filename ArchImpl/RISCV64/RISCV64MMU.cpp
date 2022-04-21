@@ -257,7 +257,7 @@ int32_t RISCV64MMU::CheckProtection(const PTE &pte, MM_ACCESS access)
 int32_t RISCV64MMU::UpdatePTEFlags(PTE *pte, etiss::mm::MM_ACCESS access)
 {
     uint64_t pte_val = pte->Get();
-    uint64_t pte_addr = pte->Get();
+    uint64_t pte_addr = pte->GetAddr();
     unsigned char *buffer = (unsigned char *)(&pte_val);
     int32_t fault = etiss::RETURNCODE::NOERROR;
 
