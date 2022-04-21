@@ -150,7 +150,7 @@ class MMU
      * @brief Reserved for some MMU that might update PTE when translating
      *
      */
-    virtual int32_t UpdatePTEFlags(PTE &, MM_ACCESS) = 0;
+    virtual int32_t UpdatePTEFlags(PTE *, MM_ACCESS) = 0;
 
     bool IsTLBFull() const { return tlb_->IsFull(); }
 
