@@ -269,4 +269,11 @@ extern "C"
         core->getMMU()->GetTLB()->Flush();
         return etiss::RETURNCODE::RELOADBLOCKS;
     }
+
+    int32_t ETISS_TLB_EVICT_VMA(ETISS_CPU *cpu, ETISS_System * const system, void * const * const plugin_pointers, etiss_uint64 vma_)
+    {
+        CPUCore *core = (CPUCore *)cpu->_etiss_private_handle_;
+        core->getMMU()->GetTLB()->EvictPTE(vma_);
+        return etiss::RETURNCODE::RELOADBLOCKS; // TODO: reload only blocks containing the given VMA
+    }
 }
