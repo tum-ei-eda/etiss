@@ -254,7 +254,7 @@ int32_t RISCV64MMU::CheckProtection(const PTE &pte, MM_ACCESS access)
     return etiss::RETURNCODE::NOERROR;
 }
 
-int32_t RISCV64MMU::UpdatePTEFlags(PTE *pte, etiss::mm::MM_ACCESS access)
+int32_t RISCV64MMU::UpdatePTEFlags(const uint64_t vfn, PTE *pte, etiss::mm::MM_ACCESS access)
 {
     uint64_t pte_val = pte->Get();
     uint64_t pte_addr = pte->GetAddr();
@@ -264,7 +264,6 @@ int32_t RISCV64MMU::UpdatePTEFlags(PTE *pte, etiss::mm::MM_ACCESS access)
     if (0 == pte->GetByName("A"))
     {
         pte_val |= PTE_A;
-        pte->Update(pte_val);
         if ((fault = system_->dwrite(system_->handle, cpu_, pte_addr, buffer, PTESIZE)))
             return fault;
     }
@@ -272,11 +271,11 @@ int32_t RISCV64MMU::UpdatePTEFlags(PTE *pte, etiss::mm::MM_ACCESS access)
     if ((0 == pte->GetByName("D")) && (W_ACCESS == access))
     {
         pte_val |= PTE_D;
-        pte->Update(pte_val);
         if ((fault = system_->dwrite(system_->handle, cpu_, pte_addr, buffer, PTESIZE)))
             return fault;
     }
 
+    fault = tlb_->UpdatePTE(vfn, pte_val);
     return fault;
 }
 
