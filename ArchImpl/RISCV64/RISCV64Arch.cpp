@@ -864,12 +864,6 @@ static InstructionDefinition lb_rd_imm_rs1_(
 "printf(\"offs = %#lx\\n\",offs); \n"
 #endif
 
-// manually moved in front of assigning value to X[rd]
-"if(exception)\n"
-"{\n"
-	"return exception;\n"
-"}\n"
-
 "if(" + toString(rd) + " != 0)\n"
 "{\n"
 	"etiss_uint8 MEM_offs;\n"
@@ -880,6 +874,13 @@ static InstructionDefinition lb_rd_imm_rs1_(
 	"{\n"
 		"cast_1 =0x0 + (etiss_uint8)cast_1 ;\n"
 	"}\n"
+
+	// manually moved in front of assigning value to X[rd]
+	"if(exception)\n"
+	"{\n"
+		"return exception;\n"
+	"}\n"
+
 	"*((RISCV64*)cpu)->X[" + toString(rd) + "] = (etiss_int64)cast_1;\n"
 	#if RISCV64_DEBUG_CALL
 	"printf(\"*((RISCV64*)cpu)->X[" + toString(rd) + "] = %#lx\\n\",*((RISCV64*)cpu)->X[" + toString(rd) + "]); \n"
@@ -1404,12 +1405,6 @@ static InstructionDefinition lh_rd_imm_rs1_(
 "printf(\"offs = %#lx\\n\",offs); \n"
 #endif
 
-// manually moved in front of assigning value to X[rd]
-"if(exception)\n"
-"{\n"
-	"return exception;\n"
-"}\n"
-
 "if(" + toString(rd) + " != 0)\n"
 "{\n"
 	"etiss_uint16 MEM_offs;\n"
@@ -1420,6 +1415,13 @@ static InstructionDefinition lh_rd_imm_rs1_(
 	"{\n"
 		"cast_1 =0x0 + (etiss_uint16)cast_1 ;\n"
 	"}\n"
+
+	// manually moved in front of assigning value to X[rd]
+	"if(exception)\n"
+	"{\n"
+		"return exception;\n"
+	"}\n"
+
 	"*((RISCV64*)cpu)->X[" + toString(rd) + "] = (etiss_int64)cast_1;\n"
 	#if RISCV64_DEBUG_CALL
 	"printf(\"*((RISCV64*)cpu)->X[" + toString(rd) + "] = %#lx\\n\",*((RISCV64*)cpu)->X[" + toString(rd) + "]); \n"
@@ -1885,17 +1887,18 @@ static InstructionDefinition lbu_rd_imm_rs1_(
 "printf(\"offs = %#lx\\n\",offs); \n"
 #endif
 
-// manually moved in front of assigning value to X[rd]
-"if(exception)\n"
-"{\n"
-	"return exception;\n"
-"}\n"
-
 "if(" + toString(rd) + " != 0)\n"
 "{\n"
 	"etiss_uint8 MEM_offs;\n"
 	"tmpbuf = (etiss_uint8 *)&MEM_offs;\n"
 	"exception = (*(system->dread))(system->handle,cpu,offs,tmpbuf,1);\n"
+
+	// manually moved in front of assigning value to X[rd]
+	"if(exception)\n"
+	"{\n"
+		"return exception;\n"
+	"}\n"
+
 	"*((RISCV64*)cpu)->X[" + toString(rd) + "] = (etiss_uint64)MEM_offs;\n"
 	#if RISCV64_DEBUG_CALL
 	"printf(\"*((RISCV64*)cpu)->X[" + toString(rd) + "] = %#lx\\n\",*((RISCV64*)cpu)->X[" + toString(rd) + "]); \n"
@@ -2214,17 +2217,18 @@ static InstructionDefinition lhu_rd_imm_rs1_(
 "printf(\"offs = %#lx\\n\",offs); \n"
 #endif
 
-// manually moved in front of assigning value to X[rd]
-"if(exception)\n"
-"{\n"
-	"return exception;\n"
-"}\n"
-
 "if(" + toString(rd) + " != 0)\n"
 "{\n"
 	"etiss_uint16 MEM_offs;\n"
 	"tmpbuf = (etiss_uint8 *)&MEM_offs;\n"
 	"exception = (*(system->dread))(system->handle,cpu,offs,tmpbuf,2);\n"
+
+	// manually moved in front of assigning value to X[rd]
+	"if(exception)\n"
+	"{\n"
+		"return exception;\n"
+	"}\n"
+
 	"*((RISCV64*)cpu)->X[" + toString(rd) + "] = (etiss_uint64)MEM_offs;\n"
 	#if RISCV64_DEBUG_CALL
 	"printf(\"*((RISCV64*)cpu)->X[" + toString(rd) + "] = %#lx\\n\",*((RISCV64*)cpu)->X[" + toString(rd) + "]); \n"
@@ -2677,17 +2681,18 @@ static InstructionDefinition lwu_rd_imm_rs1_(
 "printf(\"offs = %#lx\\n\",offs); \n"
 #endif
 
-// manually moved in front of assigning value to X[rd]
-"if(exception)\n"
-"{\n"
-	"return exception;\n"
-"}\n"
-
 "if(" + toString(rd) + " != 0)\n"
 "{\n"
 	"etiss_uint32 MEM_offs;\n"
 	"tmpbuf = (etiss_uint8 *)&MEM_offs;\n"
 	"exception = (*(system->dread))(system->handle,cpu,offs,tmpbuf,4);\n"
+
+	// manually moved in front of assigning value to X[rd]
+	"if(exception)\n"
+	"{\n"
+		"return exception;\n"
+	"}\n"
+
 	"*((RISCV64*)cpu)->X[" + toString(rd) + "] = (etiss_uint64)MEM_offs;\n"
 	#if RISCV64_DEBUG_CALL
 	"printf(\"*((RISCV64*)cpu)->X[" + toString(rd) + "] = %#lx\\n\",*((RISCV64*)cpu)->X[" + toString(rd) + "]); \n"
@@ -3069,12 +3074,6 @@ static InstructionDefinition lw_rd_imm_rs1_(
 "printf(\"offs = %#lx\\n\",offs); \n"
 #endif
 
-// manually moved in front of assigning value to X[rd]
-"if(exception)\n"
-"{\n"
-	"return exception;\n"
-"}\n"
-
 "if(" + toString(rd) + " != 0)\n"
 "{\n"
 	"etiss_uint32 MEM_offs;\n"
@@ -3085,6 +3084,13 @@ static InstructionDefinition lw_rd_imm_rs1_(
 	"{\n"
 		"cast_1 =0x0 + (etiss_uint32)cast_1 ;\n"
 	"}\n"
+
+	// manually moved in front of assigning value to X[rd]
+	"if(exception)\n"
+	"{\n"
+		"return exception;\n"
+	"}\n"
+
 	"*((RISCV64*)cpu)->X[" + toString(rd) + "] = (etiss_int64)cast_1;\n"
 	#if RISCV64_DEBUG_CALL
 	"printf(\"*((RISCV64*)cpu)->X[" + toString(rd) + "] = %#lx\\n\",*((RISCV64*)cpu)->X[" + toString(rd) + "]); \n"
@@ -3914,12 +3920,6 @@ static InstructionDefinition ld_rd_imm_rs1_(
 "printf(\"offs = %#lx\\n\",offs); \n"
 #endif
 
-// manually moved in front of assigning value to X[rd]
-"if(exception)\n"
-"{\n"
-	"return exception;\n"
-"}\n"
-
 "if(" + toString(rd) + " != 0)\n"
 "{\n"
 	"etiss_uint64 MEM_offs;\n"
@@ -3930,6 +3930,13 @@ static InstructionDefinition ld_rd_imm_rs1_(
 	"{\n"
 		"cast_1 =0x0 + (etiss_uint64)cast_1 ;\n"
 	"}\n"
+
+	// manually moved in front of assigning value to X[rd]
+	"if(exception)\n"
+	"{\n"
+		"return exception;\n"
+	"}\n"
+
 	"*((RISCV64*)cpu)->X[" + toString(rd) + "] = (etiss_int64)cast_1;\n"
 	#if RISCV64_DEBUG_CALL
 	"printf(\"*((RISCV64*)cpu)->X[" + toString(rd) + "] = %#lx\\n\",*((RISCV64*)cpu)->X[" + toString(rd) + "]); \n"
