@@ -862,7 +862,14 @@ static InstructionDefinition lb_rd_imm_rs1_(
 "offs = (etiss_int64)cast_0 + imm_extended;\n"
 #if RISCV64_DEBUG_CALL
 "printf(\"offs = %#lx\\n\",offs); \n"
-#endif	
+#endif
+
+// manually moved in front of assigning value to X[rd]
+"if(exception)\n"
+"{\n"
+	"return exception;\n"
+"}\n"
+
 "if(" + toString(rd) + " != 0)\n"
 "{\n"
 	"etiss_uint8 MEM_offs;\n"
@@ -882,10 +889,6 @@ static InstructionDefinition lb_rd_imm_rs1_(
  			
 		"cpu->instructionPointer = " +toString((uint64_t)(ic.current_address_+ 4 ))+"ULL; \n"
 		
-		"if(exception)\n"
-		"{\n"
-			"return exception;\n"
-		"}\n"
 ; 
 return true;
 },
@@ -1880,7 +1883,14 @@ static InstructionDefinition lbu_rd_imm_rs1_(
 "offs = (etiss_int64)cast_0 + imm_extended;\n"
 #if RISCV64_DEBUG_CALL
 "printf(\"offs = %#lx\\n\",offs); \n"
-#endif	
+#endif
+
+// manually moved in front of assigning value to X[rd]
+"if(exception)\n"
+"{\n"
+	"return exception;\n"
+"}\n"
+
 "if(" + toString(rd) + " != 0)\n"
 "{\n"
 	"etiss_uint8 MEM_offs;\n"
@@ -1895,10 +1905,6 @@ static InstructionDefinition lbu_rd_imm_rs1_(
  			
 		"cpu->instructionPointer = " +toString((uint64_t)(ic.current_address_+ 4 ))+"ULL; \n"
 		
-		"if(exception)\n"
-		"{\n"
-			"return exception;\n"
-		"}\n"
 ; 
 return true;
 },
@@ -2206,7 +2212,14 @@ static InstructionDefinition lhu_rd_imm_rs1_(
 "offs = (etiss_int64)cast_0 + imm_extended;\n"
 #if RISCV64_DEBUG_CALL
 "printf(\"offs = %#lx\\n\",offs); \n"
-#endif	
+#endif
+
+// manually moved in front of assigning value to X[rd]
+"if(exception)\n"
+"{\n"
+	"return exception;\n"
+"}\n"
+
 "if(" + toString(rd) + " != 0)\n"
 "{\n"
 	"etiss_uint16 MEM_offs;\n"
@@ -2221,10 +2234,6 @@ static InstructionDefinition lhu_rd_imm_rs1_(
  			
 		"cpu->instructionPointer = " +toString((uint64_t)(ic.current_address_+ 4 ))+"ULL; \n"
 		
-		"if(exception)\n"
-		"{\n"
-			"return exception;\n"
-		"}\n"
 ; 
 return true;
 },
@@ -2666,7 +2675,14 @@ static InstructionDefinition lwu_rd_imm_rs1_(
 "offs = (etiss_int64)cast_0 + imm_extended;\n"
 #if RISCV64_DEBUG_CALL
 "printf(\"offs = %#lx\\n\",offs); \n"
-#endif	
+#endif
+
+// manually moved in front of assigning value to X[rd]
+"if(exception)\n"
+"{\n"
+	"return exception;\n"
+"}\n"
+
 "if(" + toString(rd) + " != 0)\n"
 "{\n"
 	"etiss_uint32 MEM_offs;\n"
@@ -2681,10 +2697,6 @@ static InstructionDefinition lwu_rd_imm_rs1_(
  			
 		"cpu->instructionPointer = " +toString((uint64_t)(ic.current_address_+ 4 ))+"ULL; \n"
 		
-		"if(exception)\n"
-		"{\n"
-			"return exception;\n"
-		"}\n"
 ; 
 return true;
 },
@@ -3055,7 +3067,14 @@ static InstructionDefinition lw_rd_imm_rs1_(
 "offs = (etiss_int64)cast_0 + imm_extended;\n"
 #if RISCV64_DEBUG_CALL
 "printf(\"offs = %#lx\\n\",offs); \n"
-#endif	
+#endif
+
+// manually moved in front of assigning value to X[rd]
+"if(exception)\n"
+"{\n"
+	"return exception;\n"
+"}\n"
+
 "if(" + toString(rd) + " != 0)\n"
 "{\n"
 	"etiss_uint32 MEM_offs;\n"
@@ -3075,10 +3094,6 @@ static InstructionDefinition lw_rd_imm_rs1_(
  			
 		"cpu->instructionPointer = " +toString((uint64_t)(ic.current_address_+ 4 ))+"ULL; \n"
 		
-		"if(exception)\n"
-		"{\n"
-			"return exception;\n"
-		"}\n"
 ; 
 return true;
 },
@@ -3475,6 +3490,13 @@ static InstructionDefinition flw_rd_imm_xrs1_(
 "tmpbuf = (etiss_uint8 *)&MEM_offs;\n"
 "exception = (*(system->dread))(system->handle,cpu,offs,tmpbuf,4);\n"
 "res = MEM_offs;\n"
+
+// manually moved in front of assigning value to X[rd]
+"if(exception)\n"
+"{\n"
+	"return exception;\n"
+"}\n"
+
 #if RISCV64_DEBUG_CALL
 "printf(\"res = %#x\\n\",res); \n"
 #endif	
@@ -3500,11 +3522,6 @@ static InstructionDefinition flw_rd_imm_xrs1_(
  			
 		"cpu->instructionPointer = " +toString((uint64_t)(ic.current_address_+ 4 ))+"ULL; \n"
 		
-		// manually added
-		"if (exception)\n"
-		"{\n"
-			"return exception;\n"
-		"}\n"
 ; 
 return true;
 },
@@ -3895,7 +3912,14 @@ static InstructionDefinition ld_rd_imm_rs1_(
 "offs = (etiss_int64)cast_0 + imm_extended;\n"
 #if RISCV64_DEBUG_CALL
 "printf(\"offs = %#lx\\n\",offs); \n"
-#endif	
+#endif
+
+// manually moved in front of assigning value to X[rd]
+"if(exception)\n"
+"{\n"
+	"return exception;\n"
+"}\n"
+
 "if(" + toString(rd) + " != 0)\n"
 "{\n"
 	"etiss_uint64 MEM_offs;\n"
@@ -3915,10 +3939,6 @@ static InstructionDefinition ld_rd_imm_rs1_(
  			
 		"cpu->instructionPointer = " +toString((uint64_t)(ic.current_address_+ 4 ))+"ULL; \n"
 		
-		"if(exception)\n"
-		"{\n"
-			"return exception;\n"
-		"}\n"
 ; 
 return true;
 },
@@ -4126,6 +4146,13 @@ static InstructionDefinition fld_rd_imm_rs1_(
 "tmpbuf = (etiss_uint8 *)&MEM_offs;\n"
 "exception = (*(system->dread))(system->handle,cpu,offs,tmpbuf,8);\n"
 "res = MEM_offs;\n"
+
+// manually moved in front of assigning value to X[rd]
+"if(exception)\n"
+"{\n"
+	"return exception;\n"
+"}\n"
+
 #if RISCV64_DEBUG_CALL
 "printf(\"res = %#lx\\n\",res); \n"
 #endif	
@@ -4151,11 +4178,6 @@ static InstructionDefinition fld_rd_imm_rs1_(
  			
 		"cpu->instructionPointer = " +toString((uint64_t)(ic.current_address_+ 4 ))+"ULL; \n"
 		
-		// manually added
-		"if (exception)\n"
-		"{\n"
-			"return exception;\n"
-		"}\n"
 ; 
 return true;
 },
