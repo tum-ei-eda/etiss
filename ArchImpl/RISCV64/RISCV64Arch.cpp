@@ -1399,7 +1399,14 @@ static InstructionDefinition lh_rd_imm_rs1_(
 "offs = (etiss_int64)cast_0 + imm_extended;\n"
 #if RISCV64_DEBUG_CALL
 "printf(\"offs = %#lx\\n\",offs); \n"
-#endif	
+#endif
+
+// manually moved in front of assigning value to X[rd]
+"if(exception)\n"
+"{\n"
+	"return exception;\n"
+"}\n"
+
 "if(" + toString(rd) + " != 0)\n"
 "{\n"
 	"etiss_uint16 MEM_offs;\n"
@@ -1418,11 +1425,7 @@ static InstructionDefinition lh_rd_imm_rs1_(
 
  			
 		"cpu->instructionPointer = " +toString((uint64_t)(ic.current_address_+ 4 ))+"ULL; \n"
-		
-		"if(exception)\n"
-		"{\n"
-			"return exception;\n"
-		"}\n"
+
 ; 
 return true;
 },

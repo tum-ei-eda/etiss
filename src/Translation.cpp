@@ -437,7 +437,7 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
         }
     }
 
-    return 0; // should this also set etiss::RETURNCODE::JITCOMPILATIONERROR ??
+    return 0;
 }
 /// \note this function only does the instruction to C code translation. compilation (C code to function pointer) is
 /// done in getBlock()
@@ -577,7 +577,6 @@ etiss::int32 Translation::translateBlock(CodeBlock &cb)
         count++;
     } while ((count < maxcount && !context.force_block_end_) || context.force_append_next_instr_);
 
-    // do we need to return a pagefault here as well?
     return etiss::RETURNCODE::NOERROR;
 }
 
