@@ -89,9 +89,9 @@ void RISCV64MMU::SignalMMU(uint64_t control_reg_val_)
     }
     if (control_reg_val_ != mmu_control_reg_val_)
     {
-        tlb_->Flush();
-        tlb_entry_map_.clear();
-        etiss::log(etiss::VERBOSE, GetName() + " : TLB flushed due to page directory update.");
+        // tlb_->Flush();
+        // tlb_entry_map_.clear();
+        // etiss::log(etiss::VERBOSE, GetName() + " : TLB flushed due to page directory update.");
         mmu_control_reg_val_ = control_reg_val_;
         if (pid_enabled_)
             UpdatePid(GetPid(control_reg_val_));
@@ -254,25 +254,25 @@ int32_t RISCV64MMU::CheckProtection(const PTE &pte, MM_ACCESS access)
     return etiss::RETURNCODE::NOERROR;
 }
 
-int32_t RISCV64MMU::UpdatePTEFlags(PTE &pte, etiss::mm::MM_ACCESS access)
+int32_t RISCV64MMU::UpdatePTEFlags(const uint64_t vfn, PTE *pte, etiss::mm::MM_ACCESS access)
 {
-    uint64_t pte_val = pte.Get();
-    uint64_t pte_addr = pte.GetAddr();
+    uint64_t pte_val = pte->Get();
+    uint64_t pte_addr = pte->GetAddr();
     unsigned char *buffer = (unsigned char *)(&pte_val);
     int32_t fault = etiss::RETURNCODE::NOERROR;
 
-    if (0 == pte.GetByName("A"))
+    if (0 == pte->GetByName("A"))
     {
         pte_val |= PTE_A;
-        pte.Update(pte_val);
+        fault = tlb_->UpdatePTE(vfn, pte_val);
         if ((fault = system_->dwrite(system_->handle, cpu_, pte_addr, buffer, PTESIZE)))
             return fault;
     }
 
-    if ((0 == pte.GetByName("D")) && (W_ACCESS == access))
+    if ((0 == pte->GetByName("D")) && (W_ACCESS == access))
     {
         pte_val |= PTE_D;
-        pte.Update(pte_val);
+        fault = tlb_->UpdatePTE(vfn, pte_val);
         if ((fault = system_->dwrite(system_->handle, cpu_, pte_addr, buffer, PTESIZE)))
             return fault;
     }

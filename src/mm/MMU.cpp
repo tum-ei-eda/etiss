@@ -140,7 +140,7 @@ int32_t MMU::Translate(const uint64_t vma, uint64_t *const pma_buf, MM_ACCESS ac
     uint64_t offset_mask = (1 << (page_offset_msb_pos + 1)) - 1;
     *pma_buf = (pte_buf.GetPPN() << (page_offset_msb_pos + 1)) | (vma & offset_mask);
 
-    if ((fault = UpdatePTEFlags(pte_buf, access)))
+    if ((fault = UpdatePTEFlags(vpn, &pte_buf, access)))
         return fault;
 
     // Check whether vma is trying to write the data cached in TLB, if so
@@ -221,6 +221,34 @@ void MMU::AddTLBEntryMap(uint64_t phy_addr_, PTE &pte)
     tlb_entry_map_[phy_addr_] = &pte;
 }
 
+void MMU::EvictTLBEntry(const uint64_t vma)
+{
+    // get bitfield info for calculating vpn from vma
+    if (PTEFormat::Instance().GetFormatMap().find(std::string("PPN")) == PTEFormat::Instance().GetFormatMap().end())
+        etiss::log(etiss::FATALERROR, "PPN not defined in PTE format");
+    if (PTEFormat::Instance().GetFormatMap().find(std::string("PAGEOFFSET")) ==
+        PTEFormat::Instance().GetFormatMap().end())
+        etiss::log(etiss::FATALERROR, "Page size offset not defined in PTE format");
+    std::pair<uint32_t, uint32_t> page_offset_bitfield =
+        PTEFormat::Instance().GetFormatMap().find(std::string("PAGEOFFSET"))->second;
+    std::pair<uint32_t, uint32_t> ppn_bitfield = PTEFormat::Instance().GetFormatMap().find(std::string("PPN"))->second;
+    uint32_t page_offset_msb_pos = page_offset_bitfield.first;
+    uint64_t vpn = vma >> (page_offset_msb_pos + 1);
+    
+    // get PTE for eviction from tlb_entry_map_
+    PTE pte_buf = PTE(0);
+    int32_t fault = tlb_->Lookup(vpn, &pte_buf);
+    if (fault) return;  // vma not in tlb, nothing to do
+    
+    // evict corresponding entry from tlb_entry_map_
+    std::map<uint64_t, PTE *>::iterator itr = tlb_entry_map_.find(pte_buf.GetAddr());
+    if (itr != tlb_entry_map_.end())
+        tlb_entry_map_.erase(itr);
+    
+    // evict PTE from tlb_
+    tlb_->EvictPTE(vpn);
+}
+
 int32_t tlb_miss_handler(int32_t fault, MMU *mmu, uint64_t vma, MM_ACCESS access)
 {
     if (mmu->HasPageTableWalker())
@@ -267,6 +295,14 @@ extern "C"
     {
         CPUCore *core = (CPUCore *)cpu->_etiss_private_handle_;
         core->getMMU()->GetTLB()->Flush();
+        core->getMMU()->GetTLBEntryMap().clear();
         return etiss::RETURNCODE::RELOADBLOCKS;
+    }
+
+    int32_t ETISS_TLB_EVICT_VMA(ETISS_CPU *cpu, ETISS_System * const system, void * const * const plugin_pointers, etiss_uint64 vma_)
+    {
+        CPUCore *core = (CPUCore *)cpu->_etiss_private_handle_; 
+        core->getMMU()->EvictTLBEntry(vma_);
+        return etiss::RETURNCODE::RELOADBLOCKS; // TODO: reload only blocks containing the given VMA
     }
 }

@@ -57,7 +57,34 @@ etiss_int32 tmp = ETISS_SIGNAL_MMU(cpu, system, plugin_pointers, val);
 
 #ifndef ETISS_ARCH_STATIC_FN_ONLY
 
-static inline etiss_int32 flush_tlb (ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers, etiss_uint64 vaddr, etiss_uint64 asid)
+static inline etiss_int32 evict_all (ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers)
+{
+return ETISS_TLB_FLUSH(cpu, system, plugin_pointers);
+}
+
+#endif
+
+#ifndef ETISS_ARCH_STATIC_FN_ONLY
+
+static inline etiss_int32 evict_asid (ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers, etiss_uint64 asid)
+{
+return ETISS_TLB_FLUSH(cpu, system, plugin_pointers);
+}
+
+#endif
+
+#ifndef ETISS_ARCH_STATIC_FN_ONLY
+
+static inline etiss_int32 evict_addr (ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers, etiss_uint64 vaddr)
+{
+return ETISS_TLB_EVICT_VMA(cpu, system, plugin_pointers, vaddr);
+}
+
+#endif
+
+#ifndef ETISS_ARCH_STATIC_FN_ONLY
+
+static inline etiss_int32 evict_addr_asid (ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers, etiss_uint64 vaddr, etiss_uint64 asid)
 {
 return ETISS_TLB_FLUSH(cpu, system, plugin_pointers);
 }

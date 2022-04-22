@@ -150,11 +150,11 @@ class MMU
      * @brief Reserved for some MMU that might update PTE when translating
      *
      */
-    virtual int32_t UpdatePTEFlags(PTE &, MM_ACCESS) = 0;
+    virtual int32_t UpdatePTEFlags(uint64_t, PTE *, MM_ACCESS) = 0;
 
     bool IsTLBFull() const { return tlb_->IsFull(); }
 
-    PTE EvictTLBEntry(const uint64_t vfn) { return tlb_->EvictPTE(vfn); }
+    void EvictTLBEntry(const uint64_t vma);
 
     bool HasPageTableWalker() { return hw_page_table_walker_; }
 
@@ -175,6 +175,8 @@ class MMU
     virtual int32_t GetPid(uint64_t control_reg_val_) { return 0; }
 
     std::shared_ptr<etiss::mm::TLB<0>> GetTLB() { return tlb_; }
+
+    std::map<uint64_t, PTE *> GetTLBEntryMap() { return tlb_entry_map_; }
 
     /**
      * @brief Checks if memory access is overlapping page-boundary.

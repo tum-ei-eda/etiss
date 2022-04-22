@@ -7418,11 +7418,24 @@ rs2 += R_rs2_0.read(ba) << 0;
 
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4UL) + ";\n";
+partInit.code() += "etiss_int32 ret = 0U;\n";
 partInit.code() += "((RISCV64*)cpu)->FENCE[" + std::to_string(2U) + "] = " + std::to_string(rs1) + ";\n";
 partInit.code() += "((RISCV64*)cpu)->FENCE[" + std::to_string(3U) + "] = " + std::to_string(rs2) + ";\n";
 partInit.code() += "etiss_uint64 vaddr = *((RISCV64*)cpu)->X[" + std::to_string(rs1) + "];\n";
 partInit.code() += "etiss_uint64 asid = *((RISCV64*)cpu)->X[" + std::to_string(rs2) + "];\n";
-partInit.code() += "etiss_int32 ret = flush_tlb(cpu, system, plugin_pointers, vaddr, asid);\n";
+if (rs1 == 0U) {
+if (rs2 == 0U) {
+partInit.code() += "ret = evict_all(cpu, system, plugin_pointers);\n";
+} else {
+partInit.code() += "ret = evict_asid(cpu, system, plugin_pointers, asid);\n";
+}
+} else {
+if (rs2 == 0U) {
+partInit.code() += "ret = evict_addr(cpu, system, plugin_pointers, vaddr);\n";
+} else {
+partInit.code() += "ret = evict_addr_asid(cpu, system, plugin_pointers, vaddr, asid);\n";
+}
+}
 partInit.code() += "return ret;\n"; // manually added
 // -----------------------------------------------------------------------------
 

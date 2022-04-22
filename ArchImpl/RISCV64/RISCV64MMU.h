@@ -68,7 +68,7 @@ class RISCV64MMU : public etiss::mm::MMU
 
     int32_t CheckProtection(const PTE &pte, etiss::mm::MM_ACCESS access);
 
-    int32_t UpdatePTEFlags(PTE &pte, etiss::mm::MM_ACCESS access);
+    int32_t UpdatePTEFlags(const uint64_t vfn, PTE *pte, etiss::mm::MM_ACCESS access);
 
     bool CheckPrivilegedMode() { return (((RISCV64 *)cpu_)->CSR[3088] == PRV_M) ? false : true; }
 
