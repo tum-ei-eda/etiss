@@ -77,8 +77,7 @@ return ETISS_TLB_FLUSH(cpu, system, plugin_pointers);
 
 static inline etiss_int32 evict_addr (ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers, etiss_uint64 vaddr)
 {
-// return ETISS_TLB_EVICT_VMA(cpu, system, plugin_pointers, vaddr);
-return ETISS_TLB_FLUSH(cpu, system, plugin_pointers);
+return ETISS_TLB_EVICT_VMA(cpu, system, plugin_pointers, vaddr);
 }
 
 #endif

@@ -154,7 +154,7 @@ class MMU
 
     bool IsTLBFull() const { return tlb_->IsFull(); }
 
-    PTE EvictTLBEntry(const uint64_t vfn) { return tlb_->EvictPTE(vfn); }
+    void EvictTLBEntry(const uint64_t vma);
 
     bool HasPageTableWalker() { return hw_page_table_walker_; }
 

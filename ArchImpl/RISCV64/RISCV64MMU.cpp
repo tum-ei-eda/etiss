@@ -264,6 +264,7 @@ int32_t RISCV64MMU::UpdatePTEFlags(const uint64_t vfn, PTE *pte, etiss::mm::MM_A
     if (0 == pte->GetByName("A"))
     {
         pte_val |= PTE_A;
+        fault = tlb_->UpdatePTE(vfn, pte_val);
         if ((fault = system_->dwrite(system_->handle, cpu_, pte_addr, buffer, PTESIZE)))
             return fault;
     }
@@ -271,11 +272,11 @@ int32_t RISCV64MMU::UpdatePTEFlags(const uint64_t vfn, PTE *pte, etiss::mm::MM_A
     if ((0 == pte->GetByName("D")) && (W_ACCESS == access))
     {
         pte_val |= PTE_D;
+        fault = tlb_->UpdatePTE(vfn, pte_val);
         if ((fault = system_->dwrite(system_->handle, cpu_, pte_addr, buffer, PTESIZE)))
             return fault;
     }
 
-    fault = tlb_->UpdatePTE(vfn, pte_val);
     return fault;
 }
 
