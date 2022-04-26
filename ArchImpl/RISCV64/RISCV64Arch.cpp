@@ -73,7 +73,8 @@ void RISCV64Arch::resetCPU(ETISS_CPU * cpu,etiss::uint64 * startpointer)
     else cpu->instructionPointer = 0x0;   //  reference to manual
     cpu->mode = 1;
     cpu->cpuTime_ps = 0;
-    cpu->cpuCycleTime_ps = 31250;
+    cpu->cpuCycleTime_ps = etiss::cfg(getLastAssignedCoreName())
+                                 .get<uint32_t>("arch.cpu_cycle_time_ps", 31250); // original: 31250; // 32MHz
     #if RISCV64_Pipeline1 || RISCV64_Pipeline2
     //Initialize resources measurements
     cpu->resources[0] = "I_RAM";
