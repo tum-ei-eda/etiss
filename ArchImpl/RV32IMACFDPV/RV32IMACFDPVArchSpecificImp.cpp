@@ -64,10 +64,10 @@ void RV32IMACFDPVArch::initInstrSet(etiss::instr::ModedInstructionSet & mis) con
      /* Set default JIT Extensions. Read Parameters set from ETISS configuration and append with architecturally needed */
      std::string cfgPar = "";
      cfgPar = etiss::cfg().get<std::string>("jit.external_headers", ";");
-     etiss::cfg().set<std::string>("jit.external_headers", cfgPar + "etiss/jit/libsoftfloat.h");
+     etiss::cfg().set<std::string>("jit.external_headers", cfgPar + "etiss/jit/libsoftfloat.h;etiss/jit/softvector.h;etiss/jit/libsoftvector.h");
 
      cfgPar = etiss::cfg().get<std::string>("jit.external_libs", ";");
-     etiss::cfg().set<std::string>("jit.external_libs", cfgPar + "softfloat");
+     etiss::cfg().set<std::string>("jit.external_libs", cfgPar + "softfloat;softvector;etiss_softvector");
 
      cfgPar = etiss::cfg().get<std::string>("jit.external_header_paths", ";");
      etiss::cfg().set<std::string>("jit.external_header_paths", cfgPar + "/etiss/jit");
