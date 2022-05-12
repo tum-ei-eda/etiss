@@ -1,5 +1,5 @@
 /**
- * Generated on Thu, 12 May 2022 11:48:08 +0200.
+ * Generated on Thu, 12 May 2022 16:30:21 +0200.
  *
  * This file contains the instruction behavior models of the RV32V
  * instruction set for the RV32IMACFDPV core architecture.
@@ -292,11 +292,7 @@ mew += R_mew_0.read(ba) << 0;
 
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
-partInit.code() += "etiss_uint32 _vtype = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(3105U) + "];\n";
 partInit.code() += "etiss_uint32 _eew = vcfg_concatEEW(" + std::to_string(mew) + ", " + std::to_string(width) + ");\n";
-partInit.code() += "etiss_uint32 _vstart = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8U) + "];\n";
-partInit.code() += "etiss_uint32 _vl = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(3104U) + "];\n";
-partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(3106U) + "] * 8U;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -3652,11 +3648,11 @@ ss << "vmseq_vv" << " # " << ba << (" [vd=" + std::to_string(vd) + " | vs1=" + s
 	}
 );
 
-// VMSNE_VI --------------------------------------------------------------------
-static InstructionDefinition vmsne_vi_vd_simm5_vs2_vm (
+// VMSSEQ_VI -------------------------------------------------------------------
+static InstructionDefinition vmsseq_vi_vd_simm5_vs2_vm (
 	ISA32_RV32IMACFDPV,
-	"vmsne_vi",
-	(uint32_t) 0x64003057,
+	"vmsseq_vi",
+	(uint32_t) 0x60003057,
 	(uint32_t) 0xfc00707f,
 	[] (BitArray & ba,etiss::CodeSet & cs,InstructionContext & ic)
 	{
@@ -3683,7 +3679,7 @@ vm += R_vm_0.read(ba) << 0;
 
 		CodePart & partInit = cs.append(CodePart::INITIALREQUIRED);
 
-		partInit.code() = std::string("//VMSNE_VI\n");
+		partInit.code() = std::string("//VMSSEQ_VI\n");
 
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
@@ -3691,7 +3687,7 @@ partInit.code() += "etiss_uint32 _vtype = *((RV32IMACFDPV*)cpu)->CSR[" + std::to
 partInit.code() += "etiss_uint32 _vstart = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8U) + "];\n";
 partInit.code() += "etiss_uint32 _vl = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(3104U) + "];\n";
 partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(3106U) + "] * 8U;\n";
-partInit.code() += "etiss_uint32 ret = vmsne_vi(((RV32IMACFDPV*)cpu)->V, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs2) + ", " + std::to_string(simm5) + ", _vstart, _vlen, _vl);\n";
+partInit.code() += "etiss_uint32 ret = vmseq_vi(((RV32IMACFDPV*)cpu)->V, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs2) + ", " + std::to_string(simm5) + ", _vstart, _vlen, _vl);\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
 partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
@@ -3727,7 +3723,7 @@ vm += R_vm_0.read(ba) << 0;
 
 		std::stringstream ss;
 // -----------------------------------------------------------------------------
-ss << "vmsne_vi" << " # " << ba << (" [vd=" + std::to_string(vd) + " | simm5=" + std::to_string(simm5) + " | vs2=" + std::to_string(vs2) + " | vm=" + std::to_string(vm) + "]");
+ss << "vmsseq_vi" << " # " << ba << (" [vd=" + std::to_string(vd) + " | simm5=" + std::to_string(simm5) + " | vs2=" + std::to_string(vs2) + " | vm=" + std::to_string(vm) + "]");
 // -----------------------------------------------------------------------------
 		return ss.str();
 	}
@@ -3890,6 +3886,87 @@ vm += R_vm_0.read(ba) << 0;
 		std::stringstream ss;
 // -----------------------------------------------------------------------------
 ss << "vmsne_vv" << " # " << ba << (" [vd=" + std::to_string(vd) + " | vs1=" + std::to_string(vs1) + " | vs2=" + std::to_string(vs2) + " | vm=" + std::to_string(vm) + "]");
+// -----------------------------------------------------------------------------
+		return ss.str();
+	}
+);
+
+// VMSNE_VI --------------------------------------------------------------------
+static InstructionDefinition vmsne_vi_vd_simm5_vs2_vm (
+	ISA32_RV32IMACFDPV,
+	"vmsne_vi",
+	(uint32_t) 0x64003057,
+	(uint32_t) 0xfc00707f,
+	[] (BitArray & ba,etiss::CodeSet & cs,InstructionContext & ic)
+	{
+
+// -----------------------------------------------------------------------------
+
+// -----------------------------------------------------------------------------
+
+// -----------------------------------------------------------------------------
+etiss_uint32 vd = 0;
+static BitArrayRange R_vd_0(11, 7);
+vd += R_vd_0.read(ba) << 0;
+etiss_uint32 simm5 = 0;
+static BitArrayRange R_simm5_0(19, 15);
+simm5 += R_simm5_0.read(ba) << 0;
+etiss_uint32 vs2 = 0;
+static BitArrayRange R_vs2_0(24, 20);
+vs2 += R_vs2_0.read(ba) << 0;
+etiss_uint32 vm = 0;
+static BitArrayRange R_vm_0(25, 25);
+vm += R_vm_0.read(ba) << 0;
+
+// -----------------------------------------------------------------------------
+
+		CodePart & partInit = cs.append(CodePart::INITIALREQUIRED);
+
+		partInit.code() = std::string("//VMSNE_VI\n");
+
+// -----------------------------------------------------------------------------
+partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
+partInit.code() += "etiss_uint32 _vtype = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(3105U) + "];\n";
+partInit.code() += "etiss_uint32 _vstart = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8U) + "];\n";
+partInit.code() += "etiss_uint32 _vl = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(3104U) + "];\n";
+partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(3106U) + "] * 8U;\n";
+partInit.code() += "etiss_uint32 ret = vmsne_vi(((RV32IMACFDPV*)cpu)->V, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs2) + ", " + std::to_string(simm5) + ", _vstart, _vlen, _vl);\n";
+partInit.code() += "if (ret != 0U) {\n";
+partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
+partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "}\n";
+partInit.code() += " else {\n";
+partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
+partInit.code() += "}\n";
+partInit.code() += "if (exception) return exception;\n";
+// -----------------------------------------------------------------------------
+
+		partInit.getAffectedRegisters().add("instructionPointer", 32);
+
+		return true;
+	},
+	0,
+	[] (BitArray & ba, Instruction & instr)
+	{
+// -----------------------------------------------------------------------------
+etiss_uint32 vd = 0;
+static BitArrayRange R_vd_0(11, 7);
+vd += R_vd_0.read(ba) << 0;
+etiss_uint32 simm5 = 0;
+static BitArrayRange R_simm5_0(19, 15);
+simm5 += R_simm5_0.read(ba) << 0;
+etiss_uint32 vs2 = 0;
+static BitArrayRange R_vs2_0(24, 20);
+vs2 += R_vs2_0.read(ba) << 0;
+etiss_uint32 vm = 0;
+static BitArrayRange R_vm_0(25, 25);
+vm += R_vm_0.read(ba) << 0;
+
+// -----------------------------------------------------------------------------
+
+		std::stringstream ss;
+// -----------------------------------------------------------------------------
+ss << "vmsne_vi" << " # " << ba << (" [vd=" + std::to_string(vd) + " | simm5=" + std::to_string(simm5) + " | vs2=" + std::to_string(vs2) + " | vm=" + std::to_string(vm) + "]");
 // -----------------------------------------------------------------------------
 		return ss.str();
 	}
@@ -4786,87 +4863,6 @@ ss << "vmsle_vx" << " # " << ba << (" [vd=" + std::to_string(vd) + " | rs1=" + s
 	}
 );
 
-// VMSGTU_VV -------------------------------------------------------------------
-static InstructionDefinition vmsgtu_vv_vd_vs1_vs2_vm (
-	ISA32_RV32IMACFDPV,
-	"vmsgtu_vv",
-	(uint32_t) 0x78000057,
-	(uint32_t) 0xfc00707f,
-	[] (BitArray & ba,etiss::CodeSet & cs,InstructionContext & ic)
-	{
-
-// -----------------------------------------------------------------------------
-
-// -----------------------------------------------------------------------------
-
-// -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
-static BitArrayRange R_vd_0(11, 7);
-vd += R_vd_0.read(ba) << 0;
-etiss_uint32 vs1 = 0;
-static BitArrayRange R_vs1_0(19, 15);
-vs1 += R_vs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
-static BitArrayRange R_vs2_0(24, 20);
-vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
-static BitArrayRange R_vm_0(25, 25);
-vm += R_vm_0.read(ba) << 0;
-
-// -----------------------------------------------------------------------------
-
-		CodePart & partInit = cs.append(CodePart::INITIALREQUIRED);
-
-		partInit.code() = std::string("//VMSGTU_VV\n");
-
-// -----------------------------------------------------------------------------
-partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
-partInit.code() += "etiss_uint32 _vtype = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(3105U) + "];\n";
-partInit.code() += "etiss_uint32 _vstart = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8U) + "];\n";
-partInit.code() += "etiss_uint32 _vl = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(3104U) + "];\n";
-partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(3106U) + "] * 8U;\n";
-partInit.code() += "etiss_uint32 ret = vmsgtu_vv(((RV32IMACFDPV*)cpu)->V, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs1) + ", " + std::to_string(vs2) + ", _vstart, _vlen, _vl);\n";
-partInit.code() += "if (ret != 0U) {\n";
-partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
-partInit.code() += "}\n";
-partInit.code() += " else {\n";
-partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
-partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
-// -----------------------------------------------------------------------------
-
-		partInit.getAffectedRegisters().add("instructionPointer", 32);
-
-		return true;
-	},
-	0,
-	[] (BitArray & ba, Instruction & instr)
-	{
-// -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
-static BitArrayRange R_vd_0(11, 7);
-vd += R_vd_0.read(ba) << 0;
-etiss_uint32 vs1 = 0;
-static BitArrayRange R_vs1_0(19, 15);
-vs1 += R_vs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
-static BitArrayRange R_vs2_0(24, 20);
-vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
-static BitArrayRange R_vm_0(25, 25);
-vm += R_vm_0.read(ba) << 0;
-
-// -----------------------------------------------------------------------------
-
-		std::stringstream ss;
-// -----------------------------------------------------------------------------
-ss << "vmsgtu_vv" << " # " << ba << (" [vd=" + std::to_string(vd) + " | vs1=" + std::to_string(vs1) + " | vs2=" + std::to_string(vs2) + " | vm=" + std::to_string(vm) + "]");
-// -----------------------------------------------------------------------------
-		return ss.str();
-	}
-);
-
 // VMSGTU_VX -------------------------------------------------------------------
 static InstructionDefinition vmsgtu_vx_vd_rs1_vs2_vm (
 	ISA32_RV32IMACFDPV,
@@ -4943,87 +4939,6 @@ vm += R_vm_0.read(ba) << 0;
 		std::stringstream ss;
 // -----------------------------------------------------------------------------
 ss << "vmsgtu_vx" << " # " << ba << (" [vd=" + std::to_string(vd) + " | rs1=" + std::to_string(rs1) + " | vs2=" + std::to_string(vs2) + " | vm=" + std::to_string(vm) + "]");
-// -----------------------------------------------------------------------------
-		return ss.str();
-	}
-);
-
-// VMSGT_VV --------------------------------------------------------------------
-static InstructionDefinition vmsgt_vv_vd_vs1_vs2_vm (
-	ISA32_RV32IMACFDPV,
-	"vmsgt_vv",
-	(uint32_t) 0x7c000057,
-	(uint32_t) 0xfc00707f,
-	[] (BitArray & ba,etiss::CodeSet & cs,InstructionContext & ic)
-	{
-
-// -----------------------------------------------------------------------------
-
-// -----------------------------------------------------------------------------
-
-// -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
-static BitArrayRange R_vd_0(11, 7);
-vd += R_vd_0.read(ba) << 0;
-etiss_uint32 vs1 = 0;
-static BitArrayRange R_vs1_0(19, 15);
-vs1 += R_vs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
-static BitArrayRange R_vs2_0(24, 20);
-vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
-static BitArrayRange R_vm_0(25, 25);
-vm += R_vm_0.read(ba) << 0;
-
-// -----------------------------------------------------------------------------
-
-		CodePart & partInit = cs.append(CodePart::INITIALREQUIRED);
-
-		partInit.code() = std::string("//VMSGT_VV\n");
-
-// -----------------------------------------------------------------------------
-partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
-partInit.code() += "etiss_uint32 _vtype = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(3105U) + "];\n";
-partInit.code() += "etiss_uint32 _vstart = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8U) + "];\n";
-partInit.code() += "etiss_uint32 _vl = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(3104U) + "];\n";
-partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(3106U) + "] * 8U;\n";
-partInit.code() += "etiss_uint32 ret = vmsgt_vv(((RV32IMACFDPV*)cpu)->V, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs1) + ", " + std::to_string(vs2) + ", _vstart, _vlen, _vl);\n";
-partInit.code() += "if (ret != 0U) {\n";
-partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
-partInit.code() += "}\n";
-partInit.code() += " else {\n";
-partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
-partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
-// -----------------------------------------------------------------------------
-
-		partInit.getAffectedRegisters().add("instructionPointer", 32);
-
-		return true;
-	},
-	0,
-	[] (BitArray & ba, Instruction & instr)
-	{
-// -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
-static BitArrayRange R_vd_0(11, 7);
-vd += R_vd_0.read(ba) << 0;
-etiss_uint32 vs1 = 0;
-static BitArrayRange R_vs1_0(19, 15);
-vs1 += R_vs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
-static BitArrayRange R_vs2_0(24, 20);
-vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
-static BitArrayRange R_vm_0(25, 25);
-vm += R_vm_0.read(ba) << 0;
-
-// -----------------------------------------------------------------------------
-
-		std::stringstream ss;
-// -----------------------------------------------------------------------------
-ss << "vmsgt_vv" << " # " << ba << (" [vd=" + std::to_string(vd) + " | vs1=" + std::to_string(vs1) + " | vs2=" + std::to_string(vs2) + " | vm=" + std::to_string(vm) + "]");
 // -----------------------------------------------------------------------------
 		return ss.str();
 	}

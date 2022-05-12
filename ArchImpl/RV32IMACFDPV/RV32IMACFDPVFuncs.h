@@ -1,5 +1,5 @@
 /**
- * Generated on Thu, 12 May 2022 11:48:08 +0200.
+ * Generated on Thu, 12 May 2022 16:30:21 +0200.
  *
  * This file contains the function macros for the RV32IMACFDPV core architecture.
  */
@@ -82,6 +82,58 @@ static inline etiss_uint32 fclass_s(etiss_uint32);
 
 #ifndef ETISS_ARCH_STATIC_FN_ONLY
 static inline etiss_uint32 fget_flags();
+#endif
+
+#ifndef ETISS_ARCH_STATIC_FN_ONLY
+static inline etiss_uint64 fadd_d(etiss_uint64, etiss_uint64, etiss_uint8);
+#endif
+
+#ifndef ETISS_ARCH_STATIC_FN_ONLY
+static inline etiss_uint64 fsub_d(etiss_uint64, etiss_uint64, etiss_uint8);
+#endif
+
+#ifndef ETISS_ARCH_STATIC_FN_ONLY
+static inline etiss_uint64 fmul_d(etiss_uint64, etiss_uint64, etiss_uint8);
+#endif
+
+#ifndef ETISS_ARCH_STATIC_FN_ONLY
+static inline etiss_uint64 fdiv_d(etiss_uint64, etiss_uint64, etiss_uint8);
+#endif
+
+#ifndef ETISS_ARCH_STATIC_FN_ONLY
+static inline etiss_uint64 fmadd_d(etiss_uint64, etiss_uint64, etiss_uint64, etiss_uint32, etiss_uint8);
+#endif
+
+#ifndef ETISS_ARCH_STATIC_FN_ONLY
+static inline etiss_uint64 fsel_d(etiss_uint64, etiss_uint64, etiss_uint32);
+#endif
+
+#ifndef ETISS_ARCH_STATIC_FN_ONLY
+static inline etiss_uint64 fsqrt_d(etiss_uint64, etiss_uint8);
+#endif
+
+#ifndef ETISS_ARCH_STATIC_FN_ONLY
+static inline etiss_uint64 fcmp_d(etiss_uint64, etiss_uint64, etiss_uint32);
+#endif
+
+#ifndef ETISS_ARCH_STATIC_FN_ONLY
+static inline etiss_uint64 fcvt_d(etiss_uint64, etiss_uint32, etiss_uint8);
+#endif
+
+#ifndef ETISS_ARCH_STATIC_FN_ONLY
+static inline etiss_uint32 fconv_d2f(etiss_uint64, etiss_uint8);
+#endif
+
+#ifndef ETISS_ARCH_STATIC_FN_ONLY
+static inline etiss_uint64 fconv_f2d(etiss_uint32, etiss_uint8);
+#endif
+
+#ifndef ETISS_ARCH_STATIC_FN_ONLY
+static inline etiss_uint64 unbox_d(etiss_uint64);
+#endif
+
+#ifndef ETISS_ARCH_STATIC_FN_ONLY
+static inline etiss_uint64 fclass_d(etiss_uint64);
 #endif
 
 #ifndef ETISS_ARCH_STATIC_FN_ONLY
@@ -265,7 +317,7 @@ static inline etiss_uint8 vmseq_vv(etiss_int8 pV, etiss_uint16 pVTYPE, etiss_uin
 #endif
 
 #ifndef ETISS_ARCH_STATIC_FN_ONLY
-static inline etiss_uint8 vmsne_vi(etiss_int8 pV, etiss_uint16 pVTYPE, etiss_uint8 pVm, etiss_uint8 pVd, etiss_uint8 pVs2, etiss_uint8 pVimm, etiss_uint16 pVSTART, etiss_uint16 pVLEN, etiss_uint16 pVL);
+static inline etiss_uint8 vmseq_vi(etiss_int8 pV, etiss_uint16 pVTYPE, etiss_uint8 pVm, etiss_uint8 pVd, etiss_uint8 pVs2, etiss_uint8 pVimm, etiss_uint16 pVSTART, etiss_uint16 pVLEN, etiss_uint16 pVL);
 #endif
 
 #ifndef ETISS_ARCH_STATIC_FN_ONLY
@@ -274,6 +326,10 @@ static inline etiss_uint8 vmseq_vx(etiss_int8 pV, etiss_int8 pR, etiss_uint16 pV
 
 #ifndef ETISS_ARCH_STATIC_FN_ONLY
 static inline etiss_uint8 vmsne_vv(etiss_int8 pV, etiss_uint16 pVTYPE, etiss_uint8 pVm, etiss_uint8 pVd, etiss_uint8 pVs1, etiss_uint8 pVs2, etiss_uint16 pVSTART, etiss_uint16 pVLEN, etiss_uint16 pVL);
+#endif
+
+#ifndef ETISS_ARCH_STATIC_FN_ONLY
+static inline etiss_uint8 vmsne_vi(etiss_int8 pV, etiss_uint16 pVTYPE, etiss_uint8 pVm, etiss_uint8 pVd, etiss_uint8 pVs2, etiss_uint8 pVimm, etiss_uint16 pVSTART, etiss_uint16 pVLEN, etiss_uint16 pVL);
 #endif
 
 #ifndef ETISS_ARCH_STATIC_FN_ONLY
@@ -378,58 +434,6 @@ static inline etiss_uint8 vslide1up_vx(etiss_int8 pV, etiss_int8 pR, etiss_uint1
 
 #ifndef ETISS_ARCH_STATIC_FN_ONLY
 static inline etiss_uint8 vslide1down_vx(etiss_int8 pV, etiss_int8 pR, etiss_uint16 pVTYPE, etiss_uint8 pVm, etiss_uint8 pVd, etiss_uint8 pVs2, etiss_uint8 pRs1, etiss_uint16 pVSTART, etiss_uint16 pVLEN, etiss_uint16 pVL, etiss_uint8 pXLEN);
-#endif
-
-#ifndef ETISS_ARCH_STATIC_FN_ONLY
-static inline etiss_uint64 fadd_d(etiss_uint64, etiss_uint64, etiss_uint8);
-#endif
-
-#ifndef ETISS_ARCH_STATIC_FN_ONLY
-static inline etiss_uint64 fsub_d(etiss_uint64, etiss_uint64, etiss_uint8);
-#endif
-
-#ifndef ETISS_ARCH_STATIC_FN_ONLY
-static inline etiss_uint64 fmul_d(etiss_uint64, etiss_uint64, etiss_uint8);
-#endif
-
-#ifndef ETISS_ARCH_STATIC_FN_ONLY
-static inline etiss_uint64 fdiv_d(etiss_uint64, etiss_uint64, etiss_uint8);
-#endif
-
-#ifndef ETISS_ARCH_STATIC_FN_ONLY
-static inline etiss_uint64 fmadd_d(etiss_uint64, etiss_uint64, etiss_uint64, etiss_uint32, etiss_uint8);
-#endif
-
-#ifndef ETISS_ARCH_STATIC_FN_ONLY
-static inline etiss_uint64 fsel_d(etiss_uint64, etiss_uint64, etiss_uint32);
-#endif
-
-#ifndef ETISS_ARCH_STATIC_FN_ONLY
-static inline etiss_uint64 fsqrt_d(etiss_uint64, etiss_uint8);
-#endif
-
-#ifndef ETISS_ARCH_STATIC_FN_ONLY
-static inline etiss_uint64 fcmp_d(etiss_uint64, etiss_uint64, etiss_uint32);
-#endif
-
-#ifndef ETISS_ARCH_STATIC_FN_ONLY
-static inline etiss_uint64 fcvt_d(etiss_uint64, etiss_uint32, etiss_uint8);
-#endif
-
-#ifndef ETISS_ARCH_STATIC_FN_ONLY
-static inline etiss_uint32 fconv_d2f(etiss_uint64, etiss_uint8);
-#endif
-
-#ifndef ETISS_ARCH_STATIC_FN_ONLY
-static inline etiss_uint64 fconv_f2d(etiss_uint32, etiss_uint8);
-#endif
-
-#ifndef ETISS_ARCH_STATIC_FN_ONLY
-static inline etiss_uint64 unbox_d(etiss_uint64);
-#endif
-
-#ifndef ETISS_ARCH_STATIC_FN_ONLY
-static inline etiss_uint64 fclass_d(etiss_uint64);
 #endif
 
 #ifndef ETISS_ARCH_STATIC_FN_ONLY

@@ -1,5 +1,5 @@
 /**
- * Generated on Thu, 12 May 2022 11:48:08 +0200.
+ * Generated on Thu, 12 May 2022 16:30:21 +0200.
  *
  * This file contains the architecture class for the RV32IMACFDPV core architecture.
  */
@@ -182,7 +182,7 @@ void RV32IMACFDPVArch::resetCPU(ETISS_CPU * cpu,etiss::uint64 * startpointer)
  	rv32imacfdpvcpu->DPC = 0;
  	*rv32imacfdpvcpu->CSR[0] = 11;
 	*rv32imacfdpvcpu->CSR[256] = 11;
-	*rv32imacfdpvcpu->CSR[768] = 1536;
+	*rv32imacfdpvcpu->CSR[768] = 11;
 	*rv32imacfdpvcpu->CSR[769] = 1075056941;
 	*rv32imacfdpvcpu->CSR[3088] = 3;
 	*rv32imacfdpvcpu->CSR[772] = 4294966203;
