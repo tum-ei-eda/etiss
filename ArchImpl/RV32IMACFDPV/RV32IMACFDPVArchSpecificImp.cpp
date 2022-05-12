@@ -12,7 +12,7 @@
 
 #include "RV32IMACFDPVArch.h"
 #include "RV32IMACFDPVArchSpecificImp.h"
-
+#include "Encoding.h"
 /**
 	@brief This function will be called automatically in order to handling exceptions such as interrupt, system call, illegal instructions
 
@@ -31,10 +31,256 @@ etiss::int32 RV32IMACFDPVArch::handleException(etiss::int32 cause, ETISS_CPU * c
 {
 	etiss_uint32 handledCause = cause;
 
-	/**************************************************************************
-	*		 Exception handling machanism should be implemented here		  *
-	***************************************************************************/
+    std::function<void()> disableItr = [cpu]() {
+        if (likely((*((RV32IMACFDPV *)cpu)->CSR[CSR_MSTATUS]) & MSTATUS_MIE))
+        {
+            // Push MIE, SIE, UIE to MPIE, SPIE, UPIE
+            etiss_uint32 irq_enable = ((*((RV32IMACFDPV *)cpu)->CSR[CSR_MSTATUS]) & MSTATUS_MIE) |
+                                      ((*((RV32IMACFDPV *)cpu)->CSR[CSR_MSTATUS]) & MSTATUS_UIE) |
+                                      ((*((RV32IMACFDPV *)cpu)->CSR[CSR_MSTATUS]) & MSTATUS_SIE);
+            (*((RV32IMACFDPV *)cpu)->CSR[CSR_MSTATUS]) = (irq_enable << 4) | ((*((RV32IMACFDPV *)cpu)->CSR[CSR_MSTATUS]) & 0xffffff00);
+        }
+    };
 
+    std::function<etiss_uint32(etiss_uint32, etiss_uint32)> handle = [cpu, cause](etiss_uint32 causeCode,
+                                                                                  etiss_uint32 addr) {
+        std::stringstream msg;
+
+        msg << "Exception is captured with cause code: 0x" << std::hex << causeCode;
+        msg << "  Exception message: " << etiss::RETURNCODE::getErrorMessages()[cause] << std::endl;
+
+        switch (causeCode & 0x80000000)
+        {
+
+        // Exception
+        case 0x0:
+            // Check exception delegation
+            if (*((RV32IMACFDPV *)cpu)->CSR[CSR_MEDELEG] & (1 << (causeCode & 0x1f)))
+            {
+                // Pop MPIE to MIE
+                etiss::log(etiss::VERBOSE, "Exception is delegated to supervisor mode");
+                (*((RV32IMACFDPV *)cpu)->CSR[CSR_MSTATUS]) ^=
+                    (((*((RV32IMACFDPV *)cpu)->CSR[CSR_MSTATUS]) & MSTATUS_MPIE) >> 4) ^ ((*((RV32IMACFDPV *)cpu)->CSR[CSR_MSTATUS]) & MSTATUS_MIE);
+                *((RV32IMACFDPV *)cpu)->CSR[CSR_SCAUSE] = causeCode;
+                // Redo the instruction encoutered exception after handling
+                *((RV32IMACFDPV *)cpu)->CSR[CSR_SEPC] = static_cast<etiss_uint32>(cpu->instructionPointer - 4);
+                *((RV32IMACFDPV *)cpu)->CSR[CSR_SSTATUS] ^= (*((RV32IMACFDPV *)cpu)->CSR[3088] << 8) ^ (*((RV32IMACFDPV *)cpu)->CSR[CSR_SSTATUS & MSTATUS_SPP]);
+                *((RV32IMACFDPV *)cpu)->CSR[3088] = PRV_S;
+                cpu->instructionPointer = *((RV32IMACFDPV *)cpu)->CSR[CSR_STVEC] & ~0x3;
+            }
+            else
+            {
+                *((RV32IMACFDPV *)cpu)->CSR[CSR_MCAUSE] = causeCode;
+                // Redo the instruction encoutered exception after handling
+                *((RV32IMACFDPV *)cpu)->CSR[CSR_MEPC] = static_cast<etiss_uint32>(cpu->instructionPointer - 4);
+                (*((RV32IMACFDPV *)cpu)->CSR[CSR_MSTATUS]) ^=
+                    (*((RV32IMACFDPV *)cpu)->CSR[3088] << 11) ^ ((*((RV32IMACFDPV *)cpu)->CSR[CSR_MSTATUS]) & MSTATUS_MPP);
+                *((RV32IMACFDPV *)cpu)->CSR[3088] = PRV_M;
+                // Customized handler address other than specified in RISC-V ISA manual
+                if (addr)
+                {
+                    cpu->instructionPointer = addr;
+                    break;
+                }
+                cpu->instructionPointer = *((RV32IMACFDPV *)cpu)->CSR[CSR_MTVEC] & ~0x3;
+            }
+            break;
+
+        // Interrupt
+        case 0x80000000:
+            // Check exception delegation
+            if (*((RV32IMACFDPV *)cpu)->CSR[CSR_MIDELEG] & (1 << (causeCode & 0x1f)))
+            {
+                // Pop MPIE to MIE
+                etiss::log(etiss::VERBOSE, "Interrupt is delegated to supervisor mode");
+                (*((RV32IMACFDPV *)cpu)->CSR[CSR_MSTATUS]) ^=
+                    (((*((RV32IMACFDPV *)cpu)->CSR[CSR_MSTATUS]) & MSTATUS_MPIE) >> 4) ^ ((*((RV32IMACFDPV *)cpu)->CSR[CSR_MSTATUS]) & MSTATUS_MIE);
+                *((RV32IMACFDPV *)cpu)->CSR[CSR_SCAUSE] = causeCode;
+                // Return to instruction next interrupted one
+                *((RV32IMACFDPV *)cpu)->CSR[CSR_SEPC] = static_cast<etiss_uint32>(cpu->instructionPointer);
+                *((RV32IMACFDPV *)cpu)->CSR[CSR_SSTATUS] ^= (*((RV32IMACFDPV *)cpu)->CSR[3088] << 8) ^ (*((RV32IMACFDPV *)cpu)->CSR[CSR_SSTATUS] & MSTATUS_SPP);
+                *((RV32IMACFDPV *)cpu)->CSR[3088] = PRV_S;
+                if (*((RV32IMACFDPV *)cpu)->CSR[CSR_STVEC] & 0x1)
+                    cpu->instructionPointer = (*((RV32IMACFDPV *)cpu)->CSR[CSR_STVEC] & ~0x3) + causeCode * 4;
+                else
+                    cpu->instructionPointer = *((RV32IMACFDPV *)cpu)->CSR[CSR_STVEC] & ~0x3;
+            }
+            else
+            {
+                *((RV32IMACFDPV *)cpu)->CSR[CSR_MCAUSE] = causeCode;
+                // Return to instruction next interrupted one
+                *((RV32IMACFDPV *)cpu)->CSR[CSR_MEPC] = static_cast<etiss_uint32>(cpu->instructionPointer);
+                (*((RV32IMACFDPV *)cpu)->CSR[CSR_MSTATUS]) ^=
+                    (*((RV32IMACFDPV *)cpu)->CSR[3088] << 11) ^ ((*((RV32IMACFDPV *)cpu)->CSR[CSR_MSTATUS]) & MSTATUS_MPP);
+                *((RV32IMACFDPV *)cpu)->CSR[3088] = PRV_M;
+                // Customized handler address other than specified in RISC-V ISA manual
+                if (addr)
+                {
+                    cpu->instructionPointer = addr;
+                    break;
+                }
+                if (*((RV32IMACFDPV *)cpu)->CSR[CSR_MTVEC] & 0x1)
+                    cpu->instructionPointer = (*((RV32IMACFDPV *)cpu)->CSR[CSR_MTVEC] & ~0x3) + causeCode * 4;
+                else
+                    cpu->instructionPointer = *((RV32IMACFDPV *)cpu)->CSR[CSR_MTVEC] & ~0x3;
+            }
+            break;
+        }
+
+        msg << "Program is redirected to address: 0x" << std::hex << cpu->instructionPointer << std::endl;
+        etiss::log(etiss::VERBOSE, msg.str());
+        return etiss::RETURNCODE::NOERROR;
+    };
+
+    switch (cause)
+    {
+
+    case etiss::RETURNCODE::INTERRUPT:
+        if (!((*((RV32IMACFDPV *)cpu)->CSR[CSR_MSTATUS]) & MSTATUS_MIE))
+        {
+            std::stringstream msg;
+            msg << "Interrupt handling is globally disabled. Interrupt line is still pending." << std::endl;
+            etiss::log(etiss::INFO, msg.str());
+            handledCause = etiss::RETURNCODE::NOERROR;
+            break;
+        }
+        {
+            etiss_uint32 mip_tmp = (*(((RV32IMACFDPV *)cpu))->CSR[CSR_MIP]);
+            if (0 == mip_tmp)
+            {
+                handledCause = etiss::RETURNCODE::NOERROR;
+                break;
+            }
+            etiss_uint32 irqLine = 0;
+            for (size_t i = 0; i < sizeof(mip_tmp) * 8; ++i)
+            {
+                // Highest interrupt line with highest priority
+                if (unlikely((mip_tmp >> i) & 0x1))
+                    irqLine = i;
+            }
+
+            if (!((*(((RV32IMACFDPV *)cpu))->CSR[CSR_MIE]) & (1 << irqLine)))
+            {
+                std::stringstream msg;
+                handledCause = etiss::RETURNCODE::NOERROR;
+                msg << "Interrupt line: " << irqLine << " is disabled. Interrupt is still pending." << std::endl;
+                etiss::log(etiss::INFO, msg.str());
+                break;
+            }
+
+            disableItr();
+
+            handledCause = handle(irqLine | 0x80000000, 0);
+        }
+        break;
+
+    case etiss::RETURNCODE::RESET:
+        handledCause = handle(0, etiss::cfg().get<uint64_t>("vp.entry_point", 0));
+        break;
+
+    case etiss::RETURNCODE::INSTR_PAGEFAULT:
+        disableItr();
+        handledCause = handle(CAUSE_FETCH_PAGE_FAULT, 0);
+        break;
+
+    case etiss::RETURNCODE::LOAD_PAGEFAULT:
+
+        disableItr();
+        handledCause = handle(CAUSE_LOAD_PAGE_FAULT, 0);
+        break;
+
+    case etiss::RETURNCODE::STORE_PAGEFAULT:
+
+        disableItr();
+        handledCause = handle(CAUSE_STORE_PAGE_FAULT, 0);
+        break;
+
+    case etiss::RETURNCODE::ILLEGALINSTRUCTION:
+    {
+        disableItr();
+        std::stringstream msg;
+        msg << "Illegal instruction at address: 0x" << std::hex << cpu->instructionPointer << std::endl;
+        *((RV32IMACFDPV *)cpu)->CSR[CSR_MTVAL] = static_cast<etiss_uint32>(cpu->instructionPointer);
+        // Point to next instruction
+        cpu->instructionPointer += 4;
+        etiss::log(etiss::WARNING, msg.str());
+        handledCause = handle(CAUSE_ILLEGAL_INSTRUCTION, 0);
+        break;
+    }
+
+    case etiss::RETURNCODE::DBUS_READ_ERROR:
+
+        disableItr();
+        handledCause = handle(CAUSE_LOAD_ACCESS, 0);
+        break;
+
+    case etiss::RETURNCODE::DBUS_WRITE_ERROR:
+
+        disableItr();
+        handledCause = handle(CAUSE_STORE_ACCESS, 0);
+        break;
+
+    case etiss::RETURNCODE::IBUS_READ_ERROR:
+
+        disableItr();
+        handledCause = handle(CAUSE_FETCH_ACCESS, 0);
+        break;
+
+    case etiss::RETURNCODE::IBUS_WRITE_ERROR:
+
+        disableItr();
+        handledCause = handle(CAUSE_STORE_ACCESS, 0);
+        break;
+
+    case etiss::RETURNCODE::BREAKPOINT:
+
+        disableItr();
+        handledCause = handle(CAUSE_BREAKPOINT, 0);
+        break;
+
+    case etiss::RETURNCODE::SYSCALL:
+
+        disableItr();
+        switch (*((RV32IMACFDPV *)cpu)->CSR[3088])
+        {
+        case PRV_U:
+            handledCause = handle(CAUSE_USER_ECALL, 0);
+            break;
+        case PRV_S:
+            handledCause = handle(CAUSE_SUPERVISOR_ECALL, 0);
+            break;
+        case PRV_M:
+            handledCause = handle(CAUSE_MACHINE_ECALL, 0);
+            break;
+        default:
+            etiss::log(etiss::ERROR, "System call type not supported for current architecture.");
+        }
+
+        break;
+
+    case etiss::RETURNCODE::ILLEGALJUMP:
+    {
+        disableItr();
+        std::stringstream msg;
+        msg << "Illegal instruction access at address: 0x" << std::hex << cpu->instructionPointer << std::endl;
+        *((RV32IMACFDPV *)cpu)->CSR[CSR_MTVAL] = static_cast<etiss_uint32>(cpu->instructionPointer);
+        // Point to next instruction
+        cpu->instructionPointer += 4;
+        etiss::log(etiss::WARNING, msg.str());
+        handledCause = handle(CAUSE_FETCH_ACCESS, 0);
+        break;
+    }
+
+    default:
+    {
+        std::stringstream msg;
+        msg << "Exception is not handled by architecture. Exception message: ";
+        msg << etiss::RETURNCODE::getErrorMessages()[cause] << std::endl;
+        etiss::log(etiss::INFO, msg.str());
+    }
+        handledCause = cause;
+        break;
+    }
 	return handledCause;
 }
 
@@ -62,10 +308,27 @@ etiss::int32 RV32IMACFDPVArch::handleException(etiss::int32 cause, ETISS_CPU * c
 */
 void RV32IMACFDPVArch::initInstrSet(etiss::instr::ModedInstructionSet & mis) const
 {
-	if (false) {
-		// Pre-compilation of instruction set to view instruction tree. Enable by setting 'true' above.
 
-		etiss::instr::ModedInstructionSet iset("RV32IMACFDPVISA");
+    {
+     /* Set default JIT Extensions. Read Parameters set from ETISS configuration and append with architecturally needed */
+     std::string cfgPar = "";
+     cfgPar = etiss::cfg().get<std::string>("jit.external_headers", ";");
+     etiss::cfg().set<std::string>("jit.external_headers", cfgPar + "etiss/jit/libsoftfloat.h");
+
+     cfgPar = etiss::cfg().get<std::string>("jit.external_libs", ";");
+     etiss::cfg().set<std::string>("jit.external_libs", cfgPar + "softfloat");
+
+     cfgPar = etiss::cfg().get<std::string>("jit.external_header_paths", ";");
+     etiss::cfg().set<std::string>("jit.external_header_paths", cfgPar + "/etiss/jit");
+
+     cfgPar = etiss::cfg().get<std::string>("jit.external_lib_paths", ";");
+     etiss::cfg().set<std::string>("jit.external_lib_paths", cfgPar + "/etiss/jit");
+
+    }
+
+    if (false) {
+        // Pre-compilation of instruction set to view instruction tree. Could be disabled.
+        etiss::instr::ModedInstructionSet iset("RV32IMACFDPVISA");
 		bool ok = true;
 		RV32IMACFDPVISA.addTo(iset,ok);
 
@@ -79,11 +342,98 @@ void RV32IMACFDPVArch::initInstrSet(etiss::instr::ModedInstructionSet & mis) con
 	if (!ok)
 		etiss::log(etiss::FATALERROR,"Failed to add instructions for RV32IMACFDPVISA");
 
-	etiss::instr::VariableInstructionSet * vis = mis.get(1);
+    etiss::instr::VariableInstructionSet *vis = mis.get(1);
+    using namespace etiss;
+    using namespace etiss::instr;
+    vis->length_updater_ = [](VariableInstructionSet &, InstructionContext &ic, BitArray &ba) {
+        std::function<void(InstructionContext & ic, etiss_uint32 opRd)> updateRV32IMACFDPVInstrLength =
+            [](InstructionContext &ic, etiss_uint32 opRd) {
+                ic.instr_width_fully_evaluated_ = true;
+                ic.is_not_default_width_ = true;
+                if (opRd == 0x3f)
+                    ic.instr_width_ = 64;
+                else if ((opRd & 0x3f) == 0x1f)
+                    ic.instr_width_ = 48;
+                else if (((opRd & 0x1f) >= 0x3) && ((opRd & 0x1f) < 0x1f))
+                    ic.instr_width_ = 32;
+                else if(opRd == 0x7f) /* P-Extension instructions */
+                    ic.instr_width_ = 32;
+                else if ((opRd & 0x3) != 0x3)
+                    ic.instr_width_ = 16;
+                else
+                    // This might happen when code is followed by data.
+                    ic.is_not_default_width_ = false;
+            };
 
-	/**************************************************************************
-	*		      vis->length_updater_ should be replaced here	         	  *
-	***************************************************************************/
+        BitArrayRange op(6, 0);
+        etiss_uint32 opRd = op.read(ba);
+
+        /*BitArrayRange fullOp(ba.byteCount()*8-1,0);
+        etiss_uint32 fullOpRd = fullOp.read(ba);
+
+        std::stringstream ss;
+        ss << "Byte count: " << ba.byteCount()<< std::endl;
+        ss << "opcode: 0x" <<std::hex<< fullOpRd << std::endl;
+        ss << "Current PC: 0x" <<std::hex<< ic.current_address_ << std::endl;
+        std::cout << ss.str() << std::endl;*/
+
+        switch (ba.byteCount())
+        {
+        case 2:
+            if (((opRd & 0x3) != 0x3) || (opRd == 0))
+            {
+                ic.is_not_default_width_ = false;
+                break;
+            }
+            else
+            {
+                updateRV32IMACFDPVInstrLength(ic, opRd);
+                break;
+            }
+        case 4:
+            if ((((opRd & 0x1f) >= 0x3) || ((opRd & 0x1f) < 0x1f)) || (opRd == 0))
+            {
+                ic.is_not_default_width_ = false;
+                break;
+            }
+            else if(opRd == 0x7f) /* P-Extension instructions */
+            {
+                updateRV32IMACFDPVInstrLength(ic, opRd);
+                break;
+            }
+            else
+            {
+                updateRV32IMACFDPVInstrLength(ic, opRd);
+                break;
+            }
+        case 6:
+            if (((opRd & 0x3f) == 0x1f) || (opRd == 0))
+            {
+                ic.is_not_default_width_ = false;
+                break;
+            }
+            else
+            {
+                updateRV32IMACFDPVInstrLength(ic, opRd);
+                break;
+            }
+        case 8:
+            if ((opRd == 0x3f) || (opRd == 0))
+            {
+                ic.is_not_default_width_ = false;
+                break;
+            }
+            else
+            {
+                updateRV32IMACFDPVInstrLength(ic, opRd);
+                break;
+            }
+        default:
+            // This might happen when code is followed by data.
+            ic.is_not_default_width_ = false;
+        }
+    };
+
 }
 
 /**
