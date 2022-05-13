@@ -233,7 +233,7 @@ static inline etiss_uint8 vwadd_w_vx(void* pV, void* pR, etiss_uint16 pVTYPE, et
 #endif
 
 #ifndef ETISS_ARCH_STATIC_FN_ONLY
-static inline etiss_uint8 vwsubu_w_vv(void* pV, etiss_uint16 pVTYPE, etiss_uint8 pVm, etiss_uint8 pVd, etiss_uint8 pVs1, etiss_uint16 pVSTART, etiss_uint16 pVLEN, etiss_uint16 pVL);
+static inline etiss_uint8 vwsubu_w_vv(void* pV, etiss_uint16 pVTYPE, etiss_uint8 pVm, etiss_uint8 pVd, etiss_uint8 pVs1, etiss_uint8 pVs2, etiss_uint16 pVSTART, etiss_uint16 pVLEN, etiss_uint16 pVL);
 #endif
 
 #ifndef ETISS_ARCH_STATIC_FN_ONLY
