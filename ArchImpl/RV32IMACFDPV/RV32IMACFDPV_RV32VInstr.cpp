@@ -81,20 +81,20 @@ partInit.code() += "}\n";
 partInit.code() += "}\n";
 partInit.code() += "etiss_uint32 _avl = 0U;\n";
 if (rs1 != 0U) {
-partInit.code() += "etiss_uint32 _avl = *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1) + "];\n";
+partInit.code() += "_avl = *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1) + "];\n";
 } else if (rd != 0U) {
-partInit.code() += "etiss_uint32 _avl = -1U;\n";
+partInit.code() += "_avl = -1U;\n";
 } else {
-partInit.code() += "etiss_uint32 _avl = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(3104U) + "];\n";
+partInit.code() += "_avl = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(3104U) + "];\n";
 }
 partInit.code() += "etiss_uint32 _vl = 0U;\n";
 partInit.code() += "if (_avl == _vlmax) {\n";
-partInit.code() += "etiss_uint32 _vl = _avl;\n";
+partInit.code() += "_vl = _avl;\n";
 partInit.code() += "}\n";partInit.code() += " else if (_avl >= (2U * _vlmax)) {\n";
-partInit.code() += "etiss_uint32 _vl = _vlmax;\n";
+partInit.code() += "_vl = _vlmax;\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
-partInit.code() += "etiss_uint32 _vl = ((_avl % 2U)) ? (_avl / 2U + 1U) : (_avl / 2U);\n";
+partInit.code() += "_vl = ((_avl % 2U)) ? (_avl / 2U + 1U) : (_avl / 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(3104) + "] = _vl;\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(3105) + "] = _illmask | " + std::to_string(zimm) + ";\n";
@@ -200,20 +200,20 @@ partInit.code() += "}\n";
 partInit.code() += "}\n";
 partInit.code() += "etiss_uint32 _avl = 0U;\n";
 if (rs1 != 0U) {
-partInit.code() += "etiss_uint32 _avl = *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1) + "];\n";
+partInit.code() += "_avl = *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1) + "];\n";
 } else if (rd != 0U) {
-partInit.code() += "etiss_uint32 _avl = -1U;\n";
+partInit.code() += "_avl = -1U;\n";
 } else {
-partInit.code() += "etiss_uint32 _avl = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(3104U) + "];\n";
+partInit.code() += "_avl = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(3104U) + "];\n";
 }
 partInit.code() += "etiss_uint32 _vl = 0U;\n";
 partInit.code() += "if (_avl <= _vlmax) {\n";
-partInit.code() += "etiss_uint32 _vl = _avl;\n";
+partInit.code() += "_vl = _avl;\n";
 partInit.code() += "}\n";partInit.code() += " else if (_avl >= (2U * _vlmax)) {\n";
-partInit.code() += "etiss_uint32 _vl = _vlmax;\n";
+partInit.code() += "_vl = _vlmax;\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
-partInit.code() += "etiss_uint32 _vl = ((_avl % 2U)) ? (_avl / 2U + 1U) : (_avl / 2U);\n";
+partInit.code() += "_vl = ((_avl % 2U)) ? (_avl / 2U + 1U) : (_avl / 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(3104) + "] = _vl;\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(3105) + "] = _illmask | zimm;\n";
