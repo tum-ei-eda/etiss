@@ -33,6 +33,7 @@ extern "C"
 uint8_t etiss_vload_encoded_unitstride(
   ETISS_CPU* const pCpu,
   ETISS_System* const pSystem,
+  void * const * const plugin_pointers,
   uint8_t* pV,
   uint16_t pVTYPE, uint8_t  pVm, uint16_t pEEW, uint8_t  pVd, uint16_t pVSTART, uint16_t pVLEN, uint16_t pVL, uint64_t pMSTART)
 {
@@ -54,6 +55,7 @@ uint8_t etiss_vload_encoded_unitstride(
 uint8_t etiss_vload_encoded_stride(
   ETISS_CPU* const pCpu,
   ETISS_System* const pSystem,
+  void * const * const plugin_pointers,
   uint8_t* pV,
   uint16_t pVTYPE, uint8_t  pVm, uint16_t pEEW, uint8_t  pVd, uint16_t pVSTART, uint16_t pVLEN, uint16_t pVL, uint64_t pMSTART, int16_t pSTRIDE)
 {
@@ -78,6 +80,7 @@ uint8_t etiss_vload_encoded_stride(
 uint8_t etiss_vload_segment_unitstride(
   ETISS_CPU* const pCpu,
   ETISS_System* const pSystem,
+  void * const * const plugin_pointers,
   uint8_t* pV,
   uint16_t pVTYPE, uint8_t  pVm, uint16_t pEEW, uint8_t pNF, uint8_t pVd, uint16_t pVSTART, uint16_t pVLEN, uint16_t pVL, uint64_t pMSTART)
 {
@@ -107,6 +110,7 @@ uint8_t etiss_vload_segment_unitstride(
 uint8_t etiss_vload_segment_stride(
   ETISS_CPU* const pCpu,
   ETISS_System* const pSystem,
+  void * const * const plugin_pointers,
   uint8_t* pV,
   uint16_t pVTYPE, uint8_t pVm, uint16_t pEEW, uint8_t pNF, uint8_t pVd, uint16_t pVSTART, uint16_t pVLEN, uint16_t pVL, uint64_t pMSTART, int16_t pSTRIDE)
 {
@@ -136,6 +140,7 @@ uint8_t etiss_vload_segment_stride(
 uint8_t etiss_vstore_encoded_unitstride(
   ETISS_CPU* const pCpu,
   ETISS_System* const pSystem,
+  void * const * const plugin_pointers,
   uint8_t* pV,
   uint16_t pVTYPE, uint8_t pVm, uint16_t pEEW, uint8_t pVd, uint16_t pVSTART, uint16_t pVLEN, uint16_t pVL, uint64_t pMSTART)
 {
@@ -158,6 +163,7 @@ uint8_t etiss_vstore_encoded_unitstride(
 uint8_t etiss_vstore_encoded_stride(
   ETISS_CPU* const pCpu,
   ETISS_System* const pSystem,
+  void * const * const plugin_pointers,
   uint8_t* pV,
   uint16_t pVTYPE, uint8_t pVm, uint16_t pEEW, uint8_t pVd, uint16_t pVSTART, uint16_t pVLEN, uint16_t pVL, uint64_t pMSTART, int16_t pStride)
 {
@@ -180,6 +186,7 @@ uint8_t etiss_vstore_encoded_stride(
 uint8_t etiss_vstore_segment_unitstride(
   ETISS_CPU* const pCpu,
   ETISS_System* const pSystem,
+  void * const * const plugin_pointers,
   uint8_t* pV,
   uint16_t pVTYPE, uint8_t  pVm, uint16_t pEEW, uint8_t pNF, uint8_t pVd, uint16_t pVSTART, uint16_t pVLEN, uint16_t pVL, uint64_t pMSTART)
 {
@@ -209,6 +216,7 @@ uint8_t etiss_vstore_segment_unitstride(
 uint8_t etiss_vstore_segment_stride(
   ETISS_CPU* const pCpu,
   ETISS_System* const pSystem,
+  void * const * const plugin_pointers,
   uint8_t* pV,
   uint16_t pVTYPE, uint8_t  pVm, uint16_t pEEW, uint8_t pNF, uint8_t pVd, uint16_t pVSTART, uint16_t pVLEN, uint16_t pVL, uint64_t pMSTART, int16_t pStride)
 {
