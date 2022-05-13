@@ -369,7 +369,7 @@ static inline etiss_uint8 vmsleu_vi(void* pV, etiss_uint16 pVTYPE, etiss_uint8 p
 #endif
 
 #ifndef ETISS_ARCH_STATIC_FN_ONLY
-static inline etiss_uint8 ETISS_vmsleu_vx(void* pV, void* pR, etiss_uint16 pVTYPE, etiss_uint8 pVm, etiss_uint8 pVd, etiss_uint8 pVs2, etiss_uint8 pRs1, etiss_uint16 pVSTART, etiss_uint16 pVLEN, etiss_uint16 pVL, etiss_uint8 pXLEN);
+static inline etiss_uint8 vmsleu_vx(void* pV, void* pR, etiss_uint16 pVTYPE, etiss_uint8 pVm, etiss_uint8 pVd, etiss_uint8 pVs2, etiss_uint8 pRs1, etiss_uint16 pVSTART, etiss_uint16 pVLEN, etiss_uint16 pVL, etiss_uint8 pXLEN);
 #endif
 
 #ifndef ETISS_ARCH_STATIC_FN_ONLY
