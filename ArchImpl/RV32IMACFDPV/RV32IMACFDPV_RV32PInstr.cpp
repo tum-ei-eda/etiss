@@ -18,7 +18,7 @@ using namespace etiss::instr;
 static InstructionDefinition add8_rd_rs1_rs2 (
 	ISA32_RV32IMACFDPV,
 	"add8",
-	(uint32_t) 0x4800007f,
+	(uint32_t) 0x48000077,
 	(uint32_t) 0xfe00707f,
 	[] (BitArray & ba,etiss::CodeSet & cs,InstructionContext & ic)
 	{
@@ -93,7 +93,7 @@ ss << "add8" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std::
 static InstructionDefinition sub8_rd_rs1_rs2 (
 	ISA32_RV32IMACFDPV,
 	"sub8",
-	(uint32_t) 0x4a00007f,
+	(uint32_t) 0x4a000077,
 	(uint32_t) 0xfe00707f,
 	[] (BitArray & ba,etiss::CodeSet & cs,InstructionContext & ic)
 	{
@@ -167,7 +167,7 @@ ss << "sub8" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std::
 static InstructionDefinition smaqa_rd_rs1_rs2 (
 	ISA32_RV32IMACFDPV,
 	"smaqa",
-	(uint32_t) 0xc800007f,
+	(uint32_t) 0xc8000077,
 	(uint32_t) 0xfe00707f,
 	[] (BitArray & ba,etiss::CodeSet & cs,InstructionContext & ic)
 	{
@@ -244,7 +244,7 @@ ss << "smaqa" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std:
 static InstructionDefinition sll8_rd_rs1_rs2 (
 	ISA32_RV32IMACFDPV,
 	"sll8",
-	(uint32_t) 0x5c00007f,
+	(uint32_t) 0x5c000077,
 	(uint32_t) 0xfe00707f,
 	[] (BitArray & ba,etiss::CodeSet & cs,InstructionContext & ic)
 	{
@@ -319,7 +319,7 @@ ss << "sll8" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std::
 static InstructionDefinition smin8_rd_rs1_rs2 (
 	ISA32_RV32IMACFDPV,
 	"smin8",
-	(uint32_t) 0x8800007f,
+	(uint32_t) 0x88000077,
 	(uint32_t) 0xfe00707f,
 	[] (BitArray & ba,etiss::CodeSet & cs,InstructionContext & ic)
 	{
@@ -394,7 +394,7 @@ ss << "smin8" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std:
 static InstructionDefinition smax8_rd_rs1_rs2 (
 	ISA32_RV32IMACFDPV,
 	"smax8",
-	(uint32_t) 0x8a00007f,
+	(uint32_t) 0x8a000077,
 	(uint32_t) 0xfe00707f,
 	[] (BitArray & ba,etiss::CodeSet & cs,InstructionContext & ic)
 	{
@@ -469,7 +469,7 @@ ss << "smax8" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std:
 static InstructionDefinition smax16_rd_rs1_rs2 (
 	ISA32_RV32IMACFDPV,
 	"smax16",
-	(uint32_t) 0x8200007f,
+	(uint32_t) 0x82000077,
 	(uint32_t) 0xfe00707f,
 	[] (BitArray & ba,etiss::CodeSet & cs,InstructionContext & ic)
 	{
@@ -542,7 +542,7 @@ ss << "smax16" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std
 static InstructionDefinition scmple8_rd_rs1_rs2 (
 	ISA32_RV32IMACFDPV,
 	"scmple8",
-	(uint32_t) 0x1e00007f,
+	(uint32_t) 0x1e000077,
 	(uint32_t) 0xfe00707f,
 	[] (BitArray & ba,etiss::CodeSet & cs,InstructionContext & ic)
 	{

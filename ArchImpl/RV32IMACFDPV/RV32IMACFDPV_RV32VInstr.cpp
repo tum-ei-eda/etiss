@@ -1003,7 +1003,7 @@ ss << "vwaddu_vx" << " # " << ba << (" [vd=" + std::to_string(vd) + " | rs1=" + 
 static InstructionDefinition vwadd_vv_vd_vs1_vs2_vm (
 	ISA32_RV32IMACFDPV,
 	"vwadd_vv",
-	(uint32_t) 0xc4000057,
+	(uint32_t) 0xc4002057,
 	(uint32_t) 0xfc00707f,
 	[] (BitArray & ba,etiss::CodeSet & cs,InstructionContext & ic)
 	{
@@ -1327,7 +1327,7 @@ ss << "vwsubu_vx" << " # " << ba << (" [vd=" + std::to_string(vd) + " | rs1=" + 
 static InstructionDefinition vwsub_vv_vd_vs1_vs2_vm (
 	ISA32_RV32IMACFDPV,
 	"vwsub_vv",
-	(uint32_t) 0xcc000057,
+	(uint32_t) 0xcc002057,
 	(uint32_t) 0xfc00707f,
 	[] (BitArray & ba,etiss::CodeSet & cs,InstructionContext & ic)
 	{
