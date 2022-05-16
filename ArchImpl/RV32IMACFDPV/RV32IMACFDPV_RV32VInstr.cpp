@@ -386,7 +386,7 @@ partInit.code() += "etiss_uint32 _eew = vcfg_concatEEW(" + std::to_string(mew) +
 partInit.code() += "etiss_uint32 _vstart = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8U) + "];\n";
 partInit.code() += "etiss_uint32 _vl = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(3104U) + "];\n";
 partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(3106U) + "] * 8U;\n";
-partInit.code() += "etiss_uint32 ret = etiss_vstore_encoded_unitstride(cpu, system, plugin_pointers, ((RV32IMACFDPV*)cpu)->V, _vtype, " + std::to_string(vm) + ", _eew, " + std::to_string(vs3) + ", _vstart, _vlen, _vl, *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1) + "]);\n";
+partInit.code() += "etiss_uint32 ret = etiss_vstore_encoded_unitstride(cpu, system, plugin_pointers, ((RV32IMACFDPV*)cpu)->V, _vtype, " + std::to_string(vm) + ", _eew, " + std::to_string(vs3) + ", _vstart, _vlen, _vl, (etiss_uint64)(*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1) + "]));\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
 partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
