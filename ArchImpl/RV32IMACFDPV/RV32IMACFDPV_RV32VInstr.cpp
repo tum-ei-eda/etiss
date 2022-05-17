@@ -88,7 +88,7 @@ partInit.code() += "_avl = -1U;\n";
 partInit.code() += "_avl = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(3104U) + "];\n";
 }
 partInit.code() += "etiss_uint32 _vl = 0U;\n";
-partInit.code() += "if (_avl == _vlmax) {\n";
+partInit.code() += "if (_avl <= _vlmax) {\n";
 partInit.code() += "_vl = _avl;\n";
 partInit.code() += "}\n";partInit.code() += " else if (_avl >= (2U * _vlmax)) {\n";
 partInit.code() += "_vl = _vlmax;\n";
