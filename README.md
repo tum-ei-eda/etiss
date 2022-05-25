@@ -21,11 +21,8 @@ and be added flexibly without any hacking in the ETISS source code.
 
 ## Getting Started
 
-ETISS has to be built into separate libraries, and a main file is needed
-to set up a simulator. After build and installation, the folder `examples/`
-will be installed into `<etiss_install_dir>` with correct
-configuration. Check `README` in `<etiss_install_dir>/examples/` respectively
-to set up a simulator for varied bare-metal simulations.
+The ETISS core and included plugins are built as libraries. To make use of the simulator, a program using the library is needed. A very simple bare-metal processor is included in this repository in [src/bare_etiss_processor](src/bare_etiss_processor). This program is built during the normal build process; its compiled binary will be placed under `<build_-_dir>/bin` and `<etiss_install_dir>/bin`. See its [README](src/bare_etiss_processor/README.md) for more details.
+
 
 ### System Requirements
 
@@ -76,6 +73,10 @@ Build the documentation (optional):
 Install the package:
 
 	$ make install
+
+To save time, compiling can be sped up by using multiple CPU cores:
+
+	$ make -j$(nproc)
 
 ## WINDOWS SYSTEM
 

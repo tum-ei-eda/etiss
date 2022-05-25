@@ -33,47 +33,46 @@
 #	Version 0.1
 #
 
-project(bare_etiss_processor_example)
+project(bare_etiss_processor)
 
+# Set relative rpath to mimic runtime link behavior of windows (libs loadable from current dir)
 
-configure_file(
-    CMakeLists.txt.in
-    "${PROJECT_BINARY_DIR}/tobeinstalled/CMakeLists.txt"
-    @ONLY
-)
-configure_file(
-    run.sh.in
-    "${PROJECT_BINARY_DIR}/tobeinstalled/run.sh"
-    @ONLY
-)
+SET(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
+SET(CMAKE_INSTALL_RPATH "\$ORIGIN/../lib")
+
+add_executable(bare_etiss_processor main.cpp)
+target_link_libraries(bare_etiss_processor ETISS)
+
+set(ETISS_DIR ${CMAKE_INSTALL_PREFIX} )
 configure_file(
     run_helper.sh.in
     "${PROJECT_BINARY_DIR}/tobeinstalled/run_helper.sh"
     @ONLY
 )
 
-install(FILES
-    "${PROJECT_BINARY_DIR}/tobeinstalled/CMakeLists.txt"
-    "${PROJECT_BINARY_DIR}/tobeinstalled/run.sh"
-	"${PROJECT_BINARY_DIR}/tobeinstalled/run_helper.sh"
-	"get_metrics.py"
-    DESTINATION examples/bare_etiss_processor
+set(ETISS_DIR ${CMAKE_BINARY_DIR})
+configure_file(
+    run_helper.sh.in
+    "${CMAKE_BINARY_DIR}/bin/run_helper.sh"
+    @ONLY
+)
+configure_file(
+    base.ini
+    "${CMAKE_BINARY_DIR}/examples/base.ini"
+    COPYONLY
+)
+set_target_properties( bare_etiss_processor
+    PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
+ )
+
+install(TARGETS bare_etiss_processor DESTINATION bin)
+install(FILES "${PROJECT_BINARY_DIR}/tobeinstalled/run_helper.sh"
+    DESTINATION bin
     PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
 )
-
 install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/
-    DESTINATION examples/bare_etiss_processor
+    DESTINATION examples
     FILES_MATCHING
-    PATTERN "*.h"
-    PATTERN "*.cpp"
-    PATTERN "*.c"
-    PATTERN "*.S"
-    PATTERN "*.s"
     PATTERN "*.ini"
-    PATTERN "README*"
-    PATTERN "code_or1k.bin"
-    PATTERN "code_ARMv6M.elf"
-    PATTERN ".svn" EXCLUDE
-    PATTERN "*.in" EXCLUDE
-    PATTERN "CMakeLists.txt" EXCLUDE
 )

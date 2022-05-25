@@ -41,6 +41,7 @@ IF(${CMAKE_CURRENT_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_BINARY_DIR})
     MESSAGE(FATAL_ERROR "In-source builds are not allowed because they pollute the source tree with temporary files that might have to be deleted later. Please create a separate folder in which you run CMake.")
 ENDIF()
 
+set(ETISS_BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR} CACHE INTERNAL "ETISS build location")
 # Declare ETISS version
 set(ETISS_VERSION_MAJOR 0)
 set(ETISS_VERSION_MINOR 8)
@@ -85,10 +86,11 @@ ELSE()
         SET(CMAKE_LINKER_FLAGS_DEBUG "${CMAKE_LINKER_FLAGS_DEBUG} -fsanitize=address -fsanitize=undefined")
     ENDIF()
 
-
     # Set relative rpath to mimic runtime link behavior of windows (libs loadable from current dir)
     SET(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
     SET(CMAKE_INSTALL_RPATH "\$ORIGIN")
+
+
 ENDIF()
 
 # Support colored output for ninja generator.
@@ -290,6 +292,16 @@ FILES_MATCHING
 
 # copy cmake files
 set(INSTALL_CMAKE_DIR lib/CMake/ETISS CACHE PATH "Installation directory for CMake files")
+
+# to allow linking with ETISS lib in build-tree
+# copying headers
+#file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION ${ETISS_BINARY_DIR}/include/)
+#file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/include_c/ DESTINATION ${ETISS_BINARY_DIR}/include/)
+file(GLOB JIT_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/src/jitlibs/**/*.h)
+file(COPY ${JIT_HEADERS} DESTINATION ${ETISS_BINARY_DIR}/include/jit/etiss/jit/)
+# plugins/list.txt file
+file(WRITE ${ETISS_BINARY_DIR}/lib/plugins/list.txt)
+
 
 
 ############# TARGETS ##############
