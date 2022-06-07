@@ -1,5 +1,5 @@
 /**
- * Generated on Mon, 09 May 2022 21:04:41 +0200.
+ * Generated on Tue, 07 Jun 2022 14:20:49 +0200.
  *
  * This file contains the instruction behavior models of the tum_rva
  * instruction set for the RV32IMACFD core architecture.
@@ -51,13 +51,13 @@ aq += R_aq_0.read(ba) << 0;
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
 partInit.code() += "etiss_uint32 offs = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 % 32U) + "];\n";
 partInit.code() += "etiss_uint32 mem_val_0;\n";
-partInit.code() += "exception |= (*(system->dread))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_0, 4);\n";
+partInit.code() += "cpu->exception |= (*(system->dread))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_0, 4);\n";
 partInit.code() += "etiss_int32 res = (etiss_int32)(mem_val_0);\n";
 partInit.code() += "((RV32IMACFD*)cpu)->RES_ADDR = offs;\n";
 if (rd) {
 partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd % 32) + "] = (etiss_int32)(res);\n";
 }
-partInit.code() += "if (exception) return exception;\n";
+partInit.code() += "if (cpu->exception) return cpu->exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getRegisterDependencies().add(reg_name[rs1 % 32U], 32);
@@ -134,14 +134,14 @@ partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_addr
 partInit.code() += "etiss_uint32 offs = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 % 32U) + "];\n";
 partInit.code() += "if (((RV32IMACFD*)cpu)->RES_ADDR == offs) {\n";
 partInit.code() += "etiss_uint32 mem_val_0 = (etiss_int32)(*((RV32IMACFD*)cpu)->X[" + std::to_string(rs2 % 32U) + "]);\n";
-partInit.code() += "exception |= (*(system->dwrite))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_0, 4);\n";
+partInit.code() += "cpu->exception |= (*(system->dwrite))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_0, 4);\n";
 
 partInit.code() += "}\n";
 if (rd) {
 partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd % 32) + "] = ((RV32IMACFD*)cpu)->RES_ADDR != offs;\n";
 }
 partInit.code() += "((RV32IMACFD*)cpu)->RES_ADDR = -1U;\n";
-partInit.code() += "if (exception) return exception;\n";
+partInit.code() += "if (cpu->exception) return cpu->exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getRegisterDependencies().add(reg_name[rs1 % 32U], 32);
