@@ -105,6 +105,9 @@ extern "C"
         void *_etiss_private_handle_; ///< private helper handle for plugins
 
         etiss_uint32 mode; ///< instruction set mode of the processor
+
+        etiss_uint32 exception; // currently active exception of the processor
+        etiss_uint32 return_pending; // flags whether a return from the JIT code is needed
     };
 #pragma pack(pop)
 
