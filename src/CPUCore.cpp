@@ -727,6 +727,11 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
                 // cpu->instructionPointer)){
                 // Transalte virtual address to physical address if MMU is enabled
                 uint64_t pma = cpu_->instructionPointer;
+
+                // remember pc and cpu time to check for loop to self instructions
+                uint64_t old_pc = cpu_->instructionPointer;
+                uint64_t old_time = cpu_->cpuTime_ps;
+
                 if (mmu_enabled_)
                 {
                     if (mmu_->cache_flush_pending)
@@ -784,6 +789,15 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
                     // In the generated code these plugin handles are named "plugin_pointers" and can be used to access
                     // a variable of the plugin
                     exception = (*(blptr->execBlock))(cpu_, system, plugins_handle_);
+
+
+                    // exit simulator when a loop to self instruction is encountered
+                    if (!exception &&
+                            old_time + cpu_->cpuCycleTime_ps == cpu_->cpuTime_ps &&
+                            old_pc == cpu_->instructionPointer)
+                    {
+                        exception = RETURNCODE::CPUFINISHED;
+                    }
 
 #if ETISS_CPUCORE_DBG_APPROXIMATE_INSTRUCTION_COUNTER
                     instrcounter +=
