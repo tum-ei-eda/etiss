@@ -136,15 +136,15 @@ static inline etiss_uint64 fclass_d(etiss_uint64);
 #endif
 
 #ifndef ETISS_ARCH_STATIC_FN_ONLY
-etiss_uint64 etiss_get_cycles(ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers);
+static inline etiss_uint64 etiss_get_cycles(ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers);
 #endif
 
 #ifndef ETISS_ARCH_STATIC_FN_ONLY
-etiss_uint64 etiss_get_time();
+static inline etiss_uint64 etiss_get_time();
 #endif
 
 #ifndef ETISS_ARCH_STATIC_FN_ONLY
-etiss_uint64 etiss_get_instret(ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers);
+static inline etiss_uint64 etiss_get_instret(ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers);
 #endif
 
 #ifndef ETISS_ARCH_STATIC_FN_ONLY
