@@ -1,5 +1,5 @@
 /**
- * Generated on Mon, 09 May 2022 21:14:16 +0200.
+ * Generated on Tue, 21 Jun 2022 11:35:14 +0200.
  *
  * This file contains the function macros for the RV32IMACFD core architecture.
  */
@@ -13,7 +13,6 @@
 #include "etiss/jit/System.h"
 #include "etiss/jit/ReturnCode.h"
 #endif
-
 
 
 #ifndef ETISS_ARCH_STATIC_FN_ONLY
@@ -137,6 +136,18 @@ static inline etiss_uint64 fclass_d(etiss_uint64);
 #endif
 
 #ifndef ETISS_ARCH_STATIC_FN_ONLY
+static inline etiss_uint64 etiss_get_cycles(ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers);
+#endif
+
+#ifndef ETISS_ARCH_STATIC_FN_ONLY
+static inline etiss_uint64 etiss_get_time();
+#endif
+
+#ifndef ETISS_ARCH_STATIC_FN_ONLY
+static inline etiss_uint64 etiss_get_instret(ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers);
+#endif
+
+#ifndef ETISS_ARCH_STATIC_FN_ONLY
 static inline etiss_uint32 csr_read(ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers, etiss_uint32 csr)
 {
 if (csr == 1U) {
@@ -144,6 +155,24 @@ return *((RV32IMACFD*)cpu)->CSR[3U] & 31U;
 }
 if (csr == 2U) {
 return (*((RV32IMACFD*)cpu)->CSR[3U] >> 5U) & 7U;
+}
+if (csr == 3072U) {
+return etiss_get_cycles(cpu, system, plugin_pointers);
+}
+if (csr == 3200U) {
+return etiss_get_cycles(cpu, system, plugin_pointers) >> 32U;
+}
+if (csr == 3073U) {
+return etiss_get_time();
+}
+if (csr == 3201U) {
+return etiss_get_time() >> 32U;
+}
+if (csr == 3074U) {
+return etiss_get_instret(cpu, system, plugin_pointers);
+}
+if (csr == 3202U) {
+return etiss_get_instret(cpu, system, plugin_pointers) >> 32U;
 }
 return *((RV32IMACFD*)cpu)->CSR[csr];
 }
@@ -154,16 +183,12 @@ static inline void csr_write(ETISS_CPU * const cpu, ETISS_System * const system,
 {
 if (csr == 1U) {
 *((RV32IMACFD*)cpu)->CSR[3] = (*((RV32IMACFD*)cpu)->CSR[3U] & 224U) | (val & 31U);
-} else {
-if (csr == 2U) {
+} else if (csr == 2U) {
 *((RV32IMACFD*)cpu)->CSR[3] = ((val & 7U) << 5U) | (*((RV32IMACFD*)cpu)->CSR[3U] & 31U);
-} else {
-if (csr == 3U) {
+} else if (csr == 3U) {
 *((RV32IMACFD*)cpu)->CSR[3] = val & 255U;
 } else {
 *((RV32IMACFD*)cpu)->CSR[csr] = val;
-}
-}
 }
 }
 #endif
