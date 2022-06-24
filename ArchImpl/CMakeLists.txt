@@ -33,8 +33,19 @@
 #	Version 0.1
 #
 
+MACRO(SUBDIRLIST result curdir)
+  FILE(GLOB children RELATIVE ${curdir} ${curdir}/*)
+  SET(dirlist "")
+  FOREACH(child ${children})
+    IF(IS_DIRECTORY ${curdir}/${child})
+      LIST(APPEND dirlist ${child})
+    ENDIF()
+  ENDFOREACH()
+  SET(${result} ${dirlist})
+ENDMACRO()
 
-#ADD_SUBDIRECTORY(ARMv6M)
-ADD_SUBDIRECTORY(OR1K)
-ADD_SUBDIRECTORY(RISCV)
-ADD_SUBDIRECTORY(RISCV64)
+SUBDIRLIST(SUBDIRS ${CMAKE_CURRENT_SOURCE_DIR})
+
+FOREACH(subdir ${SUBDIRS})
+  ADD_SUBDIRECTORY(${subdir})
+ENDFOREACH()

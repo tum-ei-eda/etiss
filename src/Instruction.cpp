@@ -171,6 +171,7 @@ void BitArray::set_value(unsigned long value){
 
 BitArray BitArray::get_range(size_type end, size_type start) const
 {
+    // shift the bits and resize it accordingly
     BitArray ret = *this;
     ret >>= start;
     ret.resize(end-start+1);
@@ -424,34 +425,34 @@ bool InstructionSet::compile()
 {
     delete root_; // cleanup
 
-    root_ = new Node*[width_ / chunk_size](); // depth: width_ / chunk_size
+    root_ = new Node*[width_ / chunk_size](); // number of groups = width_ / chunk_size
 
     bool ok = true;
 
     std::vector<size_type> indexes;
-    for (const auto& op2instr : instrmap_){
-        BitArray code = op2instr.first->code_;
-        BitArray mask = op2instr.first->mask_;
-        Instruction* inst = op2instr.second;
+    for (const auto& op2instr : instrmap_){ // iterate through all instructions
+        Instruction* inst = op2instr.second; // current instruction to be assigned
+        BitArray code = op2instr.first->code_; // opcode of the current instruction
+        BitArray mask = op2instr.first->mask_; // mask of the opcode
 
         // iterate through chunks and permutate chunks. then put them into nodes
         for (size_type i = 0; i < mask.size() / chunk_size; ++i){
-            auto chunk_bits_code = code.get_range((i+1)*chunk_size-1, i*chunk_size);
-            auto chunk_bits_mask = mask.get_range((i+1)*chunk_size-1, i*chunk_size);
+            auto chunk_bits_code = code.get_range((i+1)*chunk_size-1, i*chunk_size); // ith chunk of the opcode
+            auto chunk_bits_mask = mask.get_range((i+1)*chunk_size-1, i*chunk_size); // ith chunk of the mask
 
             indexes.clear();
-            for (size_type i = 0; i < chunk_bits_mask.size(); ++i)
-                if (!chunk_bits_mask[i]) indexes.push_back(i); // these indexed should be permutated since
-                                                                // they dont have associated mask bit
+            for (size_type j = 0; j < chunk_bits_mask.size(); ++j)
+                if (!chunk_bits_mask[j]) indexes.push_back(j); // these indexed should be permutated since
+                                                               // they dont have associated mask bit
 
-            if(!(root_[i]))
-                root_[i] = new Node[(int)std::pow(2, chunk_size)]; // each depth has 2^chunksize nodes
+            if(!(root_[i])) // not initialized
+                root_[i] = new Node[(int)std::pow(2, chunk_size)]; // each group has 2^(chunksize) nodes
 
             auto permutated_chunk_codes = BitArray::permutate(chunk_bits_code, indexes); // put permutated codes
 
             for(const auto& permutated_chunk : permutated_chunk_codes){
-                auto val = permutated_chunk.to_ulong();
-                root_[i][val].insert(inst);
+                auto val = permutated_chunk.to_ulong(); // index of the node based on the value of the chunk
+                root_[i][val].insert(inst); // assign the current instruction to the associated node
             }
         }
     }
@@ -461,25 +462,30 @@ bool InstructionSet::compile()
 Instruction *InstructionSet::resolve(BitArray &instr)
 {
     std::set<Instruction*> results;
-    for (size_type i = 0; i < instr.size() / chunk_size; ++i){
-        auto chunk_bits_code = instr.get_range((i+1)*chunk_size-1, i*chunk_size);
+    for (size_type i = 0; i < instr.size() / chunk_size; ++i){ // divide the incoming bitarray into chunks
+        auto chunk_bits_code = instr.get_range((i+1)*chunk_size-1, i*chunk_size); // get ith chunk
 
-        auto val = chunk_bits_code.to_ulong();
+        auto val = chunk_bits_code.to_ulong(); // the value chunk is evaluated to,
+                                               // which is also the index of the associated node
         auto instrs_in_node = root_[i][val]; // val'th node
 
         if(i==0) results = instrs_in_node;
-        else{ // get intersected instrs on the nodes
+        else{ // intersect all the associated nodes, the result will be the decoded instruction
             std::set<Instruction*> results_o;
-            std::set_intersection(results.begin(), results.end(),
-                instrs_in_node.begin(), instrs_in_node.end(),
-                std::inserter(results_o, results_o.begin()));
-            results = results_o;
+            std::set_intersection(results.begin(), results.end(), // intersect the ith node with the
+                instrs_in_node.begin(), instrs_in_node.end(),     // current results
+                std::inserter(results_o, results_o.begin()));     // put overlapped instructions to results_o
+            results = results_o; // write the overlapped instructions to results
         }
     }
 
-    if(results.empty()) return nullptr;
-    else if(results.size() == 1) return *(results.begin());
+    if(results.empty()) return nullptr; // there is no overlapped instruction after the decoding
+    else if(results.size() == 1) return *(results.begin()); // instruction is found succesfully
     else{
+        // sometimes an instruction can be a subset of another instruction and hence the
+        // algorithm can find multiple instruction. In such cases, it is returning the parent
+        // instruction by simply returning the instrucion whose opcode is the longest,
+        // i.e mask has the most 1-bits.
         auto longest = std::max_element(results.begin(), results.end(),
             [](const Instruction* lhs, const Instruction* rhs) { return lhs->opc_.mask_.count() < rhs->opc_.mask_.count();});
         return *longest;

@@ -80,6 +80,11 @@ namespace instr
 typedef uint32_t I;
 
 class Instruction;
+class VariableInstructionSet;
+class ModedInstructionSet;
+class InstructionClass;
+class InstructionGroup;
+class InstructionDefinition;
 
 /**
 Buffer for reading data from memory while instructions are being fetched
@@ -182,7 +187,9 @@ public:
     */
     void set_range(unsigned long val, size_type end, size_type start);
     /**
-        @brief permutates the given input at the specified indexes
+        @brief permutates the given input at the specified indexes.
+            Ex: the bit array of 0101 with indexes 1 and 3 will be
+            permutated to 0101, 0111, 1101, 1111
         @return List of BitArray
     */
     static std::vector<BitArray> permutate(const BitArray& input, std::vector<size_type> indexes);
@@ -378,18 +385,7 @@ class InstructionContext
     ModedInstructionSet
         ↳ VariableInstructionSet (e.g. for mode 0)
             ↳ InstructionSet (e.g. 32 bit)
-                ↳ Node
-                    ↳ ...
-                    .
-                    .
-                    .
-                ↳ Node
-                    ↳ ...
-                    .
-                    .
-                    .
-                    ↳ ...
-                        ↳ <b>Instruction</b>
+                ↳ Instruction (e.g. LDR, STR)
             ↳ InstructionSet (e.g. 16 bit)
 </pre>
 */
@@ -432,26 +428,14 @@ class Instruction : public etiss::ToString
     inline std::string toString() const { return name_; }
 };
 
-class VariableInstructionSet;
 /**
     holds etiss::instr::Instruction instances and handles automatic instruction
 tree creation. <pre> Location in an instruction translation tree:
     ModedInstructionSet
         ↳ VariableInstructionSet (e.g. for mode 0)
             ↳ <b>InstructionSet</b> (e.g. 32 bit)
-                ↳ Node
-                    ↳ ...
-                    .
-                    .
-                    .
-                ↳ Node
-                    ↳ ...
-                    .
-                    .
-                    .
-                    ↳ ...
-                        ↳ Instruction
-            ↳ InstructionSet (e.g. 16 bit)
+                ↳ Instruction (e.g. LDR, STR)
+            ↳ <b>InstructionSet</b> (e.g. 16 bit)
 </pre>
 */
 class InstructionSet : public etiss::ToString
@@ -495,32 +479,20 @@ class InstructionSet : public etiss::ToString
   private:
     std::map<const OPCode *, Instruction *, etiss::instr::less> instrmap_;
 
-    Node** root_;
+    Node** root_; // holds the entry of the bucket tree in decoding and compilition algorithm
 
     Instruction invalid;
 };
 
-class ModedInstructionSet;
 /**
     holds etiss::instr::InstructionSet instances with different bit widths.
 
 <pre>
     Location in an instruction translation tree:
-    <b>ModedInstructionSet<b>
-        ↳ VariableInstructionSet (e.g. for mode 0)
+    ModedInstructionSet
+        ↳ <b>VariableInstructionSet</b> (e.g. for mode 0)
             ↳ InstructionSet (e.g. 32 bit)
-                ↳ Node
-                    ↳ ...
-                    .
-                    .
-                    .
-                ↳ Node
-                    ↳ ...
-                    .
-                    .
-                    .
-                    ↳ ...
-                        ↳ Instruction
+                ↳ Instruction (e.g. LDR, STR)
             ↳ InstructionSet (e.g. 16 bit)
 </pre>
 */
@@ -582,18 +554,7 @@ the same mode as the current mode. If the modes mismatch the block will be disca
     <b>ModedInstructionSet</b>
         ↳ VariableInstructionSet (e.g. for mode 0)
             ↳ InstructionSet (e.g. 32 bit)
-                ↳ Node
-                    ↳ ...
-                    .
-                    .
-                    .
-                ↳ Node
-                    ↳ ...
-                    .
-                    .
-                    .
-                    ↳ ...
-                        ↳ Instruction
+                ↳ Instruction (e.g. LDR, STR)
             ↳ InstructionSet (e.g. 16 bit)
 </pre>
 */
@@ -637,9 +598,8 @@ class ModedInstructionSet
     std::string print(std::string prefix = std::string());
 };
 
-class InstructionClass;
 /**
-        maps to ModedInstructionSet
+    maps to ModedInstructionSet
 */
 class InstructionCollection
 {
@@ -671,9 +631,8 @@ class InstructionCollection
     }
     void addTo(ModedInstructionSet &set, bool &ok);
 };
-class InstructionGroup;
 /**
-        maps to VariableInstructionSet
+    maps to VariableInstructionSet
 */
 class InstructionClass
 {
@@ -710,9 +669,9 @@ class InstructionClass
     }
     void addTo(VariableInstructionSet &set, bool &ok);
 };
-class InstructionDefinition;
+
 /**
-        maps to InstructionSet
+    maps to InstructionSet
 */
 class InstructionGroup : public etiss::ToString
 {
@@ -741,8 +700,9 @@ class InstructionGroup : public etiss::ToString
     void addTo(InstructionSet &set, bool &ok);
     inline std::string toString() const { return name_; }
 };
+
 /**
-        maps to Instruction
+    maps to Instruction
 */
 class InstructionDefinition : public etiss::ToString
 {
