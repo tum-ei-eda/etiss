@@ -12,7 +12,7 @@ technique of plug-ins. ETISS supports varied **Instruction Set Architectures
 Meanwhile, the simulator could be enhanced with customized plug-ins to set
 up many applications (see application examples in `examples/`).
 
-<center> <img src="etiss.png" alt="ETISS diagram" width="520"> </center>
+<center> <img src="docs/etiss.png" alt="ETISS diagram" width="520"> </center>
 
 ETISS is structured as shown in the diagram above, and it is capable of
 translating binary instructions according to loaded architecture models.
