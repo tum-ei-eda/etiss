@@ -25,9 +25,9 @@ int main()
         printf("time_l: %u, time_h: %u\n", time_l, time_h);
         printf("instret_l: %u, instret_h: %u\n", instret_l, instret_h);
 
-        printf("cycle: %lu\n", cycle);
-        printf("time: %lu\n", time);
-        printf("instret: %lu\n", instret);
+        printf("cycle: %llu\n", cycle);
+        printf("time: %llu\n", time);
+        printf("instret: %llu\n", instret);
 
         printf("---\n");
     }
