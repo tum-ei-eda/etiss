@@ -12,8 +12,8 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC ETISS)
 
 add_custom_command(
   TARGET ${PROJECT_NAME} POST_BUILD VERBATIM
-  COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/etiss/include/jit/etiss/jit/
-  COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:${PROJECT_NAME}>" ${CMAKE_BINARY_DIR}/etiss/include/jit/etiss/jit/
+  COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/include/jit/etiss/jit/
+  COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:${PROJECT_NAME}>" ${CMAKE_BINARY_DIR}/include/jit/etiss/jit/
 )
 
 INSTALL(FILES
