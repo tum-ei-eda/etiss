@@ -122,7 +122,7 @@ bool Injector::cycleAccurateCallback(uint64_t time_ps)
     {
         for (auto &it : unknown_triggers)
         {
-            if (it.first.fired(time_ps, this))
+            if (it.first.check(time_ps, this))
             { // trigger fired
                 // signal fired trigger
                 ret = true;

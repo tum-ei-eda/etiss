@@ -173,15 +173,15 @@ Trigger::~Trigger()
     }
 }
 
-bool Trigger::fired(uint64_t time_ps, etiss::fault::Injector *target_injector)
+bool Trigger::check(uint64_t time_ps, etiss::fault::Injector *target_injector)
 {
-    etiss::log(etiss::VERBOSE, std::string("etiss::fault::Trigger::fired(time_ps=") + std::to_string(time_ps) +
+    etiss::log(etiss::VERBOSE, std::string("etiss::fault::Trigger::check(time_ps=") + std::to_string(time_ps) +
                                    std::string(", Injector*)"));
     switch (type_)
     {
     case Type::META_COUNTER:
     {
-        if (sub_->fired(time_ps, target_injector))
+        if (sub_->check(time_ps, target_injector))
         {
             ++param2_; // increase count
             if (param1_ == param2_)
@@ -200,9 +200,9 @@ bool Trigger::fired(uint64_t time_ps, etiss::fault::Injector *target_injector)
             if (fieldptr_ == 0)
             {
 #ifdef NO_ETISS
-                std::cout << "Trigger::fired: Failed to get field" << std::endl;
+                std::cout << "Trigger::check: Failed to get field" << std::endl;
 #else
-                etiss::log(etiss::ERROR, "Trigger::fired: Failed to get field", *this);
+                etiss::log(etiss::ERROR, "Trigger::check: Failed to get field", *this);
 #endif
                 return false;
             }
@@ -214,9 +214,9 @@ bool Trigger::fired(uint64_t time_ps, etiss::fault::Injector *target_injector)
             if (!inj_->getInjector()->readField(fieldptr_, val, errmsg))
             {
 #ifdef NO_ETISS
-                std::cout << "Trigger::fired: Failed to read field: " << errmsg << std::endl;
+                std::cout << "Trigger::check: Failed to read field: " << errmsg << std::endl;
 #else
-                etiss::log(etiss::ERROR, "Trigger::fired: Failed to get field", *this, errmsg);
+                etiss::log(etiss::ERROR, "Trigger::check: Failed to get field", *this, errmsg);
 #endif
                 return false;
             }
@@ -224,9 +224,9 @@ bool Trigger::fired(uint64_t time_ps, etiss::fault::Injector *target_injector)
         else
         {
 #ifdef NO_ETISS
-            std::cout << "Trigger::fired: Failed get injector: " << inj_->getInjectorPath() << std::endl;
+            std::cout << "Trigger::check: Failed get injector: " << inj_->getInjectorPath() << std::endl;
 #else
-            etiss::log(etiss::ERROR, "Trigger::fired: Failed get injector", *this, *inj_);
+            etiss::log(etiss::ERROR, "Trigger::check: Failed get injector", *this, *inj_);
 #endif
         }
         return val == param1_;

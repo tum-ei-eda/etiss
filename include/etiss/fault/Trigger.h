@@ -153,7 +153,7 @@ class Trigger : public etiss::ToString
     // Members
     /** @brief this function checks if the Trigger has just fired.
      */
-    bool fired(uint64_t time_ps, etiss::fault::Injector *target_injector);
+    bool check(uint64_t time_ps, etiss::fault::Injector *target_injector);
 
     /** @brief this function calculates in case of a TIMERELATIVE Trigger a
      *         constant TIME trigger
