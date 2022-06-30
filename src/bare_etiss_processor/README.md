@@ -212,7 +212,7 @@ Usage:
 				</action>
 				<action type="BITFLIP"> <!--why not have more than one <action>: Here, an additional "BITFLIP"-->
 					<injector>core%i%</injector> <!--again we need an <injector>-->
-					<field>R1</field> <!--BITFLIP and MASK takes a <field>, here R1 aka X1 in RISC-V, with the CPUCore all ISA-GPRs and the instructionPointer are <fields>-->
+					<field>X1</field> <!--BITFLIP and MASK takes a <field>, here R1 aka X1 in RISC-V, with the CPUCore all ISA-GPRs and the instructionPointer are <fields>-->
 					<bit>1</bit> <!--the target <bit> number-->
 				</action>
 				<action type="INJECTION"> <!--now, we inject a new fault as our action.-->
@@ -247,7 +247,7 @@ Usage:
 			<actions>
 				<action type="MASK"> <!--MASK action is similar to BITFLIP as it takes a <field> as target, however, the manipulation is equal to "<field> = <field> <op> <value>" in C primitive.-->
 					<injector>core%i%</injector>
-					<field>R2</field>
+					<field>X2</field>
 					<op>OR</op> <!-- the MASK operation can be either of {AND, OR, XOR, NAND, NOR}, e.g. use AND to reset a <field>'s bits, OR to set, XOR to flip, .. etc.-->
 					<value>0x55555555</value> <!--specify the mask <value> as hexadecimal-->
 				</action>
