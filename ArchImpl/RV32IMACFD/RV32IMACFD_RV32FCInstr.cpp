@@ -1,5 +1,5 @@
 /**
- * Generated on Tue, 07 Jun 2022 14:20:49 +0200.
+ * Generated on Thu, 30 Jun 2022 19:52:53 +0200.
  *
  * This file contains the instruction behavior models of the RV32FC
  * instruction set for the RV32IMACFD core architecture.
@@ -53,9 +53,10 @@ partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_addr
 partInit.code() += "etiss_uint32 offs = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 + 8U) + "] + " + std::to_string(uimm) + ";\n";
 partInit.code() += "etiss_uint32 mem_val_0;\n";
 partInit.code() += "cpu->exception |= (*(system->dread))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_0, 4);\n";
+partInit.code() += "if (cpu->exception) translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
 partInit.code() += "etiss_uint32 res = (etiss_uint32)(mem_val_0);\n";
 partInit.code() += "((RV32IMACFD*)cpu)->F[" + std::to_string(rd + 8U) + "] = -4294967296UL | res;\n";
-partInit.code() += "if (cpu->exception) return cpu->exception;\n";
+partInit.code() += "if (cpu->return_pending) return cpu->exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getRegisterDependencies().add(reg_name[rs1 + 8U], 32);
@@ -130,8 +131,9 @@ partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_addr
 partInit.code() += "etiss_uint32 offs = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 + 8U) + "] + " + std::to_string(uimm) + ";\n";
 partInit.code() += "etiss_uint32 mem_val_0 = (etiss_uint32)(((RV32IMACFD*)cpu)->F[" + std::to_string(rs2 + 8U) + "]);\n";
 partInit.code() += "cpu->exception |= (*(system->dwrite))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_0, 4);\n";
+partInit.code() += "if (cpu->exception) translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
 
-partInit.code() += "if (cpu->exception) return cpu->exception;\n";
+partInit.code() += "if (cpu->return_pending) return cpu->exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getRegisterDependencies().add(reg_name[rs1 + 8U], 32);
@@ -203,9 +205,10 @@ partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_addr
 partInit.code() += "etiss_uint32 offs = *((RV32IMACFD*)cpu)->X[" + std::to_string(2U) + "] + " + std::to_string(uimm) + ";\n";
 partInit.code() += "etiss_uint32 mem_val_0;\n";
 partInit.code() += "cpu->exception |= (*(system->dread))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_0, 4);\n";
+partInit.code() += "if (cpu->exception) translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
 partInit.code() += "etiss_uint32 res = (etiss_uint32)(mem_val_0);\n";
 partInit.code() += "((RV32IMACFD*)cpu)->F[" + std::to_string(rd) + "] = -4294967296UL | res;\n";
-partInit.code() += "if (cpu->exception) return cpu->exception;\n";
+partInit.code() += "if (cpu->return_pending) return cpu->exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getRegisterDependencies().add(reg_name[2U], 32);
@@ -272,8 +275,9 @@ partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_addr
 partInit.code() += "etiss_uint32 offs = *((RV32IMACFD*)cpu)->X[" + std::to_string(2U) + "] + " + std::to_string(uimm) + ";\n";
 partInit.code() += "etiss_uint32 mem_val_0 = (etiss_uint32)(((RV32IMACFD*)cpu)->F[" + std::to_string(rs2) + "]);\n";
 partInit.code() += "cpu->exception |= (*(system->dwrite))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_0, 4);\n";
+partInit.code() += "if (cpu->exception) translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
 
-partInit.code() += "if (cpu->exception) return cpu->exception;\n";
+partInit.code() += "if (cpu->return_pending) return cpu->exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getRegisterDependencies().add(reg_name[2U], 32);

@@ -1,5 +1,5 @@
 /**
- * Generated on Tue, 07 Jun 2022 14:20:49 +0200.
+ * Generated on Thu, 30 Jun 2022 19:52:53 +0200.
  *
  * This file contains the instruction behavior models of the RV32A
  * instruction set for the RV32IMACFD core architecture.
@@ -56,12 +56,14 @@ partInit.code() += "etiss_uint32 offs = *((RV32IMACFD*)cpu)->X[" + std::to_strin
 if ((rd % 32U) != 0U) {
 partInit.code() += "etiss_uint32 mem_val_0;\n";
 partInit.code() += "cpu->exception |= (*(system->dread))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_0, 4);\n";
+partInit.code() += "if (cpu->exception) translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
 partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd % 32) + "] = (etiss_int32)(((etiss_int32)(mem_val_0)));\n";
 }
 partInit.code() += "etiss_uint32 mem_val_1 = (etiss_int32)(*((RV32IMACFD*)cpu)->X[" + std::to_string(rs2 % 32U) + "]);\n";
 partInit.code() += "cpu->exception |= (*(system->dwrite))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_1, 4);\n";
+partInit.code() += "if (cpu->exception) translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
 
-partInit.code() += "if (cpu->exception) return cpu->exception;\n";
+partInit.code() += "if (cpu->return_pending) return cpu->exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getRegisterDependencies().add(reg_name[rs1 % 32U], 32);
@@ -142,6 +144,7 @@ partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_addr
 partInit.code() += "etiss_uint32 offs = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 % 32U) + "];\n";
 partInit.code() += "etiss_uint32 mem_val_0;\n";
 partInit.code() += "cpu->exception |= (*(system->dread))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_0, 4);\n";
+partInit.code() += "if (cpu->exception) translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
 partInit.code() += "etiss_int32 res1 = mem_val_0;\n";
 if ((rd % 32U) != 0U) {
 partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd % 32) + "] = res1;\n";
@@ -149,8 +152,9 @@ partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd % 32) + "] = re
 partInit.code() += "etiss_uint32 res2 = res1 + *((RV32IMACFD*)cpu)->X[" + std::to_string(rs2 % 32U) + "];\n";
 partInit.code() += "etiss_uint32 mem_val_1 = res2;\n";
 partInit.code() += "cpu->exception |= (*(system->dwrite))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_1, 4);\n";
+partInit.code() += "if (cpu->exception) translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
 
-partInit.code() += "if (cpu->exception) return cpu->exception;\n";
+partInit.code() += "if (cpu->return_pending) return cpu->exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getRegisterDependencies().add(reg_name[rs1 % 32U], 32);
@@ -231,6 +235,7 @@ partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_addr
 partInit.code() += "etiss_uint32 offs = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 % 32U) + "];\n";
 partInit.code() += "etiss_uint32 mem_val_0;\n";
 partInit.code() += "cpu->exception |= (*(system->dread))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_0, 4);\n";
+partInit.code() += "if (cpu->exception) translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
 partInit.code() += "etiss_int32 res1 = mem_val_0;\n";
 if ((rd % 32U) != 0U) {
 partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd % 32) + "] = res1;\n";
@@ -238,8 +243,9 @@ partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd % 32) + "] = re
 partInit.code() += "etiss_uint32 res2 = res1 ^ *((RV32IMACFD*)cpu)->X[" + std::to_string(rs2 % 32U) + "];\n";
 partInit.code() += "etiss_uint32 mem_val_1 = res2;\n";
 partInit.code() += "cpu->exception |= (*(system->dwrite))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_1, 4);\n";
+partInit.code() += "if (cpu->exception) translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
 
-partInit.code() += "if (cpu->exception) return cpu->exception;\n";
+partInit.code() += "if (cpu->return_pending) return cpu->exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getRegisterDependencies().add(reg_name[rs1 % 32U], 32);
@@ -320,6 +326,7 @@ partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_addr
 partInit.code() += "etiss_uint32 offs = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 % 32U) + "];\n";
 partInit.code() += "etiss_uint32 mem_val_0;\n";
 partInit.code() += "cpu->exception |= (*(system->dread))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_0, 4);\n";
+partInit.code() += "if (cpu->exception) translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
 partInit.code() += "etiss_int32 res1 = mem_val_0;\n";
 if ((rd % 32U) != 0U) {
 partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd % 32) + "] = res1;\n";
@@ -327,8 +334,9 @@ partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd % 32) + "] = re
 partInit.code() += "etiss_uint32 res2 = res1 & *((RV32IMACFD*)cpu)->X[" + std::to_string(rs2 % 32U) + "];\n";
 partInit.code() += "etiss_uint32 mem_val_1 = res2;\n";
 partInit.code() += "cpu->exception |= (*(system->dwrite))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_1, 4);\n";
+partInit.code() += "if (cpu->exception) translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
 
-partInit.code() += "if (cpu->exception) return cpu->exception;\n";
+partInit.code() += "if (cpu->return_pending) return cpu->exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getRegisterDependencies().add(reg_name[rs1 % 32U], 32);
@@ -409,6 +417,7 @@ partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_addr
 partInit.code() += "etiss_uint32 offs = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 % 32U) + "];\n";
 partInit.code() += "etiss_uint32 mem_val_0;\n";
 partInit.code() += "cpu->exception |= (*(system->dread))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_0, 4);\n";
+partInit.code() += "if (cpu->exception) translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
 partInit.code() += "etiss_int32 res1 = mem_val_0;\n";
 if ((rd % 32U) != 0U) {
 partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd % 32) + "] = res1;\n";
@@ -416,8 +425,9 @@ partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd % 32) + "] = re
 partInit.code() += "etiss_uint32 res2 = res1 | *((RV32IMACFD*)cpu)->X[" + std::to_string(rs2 % 32U) + "];\n";
 partInit.code() += "etiss_uint32 mem_val_1 = res2;\n";
 partInit.code() += "cpu->exception |= (*(system->dwrite))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_1, 4);\n";
+partInit.code() += "if (cpu->exception) translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
 
-partInit.code() += "if (cpu->exception) return cpu->exception;\n";
+partInit.code() += "if (cpu->return_pending) return cpu->exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getRegisterDependencies().add(reg_name[rs1 % 32U], 32);
@@ -498,6 +508,7 @@ partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_addr
 partInit.code() += "etiss_uint32 offs = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 % 32U) + "];\n";
 partInit.code() += "etiss_uint32 mem_val_0;\n";
 partInit.code() += "cpu->exception |= (*(system->dread))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_0, 4);\n";
+partInit.code() += "if (cpu->exception) translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
 partInit.code() += "etiss_int32 res1 = mem_val_0;\n";
 if ((rd % 32U) != 0U) {
 partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd % 32) + "] = res1;\n";
@@ -505,8 +516,9 @@ partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd % 32) + "] = re
 partInit.code() += "etiss_uint32 res2 = (res1 > (etiss_int32)(*((RV32IMACFD*)cpu)->X[" + std::to_string(rs2 % 32U) + "])) ? (*((RV32IMACFD*)cpu)->X[" + std::to_string(rs2 % 32U) + "]) : (res1);\n";
 partInit.code() += "etiss_uint32 mem_val_1 = res2;\n";
 partInit.code() += "cpu->exception |= (*(system->dwrite))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_1, 4);\n";
+partInit.code() += "if (cpu->exception) translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
 
-partInit.code() += "if (cpu->exception) return cpu->exception;\n";
+partInit.code() += "if (cpu->return_pending) return cpu->exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getRegisterDependencies().add(reg_name[rs1 % 32U], 32);
@@ -587,6 +599,7 @@ partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_addr
 partInit.code() += "etiss_uint32 offs = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 % 32U) + "];\n";
 partInit.code() += "etiss_uint32 mem_val_0;\n";
 partInit.code() += "cpu->exception |= (*(system->dread))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_0, 4);\n";
+partInit.code() += "if (cpu->exception) translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
 partInit.code() += "etiss_int32 res1 = mem_val_0;\n";
 if ((rd % 32U) != 0U) {
 partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd % 32) + "] = res1;\n";
@@ -594,8 +607,9 @@ partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd % 32) + "] = re
 partInit.code() += "etiss_uint32 res2 = (res1 < (etiss_int32)(*((RV32IMACFD*)cpu)->X[" + std::to_string(rs2 % 32U) + "])) ? (*((RV32IMACFD*)cpu)->X[" + std::to_string(rs2 % 32U) + "]) : (res1);\n";
 partInit.code() += "etiss_uint32 mem_val_1 = res2;\n";
 partInit.code() += "cpu->exception |= (*(system->dwrite))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_1, 4);\n";
+partInit.code() += "if (cpu->exception) translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
 
-partInit.code() += "if (cpu->exception) return cpu->exception;\n";
+partInit.code() += "if (cpu->return_pending) return cpu->exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getRegisterDependencies().add(reg_name[rs1 % 32U], 32);
@@ -676,6 +690,7 @@ partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_addr
 partInit.code() += "etiss_uint32 offs = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 % 32U) + "];\n";
 partInit.code() += "etiss_uint32 mem_val_0;\n";
 partInit.code() += "cpu->exception |= (*(system->dread))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_0, 4);\n";
+partInit.code() += "if (cpu->exception) translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
 partInit.code() += "etiss_uint32 res1 = mem_val_0;\n";
 if ((rd % 32U) != 0U) {
 partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd % 32) + "] = (etiss_int32)(res1);\n";
@@ -683,8 +698,9 @@ partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd % 32) + "] = (e
 partInit.code() += "etiss_uint32 res2 = (res1 > *((RV32IMACFD*)cpu)->X[" + std::to_string(rs2 % 32U) + "]) ? (*((RV32IMACFD*)cpu)->X[" + std::to_string(rs2 % 32U) + "]) : (res1);\n";
 partInit.code() += "etiss_uint32 mem_val_1 = res2;\n";
 partInit.code() += "cpu->exception |= (*(system->dwrite))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_1, 4);\n";
+partInit.code() += "if (cpu->exception) translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
 
-partInit.code() += "if (cpu->exception) return cpu->exception;\n";
+partInit.code() += "if (cpu->return_pending) return cpu->exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getRegisterDependencies().add(reg_name[rs1 % 32U], 32);
@@ -765,6 +781,7 @@ partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_addr
 partInit.code() += "etiss_uint32 offs = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 % 32U) + "];\n";
 partInit.code() += "etiss_uint32 mem_val_0;\n";
 partInit.code() += "cpu->exception |= (*(system->dread))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_0, 4);\n";
+partInit.code() += "if (cpu->exception) translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
 partInit.code() += "etiss_uint32 res1 = mem_val_0;\n";
 if ((rd % 32U) != 0U) {
 partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd % 32) + "] = (etiss_int32)(res1);\n";
@@ -772,8 +789,9 @@ partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd % 32) + "] = (e
 partInit.code() += "etiss_uint32 res2 = (res1 < *((RV32IMACFD*)cpu)->X[" + std::to_string(rs2 % 32U) + "]) ? (*((RV32IMACFD*)cpu)->X[" + std::to_string(rs2 % 32U) + "]) : (res1);\n";
 partInit.code() += "etiss_uint32 mem_val_1 = res2;\n";
 partInit.code() += "cpu->exception |= (*(system->dwrite))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_1, 4);\n";
+partInit.code() += "if (cpu->exception) translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
 
-partInit.code() += "if (cpu->exception) return cpu->exception;\n";
+partInit.code() += "if (cpu->return_pending) return cpu->exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getRegisterDependencies().add(reg_name[rs1 % 32U], 32);

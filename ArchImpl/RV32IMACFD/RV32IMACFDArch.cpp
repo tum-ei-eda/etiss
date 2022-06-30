@@ -1,5 +1,5 @@
 /**
- * Generated on Tue, 07 Jun 2022 14:20:49 +0200.
+ * Generated on Thu, 30 Jun 2022 19:52:53 +0200.
  *
  * This file contains the architecture class for the RV32IMACFD core architecture.
  */
@@ -209,6 +209,7 @@ void RV32IMACFDArch::initCodeBlock(etiss::CodeBlock & cb) const
 	cb.fileglobalCode().insert("#include \"Arch/RV32IMACFD/RV32IMACFDFuncs.h\"\n");
 	cb.functionglobalCode().insert("cpu->exception = 0;\n");
 	cb.functionglobalCode().insert("cpu->return_pending = 0;\n");
+	cb.functionglobalCode().insert("etiss_uint32 mem_ret_code = 0;\n");
 }
 
 etiss::plugin::gdb::GDBCore & RV32IMACFDArch::getGDBCore()

@@ -1,5 +1,5 @@
 /**
- * Generated on Tue, 07 Jun 2022 14:20:49 +0200.
+ * Generated on Thu, 30 Jun 2022 19:53:54 +0200.
  *
  * This file contains the function macros for the RV32IMACFD core architecture.
  */
@@ -15,8 +15,11 @@
 #endif
 
 
+
+#ifndef ETISS_ARCH_STATIC_FN_ONLY
 static inline etiss_int32 raise(ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers, etiss_int32 irq, etiss_int32 mcause)
 {
+cpu->return_pending = 1;
 if (irq != 0U) {
 return -9U;
 } else {
@@ -50,6 +53,7 @@ return -15U;
 return -11U;
 }
 }
+#endif
 
 #ifndef ETISS_ARCH_STATIC_FN_ONLY
 static inline void leave(etiss_int32 priv_lvl);
@@ -224,14 +228,23 @@ if (csr == 1U) {
 }
 }
 #endif
-static inline etiss_int32 translate_exc_code(etiss_int32 cause)
+
+#ifndef ETISS_ARCH_STATIC_FN_ONLY
+static inline void translate_exc_code(ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers, etiss_int32 cause)
 {
+etiss_int32 code = 0U;
 if (cause == -5U) {
-return 5U;
+code = 5U;
+} else if (cause == -14U) {
+code = 13U;
+} else if (cause == -6U) {
+code = 7U;
+} else if (cause == -15U) {
+code = 15U;
+} else {
+code = 2U;
 }
-if (cause == -6U) {
-return 7U;
+cpu->exception = raise(cpu, system, plugin_pointers, 0U, code);
 }
-return 2U;
-}
+#endif
 #endif
