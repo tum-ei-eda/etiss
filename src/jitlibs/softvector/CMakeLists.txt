@@ -18,7 +18,7 @@ if(NOT softvector_srcs_POPULATED)
 	FetchContent_GetProperties(softvector_srcs)
 	set(EXTERNAL_INSTALL_LOCATION ${softvector_srcs_SOURCE_DIR})
 	INSTALL(
-		FILES ${softvector_srcs_SOURCE_DIR}/include/target/${TARGET_PLATFORM_NAME}/softvector.h 
+		FILES ${softvector_srcs_SOURCE_DIR}/include/target/${TARGET_PLATFORM_NAME}/softvector.h
 		DESTINATION include/jit/etiss/jit)
 	SET(SOFTVECTOR_BUILD_DOC OFF)
 endif()
@@ -37,6 +37,14 @@ TARGET_INCLUDE_DIRECTORIES(${PROJECT_NAME} PRIVATE
 )
 
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} INTERFACE softvector)
+
+add_custom_command(
+  TARGET ${PROJECT_NAME} POST_BUILD VERBATIM
+  COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/include/jit/etiss/jit/
+  COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:${PROJECT_NAME}>" ${CMAKE_BINARY_DIR}/include/jit/etiss/jit/
+  COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:softvector>" ${CMAKE_BINARY_DIR}/include/jit/etiss/jit/
+  COMMAND ${CMAKE_COMMAND} -E copy ${softvector_srcs_SOURCE_DIR}/include/target/${TARGET_PLATFORM_NAME}/softvector.h ${CMAKE_BINARY_DIR}/include/jit/etiss/jit/
+)
 
 INSTALL(FILES
   libsoftvector.h
