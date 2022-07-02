@@ -834,7 +834,7 @@ ss << "add64" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std:
 static InstructionDefinition min_rd_rs1_rs2 (
 	ISA32_RV32IMACFDPV,
 	"min",
-	(uint32_t) 0xa004077,
+	(uint32_t) 0xa004033,
 	(uint32_t) 0xfe00707f,
 	[] (BitArray & ba,etiss::CodeSet & cs,InstructionContext & ic)
 	{
