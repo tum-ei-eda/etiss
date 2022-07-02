@@ -48,10 +48,10 @@ imm += R_imm_0.read(ba) << 0;
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
 partInit.code() += "etiss_uint32 offs = *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1 % 32U) + "] + " + std::to_string(((etiss_int16)((imm) << (4)) >> (4))) + ";\n";
 partInit.code() += "etiss_uint32 mem_val_0;\n";
-partInit.code() += "exception |= (*(system->dread))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_0, 4);\n";
+partInit.code() += "((RV32IMACFDPV*)cpu)->exception |= (*(system->dread))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_0, 4);\n";
 partInit.code() += "etiss_uint32 res = (etiss_uint32)(mem_val_0);\n";
 partInit.code() += "((RV32IMACFDPV*)cpu)->F[" + std::to_string(rd) + "] = -4294967296UL | (etiss_uint64)(res);\n";
-partInit.code() += "if (exception) return exception;\n";
+partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)cpu)->exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getRegisterDependencies().add(reg_name[rs1 % 32U], 32);
@@ -119,9 +119,9 @@ imm += R_imm_5.read(ba) << 5;
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
 partInit.code() += "etiss_uint32 offs = *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1 % 32U) + "] + " + std::to_string(((etiss_int16)((imm) << (4)) >> (4))) + ";\n";
 partInit.code() += "etiss_uint32 mem_val_0 = (etiss_uint32)(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs2) + "]);\n";
-partInit.code() += "exception |= (*(system->dwrite))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_0, 4);\n";
+partInit.code() += "((RV32IMACFDPV*)cpu)->exception |= (*(system->dwrite))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_0, 4);\n";
 
-partInit.code() += "if (exception) return exception;\n";
+partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)cpu)->exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getRegisterDependencies().add(reg_name[rs1 % 32U], 32);

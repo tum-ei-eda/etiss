@@ -190,7 +190,7 @@ void RV32IMACFDPVArch::resetCPU(ETISS_CPU * cpu,etiss::uint64 * startpointer)
 	*rv32imacfdpvcpu->CSR[4] = 4294963473;
 	*rv32imacfdpvcpu->CSR[3105] = 2147483648;
 	*rv32imacfdpvcpu->CSR[3104] = 0;
-	*rv32imacfdpvcpu->CSR[3106] = 128.0;
+	*rv32imacfdpvcpu->CSR[3106] = 128;
  	rv32imacfdpvcpu->RES_ADDR = -1;
 }
 
@@ -227,7 +227,8 @@ void RV32IMACFDPVArch::initCodeBlock(etiss::CodeBlock & cb) const
 {
 	cb.fileglobalCode().insert("#include \"Arch/RV32IMACFDPV/RV32IMACFDPV.h\"\n");
 	cb.fileglobalCode().insert("#include \"Arch/RV32IMACFDPV/RV32IMACFDPVFuncs.h\"\n");
-	cb.functionglobalCode().insert("etiss_uint32 exception = 0;\n");
+	cb.functionglobalCode().insert("((RV32IMACFDPV*)cpu)->exception = 0;\n");
+	cb.functionglobalCode().insert("((RV32IMACFDPV*)cpu)->exception_pending = 0;\n");
 }
 
 etiss::plugin::gdb::GDBCore & RV32IMACFDPVArch::getGDBCore()

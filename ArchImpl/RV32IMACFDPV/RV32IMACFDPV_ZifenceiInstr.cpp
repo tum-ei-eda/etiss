@@ -45,10 +45,10 @@ imm += R_imm_0.read(ba) << 0;
 		partInit.code() = std::string("//FENCE_I\n");
 
 // -----------------------------------------------------------------------------
-partInit.code() += "exception = ETISS_RETURNCODE_RELOADBLOCKS;\n";
+partInit.code() += "((RV32IMACFDPV*)cpu)->exception = ETISS_RETURNCODE_RELOADBLOCKS;\n";
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
 partInit.code() += "((RV32IMACFDPV*)cpu)->FENCE[" + std::to_string(1) + "] = " + std::to_string(imm) + ";\n";
-partInit.code() += "return exception;\n";
+partInit.code() += "return ((RV32IMACFDPV*)cpu)->exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);

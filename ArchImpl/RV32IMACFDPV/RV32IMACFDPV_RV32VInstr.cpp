@@ -47,7 +47,7 @@ zimm += R_zimm_0.read(ba) << 0;
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
 partInit.code() += "if (!((*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(768U) + "] & 1536U))) {\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += "etiss_uint8 sew = (vtype_extractSEW(" + std::to_string(zimm) + ")) & 0x7;\n";
 partInit.code() += "etiss_uint8 lmul = (vtype_extractLMUL(" + std::to_string(zimm) + ")) & 0x7;\n";
@@ -102,7 +102,6 @@ if (rd != 0U) {
 partInit.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd) + "] = _vl;\n";
 }
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getRegisterDependencies().add(reg_name[rs1], 32);
@@ -300,12 +299,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = etiss_vload_encoded_unitstride(cpu, system, plugin_pointers, ((RV32IMACFDPV*)cpu)->V, _vtype, " + std::to_string(vm) + ", _eew, " + std::to_string(vd) + ", _vstart, _vlen, _vl, (etiss_uint64)(*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1) + "]));\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getRegisterDependencies().add(reg_name[rs1], 32);
@@ -389,12 +387,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = etiss_vstore_encoded_unitstride(cpu, system, plugin_pointers, ((RV32IMACFDPV*)cpu)->V, _vtype, " + std::to_string(vm) + ", _eew, " + std::to_string(vs3) + ", _vstart, _vlen, _vl, (etiss_uint64)(*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1) + "]));\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getRegisterDependencies().add(reg_name[rs1], 32);
@@ -474,12 +471,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vadd_vv(((RV32IMACFDPV*)cpu)->V, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs1) + ", " + std::to_string(vs2) + ", _vstart, _vlen, _vl);\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -555,12 +551,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vadd_vi(((RV32IMACFDPV*)cpu)->V, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs2) + ", " + std::to_string(simm5) + ", _vstart, _vlen, _vl);\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -636,12 +631,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vadd_vx(((RV32IMACFDPV*)cpu)->V, *((RV32IMACFDPV*)cpu)->X, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs2) + ", " + std::to_string(rs1) + ", _vstart, _vlen, _vl, " + std::to_string(32) + ");\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -717,12 +711,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vsub_vv(((RV32IMACFDPV*)cpu)->V, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs1) + ", " + std::to_string(vs2) + ", _vstart, _vlen, _vl);\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -798,12 +791,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vsub_vx(((RV32IMACFDPV*)cpu)->V, *((RV32IMACFDPV*)cpu)->X, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs2) + ", " + std::to_string(rs1) + ", _vstart, _vlen, _vl, " + std::to_string(32) + ");\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -879,12 +871,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vwaddu_vv(((RV32IMACFDPV*)cpu)->V, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs1) + ", " + std::to_string(vs2) + ", _vstart, _vlen, _vl);\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -960,12 +951,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vwaddu_vx(((RV32IMACFDPV*)cpu)->V, *((RV32IMACFDPV*)cpu)->X, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs2) + ", " + std::to_string(rs1) + ", _vstart, _vlen, _vl, " + std::to_string(32) + ");\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -1041,12 +1031,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vwadd_vv(((RV32IMACFDPV*)cpu)->V, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs1) + ", " + std::to_string(vs2) + ", _vstart, _vlen, _vl);\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -1122,12 +1111,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vwadd_vx(((RV32IMACFDPV*)cpu)->V, *((RV32IMACFDPV*)cpu)->X, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs2) + ", " + std::to_string(rs1) + ", _vstart, _vlen, _vl, " + std::to_string(32) + ");\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -1203,12 +1191,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vwsubu_vv(((RV32IMACFDPV*)cpu)->V, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs1) + ", " + std::to_string(vs2) + ", _vstart, _vlen, _vl);\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -1284,12 +1271,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vwsubu_vx(((RV32IMACFDPV*)cpu)->V, *((RV32IMACFDPV*)cpu)->X, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs2) + ", " + std::to_string(rs1) + ", _vstart, _vlen, _vl, " + std::to_string(32) + ");\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -1365,12 +1351,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vwsub_vv(((RV32IMACFDPV*)cpu)->V, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs1) + ", " + std::to_string(vs2) + ", _vstart, _vlen, _vl);\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -1446,12 +1431,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vwsub_vx(((RV32IMACFDPV*)cpu)->V, *((RV32IMACFDPV*)cpu)->X, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs2) + ", " + std::to_string(rs1) + ", _vstart, _vlen, _vl, " + std::to_string(32) + ");\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -1527,12 +1511,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vwaddu_w_vv(((RV32IMACFDPV*)cpu)->V, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs1) + ", " + std::to_string(vs2) + ", _vstart, _vlen, _vl);\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -1608,12 +1591,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vwaddu_w_vx(((RV32IMACFDPV*)cpu)->V, *((RV32IMACFDPV*)cpu)->X, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs2) + ", " + std::to_string(rs1) + ", _vstart, _vlen, _vl, " + std::to_string(32) + ");\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -1689,12 +1671,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vwadd_w_vv(((RV32IMACFDPV*)cpu)->V, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs1) + ", " + std::to_string(vs2) + ", _vstart, _vlen, _vl);\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -1770,12 +1751,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vwadd_w_vx(((RV32IMACFDPV*)cpu)->V, *((RV32IMACFDPV*)cpu)->X, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs2) + ", " + std::to_string(rs1) + ", _vstart, _vlen, _vl, " + std::to_string(32) + ");\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -1851,12 +1831,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vwsubu_w_vv(((RV32IMACFDPV*)cpu)->V, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs1) + ", " + std::to_string(vs2) + ", _vstart, _vlen, _vl);\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -1932,12 +1911,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vwsubu_w_vx(((RV32IMACFDPV*)cpu)->V, *((RV32IMACFDPV*)cpu)->X, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs2) + ", " + std::to_string(rs1) + ", _vstart, _vlen, _vl, " + std::to_string(32) + ");\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -2013,12 +1991,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vwsub_w_vv(((RV32IMACFDPV*)cpu)->V, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs1) + ", " + std::to_string(vs2) + ", _vstart, _vlen, _vl);\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -2094,12 +2071,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vwsub_w_vx(((RV32IMACFDPV*)cpu)->V, *((RV32IMACFDPV*)cpu)->X, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs2) + ", " + std::to_string(rs1) + ", _vstart, _vlen, _vl, " + std::to_string(32) + ");\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -2175,12 +2151,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vand_vv(((RV32IMACFDPV*)cpu)->V, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs1) + ", " + std::to_string(vs2) + ", _vstart, _vlen, _vl);\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -2256,12 +2231,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vand_vi(((RV32IMACFDPV*)cpu)->V, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs2) + ", " + std::to_string(simm5) + ", _vstart, _vlen, _vl);\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -2337,12 +2311,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vand_vx(((RV32IMACFDPV*)cpu)->V, *((RV32IMACFDPV*)cpu)->X, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs2) + ", " + std::to_string(rs1) + ", _vstart, _vlen, _vl, " + std::to_string(32) + ");\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -2418,12 +2391,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vor_vv(((RV32IMACFDPV*)cpu)->V, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs1) + ", " + std::to_string(vs2) + ", _vstart, _vlen, _vl);\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -2499,12 +2471,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vor_vi(((RV32IMACFDPV*)cpu)->V, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs2) + ", " + std::to_string(simm5) + ", _vstart, _vlen, _vl);\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -2580,12 +2551,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vor_vx(((RV32IMACFDPV*)cpu)->V, *((RV32IMACFDPV*)cpu)->X, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs2) + ", " + std::to_string(rs1) + ", _vstart, _vlen, _vl, " + std::to_string(32) + ");\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -2661,12 +2631,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vxor_vv(((RV32IMACFDPV*)cpu)->V, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs1) + ", " + std::to_string(vs2) + ", _vstart, _vlen, _vl);\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -2742,12 +2711,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vxor_vi(((RV32IMACFDPV*)cpu)->V, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs2) + ", " + std::to_string(simm5) + ", _vstart, _vlen, _vl);\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -2823,12 +2791,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vxor_vx(((RV32IMACFDPV*)cpu)->V, *((RV32IMACFDPV*)cpu)->X, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs2) + ", " + std::to_string(rs1) + ", _vstart, _vlen, _vl, " + std::to_string(32) + ");\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -2904,12 +2871,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vsll_vv(((RV32IMACFDPV*)cpu)->V, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs1) + ", " + std::to_string(vs2) + ", _vstart, _vlen, _vl);\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -2985,12 +2951,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vsll_vi(((RV32IMACFDPV*)cpu)->V, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs2) + ", " + std::to_string(uimm5) + ", _vstart, _vlen, _vl);\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -3066,12 +3031,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vsll_vx(((RV32IMACFDPV*)cpu)->V, *((RV32IMACFDPV*)cpu)->X, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs2) + ", " + std::to_string(rs1) + ", _vstart, _vlen, _vl, " + std::to_string(32) + ");\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -3147,12 +3111,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vsrl_vv(((RV32IMACFDPV*)cpu)->V, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs1) + ", " + std::to_string(vs2) + ", _vstart, _vlen, _vl);\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -3228,12 +3191,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vsrl_vi(((RV32IMACFDPV*)cpu)->V, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs2) + ", " + std::to_string(uimm5) + ", _vstart, _vlen, _vl);\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -3309,12 +3271,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vsrl_vx(((RV32IMACFDPV*)cpu)->V, *((RV32IMACFDPV*)cpu)->X, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs2) + ", " + std::to_string(rs1) + ", _vstart, _vlen, _vl, " + std::to_string(32) + ");\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -3390,12 +3351,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vsra_vv(((RV32IMACFDPV*)cpu)->V, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs1) + ", " + std::to_string(vs2) + ", _vstart, _vlen, _vl);\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -3471,12 +3431,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vsra_vi(((RV32IMACFDPV*)cpu)->V, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs2) + ", " + std::to_string(uimm5) + ", _vstart, _vlen, _vl);\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -3552,12 +3511,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vsra_vx(((RV32IMACFDPV*)cpu)->V, *((RV32IMACFDPV*)cpu)->X, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs2) + ", " + std::to_string(rs1) + ", _vstart, _vlen, _vl, " + std::to_string(32) + ");\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -3633,12 +3591,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vmseq_vv(((RV32IMACFDPV*)cpu)->V, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs1) + ", " + std::to_string(vs2) + ", _vstart, _vlen, _vl);\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -3714,12 +3671,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vmseq_vi(((RV32IMACFDPV*)cpu)->V, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs2) + ", " + std::to_string(simm5) + ", _vstart, _vlen, _vl);\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -3795,12 +3751,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vmseq_vx(((RV32IMACFDPV*)cpu)->V, *((RV32IMACFDPV*)cpu)->X, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs2) + ", " + std::to_string(rs1) + ", _vstart, _vlen, _vl, " + std::to_string(32) + ");\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -3876,12 +3831,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vmsne_vv(((RV32IMACFDPV*)cpu)->V, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs1) + ", " + std::to_string(vs2) + ", _vstart, _vlen, _vl);\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -3957,12 +3911,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vmsne_vi(((RV32IMACFDPV*)cpu)->V, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs2) + ", " + std::to_string(simm5) + ", _vstart, _vlen, _vl);\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -4038,12 +3991,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vmsne_vx(((RV32IMACFDPV*)cpu)->V, *((RV32IMACFDPV*)cpu)->X, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs2) + ", " + std::to_string(rs1) + ", _vstart, _vlen, _vl, " + std::to_string(32) + ");\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -4119,12 +4071,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vmsltu_vv(((RV32IMACFDPV*)cpu)->V, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs1) + ", " + std::to_string(vs2) + ", _vstart, _vlen, _vl);\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -4200,12 +4151,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vmsltu_vx(((RV32IMACFDPV*)cpu)->V, *((RV32IMACFDPV*)cpu)->X, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs2) + ", " + std::to_string(rs1) + ", _vstart, _vlen, _vl, " + std::to_string(32) + ");\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -4281,12 +4231,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vmslt_vv(((RV32IMACFDPV*)cpu)->V, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs1) + ", " + std::to_string(vs2) + ", _vstart, _vlen, _vl);\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -4362,12 +4311,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vmslt_vx(((RV32IMACFDPV*)cpu)->V, *((RV32IMACFDPV*)cpu)->X, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs2) + ", " + std::to_string(rs1) + ", _vstart, _vlen, _vl, " + std::to_string(32) + ");\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -4443,12 +4391,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vmsleu_vv(((RV32IMACFDPV*)cpu)->V, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs1) + ", " + std::to_string(vs2) + ", _vstart, _vlen, _vl);\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -4524,12 +4471,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vmsleu_vi(((RV32IMACFDPV*)cpu)->V, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs2) + ", " + std::to_string(uimm5) + ", _vstart, _vlen, _vl);\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -4605,12 +4551,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vmsleu_vx(((RV32IMACFDPV*)cpu)->V, *((RV32IMACFDPV*)cpu)->X, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs2) + ", " + std::to_string(rs1) + ", _vstart, _vlen, _vl, " + std::to_string(32) + ");\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -4686,12 +4631,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vmsle_vv(((RV32IMACFDPV*)cpu)->V, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs1) + ", " + std::to_string(vs2) + ", _vstart, _vlen, _vl);\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -4767,12 +4711,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vmsle_vi(((RV32IMACFDPV*)cpu)->V, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs2) + ", " + std::to_string(simm5) + ", _vstart, _vlen, _vl);\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -4848,12 +4791,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vmsle_vx(((RV32IMACFDPV*)cpu)->V, *((RV32IMACFDPV*)cpu)->X, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs2) + ", " + std::to_string(rs1) + ", _vstart, _vlen, _vl, " + std::to_string(32) + ");\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -4929,12 +4871,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vmsgtu_vx(((RV32IMACFDPV*)cpu)->V, *((RV32IMACFDPV*)cpu)->X, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs2) + ", " + std::to_string(rs1) + ", _vstart, _vlen, _vl, " + std::to_string(32) + ");\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -5010,12 +4951,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vmsgt_vx(((RV32IMACFDPV*)cpu)->V, *((RV32IMACFDPV*)cpu)->X, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs2) + ", " + std::to_string(rs1) + ", _vstart, _vlen, _vl, " + std::to_string(32) + ");\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -5085,12 +5025,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vmv_vv(((RV32IMACFDPV*)cpu)->V, _vtype, " + std::to_string(vd) + ", " + std::to_string(vs1) + ", _vstart, _vlen, _vl);\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -5154,12 +5093,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vmv_vi(((RV32IMACFDPV*)cpu)->V, _vtype, " + std::to_string(vd) + ", " + std::to_string(simm5) + ", _vstart, _vlen, _vl);\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -5223,12 +5161,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vmv_vx(((RV32IMACFDPV*)cpu)->V, *((RV32IMACFDPV*)cpu)->X, _vtype, " + std::to_string(vd) + ", " + std::to_string(rs1) + ", _vstart, _vlen, _vl, " + std::to_string(32) + ");\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -5292,13 +5229,12 @@ if (rd != 0U) {
 partInit.code() += "etiss_uint32 ret = vmv_xs(((RV32IMACFDPV*)cpu)->V, *((RV32IMACFDPV*)cpu)->X, _vtype, " + std::to_string(rd) + ", " + std::to_string(vs2) + ", _vlen, _vl, " + std::to_string(32) + ");\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
 }
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -5362,12 +5298,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vmv_sx(((RV32IMACFDPV*)cpu)->V, *((RV32IMACFDPV*)cpu)->X, _vtype, " + std::to_string(vd) + ", " + std::to_string(rs1) + ", _vstart, _vlen, _vl, " + std::to_string(32) + ");\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -5437,12 +5372,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vslideup_vi(((RV32IMACFDPV*)cpu)->V, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs2) + ", " + std::to_string(simm5) + ", _vstart, _vlen, _vl);\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -5518,12 +5452,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vslideup_vx(((RV32IMACFDPV*)cpu)->V, *((RV32IMACFDPV*)cpu)->X, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs2) + ", " + std::to_string(rs1) + ", _vstart, _vlen, _vl, " + std::to_string(32) + ");\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -5599,12 +5532,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vslidedown_vi(((RV32IMACFDPV*)cpu)->V, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs2) + ", " + std::to_string(simm5) + ", _vstart, _vlen, _vl);\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -5680,12 +5612,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vslidedown_vx(((RV32IMACFDPV*)cpu)->V, *((RV32IMACFDPV*)cpu)->X, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs2) + ", " + std::to_string(rs1) + ", _vstart, _vlen, _vl, " + std::to_string(32) + ");\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -5761,12 +5692,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vslide1up_vx(((RV32IMACFDPV*)cpu)->V, *((RV32IMACFDPV*)cpu)->X, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs2) + ", " + std::to_string(rs1) + ", _vstart, _vlen, _vl, " + std::to_string(32) + ");\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -5842,12 +5772,11 @@ partInit.code() += "etiss_uint32 _vlen = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_
 partInit.code() += "etiss_uint32 ret = vslide1down_vx(((RV32IMACFDPV*)cpu)->V, *((RV32IMACFDPV*)cpu)->X, _vtype, " + std::to_string(vm) + ", " + std::to_string(vd) + ", " + std::to_string(vs2) + ", " + std::to_string(rs1) + ", _vstart, _vlen, _vl, " + std::to_string(32) + ");\n";
 partInit.code() += "if (ret != 0U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = ret >> 8U;\n";
-partInit.code() += "exception = ETISS_RETURNCODE_ILLEGALINSTRUCTION;\n";
+partInit.code() += "raise(0U, 2U);\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\n";
 partInit.code() += "}\n";
-partInit.code() += "if (exception) return exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);

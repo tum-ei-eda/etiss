@@ -15,6 +15,8 @@ extern "C" {
 #pragma pack(push, 1)
 struct RV32IMACFDPV {
 	ETISS_CPU cpu; // original cpu struct must be defined as the first field of the new structure. this allows to cast X * to ETISS_CPU * and vice vers
+	etiss_uint32 exception;
+	etiss_uint32 exception_pending;
 	etiss_uint32 ZERO;
 	etiss_uint32 RA;
 	etiss_uint32 SP;

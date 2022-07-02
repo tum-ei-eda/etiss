@@ -42,7 +42,7 @@ partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(0U) + "] = *((
 partInit.code() += "cpu->instructionPointer = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(65U) + "];\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(768U) + "] = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(0U) + "];\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(256U) + "] = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(0U) + "];\n";
-partInit.code() += "return exception;\n";
+partInit.code() += "return ((RV32IMACFDPV*)cpu)->exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -93,7 +93,7 @@ partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(256U) + "] = *
 partInit.code() += "cpu->instructionPointer = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(321U) + "];\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(768U) + "] = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(256U) + "];\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(0U) + "] = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(256U) + "];\n";
-partInit.code() += "return exception;\n";
+partInit.code() += "return ((RV32IMACFDPV*)cpu)->exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -144,7 +144,7 @@ partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(768U) + "] = *
 partInit.code() += "cpu->instructionPointer = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(833U) + "];\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(0U) + "] = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(768U) + "];\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(256U) + "] = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(768U) + "];\n";
-partInit.code() += "return exception;\n";
+partInit.code() += "return ((RV32IMACFDPV*)cpu)->exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);

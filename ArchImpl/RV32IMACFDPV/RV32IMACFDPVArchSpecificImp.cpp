@@ -12,7 +12,7 @@
 
 #include "RV32IMACFDPVArch.h"
 #include "RV32IMACFDPVArchSpecificImp.h"
-#include "Encoding.h"
+
 /**
 	@brief This function will be called automatically in order to handling exceptions such as interrupt, system call, illegal instructions
 
