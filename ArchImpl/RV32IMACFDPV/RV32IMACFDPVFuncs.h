@@ -27,7 +27,7 @@ if (mcause == 2U) {
 return -11U;
 }
 if (mcause == 3U) {
-return -19U;
+return 2147483648U;
 }
 if (mcause == 4U || mcause == 5U) {
 return -5U;
