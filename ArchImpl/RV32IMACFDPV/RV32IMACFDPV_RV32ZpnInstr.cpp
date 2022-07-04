@@ -166,7 +166,7 @@ ss << "add16" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std:
 static InstructionDefinition maddr32_rd_rs1_rs2 (
 	ISA32_RV32IMACFDPV,
 	"maddr32",
-	(uint32_t) 0xc4000077,
+	(uint32_t) 0xc4001077,
 	(uint32_t) 0xfe00707f,
 	[] (BitArray & ba,etiss::CodeSet & cs,InstructionContext & ic)
 	{
