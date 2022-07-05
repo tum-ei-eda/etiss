@@ -122,8 +122,8 @@ rs2 += R_rs2_0.read(ba) << 0;
 
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
-partInit.code() += "etiss_uint32 rs1_val = *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1) + "];\n";
-partInit.code() += "etiss_uint32 rs2_val = *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs2) + "];\n";
+partInit.code() += "etiss_uint64 rs1_val = (*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1) + "]) & 0x1ffffffff;\n";
+partInit.code() += "etiss_uint64 rs2_val = (*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs2) + "]) & 0x1ffffffff;\n";
 partInit.code() += "etiss_uint64 product = rs1_val * rs2_val;\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string((((rd) >> (1U)) & 15) * 2U + 1U) + "] = (((product) >> (32U)) & 4294967295);\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string((((rd) >> (1U)) & 15) * 2U) + "] = (((product) >> (0U)) & 4294967295);\n";
