@@ -45,18 +45,18 @@ rs1 += R_rs1_0.read(ba) << 0;
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
 if (rd != 0U) {
 partInit.code() += "etiss_uint32 rs1_val = *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1) + "];\n";
-etiss_uint32 count = 0U;
-etiss_uint32 i = 32U;
-while (i > 0U) {
-i = i - 1U;
-partInit.code() += "if ((((rs1_val) >> (" + std::to_string(i) + ")) & ((1 << ((i) - (i) + 1)) - 1)) == 0U) {\n";
-count = count + 1U;
+partInit.code() += "etiss_uint32 count = 0U;\n";
+partInit.code() += "etiss_uint32 i = 32U;\n";
+partInit.code() += "while (i > 0U) {\n";
+partInit.code() += "i = i - 1U;\n";
+partInit.code() += "if ((((rs1_val) >> (i)) & ((1 << ((i) - (i) + 1)) - 1)) == 0U) {\n";
+partInit.code() += "count = count + 1U;\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
-i = 0U;
+partInit.code() += "i = 0U;\n";
 partInit.code() += "}\n";
-}
-partInit.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd) + "] = " + std::to_string(count) + ";\n";
+partInit.code() += "}\n";
+partInit.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd) + "] = count;\n";
 }
 // -----------------------------------------------------------------------------
 

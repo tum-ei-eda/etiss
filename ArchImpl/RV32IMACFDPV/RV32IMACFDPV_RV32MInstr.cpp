@@ -324,9 +324,9 @@ rs2 += R_rs2_0.read(ba) << 0;
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
 if ((rd % 32U) != 0U) {
 partInit.code() += "if (*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs2 % 32U) + "] != 0U) {\n";
-etiss_uint32 MMIN = 2147483648U;
-partInit.code() += "if (*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1 % 32U) + "] == " + std::to_string(MMIN) + " && (etiss_int32)(*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs2 % 32U) + "]) == -1U) {\n";
-partInit.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd % 32) + "] = " + std::to_string(MMIN) + ";\n";
+partInit.code() += "etiss_uint32 MMIN = 2147483648U;\n";
+partInit.code() += "if (*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1 % 32U) + "] == MMIN && (etiss_int32)(*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs2 % 32U) + "]) == -1U) {\n";
+partInit.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd % 32) + "] = MMIN;\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd % 32) + "] = (etiss_int32)(*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1 % 32U) + "]) / (etiss_int32)(*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs2 % 32U) + "]);\n";
@@ -476,8 +476,8 @@ rs2 += R_rs2_0.read(ba) << 0;
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
 if ((rd % 32U) != 0U) {
 partInit.code() += "if (*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs2 % 32U) + "] != 0U) {\n";
-etiss_uint32 MMIN = 2147483648U;
-partInit.code() += "if (*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1 % 32U) + "] == " + std::to_string(MMIN) + " && (etiss_int32)(*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs2 % 32U) + "]) == -1U) {\n";
+partInit.code() += "etiss_uint32 MMIN = 2147483648U;\n";
+partInit.code() += "if (*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1 % 32U) + "] == MMIN && (etiss_int32)(*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs2 % 32U) + "]) == -1U) {\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd % 32) + "] = 0U;\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
