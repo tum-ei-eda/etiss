@@ -122,6 +122,7 @@ void RV32IMACFDPVArch::resetCPU(ETISS_CPU * cpu,etiss::uint64 * startpointer)
 	rv32imacfdpvcpu->PRIV = 0;
 	rv32imacfdpvcpu->DPC = 0;
 	rv32imacfdpvcpu->FCSR = 0;
+	rv32imacfdpvcpu->VXSAT_CSR__ = 0;
 	rv32imacfdpvcpu->VXSAT_CSR_ = 0;
 	rv32imacfdpvcpu->VSTART_CSR = 0;
 	rv32imacfdpvcpu->VXSAT_CSR = 0;
@@ -171,6 +172,7 @@ void RV32IMACFDPVArch::resetCPU(ETISS_CPU * cpu,etiss::uint64 * startpointer)
  	rv32imacfdpvcpu->X[30] = &rv32imacfdpvcpu->T5;
  	rv32imacfdpvcpu->X[31] = &rv32imacfdpvcpu->T6;
  	rv32imacfdpvcpu->CSR[3] = &rv32imacfdpvcpu->FCSR;
+ 	rv32imacfdpvcpu->CSR[9] = &rv32imacfdpvcpu->VXSAT_CSR__;
  	rv32imacfdpvcpu->CSR[9] = &rv32imacfdpvcpu->VXSAT_CSR_;
  	rv32imacfdpvcpu->CSR[8] = &rv32imacfdpvcpu->VSTART_CSR;
  	rv32imacfdpvcpu->CSR[9] = &rv32imacfdpvcpu->VXSAT_CSR;

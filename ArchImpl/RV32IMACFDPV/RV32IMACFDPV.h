@@ -56,6 +56,7 @@ struct RV32IMACFDPV {
 	etiss_uint8 PRIV;
 	etiss_uint32 DPC;
 	etiss_uint32 FCSR;
+	etiss_uint32 VXSAT_CSR__;
 	etiss_uint32 VXSAT_CSR_;
 	etiss_uint32 VSTART_CSR;
 	etiss_uint32 VXSAT_CSR;

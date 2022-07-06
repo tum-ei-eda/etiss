@@ -162,6 +162,178 @@ ss << "add16" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std:
 	}
 );
 
+// KMADA -----------------------------------------------------------------------
+static InstructionDefinition kmada_rd_rs1_rs2 (
+	ISA32_RV32IMACFDPV,
+	"kmada",
+	(uint32_t) 0x48001077,
+	(uint32_t) 0xfe00707f,
+	[] (BitArray & ba,etiss::CodeSet & cs,InstructionContext & ic)
+	{
+
+// -----------------------------------------------------------------------------
+
+// -----------------------------------------------------------------------------
+
+// -----------------------------------------------------------------------------
+etiss_uint32 rd = 0;
+static BitArrayRange R_rd_0(11, 7);
+rd += R_rd_0.read(ba) << 0;
+etiss_uint32 rs1 = 0;
+static BitArrayRange R_rs1_0(19, 15);
+rs1 += R_rs1_0.read(ba) << 0;
+etiss_uint32 rs2 = 0;
+static BitArrayRange R_rs2_0(24, 20);
+rs2 += R_rs2_0.read(ba) << 0;
+
+// -----------------------------------------------------------------------------
+
+		CodePart & partInit = cs.append(CodePart::INITIALREQUIRED);
+
+		partInit.code() = std::string("//KMADA\n");
+
+// -----------------------------------------------------------------------------
+partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
+if (rd != 0U) {
+partInit.code() += "etiss_int32 rs1_val = *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1) + "];\n";
+partInit.code() += "etiss_int32 rs2_val = *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs2) + "];\n";
+partInit.code() += "etiss_int32 rd_val = *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd) + "];\n";
+partInit.code() += "etiss_int16 rs1_val_lo = (((rs1_val) >> (0U)) & 65535);\n";
+partInit.code() += "etiss_int16 rs1_val_hi = (((rs1_val) >> (16U)) & 65535);\n";
+partInit.code() += "etiss_int16 rs2_val_lo = (((rs2_val) >> (0U)) & 65535);\n";
+partInit.code() += "etiss_int16 rs2_val_hi = (((rs2_val) >> (16U)) & 65535);\n";
+partInit.code() += "etiss_int32 mula32 = rs1_val_hi * rs2_val_hi;\n";
+partInit.code() += "etiss_int32 mulb32 = rs1_val_lo * rs2_val_lo;\n";
+partInit.code() += "etiss_int64 res34 = ((etiss_int64)((rd_val & 0x3ffffffff)) + (etiss_int64)((mula32 & 0x3ffffffff)) + (etiss_int64)((mulb32 & 0x3ffffffff))) & 0x3ffffffff;\n";
+partInit.code() += "if (res34 >= 4294967296UL) {\n";
+partInit.code() += "res34 = (4294967295UL) & 0x3ffffffff;\n";
+partInit.code() += "(((((RV32IMACFDPV*)cpu)->VXSAT_CSR__) >> (0U)) & 1) = (1U) & 0x1;\n";
+partInit.code() += "}\n";partInit.code() += " else if (res34 < -4294967296UL) {\n";
+partInit.code() += "res34 = (-4294967296UL) & 0x3ffffffff;\n";
+partInit.code() += "(((((RV32IMACFDPV*)cpu)->VXSAT_CSR__) >> (0U)) & 1) = (1U) & 0x1;\n";
+partInit.code() += "}\n";
+partInit.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd) + "] = (((res34) >> (0U)) & 4294967295);\n";
+}
+// -----------------------------------------------------------------------------
+
+		partInit.getRegisterDependencies().add(reg_name[rd], 32);
+		partInit.getRegisterDependencies().add(reg_name[rs1], 32);
+		partInit.getRegisterDependencies().add(reg_name[rs2], 32);
+		partInit.getAffectedRegisters().add(reg_name[rd], 32);
+		partInit.getAffectedRegisters().add("instructionPointer", 32);
+
+		return true;
+	},
+	0,
+	[] (BitArray & ba, Instruction & instr)
+	{
+// -----------------------------------------------------------------------------
+etiss_uint32 rd = 0;
+static BitArrayRange R_rd_0(11, 7);
+rd += R_rd_0.read(ba) << 0;
+etiss_uint32 rs1 = 0;
+static BitArrayRange R_rs1_0(19, 15);
+rs1 += R_rs1_0.read(ba) << 0;
+etiss_uint32 rs2 = 0;
+static BitArrayRange R_rs2_0(24, 20);
+rs2 += R_rs2_0.read(ba) << 0;
+
+// -----------------------------------------------------------------------------
+
+		std::stringstream ss;
+// -----------------------------------------------------------------------------
+ss << "kmada" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std::to_string(rs1) + " | rs2=" + std::to_string(rs2) + "]");
+// -----------------------------------------------------------------------------
+		return ss.str();
+	}
+);
+
+// KMAXDA ----------------------------------------------------------------------
+static InstructionDefinition kmaxda_rd_rs1_rs2 (
+	ISA32_RV32IMACFDPV,
+	"kmaxda",
+	(uint32_t) 0x4a001077,
+	(uint32_t) 0xfe00707f,
+	[] (BitArray & ba,etiss::CodeSet & cs,InstructionContext & ic)
+	{
+
+// -----------------------------------------------------------------------------
+
+// -----------------------------------------------------------------------------
+
+// -----------------------------------------------------------------------------
+etiss_uint32 rd = 0;
+static BitArrayRange R_rd_0(11, 7);
+rd += R_rd_0.read(ba) << 0;
+etiss_uint32 rs1 = 0;
+static BitArrayRange R_rs1_0(19, 15);
+rs1 += R_rs1_0.read(ba) << 0;
+etiss_uint32 rs2 = 0;
+static BitArrayRange R_rs2_0(24, 20);
+rs2 += R_rs2_0.read(ba) << 0;
+
+// -----------------------------------------------------------------------------
+
+		CodePart & partInit = cs.append(CodePart::INITIALREQUIRED);
+
+		partInit.code() = std::string("//KMAXDA\n");
+
+// -----------------------------------------------------------------------------
+partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
+if (rd != 0U) {
+partInit.code() += "etiss_int32 rs1_val = *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1) + "];\n";
+partInit.code() += "etiss_int32 rs2_val = *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs2) + "];\n";
+partInit.code() += "etiss_int32 rd_val = *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd) + "];\n";
+partInit.code() += "etiss_int16 rs1_val_lo = (((rs1_val) >> (0U)) & 65535);\n";
+partInit.code() += "etiss_int16 rs1_val_hi = (((rs1_val) >> (16U)) & 65535);\n";
+partInit.code() += "etiss_int16 rs2_val_lo = (((rs2_val) >> (0U)) & 65535);\n";
+partInit.code() += "etiss_int16 rs2_val_hi = (((rs2_val) >> (16U)) & 65535);\n";
+partInit.code() += "etiss_int32 mula32 = rs1_val_hi * rs2_val_lo;\n";
+partInit.code() += "etiss_int32 mulb32 = rs1_val_lo * rs2_val_hi;\n";
+partInit.code() += "etiss_int64 res34 = ((etiss_int64)((rd_val & 0x3ffffffff)) + (etiss_int64)((mula32 & 0x3ffffffff)) + (etiss_int64)((mulb32 & 0x3ffffffff))) & 0x3ffffffff;\n";
+partInit.code() += "if (res34 >= 4294967296UL) {\n";
+partInit.code() += "res34 = (4294967295UL) & 0x3ffffffff;\n";
+partInit.code() += "(((((RV32IMACFDPV*)cpu)->VXSAT_CSR__) >> (0U)) & 1) = (1U) & 0x1;\n";
+partInit.code() += "}\n";partInit.code() += " else if (res34 < -4294967296UL) {\n";
+partInit.code() += "res34 = (-4294967296UL) & 0x3ffffffff;\n";
+partInit.code() += "(((((RV32IMACFDPV*)cpu)->VXSAT_CSR__) >> (0U)) & 1) = (1U) & 0x1;\n";
+partInit.code() += "}\n";
+partInit.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd) + "] = (((res34) >> (0U)) & 4294967295);\n";
+}
+// -----------------------------------------------------------------------------
+
+		partInit.getRegisterDependencies().add(reg_name[rd], 32);
+		partInit.getRegisterDependencies().add(reg_name[rs1], 32);
+		partInit.getRegisterDependencies().add(reg_name[rs2], 32);
+		partInit.getAffectedRegisters().add(reg_name[rd], 32);
+		partInit.getAffectedRegisters().add("instructionPointer", 32);
+
+		return true;
+	},
+	0,
+	[] (BitArray & ba, Instruction & instr)
+	{
+// -----------------------------------------------------------------------------
+etiss_uint32 rd = 0;
+static BitArrayRange R_rd_0(11, 7);
+rd += R_rd_0.read(ba) << 0;
+etiss_uint32 rs1 = 0;
+static BitArrayRange R_rs1_0(19, 15);
+rs1 += R_rs1_0.read(ba) << 0;
+etiss_uint32 rs2 = 0;
+static BitArrayRange R_rs2_0(24, 20);
+rs2 += R_rs2_0.read(ba) << 0;
+
+// -----------------------------------------------------------------------------
+
+		std::stringstream ss;
+// -----------------------------------------------------------------------------
+ss << "kmaxda" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std::to_string(rs1) + " | rs2=" + std::to_string(rs2) + "]");
+// -----------------------------------------------------------------------------
+		return ss.str();
+	}
+);
+
 // MADDR32 ---------------------------------------------------------------------
 static InstructionDefinition maddr32_rd_rs1_rs2 (
 	ISA32_RV32IMACFDPV,
@@ -754,6 +926,93 @@ rs2 += R_rs2_0.read(ba) << 0;
 		std::stringstream ss;
 // -----------------------------------------------------------------------------
 ss << "sub8" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std::to_string(rs1) + " | rs2=" + std::to_string(rs2) + "]");
+// -----------------------------------------------------------------------------
+		return ss.str();
+	}
+);
+
+// SUNPKD8 ---------------------------------------------------------------------
+static InstructionDefinition sunpkd8_rd_rs1_code (
+	ISA32_RV32IMACFDPV,
+	"sunpkd8",
+	(uint32_t) 0xac000077,
+	(uint32_t) 0xfe00707f,
+	[] (BitArray & ba,etiss::CodeSet & cs,InstructionContext & ic)
+	{
+
+// -----------------------------------------------------------------------------
+
+// -----------------------------------------------------------------------------
+
+// -----------------------------------------------------------------------------
+etiss_uint32 rd = 0;
+static BitArrayRange R_rd_0(11, 7);
+rd += R_rd_0.read(ba) << 0;
+etiss_uint32 rs1 = 0;
+static BitArrayRange R_rs1_0(19, 15);
+rs1 += R_rs1_0.read(ba) << 0;
+etiss_uint32 code = 0;
+static BitArrayRange R_code_0(24, 20);
+code += R_code_0.read(ba) << 0;
+
+// -----------------------------------------------------------------------------
+
+		CodePart & partInit = cs.append(CodePart::INITIALREQUIRED);
+
+		partInit.code() = std::string("//SUNPKD8\n");
+
+// -----------------------------------------------------------------------------
+partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
+if (rd != 0U) {
+partInit.code() += "etiss_uint32 rs1_val = *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1) + "];\n";
+if (code & 8U) {
+partInit.code() += "etiss_int8 rs1_val_hi = (((rs1_val) >> (8U)) & 255);\n";
+partInit.code() += "etiss_int8 rs1_val_lo = (((rs1_val) >> (0U)) & 255);\n";
+} else if (code & 9U) {
+partInit.code() += "etiss_int8 rs1_val_hi = (((rs1_val) >> (16U)) & 255);\n";
+partInit.code() += "etiss_int8 rs1_val_lo = (((rs1_val) >> (0U)) & 255);\n";
+} else if (code & 10U) {
+partInit.code() += "etiss_int8 rs1_val_hi = (((rs1_val) >> (24U)) & 255);\n";
+partInit.code() += "etiss_int8 rs1_val_lo = (((rs1_val) >> (0U)) & 255);\n";
+} else if (code & 11U) {
+partInit.code() += "etiss_int8 rs1_val_hi = (((rs1_val) >> (24U)) & 255);\n";
+partInit.code() += "etiss_int8 rs1_val_lo = (((rs1_val) >> (8U)) & 255);\n";
+} else if (code & 19U) {
+partInit.code() += "etiss_int8 rs1_val_hi = (((rs1_val) >> (24U)) & 255);\n";
+partInit.code() += "etiss_int8 rs1_val_lo = (((rs1_val) >> (16U)) & 255);\n";
+} else {
+partInit.code() += "((RV32IMACFDPV*)cpu)->exception = raise(cpu, system, plugin_pointers, 0U, 2U);\n";
+}
+partInit.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd) + "] = ((((etiss_int16)(rs1_val_hi)) << 16) | ((etiss_int16)(rs1_val_lo)));\n";
+}
+partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)cpu)->exception;\n";
+// -----------------------------------------------------------------------------
+
+		partInit.getRegisterDependencies().add(reg_name[rs1], 32);
+		partInit.getAffectedRegisters().add(reg_name[rd], 32);
+		partInit.getAffectedRegisters().add("instructionPointer", 32);
+
+		return true;
+	},
+	0,
+	[] (BitArray & ba, Instruction & instr)
+	{
+// -----------------------------------------------------------------------------
+etiss_uint32 rd = 0;
+static BitArrayRange R_rd_0(11, 7);
+rd += R_rd_0.read(ba) << 0;
+etiss_uint32 rs1 = 0;
+static BitArrayRange R_rs1_0(19, 15);
+rs1 += R_rs1_0.read(ba) << 0;
+etiss_uint32 code = 0;
+static BitArrayRange R_code_0(24, 20);
+code += R_code_0.read(ba) << 0;
+
+// -----------------------------------------------------------------------------
+
+		std::stringstream ss;
+// -----------------------------------------------------------------------------
+ss << "sunpkd8" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std::to_string(rs1) + " | code=" + std::to_string(code) + "]");
 // -----------------------------------------------------------------------------
 		return ss.str();
 	}
