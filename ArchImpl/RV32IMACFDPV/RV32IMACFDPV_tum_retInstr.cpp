@@ -37,11 +37,11 @@ static InstructionDefinition uret_ (
 
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
-partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(3088U) + "] = 0U;\n";
-partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(0U) + "] = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(0U) + "] ^ ((*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(0U) + "] & 16U) >> 4U) ^ (*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(0U) + "] & 1U);\n";
-partInit.code() += "cpu->instructionPointer = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(65U) + "];\n";
-partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(768U) + "] = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(0U) + "];\n";
-partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(256U) + "] = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(0U) + "];\n";
+partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[3088U] = 0U;\n";
+partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[0U] = *((RV32IMACFDPV*)cpu)->CSR[0U] ^ ((*((RV32IMACFDPV*)cpu)->CSR[0U] & 16U) >> 4U) ^ (*((RV32IMACFDPV*)cpu)->CSR[0U] & 1U);\n";
+partInit.code() += "cpu->instructionPointer = *((RV32IMACFDPV*)cpu)->CSR[65U];\n";
+partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[768U] = *((RV32IMACFDPV*)cpu)->CSR[0U];\n";
+partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[256U] = *((RV32IMACFDPV*)cpu)->CSR[0U];\n";
 partInit.code() += "return ((RV32IMACFDPV*)cpu)->exception;\n";
 // -----------------------------------------------------------------------------
 
@@ -87,12 +87,12 @@ static InstructionDefinition sret_ (
 
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
-partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(3088U) + "] = (*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(256U) + "] & 256U) >> 8U;\n";
-partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(256U) + "] = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(256U) + "] ^ (*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(256U) + "] & 256U);\n";
-partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(256U) + "] = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(256U) + "] ^ ((*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(256U) + "] & 32U) >> 4U) ^ (*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(256U) + "] & 2U);\n";
-partInit.code() += "cpu->instructionPointer = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(321U) + "];\n";
-partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(768U) + "] = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(256U) + "];\n";
-partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(0U) + "] = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(256U) + "];\n";
+partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[3088U] = (*((RV32IMACFDPV*)cpu)->CSR[256U] & 256U) >> 8U;\n";
+partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[256U] = *((RV32IMACFDPV*)cpu)->CSR[256U] ^ (*((RV32IMACFDPV*)cpu)->CSR[256U] & 256U);\n";
+partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[256U] = *((RV32IMACFDPV*)cpu)->CSR[256U] ^ ((*((RV32IMACFDPV*)cpu)->CSR[256U] & 32U) >> 4U) ^ (*((RV32IMACFDPV*)cpu)->CSR[256U] & 2U);\n";
+partInit.code() += "cpu->instructionPointer = *((RV32IMACFDPV*)cpu)->CSR[321U];\n";
+partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[768U] = *((RV32IMACFDPV*)cpu)->CSR[256U];\n";
+partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[0U] = *((RV32IMACFDPV*)cpu)->CSR[256U];\n";
 partInit.code() += "return ((RV32IMACFDPV*)cpu)->exception;\n";
 // -----------------------------------------------------------------------------
 
@@ -138,12 +138,12 @@ static InstructionDefinition mret_ (
 
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
-partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(3088U) + "] = (*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(768U) + "] & 6144U) >> 11U;\n";
-partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(768U) + "] = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(768U) + "] ^ (*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(768U) + "] & 6144U);\n";
-partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(768U) + "] = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(768U) + "] ^ ((*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(768U) + "] & 128U) >> 4U) ^ (*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(768U) + "] & 8U);\n";
-partInit.code() += "cpu->instructionPointer = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(833U) + "];\n";
-partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(0U) + "] = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(768U) + "];\n";
-partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(256U) + "] = *((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(768U) + "];\n";
+partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[3088U] = (*((RV32IMACFDPV*)cpu)->CSR[768U] & 6144U) >> 11U;\n";
+partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[768U] = *((RV32IMACFDPV*)cpu)->CSR[768U] ^ (*((RV32IMACFDPV*)cpu)->CSR[768U] & 6144U);\n";
+partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[768U] = *((RV32IMACFDPV*)cpu)->CSR[768U] ^ ((*((RV32IMACFDPV*)cpu)->CSR[768U] & 128U) >> 4U) ^ (*((RV32IMACFDPV*)cpu)->CSR[768U] & 8U);\n";
+partInit.code() += "cpu->instructionPointer = *((RV32IMACFDPV*)cpu)->CSR[833U];\n";
+partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[0U] = *((RV32IMACFDPV*)cpu)->CSR[768U];\n";
+partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[256U] = *((RV32IMACFDPV*)cpu)->CSR[768U];\n";
 partInit.code() += "return ((RV32IMACFDPV*)cpu)->exception;\n";
 // -----------------------------------------------------------------------------
 
