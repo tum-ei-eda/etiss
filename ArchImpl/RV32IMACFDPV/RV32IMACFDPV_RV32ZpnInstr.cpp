@@ -207,10 +207,10 @@ partInit.code() += "etiss_int32 mulb32 = rs1_val_lo * rs2_val_lo;\n";
 partInit.code() += "etiss_int64 res34 = ((etiss_int64)((rd_val & 0x3ffffffff)) + (etiss_int64)((mula32 & 0x3ffffffff)) + (etiss_int64)((mulb32 & 0x3ffffffff))) & 0x3ffffffff;\n";
 partInit.code() += "if (res34 >= 4294967296UL) {\n";
 partInit.code() += "res34 = (4294967295UL) & 0x3ffffffff;\n";
-partInit.code() += "(((((RV32IMACFDPV*)cpu)->VXSAT_CSR__) >> (0U)) & 1) = (1U) & 0x1;\n";
+partInit.code() += "((RV32IMACFDPV*)cpu)->VXSAT_CSR__ = ((RV32IMACFDPV*)cpu)->VXSAT_CSR__ | 1U;\n";
 partInit.code() += "}\n";partInit.code() += " else if (res34 < -4294967296UL) {\n";
 partInit.code() += "res34 = (-4294967296UL) & 0x3ffffffff;\n";
-partInit.code() += "(((((RV32IMACFDPV*)cpu)->VXSAT_CSR__) >> (0U)) & 1) = (1U) & 0x1;\n";
+partInit.code() += "((RV32IMACFDPV*)cpu)->VXSAT_CSR = ((RV32IMACFDPV*)cpu)->VXSAT_CSR__ | 1U;\n";
 partInit.code() += "}\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd) + "] = (((res34) >> (0U)) & 4294967295);\n";
 }
@@ -293,10 +293,10 @@ partInit.code() += "etiss_int32 mulb32 = rs1_val_lo * rs2_val_hi;\n";
 partInit.code() += "etiss_int64 res34 = ((etiss_int64)((rd_val & 0x3ffffffff)) + (etiss_int64)((mula32 & 0x3ffffffff)) + (etiss_int64)((mulb32 & 0x3ffffffff))) & 0x3ffffffff;\n";
 partInit.code() += "if (res34 >= 4294967296UL) {\n";
 partInit.code() += "res34 = (4294967295UL) & 0x3ffffffff;\n";
-partInit.code() += "(((((RV32IMACFDPV*)cpu)->VXSAT_CSR__) >> (0U)) & 1) = (1U) & 0x1;\n";
+partInit.code() += "((RV32IMACFDPV*)cpu)->VXSAT_CSR__ = ((RV32IMACFDPV*)cpu)->VXSAT_CSR__ | 1U;\n";
 partInit.code() += "}\n";partInit.code() += " else if (res34 < -4294967296UL) {\n";
 partInit.code() += "res34 = (-4294967296UL) & 0x3ffffffff;\n";
-partInit.code() += "(((((RV32IMACFDPV*)cpu)->VXSAT_CSR__) >> (0U)) & 1) = (1U) & 0x1;\n";
+partInit.code() += "((RV32IMACFDPV*)cpu)->VXSAT_CSR__ = ((RV32IMACFDPV*)cpu)->VXSAT_CSR__ | 1U;\n";
 partInit.code() += "}\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd) + "] = (((res34) >> (0U)) & 4294967295);\n";
 }
