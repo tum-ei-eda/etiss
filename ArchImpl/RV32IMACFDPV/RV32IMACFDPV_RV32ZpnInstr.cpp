@@ -970,16 +970,16 @@ partInit.code() += "etiss_uint32 rs1_val = *((RV32IMACFDPV*)cpu)->X[" + std::to_
 if (code & 8U) {
 partInit.code() += "etiss_int8 rs1_val_hi = (((rs1_val) >> (8U)) & 255);\n";
 partInit.code() += "etiss_int8 rs1_val_lo = (((rs1_val) >> (0U)) & 255);\n";
-} else if (code & 9U) {
+} else if (code == 9U) {
 partInit.code() += "etiss_int8 rs1_val_hi = (((rs1_val) >> (16U)) & 255);\n";
 partInit.code() += "etiss_int8 rs1_val_lo = (((rs1_val) >> (0U)) & 255);\n";
-} else if (code & 10U) {
+} else if (code == 10U) {
 partInit.code() += "etiss_int8 rs1_val_hi = (((rs1_val) >> (24U)) & 255);\n";
 partInit.code() += "etiss_int8 rs1_val_lo = (((rs1_val) >> (0U)) & 255);\n";
-} else if (code & 11U) {
+} else if (code == 11U) {
 partInit.code() += "etiss_int8 rs1_val_hi = (((rs1_val) >> (24U)) & 255);\n";
 partInit.code() += "etiss_int8 rs1_val_lo = (((rs1_val) >> (8U)) & 255);\n";
-} else if (code & 19U) {
+} else if (code == 19U) {
 partInit.code() += "etiss_int8 rs1_val_hi = (((rs1_val) >> (24U)) & 255);\n";
 partInit.code() += "etiss_int8 rs1_val_lo = (((rs1_val) >> (16U)) & 255);\n";
 } else {
