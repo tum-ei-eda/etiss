@@ -205,7 +205,7 @@ partInit.code() += "etiss_int16 rs2_val_hi = (((rs2_val) >> (16U)) & 65535);\n";
 partInit.code() += "etiss_int32 mula32 = rs1_val_hi * rs2_val_hi;\n";
 partInit.code() += "etiss_int32 mulb32 = rs1_val_lo * rs2_val_lo;\n";
 partInit.code() += "etiss_int64 res34 = (etiss_int64)(rd_val) + (etiss_int64)(mula32) + (etiss_int64)(mulb32);\n";
-partInit.code() += "if (res34 >= 0L && res34 >= 4294967296UL) {\n";
+partInit.code() += "if (res34 >= 0UL && res34 >= 4294967296UL) {\n";
 partInit.code() += "res34 = 4294967295UL;\n";
 partInit.code() += "((RV32IMACFDPV*)cpu)->VXSAT_CSR__ = ((RV32IMACFDPV*)cpu)->VXSAT_CSR__ | 1U;\n";
 partInit.code() += "}\n";
@@ -985,7 +985,7 @@ partInit.code() += "etiss_int8 rs1_val_lo = (((rs1_val) >> (16U)) & 255);\n";
 } else {
 partInit.code() += "((RV32IMACFDPV*)cpu)->exception = raise(cpu, system, plugin_pointers, 0U, 2U);\n";
 }
-partInit.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd) + "] = ((((etiss_int16)(rs1_val_hi)) << 16) | ((etiss_int16)(rs1_val_lo)));\n";
+partInit.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd) + "] = ((((etiss_int16)(rs1_val_hi)) << 32) | ((etiss_uint32)(((etiss_int16)(rs1_val_lo)))));\n";
 }
 partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)cpu)->exception;\n";
 // -----------------------------------------------------------------------------
