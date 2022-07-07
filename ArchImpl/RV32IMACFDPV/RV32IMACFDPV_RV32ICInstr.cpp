@@ -1585,7 +1585,7 @@ rs1 += R_rs1_0.read(ba) << 0;
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 2U) + ";\n";
 if (rs1) {
-partInit.code() += "cpu->instructionPointer = *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1 % 32U) + "] & -2U;\n";
+partInit.code() += "cpu->instructionPointer = *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1 % 32U) + "] & -2;\n";
 } else {
 partInit.code() += "((RV32IMACFDPV*)cpu)->exception = raise(cpu, system, plugin_pointers, 0U, 2U);\n";
 }
@@ -1751,7 +1751,7 @@ rs1 += R_rs1_0.read(ba) << 0;
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 2U) + ";\n";
 partInit.code() += "etiss_uint32 new_pc = *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1 % 32U) + "];\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->X[1U] = " + std::to_string(ic.current_address_ + 2U) + ";\n";
-partInit.code() += "cpu->instructionPointer = new_pc & -2U;\n";
+partInit.code() += "cpu->instructionPointer = new_pc & -2;\n";
 partInit.code() += "return ((RV32IMACFDPV*)cpu)->exception;\n";
 // -----------------------------------------------------------------------------
 

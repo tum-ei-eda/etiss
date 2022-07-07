@@ -140,7 +140,7 @@ partInit.code() += "}\n";
 if (rd) {
 partInit.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd % 32) + "] = ((RV32IMACFDPV*)cpu)->RES_ADDR != offs;\n";
 }
-partInit.code() += "((RV32IMACFDPV*)cpu)->RES_ADDR = -1U;\n";
+partInit.code() += "((RV32IMACFDPV*)cpu)->RES_ADDR = -1;\n";
 partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)cpu)->exception;\n";
 // -----------------------------------------------------------------------------
 

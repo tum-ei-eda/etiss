@@ -54,7 +54,7 @@ partInit.code() += "etiss_uint32 offs = *((RV32IMACFDPV*)cpu)->X[" + std::to_str
 partInit.code() += "etiss_uint32 mem_val_0;\n";
 partInit.code() += "((RV32IMACFDPV*)cpu)->exception |= (*(system->dread))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_0, 4);\n";
 partInit.code() += "etiss_uint32 res = (etiss_uint32)(mem_val_0);\n";
-partInit.code() += "((RV32IMACFDPV*)cpu)->F[" + std::to_string(rd + 8U) + "] = -4294967296UL | res;\n";
+partInit.code() += "((RV32IMACFDPV*)cpu)->F[" + std::to_string(rd + 8U) + "] = -4294967296L | res;\n";
 partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)cpu)->exception;\n";
 // -----------------------------------------------------------------------------
 
@@ -204,7 +204,7 @@ partInit.code() += "etiss_uint32 offs = *((RV32IMACFDPV*)cpu)->X[2U] + " + std::
 partInit.code() += "etiss_uint32 mem_val_0;\n";
 partInit.code() += "((RV32IMACFDPV*)cpu)->exception |= (*(system->dread))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_0, 4);\n";
 partInit.code() += "etiss_uint32 res = (etiss_uint32)(mem_val_0);\n";
-partInit.code() += "((RV32IMACFDPV*)cpu)->F[" + std::to_string(rd) + "] = -4294967296UL | res;\n";
+partInit.code() += "((RV32IMACFDPV*)cpu)->F[" + std::to_string(rd) + "] = -4294967296L | res;\n";
 partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)cpu)->exception;\n";
 // -----------------------------------------------------------------------------
 

@@ -87,7 +87,7 @@ partInit.code() += "etiss_uint32 _avl = 0U;\n";
 if (rs1 != 0U) {
 partInit.code() += "_avl = *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1) + "];\n";
 } else if (rd != 0U) {
-partInit.code() += "_avl = -1U;\n";
+partInit.code() += "_avl = -1;\n";
 } else {
 partInit.code() += "_avl = *((RV32IMACFDPV*)cpu)->CSR[3104U];\n";
 }
@@ -211,7 +211,7 @@ partInit.code() += "etiss_uint32 _avl = 0U;\n";
 if (rs1 != 0U) {
 partInit.code() += "_avl = *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1) + "];\n";
 } else if (rd != 0U) {
-partInit.code() += "_avl = -1U;\n";
+partInit.code() += "_avl = -1;\n";
 } else {
 partInit.code() += "_avl = *((RV32IMACFDPV*)cpu)->CSR[3104U];\n";
 }

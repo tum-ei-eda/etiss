@@ -18,36 +18,36 @@
 static inline etiss_int32 raise(ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers, etiss_int32 irq, etiss_int32 mcause)
 {
 if (irq != 0U) {
-return -9U;
+return -9;
 } else {
-if (mcause == 0U || mcause == 1U) {
-return -7U;
+if (mcause == 0 || mcause == 1) {
+return -7;
 }
-if (mcause == 2U) {
-return -11U;
+if (mcause == 2) {
+return -11;
 }
-if (mcause == 3U) {
-return 2147483648U;
+if (mcause == 3) {
+return 2147483648;
 }
-if (mcause == 4U || mcause == 5U) {
-return -5U;
+if (mcause == 4 || mcause == 5) {
+return -5;
 }
-if (mcause == 6U || mcause == 7U) {
-return -6U;
+if (mcause == 6 || mcause == 7) {
+return -6;
 }
-if (mcause == 8U || mcause == 9U || mcause == 10U || mcause == 11U) {
-return -17U;
+if (mcause == 8 || mcause == 9 || mcause == 10 || mcause == 11) {
+return -17;
 }
-if (mcause == 12U || mcause == 20U) {
-return -13U;
+if (mcause == 12 || mcause == 20) {
+return -13;
 }
-if (mcause == 13U || mcause == 21U) {
-return -14U;
+if (mcause == 13 || mcause == 21) {
+return -14;
 }
-if (mcause == 15U || mcause == 23U) {
-return -15U;
+if (mcause == 15 || mcause == 23) {
+return -15;
 }
-return -11U;
+return -11;
 }
 }
 

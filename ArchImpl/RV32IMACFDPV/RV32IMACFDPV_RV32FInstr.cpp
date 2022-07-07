@@ -50,7 +50,7 @@ partInit.code() += "etiss_uint32 offs = *((RV32IMACFDPV*)cpu)->X[" + std::to_str
 partInit.code() += "etiss_uint32 mem_val_0;\n";
 partInit.code() += "((RV32IMACFDPV*)cpu)->exception |= (*(system->dread))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_0, 4);\n";
 partInit.code() += "etiss_uint32 res = (etiss_uint32)(mem_val_0);\n";
-partInit.code() += "((RV32IMACFDPV*)cpu)->F[" + std::to_string(rd) + "] = -4294967296UL | (etiss_uint64)(res);\n";
+partInit.code() += "((RV32IMACFDPV*)cpu)->F[" + std::to_string(rd) + "] = -4294967296L | (etiss_uint64)(res);\n";
 partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)cpu)->exception;\n";
 // -----------------------------------------------------------------------------
 
@@ -194,9 +194,9 @@ rs3 += R_rs3_0.read(ba) << 0;
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
 partInit.code() += "etiss_uint32 res = fmadd_s(unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs1) + "]), unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs2) + "]), unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs3) + "]), 0U, (" + std::to_string(rm < 7U) + ") ? (" + std::to_string(rm) + ") : ((etiss_uint8)(((RV32IMACFDPV*)cpu)->FCSR)));\n";
-partInit.code() += "((RV32IMACFDPV*)cpu)->F[" + std::to_string(rd) + "] = -4294967296UL | (etiss_uint64)(res);\n";
+partInit.code() += "((RV32IMACFDPV*)cpu)->F[" + std::to_string(rd) + "] = -4294967296L | (etiss_uint64)(res);\n";
 partInit.code() += "etiss_uint32 flags = fget_flags();\n";
-partInit.code() += "((RV32IMACFDPV*)cpu)->FCSR = (((RV32IMACFDPV*)cpu)->FCSR & -32U) | (flags & 31U);\n";
+partInit.code() += "((RV32IMACFDPV*)cpu)->FCSR = (((RV32IMACFDPV*)cpu)->FCSR & -32) | (flags & 31U);\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -272,9 +272,9 @@ rs3 += R_rs3_0.read(ba) << 0;
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
 partInit.code() += "etiss_uint32 res = fmadd_s(unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs1) + "]), unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs2) + "]), unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs3) + "]), 1U, (" + std::to_string(rm < 7U) + ") ? (" + std::to_string(rm) + ") : ((etiss_uint8)(((RV32IMACFDPV*)cpu)->FCSR)));\n";
-partInit.code() += "((RV32IMACFDPV*)cpu)->F[" + std::to_string(rd) + "] = -4294967296UL | (etiss_uint64)(res);\n";
+partInit.code() += "((RV32IMACFDPV*)cpu)->F[" + std::to_string(rd) + "] = -4294967296L | (etiss_uint64)(res);\n";
 partInit.code() += "etiss_uint32 flags = fget_flags();\n";
-partInit.code() += "((RV32IMACFDPV*)cpu)->FCSR = (((RV32IMACFDPV*)cpu)->FCSR & -32U) | (flags & 31U);\n";
+partInit.code() += "((RV32IMACFDPV*)cpu)->FCSR = (((RV32IMACFDPV*)cpu)->FCSR & -32) | (flags & 31U);\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -353,9 +353,9 @@ partInit.code() += "etiss_uint32 frs1 = unbox_s(((RV32IMACFDPV*)cpu)->F[" + std:
 partInit.code() += "etiss_uint32 frs2 = unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs2) + "]);\n";
 partInit.code() += "etiss_uint32 frs3 = unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs3) + "]);\n";
 partInit.code() += "etiss_uint32 res = fmadd_s(frs1, frs2, frs3, 2U, (" + std::to_string(rm < 7U) + ") ? (" + std::to_string(rm) + ") : ((etiss_uint8)(((RV32IMACFDPV*)cpu)->FCSR)));\n";
-partInit.code() += "((RV32IMACFDPV*)cpu)->F[" + std::to_string(rd) + "] = -4294967296UL | (etiss_uint64)(res);\n";
+partInit.code() += "((RV32IMACFDPV*)cpu)->F[" + std::to_string(rd) + "] = -4294967296L | (etiss_uint64)(res);\n";
 partInit.code() += "etiss_uint32 flags = fget_flags();\n";
-partInit.code() += "((RV32IMACFDPV*)cpu)->FCSR = (((RV32IMACFDPV*)cpu)->FCSR & -32U) | (flags & 31U);\n";
+partInit.code() += "((RV32IMACFDPV*)cpu)->FCSR = (((RV32IMACFDPV*)cpu)->FCSR & -32) | (flags & 31U);\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -434,9 +434,9 @@ partInit.code() += "etiss_uint32 frs1 = unbox_s(((RV32IMACFDPV*)cpu)->F[" + std:
 partInit.code() += "etiss_uint32 frs2 = unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs2) + "]);\n";
 partInit.code() += "etiss_uint32 frs3 = unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs3) + "]);\n";
 partInit.code() += "etiss_uint32 res = fmadd_s(frs1, frs2, frs3, 3U, (" + std::to_string(rm < 7U) + ") ? (" + std::to_string(rm) + ") : ((etiss_uint8)(((RV32IMACFDPV*)cpu)->FCSR)));\n";
-partInit.code() += "((RV32IMACFDPV*)cpu)->F[" + std::to_string(rd) + "] = -4294967296UL | (etiss_uint64)(res);\n";
+partInit.code() += "((RV32IMACFDPV*)cpu)->F[" + std::to_string(rd) + "] = -4294967296L | (etiss_uint64)(res);\n";
 partInit.code() += "etiss_uint32 flags = fget_flags();\n";
-partInit.code() += "((RV32IMACFDPV*)cpu)->FCSR = (((RV32IMACFDPV*)cpu)->FCSR & -32U) | (flags & 31U);\n";
+partInit.code() += "((RV32IMACFDPV*)cpu)->FCSR = (((RV32IMACFDPV*)cpu)->FCSR & -32) | (flags & 31U);\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -511,9 +511,9 @@ partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_addr
 partInit.code() += "etiss_uint32 frs1 = unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs1) + "]);\n";
 partInit.code() += "etiss_uint32 frs2 = unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs2) + "]);\n";
 partInit.code() += "etiss_uint32 res = fadd_s(frs1, frs2, (" + std::to_string(rm < 7U) + ") ? (" + std::to_string(rm) + ") : ((etiss_uint8)(((RV32IMACFDPV*)cpu)->FCSR)));\n";
-partInit.code() += "((RV32IMACFDPV*)cpu)->F[" + std::to_string(rd) + "] = -4294967296UL | (etiss_uint64)(res);\n";
+partInit.code() += "((RV32IMACFDPV*)cpu)->F[" + std::to_string(rd) + "] = -4294967296L | (etiss_uint64)(res);\n";
 partInit.code() += "etiss_uint32 flags = fget_flags();\n";
-partInit.code() += "((RV32IMACFDPV*)cpu)->FCSR = (((RV32IMACFDPV*)cpu)->FCSR & -32U) | (flags & 31U);\n";
+partInit.code() += "((RV32IMACFDPV*)cpu)->FCSR = (((RV32IMACFDPV*)cpu)->FCSR & -32) | (flags & 31U);\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -585,9 +585,9 @@ partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_addr
 partInit.code() += "etiss_uint32 frs1 = unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs1) + "]);\n";
 partInit.code() += "etiss_uint32 frs2 = unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs2) + "]);\n";
 partInit.code() += "etiss_uint32 res = fsub_s(frs1, frs2, (" + std::to_string(rm < 7U) + ") ? (" + std::to_string(rm) + ") : ((etiss_uint8)(((RV32IMACFDPV*)cpu)->FCSR)));\n";
-partInit.code() += "((RV32IMACFDPV*)cpu)->F[" + std::to_string(rd) + "] = -4294967296UL | (etiss_uint64)(res);\n";
+partInit.code() += "((RV32IMACFDPV*)cpu)->F[" + std::to_string(rd) + "] = -4294967296L | (etiss_uint64)(res);\n";
 partInit.code() += "etiss_uint32 flags = fget_flags();\n";
-partInit.code() += "((RV32IMACFDPV*)cpu)->FCSR = (((RV32IMACFDPV*)cpu)->FCSR & -32U) | (flags & 31U);\n";
+partInit.code() += "((RV32IMACFDPV*)cpu)->FCSR = (((RV32IMACFDPV*)cpu)->FCSR & -32) | (flags & 31U);\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -659,9 +659,9 @@ partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_addr
 partInit.code() += "etiss_uint32 frs1 = unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs1) + "]);\n";
 partInit.code() += "etiss_uint32 frs2 = unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs2) + "]);\n";
 partInit.code() += "etiss_uint32 res = fmul_s(frs1, frs2, (" + std::to_string(rm < 7U) + ") ? (" + std::to_string(rm) + ") : ((etiss_uint8)(((RV32IMACFDPV*)cpu)->FCSR)));\n";
-partInit.code() += "((RV32IMACFDPV*)cpu)->F[" + std::to_string(rd) + "] = -4294967296UL | (etiss_uint64)(res);\n";
+partInit.code() += "((RV32IMACFDPV*)cpu)->F[" + std::to_string(rd) + "] = -4294967296L | (etiss_uint64)(res);\n";
 partInit.code() += "etiss_uint32 flags = fget_flags();\n";
-partInit.code() += "((RV32IMACFDPV*)cpu)->FCSR = (((RV32IMACFDPV*)cpu)->FCSR & -32U) | (flags & 31U);\n";
+partInit.code() += "((RV32IMACFDPV*)cpu)->FCSR = (((RV32IMACFDPV*)cpu)->FCSR & -32) | (flags & 31U);\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -733,9 +733,9 @@ partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_addr
 partInit.code() += "etiss_uint32 frs1 = unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs1) + "]);\n";
 partInit.code() += "etiss_uint32 frs2 = unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs2) + "]);\n";
 partInit.code() += "etiss_uint32 res = fdiv_s(frs1, frs2, (" + std::to_string(rm < 7U) + ") ? (" + std::to_string(rm) + ") : ((etiss_uint8)(((RV32IMACFDPV*)cpu)->FCSR)));\n";
-partInit.code() += "((RV32IMACFDPV*)cpu)->F[" + std::to_string(rd) + "] = -4294967296UL | (etiss_uint64)(res);\n";
+partInit.code() += "((RV32IMACFDPV*)cpu)->F[" + std::to_string(rd) + "] = -4294967296L | (etiss_uint64)(res);\n";
 partInit.code() += "etiss_uint32 flags = fget_flags();\n";
-partInit.code() += "((RV32IMACFDPV*)cpu)->FCSR = (((RV32IMACFDPV*)cpu)->FCSR & -32U) | (flags & 31U);\n";
+partInit.code() += "((RV32IMACFDPV*)cpu)->FCSR = (((RV32IMACFDPV*)cpu)->FCSR & -32) | (flags & 31U);\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -803,9 +803,9 @@ rs1 += R_rs1_0.read(ba) << 0;
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
 partInit.code() += "etiss_uint32 frs1 = unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs1) + "]);\n";
 partInit.code() += "etiss_uint32 res = fsqrt_s(frs1, (" + std::to_string(rm < 7U) + ") ? (" + std::to_string(rm) + ") : ((etiss_uint8)(((RV32IMACFDPV*)cpu)->FCSR)));\n";
-partInit.code() += "((RV32IMACFDPV*)cpu)->F[" + std::to_string(rd) + "] = -4294967296UL | (etiss_uint64)(res);\n";
+partInit.code() += "((RV32IMACFDPV*)cpu)->F[" + std::to_string(rd) + "] = -4294967296L | (etiss_uint64)(res);\n";
 partInit.code() += "etiss_uint32 flags = fget_flags();\n";
-partInit.code() += "((RV32IMACFDPV*)cpu)->FCSR = (((RV32IMACFDPV*)cpu)->FCSR & -32U) | (flags & 31U);\n";
+partInit.code() += "((RV32IMACFDPV*)cpu)->FCSR = (((RV32IMACFDPV*)cpu)->FCSR & -32) | (flags & 31U);\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -871,7 +871,7 @@ partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_addr
 partInit.code() += "etiss_uint32 frs1 = unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs1) + "]);\n";
 partInit.code() += "etiss_uint32 frs2 = unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs2) + "]);\n";
 partInit.code() += "etiss_uint32 res = ((((((frs2) >> (31U)) & 1)) << 31) | ((((frs1) >> (0U)) & 2147483647)));\n";
-partInit.code() += "((RV32IMACFDPV*)cpu)->F[" + std::to_string(rd) + "] = -4294967296UL | (etiss_uint64)(res);\n";
+partInit.code() += "((RV32IMACFDPV*)cpu)->F[" + std::to_string(rd) + "] = -4294967296L | (etiss_uint64)(res);\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -937,7 +937,7 @@ partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_addr
 partInit.code() += "etiss_uint32 frs1 = unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs1) + "]);\n";
 partInit.code() += "etiss_uint32 frs2 = unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs2) + "]);\n";
 partInit.code() += "etiss_uint32 res = (((~((((frs2) >> (31U)) & 1))) << 31) | ((((frs1) >> (0U)) & 2147483647)));\n";
-partInit.code() += "((RV32IMACFDPV*)cpu)->F[" + std::to_string(rd) + "] = -4294967296UL | (etiss_uint64)(res);\n";
+partInit.code() += "((RV32IMACFDPV*)cpu)->F[" + std::to_string(rd) + "] = -4294967296L | (etiss_uint64)(res);\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -1003,7 +1003,7 @@ partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_addr
 partInit.code() += "etiss_uint32 frs1 = unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs1) + "]);\n";
 partInit.code() += "etiss_uint32 frs2 = unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs2) + "]);\n";
 partInit.code() += "etiss_uint32 res = frs1 ^ (frs2 & 2147483648U);\n";
-partInit.code() += "((RV32IMACFDPV*)cpu)->F[" + std::to_string(rd) + "] = -4294967296UL | (etiss_uint64)(res);\n";
+partInit.code() += "((RV32IMACFDPV*)cpu)->F[" + std::to_string(rd) + "] = -4294967296L | (etiss_uint64)(res);\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -1069,9 +1069,9 @@ partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_addr
 partInit.code() += "etiss_uint32 frs1 = unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs1) + "]);\n";
 partInit.code() += "etiss_uint32 frs2 = unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs2) + "]);\n";
 partInit.code() += "etiss_uint32 res = fsel_s(frs1, frs2, 0U);\n";
-partInit.code() += "((RV32IMACFDPV*)cpu)->F[" + std::to_string(rd) + "] = -4294967296UL | (etiss_uint64)(res);\n";
+partInit.code() += "((RV32IMACFDPV*)cpu)->F[" + std::to_string(rd) + "] = -4294967296L | (etiss_uint64)(res);\n";
 partInit.code() += "etiss_uint32 flags = fget_flags();\n";
-partInit.code() += "((RV32IMACFDPV*)cpu)->FCSR = (((RV32IMACFDPV*)cpu)->FCSR & -32U) | (flags & 31U);\n";
+partInit.code() += "((RV32IMACFDPV*)cpu)->FCSR = (((RV32IMACFDPV*)cpu)->FCSR & -32) | (flags & 31U);\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -1137,9 +1137,9 @@ partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_addr
 partInit.code() += "etiss_uint32 frs1 = unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs1) + "]);\n";
 partInit.code() += "etiss_uint32 frs2 = unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs2) + "]);\n";
 partInit.code() += "etiss_uint32 res = fsel_s(frs1, frs2, 1U);\n";
-partInit.code() += "((RV32IMACFDPV*)cpu)->F[" + std::to_string(rd) + "] = -4294967296UL | (etiss_uint64)(res);\n";
+partInit.code() += "((RV32IMACFDPV*)cpu)->F[" + std::to_string(rd) + "] = -4294967296L | (etiss_uint64)(res);\n";
 partInit.code() += "etiss_uint32 flags = fget_flags();\n";
-partInit.code() += "((RV32IMACFDPV*)cpu)->FCSR = (((RV32IMACFDPV*)cpu)->FCSR & -32U) | (flags & 31U);\n";
+partInit.code() += "((RV32IMACFDPV*)cpu)->FCSR = (((RV32IMACFDPV*)cpu)->FCSR & -32) | (flags & 31U);\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add("instructionPointer", 32);
@@ -1209,7 +1209,7 @@ if ((rd % 32U) != 0U) {
 partInit.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd % 32) + "] = res;\n";
 }
 partInit.code() += "etiss_uint32 flags = fget_flags();\n";
-partInit.code() += "((RV32IMACFDPV*)cpu)->FCSR = (((RV32IMACFDPV*)cpu)->FCSR & -32U) | (flags & 31U);\n";
+partInit.code() += "((RV32IMACFDPV*)cpu)->FCSR = (((RV32IMACFDPV*)cpu)->FCSR & -32) | (flags & 31U);\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add(reg_name[rd % 32], 32);
@@ -1280,7 +1280,7 @@ if ((rd % 32U) != 0U) {
 partInit.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd % 32) + "] = res;\n";
 }
 partInit.code() += "etiss_uint32 flags = fget_flags();\n";
-partInit.code() += "((RV32IMACFDPV*)cpu)->FCSR = (((RV32IMACFDPV*)cpu)->FCSR & -32U) | (flags & 31U);\n";
+partInit.code() += "((RV32IMACFDPV*)cpu)->FCSR = (((RV32IMACFDPV*)cpu)->FCSR & -32) | (flags & 31U);\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add(reg_name[rd % 32], 32);
@@ -1352,7 +1352,7 @@ if ((rd % 32U) != 0U) {
 partInit.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd % 32) + "] = res;\n";
 }
 partInit.code() += "etiss_uint32 flags = fget_flags();\n";
-partInit.code() += "((RV32IMACFDPV*)cpu)->FCSR = (((RV32IMACFDPV*)cpu)->FCSR & -32U) | (flags & 31U);\n";
+partInit.code() += "((RV32IMACFDPV*)cpu)->FCSR = (((RV32IMACFDPV*)cpu)->FCSR & -32) | (flags & 31U);\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add(reg_name[rd % 32], 32);
@@ -1424,7 +1424,7 @@ if ((rd % 32U) != 0U) {
 partInit.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd % 32) + "] = res;\n";
 }
 partInit.code() += "etiss_uint32 flags = fget_flags();\n";
-partInit.code() += "((RV32IMACFDPV*)cpu)->FCSR = (((RV32IMACFDPV*)cpu)->FCSR & -32U) | (flags & 31U);\n";
+partInit.code() += "((RV32IMACFDPV*)cpu)->FCSR = (((RV32IMACFDPV*)cpu)->FCSR & -32) | (flags & 31U);\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add(reg_name[rd % 32], 32);
@@ -1496,7 +1496,7 @@ if ((rd % 32U) != 0U) {
 partInit.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd % 32) + "] = res;\n";
 }
 partInit.code() += "etiss_uint32 flags = fget_flags();\n";
-partInit.code() += "((RV32IMACFDPV*)cpu)->FCSR = (((RV32IMACFDPV*)cpu)->FCSR & -32U) | (flags & 31U);\n";
+partInit.code() += "((RV32IMACFDPV*)cpu)->FCSR = (((RV32IMACFDPV*)cpu)->FCSR & -32) | (flags & 31U);\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add(reg_name[rd % 32], 32);
@@ -1623,7 +1623,7 @@ rs1 += R_rs1_0.read(ba) << 0;
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
 partInit.code() += "etiss_uint32 res = fcvt_s((etiss_uint32)(*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1 % 32U) + "]), 2U, " + std::to_string(rm) + ");\n";
-partInit.code() += "((RV32IMACFDPV*)cpu)->F[" + std::to_string(rd) + "] = -4294967296UL | (etiss_uint64)(res);\n";
+partInit.code() += "((RV32IMACFDPV*)cpu)->F[" + std::to_string(rd) + "] = -4294967296L | (etiss_uint64)(res);\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getRegisterDependencies().add(reg_name[rs1 % 32U], 32);
@@ -1688,7 +1688,7 @@ rs1 += R_rs1_0.read(ba) << 0;
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
 partInit.code() += "etiss_uint32 res = fcvt_s((etiss_uint32)(*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1 % 32U) + "]), 3U, " + std::to_string(rm) + ");\n";
-partInit.code() += "((RV32IMACFDPV*)cpu)->F[" + std::to_string(rd) + "] = -4294967296UL | (etiss_uint64)(res);\n";
+partInit.code() += "((RV32IMACFDPV*)cpu)->F[" + std::to_string(rd) + "] = -4294967296L | (etiss_uint64)(res);\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getRegisterDependencies().add(reg_name[rs1 % 32U], 32);
@@ -1809,7 +1809,7 @@ rs1 += R_rs1_0.read(ba) << 0;
 
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
-partInit.code() += "((RV32IMACFDPV*)cpu)->F[" + std::to_string(rd) + "] = -4294967296UL | (etiss_uint64)(*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1 % 32U) + "]);\n";
+partInit.code() += "((RV32IMACFDPV*)cpu)->F[" + std::to_string(rd) + "] = -4294967296L | (etiss_uint64)(*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1 % 32U) + "]);\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getRegisterDependencies().add(reg_name[rs1 % 32U], 32);

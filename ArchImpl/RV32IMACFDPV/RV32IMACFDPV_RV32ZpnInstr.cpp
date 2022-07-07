@@ -210,7 +210,7 @@ partInit.code() += "res34 = 4294967295UL;\n";
 partInit.code() += "((RV32IMACFDPV*)cpu)->VXSAT_CSR__ = ((RV32IMACFDPV*)cpu)->VXSAT_CSR__ | 1U;\n";
 partInit.code() += "}\n";
 partInit.code() += " else if (res34 < -4294967296L) {\n";
-partInit.code() += "res34 = -4294967296UL;\n";
+partInit.code() += "res34 = -4294967296L;\n";
 partInit.code() += "((RV32IMACFDPV*)cpu)->VXSAT_CSR = ((RV32IMACFDPV*)cpu)->VXSAT_CSR__ | 1U;\n";
 partInit.code() += "}\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd) + "] = (((res34) >> (0U)) & 4294967295);\n";
@@ -292,12 +292,12 @@ partInit.code() += "etiss_int16 rs2_val_hi = (((rs2_val) >> (16U)) & 65535);\n";
 partInit.code() += "etiss_int32 mula32 = rs1_val_hi * rs2_val_lo;\n";
 partInit.code() += "etiss_int32 mulb32 = rs1_val_lo * rs2_val_hi;\n";
 partInit.code() += "etiss_int64 res34 = (etiss_int64)(rd_val) + (etiss_int64)(mula32) + (etiss_int64)(mulb32);\n";
-partInit.code() += "if (res34 >= 4294967296UL) {\n";
+partInit.code() += "if (res34 >= 4294967296L) {\n";
 partInit.code() += "res34 = 4294967295UL;\n";
 partInit.code() += "((RV32IMACFDPV*)cpu)->VXSAT_CSR__ = ((RV32IMACFDPV*)cpu)->VXSAT_CSR__ | 1U;\n";
 partInit.code() += "}\n";
-partInit.code() += " else if (res34 < -4294967296UL) {\n";
-partInit.code() += "res34 = -4294967296UL;\n";
+partInit.code() += " else if (res34 < -4294967296L) {\n";
+partInit.code() += "res34 = -4294967296L;\n";
 partInit.code() += "((RV32IMACFDPV*)cpu)->VXSAT_CSR__ = ((RV32IMACFDPV*)cpu)->VXSAT_CSR__ | 1U;\n";
 partInit.code() += "}\n";
 partInit.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd) + "] = (((res34) >> (0U)) & 4294967295);\n";
@@ -967,7 +967,7 @@ code += R_code_0.read(ba) << 0;
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
 if (rd != 0U) {
 partInit.code() += "etiss_uint32 rs1_val = *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1) + "];\n";
-if (code & 8U) {
+if (code == 8U) {
 partInit.code() += "etiss_int8 rs1_val_hi = (((rs1_val) >> (8U)) & 255);\n";
 partInit.code() += "etiss_int8 rs1_val_lo = (((rs1_val) >> (0U)) & 255);\n";
 } else if (code == 9U) {
