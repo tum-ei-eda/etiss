@@ -1,5 +1,5 @@
 /**
- * Generated on Thu, 30 Jun 2022 19:52:53 +0200.
+ * Generated on Mon, 11 Jul 2022 15:43:25 +0200.
  *
  * This file contains the instruction behavior models of the RV32IC
  * instruction set for the RV32IMACFD core architecture.
@@ -50,7 +50,7 @@ imm += R_imm_4.read(ba) << 4;
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 2U) + ";\n";
 if (imm) {
-partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd + 8U) + "] = *((RV32IMACFD*)cpu)->X[" + std::to_string(2U) + "] + " + std::to_string(imm) + ";\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd + 8U) + "] = *((RV32IMACFD*)cpu)->X[2U] + " + std::to_string(imm) + ";\n";
 } else {
 partInit.code() += "cpu->exception = raise(cpu, system, plugin_pointers, 0U, 2U);\n";
 }
@@ -405,7 +405,7 @@ imm += R_imm_11.read(ba) << 11;
 
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 2U) + ";\n";
-partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(1U) + "] = " + std::to_string(ic.current_address_ + 2U) + ";\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->X[1U] = " + std::to_string(ic.current_address_ + 2U) + ";\n";
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + ((etiss_int16)((imm) << (4)) >> (4))) + ";\n";
 partInit.code() += "return cpu->exception;\n";
 // -----------------------------------------------------------------------------
@@ -614,7 +614,7 @@ nzimm += R_nzimm_9.read(ba) << 9;
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 2U) + ";\n";
 if (nzimm) {
-partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(2U) + "] = *((RV32IMACFD*)cpu)->X[" + std::to_string(2U) + "] + " + std::to_string(((etiss_int16)((nzimm) << (6)) >> (6))) + ";\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->X[2U] = *((RV32IMACFD*)cpu)->X[2U] + " + std::to_string(((etiss_int16)((nzimm) << (6)) >> (6))) + ";\n";
 } else {
 partInit.code() += "cpu->exception = raise(cpu, system, plugin_pointers, 0U, 2U);\n";
 }
@@ -1456,7 +1456,7 @@ uimm += R_uimm_5.read(ba) << 5;
 
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 2U) + ";\n";
-partInit.code() += "etiss_uint32 offs = *((RV32IMACFD*)cpu)->X[" + std::to_string(2U) + "] + " + std::to_string(uimm) + ";\n";
+partInit.code() += "etiss_uint32 offs = *((RV32IMACFD*)cpu)->X[2U] + " + std::to_string(uimm) + ";\n";
 partInit.code() += "etiss_uint32 mem_val_0;\n";
 partInit.code() += "cpu->exception |= (*(system->dread))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_0, 4);\n";
 partInit.code() += "if (cpu->exception) translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
@@ -1588,7 +1588,7 @@ rs1 += R_rs1_0.read(ba) << 0;
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 2U) + ";\n";
 if (rs1) {
-partInit.code() += "cpu->instructionPointer = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 % 32U) + "] & -2U;\n";
+partInit.code() += "cpu->instructionPointer = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 % 32U) + "] & -2;\n";
 } else {
 partInit.code() += "cpu->exception = raise(cpu, system, plugin_pointers, 0U, 2U);\n";
 }
@@ -1753,8 +1753,8 @@ rs1 += R_rs1_0.read(ba) << 0;
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 2U) + ";\n";
 partInit.code() += "etiss_uint32 new_pc = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 % 32U) + "];\n";
-partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(1U) + "] = " + std::to_string(ic.current_address_ + 2U) + ";\n";
-partInit.code() += "cpu->instructionPointer = new_pc & -2U;\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->X[1U] = " + std::to_string(ic.current_address_ + 2U) + ";\n";
+partInit.code() += "cpu->instructionPointer = new_pc & -2;\n";
 partInit.code() += "return cpu->exception;\n";
 // -----------------------------------------------------------------------------
 
@@ -1859,7 +1859,7 @@ uimm += R_uimm_2.read(ba) << 2;
 
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 2U) + ";\n";
-partInit.code() += "etiss_uint32 offs = *((RV32IMACFD*)cpu)->X[" + std::to_string(2U) + "] + " + std::to_string(uimm) + ";\n";
+partInit.code() += "etiss_uint32 offs = *((RV32IMACFD*)cpu)->X[2U] + " + std::to_string(uimm) + ";\n";
 partInit.code() += "etiss_uint32 mem_val_0 = (etiss_uint32)(*((RV32IMACFD*)cpu)->X[" + std::to_string(rs2 % 32U) + "]);\n";
 partInit.code() += "cpu->exception |= (*(system->dwrite))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_0, 4);\n";
 partInit.code() += "if (cpu->exception) translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";

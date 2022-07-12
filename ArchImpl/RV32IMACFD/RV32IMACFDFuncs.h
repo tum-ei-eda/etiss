@@ -1,5 +1,5 @@
 /**
- * Generated on Thu, 30 Jun 2022 19:53:54 +0200.
+ * Generated on Mon, 11 Jul 2022 15:43:25 +0200.
  *
  * This file contains the function macros for the RV32IMACFD core architecture.
  */
@@ -21,36 +21,36 @@ static inline etiss_int32 raise(ETISS_CPU * const cpu, ETISS_System * const syst
 {
 cpu->return_pending = 1;
 if (irq != 0U) {
-return -9U;
+return -9;
 } else {
-if (mcause == 0U || mcause == 1U) {
-return -7U;
+if (mcause == 0 || mcause == 1) {
+return -7;
 }
-if (mcause == 2U) {
-return -11U;
+if (mcause == 2) {
+return -11;
 }
-if (mcause == 3U) {
-return 2147483648U;
+if (mcause == 3) {
+return 2147483648;
 }
-if (mcause == 4U || mcause == 5U) {
-return -5U;
+if (mcause == 4 || mcause == 5) {
+return -5;
 }
-if (mcause == 6U || mcause == 7U) {
-return -6U;
+if (mcause == 6 || mcause == 7) {
+return -6;
 }
-if (mcause == 8U || mcause == 9U || mcause == 10U || mcause == 11U) {
-return -17U;
+if (mcause == 8 || mcause == 9 || mcause == 10 || mcause == 11) {
+return -17;
 }
-if (mcause == 12U || mcause == 20U) {
-return -13U;
+if (mcause == 12 || mcause == 20) {
+return -13;
 }
-if (mcause == 13U || mcause == 21U) {
-return -14U;
+if (mcause == 13 || mcause == 21) {
+return -14;
 }
-if (mcause == 15U || mcause == 23U) {
-return -15U;
+if (mcause == 15 || mcause == 23) {
+return -15;
 }
-return -11U;
+return -11;
 }
 }
 #endif
@@ -233,16 +233,16 @@ if (csr == 1U) {
 static inline void translate_exc_code(ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers, etiss_int32 cause)
 {
 etiss_int32 code = 0U;
-if (cause == -5U) {
-code = 5U;
-} else if (cause == -14U) {
-code = 13U;
-} else if (cause == -6U) {
-code = 7U;
-} else if (cause == -15U) {
-code = 15U;
+if (cause == -5) {
+code = 5;
+} else if (cause == -14) {
+code = 13;
+} else if (cause == -6) {
+code = 7;
+} else if (cause == -15) {
+code = 15;
 } else {
-code = 2U;
+code = 2;
 }
 cpu->exception = raise(cpu, system, plugin_pointers, 0U, code);
 }

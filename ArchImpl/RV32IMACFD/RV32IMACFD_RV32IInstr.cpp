@@ -1,5 +1,5 @@
 /**
- * Generated on Thu, 30 Jun 2022 19:52:53 +0200.
+ * Generated on Mon, 11 Jul 2022 15:43:25 +0200.
  *
  * This file contains the instruction behavior models of the RV32I
  * instruction set for the RV32IMACFD core architecture.
@@ -244,7 +244,7 @@ imm += R_imm_0.read(ba) << 0;
 
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
-partInit.code() += "etiss_uint32 new_pc = (*((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 % 32U) + "] + " + std::to_string(((etiss_int16)((imm) << (4)) >> (4))) + ") & -2U;\n";
+partInit.code() += "etiss_uint32 new_pc = (*((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 % 32U) + "] + " + std::to_string(((etiss_int16)((imm) << (4)) >> (4))) + ") & -2;\n";
 partInit.code() += "if (new_pc % 2U) {\n";
 partInit.code() += "cpu->exception = raise(cpu, system, plugin_pointers, 0U, 0U);\n";
 partInit.code() += "}\n";
@@ -252,7 +252,7 @@ partInit.code() += " else {\n";
 if ((rd % 32U) != 0U) {
 partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd % 32) + "] = " + std::to_string(ic.current_address_ + 4U) + ";\n";
 }
-partInit.code() += "cpu->instructionPointer = new_pc & -2U;\n";
+partInit.code() += "cpu->instructionPointer = new_pc & -2;\n";
 partInit.code() += "}\n";
 partInit.code() += "return cpu->exception;\n";
 // -----------------------------------------------------------------------------

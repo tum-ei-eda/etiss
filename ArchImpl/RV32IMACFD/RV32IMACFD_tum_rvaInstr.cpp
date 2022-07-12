@@ -1,5 +1,5 @@
 /**
- * Generated on Thu, 30 Jun 2022 19:52:53 +0200.
+ * Generated on Mon, 11 Jul 2022 15:43:25 +0200.
  *
  * This file contains the instruction behavior models of the tum_rva
  * instruction set for the RV32IMACFD core architecture.
@@ -142,7 +142,7 @@ partInit.code() += "}\n";
 if (rd) {
 partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd % 32) + "] = ((RV32IMACFD*)cpu)->RES_ADDR != offs;\n";
 }
-partInit.code() += "((RV32IMACFD*)cpu)->RES_ADDR = -1U;\n";
+partInit.code() += "((RV32IMACFD*)cpu)->RES_ADDR = -1;\n";
 partInit.code() += "if (cpu->return_pending) return cpu->exception;\n";
 // -----------------------------------------------------------------------------
 

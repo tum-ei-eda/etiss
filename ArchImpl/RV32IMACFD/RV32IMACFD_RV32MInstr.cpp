@@ -1,5 +1,5 @@
 /**
- * Generated on Mon, 09 May 2022 21:04:41 +0200.
+ * Generated on Mon, 11 Jul 2022 15:43:25 +0200.
  *
  * This file contains the instruction behavior models of the RV32M
  * instruction set for the RV32IMACFD core architecture.
@@ -325,7 +325,7 @@ partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_addr
 if ((rd % 32U) != 0U) {
 partInit.code() += "if (*((RV32IMACFD*)cpu)->X[" + std::to_string(rs2 % 32U) + "] != 0U) {\n";
 etiss_uint32 MMIN = 2147483648U;
-partInit.code() += "if (*((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 % 32U) + "] == " + std::to_string(MMIN) + " && (etiss_int32)(*((RV32IMACFD*)cpu)->X[" + std::to_string(rs2 % 32U) + "]) == -1U) {\n";
+partInit.code() += "if (*((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 % 32U) + "] == " + std::to_string(MMIN) + " && (etiss_int32)(*((RV32IMACFD*)cpu)->X[" + std::to_string(rs2 % 32U) + "]) == -1) {\n";
 partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd % 32) + "] = " + std::to_string(MMIN) + ";\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
@@ -333,7 +333,7 @@ partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd % 32) + "] = (e
 partInit.code() += "}\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
-partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd % 32) + "] = -1U;\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd % 32) + "] = -1;\n";
 partInit.code() += "}\n";
 }
 // -----------------------------------------------------------------------------
@@ -406,7 +406,7 @@ partInit.code() += "if (*((RV32IMACFD*)cpu)->X[" + std::to_string(rs2 % 32U) + "
 partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd % 32) + "] = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 % 32U) + "] / *((RV32IMACFD*)cpu)->X[" + std::to_string(rs2 % 32U) + "];\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
-partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd % 32) + "] = -1U;\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd % 32) + "] = -1;\n";
 partInit.code() += "}\n";
 }
 // -----------------------------------------------------------------------------
@@ -477,7 +477,7 @@ partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_addr
 if ((rd % 32U) != 0U) {
 partInit.code() += "if (*((RV32IMACFD*)cpu)->X[" + std::to_string(rs2 % 32U) + "] != 0U) {\n";
 etiss_uint32 MMIN = 2147483648U;
-partInit.code() += "if (*((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 % 32U) + "] == " + std::to_string(MMIN) + " && (etiss_int32)(*((RV32IMACFD*)cpu)->X[" + std::to_string(rs2 % 32U) + "]) == -1U) {\n";
+partInit.code() += "if (*((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 % 32U) + "] == " + std::to_string(MMIN) + " && (etiss_int32)(*((RV32IMACFD*)cpu)->X[" + std::to_string(rs2 % 32U) + "]) == -1) {\n";
 partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd % 32) + "] = 0U;\n";
 partInit.code() += "}\n";
 partInit.code() += " else {\n";
