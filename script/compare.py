@@ -14,42 +14,41 @@ matplotlib.use('Agg')
 ### Template to be published under an issue as a comment ###
 ISSUE_TEMPLATE = r'''
 **Performance Statistics**
-
-% for jit_engine_name, old_best_hash, best_hash_link, new_mips, message, best_mips, best_diff in zip_form:
-
+% for jit_engine_name, old_best_hash, best_hash_link, new_data, message, best_data, best_diff in zip_form:
 **Status for the ${jit_engine_name} Just-In-Time Engine** (for commit ${current_hash})**:** ${message}
-**Current dhrystone MIPS for ${jit_engine_name} JIT** **:** ${new_mips}
-**Previous best for ${jit_engine_name} JIT** (recorded in commit ${old_best_hash})**:** ${best_mips}, difference ${f'{best_diff:.2%}'}
-
+**Current dhrystone MIPS for ${jit_engine_name} JIT** **:** ${new_data}
+**Previous best for ${jit_engine_name} JIT** (recorded in commit ${old_best_hash})**:** ${best_data}, difference ${f'{best_diff:.2%}'}
 % endfor
-
 <sub>This comment was created automatically, please do not change!</sub>
 '''
 ### Template to be published in Github wiki ###
 WIKI_TEMPLATE = r'''
-% for jit_engine_name, old_best_hash, best_hash_link, new_mips, message, best_mips, best_diff in zip_form:
+% for jit_engine_name, old_best_hash, best_hash_link, new_data, message, best_data, best_diff in zip_form:
 **Status for the ${jit_engine_name} Just-In-Time Engine** (for commit ${current_hash_wiki})**:**
 ${message}
 <br/>
-**Current dhrystone MIPS for ${jit_engine_name} JIT** **:** ${new_mips}
+**Current ${benchmark_type} ${key_to_compare} for ${jit_engine_name} JIT** **:** ${new_data}
 <br/>
-**Previous best for ${jit_engine_name} JIT** (recorded in commit ${best_hash_link})**:** ${best_mips}, difference  ${f'{best_diff:.2%}'}
+**Previous best for ${jit_engine_name} JIT** (recorded in commit ${best_hash_link})**:** ${best_data}, difference  ${f'{best_diff:.2%}'}
 <br/>
 <br/>
 % endfor
 **Graphical Analysis for the last ${commit_history} commits:**
 <br/>
 <br/>
-[[performance_metrics.svg]]
+[[performance_metrics_${benchmark_type}.svg]]
 '''
 # Declaration of Global Variables:
-KEY_TO_COMPARE = "mips"  # the key from the input files to compare across engines
+KEY_TO_COMPARE_LIST = {
+    "dhrystone": ("mips", lambda a, b: a > b),
+    "translation": ("Simulation_Time", lambda a, b: a < b)
+}
+
 MAX_HISTORY = 50  # max amount of past data to keep
 TOLERANCE = 0.2
 
 
-def calculating_performance_metrics(input_files, stats_file, issue_md, wiki_md, graph_file, current_hash, repo_url):
-
+def calculating_performance_metrics(input_files, stats_file, issue_md, wiki_md, graph_file, current_hash, repo_url, benchmark_type):
     # truncating hash value to first 8 characters
     current_hash = current_hash[:8]
 
@@ -57,11 +56,13 @@ def calculating_performance_metrics(input_files, stats_file, issue_md, wiki_md, 
 
     runs = defaultdict(list)
 
+    KEY_TO_COMPARE, COMPARISON_FN = KEY_TO_COMPARE_LIST[benchmark_type]
+
     # get engine name and run no from filename of input
     # input files should have the format "run_<engine name>_<run no>.json"
     for index, fname in enumerate(input_files):
         filepath = Path(input_files[index])
-        placeholder, engine, run_no = filepath.stem.split(
+        placeholder, benchmark, engine, run_no = filepath.stem.split(
                 "_")
         match = re.search("^\d+$", run_no)
         try:
@@ -73,6 +74,7 @@ def calculating_performance_metrics(input_files, stats_file, issue_md, wiki_md, 
         run_no = int(run_no)
         with open(filepath, 'r') as f:
             in_dict = json.load(f)
+
         runs[engine].append(in_dict[KEY_TO_COMPARE])
 
     # Averaing out
@@ -113,7 +115,7 @@ def calculating_performance_metrics(input_files, stats_file, issue_md, wiki_md, 
                 messages[engine] = "first entry"
 
             else:
-                # adding the MIPS from current run
+                # adding the data from current run
                 stats[engine][KEY_TO_COMPARE].append((value, current_hash))
                 stats[engine][KEY_TO_COMPARE] = stats[engine][KEY_TO_COMPARE][-MAX_HISTORY:]
 
@@ -122,8 +124,8 @@ def calculating_performance_metrics(input_files, stats_file, issue_md, wiki_md, 
                 diff = value / best - 1
                 diffs[engine] = diff
 
-                # Comparison logic:
-                if value > best:
+                # Comparison logic for MIPS:
+                if COMPARISON_FN(value, best):
                     stats[engine][f"best_" + KEY_TO_COMPARE] = value
                     stats[engine][f"best_hash"] = current_hash[:8]
                     messages[engine] = f'🥇 New best performance!'
@@ -142,6 +144,7 @@ def calculating_performance_metrics(input_files, stats_file, issue_md, wiki_md, 
                         messages[engine] = "Regression cleared"
                     else:
                         messages[engine] = "No significant performance change"
+
 
     # Template rendering for issue and Github Wiki:
     issue_template = Template(text=ISSUE_TEMPLATE)
@@ -180,19 +183,22 @@ def calculating_performance_metrics(input_files, stats_file, issue_md, wiki_md, 
     fig = plt.figure(figsize=(20, 10))
 
     for engine in stats:
+        print(engine)
         commit_history = list(chain.from_iterable(islice(item, 1, 2)
                               for item in stats[engine][KEY_TO_COMPARE]))
-        mips_value = list(chain.from_iterable(islice(item, 0, 1)
+        print(commit_history)
+        key_to_compare_value = list(chain.from_iterable(islice(item, 0, 1)
                           for item in stats[engine][KEY_TO_COMPARE]))
-        plt.plot(commit_history, mips_value,
+        print(key_to_compare_value)
+        plt.plot(commit_history, key_to_compare_value,
                  label=f'{KEY_TO_COMPARE}_{engine}')
 
     plt.xticks(fontsize=15, rotation=45)
     plt.yticks(fontsize=20)
     plt.title(
-        f'MIPS values for the last  {len(commit_history)} commit(s)', size=50)
+        f'{KEY_TO_COMPARE} values for the last  {len(commit_history)} commit(s)', size=50)
     plt.xlabel("Commit History", size=30)
-    plt.ylabel("MIPS", size=30)
+    plt.ylabel(f'{KEY_TO_COMPARE}', size=30)
     plt.legend(loc='center left', bbox_to_anchor=(1, 0.5), prop={'size': 30})
 
     # Save figure
@@ -211,7 +217,9 @@ def calculating_performance_metrics(input_files, stats_file, issue_md, wiki_md, 
                     current_hash=current_hash,
                     current_hash_wiki=current_hash_wiki,
                     zip_form=zip_list,
-                    commit_history=len(commit_history)
+                    commit_history=len(commit_history),
+                    key_to_compare = KEY_TO_COMPARE,
+                    benchmark_type = benchmark_type
                 )
                 )
 
@@ -226,8 +234,11 @@ if __name__ == '__main__':
     parser.add_argument('-gr', '--graph_file')
     parser.add_argument('-g', '--current_hash')
     parser.add_argument('-r', '--repo_url')
+    parser.add_argument('-b', '--benchmark_type', choices=["dhrystone", "translation"])
     args = parser.parse_args()
 
 
 calculating_performance_metrics(args.input_files, args.stats_file, args.issue_md,
-                                args.wiki_md, args.graph_file, args.current_hash, args.repo_url)
+                                args.wiki_md, args.graph_file, args.current_hash, args.repo_url, args.benchmark_type)
+
+

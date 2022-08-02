@@ -73,3 +73,6 @@ install(FILES riscv_cpp/CMakeLists.txt riscv/memsegs.ini
 install(FILES riscv_dhry/CMakeLists.txt
     DESTINATION examples/SW/riscv_dhry
 )
+install(FILES riscv_nop/CMakeLists.txt
+    DESTINATION examples/SW/riscv_nop
+)
