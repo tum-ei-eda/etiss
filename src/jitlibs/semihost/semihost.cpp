@@ -408,6 +408,7 @@ etiss_int64 semihostingCall(ETISS_CPU *const cpu, ETISS_System *const etissSyste
 
         cpu->exception = ETISS_RETURNCODE_CPUFINISHED;
         cpu->return_pending = 1;
+        return 0;
     }
     case SYS_ELAPSED:
     {
