@@ -163,7 +163,7 @@ jobs:
     #   if: matrix.config.name == 'Windows'
     #   shell: bash
     #   run: |
-    #     PATH=$PATH:/d/a/etiss_new/install/lib/
+    #     PATH=$PATH:/d/a/etiss/install/lib/
     #     cd $BUILD_TYPE
     #     ./main.exe --vp.elf_file=../../../SW/riscv/build/riscv_example.elf --jit.type=TCCJIT --etiss.loglevel=4 -i../../../SW/riscv/memsegs.ini -pLogger
     #     ./main.exe --vp.elf_file=../../../SW/riscv/build/riscv_example.elf --jit.type=LLVMJIT --etiss.loglevel=4 -i../../../SW/riscv/memsegs.ini -pLogger
@@ -239,12 +239,13 @@ jobs:
             ls benchmark_results_new
             rm -rf results_
             mkdir results_
+
       - name: Run comparison (Push)
-        if: ${{github.event_name == 'push'}}
+        if: github.event_name == 'push' 
         run: python3 script/compare.py benchmark_results_new/run_dhrystone_*.json -o benchmark_results_old/stats_file.json -i results_/issue.md -w results_/wiki.md -gr results_/performance_metrics_dhrystone.svg -g ${{ github.sha }} -r $GITHUB_REPOSITORY -b "dhrystone"
 
-      - name: Run comparison (PR)
-        if: ${{github.event_name == 'pull_request'}}
+      - name: Run comparison (Pull request)
+        if: github.event_name == 'pull_request'
         run: python3 script/compare.py benchmark_results_new/run_dhrystone_*.json -o benchmark_results_old/stats_file.json -i results_/issue.md -w results_/wiki.md -gr results_/performance_metrics_dhrystone.svg -g ${{ github.event.pull_request.head.sha }} -r $GITHUB_REPOSITORY -b "dhrystone"
 
       - name: Deploy results to git
@@ -263,6 +264,7 @@ jobs:
           path: benchmark_results_old/stats_file.json
 
       - name: uploading image
+        if: github.event_name == 'push' 
         uses: actions/upload-artifact@v2
         with:
           name: performance_metrics_dhrystone.svg
@@ -276,6 +278,7 @@ jobs:
           path: results_/issue.md
 
       - name: Upload wiki text
+        if: github.event_name == 'push' 
         uses: actions/upload-artifact@v2
         with:
           name: wiki.md
@@ -397,6 +400,8 @@ jobs:
           git add Dhrystone_Performance.md performance_metrics_dhrystone.svg
           git commit -m "update perf dhrystone"
           git push
+
+
   benchmark_translation:
     strategy:
       matrix:
@@ -464,13 +469,16 @@ jobs:
             ls benchmark_results_new
             rm -rf results_
             mkdir results_
+
+
       - name: Run comparison (Push)
         if: ${{github.event_name == 'push'}}
         run: python3 script/compare.py benchmark_results_new/run_translation_*.json -o benchmark_results_old/stats_file_translation.json -i results_/issue.md -w results_/wiki_translation.md -gr results_/performance_metrics_translation.svg -g ${{ github.sha }} -r $GITHUB_REPOSITORY  -b "translation"
+    
+      - name: Run comparison (Pull request)
+        if: ${{github.event_name == 'pull_request'}}
+        run: python3 script/compare.py benchmark_results_new/run_*.json -o benchmark_results_old/stats_file.json -i results_/issue.md -w results_/wiki.md -gr results_/performance_metrics.svg -g ${{ github.event.pull_request.head.sha }} -r $GITHUB_REPOSITORY
 
-      # - name: Run comparison (PR)
-      #   if: ${{github.event_name == 'pull_request'}}
-      #   run: python3 script/compare.py benchmark_results_new/run_*.json -o benchmark_results_old/stats_file.json -i results_/issue.md -w results_/wiki.md -gr results_/performance_metrics.svg -g ${{ github.event.pull_request.head.sha }} -r $GITHUB_REPOSITORY
 
       - name: Deploy results to git
         if: ${{github.event_name == 'push'}}
@@ -488,6 +496,7 @@ jobs:
           path: benchmark_results_old/stats_file_translation.json
 
       - name: uploading image
+        if: github.event_name == 'push'
         uses: actions/upload-artifact@v2
         with:
           name: performance_metrics_translation.svg
@@ -500,6 +509,7 @@ jobs:
           path: results_/issue_translation.md
 
       - name: Upload wiki text
+        if: github.event_name == 'push'
         uses: actions/upload-artifact@v2
         with:
           name: wiki_translation.md
