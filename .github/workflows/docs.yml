@@ -7,8 +7,17 @@ on:
 env:
   BUILD_TYPE: Release
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
   doxygen:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -25,6 +34,7 @@ jobs:
         wget https://github.com/llvm/llvm-project/releases/download/llvmorg-11.0.0/$LLVM_NAME.tar.xz
         tar xf $LLVM_NAME.tar.xz
         mv $LLVM_NAME llvm-lib
+
     - name: Create Build Environment
       run: cmake -E make_directory ${{runner.workspace}}/build
 
@@ -40,12 +50,14 @@ jobs:
       shell: bash
       run: cmake --build . --config $BUILD_TYPE --target doc
 
-    - name: Deploy to pages
-      uses: peaceiris/actions-gh-pages@v3
+    - name: Setup Pages
+      uses: actions/configure-pages@v1
+
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v1
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ${{runner.workspace}}/build/doc/html
-        user_name: 'github-actions[bot]'
-        user_email: 'github-actions[bot]@users.noreply.github.com'
-        force_orphan: true
-        publish_branch: gh-pages
+        path: ${{runner.workspace}}/build/doc/html
+
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v1
