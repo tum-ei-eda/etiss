@@ -1,5 +1,5 @@
 /**
- * Generated on Fri, 15 Jul 2022 16:36:47 +0200.
+ * Generated on Thu, 25 Aug 2022 14:20:44 +0200.
  *
  * This file contains the instruction behavior models of the tum_csr
  * instruction set for the RV32IMACFD core architecture.
@@ -28,13 +28,13 @@ static InstructionDefinition csrrw_rd_rs1_csr (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 rd = 0;
+etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 csr = 0;
+etiss_uint16 csr = 0;
 static BitArrayRange R_csr_0(31, 20);
 csr += R_csr_0.read(ba) << 0;
 
@@ -54,6 +54,7 @@ partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd % 32) + "] = xr
 } else {
 partInit.code() += "csr_write(cpu, system, plugin_pointers, " + std::to_string(csr) + ", xrs1);\n";
 }
+partInit.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getRegisterDependencies().add(reg_name[rs1 % 32U], 32);
@@ -66,13 +67,13 @@ partInit.code() += "csr_write(cpu, system, plugin_pointers, " + std::to_string(c
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 rd = 0;
+etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 csr = 0;
+etiss_uint16 csr = 0;
 static BitArrayRange R_csr_0(31, 20);
 csr += R_csr_0.read(ba) << 0;
 
@@ -100,13 +101,13 @@ static InstructionDefinition csrrs_rd_rs1_csr (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 rd = 0;
+etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 csr = 0;
+etiss_uint16 csr = 0;
 static BitArrayRange R_csr_0(31, 20);
 csr += R_csr_0.read(ba) << 0;
 
@@ -126,6 +127,7 @@ partInit.code() += "csr_write(cpu, system, plugin_pointers, " + std::to_string(c
 if ((rd % 32U) != 0U) {
 partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd % 32) + "] = xrd;\n";
 }
+partInit.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getRegisterDependencies().add(reg_name[rs1 % 32U], 32);
@@ -138,13 +140,13 @@ partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd % 32) + "] = xr
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 rd = 0;
+etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 csr = 0;
+etiss_uint16 csr = 0;
 static BitArrayRange R_csr_0(31, 20);
 csr += R_csr_0.read(ba) << 0;
 
@@ -172,13 +174,13 @@ static InstructionDefinition csrrc_rd_rs1_csr (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 rd = 0;
+etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 csr = 0;
+etiss_uint16 csr = 0;
 static BitArrayRange R_csr_0(31, 20);
 csr += R_csr_0.read(ba) << 0;
 
@@ -198,6 +200,7 @@ partInit.code() += "csr_write(cpu, system, plugin_pointers, " + std::to_string(c
 if ((rd % 32U) != 0U) {
 partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd % 32) + "] = xrd;\n";
 }
+partInit.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getRegisterDependencies().add(reg_name[rs1 % 32U], 32);
@@ -210,13 +213,13 @@ partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd % 32) + "] = xr
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 rd = 0;
+etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 csr = 0;
+etiss_uint16 csr = 0;
 static BitArrayRange R_csr_0(31, 20);
 csr += R_csr_0.read(ba) << 0;
 
@@ -244,13 +247,13 @@ static InstructionDefinition csrrwi_rd_zimm_csr (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 rd = 0;
+etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
-etiss_uint32 zimm = 0;
+etiss_uint8 zimm = 0;
 static BitArrayRange R_zimm_0(19, 15);
 zimm += R_zimm_0.read(ba) << 0;
-etiss_uint32 csr = 0;
+etiss_uint16 csr = 0;
 static BitArrayRange R_csr_0(31, 20);
 csr += R_csr_0.read(ba) << 0;
 
@@ -267,6 +270,7 @@ partInit.code() += "csr_write(cpu, system, plugin_pointers, " + std::to_string(c
 if ((rd % 32U) != 0U) {
 partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd % 32) + "] = xrd;\n";
 }
+partInit.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add(reg_name[rd % 32], 32);
@@ -278,13 +282,13 @@ partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd % 32) + "] = xr
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 rd = 0;
+etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
-etiss_uint32 zimm = 0;
+etiss_uint8 zimm = 0;
 static BitArrayRange R_zimm_0(19, 15);
 zimm += R_zimm_0.read(ba) << 0;
-etiss_uint32 csr = 0;
+etiss_uint16 csr = 0;
 static BitArrayRange R_csr_0(31, 20);
 csr += R_csr_0.read(ba) << 0;
 
@@ -312,13 +316,13 @@ static InstructionDefinition csrrsi_rd_zimm_csr (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 rd = 0;
+etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
-etiss_uint32 zimm = 0;
+etiss_uint8 zimm = 0;
 static BitArrayRange R_zimm_0(19, 15);
 zimm += R_zimm_0.read(ba) << 0;
-etiss_uint32 csr = 0;
+etiss_uint16 csr = 0;
 static BitArrayRange R_csr_0(31, 20);
 csr += R_csr_0.read(ba) << 0;
 
@@ -337,6 +341,7 @@ partInit.code() += "csr_write(cpu, system, plugin_pointers, " + std::to_string(c
 if ((rd % 32U) != 0U) {
 partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd % 32) + "] = xrd;\n";
 }
+partInit.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add(reg_name[rd % 32], 32);
@@ -348,13 +353,13 @@ partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd % 32) + "] = xr
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 rd = 0;
+etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
-etiss_uint32 zimm = 0;
+etiss_uint8 zimm = 0;
 static BitArrayRange R_zimm_0(19, 15);
 zimm += R_zimm_0.read(ba) << 0;
-etiss_uint32 csr = 0;
+etiss_uint16 csr = 0;
 static BitArrayRange R_csr_0(31, 20);
 csr += R_csr_0.read(ba) << 0;
 
@@ -382,13 +387,13 @@ static InstructionDefinition csrrci_rd_zimm_csr (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 rd = 0;
+etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
-etiss_uint32 zimm = 0;
+etiss_uint8 zimm = 0;
 static BitArrayRange R_zimm_0(19, 15);
 zimm += R_zimm_0.read(ba) << 0;
-etiss_uint32 csr = 0;
+etiss_uint16 csr = 0;
 static BitArrayRange R_csr_0(31, 20);
 csr += R_csr_0.read(ba) << 0;
 
@@ -407,6 +412,7 @@ partInit.code() += "csr_write(cpu, system, plugin_pointers, " + std::to_string(c
 if ((rd % 32U) != 0U) {
 partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd % 32) + "] = xrd;\n";
 }
+partInit.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getAffectedRegisters().add(reg_name[rd % 32], 32);
@@ -418,13 +424,13 @@ partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd % 32) + "] = xr
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 rd = 0;
+etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
-etiss_uint32 zimm = 0;
+etiss_uint8 zimm = 0;
 static BitArrayRange R_zimm_0(19, 15);
 zimm += R_zimm_0.read(ba) << 0;
-etiss_uint32 csr = 0;
+etiss_uint16 csr = 0;
 static BitArrayRange R_csr_0(31, 20);
 csr += R_csr_0.read(ba) << 0;
 

@@ -789,7 +789,6 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
                     // In the generated code these plugin handles are named "plugin_pointers" and can be used to access
                     // a variable of the plugin
                     exception = (*(blptr->execBlock))(cpu_, system, plugins_handle_);
-                    cpu_->instructionPointer = cpu_->nextPc;
 
                     // exit simulator when a loop to self instruction is encountered
                     if (!exception &&

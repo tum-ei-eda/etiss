@@ -1,5 +1,5 @@
 /**
- * Generated on Mon, 18 Jul 2022 21:37:38 +0200.
+ * Generated on Thu, 25 Aug 2022 14:20:44 +0200.
  *
  * This file contains the instruction behavior models of the tum_ret
  * instruction set for the RV32IMACFD core architecture.
@@ -37,12 +37,13 @@ static InstructionDefinition mret_ (
 
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4U) + ";\n";
-partInit.code() += "*((RV32IMACFD*)cpu)->CSR[3088U] = (*((RV32IMACFD*)cpu)->CSR[768U] & 6144U) >> 11U;\n";
-partInit.code() += "*((RV32IMACFD*)cpu)->CSR[768U] = *((RV32IMACFD*)cpu)->CSR[768U] ^ (*((RV32IMACFD*)cpu)->CSR[768U] & 6144U);\n";
-partInit.code() += "*((RV32IMACFD*)cpu)->CSR[768U] = *((RV32IMACFD*)cpu)->CSR[768U] ^ ((*((RV32IMACFD*)cpu)->CSR[768U] & 128U) >> 4U) ^ (*((RV32IMACFD*)cpu)->CSR[768U] & 8U);\n";
-partInit.code() += "cpu->nextPc = *((RV32IMACFD*)cpu)->CSR[833U];\n";
-partInit.code() += "*((RV32IMACFD*)cpu)->CSR[0U] = *((RV32IMACFD*)cpu)->CSR[768U];\n";
-partInit.code() += "*((RV32IMACFD*)cpu)->CSR[256U] = *((RV32IMACFD*)cpu)->CSR[768U];\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->CSR[3088U] = (*((RV32IMACFD*)cpu)->CSR[768] & 6144U) >> 11U;\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->CSR[768] = *((RV32IMACFD*)cpu)->CSR[768] ^ (*((RV32IMACFD*)cpu)->CSR[768] & 6144U);\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->CSR[768] = *((RV32IMACFD*)cpu)->CSR[768] ^ ((*((RV32IMACFD*)cpu)->CSR[768] & 128U) >> 4U) ^ (*((RV32IMACFD*)cpu)->CSR[768] & 8U);\n";
+partInit.code() += "cpu->nextPc = *((RV32IMACFD*)cpu)->CSR[833];\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->CSR[0U] = *((RV32IMACFD*)cpu)->CSR[768];\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->CSR[" + std::to_string(256) + "] = *((RV32IMACFD*)cpu)->CSR[768];\n";
+partInit.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 partInit.code() += "return cpu->exception;\n";
 // -----------------------------------------------------------------------------
 
@@ -91,8 +92,9 @@ partInit.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4U) +
 partInit.code() += "*((RV32IMACFD*)cpu)->CSR[3088U] = 0U;\n";
 partInit.code() += "*((RV32IMACFD*)cpu)->CSR[0U] = *((RV32IMACFD*)cpu)->CSR[0U] ^ ((*((RV32IMACFD*)cpu)->CSR[0U] & 16U) >> 4U) ^ (*((RV32IMACFD*)cpu)->CSR[0U] & 1U);\n";
 partInit.code() += "cpu->nextPc = *((RV32IMACFD*)cpu)->CSR[65U];\n";
-partInit.code() += "*((RV32IMACFD*)cpu)->CSR[768U] = *((RV32IMACFD*)cpu)->CSR[0U];\n";
-partInit.code() += "*((RV32IMACFD*)cpu)->CSR[256U] = *((RV32IMACFD*)cpu)->CSR[0U];\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->CSR[" + std::to_string(768) + "] = *((RV32IMACFD*)cpu)->CSR[0U];\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->CSR[" + std::to_string(256) + "] = *((RV32IMACFD*)cpu)->CSR[0U];\n";
+partInit.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 partInit.code() += "return cpu->exception;\n";
 // -----------------------------------------------------------------------------
 
@@ -138,12 +140,13 @@ static InstructionDefinition sret_ (
 
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4U) + ";\n";
-partInit.code() += "*((RV32IMACFD*)cpu)->CSR[3088U] = (*((RV32IMACFD*)cpu)->CSR[256U] & 256U) >> 8U;\n";
-partInit.code() += "*((RV32IMACFD*)cpu)->CSR[256U] = *((RV32IMACFD*)cpu)->CSR[256U] ^ (*((RV32IMACFD*)cpu)->CSR[256U] & 256U);\n";
-partInit.code() += "*((RV32IMACFD*)cpu)->CSR[256U] = *((RV32IMACFD*)cpu)->CSR[256U] ^ ((*((RV32IMACFD*)cpu)->CSR[256U] & 32U) >> 4U) ^ (*((RV32IMACFD*)cpu)->CSR[256U] & 2U);\n";
-partInit.code() += "cpu->nextPc = *((RV32IMACFD*)cpu)->CSR[321U];\n";
-partInit.code() += "*((RV32IMACFD*)cpu)->CSR[768U] = *((RV32IMACFD*)cpu)->CSR[256U];\n";
-partInit.code() += "*((RV32IMACFD*)cpu)->CSR[0U] = *((RV32IMACFD*)cpu)->CSR[256U];\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->CSR[3088U] = (*((RV32IMACFD*)cpu)->CSR[256] & 256U) >> 8U;\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->CSR[256] = *((RV32IMACFD*)cpu)->CSR[256] ^ (*((RV32IMACFD*)cpu)->CSR[256] & 256U);\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->CSR[256] = *((RV32IMACFD*)cpu)->CSR[256] ^ ((*((RV32IMACFD*)cpu)->CSR[256] & 32U) >> 4U) ^ (*((RV32IMACFD*)cpu)->CSR[256] & 2U);\n";
+partInit.code() += "cpu->nextPc = *((RV32IMACFD*)cpu)->CSR[321];\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->CSR[" + std::to_string(768) + "] = *((RV32IMACFD*)cpu)->CSR[256];\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->CSR[0U] = *((RV32IMACFD*)cpu)->CSR[256];\n";
+partInit.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 partInit.code() += "return cpu->exception;\n";
 // -----------------------------------------------------------------------------
 

@@ -1,5 +1,5 @@
 /**
- * Generated on Fri, 15 Jul 2022 16:36:47 +0200.
+ * Generated on Thu, 25 Aug 2022 14:20:44 +0200.
  *
  * This file contains the instruction behavior models of the Zifencei
  * instruction set for the RV32IMACFD core architecture.
@@ -28,13 +28,13 @@ static InstructionDefinition fence_i_rd_rs1_imm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 rd = 0;
+etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 imm = 0;
+etiss_uint16 imm = 0;
 static BitArrayRange R_imm_0(31, 20);
 imm += R_imm_0.read(ba) << 0;
 
@@ -48,6 +48,7 @@ imm += R_imm_0.read(ba) << 0;
 partInit.code() += "cpu->exception = ETISS_RETURNCODE_RELOADBLOCKS;\n";
 partInit.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4U) + ";\n";
 partInit.code() += "((RV32IMACFD*)cpu)->FENCE[" + std::to_string(1) + "] = " + std::to_string(imm) + ";\n";
+partInit.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 partInit.code() += "return cpu->exception;\n";
 // -----------------------------------------------------------------------------
 
@@ -59,13 +60,13 @@ partInit.code() += "return cpu->exception;\n";
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 rd = 0;
+etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 imm = 0;
+etiss_uint16 imm = 0;
 static BitArrayRange R_imm_0(31, 20);
 imm += R_imm_0.read(ba) << 0;
 

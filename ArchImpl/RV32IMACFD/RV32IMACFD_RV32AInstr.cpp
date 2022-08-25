@@ -1,5 +1,5 @@
 /**
- * Generated on Fri, 15 Jul 2022 16:36:47 +0200.
+ * Generated on Thu, 25 Aug 2022 14:20:44 +0200.
  *
  * This file contains the instruction behavior models of the RV32A
  * instruction set for the RV32IMACFD core architecture.
@@ -28,19 +28,19 @@ static InstructionDefinition amoswapw_rd_rs1_rs2_rl_aq (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 rd = 0;
+etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 rs2 = 0;
+etiss_uint8 rs2 = 0;
 static BitArrayRange R_rs2_0(24, 20);
 rs2 += R_rs2_0.read(ba) << 0;
-etiss_uint32 rl = 0;
+etiss_uint8 rl = 0;
 static BitArrayRange R_rl_0(25, 25);
 rl += R_rl_0.read(ba) << 0;
-etiss_uint32 aq = 0;
+etiss_uint8 aq = 0;
 static BitArrayRange R_aq_0(26, 26);
 aq += R_aq_0.read(ba) << 0;
 
@@ -62,7 +62,7 @@ partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd % 32) + "] = (e
 partInit.code() += "etiss_uint32 mem_val_1 = (etiss_int32)(*((RV32IMACFD*)cpu)->X[" + std::to_string(rs2 % 32U) + "]);\n";
 partInit.code() += "cpu->exception |= (*(system->dwrite))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_1, 4);\n";
 partInit.code() += "if (cpu->exception) translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
-
+partInit.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 partInit.code() += "if (cpu->return_pending) return cpu->exception;\n";
 // -----------------------------------------------------------------------------
 
@@ -77,19 +77,19 @@ partInit.code() += "if (cpu->return_pending) return cpu->exception;\n";
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 rd = 0;
+etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 rs2 = 0;
+etiss_uint8 rs2 = 0;
 static BitArrayRange R_rs2_0(24, 20);
 rs2 += R_rs2_0.read(ba) << 0;
-etiss_uint32 rl = 0;
+etiss_uint8 rl = 0;
 static BitArrayRange R_rl_0(25, 25);
 rl += R_rl_0.read(ba) << 0;
-etiss_uint32 aq = 0;
+etiss_uint8 aq = 0;
 static BitArrayRange R_aq_0(26, 26);
 aq += R_aq_0.read(ba) << 0;
 
@@ -117,19 +117,19 @@ static InstructionDefinition amoaddw_rd_rs1_rs2_rl_aq (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 rd = 0;
+etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 rs2 = 0;
+etiss_uint8 rs2 = 0;
 static BitArrayRange R_rs2_0(24, 20);
 rs2 += R_rs2_0.read(ba) << 0;
-etiss_uint32 rl = 0;
+etiss_uint8 rl = 0;
 static BitArrayRange R_rl_0(25, 25);
 rl += R_rl_0.read(ba) << 0;
-etiss_uint32 aq = 0;
+etiss_uint8 aq = 0;
 static BitArrayRange R_aq_0(26, 26);
 aq += R_aq_0.read(ba) << 0;
 
@@ -153,7 +153,7 @@ partInit.code() += "etiss_uint32 res2 = res1 + *((RV32IMACFD*)cpu)->X[" + std::t
 partInit.code() += "etiss_uint32 mem_val_1 = res2;\n";
 partInit.code() += "cpu->exception |= (*(system->dwrite))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_1, 4);\n";
 partInit.code() += "if (cpu->exception) translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
-
+partInit.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 partInit.code() += "if (cpu->return_pending) return cpu->exception;\n";
 // -----------------------------------------------------------------------------
 
@@ -168,19 +168,19 @@ partInit.code() += "if (cpu->return_pending) return cpu->exception;\n";
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 rd = 0;
+etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 rs2 = 0;
+etiss_uint8 rs2 = 0;
 static BitArrayRange R_rs2_0(24, 20);
 rs2 += R_rs2_0.read(ba) << 0;
-etiss_uint32 rl = 0;
+etiss_uint8 rl = 0;
 static BitArrayRange R_rl_0(25, 25);
 rl += R_rl_0.read(ba) << 0;
-etiss_uint32 aq = 0;
+etiss_uint8 aq = 0;
 static BitArrayRange R_aq_0(26, 26);
 aq += R_aq_0.read(ba) << 0;
 
@@ -208,19 +208,19 @@ static InstructionDefinition amoxorw_rd_rs1_rs2_rl_aq (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 rd = 0;
+etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 rs2 = 0;
+etiss_uint8 rs2 = 0;
 static BitArrayRange R_rs2_0(24, 20);
 rs2 += R_rs2_0.read(ba) << 0;
-etiss_uint32 rl = 0;
+etiss_uint8 rl = 0;
 static BitArrayRange R_rl_0(25, 25);
 rl += R_rl_0.read(ba) << 0;
-etiss_uint32 aq = 0;
+etiss_uint8 aq = 0;
 static BitArrayRange R_aq_0(26, 26);
 aq += R_aq_0.read(ba) << 0;
 
@@ -244,7 +244,7 @@ partInit.code() += "etiss_uint32 res2 = res1 ^ *((RV32IMACFD*)cpu)->X[" + std::t
 partInit.code() += "etiss_uint32 mem_val_1 = res2;\n";
 partInit.code() += "cpu->exception |= (*(system->dwrite))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_1, 4);\n";
 partInit.code() += "if (cpu->exception) translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
-
+partInit.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 partInit.code() += "if (cpu->return_pending) return cpu->exception;\n";
 // -----------------------------------------------------------------------------
 
@@ -259,19 +259,19 @@ partInit.code() += "if (cpu->return_pending) return cpu->exception;\n";
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 rd = 0;
+etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 rs2 = 0;
+etiss_uint8 rs2 = 0;
 static BitArrayRange R_rs2_0(24, 20);
 rs2 += R_rs2_0.read(ba) << 0;
-etiss_uint32 rl = 0;
+etiss_uint8 rl = 0;
 static BitArrayRange R_rl_0(25, 25);
 rl += R_rl_0.read(ba) << 0;
-etiss_uint32 aq = 0;
+etiss_uint8 aq = 0;
 static BitArrayRange R_aq_0(26, 26);
 aq += R_aq_0.read(ba) << 0;
 
@@ -299,19 +299,19 @@ static InstructionDefinition amoandw_rd_rs1_rs2_rl_aq (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 rd = 0;
+etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 rs2 = 0;
+etiss_uint8 rs2 = 0;
 static BitArrayRange R_rs2_0(24, 20);
 rs2 += R_rs2_0.read(ba) << 0;
-etiss_uint32 rl = 0;
+etiss_uint8 rl = 0;
 static BitArrayRange R_rl_0(25, 25);
 rl += R_rl_0.read(ba) << 0;
-etiss_uint32 aq = 0;
+etiss_uint8 aq = 0;
 static BitArrayRange R_aq_0(26, 26);
 aq += R_aq_0.read(ba) << 0;
 
@@ -335,7 +335,7 @@ partInit.code() += "etiss_uint32 res2 = res1 & *((RV32IMACFD*)cpu)->X[" + std::t
 partInit.code() += "etiss_uint32 mem_val_1 = res2;\n";
 partInit.code() += "cpu->exception |= (*(system->dwrite))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_1, 4);\n";
 partInit.code() += "if (cpu->exception) translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
-
+partInit.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 partInit.code() += "if (cpu->return_pending) return cpu->exception;\n";
 // -----------------------------------------------------------------------------
 
@@ -350,19 +350,19 @@ partInit.code() += "if (cpu->return_pending) return cpu->exception;\n";
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 rd = 0;
+etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 rs2 = 0;
+etiss_uint8 rs2 = 0;
 static BitArrayRange R_rs2_0(24, 20);
 rs2 += R_rs2_0.read(ba) << 0;
-etiss_uint32 rl = 0;
+etiss_uint8 rl = 0;
 static BitArrayRange R_rl_0(25, 25);
 rl += R_rl_0.read(ba) << 0;
-etiss_uint32 aq = 0;
+etiss_uint8 aq = 0;
 static BitArrayRange R_aq_0(26, 26);
 aq += R_aq_0.read(ba) << 0;
 
@@ -390,19 +390,19 @@ static InstructionDefinition amoorw_rd_rs1_rs2_rl_aq (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 rd = 0;
+etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 rs2 = 0;
+etiss_uint8 rs2 = 0;
 static BitArrayRange R_rs2_0(24, 20);
 rs2 += R_rs2_0.read(ba) << 0;
-etiss_uint32 rl = 0;
+etiss_uint8 rl = 0;
 static BitArrayRange R_rl_0(25, 25);
 rl += R_rl_0.read(ba) << 0;
-etiss_uint32 aq = 0;
+etiss_uint8 aq = 0;
 static BitArrayRange R_aq_0(26, 26);
 aq += R_aq_0.read(ba) << 0;
 
@@ -426,7 +426,7 @@ partInit.code() += "etiss_uint32 res2 = res1 | *((RV32IMACFD*)cpu)->X[" + std::t
 partInit.code() += "etiss_uint32 mem_val_1 = res2;\n";
 partInit.code() += "cpu->exception |= (*(system->dwrite))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_1, 4);\n";
 partInit.code() += "if (cpu->exception) translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
-
+partInit.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 partInit.code() += "if (cpu->return_pending) return cpu->exception;\n";
 // -----------------------------------------------------------------------------
 
@@ -441,19 +441,19 @@ partInit.code() += "if (cpu->return_pending) return cpu->exception;\n";
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 rd = 0;
+etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 rs2 = 0;
+etiss_uint8 rs2 = 0;
 static BitArrayRange R_rs2_0(24, 20);
 rs2 += R_rs2_0.read(ba) << 0;
-etiss_uint32 rl = 0;
+etiss_uint8 rl = 0;
 static BitArrayRange R_rl_0(25, 25);
 rl += R_rl_0.read(ba) << 0;
-etiss_uint32 aq = 0;
+etiss_uint8 aq = 0;
 static BitArrayRange R_aq_0(26, 26);
 aq += R_aq_0.read(ba) << 0;
 
@@ -481,19 +481,19 @@ static InstructionDefinition amominw_rd_rs1_rs2_rl_aq (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 rd = 0;
+etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 rs2 = 0;
+etiss_uint8 rs2 = 0;
 static BitArrayRange R_rs2_0(24, 20);
 rs2 += R_rs2_0.read(ba) << 0;
-etiss_uint32 rl = 0;
+etiss_uint8 rl = 0;
 static BitArrayRange R_rl_0(25, 25);
 rl += R_rl_0.read(ba) << 0;
-etiss_uint32 aq = 0;
+etiss_uint8 aq = 0;
 static BitArrayRange R_aq_0(26, 26);
 aq += R_aq_0.read(ba) << 0;
 
@@ -517,7 +517,7 @@ partInit.code() += "etiss_uint32 res2 = (res1 > (etiss_int32)(*((RV32IMACFD*)cpu
 partInit.code() += "etiss_uint32 mem_val_1 = res2;\n";
 partInit.code() += "cpu->exception |= (*(system->dwrite))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_1, 4);\n";
 partInit.code() += "if (cpu->exception) translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
-
+partInit.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 partInit.code() += "if (cpu->return_pending) return cpu->exception;\n";
 // -----------------------------------------------------------------------------
 
@@ -532,19 +532,19 @@ partInit.code() += "if (cpu->return_pending) return cpu->exception;\n";
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 rd = 0;
+etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 rs2 = 0;
+etiss_uint8 rs2 = 0;
 static BitArrayRange R_rs2_0(24, 20);
 rs2 += R_rs2_0.read(ba) << 0;
-etiss_uint32 rl = 0;
+etiss_uint8 rl = 0;
 static BitArrayRange R_rl_0(25, 25);
 rl += R_rl_0.read(ba) << 0;
-etiss_uint32 aq = 0;
+etiss_uint8 aq = 0;
 static BitArrayRange R_aq_0(26, 26);
 aq += R_aq_0.read(ba) << 0;
 
@@ -572,19 +572,19 @@ static InstructionDefinition amomaxw_rd_rs1_rs2_rl_aq (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 rd = 0;
+etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 rs2 = 0;
+etiss_uint8 rs2 = 0;
 static BitArrayRange R_rs2_0(24, 20);
 rs2 += R_rs2_0.read(ba) << 0;
-etiss_uint32 rl = 0;
+etiss_uint8 rl = 0;
 static BitArrayRange R_rl_0(25, 25);
 rl += R_rl_0.read(ba) << 0;
-etiss_uint32 aq = 0;
+etiss_uint8 aq = 0;
 static BitArrayRange R_aq_0(26, 26);
 aq += R_aq_0.read(ba) << 0;
 
@@ -608,7 +608,7 @@ partInit.code() += "etiss_uint32 res2 = (res1 < (etiss_int32)(*((RV32IMACFD*)cpu
 partInit.code() += "etiss_uint32 mem_val_1 = res2;\n";
 partInit.code() += "cpu->exception |= (*(system->dwrite))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_1, 4);\n";
 partInit.code() += "if (cpu->exception) translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
-
+partInit.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 partInit.code() += "if (cpu->return_pending) return cpu->exception;\n";
 // -----------------------------------------------------------------------------
 
@@ -623,19 +623,19 @@ partInit.code() += "if (cpu->return_pending) return cpu->exception;\n";
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 rd = 0;
+etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 rs2 = 0;
+etiss_uint8 rs2 = 0;
 static BitArrayRange R_rs2_0(24, 20);
 rs2 += R_rs2_0.read(ba) << 0;
-etiss_uint32 rl = 0;
+etiss_uint8 rl = 0;
 static BitArrayRange R_rl_0(25, 25);
 rl += R_rl_0.read(ba) << 0;
-etiss_uint32 aq = 0;
+etiss_uint8 aq = 0;
 static BitArrayRange R_aq_0(26, 26);
 aq += R_aq_0.read(ba) << 0;
 
@@ -663,19 +663,19 @@ static InstructionDefinition amominuw_rd_rs1_rs2_rl_aq (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 rd = 0;
+etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 rs2 = 0;
+etiss_uint8 rs2 = 0;
 static BitArrayRange R_rs2_0(24, 20);
 rs2 += R_rs2_0.read(ba) << 0;
-etiss_uint32 rl = 0;
+etiss_uint8 rl = 0;
 static BitArrayRange R_rl_0(25, 25);
 rl += R_rl_0.read(ba) << 0;
-etiss_uint32 aq = 0;
+etiss_uint8 aq = 0;
 static BitArrayRange R_aq_0(26, 26);
 aq += R_aq_0.read(ba) << 0;
 
@@ -699,7 +699,7 @@ partInit.code() += "etiss_uint32 res2 = (res1 > *((RV32IMACFD*)cpu)->X[" + std::
 partInit.code() += "etiss_uint32 mem_val_1 = res2;\n";
 partInit.code() += "cpu->exception |= (*(system->dwrite))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_1, 4);\n";
 partInit.code() += "if (cpu->exception) translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
-
+partInit.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 partInit.code() += "if (cpu->return_pending) return cpu->exception;\n";
 // -----------------------------------------------------------------------------
 
@@ -714,19 +714,19 @@ partInit.code() += "if (cpu->return_pending) return cpu->exception;\n";
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 rd = 0;
+etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 rs2 = 0;
+etiss_uint8 rs2 = 0;
 static BitArrayRange R_rs2_0(24, 20);
 rs2 += R_rs2_0.read(ba) << 0;
-etiss_uint32 rl = 0;
+etiss_uint8 rl = 0;
 static BitArrayRange R_rl_0(25, 25);
 rl += R_rl_0.read(ba) << 0;
-etiss_uint32 aq = 0;
+etiss_uint8 aq = 0;
 static BitArrayRange R_aq_0(26, 26);
 aq += R_aq_0.read(ba) << 0;
 
@@ -754,19 +754,19 @@ static InstructionDefinition amomaxuw_rd_rs1_rs2_rl_aq (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 rd = 0;
+etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 rs2 = 0;
+etiss_uint8 rs2 = 0;
 static BitArrayRange R_rs2_0(24, 20);
 rs2 += R_rs2_0.read(ba) << 0;
-etiss_uint32 rl = 0;
+etiss_uint8 rl = 0;
 static BitArrayRange R_rl_0(25, 25);
 rl += R_rl_0.read(ba) << 0;
-etiss_uint32 aq = 0;
+etiss_uint8 aq = 0;
 static BitArrayRange R_aq_0(26, 26);
 aq += R_aq_0.read(ba) << 0;
 
@@ -790,7 +790,7 @@ partInit.code() += "etiss_uint32 res2 = (res1 < *((RV32IMACFD*)cpu)->X[" + std::
 partInit.code() += "etiss_uint32 mem_val_1 = res2;\n";
 partInit.code() += "cpu->exception |= (*(system->dwrite))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_1, 4);\n";
 partInit.code() += "if (cpu->exception) translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
-
+partInit.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 partInit.code() += "if (cpu->return_pending) return cpu->exception;\n";
 // -----------------------------------------------------------------------------
 
@@ -805,19 +805,19 @@ partInit.code() += "if (cpu->return_pending) return cpu->exception;\n";
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 rd = 0;
+etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 rs2 = 0;
+etiss_uint8 rs2 = 0;
 static BitArrayRange R_rs2_0(24, 20);
 rs2 += R_rs2_0.read(ba) << 0;
-etiss_uint32 rl = 0;
+etiss_uint8 rl = 0;
 static BitArrayRange R_rl_0(25, 25);
 rl += R_rl_0.read(ba) << 0;
-etiss_uint32 aq = 0;
+etiss_uint8 aq = 0;
 static BitArrayRange R_aq_0(26, 26);
 aq += R_aq_0.read(ba) << 0;
 
