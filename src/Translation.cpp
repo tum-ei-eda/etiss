@@ -321,6 +321,7 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
     block.fileglobalCode().insert("#include \"etiss/jit/CPU.h\"\n"
                                   "#include \"etiss/jit/System.h\"\n"
                                   "#include \"etiss/jit/libresources.h\"\n"
+                                  "#include \"etiss/jit/libsemihost.h\"\n"
                                   "#include \"etiss/jit/ReturnCode.h\"\n"
                                   "#include \"etiss/jit/libCSRCounters.h\"\n");
 
@@ -370,6 +371,7 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
     std::set<std::string> libs;
     //libs.insert("ETISS");
     libs.insert("resources");
+    libs.insert("semihost");
     libs.insert("CSRCounters");
     for(auto & it: jitExtLibraries()){
        if(it != "") libs.insert(it);
