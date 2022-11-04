@@ -1,5 +1,5 @@
 /**
- * Generated on Thu, 25 Aug 2022 14:20:44 +0200.
+ * Generated on Wed, 12 Oct 2022 12:21:19 +0200.
  *
  * This file contains the instruction behavior models of the RV32D
  * instruction set for the RV32IMACFD core architecture.
@@ -1596,7 +1596,7 @@ rs1 += R_rs1_0.read(ba) << 0;
 
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4U) + ";\n";
-partInit.code() += "etiss_int64 res = 0U;\n";
+partInit.code() += "etiss_int32 res = 0U;\n";
 partInit.code() += "res = fcvt_64_32(((RV32IMACFD*)cpu)->F[" + std::to_string(rs1) + "], 0U, " + std::to_string(rm) + ");\n";
 if ((rd % 32U) != 0U) {
 partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd % 32) + "] = res;\n";
@@ -1667,10 +1667,10 @@ rs1 += R_rs1_0.read(ba) << 0;
 
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4U) + ";\n";
-partInit.code() += "etiss_uint64 res = 0U;\n";
-partInit.code() += "res = fcvt_64_32(((RV32IMACFD*)cpu)->F[" + std::to_string(rs1) + "], 0U, " + std::to_string(rm) + ");\n";
+partInit.code() += "etiss_uint32 res = 0U;\n";
+partInit.code() += "res = fcvt_64_32(((RV32IMACFD*)cpu)->F[" + std::to_string(rs1) + "], 1U, " + std::to_string(rm) + ");\n";
 if ((rd % 32U) != 0U) {
-partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd % 32) + "] = res;\n";
+partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd % 32) + "] = (etiss_uint64)((etiss_int32)(res));\n";
 }
 partInit.code() += "etiss_uint32 flags = fget_flags();\n";
 partInit.code() += "((RV32IMACFD*)cpu)->FCSR = (((RV32IMACFD*)cpu)->FCSR & -32) | (flags & 31U);\n";
