@@ -1,5 +1,5 @@
 /**
- * Generated on Thu, 03 Nov 2022 15:55:27 +0100.
+ * Generated on Fri, 04 Nov 2022 23:55:27 +0100.
  *
  * This file contains the instruction behavior models of the RV32I
  * instruction set for the RV64IMACFD core architecture.
@@ -2813,53 +2813,6 @@ partInit.code() += "return cpu->exception;\n";
 		std::stringstream ss;
 // -----------------------------------------------------------------------------
 ss << "ecall" << " # " << ba << (" []");
-// -----------------------------------------------------------------------------
-		return ss.str();
-	}
-);
-
-// EBREAK ----------------------------------------------------------------------
-static InstructionDefinition ebreak_ (
-	ISA32_RV64IMACFD,
-	"ebreak",
-	(uint32_t) 0x100073,
-	(uint32_t) 0xffffffff,
-	[] (BitArray & ba,etiss::CodeSet & cs,InstructionContext & ic)
-	{
-
-// -----------------------------------------------------------------------------
-
-// -----------------------------------------------------------------------------
-
-// -----------------------------------------------------------------------------
-
-// -----------------------------------------------------------------------------
-
-		CodePart & partInit = cs.append(CodePart::INITIALREQUIRED);
-
-		partInit.code() = std::string("//EBREAK\n");
-
-// -----------------------------------------------------------------------------
-partInit.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4UL) + ";\n";
-partInit.code() += "cpu->exception = 0; raise(cpu, system, plugin_pointers, 0U, 3U);\n";
-partInit.code() += "cpu->instructionPointer = cpu->nextPc;\n";
-partInit.code() += "return cpu->exception;\n";
-// -----------------------------------------------------------------------------
-
-		partInit.getAffectedRegisters().add("instructionPointer", 32);
-
-		return true;
-	},
-	0,
-	[] (BitArray & ba, Instruction & instr)
-	{
-// -----------------------------------------------------------------------------
-
-// -----------------------------------------------------------------------------
-
-		std::stringstream ss;
-// -----------------------------------------------------------------------------
-ss << "ebreak" << " # " << ba << (" []");
 // -----------------------------------------------------------------------------
 		return ss.str();
 	}

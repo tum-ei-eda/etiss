@@ -1,5 +1,5 @@
 /**
- * Generated on Wed, 12 Oct 2022 12:54:05 +0200.
+ * Generated on Fri, 04 Nov 2022 23:55:27 +0100.
  *
  * This file contains the function macros for the RV32IMACFD core architecture.
  */
@@ -229,10 +229,20 @@ code = 13;
 code = 7;
 } else if (cause == -15) {
 code = 15;
+} else if (cause == -7) {
+code = 1;
 } else {
 code = 2;
 }
-raise(cpu, system, plugin_pointers, 0U, code);
+cpu->exception = 0; raise(cpu, system, plugin_pointers, 0U, code);
 }
+#endif
+
+#ifndef ETISS_ARCH_STATIC_FN_ONLY
+static inline etiss_uint8 etiss_semihost_enabled();
+#endif
+
+#ifndef ETISS_ARCH_STATIC_FN_ONLY
+static inline etiss_int64 etiss_semihost(ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers, etiss_uint32 XLEN, etiss_uint64 operation, etiss_uint64 parameter);
 #endif
 #endif
