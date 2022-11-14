@@ -121,8 +121,8 @@ error_code += R_error_code_0.read(ba) << 0;
 		partInit.code() = std::string("//trap_entry 32\n");
 
 // -----------------------------------------------------------------------------
-partInit.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4U) + ";\n";
-partInit.code() += "translate_exc_code(cpu, system, plugin_pointers, " + std::to_string(error_code) + ");\n";
+partInit.code() += "translate_exc_code(cpu, system, plugin_pointers, " + std::to_string(error_code) + "U); goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
+partInit.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
 partInit.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 partInit.code() += "return cpu->exception;\n";
 // -----------------------------------------------------------------------------
@@ -154,8 +154,8 @@ error_code += R_error_code_0.read(ba) << 0;
 		partInit.code() = std::string("//trap_entry 16\n");
 
 // -----------------------------------------------------------------------------
-partInit.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + ";\n";
-partInit.code() += "translate_exc_code(cpu, system, plugin_pointers, " + std::to_string(error_code) + ");\n";
+partInit.code() += "translate_exc_code(cpu, system, plugin_pointers, " + std::to_string(error_code) + "U); goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
+partInit.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
 partInit.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 partInit.code() += "return cpu->exception;\n";
 // -----------------------------------------------------------------------------
