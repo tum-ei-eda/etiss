@@ -1,5 +1,5 @@
 /**
- * Generated on Fri, 04 Nov 2022 23:55:27 +0100.
+ * Generated on Mon, 14 Nov 2022 18:28:02 +0100.
  *
  * This file contains the function macros for the RV64IMACFD core architecture.
  */
@@ -131,6 +131,52 @@ static inline etiss_uint64 unbox_d(etiss_uint64);
 #ifndef ETISS_ARCH_STATIC_FN_ONLY
 static inline etiss_uint64 fclass_d(etiss_uint64);
 #endif
+static inline etiss_uint64 get_field(etiss_uint64 reg, etiss_uint64 mask)
+{
+return (reg & mask) / (mask & ~((mask << 1UL)));
+}
+static inline etiss_uint64 set_field(etiss_uint64 reg, etiss_uint64 mask, etiss_uint64 val)
+{
+return ((reg & ~(mask)) | ((val * (mask & ~((mask << 1UL)))) & mask));
+}
+
+#ifndef ETISS_ARCH_STATIC_FN_ONLY
+static inline void raise(ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers, etiss_int32 irq, etiss_int32 mcause)
+{
+cpu->return_pending = 1;
+etiss_uint64 epc = cpu->instructionPointer;
+cpu->nextPc = (*((RV64IMACFD*)cpu)->CSR[773] & -2L);
+*((RV64IMACFD*)cpu)->CSR[833] = epc;
+*((RV64IMACFD*)cpu)->CSR[834] = mcause;
+etiss_uint64 s = *((RV64IMACFD*)cpu)->CSR[768];
+s = set_field(s, 128, get_field(s, 8));
+s = set_field(s, 6144, ((RV64IMACFD*)cpu)->PRIV);
+s = set_field(s, 8, 0U);
+*((RV64IMACFD*)cpu)->CSR[768] = s;
+((RV64IMACFD*)cpu)->PRIV = (3) & 0x7;
+}
+#endif
+
+#ifndef ETISS_ARCH_STATIC_FN_ONLY
+static inline void translate_exc_code(ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers, etiss_int32 cause)
+{
+etiss_int32 code = 0U;
+if (cause == -5) {
+code = 5;
+} else if (cause == -14) {
+code = 13;
+} else if (cause == -6) {
+code = 7;
+} else if (cause == -15) {
+code = 15;
+} else if (cause == -7) {
+code = 1;
+} else {
+code = 2;
+}
+cpu->exception = 0; raise(cpu, system, plugin_pointers, 0U, code);
+}
+#endif
 
 #ifndef ETISS_ARCH_STATIC_FN_ONLY
 static inline etiss_uint64 etiss_get_cycles(ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers);
@@ -186,55 +232,9 @@ if (csr == 1) {
 *((RV64IMACFD*)cpu)->CSR[3] = val & 255UL;
 } else if (csr == 768) {
 *((RV64IMACFD*)cpu)->CSR[768] = val & 136UL;
-} else {
+} else if (csr != 769) {
 *((RV64IMACFD*)cpu)->CSR[csr] = val;
 }
-}
-#endif
-static inline etiss_uint64 get_field(etiss_uint64 reg, etiss_uint64 mask)
-{
-return (reg & mask) / (mask & ~((mask << 1UL)));
-}
-static inline etiss_uint64 set_field(etiss_uint64 reg, etiss_uint64 mask, etiss_uint64 val)
-{
-return ((reg & ~(mask)) | ((val * (mask & ~((mask << 1UL)))) & mask));
-}
-
-#ifndef ETISS_ARCH_STATIC_FN_ONLY
-static inline void raise(ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers, etiss_int32 irq, etiss_int32 mcause)
-{
-cpu->return_pending = 1;
-etiss_uint64 epc = cpu->instructionPointer;
-cpu->nextPc = (*((RV64IMACFD*)cpu)->CSR[773] & -2L);
-*((RV64IMACFD*)cpu)->CSR[833] = epc;
-*((RV64IMACFD*)cpu)->CSR[834] = mcause;
-etiss_uint64 s = *((RV64IMACFD*)cpu)->CSR[768];
-s = set_field(s, 128, get_field(s, 8));
-s = set_field(s, 6144, ((RV64IMACFD*)cpu)->PRIV);
-s = set_field(s, 8, 0U);
-*((RV64IMACFD*)cpu)->CSR[768] = s;
-((RV64IMACFD*)cpu)->PRIV = (3) & 0x7;
-}
-#endif
-
-#ifndef ETISS_ARCH_STATIC_FN_ONLY
-static inline void translate_exc_code(ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers, etiss_int32 cause)
-{
-etiss_int32 code = 0U;
-if (cause == -5) {
-code = 5;
-} else if (cause == -14) {
-code = 13;
-} else if (cause == -6) {
-code = 7;
-} else if (cause == -15) {
-code = 15;
-} else if (cause == -7) {
-code = 1;
-} else {
-code = 2;
-}
-cpu->exception = 0; raise(cpu, system, plugin_pointers, 0U, code);
 }
 #endif
 
