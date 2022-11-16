@@ -1,5 +1,5 @@
 /**
- * Generated on Mon, 14 Nov 2022 18:28:02 +0100.
+ * Generated on Wed, 16 Nov 2022 11:52:53 +0100.
  *
  * This file contains the instruction behavior models of the tum_csr
  * instruction set for the RV32IMACFD core architecture.
@@ -51,7 +51,8 @@ if ((rd % 32U) != 0U) {
 partInit.code() += "etiss_uint32 xrd = csr_read(cpu, system, plugin_pointers, " + std::to_string(csr) + "U);\n";
 partInit.code() += "csr_write(cpu, system, plugin_pointers, " + std::to_string(csr) + "U, xrs1);\n";
 partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd % 32) + "U] = xrd;\n";
-} else {
+}
+else {
 partInit.code() += "csr_write(cpu, system, plugin_pointers, " + std::to_string(csr) + "U, xrs1);\n";
 }
 partInit.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";

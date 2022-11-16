@@ -1,4 +1,4 @@
-# Generated on Fri, 04 Nov 2022 23:33:07 +0100.
+# Generated on Wed, 16 Nov 2022 11:39:01 +0100.
 #
 # This file contains the CMake build info for the RV32IMACFD core architecture.
 
@@ -17,8 +17,8 @@ ADD_LIBRARY(${PROJECT_NAME} SHARED
 	RV32IMACFD_RV32DInstr.cpp
 	RV32IMACFD_RV32DCInstr.cpp
 	RV32IMACFD_ZifenceiInstr.cpp
-	RV32IMACFD_tum_csrInstr.cpp
 	RV32IMACFD_tum_retInstr.cpp
+	RV32IMACFD_tum_csrInstr.cpp
 	RV32IMACFD_RV32AInstr.cpp
 	RV32IMACFD_tum_rvaInstr.cpp
 	RV32IMACFD_tum_semihostingInstr.cpp

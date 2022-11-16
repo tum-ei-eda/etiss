@@ -1,5 +1,5 @@
 /**
- * Generated on Mon, 14 Nov 2022 18:28:02 +0100.
+ * Generated on Wed, 16 Nov 2022 11:52:53 +0100.
  *
  * This file contains the function macros for the RV32IMACFD core architecture.
  */
@@ -163,15 +163,20 @@ static inline void translate_exc_code(ETISS_CPU * const cpu, ETISS_System * cons
 etiss_int32 code = 0U;
 if (cause == -5) {
 code = 5;
-} else if (cause == -14) {
+}
+ else if (cause == -14) {
 code = 13;
-} else if (cause == -6) {
+}
+ else if (cause == -6) {
 code = 7;
-} else if (cause == -15) {
+}
+ else if (cause == -15) {
 code = 15;
-} else if (cause == -7) {
+}
+ else if (cause == -7) {
 code = 1;
-} else {
+}
+else {
 code = 2;
 }
 cpu->exception = 0; raise(cpu, system, plugin_pointers, 0U, code);
@@ -226,13 +231,17 @@ static inline void csr_write(ETISS_CPU * const cpu, ETISS_System * const system,
 {
 if (csr == 1) {
 *((RV32IMACFD*)cpu)->CSR[3] = (*((RV32IMACFD*)cpu)->CSR[3] & 224U) | (val & 31U);
-} else if (csr == 2) {
+}
+ else if (csr == 2) {
 *((RV32IMACFD*)cpu)->CSR[3] = ((val & 7U) << 5U) | (*((RV32IMACFD*)cpu)->CSR[3] & 31U);
-} else if (csr == 3) {
+}
+ else if (csr == 3) {
 *((RV32IMACFD*)cpu)->CSR[3] = val & 255U;
-} else if (csr == 768) {
+}
+ else if (csr == 768) {
 *((RV32IMACFD*)cpu)->CSR[768] = val & 136U;
-} else if (csr != 769) {
+}
+ else if (csr != 769) {
 *((RV32IMACFD*)cpu)->CSR[csr] = val;
 }
 }

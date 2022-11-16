@@ -1,5 +1,5 @@
 /**
- * Generated on Mon, 14 Nov 2022 16:47:27 +0100.
+ * Generated on Wed, 16 Nov 2022 11:39:01 +0100.
  *
  * This file contains the instruction behavior models of the RV32D
  * instruction set for the RV64IMACFD core architecture.
@@ -50,7 +50,8 @@ partInit.code() += "etiss_uint64 offs = *((RV64IMACFD*)cpu)->X[" + std::to_strin
 partInit.code() += "etiss_uint64 mem_val_0;\n";
 partInit.code() += "cpu->exception |= (*(system->dread))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_0, 8);\n";
 partInit.code() += "if (cpu->exception) {\n";
-partInit.code() += "translate_exc_code(cpu, system, plugin_pointers, cpu->exception); goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
+partInit.code() += "translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
+partInit.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 partInit.code() += "}\n";
 partInit.code() += "etiss_uint64 res = (etiss_uint64)(mem_val_0);\n";
 partInit.code() += "((RV64IMACFD*)cpu)->F[" + std::to_string(rd) + "U] = res;\n";
@@ -123,10 +124,12 @@ imm += R_imm_5.read(ba) << 5;
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4UL) + "U;\n";
 partInit.code() += "etiss_uint64 offs = *((RV64IMACFD*)cpu)->X[" + std::to_string(rs1 % 32U) + "U] + " + std::to_string(((etiss_int16)((imm) << (4)) >> (4))) + ";\n";
-partInit.code() += "etiss_uint64 mem_val_0 = (etiss_uint64)(((RV64IMACFD*)cpu)->F[" + std::to_string(rs2) + "U]);\n";
+partInit.code() += "etiss_uint64 mem_val_0;\n";
+partInit.code() += "mem_val_0 = (etiss_uint64)(((RV64IMACFD*)cpu)->F[" + std::to_string(rs2) + "U]);\n";
 partInit.code() += "cpu->exception |= (*(system->dwrite))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_0, 8);\n";
 partInit.code() += "if (cpu->exception) {\n";
-partInit.code() += "translate_exc_code(cpu, system, plugin_pointers, cpu->exception); goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
+partInit.code() += "translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
+partInit.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 partInit.code() += "}\n";
 partInit.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
 partInit.code() += "cpu->instructionPointer = cpu->nextPc;\n";
