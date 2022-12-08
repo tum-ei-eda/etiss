@@ -502,8 +502,13 @@ etiss::InterruptVector * RV32IMACFDArch::createInterruptVector(ETISS_CPU * cpu)
 	// This is a default vector, implemented to avoid segfaults. Replace
 	// with actual implementation if necessary.
 
+        RV32IMACFD* rvcpu = (RV32IMACFD *)cpu;
+
 	std::vector<etiss::uint32 *> vec;
 	std::vector<etiss::uint32 *> mask;
+
+        vec.push_back(rvcpu->CSR[CSR_MIP]);
+        mask.push_back(rvcpu->CSR[CSR_MIE]);
 
 	return new etiss::MappedInterruptVector<etiss::uint32>(vec, mask);
 }
