@@ -37,7 +37,6 @@
 project(TCCJIT)
 
 set(ETISS_TCC_SELINUX OFF CACHE BOOL "Enable SELinux support in the TCC JIT engine")
-
 add_library(${PROJECT_NAME} SHARED
     TCCJIT.cpp
     TCCJIT.h
@@ -68,7 +67,7 @@ else()
     message(ERROR "cannot build TCCJIT on this unknown system")
 endif()
 
-set(ETISS_TCC_CONFIGURE_ARGS "--with-libgcc")
+#set(ETISS_TCC_CONFIGURE_ARGS "--with-libgcc")
 if(ETISS_TCC_SELINUX)
     set(ETISS_TCC_CONFIGURE_ARGS ${ETISS_TCC_CONFIGURE_ARGS} --with-selinux)
 endif()
@@ -92,7 +91,8 @@ if(NOT tcc_srcs_POPULATED)
         set(TCC_ADDITIONAL_CFLAGS "-Og;-g;-Wall")
     endif()
     execute_process(
-        COMMAND bash ${tcc_srcs_SOURCE_DIR}/configure --prefix=${INSTALL_DIR} --extra-cflags=-fPIC;${TCC_ADDITIONAL_CFLAGS} ${ETISS_TCC_CONFIGURE_ARGS}
+        COMMAND bash ${tcc_srcs_SOURCE_DIR}/configure --prefix=${INSTALL_DIR}
+            --extra-cflags=-fPIC;${TCC_ADDITIONAL_CFLAGS} ${ETISS_TCC_CONFIGURE_ARGS}
         WORKING_DIRECTORY ${tcc_srcs_BINARY_DIR}
         COMMAND_ECHO STDOUT
     )
@@ -149,4 +149,4 @@ endforeach()
 
 RegisterJITFiles("${TCC_H_FILES}")
 
-ETISSPlugin(${PRO
+ETISSPlugin(${PROJECT_NAME})
