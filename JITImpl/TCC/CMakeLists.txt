@@ -58,6 +58,9 @@ if(UNIX)
         set(ETISS_TCC_SELINUX ON)
     endif()
 elseif(WIN32)
+    set(PREBUILT_TOOL_PKGS_DIR "${PROJECT_SOURCE_DIR}/../toolpkgs")
+    set(TCC_PKG tcc-0.9.27)
+
     if( CMAKE_SIZEOF_VOID_P EQUAL 8 )
         set(TCCJIT_ARCH win64)
     else()
@@ -67,7 +70,7 @@ else()
     message(ERROR "cannot build TCCJIT on this unknown system")
 endif()
 
-#set(ETISS_TCC_CONFIGURE_ARGS "--with-libgcc")
+set(ETISS_TCC_CONFIGURE_ARGS "") #--with-libgcc
 if(ETISS_TCC_SELINUX)
     set(ETISS_TCC_CONFIGURE_ARGS ${ETISS_TCC_CONFIGURE_ARGS} --with-selinux)
 endif()
@@ -217,6 +220,8 @@ elseif(${TCCJIT_ARCH} STREQUAL win32)
 else()
     message(ERROR "Unknown TCCJIT_ARCH value")
 endif()
+
+###include headers
 
 file(GLOB_RECURSE TCC_H_FILES_TMP RELATIVE "${TCC_H_PATH}" "${TCC_H_PATH}/include/*")
 foreach(tccfile ${TCC_H_FILES_TMP})
