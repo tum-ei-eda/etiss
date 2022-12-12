@@ -1,5 +1,5 @@
 /**
- * Generated on Wed, 16 Nov 2022 11:39:01 +0100.
+ * Generated on Mon, 05 Dec 2022 22:18:34 +0100.
  *
  * This file contains the instruction behavior models of the tum_semihosting
  * instruction set for the RV32IMACFD core architecture.
@@ -75,7 +75,7 @@ partInit.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";
 partInit.code() += "}\n";
 partInit.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
 partInit.code() += "cpu->instructionPointer = cpu->nextPc;\n";
-partInit.code() += "if (cpu->return_pending | cpu->nextPc != " + std::to_string(ic.current_address_ + 4) + ") return cpu->exception;\n";
+partInit.code() += "if (cpu->return_pending | cpu->exception | cpu->nextPc != " + std::to_string(ic.current_address_ + 4) + ") return cpu->exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getRegisterDependencies().add(reg_name[10U], 32);

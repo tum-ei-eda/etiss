@@ -1,5 +1,5 @@
 /**
- * Generated on Wed, 16 Nov 2022 11:39:01 +0100.
+ * Generated on Mon, 05 Dec 2022 22:18:34 +0100.
  *
  * This file contains the instruction behavior models of the RV32FC
  * instruction set for the RV32IMACFD core architecture.
@@ -61,7 +61,7 @@ partInit.code() += "etiss_uint32 res = (etiss_uint32)(mem_val_0);\n";
 partInit.code() += "((RV32IMACFD*)cpu)->F[" + std::to_string(rd + 8U) + "U] = -4294967296L | res;\n";
 partInit.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
 partInit.code() += "cpu->instructionPointer = cpu->nextPc;\n";
-partInit.code() += "if (cpu->return_pending) return cpu->exception;\n";
+partInit.code() += "if (cpu->return_pending | cpu->exception) return cpu->exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getRegisterDependencies().add(reg_name[rs1 + 8U], 32);
@@ -143,7 +143,7 @@ partInit.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";
 partInit.code() += "}\n";
 partInit.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
 partInit.code() += "cpu->instructionPointer = cpu->nextPc;\n";
-partInit.code() += "if (cpu->return_pending) return cpu->exception;\n";
+partInit.code() += "if (cpu->return_pending | cpu->exception) return cpu->exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getRegisterDependencies().add(reg_name[rs1 + 8U], 32);
@@ -223,7 +223,7 @@ partInit.code() += "etiss_uint32 res = (etiss_uint32)(mem_val_0);\n";
 partInit.code() += "((RV32IMACFD*)cpu)->F[" + std::to_string(rd) + "U] = -4294967296L | res;\n";
 partInit.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
 partInit.code() += "cpu->instructionPointer = cpu->nextPc;\n";
-partInit.code() += "if (cpu->return_pending) return cpu->exception;\n";
+partInit.code() += "if (cpu->return_pending | cpu->exception) return cpu->exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getRegisterDependencies().add(reg_name[2U], 32);
@@ -297,7 +297,7 @@ partInit.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";
 partInit.code() += "}\n";
 partInit.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
 partInit.code() += "cpu->instructionPointer = cpu->nextPc;\n";
-partInit.code() += "if (cpu->return_pending) return cpu->exception;\n";
+partInit.code() += "if (cpu->return_pending | cpu->exception) return cpu->exception;\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getRegisterDependencies().add(reg_name[2U], 32);

@@ -1,5 +1,5 @@
 /**
- * Generated on Wed, 16 Nov 2022 11:52:53 +0100.
+ * Generated on Mon, 05 Dec 2022 22:55:33 +0100.
  *
  * This file contains the function macros for the RV32IMACFD core architecture.
  */
@@ -161,7 +161,10 @@ s = set_field(s, 8, 0U);
 static inline void translate_exc_code(ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers, etiss_int32 cause)
 {
 etiss_int32 code = 0U;
-if (cause == -5) {
+if (cause == -2147483648) {
+return;
+}
+ else if (cause == -5) {
 code = 5;
 }
  else if (cause == -14) {
