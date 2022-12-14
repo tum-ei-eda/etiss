@@ -145,6 +145,27 @@ jobs:
       working-directory: ${{runner.workspace}}
       run: tar -xf etiss.tar
 
+    - name: Requirements (Linux)
+      if: matrix.config.name == 'Linux'
+      run: |
+        sudo apt-get install libboost-system-dev libboost-filesystem-dev libboost-program-options-dev
+
+    # - name: Requirements (Windows)
+    #   if: matrix.config.name == 'Windows'
+    #   working-directory: ${{runner.workspace}}
+    #   shell: bash
+    #   run: |
+    #     choco install boost-msvc-14.2
+    #     choco install wget unzip
+    #     choco install llvm --version=11.0.0 --allow-downgrade
+    #     choco install make
+    #     ln -s "/c/Program Files/LLVM" llvm-lib
+
+    - name: Requirements (Mac)
+      if: matrix.config.name == 'Mac'
+      run: |
+        brew install boost coreutils
+
     - name: Test (Linux/Mac)
       working-directory: ${{runner.workspace}}/install/bin
       if: matrix.config.name == 'Linux'
@@ -194,6 +215,10 @@ jobs:
       working-directory: ${{runner.workspace}}
       run: tar -xf etiss.tar
 
+    - name: Requirements (Linux)
+      run: |
+        sudo apt-get install libboost-system-dev libboost-filesystem-dev libboost-program-options-dev
+      
     - name: create directory to store results
       working-directory: ${{runner.workspace}}
       run: mkdir ${{runner.workspace}}/results
