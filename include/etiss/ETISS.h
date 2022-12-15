@@ -65,7 +65,7 @@
 #include "etiss/Misc.h"
 
 #include "etiss/LibraryInterface.h"
-#include "etiss/IntegratedLibrary/SimpleIni/SimpleIni.h"
+#include "SimpleIni.h"
 
 namespace etiss
 {
