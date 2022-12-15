@@ -70,84 +70,67 @@ else()
     message(ERROR "cannot build TCCJIT on this unknown system")
 endif()
 
-target_compile_definitions(${PROJECT_NAME} PUBLIC -DTCCJIT_ARCH_UNIX)
-
 if(ETISS_TCC_SELINUX)
     set(ETISS_TCC_CONFIGURE_ARGS ${ETISS_TCC_CONFIGURE_ARGS} --with-selinux)
 endif()
 
 if(${TCCJIT_ARCH} STREQUAL unix)
-    include(FetchContent)
-    FetchContent_Declare(tcc_srcs
-        GIT_REPOSITORY "https://github.com/TinyCC/tinycc"
-        GIT_TAG "d0c26ba4e50a36779456af71b06ec01985e406e5"
-    )
+    include(ExternalProject)
 
-    if(NOT tcc_srcs_POPULATED)
-        FetchContent_Populate(tcc_srcs)
-        FetchContent_GetProperties(tcc_srcs)
-        message(STATUS "[TCC] Fetch SOURCE_DIR: ${tcc_srcs_SOURCE_DIR}")
-        message(STATUS "[TCC] Fetch BINARY_DIR: ${tcc_srcs_BINARY_DIR}")
-
-        message(STATUS "[TCC] configure in build tree")
-        set(TCCJIT_BINARY_DIR ${ETISS_BINARY_DIR}/include/jit/tcc)
-
-        if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-            set(TCC_ADDITIONAL_CFLAGS "-Og -g -Wall")
-        else()
-            set(TCC_ADDITIONAL_CFLAGS "-Ofast -Wall")
-        endif()
+    set(TCC_ADDITIONAL_CFLAGS "-Ofast -Wall")
+    if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+        set(TCC_ADDITIONAL_CFLAGS "-Og -g -Wall")
     endif()
 
-    add_custom_command(
-        OUTPUT ${TCCJIT_BINARY_DIR}/lib ${TCCJIT_BINARY_DIR}/include
-        COMMAND make install -j ${CMAKE_BUILD_PARALLEL_LEVEL}
-        DEPENDS ${tcc_srcs_BINARY_DIR}/tcc ${tcc_srcs_BINARY_DIR}/Makefile
-        WORKING_DIRECTORY ${tcc_srcs_BINARY_DIR}
-        VERBATIM
-        USES_TERMINAL
-        COMMENT "[TCC] Local install to ${TCCJIT_BINARY_DIR}"
-    )
-    add_custom_command(
-        OUTPUT ${tcc_srcs_BINARY_DIR}/tcc
-        COMMAND make -j ${CMAKE_BUILD_PARALLEL_LEVEL}
-        DEPENDS ${tcc_srcs_BINARY_DIR}/Makefile
-        WORKING_DIRECTORY ${tcc_srcs_BINARY_DIR}
-        VERBATIM
-        USES_TERMINAL
-        COMMENT "[TCC] Build in ${tcc_srcs_BINARY_DIR}"
-    )
-    add_custom_command(
-        OUTPUT ${tcc_srcs_BINARY_DIR}/Makefile
-        COMMAND bash ${tcc_srcs_SOURCE_DIR}/configure
-            "--prefix=${tcc_srcs_BINARY_DIR}/installed" # keep everything per default in the build/_deps
-            "--libdir=${TCCJIT_BINARY_DIR}/lib" # only install lib_tcc and tcc_stdlib components
-            "--includedir=${TCCJIT_BINARY_DIR}/include"
+    set(TCCJIT_BINARY_DIR ${CMAKE_BINARY_DIR}/include/jit/tcc)
+    set(TinyCC_LIBNAME ${CMAKE_STATIC_LIBRARY_PREFIX}tcc${CMAKE_STATIC_LIBRARY_SUFFIX})
+    set(TinyCC_STD_LIBNAME ${CMAKE_STATIC_LIBRARY_PREFIX}tcc1${CMAKE_STATIC_LIBRARY_SUFFIX})
+
+    ExternalProject_Add(TinyCC
+        GIT_REPOSITORY https://github.com/TinyCC/tinycc.git
+        GIT_TAG d0c26ba4e50a36779456af71b06ec01985e406e5
+        GIT_CONFIG advice.detachedHead=false # deliberately checkout a commit hash
+
+        CONFIGURE_COMMAND bash <SOURCE_DIR>/configure
+            --prefix=<TMP_DIR> # we do not care about TCC long term. Only stdlib will be installed manually
             "--extra-cflags=-fPIC ${TCC_ADDITIONAL_CFLAGS}"
             ${ETISS_TCC_CONFIGURE_ARGS}
-        WORKING_DIRECTORY ${tcc_srcs_BINARY_DIR}
-        VERBATIM
-        USES_TERMINAL
+
+        BUILD_COMMAND make -j ${CMAKE_BUILD_PARALLEL_LEVEL}
+        BUILD_BYPRODUCTS <BINARY_DIR>/${CMAKE_STATIC_LIBRARY_PREFIX}tcc${CMAKE_STATIC_LIBRARY_SUFFIX}
+                         <BINARY_DIR>/include
+
+        INSTALL_COMMAND "" # we only need the standard library which can be copied
     )
+    ExternalProject_Get_Property(TinyCC BINARY_DIR SOURCE_DIR)
+    set(TinyCC_SOURCE_DIR ${SOURCE_DIR})
+    set(TinyCC_BINARY_DIR ${BINARY_DIR})
 
-    add_custom_target(libtcc
-        DEPENDS ${TCCJIT_BINARY_DIR}/lib ${TCCJIT_BINARY_DIR}/include
+    # Import tcc library from External Project
+    add_library(tcc STATIC IMPORTED GLOBAL)
+    set_property(TARGET tcc PROPERTY IMPORTED_LOCATION ${TinyCC_BINARY_DIR}/${TinyCC_LIBNAME})
+    set_property(TARGET tcc PROPERTY INTERFACE_INCLUDE_DIRECTORIES
+        $<BUILD_INTERFACE:${TinyCC_SOURCE_DIR}>
     )
-
-    add_dependencies(${PROJECT_NAME} libtcc)
-
-    target_include_directories(${PROJECT_NAME} PUBLIC ${TCCJIT_BINARY_DIR}/include)
-    target_link_directories(${PROJECT_NAME} PUBLIC ${TCCJIT_BINARY_DIR}/lib)
     target_link_libraries(${PROJECT_NAME} PUBLIC tcc pthread dl)
+    # Let TCCJIT depend on external TinyCC project to force a fetch
+    add_dependencies(${PROJECT_NAME} TinyCC)
 
-    set(TCC_H_PATH "${TCCJIT_BINARY_DIR}/lib/tcc")
-
-    # we can not use RegisterJITFiles() Macro because the libraries and headers are not built during configuration time
-    # TCC for build tree JIT, aka copy files, already done by tcc build
-    install(DIRECTORY ${TCCJIT_BINARY_DIR}
-        DESTINATION "include/jit/"
-        FILES_MATCHING REGEX "\.h|\.a|\.so"
+    ###################################################################################################################
+    # TCC JIT stdlib
+    # Need to copy TCC's stdlib with headers manually, because they are only copied by TCC on `make install`.
+    # ETISS Build JIT:
+    add_custom_command(TARGET TinyCC POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory "${TinyCC_SOURCE_DIR}/include/" "${TCCJIT_BINARY_DIR}/../tcc_stdlib/"
+        COMMAND ${CMAKE_COMMAND} -E copy "${TinyCC_BINARY_DIR}/${TinyCC_STD_LIBNAME}"
+                                         "${TCCJIT_BINARY_DIR}/${TinyCC_STD_LIBNAME}"
+        VERBATIM
+        COMMENT "[TCC] Copy stdlib and headers to build JIT"
     )
+    # ETISS install JIT:
+    install(DIRECTORY ${TCCJIT_BINARY_DIR} DESTINATION "include/jit/" FILES_MATCHING REGEX "\.a")
+    install(DIRECTORY ${TCCJIT_BINARY_DIR}/../tcc_stdlib DESTINATION "include/jit/" FILES_MATCHING REGEX "\.h")
+
     ETISSPlugin(${PROJECT_NAME})
 
 elseif(${TCCJIT_ARCH} STREQUAL win64)

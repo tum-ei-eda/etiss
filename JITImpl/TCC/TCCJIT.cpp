@@ -117,11 +117,7 @@ void *TCCJIT::translate(std::string code, std::set<std::string> headerpaths, std
     }
 
     /* if tcclib.h and libtcc1.a are not installed, where can we find them */
-#if defined(TCCJIT_ARCH_UNIX)
-    tcc_set_lib_path(s, (etiss::jitFiles() + "/tcc/lib/tcc").c_str());
-#else
     tcc_set_lib_path(s, (etiss::jitFiles() + "/tcc").c_str());
-#endif
 
     // init
     tcc_set_output_type(s, TCC_OUTPUT_MEMORY);
@@ -131,11 +127,7 @@ void *TCCJIT::translate(std::string code, std::set<std::string> headerpaths, std
     {
         tcc_add_include_path(s, iter->c_str());
     }
-#if defined(TCCJIT_ARCH_UNIX)
-    tcc_add_include_path(s, (etiss::jitFiles() + "/tcc/lib/tcc/include").c_str());
-#else
     tcc_add_include_path(s, (etiss::jitFiles() + "/tcc_stdlib").c_str());
-#endif
 
     if (tcc_compile_string(s, code.c_str()) == -1)
     { // compile
