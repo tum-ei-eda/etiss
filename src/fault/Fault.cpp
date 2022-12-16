@@ -47,7 +47,7 @@
 #include "etiss/fault/Injector.h"
 #include "etiss/fault/InjectorAddress.h"
 #include "etiss/fault/Stressor.h"
-#include "etiss/fault/xml/pugixml.hpp"
+#include "pugixml.hpp"
 #else
 #include "fault/Fault.h"
 #include "fault/Trigger.h"
@@ -55,7 +55,7 @@
 #include "fault/Injector.h"
 #include "fault/InjectorAddress.h"
 #include "fault/Stressor.h"
-#include "fault/xml/pugixml.hpp"
+#include "pugixml.hpp"
 #endif
 
 #if MUTEX_SUPPORTED
@@ -268,7 +268,7 @@ std::string Fault::toString() const
 {
 
     pugi::xml_document doc;
-    doc.load("<?xml version=\"1.0\"?>");
+    doc.load_string("<?xml version=\"1.0\"?>");
 
     etiss::fault::xml::Diagnostics diag;
 
@@ -304,7 +304,7 @@ std::string FaultRef::toString() const
 {
 
     pugi::xml_document doc;
-    doc.load("<?xml version=\"1.0\"?>");
+    doc.load_string("<?xml version=\"1.0\"?>");
 
     etiss::fault::xml::Diagnostics diag;
 
@@ -358,7 +358,7 @@ bool writeXML(const std::vector<Fault> &vec, std::ostream &out, std::ostream &di
 {
     pugi::xml_document doc;
 
-    doc.load("<?xml version=\"1.0\"?>");
+    doc.load_string("<?xml version=\"1.0\"?>");
 
     etiss::fault::xml::Diagnostics diag;
 

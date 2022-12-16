@@ -57,10 +57,10 @@
 
 #ifndef NO_ETISS
 #include "etiss/fault/Defs.h"
-#include "etiss/fault/xml/pugixml.hpp"
+#include "pugixml.hpp"
 #else
 #include "fault/Defs.h"
-#include "fault/xml/pugixml.hpp"
+#include "pugixml.hpp"
 #endif
 
 #include <cstdio>

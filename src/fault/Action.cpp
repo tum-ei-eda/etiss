@@ -249,7 +249,7 @@ int32_t Action::getEvent() const
 std::string Action::toString() const
 {
     pugi::xml_document doc;
-    doc.load("<?xml version=\"1.0\"?>");
+    doc.load_string("<?xml version=\"1.0\"?>");
 
     etiss::fault::xml::Diagnostics diag;
 

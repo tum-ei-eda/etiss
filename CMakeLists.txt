@@ -266,6 +266,16 @@ install(TARGETS simpleini
     PUBLIC_HEADER DESTINATION include/simpleini
 )
 
+FetchContent_Declare(pugixml_srcs
+	GIT_REPOSITORY https://github.com/zeux/pugixml.git
+	GIT_TAG v1.11.4
+)
+if(NOT pugixml_srcs_POPULATED)
+	FetchContent_Populate(pugixml_srcs)
+	FetchContent_GetProperties(pugixml_srcs)
+endif()
+add_subdirectory(${pugixml_srcs_SOURCE_DIR} ${pugixml_srcs_BINARY_DIR} EXCLUDE_FROM_ALL)
+
 ### Doxyfile
 set(ETISS_DOX_LOCATIONS ${ETISS_DOX_LOCATIONS} ${PROJECT_BINARY_DIR}/include)
 set(ETISS_DOX_LOCATIONS ${ETISS_DOX_LOCATIONS} ${PROJECT_BINARY_DIR}/include_c)
@@ -388,6 +398,7 @@ TARGET_INCLUDE_DIRECTORIES(ETISS PUBLIC
     ${INCGEN_INC_DIR}
 )
 TARGET_LINK_LIBRARIES(ETISS PUBLIC simpleini elfio)
+TARGET_LINK_LIBRARIES(ETISS PUBLIC pugixml)
 
 GENERATE_EXPORT_HEADER(ETISS
           BASE_NAME ETISS_PLUGIN
