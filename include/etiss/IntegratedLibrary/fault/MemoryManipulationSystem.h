@@ -90,7 +90,7 @@ class MemoryWordManipulatorBase
         word_t operator()(word_t src1, word_t src2) const;
         ////////////////////////////////////////////////////////////////////////////////////////////
         /// \brief Constructor takes string encoded memory operation \ref MemOpType
-        MemOp(const std::string &memop_str);
+        MemOp(const std::string &memop_str) : mem_op_t(mem_op_t::_from_string(memop_str.c_str())) {}
     } /* class MemOp */;
 
     ////////////////////////////////////////////////////////////////////////////////////////////
