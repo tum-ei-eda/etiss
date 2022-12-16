@@ -59,11 +59,11 @@
 #include "etiss/Misc.h"
 #include "etiss/fault/Defs.h"
 #include "etiss/fault/XML.h"
-#include "etiss/fault/Misc.h"
+#include "enum.h"
 #else
 #include "fault/Defs.h"
 #include "fault/XML.h"
-#include "fault/Misc.h"
+#include "enum.h"
 #endif
 
 namespace etiss
@@ -74,40 +74,20 @@ namespace fault
 class FaultRef;
 class InjectorAddress;
 
+//  BITFLIP: applies a bit flip to a bit in a specified field
+//  MASK: applies a mask type injection (field <op>= mask;) where <op> can be any MaskOp
+//  COMMAND: commands are targetet at Injectors, not fields. in case a command is targetet at a certain field that
+//  information must be passed within the command string INJECTION: an action that injects a fault definition (trigger +
+//  actions) EJECTION: an action that ejects a referenced fault (which must exist)
+//  EVENT: an event that breaks the JIT-block and forces the simulation loop to handle the etiss::RETURNCODE exception
+BETTER_ENUM(Action_Type, char, NOP = 0, BITFLIP, MASK, COMMAND, INJECTION, EJECTION, EVENT)
+BETTER_ENUM(Action_MaskOp, char, NOP = 0, AND, OR, XOR, NAND, NOR)
+
 class Action : public etiss::ToString
 {
   public:
-    enum class Type
-    {
-        NOP = 0 /// NO Operation. used by default constructor
-        ,
-        BITFLIP /// applies a bit flip to a bit in a specified field
-        ,
-        MASK /// applies a mask type injection (field <op>= mask;) where <op> can be any MaskOp
-        ,
-        COMMAND /// commands are targetet at Injectors, not fields. in case a command is targetet at a certain field
-                /// that information must be passed within the command string
-        ,
-        INJECTION /// an action that injects a fault definition (trigger + actions)
-        ,
-        EJECTION /// an action that ejects a referenced fault (must exist)
-#ifndef NO_ETISS
-        ,
-        EVENT /// an event that breaks the JIT-block and forces the simulation loop to handle the etiss::RETURNCODE
-              /// exception
-#endif
-    };
-    typedef SmartType<Type> type_t;
-    enum class MaskOp
-    {
-        NOP,
-        AND,
-        OR,
-        XOR,
-        NAND,
-        NOR
-    };
-    typedef SmartType<MaskOp> mask_op_t;
+    typedef Action_Type type_t;
+    typedef Action_MaskOp mask_op_t;
     /**
      *	@brief returns true if type_ is an action on a Field
      */
@@ -143,7 +123,7 @@ class Action : public etiss::ToString
      *
      *	@brief applies a mask type injection (field op= mask;) where <op> can be bitwise AND, OR, XOR, NAND, NOR
      */
-    Action(const InjectorAddress &inj, const std::string &field, MaskOp mask_op, uint64_t mask_value);
+    Action(const InjectorAddress &inj, const std::string &field, mask_op_t mask_op, uint64_t mask_value);
     /**
      * @note Type: Injection
      *
@@ -184,21 +164,21 @@ class Action : public etiss::ToString
     // Members
     std::string toString() const; ///< operator<< can be used.
 
-  private:                                            // Attributes
-    type_t type_;                                     ///< type of the Attribute
+  private:                                 // Attributes
+    type_t type_;                          ///< type of the Attribute
     std::unique_ptr<InjectorAddress> inj_; ///< Address of Injector
-    std::string command_;                       ///< command e.g. for booting OR1KVCPU
-    std::string field_;                         ///< concerning Field (for fault injection)
-    unsigned bit_ = { 0 };                            ///< concerning Bit (for fault injection)
-    mask_op_t mask_op_{ MaskOp::NOP };                ///< mask operation (for mask injection)
-    uint64_t mask_value_{ 0 };                        ///< mask value (for mask injection)
+    std::string command_;                  ///< command e.g. for booting OR1KVCPU
+    std::string field_;                    ///< concerning Field (for fault injection)
+    unsigned bit_ = { 0 };                 ///< concerning Bit (for fault injection)
+    mask_op_t mask_op_{ mask_op_t::NOP };  ///< mask operation (for mask injection)
+    uint64_t mask_value_{ 0 };             ///< mask value (for mask injection)
     std::unique_ptr<FaultRef> fault_ref_;  ///< for fault injection
 #ifndef NO_ETISS
     int32_t event_{ 0 }; ///< exception, or rather etiss::RETURNCODE to
                          /// to be injected into the simulation loop
 #endif
     // private Members
-    void ensure(Type);
+    void ensure(type_t);
 };
 
 #ifndef NO_ETISS

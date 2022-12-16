@@ -116,13 +116,15 @@ void MemoryManipulationSystem::init_manipulation(std::shared_ptr<etiss::VirtualS
 
         if (arch_width == 32)
         {
-            auto read = [this](size_t address, etiss::int32 &return_code) {
+            auto read = [this](size_t address, etiss::int32 &return_code)
+            {
                 etiss::uint32 x;
                 return_code = dbus_access<false>(nullptr, static_cast<etiss::uint64>(address),
                                                  reinterpret_cast<etiss::uint8 *>(&x), sizeof(x));
                 return x;
             };
-            auto write = [this](size_t address, etiss::uint32 word, etiss::int32 &return_code) {
+            auto write = [this](size_t address, etiss::uint32 word, etiss::int32 &return_code)
+            {
                 return_code = dbus_access<true>(nullptr, static_cast<etiss::uint64>(address),
                                                 reinterpret_cast<etiss::uint8 *>(&word), sizeof(word));
             };
@@ -130,13 +132,15 @@ void MemoryManipulationSystem::init_manipulation(std::shared_ptr<etiss::VirtualS
         }
         else if (arch_width == 64)
         {
-            auto read = [this](size_t address, etiss::int32 &return_code) {
+            auto read = [this](size_t address, etiss::int32 &return_code)
+            {
                 etiss::uint64 x;
                 return_code = dbus_access<false>(nullptr, static_cast<etiss::uint64>(address),
                                                  reinterpret_cast<etiss::uint8 *>(&x), sizeof(x));
                 return x;
             };
-            auto write = [this](size_t address, etiss::uint64 word, etiss::int32 &return_code) {
+            auto write = [this](size_t address, etiss::uint64 word, etiss::int32 &return_code)
+            {
                 return_code = dbus_access<true>(nullptr, static_cast<etiss::uint64>(address),
                                                 reinterpret_cast<etiss::uint8 *>(&word), sizeof(word));
             };
@@ -148,8 +152,9 @@ void MemoryManipulationSystem::init_manipulation(std::shared_ptr<etiss::VirtualS
                        std::string("Failed to initiliaze MemStack: Architecture bit width not set."));
         }
 
-        getStruct()->applyCustomAction = [this](const etiss::fault::Fault &fault, const etiss::fault::Action &action,
-                                                std::string &errormsg) {
+        getStruct()->applyCustomAction =
+            [this](const etiss::fault::Fault &fault, const etiss::fault::Action &action, std::string &errormsg)
+        {
             auto cmd = action.getCommand();
 
             size_t pos = 0;
@@ -166,16 +171,21 @@ void MemoryManipulationSystem::init_manipulation(std::shared_ptr<etiss::VirtualS
                 etiss::int32 return_code;
                 dst_address = std::stoll(split_cmd[1], nullptr, 16);
 
-                MemoryWordManipulatorBase::mem_manip_cmd_t mem_manip_cmd(split_cmd[0]);
+                auto mem_manip_cmd = MemoryWordManipulatorBase::mem_manip_cmd_t::_from_string("UNDEF");
+                if (auto maybe = MemoryWordManipulatorBase::mem_manip_cmd_t::_from_string_nothrow(split_cmd[0].c_str()))
+                {
+                    mem_manip_cmd._from_integral(maybe);
+                }
+
                 switch (mem_manip_cmd)
                 {
-                case MemoryWordManipulatorBase::MemManipCmd::PUSH:
+                case MemoryWordManipulatorBase::mem_manip_cmd_t::PUSH:
                     return_code = mem_manipulator_->push(dst_address);
                     break;
-                case MemoryWordManipulatorBase::MemManipCmd::POP:
+                case MemoryWordManipulatorBase::mem_manip_cmd_t::POP:
                     return_code = mem_manipulator_->pop(dst_address);
                     break;
-                case MemoryWordManipulatorBase::MemManipCmd::RMW:
+                case MemoryWordManipulatorBase::mem_manip_cmd_t::RMW:
                 {
                     etiss::uint64 val;
                     val = std::stoll(split_cmd[3], nullptr, 16);
@@ -183,7 +193,7 @@ void MemoryManipulationSystem::init_manipulation(std::shared_ptr<etiss::VirtualS
                         mem_manipulator_->rmw(dst_address, MemoryWordManipulatorBase::MemOp(split_cmd[2]), val);
                     break;
                 }
-                case MemoryWordManipulatorBase::MemManipCmd::RRMW:
+                case MemoryWordManipulatorBase::mem_manip_cmd_t::RRMW:
                 {
                     etiss::uint64 src2_addr;
                     src2_addr = std::stoll(split_cmd[3], nullptr, 16);
@@ -222,29 +232,3 @@ MemoryManipulationSystem::MemoryManipulationSystem(const std::string &name)
     : SimpleMemSystem(), name_(name), vsystem_(), mem_manipulator_()
 {
 }
-
-/* MemoryWordManipulatorBase implementation */
-
-template <>
-etiss::MemoryWordManipulatorBase::mem_op_t::map_t etiss::MemoryWordManipulatorBase::mem_op_t::TABLE = {
-    { MemoryWordManipulatorBase::MemOpType::COPY, "COPY" },  { MemoryWordManipulatorBase::MemOpType::AND, "OR" },
-    { MemoryWordManipulatorBase::MemOpType::OR, "OR" },      { MemoryWordManipulatorBase::MemOpType::XOR, "XOR" },
-    { MemoryWordManipulatorBase::MemOpType::NAND, "NAND" },  { MemoryWordManipulatorBase::MemOpType::NOR, "NOR" },
-    { MemoryWordManipulatorBase::MemOpType::UNDEF, "UNDEF" }
-};
-
-MemoryWordManipulatorBase::MemOp::MemOp(const std::string &memop_str) : mem_op_t(memop_str)
-{
-    if (*this == MemOpType::UNDEF)
-        etiss::log(etiss::FATALERROR,
-                   std::string("MemoryManipulationSystem/MemFaulter: Unrecognized op code: ") + memop_str);
-}
-
-template <>
-etiss::MemoryWordManipulatorBase::mem_manip_cmd_t::map_t etiss::MemoryWordManipulatorBase::mem_manip_cmd_t::TABLE = {
-    { MemoryWordManipulatorBase::MemManipCmd::PUSH, "push" },
-    { MemoryWordManipulatorBase::MemManipCmd::POP, "pop" },
-    { MemoryWordManipulatorBase::MemManipCmd::RMW, "rmw" },
-    { MemoryWordManipulatorBase::MemManipCmd::RRMW, "rrmw" },
-    { MemoryWordManipulatorBase::MemManipCmd::UNDEF, "UNDEF" }
-};

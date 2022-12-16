@@ -61,35 +61,35 @@ namespace etiss
 namespace fault
 {
 
-void Trigger::ensure(Type type) const
+void Trigger::ensure(type_t type) const
 {
     if (type_ != type)
     {
         etiss::log(etiss::FATALERROR, std::string("etiss::fault::Trigger::ensure: Type mismatch type=") +
-                                          type_t::toString(type) + " type_=" + std::string(type_));
+                                          type._to_string() + " type_=" + type_._to_string());
         throw "called function of different trigger type";
     }
 }
 
-Trigger::Trigger() : type_(Type::NOP)
+Trigger::Trigger() : type_(type_t::NOP)
 {
     etiss::log(etiss::VERBOSE, std::string("etiss::fault::Trigger::Trigger() : type_ (NOP)"));
 }
 
 Trigger::Trigger(const InjectorAddress &target_injector)
-    : type_(Type::ASAP), inj_(std::make_unique<InjectorAddress>(target_injector))
+    : type_(type_t::ASAP), inj_(std::make_unique<InjectorAddress>(target_injector))
 {
     etiss::log(etiss::VERBOSE,
                std::string("etiss::fault::Trigger::Trigger(const InjectorAddress &target_injector) : type_ (ASAP)"));
 }
 
 Trigger::Trigger(const Trigger &sub, uint64_t count)
-    : type_(Type::META_COUNTER), sub_(new Trigger(sub)), param1_(count), param2_(0)
+    : type_(type_t::META_COUNTER), sub_(new Trigger(sub)), param1_(count), param2_(0)
 {
     etiss::log(etiss::VERBOSE, std::string("etiss::fault::Trigger::Trigger() : type_ (META_COUNTER)"));
 }
 Trigger::Trigger(const InjectorAddress &target_injector, const std::string &field, uint64_t value)
-    : type_(Type::VARIABLEVALUE)
+    : type_(type_t::VARIABLEVALUE)
     , field_(field)
     , inj_(std::make_unique<InjectorAddress>(target_injector))
     , fieldptr_(0)
@@ -98,7 +98,7 @@ Trigger::Trigger(const InjectorAddress &target_injector, const std::string &fiel
     etiss::log(etiss::VERBOSE, std::string("etiss::fault::Trigger::Trigger() : type_ (VARIABLEVALUE)"));
 }
 Trigger::Trigger(const InjectorAddress &target_injector, uint64_t time_ps, bool relative)
-    : type_(relative ? Type::TIMERELATIVE : Type::TIME)
+    : type_(relative ? type_t::TIMERELATIVE : type_t::TIME)
     , inj_(std::make_unique<InjectorAddress>(target_injector))
     , param1_(time_ps)
     , param2_(0)
@@ -107,13 +107,14 @@ Trigger::Trigger(const InjectorAddress &target_injector, uint64_t time_ps, bool 
              : etiss::log(etiss::VERBOSE, std::string("etiss::fault::Trigger::Trigger() : type_ (TIME)"));
 }
 
-Trigger::Trigger(const Trigger &cpy) : type_(Type::NOP)
+Trigger::Trigger(const Trigger &cpy) : type_(type_t::NOP)
 {
     *this = cpy;
 }
+
 Trigger &Trigger::operator=(const Trigger &cpy)
 {
-    if (type_ == Type::VARIABLEVALUE)
+    if (type_ == +type_t::VARIABLEVALUE)
     {
         if (inj_->isResolved() && fieldptr_)
         {
@@ -123,35 +124,35 @@ Trigger &Trigger::operator=(const Trigger &cpy)
     type_ = cpy.type_;
     switch (type_)
     {
-    case Type::META_COUNTER:
+    case type_t::META_COUNTER:
         sub_ = std::make_unique<Trigger>(cpy.getSubTrigger());
         param1_ = cpy.param1_;
         param2_ = cpy.param2_;
         break;
-    case Type::VARIABLEVALUE:
+    case type_t::VARIABLEVALUE:
         field_ = cpy.field_;
         inj_ = std::make_unique<InjectorAddress>(cpy.getInjectorAddress());
         fieldptr_ = 0;
         param1_ = cpy.param1_;
         break;
-    case Type::TIMERELATIVE:
+    case type_t::TIMERELATIVE:
         [[fallthrough]];
-    case Type::TIME:
+    case type_t::TIME:
         inj_ = std::make_unique<InjectorAddress>(cpy.getInjectorAddress());
         param1_ = cpy.param1_;
         param2_ = cpy.param2_;
         break;
-    case Type::ASAP:
+    case type_t::ASAP:
         inj_ = std::make_unique<InjectorAddress>(cpy.getInjectorAddress());
         break;
-    case Type::NOP:
+    case type_t::NOP:
         break;
     }
     return *this;
 }
 
 #if CXX0X_UP_SUPPORTED
-Trigger::Trigger(Trigger &&cpy) : type_(Type::NOP)
+Trigger::Trigger(Trigger &&cpy) : type_(cpy.getType())
 {
     operator=(cpy);
 }
@@ -164,7 +165,7 @@ Trigger &Trigger::operator=(Trigger &&cpy)
 
 Trigger::~Trigger()
 {
-    if (type_ == Type::VARIABLEVALUE)
+    if (type_ == +type_t::VARIABLEVALUE)
     {
         if (inj_->isResolved() && fieldptr_)
         {
@@ -179,7 +180,7 @@ bool Trigger::check(uint64_t time_ps, etiss::fault::Injector *target_injector)
                                    std::string(", Injector*)"));
     switch (type_)
     {
-    case Type::META_COUNTER:
+    case type_t::META_COUNTER:
     {
         if (sub_->check(time_ps, target_injector))
         {
@@ -191,7 +192,7 @@ bool Trigger::check(uint64_t time_ps, etiss::fault::Injector *target_injector)
         }
         break;
     }
-    case Type::VARIABLEVALUE:
+    case type_t::VARIABLEVALUE:
     {
         if (fieldptr_ == 0)
         {
@@ -231,13 +232,13 @@ bool Trigger::check(uint64_t time_ps, etiss::fault::Injector *target_injector)
         }
         return val == param1_;
     }
-    case Type::TIMERELATIVE:
+    case type_t::TIMERELATIVE:
     {
         etiss::log(etiss::WARNING, "Trigger::fired: Unresolved TIMERELATIVE  - resolving now", *this, *inj_);
         resolveTime(time_ps);
         [[fallthrough]];
     }
-    case Type::TIME:
+    case type_t::TIME:
     {
         /* TODO: Why doing it like this ? this would always fire after time_ps has reached */
         // Possibly because might be called not exaclty but later than excact trigger time, then late triggering should
@@ -259,11 +260,11 @@ bool Trigger::check(uint64_t time_ps, etiss::fault::Injector *target_injector)
         // return true;
         break;
     }
-    case Type::ASAP:
+    case type_t::ASAP:
     {
         return true; // as soon as possible means on next check
     }
-    case Type::NOP:
+    case type_t::NOP:
     {
         return true;
     }
@@ -276,50 +277,50 @@ void Trigger::resolveTime(uint64_t time)
 {
     etiss::log(etiss::VERBOSE,
                std::string("etiss::fault::Trigger::resolveTime(time=") + std::to_string(time) + std::string(")"));
-    if (type_ == Type::TIMERELATIVE)
+    if (type_ == +type_t::TIMERELATIVE)
     {
-        type_ = Type::TIME;
+        type_ = type_t::TIME;
         param1_ = param1_ + time;
     }
-    else if (type_ == Type::META_COUNTER)
+    else if (type_ == +type_t::META_COUNTER)
     {
         return sub_->resolveTime(time);
     }
 }
 bool Trigger::isResolved() const
 {
-    if (type_ == Type::META_COUNTER)
+    if (type_ == +type_t::META_COUNTER)
     {
         return sub_->isResolved();
     }
-    return type_ != Type::TIMERELATIVE;
+    return type_ != +type_t::TIMERELATIVE;
 }
 
 uint64_t Trigger::getTriggerCount() const
 {
-    ensure(Type::META_COUNTER);
+    ensure(type_t::META_COUNTER);
     return param1_;
 }
 
 const Trigger &Trigger::getSubTrigger() const
 {
-    ensure(Type::META_COUNTER);
+    ensure(type_t::META_COUNTER);
     return *sub_;
 }
 
 uint64_t Trigger::getTriggerTime() const
 {
-    if (type_ == Type::META_COUNTER)
+    if (type_ == +type_t::META_COUNTER)
     {
         return sub_->getTriggerTime();
     }
     try
     {
-        ensure(Type::TIME);
+        ensure(type_t::TIME);
     }
     catch (char const *)
     {
-        ensure(Type::TIMERELATIVE);
+        ensure(type_t::TIMERELATIVE);
     }
     return param1_;
 }
@@ -331,7 +332,7 @@ const InjectorAddress &Trigger::getInjectorAddress() const
 
 const Injector_ptr &Trigger::getInjector() const
 {
-    if (type_ == Type::META_COUNTER)
+    if (type_ == +type_t::META_COUNTER)
     {
         return sub_->getInjector();
     }
@@ -343,35 +344,35 @@ const Injector_ptr &Trigger::getInjector() const
 
 bool Trigger::isNOP() const
 {
-    if (type_ == Type::META_COUNTER)
+    if (type_ == +type_t::META_COUNTER)
     {
         return sub_->isNOP();
     }
     else
     {
-        return type_ == Type::NOP;
+        return type_ == +type_t::NOP;
     }
 }
 
 const std::string &Trigger::getTriggerField() const
 {
     // std::cout << "Trigger::getTriggerField() called" << std::endl;
-    if (type_ == Type::META_COUNTER)
+    if (type_ == +type_t::META_COUNTER)
     {
         return sub_->getTriggerField();
     }
-    ensure(Type::VARIABLEVALUE);
+    ensure(type_t::VARIABLEVALUE);
     return field_;
 }
 
 const uint64_t &Trigger::getTriggerFieldValue() const
 {
     // std::cout << "Trigger::getTriggerFieldValue() called" << std::endl;
-    if (type_ == Type::META_COUNTER)
+    if (type_ == +type_t::META_COUNTER)
     {
         return sub_->getTriggerFieldValue();
     }
-    ensure(Type::VARIABLEVALUE);
+    ensure(type_t::VARIABLEVALUE);
     return param1_;
 }
 
@@ -383,18 +384,18 @@ const Trigger::type_t &Trigger::getType() const
 std::string Trigger::toString() const
 {
     std::stringstream ss;
-    ss << "Trigger { type=" << std::string(type_);
+    ss << "Trigger { type=" << type_;
     switch (type_)
     {
-    case Type::META_COUNTER:
+    case type_t::META_COUNTER:
         ss << " triggerCount=" << +param1_ << " currentCount=" << +param2_;
         break;
-    case Type::VARIABLEVALUE:
+    case type_t::VARIABLEVALUE:
         ss << " field=" << field_ << " triggerValue=" << +param1_;
         break;
-    case Type::TIMERELATIVE:
+    case type_t::TIMERELATIVE:
         [[fallthrough]];
-    case Type::TIME:
+    case type_t::TIME:
         ss << " triggerTime=" << +param1_;
         break;
     default:
@@ -413,16 +414,22 @@ bool parse<etiss::fault::Trigger *>(pugi::xml_node node, etiss::fault::Trigger *
     etiss::log(etiss::VERBOSE, std::string("Called etiss::fault::xml::parse<etiss::fault::Trigger*>") +
                                    std::string("(node, Trigger*&, Diagnostics)"));
     f = 0;
-    std::string type_str;
-    if (!parse_attr(node, "type", type_str, diag))
+    std::string type_s;
+    if (!parse_attr(node, "type", type_s, diag))
     {
         return false;
     }
-    etiss::fault::Trigger::type_t type(type_str);
+
+    if (!Trigger::type_t::_from_string_nothrow(type_s.c_str()))
+    {
+        diag.unexpectedNode(node, std::string("There is no Trigger type ") + type_s);
+        return false;
+    }
+    auto type = Trigger::type_t::_from_string(type_s.c_str());
 
     switch (type)
     {
-    case etiss::fault::Trigger::Type::META_COUNTER:
+    case Trigger::type_t::META_COUNTER:
     {
         uint64_t count;
         if (!parse<uint64_t>(findSingleNode(node, "count", diag), count, diag))
@@ -440,7 +447,7 @@ bool parse<etiss::fault::Trigger *>(pugi::xml_node node, etiss::fault::Trigger *
         return true;
     }
 
-    case etiss::fault::Trigger::Type::VARIABLEVALUE:
+    case Trigger::type_t::VARIABLEVALUE:
     {
         uint64_t value;
         if (!parse_hex(findSingleNode(node, "value", diag), value, diag))
@@ -462,7 +469,7 @@ bool parse<etiss::fault::Trigger *>(pugi::xml_node node, etiss::fault::Trigger *
         return true;
     }
 
-    case etiss::fault::Trigger::Type::TIME:
+    case Trigger::type_t::TIME:
     {
         uint64_t count;
         if (!parse<uint64_t>(findSingleNode(node, "time_ps", diag), count, diag))
@@ -479,7 +486,7 @@ bool parse<etiss::fault::Trigger *>(pugi::xml_node node, etiss::fault::Trigger *
         return true;
     }
 
-    case etiss::fault::Trigger::Type::TIMERELATIVE: // if (type == "TIMERELATIVE")
+    case Trigger::type_t::TIMERELATIVE:
     {
         uint64_t count;
         if (!parse<uint64_t>(findSingleNode(node, "time_ps", diag), count, diag))
@@ -497,7 +504,7 @@ bool parse<etiss::fault::Trigger *>(pugi::xml_node node, etiss::fault::Trigger *
         return true;
     }
 
-    case etiss::fault::Trigger::Type::ASAP:
+    case Trigger::type_t::ASAP:
     {
         etiss::fault::InjectorAddress injector;
         if (!parse<etiss::fault::InjectorAddress>(findSingleNode(node, "injector", diag), injector, diag))
@@ -538,23 +545,22 @@ bool parse<etiss::fault::Trigger>(pugi::xml_node node, etiss::fault::Trigger &f,
     return true;
 }
 template <>
-bool write<etiss::fault::Trigger>(pugi::xml_node node, const etiss::fault::Trigger &f, Diagnostics &diag)
+bool write<Trigger>(pugi::xml_node node, const Trigger &f, Diagnostics &diag)
 {
     etiss::log(etiss::VERBOSE, std::string("Called etiss::fault::xml::write<etiss::fault::Trigger>") +
                                    std::string("(node, Trigger&, Diagnostics)"));
 
+    write_attr<std::string>(node, "type", f.getType()._to_string(), diag);
     switch (f.getType())
     {
-    case etiss::fault::Trigger::Type::META_COUNTER:
+    case Trigger::type_t::META_COUNTER:
     {
-        write_attr<std::string>(node, "type", std::string(f.getType()), diag);
         write<uint64_t>(node.append_child("count"), f.getTriggerCount(), diag);
-        write<etiss::fault::Trigger>(node.append_child("trigger"), f.getSubTrigger(), diag);
+        write<Trigger>(node.append_child("trigger"), f.getSubTrigger(), diag);
     }
         return true;
-    case etiss::fault::Trigger::Type::VARIABLEVALUE:
+    case Trigger::type_t::VARIABLEVALUE:
     {
-        write_attr<std::string>(node, "type", std::string(f.getType()), diag);
         write<std::string>(node.append_child("field"), f.getTriggerField(), diag);
         write<uint64_t>(node.append_child("count"), f.getTriggerFieldValue(), diag);
         Injector_ptr ptr = f.getInjector();
@@ -567,11 +573,10 @@ bool write<etiss::fault::Trigger>(pugi::xml_node node, const etiss::fault::Trigg
         write<std::string>(node.append_child("injector"), ptr->getInjectorPath(), diag);
     }
         return true;
-    case etiss::fault::Trigger::Type::TIME:
+    case Trigger::type_t::TIME:
         [[fallthrough]];
-    case etiss::fault::Trigger::Type::TIMERELATIVE:
+    case Trigger::type_t::TIMERELATIVE:
     {
-        write_attr<std::string>(node, "type", std::string(f.getType()), diag);
         write<uint64_t>(node.append_child("time_ps"), f.getTriggerTime(), diag);
         Injector_ptr ptr = f.getInjector();
         if (!ptr)
@@ -583,11 +588,10 @@ bool write<etiss::fault::Trigger>(pugi::xml_node node, const etiss::fault::Trigg
         write<std::string>(node.append_child("injector"), ptr->getInjectorPath(), diag);
         return true;
     }
-    case etiss::fault::Trigger::Type::ASAP:
+    case Trigger::type_t::ASAP:
         [[fallthrough]];
-    case etiss::fault::Trigger::Type::NOP:
+    case Trigger::type_t::NOP:
     {
-        write_attr<std::string>(node, "type", std::string(f.getType()), diag);
         return true;
     }
     }
@@ -600,14 +604,6 @@ bool write<etiss::fault::Trigger>(pugi::xml_node node, const etiss::fault::Trigg
 
 } // namespace xml
 #endif
-
-template <>
-Trigger::type_t::map_t Trigger::type_t::TABLE = { { Trigger::Type::META_COUNTER, "META_COUNTER" },
-                                                  { Trigger::Type::VARIABLEVALUE, "VARIABLEVALUE" },
-                                                  { Trigger::Type::TIME, "TIME" },
-                                                  { Trigger::Type::TIMERELATIVE, "TIMERELATIVE" },
-                                                  { Trigger::Type::ASAP, "ASAP" },
-                                                  { Trigger::Type::NOP, "NOP" } };
 
 } // namespace fault
 

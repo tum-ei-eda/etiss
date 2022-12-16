@@ -259,7 +259,7 @@ bool Stressor::addFault(const Fault &f, bool injected_fault)
     for (const auto &trigger : f.triggers)
     {
 
-        if (trigger.getType() != etiss::fault::Trigger::Type::NOP) // only add Trigger, if it is not a NOP
+        if (trigger.getType() != +etiss::fault::Trigger_Type::NOP) // only add Trigger, if it is not a NOP
         {
             iptr = trigger.getInjector();
 
@@ -343,7 +343,7 @@ bool Stressor::removeFault(const Fault &f, bool injected_fault)
     for (const auto &trigger : f.triggers)
     {
 
-        if (trigger.getType() != etiss::fault::Trigger::Type::NOP) // don't care
+        if (trigger.getType() != +etiss::fault::Trigger_Type::NOP) // don't care
         {
             iptr = trigger.getInjector();
 
@@ -400,7 +400,7 @@ bool Stressor::firedTrigger(const Trigger &triggered, int32_t fault_id, Injector
         {
             switch (iter->getType())
             {
-            case etiss::fault::Action::Type::INJECTION:
+            case +etiss::fault::Action_Type::INJECTION:
                 if (!iter->getFaultRef().is_set())
                 {
                     // try to resolve the reference again
@@ -415,7 +415,7 @@ bool Stressor::firedTrigger(const Trigger &triggered, int32_t fault_id, Injector
                 }
                 addFault(iter->getFaultRef().get_fault(), true);
                 break;
-            case etiss::fault::Action::Type::EJECTION:
+            case +etiss::fault::Action_Type::EJECTION:
                 if (!iter->getFaultRef().is_set())
                 {
                     // try to resolve the reference again
@@ -430,12 +430,12 @@ bool Stressor::firedTrigger(const Trigger &triggered, int32_t fault_id, Injector
                 }
                 removeFault(iter->getFaultRef().get_fault(), true);
                 break;
-            case etiss::fault::Action::Type::NOP:
+            case +etiss::fault::Action_Type::NOP:
                 etiss::log(etiss::VERBOSE,
                            std::string("Stressor::firedTrigger: Discarded - Action is NOP (do not care)."));
                 return true;
 #ifndef NO_ETISS
-            case etiss::fault::Action::Type::EVENT:
+            case +etiss::fault::Action_Type::EVENT:
                 etiss::log(etiss::VERBOSE, std::string("Stressor::firedTrigger: Action is EVENT"));
                 set_event(iter->getEvent());
                 return true;

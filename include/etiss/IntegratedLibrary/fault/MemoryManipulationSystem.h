@@ -65,27 +65,20 @@
 #include <functional>
 
 #include "etiss/fault/Misc.h"
+#include "enum.h"
 
 namespace etiss
 {
+
+BETTER_ENUM(MM_MemOpType, char, UNDEF = 0, COPY, AND, OR, XOR, NAND, NOR)
+BETTER_ENUM(MM_MemManipCmd, char, UNDEF = 0, PUSH, POP, OR, RMW, RRMW)
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /// \brief Memory word faulter base class
 class MemoryWordManipulatorBase
 {
   public:
-    ////////////////////////////////////////////////////////////////////////////////////////////
-    /// \brief Memory operation type code
-    enum class MemOpType
-    {
-        COPY,
-        AND,
-        OR,
-        XOR,
-        NAND,
-        NOR,
-        UNDEF
-    };
-    typedef etiss::fault::SmartType<MemOpType> mem_op_t;
+    typedef MM_MemOpType mem_op_t;
     ////////////////////////////////////////////////////////////////////////////////////////////////
     /// \brief Memory operation class
     class MemOp : mem_op_t
@@ -102,15 +95,7 @@ class MemoryWordManipulatorBase
 
     ////////////////////////////////////////////////////////////////////////////////////////////
     /// \brief Memory operation type code
-    enum class MemManipCmd
-    {
-        PUSH,
-        POP,
-        RMW,
-        RRMW,
-        UNDEF
-    };
-    typedef etiss::fault::SmartType<MemManipCmd> mem_manip_cmd_t;
+    typedef MM_MemManipCmd mem_manip_cmd_t;
 
     virtual etiss::int32 push(size_t address) = 0;
     virtual etiss::int32 pop(size_t address) = 0;
@@ -189,17 +174,17 @@ word_t MemoryWordManipulatorBase::MemOp::operator()(word_t src1, word_t src2) co
 {
     switch (*this)
     {
-    case MemOpType::COPY:
+    case MM_MemOpType::COPY:
         return src2;
-    case MemOpType::AND:
+    case MM_MemOpType::AND:
         return (src1 & src2);
-    case MemOpType::OR:
+    case MM_MemOpType::OR:
         return (src1 | src2);
-    case MemOpType::XOR:
+    case MM_MemOpType::XOR:
         return (src1 ^ src2);
-    case MemOpType::NAND:
+    case MM_MemOpType::NAND:
         return ~(src1 & src2);
-    case MemOpType::NOR:
+    case MM_MemOpType::NOR:
         return ~(src1 | src2);
     default:
         break;

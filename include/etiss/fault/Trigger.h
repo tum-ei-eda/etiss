@@ -68,6 +68,8 @@
 #include "fault/Misc.h"
 #endif
 
+#include "enum.h"
+
 namespace etiss
 {
 namespace fault
@@ -82,22 +84,12 @@ typedef std::shared_ptr<Injector> Injector_ptr;
 typedef Injector *Injector_ptr;
 #endif
 
+BETTER_ENUM(Trigger_Type, char, NOP = 0, META_COUNTER, VARIABLEVALUE, TIME, TIMERELATIVE, ASAP)
+
 class Trigger : public etiss::ToString
 {
   public:
-    enum class Type
-    {
-        META_COUNTER,
-        VARIABLEVALUE,
-        TIME
-        /// needs to be resolved. this can only be used in connection with an
-        /// injection action
-        ,
-        TIMERELATIVE,
-        ASAP,
-        NOP
-    };
-    typedef SmartType<Type> type_t;
+    typedef Trigger_Type type_t;
     // constructors
     /**
         Type: NOP (no operation)
@@ -176,7 +168,7 @@ class Trigger : public etiss::ToString
     uint64_t param2_{ 0 };
 
     // Private Members
-    void ensure(Type type) const;
+    void ensure(type_t type) const;
 };
 
 #if ETISS_FAULT_XML

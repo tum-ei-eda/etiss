@@ -214,39 +214,39 @@ bool VirtualStruct::Field::_applyBitflip(unsigned position, uint64_t fault_id)
 bool VirtualStruct::Field::_applyAction(const etiss::fault::Fault &f, const etiss::fault::Action &a,
                                         std::string &errormsg)
 {
-    if (a.getType() == etiss::fault::Action::Type::MASK)
+    if (a.getType() == +etiss::fault::Action::type_t::MASK)
     {
         uint64_t mask_value = a.getMaskValue();
         uint64_t val = read(), errval;
         switch (a.getMaskOp())
         {
-        case etiss::fault::Action::MaskOp::AND:
+        case etiss::fault::Action::mask_op_t::AND:
             errval = (val & mask_value);
             break;
-        case etiss::fault::Action::MaskOp::OR:
+        case etiss::fault::Action::mask_op_t::OR:
             errval = (val | mask_value);
             break;
-        case etiss::fault::Action::MaskOp::XOR:
+        case etiss::fault::Action::mask_op_t::XOR:
             errval = (val ^ mask_value);
             break;
-        case etiss::fault::Action::MaskOp::NAND:
+        case etiss::fault::Action::mask_op_t::NAND:
             errval = ~(val & mask_value);
             break;
-        case etiss::fault::Action::MaskOp::NOR:
+        case etiss::fault::Action::mask_op_t::NOR:
             errval = ~(val | mask_value);
             break;
-        case etiss::fault::Action::MaskOp::NOP:
+        case etiss::fault::Action::mask_op_t::NOP:
             errval = val;
             break;
         }
         write(errval);
         std::stringstream ss;
-        ss << "Injected mask fault in " << name_ << " 0x" << std::hex << val << " " << std::string(a.getMaskOp())
+        ss << "Injected mask fault in " << name_ << " 0x" << std::hex << val << " " << a.getMaskOp()
            << " 0x" << mask_value << "->0x" << errval << std::dec;
         etiss::log(etiss::INFO, ss.str());
         return true;
     }
-    else if (a.getType() == etiss::fault::Action::Type::BITFLIP)
+    else if (a.getType() == +etiss::fault::Action::type_t::BITFLIP)
     {
         return applyBitflip(a.getTargetBit(), f.id_);
     }
@@ -504,7 +504,7 @@ bool VirtualStruct::applyAction(const etiss::fault::Fault &fault, const etiss::f
 {
     switch (action.getType())
     {
-    case etiss::fault::Action::Type::COMMAND: // handle command
+    case +etiss::fault::Action::type_t::COMMAND: // handle command
     {
         if (!applyCustomAction)
         {
@@ -514,9 +514,9 @@ bool VirtualStruct::applyAction(const etiss::fault::Fault &fault, const etiss::f
         }
         return applyCustomAction(fault, action, errormsg);
     }
-    case etiss::fault::Action::Type::MASK:
+    case +etiss::fault::Action::type_t::MASK:
         [[fallthrough]];
-    case etiss::fault::Action::Type::BITFLIP: // handle bitflip
+    case +etiss::fault::Action::type_t::BITFLIP: // handle bitflip
     {
         Field *f;
         auto find = fieldNames_.find(action.getTargetField());
@@ -574,9 +574,9 @@ bool VirtualStruct::update_field_access_rights(const etiss::fault::Action &actio
     {
         switch (action.getType())
         {
-        case etiss::fault::Action::Type::MASK:
+        case +etiss::fault::Action::type_t::MASK:
             [[fallthrough]];
-        case etiss::fault::Action::Type::BITFLIP:
+        case +etiss::fault::Action::type_t::BITFLIP:
             f->flags_ |= Field::F;
             break;
         default:

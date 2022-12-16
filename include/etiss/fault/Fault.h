@@ -103,8 +103,8 @@ class Fault : public etiss::ToString
 class FaultRef : public etiss::ToString
 {
   private:
-    mutable Fault fault_;    ///< referenced Fault, needs to be resolved during sim. runtime
-    std::string name_; ///< string identifier, used to resolve actual reference via fault_
+    mutable Fault fault_; ///< referenced Fault, needs to be resolved during sim. runtime
+    std::string name_;    ///< string identifier, used to resolve actual reference via fault_
 
   public:
     std::string toString() const; ///< operator<< can be used.

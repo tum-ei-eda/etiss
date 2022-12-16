@@ -65,63 +65,6 @@ namespace etiss
 namespace fault
 {
 
-////////////////////////////////////////////////////////////////////////////////////////////////
-/// \brief Action type class
-template <typename enum_t>
-class SmartType : public etiss::ToString
-{
-  public:
-    typedef std::map<enum_t, const char *> map_t;
-
-  private:
-    enum_t type_;
-    static map_t TABLE;
-
-  public:
-    ////////////////////////////////////////////////////////////////////////////////////////////
-    /// \brief decode a string \p type_str to \ref enum_t, return true if successful
-    static bool fromString(const std::string &type_str, enum_t &out)
-    {
-        for (auto const &e : TABLE)
-        {
-            if (type_str == e.second)
-            {
-                out = e.first;
-                return true;
-            }
-        }
-        return false;
-    }
-    ////////////////////////////////////////////////////////////////////////////////////////////
-    /// \brief convert a \ref enum_t \p in to a std::string with the static \ref TABLE
-    static std::string toString(enum_t in) { return TABLE.at(in); }
-    ////////////////////////////////////////////////////////////////////////////////////////////
-    /// \brief return self as string
-    std::string toString() const { return toString(type_); }
-    ////////////////////////////////////////////////////////////////////////////////////////////
-    /// \brief Constructor takes \p type specifying action type
-    SmartType() : type_() {}
-    ////////////////////////////////////////////////////////////////////////////////////////////
-    /// \brief Constructor takes \p type specifying action type
-    SmartType(enum_t type) : type_(type) {}
-    ////////////////////////////////////////////////////////////////////////////////////////////
-    /// \brief Constructor takes \p type_str specifying action type string encoded
-    /// \note If string does not match, default \ref enum_t() is used. Make sure to adapt
-    SmartType(const std::string &type_str) : type_()
-    {
-        auto ret = fromString(type_str, type_);
-        if (!ret)
-            etiss::log(etiss::ERROR, std::string("SmartType<enum_t>: Unrecognized type string: \"") + type_str +
-                                         std::string("\" using default enum_t()"));
-    }
-    ////////////////////////////////////////////////////////////////////////////////////////////
-    /// \brief Typecast operator to \ref code_t
-    operator enum_t() const { return type_; }
-    ////////////////////////////////////////////////////////////////////////////////////////////
-    /// \brief Typecast operator to \ref code_t
-    operator std::string() const { return toString(); }
-} /* class SmartType */;
-
 } // end of namespace fault
 
 } // end of namespace etiss
