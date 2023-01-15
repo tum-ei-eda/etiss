@@ -1,5 +1,5 @@
 /**
- * Generated on Thu, 12 May 2022 16:30:21 +0200.
+ * Generated on Sun, 15 Jan 2023 14:28:55 +0100.
  *
  * This file contains the instruction behavior models of the RV32FC
  * instruction set for the RV32IMACFDPV core architecture.
@@ -28,15 +28,15 @@ static InstructionDefinition cflw_rd_uimm_rs1 (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 rd = 0;
+etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(4, 2);
 rd += R_rd_0.read(ba) << 0;
-etiss_uint32 uimm = 0;
+etiss_uint8 uimm = 0;
 static BitArrayRange R_uimm_6(5, 5);
 uimm += R_uimm_6.read(ba) << 6;
 static BitArrayRange R_uimm_2(6, 6);
 uimm += R_uimm_2.read(ba) << 2;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(9, 7);
 rs1 += R_rs1_0.read(ba) << 0;
 static BitArrayRange R_uimm_3(12, 10);
@@ -67,15 +67,15 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 rd = 0;
+etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(4, 2);
 rd += R_rd_0.read(ba) << 0;
-etiss_uint32 uimm = 0;
+etiss_uint8 uimm = 0;
 static BitArrayRange R_uimm_6(5, 5);
 uimm += R_uimm_6.read(ba) << 6;
 static BitArrayRange R_uimm_2(6, 6);
 uimm += R_uimm_2.read(ba) << 2;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(9, 7);
 rs1 += R_rs1_0.read(ba) << 0;
 static BitArrayRange R_uimm_3(12, 10);
@@ -105,15 +105,15 @@ static InstructionDefinition cfsw_rs2_uimm_rs1 (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 rs2 = 0;
+etiss_uint8 rs2 = 0;
 static BitArrayRange R_rs2_0(4, 2);
 rs2 += R_rs2_0.read(ba) << 0;
-etiss_uint32 uimm = 0;
+etiss_uint8 uimm = 0;
 static BitArrayRange R_uimm_6(5, 5);
 uimm += R_uimm_6.read(ba) << 6;
 static BitArrayRange R_uimm_2(6, 6);
 uimm += R_uimm_2.read(ba) << 2;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(9, 7);
 rs1 += R_rs1_0.read(ba) << 0;
 static BitArrayRange R_uimm_3(12, 10);
@@ -143,15 +143,15 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 rs2 = 0;
+etiss_uint8 rs2 = 0;
 static BitArrayRange R_rs2_0(4, 2);
 rs2 += R_rs2_0.read(ba) << 0;
-etiss_uint32 uimm = 0;
+etiss_uint8 uimm = 0;
 static BitArrayRange R_uimm_6(5, 5);
 uimm += R_uimm_6.read(ba) << 6;
 static BitArrayRange R_uimm_2(6, 6);
 uimm += R_uimm_2.read(ba) << 2;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(9, 7);
 rs1 += R_rs1_0.read(ba) << 0;
 static BitArrayRange R_uimm_3(12, 10);
@@ -181,12 +181,12 @@ static InstructionDefinition cflwsp_uimm_rd (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 uimm = 0;
+etiss_uint8 uimm = 0;
 static BitArrayRange R_uimm_6(3, 2);
 uimm += R_uimm_6.read(ba) << 6;
 static BitArrayRange R_uimm_2(6, 4);
 uimm += R_uimm_2.read(ba) << 2;
-etiss_uint32 rd = 0;
+etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
 static BitArrayRange R_uimm_5(12, 12);
@@ -217,12 +217,12 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 uimm = 0;
+etiss_uint8 uimm = 0;
 static BitArrayRange R_uimm_6(3, 2);
 uimm += R_uimm_6.read(ba) << 6;
 static BitArrayRange R_uimm_2(6, 4);
 uimm += R_uimm_2.read(ba) << 2;
-etiss_uint32 rd = 0;
+etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
 static BitArrayRange R_uimm_5(12, 12);
@@ -252,10 +252,10 @@ static InstructionDefinition cfswsp_rs2_uimm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 rs2 = 0;
+etiss_uint8 rs2 = 0;
 static BitArrayRange R_rs2_0(6, 2);
 rs2 += R_rs2_0.read(ba) << 0;
-etiss_uint32 uimm = 0;
+etiss_uint8 uimm = 0;
 static BitArrayRange R_uimm_6(8, 7);
 uimm += R_uimm_6.read(ba) << 6;
 static BitArrayRange R_uimm_2(12, 9);
@@ -285,10 +285,10 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 rs2 = 0;
+etiss_uint8 rs2 = 0;
 static BitArrayRange R_rs2_0(6, 2);
 rs2 += R_rs2_0.read(ba) << 0;
-etiss_uint32 uimm = 0;
+etiss_uint8 uimm = 0;
 static BitArrayRange R_uimm_6(8, 7);
 uimm += R_uimm_6.read(ba) << 6;
 static BitArrayRange R_uimm_2(12, 9);
