@@ -6141,7 +6141,7 @@ ss << "vmv_x_s" << " # " << ba << (" [rd=" + std::to_string(rd) + " | vs2=" + st
 static InstructionDefinition vmv_s_x_vd_rs1 (
 	ISA32_RV32IMACFDPV,
 	"vmv_s_x",
-	(uint32_t) 0x42004057,
+	(uint32_t) 0x42006057,
 	(uint32_t) 0xfff0707f,
 	[] (BitArray & ba,etiss::CodeSet & cs,InstructionContext & ic)
 	{
