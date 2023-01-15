@@ -27,7 +27,7 @@ if (mcause == 2) {
 return -11;
 }
 if (mcause == 3) {
-return 2147483648;
+return -19;
 }
 if (mcause == 4 || mcause == 5) {
 return -5;
