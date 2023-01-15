@@ -880,6 +880,69 @@ ss << "vse64_u" << " # " << ba << (" [vs3=" + std::to_string(vs3) + " | rs1=" + 
 	}
 );
 
+// VSR_V -----------------------------------------------------------------------
+static InstructionDefinition vsr_v_vs3_rs1_nf (
+	ISA32_RV32IMACFDPV,
+	"vsr_v",
+	(uint32_t) 0x2800027,
+	(uint32_t) 0x1ff0707f,
+	[] (BitArray & ba,etiss::CodeSet & cs,InstructionContext & ic)
+	{
+
+// -----------------------------------------------------------------------------
+
+// -----------------------------------------------------------------------------
+
+// -----------------------------------------------------------------------------
+etiss_uint8 vs3 = 0;
+static BitArrayRange R_vs3_0(11, 7);
+vs3 += R_vs3_0.read(ba) << 0;
+etiss_uint8 rs1 = 0;
+static BitArrayRange R_rs1_0(19, 15);
+rs1 += R_rs1_0.read(ba) << 0;
+etiss_uint8 nf = 0;
+static BitArrayRange R_nf_0(31, 29);
+nf += R_nf_0.read(ba) << 0;
+
+// -----------------------------------------------------------------------------
+
+		CodePart & partInit = cs.append(CodePart::INITIALREQUIRED);
+
+		partInit.code() = std::string("//VSR_V\n");
+
+// -----------------------------------------------------------------------------
+partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
+partInit.code() += "etiss_uint32 _vstart = *((RV32IMACFDPV*)cpu)->CSR[8U];\n";
+// -----------------------------------------------------------------------------
+
+		partInit.getAffectedRegisters().add("instructionPointer", 32);
+
+		return true;
+	},
+	0,
+	[] (BitArray & ba, Instruction & instr)
+	{
+// -----------------------------------------------------------------------------
+etiss_uint8 vs3 = 0;
+static BitArrayRange R_vs3_0(11, 7);
+vs3 += R_vs3_0.read(ba) << 0;
+etiss_uint8 rs1 = 0;
+static BitArrayRange R_rs1_0(19, 15);
+rs1 += R_rs1_0.read(ba) << 0;
+etiss_uint8 nf = 0;
+static BitArrayRange R_nf_0(31, 29);
+nf += R_nf_0.read(ba) << 0;
+
+// -----------------------------------------------------------------------------
+
+		std::stringstream ss;
+// -----------------------------------------------------------------------------
+ss << "vsr_v" << " # " << ba << (" [vs3=" + std::to_string(vs3) + " | rs1=" + std::to_string(rs1) + " | nf=" + std::to_string(nf) + "]");
+// -----------------------------------------------------------------------------
+		return ss.str();
+	}
+);
+
 // VADD_VV ---------------------------------------------------------------------
 static InstructionDefinition vadd_vv_vd_vs1_vs2_vm (
 	ISA32_RV32IMACFDPV,
