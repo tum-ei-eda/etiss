@@ -6545,10 +6545,10 @@ ss << "vzext" << " # " << ba << (" [rd=" + std::to_string(rd) + " | vs1=" + std:
 	}
 );
 
-// VID -------------------------------------------------------------------------
-static InstructionDefinition vid_rd_vs1_vs2 (
+// VID_V -----------------------------------------------------------------------
+static InstructionDefinition vid_v_rd_vs1_vs2 (
 	ISA32_RV32IMACFDPV,
-	"vid",
+	"vid_v",
 	(uint32_t) 0x52002057,
 	(uint32_t) 0xfe00707f,
 	[] (BitArray & ba,etiss::CodeSet & cs,InstructionContext & ic)
@@ -6573,7 +6573,7 @@ vs2 += R_vs2_0.read(ba) << 0;
 
 		CodePart & partInit = cs.append(CodePart::INITIALREQUIRED);
 
-		partInit.code() = std::string("//VID\n");
+		partInit.code() = std::string("//VID_V\n");
 
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
@@ -6602,7 +6602,7 @@ vs2 += R_vs2_0.read(ba) << 0;
 
 		std::stringstream ss;
 // -----------------------------------------------------------------------------
-ss << "vid" << " # " << ba << (" [rd=" + std::to_string(rd) + " | vs1=" + std::to_string(vs1) + " | vs2=" + std::to_string(vs2) + "]");
+ss << "vid_v" << " # " << ba << (" [rd=" + std::to_string(rd) + " | vs1=" + std::to_string(vs1) + " | vs2=" + std::to_string(vs2) + "]");
 // -----------------------------------------------------------------------------
 		return ss.str();
 	}
