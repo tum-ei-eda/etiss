@@ -572,6 +572,75 @@ ss << "vle64_u" << " # " << ba << (" [vd=" + std::to_string(vd) + " | rs1=" + st
 	}
 );
 
+// VLSEGE16 --------------------------------------------------------------------
+static InstructionDefinition vlsege16_vd_rs1_vm_nf (
+	ISA32_RV32IMACFDPV,
+	"vlsege16",
+	(uint32_t) 0x005007,
+	(uint32_t) 0x1df0707f,
+	[] (BitArray & ba,etiss::CodeSet & cs,InstructionContext & ic)
+	{
+
+// -----------------------------------------------------------------------------
+
+// -----------------------------------------------------------------------------
+
+// -----------------------------------------------------------------------------
+etiss_uint8 vd = 0;
+static BitArrayRange R_vd_0(11, 7);
+vd += R_vd_0.read(ba) << 0;
+etiss_uint8 rs1 = 0;
+static BitArrayRange R_rs1_0(19, 15);
+rs1 += R_rs1_0.read(ba) << 0;
+etiss_uint8 vm = 0;
+static BitArrayRange R_vm_0(25, 25);
+vm += R_vm_0.read(ba) << 0;
+etiss_uint8 nf = 0;
+static BitArrayRange R_nf_0(31, 29);
+nf += R_nf_0.read(ba) << 0;
+
+// -----------------------------------------------------------------------------
+
+		CodePart & partInit = cs.append(CodePart::INITIALREQUIRED);
+
+		partInit.code() = std::string("//VLSEGE16\n");
+
+// -----------------------------------------------------------------------------
+partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
+partInit.code() += "etiss_uint32 _vstart = *((RV32IMACFDPV*)cpu)->CSR[8U];\n";
+// -----------------------------------------------------------------------------
+
+		partInit.getAffectedRegisters().add("instructionPointer", 32);
+
+		return true;
+	},
+	0,
+	[] (BitArray & ba, Instruction & instr)
+	{
+// -----------------------------------------------------------------------------
+etiss_uint8 vd = 0;
+static BitArrayRange R_vd_0(11, 7);
+vd += R_vd_0.read(ba) << 0;
+etiss_uint8 rs1 = 0;
+static BitArrayRange R_rs1_0(19, 15);
+rs1 += R_rs1_0.read(ba) << 0;
+etiss_uint8 vm = 0;
+static BitArrayRange R_vm_0(25, 25);
+vm += R_vm_0.read(ba) << 0;
+etiss_uint8 nf = 0;
+static BitArrayRange R_nf_0(31, 29);
+nf += R_nf_0.read(ba) << 0;
+
+// -----------------------------------------------------------------------------
+
+		std::stringstream ss;
+// -----------------------------------------------------------------------------
+ss << "vlsege16" << " # " << ba << (" [vd=" + std::to_string(vd) + " | rs1=" + std::to_string(rs1) + " | vm=" + std::to_string(vm) + " | nf=" + std::to_string(nf) + "]");
+// -----------------------------------------------------------------------------
+		return ss.str();
+	}
+);
+
 // VSE8_U ----------------------------------------------------------------------
 static InstructionDefinition vse8_u_vs3_rs1_vm (
 	ISA32_RV32IMACFDPV,
