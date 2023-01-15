@@ -28,13 +28,13 @@ static InstructionDefinition vsetvli_rd_rs1_zimm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 rd = 0;
+etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 zimm = 0;
+etiss_uint16 zimm = 0;
 static BitArrayRange R_zimm_0(30, 20);
 zimm += R_zimm_0.read(ba) << 0;
 
@@ -120,13 +120,13 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 rd = 0;
+etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 zimm = 0;
+etiss_uint16 zimm = 0;
 static BitArrayRange R_zimm_0(30, 20);
 zimm += R_zimm_0.read(ba) << 0;
 
@@ -154,13 +154,13 @@ static InstructionDefinition vsetvl_rd_rs1_rs2 (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 rd = 0;
+etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 rs2 = 0;
+etiss_uint8 rs2 = 0;
 static BitArrayRange R_rs2_0(24, 20);
 rs2 += R_rs2_0.read(ba) << 0;
 
@@ -244,13 +244,13 @@ partInit.code() += "*((RV32IMACFDPV*)cpu)->CSR[" + std::to_string(8) + "] = 0U;\
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 rd = 0;
+etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 rs2 = 0;
+etiss_uint8 rs2 = 0;
 static BitArrayRange R_rs2_0(24, 20);
 rs2 += R_rs2_0.read(ba) << 0;
 
@@ -278,13 +278,13 @@ static InstructionDefinition vle8_u_vd_rs1_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -321,13 +321,13 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -355,13 +355,13 @@ static InstructionDefinition vle16_u_vd_rs1_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -398,13 +398,13 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -432,13 +432,13 @@ static InstructionDefinition vle32_u_vd_rs1_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -475,13 +475,13 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -509,13 +509,13 @@ static InstructionDefinition vle64_u_vd_rs1_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -552,13 +552,13 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -586,13 +586,13 @@ static InstructionDefinition vse8_u_vs3_rs1_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vs3 = 0;
+etiss_uint8 vs3 = 0;
 static BitArrayRange R_vs3_0(11, 7);
 vs3 += R_vs3_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -629,13 +629,13 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vs3 = 0;
+etiss_uint8 vs3 = 0;
 static BitArrayRange R_vs3_0(11, 7);
 vs3 += R_vs3_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -663,13 +663,13 @@ static InstructionDefinition vse16_u_vs3_rs1_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vs3 = 0;
+etiss_uint8 vs3 = 0;
 static BitArrayRange R_vs3_0(11, 7);
 vs3 += R_vs3_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -706,13 +706,13 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vs3 = 0;
+etiss_uint8 vs3 = 0;
 static BitArrayRange R_vs3_0(11, 7);
 vs3 += R_vs3_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -740,13 +740,13 @@ static InstructionDefinition vse32_u_vs3_rs1_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vs3 = 0;
+etiss_uint8 vs3 = 0;
 static BitArrayRange R_vs3_0(11, 7);
 vs3 += R_vs3_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -783,13 +783,13 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vs3 = 0;
+etiss_uint8 vs3 = 0;
 static BitArrayRange R_vs3_0(11, 7);
 vs3 += R_vs3_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -817,13 +817,13 @@ static InstructionDefinition vse64_u_vs3_rs1_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vs3 = 0;
+etiss_uint8 vs3 = 0;
 static BitArrayRange R_vs3_0(11, 7);
 vs3 += R_vs3_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -860,13 +860,13 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vs3 = 0;
+etiss_uint8 vs3 = 0;
 static BitArrayRange R_vs3_0(11, 7);
 vs3 += R_vs3_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -894,16 +894,16 @@ static InstructionDefinition vadd_vv_vd_vs1_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 vs1 = 0;
+etiss_uint8 vs1 = 0;
 static BitArrayRange R_vs1_0(19, 15);
 vs1 += R_vs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -938,16 +938,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 vs1 = 0;
+etiss_uint8 vs1 = 0;
 static BitArrayRange R_vs1_0(19, 15);
 vs1 += R_vs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -975,16 +975,16 @@ static InstructionDefinition vadd_vi_vd_simm5_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 simm5 = 0;
+etiss_uint8 simm5 = 0;
 static BitArrayRange R_simm5_0(19, 15);
 simm5 += R_simm5_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -1019,16 +1019,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 simm5 = 0;
+etiss_uint8 simm5 = 0;
 static BitArrayRange R_simm5_0(19, 15);
 simm5 += R_simm5_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -1056,16 +1056,16 @@ static InstructionDefinition vadd_vx_vd_rs1_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -1100,16 +1100,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -1137,16 +1137,16 @@ static InstructionDefinition vsub_vv_vd_vs1_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 vs1 = 0;
+etiss_uint8 vs1 = 0;
 static BitArrayRange R_vs1_0(19, 15);
 vs1 += R_vs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -1181,16 +1181,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 vs1 = 0;
+etiss_uint8 vs1 = 0;
 static BitArrayRange R_vs1_0(19, 15);
 vs1 += R_vs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -1218,16 +1218,16 @@ static InstructionDefinition vsub_vx_vd_rs1_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -1262,16 +1262,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -1299,16 +1299,16 @@ static InstructionDefinition vwaddu_vv_vd_vs1_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 vs1 = 0;
+etiss_uint8 vs1 = 0;
 static BitArrayRange R_vs1_0(19, 15);
 vs1 += R_vs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -1343,16 +1343,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 vs1 = 0;
+etiss_uint8 vs1 = 0;
 static BitArrayRange R_vs1_0(19, 15);
 vs1 += R_vs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -1380,16 +1380,16 @@ static InstructionDefinition vwaddu_vx_vd_rs1_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -1424,16 +1424,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -1461,16 +1461,16 @@ static InstructionDefinition vwadd_vv_vd_vs1_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 vs1 = 0;
+etiss_uint8 vs1 = 0;
 static BitArrayRange R_vs1_0(19, 15);
 vs1 += R_vs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -1505,16 +1505,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 vs1 = 0;
+etiss_uint8 vs1 = 0;
 static BitArrayRange R_vs1_0(19, 15);
 vs1 += R_vs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -1542,16 +1542,16 @@ static InstructionDefinition vwadd_vx_vd_rs1_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -1586,16 +1586,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -1623,16 +1623,16 @@ static InstructionDefinition vwsubu_vv_vd_vs1_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 vs1 = 0;
+etiss_uint8 vs1 = 0;
 static BitArrayRange R_vs1_0(19, 15);
 vs1 += R_vs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -1667,16 +1667,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 vs1 = 0;
+etiss_uint8 vs1 = 0;
 static BitArrayRange R_vs1_0(19, 15);
 vs1 += R_vs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -1704,16 +1704,16 @@ static InstructionDefinition vwsubu_vx_vd_rs1_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -1748,16 +1748,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -1785,16 +1785,16 @@ static InstructionDefinition vwsub_vv_vd_vs1_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 vs1 = 0;
+etiss_uint8 vs1 = 0;
 static BitArrayRange R_vs1_0(19, 15);
 vs1 += R_vs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -1829,16 +1829,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 vs1 = 0;
+etiss_uint8 vs1 = 0;
 static BitArrayRange R_vs1_0(19, 15);
 vs1 += R_vs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -1866,16 +1866,16 @@ static InstructionDefinition vwsub_vx_vd_rs1_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -1910,16 +1910,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -1947,16 +1947,16 @@ static InstructionDefinition vwaddu_w_vv_vd_vs1_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 vs1 = 0;
+etiss_uint8 vs1 = 0;
 static BitArrayRange R_vs1_0(19, 15);
 vs1 += R_vs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -1991,16 +1991,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 vs1 = 0;
+etiss_uint8 vs1 = 0;
 static BitArrayRange R_vs1_0(19, 15);
 vs1 += R_vs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -2028,16 +2028,16 @@ static InstructionDefinition vwaddu_w_vx_vd_rs1_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -2072,16 +2072,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -2109,16 +2109,16 @@ static InstructionDefinition vwadd_w_vv_vd_vs1_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 vs1 = 0;
+etiss_uint8 vs1 = 0;
 static BitArrayRange R_vs1_0(19, 15);
 vs1 += R_vs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -2153,16 +2153,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 vs1 = 0;
+etiss_uint8 vs1 = 0;
 static BitArrayRange R_vs1_0(19, 15);
 vs1 += R_vs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -2190,16 +2190,16 @@ static InstructionDefinition vwadd_w_vx_vd_rs1_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -2234,16 +2234,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -2271,16 +2271,16 @@ static InstructionDefinition vwsubu_w_vv_vd_vs1_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 vs1 = 0;
+etiss_uint8 vs1 = 0;
 static BitArrayRange R_vs1_0(19, 15);
 vs1 += R_vs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -2315,16 +2315,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 vs1 = 0;
+etiss_uint8 vs1 = 0;
 static BitArrayRange R_vs1_0(19, 15);
 vs1 += R_vs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -2352,16 +2352,16 @@ static InstructionDefinition vwsubu_w_vx_vd_rs1_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -2396,16 +2396,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -2433,16 +2433,16 @@ static InstructionDefinition vwsub_w_vv_vd_vs1_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 vs1 = 0;
+etiss_uint8 vs1 = 0;
 static BitArrayRange R_vs1_0(19, 15);
 vs1 += R_vs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -2477,16 +2477,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 vs1 = 0;
+etiss_uint8 vs1 = 0;
 static BitArrayRange R_vs1_0(19, 15);
 vs1 += R_vs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -2514,16 +2514,16 @@ static InstructionDefinition vwsub_w_vx_vd_rs1_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -2558,16 +2558,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -2595,16 +2595,16 @@ static InstructionDefinition vand_vv_vd_vs1_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 vs1 = 0;
+etiss_uint8 vs1 = 0;
 static BitArrayRange R_vs1_0(19, 15);
 vs1 += R_vs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -2639,16 +2639,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 vs1 = 0;
+etiss_uint8 vs1 = 0;
 static BitArrayRange R_vs1_0(19, 15);
 vs1 += R_vs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -2676,16 +2676,16 @@ static InstructionDefinition vand_vi_vd_simm5_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 simm5 = 0;
+etiss_uint8 simm5 = 0;
 static BitArrayRange R_simm5_0(19, 15);
 simm5 += R_simm5_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -2720,16 +2720,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 simm5 = 0;
+etiss_uint8 simm5 = 0;
 static BitArrayRange R_simm5_0(19, 15);
 simm5 += R_simm5_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -2757,16 +2757,16 @@ static InstructionDefinition vand_vx_vd_rs1_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -2801,16 +2801,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -2838,16 +2838,16 @@ static InstructionDefinition vor_vv_vd_vs1_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 vs1 = 0;
+etiss_uint8 vs1 = 0;
 static BitArrayRange R_vs1_0(19, 15);
 vs1 += R_vs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -2882,16 +2882,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 vs1 = 0;
+etiss_uint8 vs1 = 0;
 static BitArrayRange R_vs1_0(19, 15);
 vs1 += R_vs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -2919,16 +2919,16 @@ static InstructionDefinition vor_vi_vd_simm5_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 simm5 = 0;
+etiss_uint8 simm5 = 0;
 static BitArrayRange R_simm5_0(19, 15);
 simm5 += R_simm5_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -2963,16 +2963,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 simm5 = 0;
+etiss_uint8 simm5 = 0;
 static BitArrayRange R_simm5_0(19, 15);
 simm5 += R_simm5_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -3000,16 +3000,16 @@ static InstructionDefinition vor_vx_vd_rs1_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -3044,16 +3044,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -3081,16 +3081,16 @@ static InstructionDefinition vxor_vv_vd_vs1_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 vs1 = 0;
+etiss_uint8 vs1 = 0;
 static BitArrayRange R_vs1_0(19, 15);
 vs1 += R_vs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -3125,16 +3125,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 vs1 = 0;
+etiss_uint8 vs1 = 0;
 static BitArrayRange R_vs1_0(19, 15);
 vs1 += R_vs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -3162,16 +3162,16 @@ static InstructionDefinition vxor_vi_vd_simm5_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 simm5 = 0;
+etiss_uint8 simm5 = 0;
 static BitArrayRange R_simm5_0(19, 15);
 simm5 += R_simm5_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -3206,16 +3206,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 simm5 = 0;
+etiss_uint8 simm5 = 0;
 static BitArrayRange R_simm5_0(19, 15);
 simm5 += R_simm5_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -3243,16 +3243,16 @@ static InstructionDefinition vxor_vx_vd_rs1_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -3287,16 +3287,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -3324,16 +3324,16 @@ static InstructionDefinition vsll_vv_vd_vs1_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 vs1 = 0;
+etiss_uint8 vs1 = 0;
 static BitArrayRange R_vs1_0(19, 15);
 vs1 += R_vs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -3368,16 +3368,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 vs1 = 0;
+etiss_uint8 vs1 = 0;
 static BitArrayRange R_vs1_0(19, 15);
 vs1 += R_vs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -3405,16 +3405,16 @@ static InstructionDefinition vsll_vi_vd_uimm5_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 uimm5 = 0;
+etiss_uint8 uimm5 = 0;
 static BitArrayRange R_uimm5_0(19, 15);
 uimm5 += R_uimm5_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -3449,16 +3449,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 uimm5 = 0;
+etiss_uint8 uimm5 = 0;
 static BitArrayRange R_uimm5_0(19, 15);
 uimm5 += R_uimm5_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -3486,16 +3486,16 @@ static InstructionDefinition vsll_vx_vd_rs1_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -3530,16 +3530,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -3567,16 +3567,16 @@ static InstructionDefinition vsrl_vv_vd_vs1_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 vs1 = 0;
+etiss_uint8 vs1 = 0;
 static BitArrayRange R_vs1_0(19, 15);
 vs1 += R_vs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -3611,16 +3611,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 vs1 = 0;
+etiss_uint8 vs1 = 0;
 static BitArrayRange R_vs1_0(19, 15);
 vs1 += R_vs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -3648,16 +3648,16 @@ static InstructionDefinition vsrl_vi_vd_uimm5_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 uimm5 = 0;
+etiss_uint8 uimm5 = 0;
 static BitArrayRange R_uimm5_0(19, 15);
 uimm5 += R_uimm5_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -3692,16 +3692,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 uimm5 = 0;
+etiss_uint8 uimm5 = 0;
 static BitArrayRange R_uimm5_0(19, 15);
 uimm5 += R_uimm5_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -3729,16 +3729,16 @@ static InstructionDefinition vsrl_vx_vd_rs1_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -3773,16 +3773,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -3810,16 +3810,16 @@ static InstructionDefinition vsra_vv_vd_vs1_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 vs1 = 0;
+etiss_uint8 vs1 = 0;
 static BitArrayRange R_vs1_0(19, 15);
 vs1 += R_vs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -3854,16 +3854,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 vs1 = 0;
+etiss_uint8 vs1 = 0;
 static BitArrayRange R_vs1_0(19, 15);
 vs1 += R_vs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -3891,16 +3891,16 @@ static InstructionDefinition vsra_vi_vd_uimm5_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 uimm5 = 0;
+etiss_uint8 uimm5 = 0;
 static BitArrayRange R_uimm5_0(19, 15);
 uimm5 += R_uimm5_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -3935,16 +3935,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 uimm5 = 0;
+etiss_uint8 uimm5 = 0;
 static BitArrayRange R_uimm5_0(19, 15);
 uimm5 += R_uimm5_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -3972,16 +3972,16 @@ static InstructionDefinition vsra_vx_vd_rs1_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -4016,16 +4016,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -4053,16 +4053,16 @@ static InstructionDefinition vmseq_vv_vd_vs1_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 vs1 = 0;
+etiss_uint8 vs1 = 0;
 static BitArrayRange R_vs1_0(19, 15);
 vs1 += R_vs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -4097,16 +4097,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 vs1 = 0;
+etiss_uint8 vs1 = 0;
 static BitArrayRange R_vs1_0(19, 15);
 vs1 += R_vs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -4134,16 +4134,16 @@ static InstructionDefinition vmsseq_vi_vd_simm5_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 simm5 = 0;
+etiss_uint8 simm5 = 0;
 static BitArrayRange R_simm5_0(19, 15);
 simm5 += R_simm5_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -4178,16 +4178,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 simm5 = 0;
+etiss_uint8 simm5 = 0;
 static BitArrayRange R_simm5_0(19, 15);
 simm5 += R_simm5_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -4215,16 +4215,16 @@ static InstructionDefinition vmseq_vx_vd_rs1_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -4259,16 +4259,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -4296,16 +4296,16 @@ static InstructionDefinition vmsne_vv_vd_vs1_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 vs1 = 0;
+etiss_uint8 vs1 = 0;
 static BitArrayRange R_vs1_0(19, 15);
 vs1 += R_vs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -4340,16 +4340,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 vs1 = 0;
+etiss_uint8 vs1 = 0;
 static BitArrayRange R_vs1_0(19, 15);
 vs1 += R_vs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -4377,16 +4377,16 @@ static InstructionDefinition vmsne_vi_vd_simm5_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 simm5 = 0;
+etiss_uint8 simm5 = 0;
 static BitArrayRange R_simm5_0(19, 15);
 simm5 += R_simm5_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -4421,16 +4421,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 simm5 = 0;
+etiss_uint8 simm5 = 0;
 static BitArrayRange R_simm5_0(19, 15);
 simm5 += R_simm5_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -4458,16 +4458,16 @@ static InstructionDefinition vmsne_vx_vd_rs1_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -4502,16 +4502,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -4539,16 +4539,16 @@ static InstructionDefinition vmsltu_vv_vd_vs1_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 vs1 = 0;
+etiss_uint8 vs1 = 0;
 static BitArrayRange R_vs1_0(19, 15);
 vs1 += R_vs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -4583,16 +4583,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 vs1 = 0;
+etiss_uint8 vs1 = 0;
 static BitArrayRange R_vs1_0(19, 15);
 vs1 += R_vs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -4620,16 +4620,16 @@ static InstructionDefinition vmsltu_vx_vd_rs1_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -4664,16 +4664,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -4701,16 +4701,16 @@ static InstructionDefinition vmslt_vv_vd_vs1_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 vs1 = 0;
+etiss_uint8 vs1 = 0;
 static BitArrayRange R_vs1_0(19, 15);
 vs1 += R_vs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -4745,16 +4745,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 vs1 = 0;
+etiss_uint8 vs1 = 0;
 static BitArrayRange R_vs1_0(19, 15);
 vs1 += R_vs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -4782,16 +4782,16 @@ static InstructionDefinition vmslt_vx_vd_rs1_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -4826,16 +4826,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -4863,16 +4863,16 @@ static InstructionDefinition vmsleu_vv_vd_vs1_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 vs1 = 0;
+etiss_uint8 vs1 = 0;
 static BitArrayRange R_vs1_0(19, 15);
 vs1 += R_vs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -4907,16 +4907,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 vs1 = 0;
+etiss_uint8 vs1 = 0;
 static BitArrayRange R_vs1_0(19, 15);
 vs1 += R_vs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -4944,16 +4944,16 @@ static InstructionDefinition vmsleu_vi_vd_uimm5_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 uimm5 = 0;
+etiss_uint8 uimm5 = 0;
 static BitArrayRange R_uimm5_0(19, 15);
 uimm5 += R_uimm5_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -4988,16 +4988,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 uimm5 = 0;
+etiss_uint8 uimm5 = 0;
 static BitArrayRange R_uimm5_0(19, 15);
 uimm5 += R_uimm5_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -5025,16 +5025,16 @@ static InstructionDefinition vmsleu_vx_vd_rs1_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -5069,16 +5069,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -5106,16 +5106,16 @@ static InstructionDefinition vmsle_vv_vd_vs1_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 vs1 = 0;
+etiss_uint8 vs1 = 0;
 static BitArrayRange R_vs1_0(19, 15);
 vs1 += R_vs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -5150,16 +5150,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 vs1 = 0;
+etiss_uint8 vs1 = 0;
 static BitArrayRange R_vs1_0(19, 15);
 vs1 += R_vs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -5187,16 +5187,16 @@ static InstructionDefinition vmsle_vi_vd_simm5_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 simm5 = 0;
+etiss_uint8 simm5 = 0;
 static BitArrayRange R_simm5_0(19, 15);
 simm5 += R_simm5_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -5231,16 +5231,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 simm5 = 0;
+etiss_uint8 simm5 = 0;
 static BitArrayRange R_simm5_0(19, 15);
 simm5 += R_simm5_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -5268,16 +5268,16 @@ static InstructionDefinition vmsle_vx_vd_rs1_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -5312,16 +5312,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -5349,16 +5349,16 @@ static InstructionDefinition vmsgtu_vx_vd_rs1_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -5393,16 +5393,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -5430,16 +5430,16 @@ static InstructionDefinition vmsgt_vx_vd_rs1_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -5474,16 +5474,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -5511,10 +5511,10 @@ static InstructionDefinition vmv_v_v_vd_vs1 (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 vs1 = 0;
+etiss_uint8 vs1 = 0;
 static BitArrayRange R_vs1_0(19, 15);
 vs1 += R_vs1_0.read(ba) << 0;
 
@@ -5549,10 +5549,10 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 vs1 = 0;
+etiss_uint8 vs1 = 0;
 static BitArrayRange R_vs1_0(19, 15);
 vs1 += R_vs1_0.read(ba) << 0;
 
@@ -5580,10 +5580,10 @@ static InstructionDefinition vmv_v_i_vd_simm5 (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 simm5 = 0;
+etiss_uint8 simm5 = 0;
 static BitArrayRange R_simm5_0(19, 15);
 simm5 += R_simm5_0.read(ba) << 0;
 
@@ -5618,10 +5618,10 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 simm5 = 0;
+etiss_uint8 simm5 = 0;
 static BitArrayRange R_simm5_0(19, 15);
 simm5 += R_simm5_0.read(ba) << 0;
 
@@ -5649,10 +5649,10 @@ static InstructionDefinition vmv_v_x_vd_rs1 (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
 
@@ -5687,10 +5687,10 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
 
@@ -5718,10 +5718,10 @@ static InstructionDefinition vmv_x_s_rd_vs2 (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 rd = 0;
+etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
 
@@ -5757,10 +5757,10 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 rd = 0;
+etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
 
@@ -5788,10 +5788,10 @@ static InstructionDefinition vmv_s_x_vd_rs1 (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
 
@@ -5826,10 +5826,10 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
 
@@ -5857,16 +5857,16 @@ static InstructionDefinition vslideup_vi_vd_simm5_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 simm5 = 0;
+etiss_uint8 simm5 = 0;
 static BitArrayRange R_simm5_0(19, 15);
 simm5 += R_simm5_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -5901,16 +5901,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 simm5 = 0;
+etiss_uint8 simm5 = 0;
 static BitArrayRange R_simm5_0(19, 15);
 simm5 += R_simm5_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -5938,16 +5938,16 @@ static InstructionDefinition vslideup_vx_vd_rs1_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -5982,16 +5982,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -6019,16 +6019,16 @@ static InstructionDefinition vslidedown_vi_vd_simm5_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 simm5 = 0;
+etiss_uint8 simm5 = 0;
 static BitArrayRange R_simm5_0(19, 15);
 simm5 += R_simm5_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -6063,16 +6063,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 simm5 = 0;
+etiss_uint8 simm5 = 0;
 static BitArrayRange R_simm5_0(19, 15);
 simm5 += R_simm5_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -6100,16 +6100,16 @@ static InstructionDefinition vslidedown_vx_vd_rs1_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -6144,16 +6144,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -6181,16 +6181,16 @@ static InstructionDefinition vslide1up_vx_vd_rs1_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -6225,16 +6225,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -6262,16 +6262,16 @@ static InstructionDefinition vslide1down_vx_vd_rs1_vs2_vm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
@@ -6306,16 +6306,16 @@ partInit.code() += "if (((RV32IMACFDPV*)cpu)->exception) return ((RV32IMACFDPV*)
 	[] (BitArray & ba, Instruction & instr)
 	{
 // -----------------------------------------------------------------------------
-etiss_uint32 vd = 0;
+etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint32 rs1 = 0;
+etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
-etiss_uint32 vs2 = 0;
+etiss_uint8 vs2 = 0;
 static BitArrayRange R_vs2_0(24, 20);
 vs2 += R_vs2_0.read(ba) << 0;
-etiss_uint32 vm = 0;
+etiss_uint8 vm = 0;
 static BitArrayRange R_vm_0(25, 25);
 vm += R_vm_0.read(ba) << 0;
 
