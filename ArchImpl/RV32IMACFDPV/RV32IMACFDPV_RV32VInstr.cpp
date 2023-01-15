@@ -6275,6 +6275,69 @@ ss << "vmv_s_x" << " # " << ba << (" [vd=" + std::to_string(vd) + " | rs1=" + st
 	}
 );
 
+// VZEXT -----------------------------------------------------------------------
+static InstructionDefinition vzext_rd_vs1_vs2 (
+	ISA32_RV32IMACFDPV,
+	"vzext",
+	(uint32_t) 0x4a002057,
+	(uint32_t) 0xfe00707f,
+	[] (BitArray & ba,etiss::CodeSet & cs,InstructionContext & ic)
+	{
+
+// -----------------------------------------------------------------------------
+
+// -----------------------------------------------------------------------------
+
+// -----------------------------------------------------------------------------
+etiss_uint8 rd = 0;
+static BitArrayRange R_rd_0(11, 7);
+rd += R_rd_0.read(ba) << 0;
+etiss_uint8 vs1 = 0;
+static BitArrayRange R_vs1_0(19, 15);
+vs1 += R_vs1_0.read(ba) << 0;
+etiss_uint8 vs2 = 0;
+static BitArrayRange R_vs2_0(24, 20);
+vs2 += R_vs2_0.read(ba) << 0;
+
+// -----------------------------------------------------------------------------
+
+		CodePart & partInit = cs.append(CodePart::INITIALREQUIRED);
+
+		partInit.code() = std::string("//VZEXT\n");
+
+// -----------------------------------------------------------------------------
+partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
+partInit.code() += "etiss_uint32 _vstart = *((RV32IMACFDPV*)cpu)->CSR[8U];\n";
+// -----------------------------------------------------------------------------
+
+		partInit.getAffectedRegisters().add("instructionPointer", 32);
+
+		return true;
+	},
+	0,
+	[] (BitArray & ba, Instruction & instr)
+	{
+// -----------------------------------------------------------------------------
+etiss_uint8 rd = 0;
+static BitArrayRange R_rd_0(11, 7);
+rd += R_rd_0.read(ba) << 0;
+etiss_uint8 vs1 = 0;
+static BitArrayRange R_vs1_0(19, 15);
+vs1 += R_vs1_0.read(ba) << 0;
+etiss_uint8 vs2 = 0;
+static BitArrayRange R_vs2_0(24, 20);
+vs2 += R_vs2_0.read(ba) << 0;
+
+// -----------------------------------------------------------------------------
+
+		std::stringstream ss;
+// -----------------------------------------------------------------------------
+ss << "vzext" << " # " << ba << (" [rd=" + std::to_string(rd) + " | vs1=" + std::to_string(vs1) + " | vs2=" + std::to_string(vs2) + "]");
+// -----------------------------------------------------------------------------
+		return ss.str();
+	}
+);
+
 // VSLIDEUP_VI -----------------------------------------------------------------
 static InstructionDefinition vslideup_vi_vd_simm5_vs2_vm (
 	ISA32_RV32IMACFDPV,
