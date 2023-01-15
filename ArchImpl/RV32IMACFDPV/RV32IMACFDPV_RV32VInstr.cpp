@@ -1532,7 +1532,7 @@ ss << "vwadd_vv" << " # " << ba << (" [vd=" + std::to_string(vd) + " | vs1=" + s
 static InstructionDefinition vwadd_vx_vd_rs1_vs2_vm (
 	ISA32_RV32IMACFDPV,
 	"vwadd_vx",
-	(uint32_t) 0xc4004057,
+	(uint32_t) 0xc4006057,
 	(uint32_t) 0xfc00707f,
 	[] (BitArray & ba,etiss::CodeSet & cs,InstructionContext & ic)
 	{
