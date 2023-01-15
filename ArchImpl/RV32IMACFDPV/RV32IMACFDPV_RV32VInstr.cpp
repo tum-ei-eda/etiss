@@ -1486,6 +1486,75 @@ ss << "vsub_vx" << " # " << ba << (" [vd=" + std::to_string(vd) + " | rs1=" + st
 	}
 );
 
+// VREDSUM ---------------------------------------------------------------------
+static InstructionDefinition vredsum_vd_vs1_vs2_vm (
+	ISA32_RV32IMACFDPV,
+	"vredsum",
+	(uint32_t) 0x002057,
+	(uint32_t) 0xfc00707f,
+	[] (BitArray & ba,etiss::CodeSet & cs,InstructionContext & ic)
+	{
+
+// -----------------------------------------------------------------------------
+
+// -----------------------------------------------------------------------------
+
+// -----------------------------------------------------------------------------
+etiss_uint8 vd = 0;
+static BitArrayRange R_vd_0(11, 7);
+vd += R_vd_0.read(ba) << 0;
+etiss_uint8 vs1 = 0;
+static BitArrayRange R_vs1_0(19, 15);
+vs1 += R_vs1_0.read(ba) << 0;
+etiss_uint8 vs2 = 0;
+static BitArrayRange R_vs2_0(24, 20);
+vs2 += R_vs2_0.read(ba) << 0;
+etiss_uint8 vm = 0;
+static BitArrayRange R_vm_0(25, 25);
+vm += R_vm_0.read(ba) << 0;
+
+// -----------------------------------------------------------------------------
+
+		CodePart & partInit = cs.append(CodePart::INITIALREQUIRED);
+
+		partInit.code() = std::string("//VREDSUM\n");
+
+// -----------------------------------------------------------------------------
+partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
+partInit.code() += "etiss_uint32 _vstart = *((RV32IMACFDPV*)cpu)->CSR[8U];\n";
+// -----------------------------------------------------------------------------
+
+		partInit.getAffectedRegisters().add("instructionPointer", 32);
+
+		return true;
+	},
+	0,
+	[] (BitArray & ba, Instruction & instr)
+	{
+// -----------------------------------------------------------------------------
+etiss_uint8 vd = 0;
+static BitArrayRange R_vd_0(11, 7);
+vd += R_vd_0.read(ba) << 0;
+etiss_uint8 vs1 = 0;
+static BitArrayRange R_vs1_0(19, 15);
+vs1 += R_vs1_0.read(ba) << 0;
+etiss_uint8 vs2 = 0;
+static BitArrayRange R_vs2_0(24, 20);
+vs2 += R_vs2_0.read(ba) << 0;
+etiss_uint8 vm = 0;
+static BitArrayRange R_vm_0(25, 25);
+vm += R_vm_0.read(ba) << 0;
+
+// -----------------------------------------------------------------------------
+
+		std::stringstream ss;
+// -----------------------------------------------------------------------------
+ss << "vredsum" << " # " << ba << (" [vd=" + std::to_string(vd) + " | vs1=" + std::to_string(vs1) + " | vs2=" + std::to_string(vs2) + " | vm=" + std::to_string(vm) + "]");
+// -----------------------------------------------------------------------------
+		return ss.str();
+	}
+);
+
 // VWADDU_VV -------------------------------------------------------------------
 static InstructionDefinition vwaddu_vv_vd_vs1_vs2_vm (
 	ISA32_RV32IMACFDPV,
