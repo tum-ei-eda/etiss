@@ -572,6 +572,69 @@ ss << "vle64_u" << " # " << ba << (" [vd=" + std::to_string(vd) + " | rs1=" + st
 	}
 );
 
+// VLM_V -----------------------------------------------------------------------
+static InstructionDefinition vlm_v_vd_rs1_vm (
+	ISA32_RV32IMACFDPV,
+	"vlm_v",
+	(uint32_t) 0xb00007,
+	(uint32_t) 0xfdf0707f,
+	[] (BitArray & ba,etiss::CodeSet & cs,InstructionContext & ic)
+	{
+
+// -----------------------------------------------------------------------------
+
+// -----------------------------------------------------------------------------
+
+// -----------------------------------------------------------------------------
+etiss_uint8 vd = 0;
+static BitArrayRange R_vd_0(11, 7);
+vd += R_vd_0.read(ba) << 0;
+etiss_uint8 rs1 = 0;
+static BitArrayRange R_rs1_0(19, 15);
+rs1 += R_rs1_0.read(ba) << 0;
+etiss_uint8 vm = 0;
+static BitArrayRange R_vm_0(25, 25);
+vm += R_vm_0.read(ba) << 0;
+
+// -----------------------------------------------------------------------------
+
+		CodePart & partInit = cs.append(CodePart::INITIALREQUIRED);
+
+		partInit.code() = std::string("//VLM_V\n");
+
+// -----------------------------------------------------------------------------
+partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
+partInit.code() += "etiss_uint32 _vstart = *((RV32IMACFDPV*)cpu)->CSR[8U];\n";
+// -----------------------------------------------------------------------------
+
+		partInit.getAffectedRegisters().add("instructionPointer", 32);
+
+		return true;
+	},
+	0,
+	[] (BitArray & ba, Instruction & instr)
+	{
+// -----------------------------------------------------------------------------
+etiss_uint8 vd = 0;
+static BitArrayRange R_vd_0(11, 7);
+vd += R_vd_0.read(ba) << 0;
+etiss_uint8 rs1 = 0;
+static BitArrayRange R_rs1_0(19, 15);
+rs1 += R_rs1_0.read(ba) << 0;
+etiss_uint8 vm = 0;
+static BitArrayRange R_vm_0(25, 25);
+vm += R_vm_0.read(ba) << 0;
+
+// -----------------------------------------------------------------------------
+
+		std::stringstream ss;
+// -----------------------------------------------------------------------------
+ss << "vlm_v" << " # " << ba << (" [vd=" + std::to_string(vd) + " | rs1=" + std::to_string(rs1) + " | vm=" + std::to_string(vm) + "]");
+// -----------------------------------------------------------------------------
+		return ss.str();
+	}
+);
+
 // VLSEGE16 --------------------------------------------------------------------
 static InstructionDefinition vlsege16_vd_rs1_vm_nf (
 	ISA32_RV32IMACFDPV,
@@ -944,6 +1007,69 @@ vm += R_vm_0.read(ba) << 0;
 		std::stringstream ss;
 // -----------------------------------------------------------------------------
 ss << "vse64_u" << " # " << ba << (" [vs3=" + std::to_string(vs3) + " | rs1=" + std::to_string(rs1) + " | vm=" + std::to_string(vm) + "]");
+// -----------------------------------------------------------------------------
+		return ss.str();
+	}
+);
+
+// VSM_V -----------------------------------------------------------------------
+static InstructionDefinition vsm_v_vs3_rs1_vm (
+	ISA32_RV32IMACFDPV,
+	"vsm_v",
+	(uint32_t) 0xb00027,
+	(uint32_t) 0xfdf0707f,
+	[] (BitArray & ba,etiss::CodeSet & cs,InstructionContext & ic)
+	{
+
+// -----------------------------------------------------------------------------
+
+// -----------------------------------------------------------------------------
+
+// -----------------------------------------------------------------------------
+etiss_uint8 vs3 = 0;
+static BitArrayRange R_vs3_0(11, 7);
+vs3 += R_vs3_0.read(ba) << 0;
+etiss_uint8 rs1 = 0;
+static BitArrayRange R_rs1_0(19, 15);
+rs1 += R_rs1_0.read(ba) << 0;
+etiss_uint8 vm = 0;
+static BitArrayRange R_vm_0(25, 25);
+vm += R_vm_0.read(ba) << 0;
+
+// -----------------------------------------------------------------------------
+
+		CodePart & partInit = cs.append(CodePart::INITIALREQUIRED);
+
+		partInit.code() = std::string("//VSM_V\n");
+
+// -----------------------------------------------------------------------------
+partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
+partInit.code() += "etiss_uint32 _vstart = *((RV32IMACFDPV*)cpu)->CSR[8U];\n";
+// -----------------------------------------------------------------------------
+
+		partInit.getAffectedRegisters().add("instructionPointer", 32);
+
+		return true;
+	},
+	0,
+	[] (BitArray & ba, Instruction & instr)
+	{
+// -----------------------------------------------------------------------------
+etiss_uint8 vs3 = 0;
+static BitArrayRange R_vs3_0(11, 7);
+vs3 += R_vs3_0.read(ba) << 0;
+etiss_uint8 rs1 = 0;
+static BitArrayRange R_rs1_0(19, 15);
+rs1 += R_rs1_0.read(ba) << 0;
+etiss_uint8 vm = 0;
+static BitArrayRange R_vm_0(25, 25);
+vm += R_vm_0.read(ba) << 0;
+
+// -----------------------------------------------------------------------------
+
+		std::stringstream ss;
+// -----------------------------------------------------------------------------
+ss << "vsm_v" << " # " << ba << (" [vs3=" + std::to_string(vs3) + " | rs1=" + std::to_string(rs1) + " | vm=" + std::to_string(vm) + "]");
 // -----------------------------------------------------------------------------
 		return ss.str();
 	}
