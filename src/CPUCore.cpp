@@ -685,6 +685,7 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
 
     // start execution loop
 
+    bool exit_on_loop = etiss::cfg().get<bool>("etiss.exit_on_loop", false);
 
     float startTime = (float)clock() / CLOCKS_PER_SEC; // TESTING
 
@@ -792,7 +793,7 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
 
 
                     // exit simulator when a loop to self instruction is encountered
-                    if (!exception &&
+                    if (exit_on_loop && !exception &&
                             old_time + cpu_->cpuCycleTime_ps == cpu_->cpuTime_ps &&
                             old_pc == cpu_->instructionPointer)
                     {
