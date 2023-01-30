@@ -358,6 +358,32 @@ void OR1KArch::initInstrSet(etiss::instr::ModedInstructionSet &mis) const
     {
         etiss_log(ERROR, "Failed to add instructions of the OR1K instruction set");
     }
+
+    mis.foreach(
+        [](etiss::instr::VariableInstructionSet &vis) {
+            vis.foreach(
+                [](etiss::instr::InstructionSet &is) {
+                    is.getInvalid().addCallback(
+                        [](etiss::instr::BitArray &ba, CodeSet &cs, etiss::instr::InstructionContext &ic) {
+                            etiss_uint32 error_code = 0;
+                            static etiss::instr::BitArrayRange R_error_code_0(31, 0);
+                            error_code += R_error_code_0.read(ba) << 0;
+
+                            std::stringstream ss;
+                            ss << "\t\t//trap_entry 32\n";
+                            ss << "\t\treturn " << std::to_string(error_code) << "U;";
+                            //#if DEBUG
+                            ss << " // @0x" << std::hex << ic.current_address_ << std::dec << ": " << ba;
+                            //#endif
+                            ss << "\n";
+                            cs.append(CodePart::APPENDEDRETURNINGREQUIRED).code() = ss.str();
+                            return true;
+                        },
+                        0);
+                }
+            );
+        }
+    );
 }
 
 void OR1KArch::initCodeBlock(etiss::CodeBlock &cb) const

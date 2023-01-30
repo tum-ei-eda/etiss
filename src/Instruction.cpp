@@ -893,19 +893,8 @@ InstructionSet::InstructionSet(VariableInstructionSet &parent, unsigned width, c
     : parent_(parent), name_(name), width_(width), root_(nullptr), invalid(width, -1, -1, "INVALID")
 {
 
-    invalid.addCallback(
-        [](BitArray &ba, CodeSet &cs, InstructionContext &ic) {
-            std::stringstream ss;
-            ss << "\t\treturn ETISS_RETURNCODE_ILLEGALINSTRUCTION;";
-            //#if DEBUG
-            ss << " // @0x" << std::hex << ic.current_address_ << std::dec << ": " << ba;
-            //#endif
-            ss << "\n";
-            cs.append(CodePart::APPENDEDRETURNINGREQUIRED).code() = ss.str();
-            return true;
-        },
-        0);
 }
+
 InstructionSet::~InstructionSet()
 {
     delete root_;
