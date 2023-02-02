@@ -28,24 +28,51 @@
 #	POSSIBILITY OF SUCH DAMAGE.
 #
 #
-#	Author: Marc Greim <marc.greim@mytum.de>, Chair of Electronic Design Automation, TUM
+#	Author: Chair of Electronic Design Automation, TUM
 #
 #	Version 0.1
 #
 
-### recurse into sub directories
-unset(LOCAL_SUBDIRS)
-FILE(GLOB LOCAL_SUBDIRS ./ *)
-foreach(subdir ${LOCAL_SUBDIRS})
-	if(IS_DIRECTORY ${subdir})
-		add_subdirectory(${subdir})
-	endif()
-endforeach()
+project(bare_etiss_processor)
 
+# Set relative rpath to mimic runtime link behavior of windows (libs loadable from current dir)
 
-unset(LOCAL_SOURCE1)
-unset(LOCAL_SOURCE2)
-FILE(GLOB LOCAL_SOURCE1 *.c)
-FILE(GLOB LOCAL_SOURCE2 *.cpp)
+SET(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
+SET(CMAKE_INSTALL_RPATH "\$ORIGIN/../lib")
 
-set(ETISS_SOURCE ${ETISS_SOURCE} ${LOCAL_SOURCE1} ${LOCAL_SOURCE2} PARENT_SCOPE)
+add_executable(bare_etiss_processor main.cpp)
+target_link_libraries(bare_etiss_processor ETISS)
+
+set(ETISS_DIR ${CMAKE_INSTALL_PREFIX} )
+configure_file(
+    run_helper.sh.in
+    "${PROJECT_BINARY_DIR}/tobeinstalled/run_helper.sh"
+    @ONLY
+)
+
+set(ETISS_DIR ${CMAKE_BINARY_DIR})
+configure_file(
+    run_helper.sh.in
+    "${CMAKE_BINARY_DIR}/bin/run_helper.sh"
+    @ONLY
+)
+configure_file(
+    base.ini
+    "${CMAKE_BINARY_DIR}/examples/base.ini"
+    COPYONLY
+)
+set_target_properties( bare_etiss_processor
+    PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
+ )
+
+install(TARGETS bare_etiss_processor DESTINATION bin)
+install(FILES "${PROJECT_BINARY_DIR}/tobeinstalled/run_helper.sh"
+    DESTINATION bin
+    PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
+)
+install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/
+    DESTINATION examples
+    FILES_MATCHING
+    PATTERN "*.ini"
+)

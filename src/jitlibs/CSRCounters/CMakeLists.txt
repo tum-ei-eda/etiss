@@ -1,13 +1,14 @@
-PROJECT(resources)
+PROJECT(CSRCounters)
 
 IF(WIN32)
 	SET(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 ENDIF()
 
 ADD_LIBRARY(${PROJECT_NAME} SHARED
-    resources.cpp
+    CSRCounters.cpp
 )
 
+TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC ETISS)
 
 add_custom_command(
   TARGET ${PROJECT_NAME} POST_BUILD VERBATIM
@@ -15,11 +16,8 @@ add_custom_command(
   COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:${PROJECT_NAME}>" ${CMAKE_BINARY_DIR}/include/jit/etiss/jit/
 )
 
-
-TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC ETISS)
-
 INSTALL(FILES
-    libresources.h
+    libCSRCounters.h
     DESTINATION include/jit/etiss/jit
 )
 InstallJitLib(${PROJECT_NAME})

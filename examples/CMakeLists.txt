@@ -34,7 +34,7 @@
 #
 
 
-ADD_SUBDIRECTORY(bare_etiss_processor)
+#ADD_SUBDIRECTORY(bare_etiss_processor)
 #ADD_SUBDIRECTORY(mixed_level_fault_injection)
 ADD_SUBDIRECTORY(SW)
 #ADD_SUBDIRECTORY(systemc)

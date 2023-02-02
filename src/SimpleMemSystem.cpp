@@ -91,6 +91,9 @@ void SimpleMemSystem::load_segments() {
 
         ss << "simple_mem_system.memseg_length_" << std::setw(2) << std::setfill('0') << i;
         uint64_t length = etiss::cfg().get<uint64_t>(ss.str(), -1);
+        if (length == 0) {
+            etiss::log(etiss::FATALERROR, "Empty memsegs are not allowed!");
+        }
         std::stringstream().swap(ss);
 
         ss << "simple_mem_system.memseg_image_" << std::setw(2) << std::setfill('0') << i;
@@ -173,7 +176,7 @@ void SimpleMemSystem::load_elf()
             if ((reader.get_class() == ELFCLASS64)) {
                 etiss::cfg().set<std::string>("arch.cpu", "RISCV64"); // RISCV and OR1K work as well
             } else if ((reader.get_class() == ELFCLASS32)) {
-                etiss::cfg().set<std::string>("arch.cpu", "RISCV");
+                etiss::cfg().set<std::string>("arch.cpu", "RV32IMACFD");
             // add conditions
             } else {
                 etiss::log(etiss::FATALERROR, "System architecture is neither 64 nor 32 bit!");
@@ -201,7 +204,9 @@ void SimpleMemSystem::load_elf()
     {
         etiss::uint64 start_addr = seg->get_physical_address();
         etiss::uint64 size = seg->get_memory_size();
+        if (size == 0) continue;
         size_t file_size = seg->get_file_size();
+        if (seg->get_type() != PT_LOAD) continue;
 
         int mode = 0;
         std::string modestr = "";
