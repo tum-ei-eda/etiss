@@ -452,6 +452,7 @@ etiss::int32 Translation::translateBlock(CodeBlock &cb)
 
     unsigned count = 0;
     const unsigned maxcount = etiss::cfg().get<unsigned>("etiss.max_block_size", 100);
+    cb.reserve(maxcount);
 
     etiss::instr::VariableInstructionSet *const vis_ = mis_->get(cpu_.mode);
 
