@@ -1,5 +1,5 @@
 /**
- * Generated on Mon, 05 Dec 2022 22:18:34 +0100.
+ * Generated on Tue, 07 Feb 2023 18:20:18 +0100.
  *
  * This file contains the instruction behavior models of the RV32IC
  * instruction set for the RV32IMACFD core architecture.
@@ -43,27 +43,36 @@ imm += R_imm_4.read(ba) << 4;
 
 // -----------------------------------------------------------------------------
 
-		CodePart & partInit = cs.append(CodePart::INITIALREQUIRED);
+	{
+		CodePart & cp = cs.append(CodePart::INITIALREQUIRED);
 
-		partInit.code() = std::string("//CADDI4SPN\n");
+		cp.code() = std::string("//CADDI4SPN\n");
 
 // -----------------------------------------------------------------------------
-partInit.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
 if (imm) {
-partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd + 8U) + "U] = *((RV32IMACFD*)cpu)->X[2U] + " + std::to_string(imm) + "U;\n";
+cp.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd + 8U) + "U] = *((RV32IMACFD*)cpu)->X[2U] + " + std::to_string(imm) + "U;\n";
 }
 else {
-partInit.code() += "cpu->exception = 0; raise(cpu, system, plugin_pointers, 0U, 2U);\n";
-partInit.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
+cp.code() += "cpu->exception = 0; raise(cpu, system, plugin_pointers, 0U, 2U);\n";
+cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 }
-partInit.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
-partInit.code() += "cpu->instructionPointer = cpu->nextPc;\n";
-partInit.code() += "if (cpu->return_pending | cpu->exception) return cpu->exception;\n";
+cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
+cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
+		cp.getRegisterDependencies().add(reg_name[2U], 32);
+		cp.getAffectedRegisters().add(reg_name[rd + 8U], 32);
+		cp.getAffectedRegisters().add("instructionPointer", 32);
+	}
+	{
+		CodePart & cp = cs.append(CodePart::APPENDEDRETURNINGREQUIRED);
 
-		partInit.getRegisterDependencies().add(reg_name[2U], 32);
-		partInit.getAffectedRegisters().add(reg_name[rd + 8U], 32);
-		partInit.getAffectedRegisters().add("instructionPointer", 32);
+		cp.code() = std::string("//CADDI4SPN\n");
+
+// -----------------------------------------------------------------------------
+cp.code() += "if (cpu->return_pending | cpu->exception) return cpu->exception;\n";
+// -----------------------------------------------------------------------------
+	}
 
 		return true;
 	},
@@ -124,28 +133,37 @@ uimm += R_uimm_3.read(ba) << 3;
 
 // -----------------------------------------------------------------------------
 
-		CodePart & partInit = cs.append(CodePart::INITIALREQUIRED);
+	{
+		CodePart & cp = cs.append(CodePart::INITIALREQUIRED);
 
-		partInit.code() = std::string("//CLW\n");
+		cp.code() = std::string("//CLW\n");
 
 // -----------------------------------------------------------------------------
-partInit.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
-partInit.code() += "etiss_uint32 load_address = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 + 8U) + "U] + " + std::to_string(uimm) + "U;\n";
-partInit.code() += "etiss_uint32 mem_val_0;\n";
-partInit.code() += "cpu->exception |= (*(system->dread))(system->handle, cpu, load_address, (etiss_uint8*)&mem_val_0, 4);\n";
-partInit.code() += "if (cpu->exception) {\n";
-partInit.code() += "translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
-partInit.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
-partInit.code() += "}\n";
-partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd + 8U) + "U] = (etiss_int32)(mem_val_0);\n";
-partInit.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
-partInit.code() += "cpu->instructionPointer = cpu->nextPc;\n";
-partInit.code() += "if (cpu->return_pending | cpu->exception) return cpu->exception;\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
+cp.code() += "etiss_uint32 load_address = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 + 8U) + "U] + " + std::to_string(uimm) + "U;\n";
+cp.code() += "etiss_uint32 mem_val_0;\n";
+cp.code() += "cpu->exception |= (*(system->dread))(system->handle, cpu, load_address, (etiss_uint8*)&mem_val_0, 4);\n";
+cp.code() += "if (cpu->exception) {\n";
+cp.code() += "translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
+cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
+cp.code() += "}\n";
+cp.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd + 8U) + "U] = (etiss_int32)(mem_val_0);\n";
+cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
+cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
+		cp.getRegisterDependencies().add(reg_name[rs1 + 8U], 32);
+		cp.getAffectedRegisters().add(reg_name[rd + 8U], 32);
+		cp.getAffectedRegisters().add("instructionPointer", 32);
+	}
+	{
+		CodePart & cp = cs.append(CodePart::APPENDEDRETURNINGREQUIRED);
 
-		partInit.getRegisterDependencies().add(reg_name[rs1 + 8U], 32);
-		partInit.getAffectedRegisters().add(reg_name[rd + 8U], 32);
-		partInit.getAffectedRegisters().add("instructionPointer", 32);
+		cp.code() = std::string("//CLW\n");
+
+// -----------------------------------------------------------------------------
+cp.code() += "if (cpu->return_pending | cpu->exception) return cpu->exception;\n";
+// -----------------------------------------------------------------------------
+	}
 
 		return true;
 	},
@@ -207,28 +225,37 @@ uimm += R_uimm_3.read(ba) << 3;
 
 // -----------------------------------------------------------------------------
 
-		CodePart & partInit = cs.append(CodePart::INITIALREQUIRED);
+	{
+		CodePart & cp = cs.append(CodePart::INITIALREQUIRED);
 
-		partInit.code() = std::string("//CSW\n");
+		cp.code() = std::string("//CSW\n");
 
 // -----------------------------------------------------------------------------
-partInit.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
-partInit.code() += "etiss_uint32 load_address = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 + 8U) + "U] + " + std::to_string(uimm) + "U;\n";
-partInit.code() += "etiss_uint32 mem_val_0;\n";
-partInit.code() += "mem_val_0 = (etiss_int32)(*((RV32IMACFD*)cpu)->X[" + std::to_string(rs2 + 8U) + "U]);\n";
-partInit.code() += "cpu->exception |= (*(system->dwrite))(system->handle, cpu, load_address, (etiss_uint8*)&mem_val_0, 4);\n";
-partInit.code() += "if (cpu->exception) {\n";
-partInit.code() += "translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
-partInit.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
-partInit.code() += "}\n";
-partInit.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
-partInit.code() += "cpu->instructionPointer = cpu->nextPc;\n";
-partInit.code() += "if (cpu->return_pending | cpu->exception) return cpu->exception;\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
+cp.code() += "etiss_uint32 load_address = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 + 8U) + "U] + " + std::to_string(uimm) + "U;\n";
+cp.code() += "etiss_uint32 mem_val_0;\n";
+cp.code() += "mem_val_0 = (etiss_int32)(*((RV32IMACFD*)cpu)->X[" + std::to_string(rs2 + 8U) + "U]);\n";
+cp.code() += "cpu->exception |= (*(system->dwrite))(system->handle, cpu, load_address, (etiss_uint8*)&mem_val_0, 4);\n";
+cp.code() += "if (cpu->exception) {\n";
+cp.code() += "translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
+cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
+cp.code() += "}\n";
+cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
+cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
+		cp.getRegisterDependencies().add(reg_name[rs1 + 8U], 32);
+		cp.getRegisterDependencies().add(reg_name[rs2 + 8U], 32);
+		cp.getAffectedRegisters().add("instructionPointer", 32);
+	}
+	{
+		CodePart & cp = cs.append(CodePart::APPENDEDRETURNINGREQUIRED);
 
-		partInit.getRegisterDependencies().add(reg_name[rs1 + 8U], 32);
-		partInit.getRegisterDependencies().add(reg_name[rs2 + 8U], 32);
-		partInit.getAffectedRegisters().add("instructionPointer", 32);
+		cp.code() = std::string("//CSW\n");
+
+// -----------------------------------------------------------------------------
+cp.code() += "if (cpu->return_pending | cpu->exception) return cpu->exception;\n";
+// -----------------------------------------------------------------------------
+	}
 
 		return true;
 	},
@@ -285,22 +312,23 @@ imm += R_imm_5.read(ba) << 5;
 
 // -----------------------------------------------------------------------------
 
-		CodePart & partInit = cs.append(CodePart::INITIALREQUIRED);
+	{
+		CodePart & cp = cs.append(CodePart::INITIALREQUIRED);
 
-		partInit.code() = std::string("//CADDI\n");
+		cp.code() = std::string("//CADDI\n");
 
 // -----------------------------------------------------------------------------
-partInit.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
 if ((rs1 % 32U) != 0U) {
-partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 % 32) + "U] = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 % 32U) + "U] + " + std::to_string(((etiss_int8)((imm) << (2)) >> (2))) + ";\n";
+cp.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 % 32U) + "U] = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 % 32U) + "U] + " + std::to_string(((etiss_int8)((imm) << (2)) >> (2))) + ";\n";
 }
-partInit.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
-partInit.code() += "cpu->instructionPointer = cpu->nextPc;\n";
+cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
+cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
-
-		partInit.getRegisterDependencies().add(reg_name[rs1 % 32U], 32);
-		partInit.getAffectedRegisters().add(reg_name[rs1 % 32], 32);
-		partInit.getAffectedRegisters().add("instructionPointer", 32);
+		cp.getRegisterDependencies().add(reg_name[rs1 % 32U], 32);
+		cp.getAffectedRegisters().add(reg_name[rs1 % 32U], 32);
+		cp.getAffectedRegisters().add("instructionPointer", 32);
+	}
 
 		return true;
 	},
@@ -349,17 +377,18 @@ nzimm += R_nzimm_5.read(ba) << 5;
 
 // -----------------------------------------------------------------------------
 
-		CodePart & partInit = cs.append(CodePart::INITIALREQUIRED);
+	{
+		CodePart & cp = cs.append(CodePart::INITIALREQUIRED);
 
-		partInit.code() = std::string("//CNOP\n");
+		cp.code() = std::string("//CNOP\n");
 
 // -----------------------------------------------------------------------------
-partInit.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
-partInit.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
-partInit.code() += "cpu->instructionPointer = cpu->nextPc;\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
+cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
+cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
-
-		partInit.getAffectedRegisters().add("instructionPointer", 32);
+		cp.getAffectedRegisters().add("instructionPointer", 32);
+	}
 
 		return true;
 	},
@@ -417,21 +446,30 @@ imm += R_imm_11.read(ba) << 11;
 
 // -----------------------------------------------------------------------------
 
-		CodePart & partInit = cs.append(CodePart::INITIALREQUIRED);
+	{
+		CodePart & cp = cs.append(CodePart::INITIALREQUIRED);
 
-		partInit.code() = std::string("//CJAL\n");
+		cp.code() = std::string("//CJAL\n");
 
 // -----------------------------------------------------------------------------
-partInit.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
-partInit.code() += "*((RV32IMACFD*)cpu)->X[1U] = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
-partInit.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + ((etiss_int16)((imm) << (4)) >> (4))) + ";\n";
-partInit.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
-partInit.code() += "cpu->instructionPointer = cpu->nextPc;\n";
-partInit.code() += "return cpu->exception;\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
+cp.code() += "*((RV32IMACFD*)cpu)->X[1U] = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + ((etiss_int16)((imm) << (4)) >> (4))) + ";\n";
+cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
+cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
+		cp.getAffectedRegisters().add(reg_name[1U], 32);
+		cp.getAffectedRegisters().add("instructionPointer", 32);
+	}
+	{
+		CodePart & cp = cs.append(CodePart::APPENDEDRETURNINGREQUIRED);
 
-		partInit.getAffectedRegisters().add(reg_name[1U], 32);
-		partInit.getAffectedRegisters().add("instructionPointer", 32);
+		cp.code() = std::string("//CJAL\n");
+
+// -----------------------------------------------------------------------------
+cp.code() += "return cpu->exception;\n";
+// -----------------------------------------------------------------------------
+	}
 
 		return true;
 	},
@@ -492,21 +530,22 @@ imm += R_imm_5.read(ba) << 5;
 
 // -----------------------------------------------------------------------------
 
-		CodePart & partInit = cs.append(CodePart::INITIALREQUIRED);
+	{
+		CodePart & cp = cs.append(CodePart::INITIALREQUIRED);
 
-		partInit.code() = std::string("//CLI\n");
+		cp.code() = std::string("//CLI\n");
 
 // -----------------------------------------------------------------------------
-partInit.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
 if ((rd % 32U) != 0U) {
-partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd % 32) + "U] = " + std::to_string(((etiss_int8)((imm) << (2)) >> (2))) + ";\n";
+cp.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd % 32U) + "U] = " + std::to_string(((etiss_int8)((imm) << (2)) >> (2))) + ";\n";
 }
-partInit.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
-partInit.code() += "cpu->instructionPointer = cpu->nextPc;\n";
+cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
+cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
-
-		partInit.getAffectedRegisters().add(reg_name[rd % 32], 32);
-		partInit.getAffectedRegisters().add("instructionPointer", 32);
+		cp.getAffectedRegisters().add(reg_name[rd % 32U], 32);
+		cp.getAffectedRegisters().add("instructionPointer", 32);
+	}
 
 		return true;
 	},
@@ -558,26 +597,35 @@ imm += R_imm_17.read(ba) << 17;
 
 // -----------------------------------------------------------------------------
 
-		CodePart & partInit = cs.append(CodePart::INITIALREQUIRED);
+	{
+		CodePart & cp = cs.append(CodePart::INITIALREQUIRED);
 
-		partInit.code() = std::string("//CLUI\n");
+		cp.code() = std::string("//CLUI\n");
 
 // -----------------------------------------------------------------------------
-partInit.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
 if (imm == 0U) {
-partInit.code() += "cpu->exception = 0; raise(cpu, system, plugin_pointers, 0U, 2U);\n";
-partInit.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
+cp.code() += "cpu->exception = 0; raise(cpu, system, plugin_pointers, 0U, 2U);\n";
+cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 }
 if ((rd % 32U) != 0U) {
-partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd % 32) + "U] = " + std::to_string(((etiss_int32)((imm) << (14)) >> (14))) + ";\n";
+cp.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd % 32U) + "U] = " + std::to_string(((etiss_int32)((imm) << (14)) >> (14))) + ";\n";
 }
-partInit.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
-partInit.code() += "cpu->instructionPointer = cpu->nextPc;\n";
-partInit.code() += "if (cpu->return_pending | cpu->exception) return cpu->exception;\n";
+cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
+cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
+		cp.getAffectedRegisters().add(reg_name[rd % 32U], 32);
+		cp.getAffectedRegisters().add("instructionPointer", 32);
+	}
+	{
+		CodePart & cp = cs.append(CodePart::APPENDEDRETURNINGREQUIRED);
 
-		partInit.getAffectedRegisters().add(reg_name[rd % 32], 32);
-		partInit.getAffectedRegisters().add("instructionPointer", 32);
+		cp.code() = std::string("//CLUI\n");
+
+// -----------------------------------------------------------------------------
+cp.code() += "if (cpu->return_pending | cpu->exception) return cpu->exception;\n";
+// -----------------------------------------------------------------------------
+	}
 
 		return true;
 	},
@@ -632,27 +680,36 @@ nzimm += R_nzimm_9.read(ba) << 9;
 
 // -----------------------------------------------------------------------------
 
-		CodePart & partInit = cs.append(CodePart::INITIALREQUIRED);
+	{
+		CodePart & cp = cs.append(CodePart::INITIALREQUIRED);
 
-		partInit.code() = std::string("//CADDI16SP\n");
+		cp.code() = std::string("//CADDI16SP\n");
 
 // -----------------------------------------------------------------------------
-partInit.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
 if (nzimm) {
-partInit.code() += "*((RV32IMACFD*)cpu)->X[2U] = *((RV32IMACFD*)cpu)->X[2U] + " + std::to_string(((etiss_int16)((nzimm) << (6)) >> (6))) + ";\n";
+cp.code() += "*((RV32IMACFD*)cpu)->X[2U] = *((RV32IMACFD*)cpu)->X[2U] + " + std::to_string(((etiss_int16)((nzimm) << (6)) >> (6))) + ";\n";
 }
 else {
-partInit.code() += "cpu->exception = 0; raise(cpu, system, plugin_pointers, 0U, 2U);\n";
-partInit.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
+cp.code() += "cpu->exception = 0; raise(cpu, system, plugin_pointers, 0U, 2U);\n";
+cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 }
-partInit.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
-partInit.code() += "cpu->instructionPointer = cpu->nextPc;\n";
-partInit.code() += "if (cpu->return_pending | cpu->exception) return cpu->exception;\n";
+cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
+cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
+		cp.getRegisterDependencies().add(reg_name[2U], 32);
+		cp.getAffectedRegisters().add(reg_name[2U], 32);
+		cp.getAffectedRegisters().add("instructionPointer", 32);
+	}
+	{
+		CodePart & cp = cs.append(CodePart::APPENDEDRETURNINGREQUIRED);
 
-		partInit.getRegisterDependencies().add(reg_name[2U], 32);
-		partInit.getAffectedRegisters().add(reg_name[2U], 32);
-		partInit.getAffectedRegisters().add("instructionPointer", 32);
+		cp.code() = std::string("//CADDI16SP\n");
+
+// -----------------------------------------------------------------------------
+cp.code() += "if (cpu->return_pending | cpu->exception) return cpu->exception;\n";
+// -----------------------------------------------------------------------------
+	}
 
 		return true;
 	},
@@ -702,20 +759,29 @@ rd += R_rd_0.read(ba) << 0;
 
 // -----------------------------------------------------------------------------
 
-		CodePart & partInit = cs.append(CodePart::INITIALREQUIRED);
+	{
+		CodePart & cp = cs.append(CodePart::INITIALREQUIRED);
 
-		partInit.code() = std::string("//__reserved_clui\n");
+		cp.code() = std::string("//__reserved_clui\n");
 
 // -----------------------------------------------------------------------------
-partInit.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
-partInit.code() += "cpu->exception = 0; raise(cpu, system, plugin_pointers, 0U, 2U);\n";
-partInit.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
-partInit.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
-partInit.code() += "cpu->instructionPointer = cpu->nextPc;\n";
-partInit.code() += "if (cpu->return_pending | cpu->exception) return cpu->exception;\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
+cp.code() += "cpu->exception = 0; raise(cpu, system, plugin_pointers, 0U, 2U);\n";
+cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
+cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
+cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
+		cp.getAffectedRegisters().add("instructionPointer", 32);
+	}
+	{
+		CodePart & cp = cs.append(CodePart::APPENDEDRETURNINGREQUIRED);
 
-		partInit.getAffectedRegisters().add("instructionPointer", 32);
+		cp.code() = std::string("//__reserved_clui\n");
+
+// -----------------------------------------------------------------------------
+cp.code() += "if (cpu->return_pending | cpu->exception) return cpu->exception;\n";
+// -----------------------------------------------------------------------------
+	}
 
 		return true;
 	},
@@ -760,20 +826,21 @@ rs1 += R_rs1_0.read(ba) << 0;
 
 // -----------------------------------------------------------------------------
 
-		CodePart & partInit = cs.append(CodePart::INITIALREQUIRED);
+	{
+		CodePart & cp = cs.append(CodePart::INITIALREQUIRED);
 
-		partInit.code() = std::string("//CSRLI\n");
+		cp.code() = std::string("//CSRLI\n");
 
 // -----------------------------------------------------------------------------
-partInit.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
-partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 + 8U) + "U] = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 + 8U) + "U] >> " + std::to_string(shamt) + "U;\n";
-partInit.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
-partInit.code() += "cpu->instructionPointer = cpu->nextPc;\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
+cp.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 + 8U) + "U] = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 + 8U) + "U] >> " + std::to_string(shamt) + "U;\n";
+cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
+cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
-
-		partInit.getRegisterDependencies().add(reg_name[rs1 + 8U], 32);
-		partInit.getAffectedRegisters().add(reg_name[rs1 + 8U], 32);
-		partInit.getAffectedRegisters().add("instructionPointer", 32);
+		cp.getRegisterDependencies().add(reg_name[rs1 + 8U], 32);
+		cp.getAffectedRegisters().add(reg_name[rs1 + 8U], 32);
+		cp.getAffectedRegisters().add("instructionPointer", 32);
+	}
 
 		return true;
 	},
@@ -821,22 +888,23 @@ rs1 += R_rs1_0.read(ba) << 0;
 
 // -----------------------------------------------------------------------------
 
-		CodePart & partInit = cs.append(CodePart::INITIALREQUIRED);
+	{
+		CodePart & cp = cs.append(CodePart::INITIALREQUIRED);
 
-		partInit.code() = std::string("//CSRAI\n");
+		cp.code() = std::string("//CSRAI\n");
 
 // -----------------------------------------------------------------------------
-partInit.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
 if (shamt) {
-partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 + 8U) + "U] = ((etiss_int32)(*((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 + 8U) + "U])) >> " + std::to_string(shamt) + "U;\n";
+cp.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 + 8U) + "U] = ((etiss_int32)(*((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 + 8U) + "U])) >> " + std::to_string(shamt) + "U;\n";
 }
-partInit.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
-partInit.code() += "cpu->instructionPointer = cpu->nextPc;\n";
+cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
+cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
-
-		partInit.getRegisterDependencies().add(reg_name[rs1 + 8U], 32);
-		partInit.getAffectedRegisters().add(reg_name[rs1 + 8U], 32);
-		partInit.getAffectedRegisters().add("instructionPointer", 32);
+		cp.getRegisterDependencies().add(reg_name[rs1 + 8U], 32);
+		cp.getAffectedRegisters().add(reg_name[rs1 + 8U], 32);
+		cp.getAffectedRegisters().add("instructionPointer", 32);
+	}
 
 		return true;
 	},
@@ -886,20 +954,21 @@ imm += R_imm_5.read(ba) << 5;
 
 // -----------------------------------------------------------------------------
 
-		CodePart & partInit = cs.append(CodePart::INITIALREQUIRED);
+	{
+		CodePart & cp = cs.append(CodePart::INITIALREQUIRED);
 
-		partInit.code() = std::string("//CANDI\n");
+		cp.code() = std::string("//CANDI\n");
 
 // -----------------------------------------------------------------------------
-partInit.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
-partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 + 8U) + "U] = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 + 8U) + "U] & " + std::to_string(((etiss_int8)((imm) << (2)) >> (2))) + ";\n";
-partInit.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
-partInit.code() += "cpu->instructionPointer = cpu->nextPc;\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
+cp.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 + 8U) + "U] = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 + 8U) + "U] & " + std::to_string(((etiss_int8)((imm) << (2)) >> (2))) + ";\n";
+cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
+cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
-
-		partInit.getRegisterDependencies().add(reg_name[rs1 + 8U], 32);
-		partInit.getAffectedRegisters().add(reg_name[rs1 + 8U], 32);
-		partInit.getAffectedRegisters().add("instructionPointer", 32);
+		cp.getRegisterDependencies().add(reg_name[rs1 + 8U], 32);
+		cp.getAffectedRegisters().add(reg_name[rs1 + 8U], 32);
+		cp.getAffectedRegisters().add("instructionPointer", 32);
+	}
 
 		return true;
 	},
@@ -949,21 +1018,22 @@ rd += R_rd_0.read(ba) << 0;
 
 // -----------------------------------------------------------------------------
 
-		CodePart & partInit = cs.append(CodePart::INITIALREQUIRED);
+	{
+		CodePart & cp = cs.append(CodePart::INITIALREQUIRED);
 
-		partInit.code() = std::string("//CSUB\n");
+		cp.code() = std::string("//CSUB\n");
 
 // -----------------------------------------------------------------------------
-partInit.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
-partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd + 8U) + "U] = *((RV32IMACFD*)cpu)->X[" + std::to_string(rd + 8U) + "U] - *((RV32IMACFD*)cpu)->X[" + std::to_string(rs2 + 8U) + "U];\n";
-partInit.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
-partInit.code() += "cpu->instructionPointer = cpu->nextPc;\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
+cp.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd + 8U) + "U] = *((RV32IMACFD*)cpu)->X[" + std::to_string(rd + 8U) + "U] - *((RV32IMACFD*)cpu)->X[" + std::to_string(rs2 + 8U) + "U];\n";
+cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
+cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
-
-		partInit.getRegisterDependencies().add(reg_name[rd + 8U], 32);
-		partInit.getRegisterDependencies().add(reg_name[rs2 + 8U], 32);
-		partInit.getAffectedRegisters().add(reg_name[rd + 8U], 32);
-		partInit.getAffectedRegisters().add("instructionPointer", 32);
+		cp.getRegisterDependencies().add(reg_name[rd + 8U], 32);
+		cp.getRegisterDependencies().add(reg_name[rs2 + 8U], 32);
+		cp.getAffectedRegisters().add(reg_name[rd + 8U], 32);
+		cp.getAffectedRegisters().add("instructionPointer", 32);
+	}
 
 		return true;
 	},
@@ -1011,21 +1081,22 @@ rd += R_rd_0.read(ba) << 0;
 
 // -----------------------------------------------------------------------------
 
-		CodePart & partInit = cs.append(CodePart::INITIALREQUIRED);
+	{
+		CodePart & cp = cs.append(CodePart::INITIALREQUIRED);
 
-		partInit.code() = std::string("//CXOR\n");
+		cp.code() = std::string("//CXOR\n");
 
 // -----------------------------------------------------------------------------
-partInit.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
-partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd + 8U) + "U] = *((RV32IMACFD*)cpu)->X[" + std::to_string(rd + 8U) + "U] ^ *((RV32IMACFD*)cpu)->X[" + std::to_string(rs2 + 8U) + "U];\n";
-partInit.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
-partInit.code() += "cpu->instructionPointer = cpu->nextPc;\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
+cp.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd + 8U) + "U] = *((RV32IMACFD*)cpu)->X[" + std::to_string(rd + 8U) + "U] ^ *((RV32IMACFD*)cpu)->X[" + std::to_string(rs2 + 8U) + "U];\n";
+cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
+cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
-
-		partInit.getRegisterDependencies().add(reg_name[rd + 8U], 32);
-		partInit.getRegisterDependencies().add(reg_name[rs2 + 8U], 32);
-		partInit.getAffectedRegisters().add(reg_name[rd + 8U], 32);
-		partInit.getAffectedRegisters().add("instructionPointer", 32);
+		cp.getRegisterDependencies().add(reg_name[rd + 8U], 32);
+		cp.getRegisterDependencies().add(reg_name[rs2 + 8U], 32);
+		cp.getAffectedRegisters().add(reg_name[rd + 8U], 32);
+		cp.getAffectedRegisters().add("instructionPointer", 32);
+	}
 
 		return true;
 	},
@@ -1073,21 +1144,22 @@ rd += R_rd_0.read(ba) << 0;
 
 // -----------------------------------------------------------------------------
 
-		CodePart & partInit = cs.append(CodePart::INITIALREQUIRED);
+	{
+		CodePart & cp = cs.append(CodePart::INITIALREQUIRED);
 
-		partInit.code() = std::string("//COR\n");
+		cp.code() = std::string("//COR\n");
 
 // -----------------------------------------------------------------------------
-partInit.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
-partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd + 8U) + "U] = *((RV32IMACFD*)cpu)->X[" + std::to_string(rd + 8U) + "U] | *((RV32IMACFD*)cpu)->X[" + std::to_string(rs2 + 8U) + "U];\n";
-partInit.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
-partInit.code() += "cpu->instructionPointer = cpu->nextPc;\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
+cp.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd + 8U) + "U] = *((RV32IMACFD*)cpu)->X[" + std::to_string(rd + 8U) + "U] | *((RV32IMACFD*)cpu)->X[" + std::to_string(rs2 + 8U) + "U];\n";
+cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
+cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
-
-		partInit.getRegisterDependencies().add(reg_name[rd + 8U], 32);
-		partInit.getRegisterDependencies().add(reg_name[rs2 + 8U], 32);
-		partInit.getAffectedRegisters().add(reg_name[rd + 8U], 32);
-		partInit.getAffectedRegisters().add("instructionPointer", 32);
+		cp.getRegisterDependencies().add(reg_name[rd + 8U], 32);
+		cp.getRegisterDependencies().add(reg_name[rs2 + 8U], 32);
+		cp.getAffectedRegisters().add(reg_name[rd + 8U], 32);
+		cp.getAffectedRegisters().add("instructionPointer", 32);
+	}
 
 		return true;
 	},
@@ -1135,21 +1207,22 @@ rd += R_rd_0.read(ba) << 0;
 
 // -----------------------------------------------------------------------------
 
-		CodePart & partInit = cs.append(CodePart::INITIALREQUIRED);
+	{
+		CodePart & cp = cs.append(CodePart::INITIALREQUIRED);
 
-		partInit.code() = std::string("//CAND\n");
+		cp.code() = std::string("//CAND\n");
 
 // -----------------------------------------------------------------------------
-partInit.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
-partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd + 8U) + "U] = *((RV32IMACFD*)cpu)->X[" + std::to_string(rd + 8U) + "U] & *((RV32IMACFD*)cpu)->X[" + std::to_string(rs2 + 8U) + "U];\n";
-partInit.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
-partInit.code() += "cpu->instructionPointer = cpu->nextPc;\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
+cp.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd + 8U) + "U] = *((RV32IMACFD*)cpu)->X[" + std::to_string(rd + 8U) + "U] & *((RV32IMACFD*)cpu)->X[" + std::to_string(rs2 + 8U) + "U];\n";
+cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
+cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
-
-		partInit.getRegisterDependencies().add(reg_name[rd + 8U], 32);
-		partInit.getRegisterDependencies().add(reg_name[rs2 + 8U], 32);
-		partInit.getAffectedRegisters().add(reg_name[rd + 8U], 32);
-		partInit.getAffectedRegisters().add("instructionPointer", 32);
+		cp.getRegisterDependencies().add(reg_name[rd + 8U], 32);
+		cp.getRegisterDependencies().add(reg_name[rs2 + 8U], 32);
+		cp.getAffectedRegisters().add(reg_name[rd + 8U], 32);
+		cp.getAffectedRegisters().add("instructionPointer", 32);
+	}
 
 		return true;
 	},
@@ -1208,19 +1281,28 @@ imm += R_imm_11.read(ba) << 11;
 
 // -----------------------------------------------------------------------------
 
-		CodePart & partInit = cs.append(CodePart::INITIALREQUIRED);
+	{
+		CodePart & cp = cs.append(CodePart::INITIALREQUIRED);
 
-		partInit.code() = std::string("//CJ\n");
+		cp.code() = std::string("//CJ\n");
 
 // -----------------------------------------------------------------------------
-partInit.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
-partInit.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + ((etiss_int16)((imm) << (4)) >> (4))) + ";\n";
-partInit.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
-partInit.code() += "cpu->instructionPointer = cpu->nextPc;\n";
-partInit.code() += "return cpu->exception;\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + ((etiss_int16)((imm) << (4)) >> (4))) + ";\n";
+cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
+cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
+		cp.getAffectedRegisters().add("instructionPointer", 32);
+	}
+	{
+		CodePart & cp = cs.append(CodePart::APPENDEDRETURNINGREQUIRED);
 
-		partInit.getAffectedRegisters().add("instructionPointer", 32);
+		cp.code() = std::string("//CJ\n");
+
+// -----------------------------------------------------------------------------
+cp.code() += "return cpu->exception;\n";
+// -----------------------------------------------------------------------------
+	}
 
 		return true;
 	},
@@ -1287,22 +1369,31 @@ imm += R_imm_8.read(ba) << 8;
 
 // -----------------------------------------------------------------------------
 
-		CodePart & partInit = cs.append(CodePart::INITIALREQUIRED);
+	{
+		CodePart & cp = cs.append(CodePart::INITIALREQUIRED);
 
-		partInit.code() = std::string("//CBEQZ\n");
+		cp.code() = std::string("//CBEQZ\n");
 
 // -----------------------------------------------------------------------------
-partInit.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
-partInit.code() += "if (*((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 + 8U) + "U] == 0U) {\n";
-partInit.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + ((etiss_int16)((imm) << (7)) >> (7))) + ";\n";
-partInit.code() += "}\n";
-partInit.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
-partInit.code() += "cpu->instructionPointer = cpu->nextPc;\n";
-partInit.code() += "if (cpu->nextPc != " + std::to_string(ic.current_address_ + 2) + ") return cpu->exception;\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
+cp.code() += "if (*((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 + 8U) + "U] == 0U) {\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + ((etiss_int16)((imm) << (7)) >> (7))) + ";\n";
+cp.code() += "}\n";
+cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
+cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
+		cp.getRegisterDependencies().add(reg_name[rs1 + 8U], 32);
+		cp.getAffectedRegisters().add("instructionPointer", 32);
+	}
+	{
+		CodePart & cp = cs.append(CodePart::APPENDEDRETURNINGREQUIRED);
 
-		partInit.getRegisterDependencies().add(reg_name[rs1 + 8U], 32);
-		partInit.getAffectedRegisters().add("instructionPointer", 32);
+		cp.code() = std::string("//CBEQZ\n");
+
+// -----------------------------------------------------------------------------
+cp.code() += "if (cpu->nextPc != " + std::to_string(ic.current_address_ + 2) + ") return cpu->exception;\n";
+// -----------------------------------------------------------------------------
+	}
 
 		return true;
 	},
@@ -1366,22 +1457,31 @@ imm += R_imm_8.read(ba) << 8;
 
 // -----------------------------------------------------------------------------
 
-		CodePart & partInit = cs.append(CodePart::INITIALREQUIRED);
+	{
+		CodePart & cp = cs.append(CodePart::INITIALREQUIRED);
 
-		partInit.code() = std::string("//CBNEZ\n");
+		cp.code() = std::string("//CBNEZ\n");
 
 // -----------------------------------------------------------------------------
-partInit.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
-partInit.code() += "if (*((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 + 8U) + "U] != 0U) {\n";
-partInit.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + ((etiss_int16)((imm) << (7)) >> (7))) + ";\n";
-partInit.code() += "}\n";
-partInit.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
-partInit.code() += "cpu->instructionPointer = cpu->nextPc;\n";
-partInit.code() += "if (cpu->nextPc != " + std::to_string(ic.current_address_ + 2) + ") return cpu->exception;\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
+cp.code() += "if (*((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 + 8U) + "U] != 0U) {\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + ((etiss_int16)((imm) << (7)) >> (7))) + ";\n";
+cp.code() += "}\n";
+cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
+cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
+		cp.getRegisterDependencies().add(reg_name[rs1 + 8U], 32);
+		cp.getAffectedRegisters().add("instructionPointer", 32);
+	}
+	{
+		CodePart & cp = cs.append(CodePart::APPENDEDRETURNINGREQUIRED);
 
-		partInit.getRegisterDependencies().add(reg_name[rs1 + 8U], 32);
-		partInit.getAffectedRegisters().add("instructionPointer", 32);
+		cp.code() = std::string("//CBNEZ\n");
+
+// -----------------------------------------------------------------------------
+cp.code() += "if (cpu->nextPc != " + std::to_string(ic.current_address_ + 2) + ") return cpu->exception;\n";
+// -----------------------------------------------------------------------------
+	}
 
 		return true;
 	},
@@ -1437,22 +1537,23 @@ rs1 += R_rs1_0.read(ba) << 0;
 
 // -----------------------------------------------------------------------------
 
-		CodePart & partInit = cs.append(CodePart::INITIALREQUIRED);
+	{
+		CodePart & cp = cs.append(CodePart::INITIALREQUIRED);
 
-		partInit.code() = std::string("//CSLLI\n");
+		cp.code() = std::string("//CSLLI\n");
 
 // -----------------------------------------------------------------------------
-partInit.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
 if (nzuimm) {
-partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 % 32) + "U] = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 % 32U) + "U] << " + std::to_string(nzuimm) + "U;\n";
+cp.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 % 32U) + "U] = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 % 32U) + "U] << " + std::to_string(nzuimm) + "U;\n";
 }
-partInit.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
-partInit.code() += "cpu->instructionPointer = cpu->nextPc;\n";
+cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
+cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
-
-		partInit.getRegisterDependencies().add(reg_name[rs1 % 32U], 32);
-		partInit.getAffectedRegisters().add(reg_name[rs1 % 32], 32);
-		partInit.getAffectedRegisters().add("instructionPointer", 32);
+		cp.getRegisterDependencies().add(reg_name[rs1 % 32U], 32);
+		cp.getAffectedRegisters().add(reg_name[rs1 % 32U], 32);
+		cp.getAffectedRegisters().add("instructionPointer", 32);
+	}
 
 		return true;
 	},
@@ -1504,33 +1605,42 @@ uimm += R_uimm_5.read(ba) << 5;
 
 // -----------------------------------------------------------------------------
 
-		CodePart & partInit = cs.append(CodePart::INITIALREQUIRED);
+	{
+		CodePart & cp = cs.append(CodePart::INITIALREQUIRED);
 
-		partInit.code() = std::string("//CLWSP\n");
+		cp.code() = std::string("//CLWSP\n");
 
 // -----------------------------------------------------------------------------
-partInit.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
 if (rd % 32U) {
-partInit.code() += "etiss_uint32 mem_val_0;\n";
-partInit.code() += "cpu->exception |= (*(system->dread))(system->handle, cpu, *((RV32IMACFD*)cpu)->X[2U] + " + std::to_string(uimm) + "U, (etiss_uint8*)&mem_val_0, 4);\n";
-partInit.code() += "if (cpu->exception) {\n";
-partInit.code() += "translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
-partInit.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
-partInit.code() += "}\n";
-partInit.code() += "etiss_int32 res = mem_val_0;\n";
-partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd % 32) + "U] = (etiss_int32)(res);\n";
+cp.code() += "etiss_uint32 mem_val_0;\n";
+cp.code() += "cpu->exception |= (*(system->dread))(system->handle, cpu, *((RV32IMACFD*)cpu)->X[2U] + " + std::to_string(uimm) + "U, (etiss_uint8*)&mem_val_0, 4);\n";
+cp.code() += "if (cpu->exception) {\n";
+cp.code() += "translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
+cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
+cp.code() += "}\n";
+cp.code() += "etiss_int32 res = mem_val_0;\n";
+cp.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd % 32U) + "U] = (etiss_int32)(res);\n";
 }
 else {
-partInit.code() += "cpu->exception = 0; raise(cpu, system, plugin_pointers, 0U, 2U);\n";
-partInit.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
+cp.code() += "cpu->exception = 0; raise(cpu, system, plugin_pointers, 0U, 2U);\n";
+cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 }
-partInit.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
-partInit.code() += "cpu->instructionPointer = cpu->nextPc;\n";
-partInit.code() += "if (cpu->return_pending | cpu->exception) return cpu->exception;\n";
+cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
+cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
+		cp.getAffectedRegisters().add(reg_name[rd % 32U], 32);
+		cp.getAffectedRegisters().add("instructionPointer", 32);
+	}
+	{
+		CodePart & cp = cs.append(CodePart::APPENDEDRETURNINGREQUIRED);
 
-		partInit.getAffectedRegisters().add(reg_name[rd % 32], 32);
-		partInit.getAffectedRegisters().add("instructionPointer", 32);
+		cp.code() = std::string("//CLWSP\n");
+
+// -----------------------------------------------------------------------------
+cp.code() += "if (cpu->return_pending | cpu->exception) return cpu->exception;\n";
+// -----------------------------------------------------------------------------
+	}
 
 		return true;
 	},
@@ -1582,22 +1692,23 @@ rd += R_rd_0.read(ba) << 0;
 
 // -----------------------------------------------------------------------------
 
-		CodePart & partInit = cs.append(CodePart::INITIALREQUIRED);
+	{
+		CodePart & cp = cs.append(CodePart::INITIALREQUIRED);
 
-		partInit.code() = std::string("//CMV\n");
+		cp.code() = std::string("//CMV\n");
 
 // -----------------------------------------------------------------------------
-partInit.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
 if ((rd % 32U) != 0U) {
-partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd % 32) + "U] = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs2 % 32U) + "U];\n";
+cp.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd % 32U) + "U] = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs2 % 32U) + "U];\n";
 }
-partInit.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
-partInit.code() += "cpu->instructionPointer = cpu->nextPc;\n";
+cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
+cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
-
-		partInit.getRegisterDependencies().add(reg_name[rs2 % 32U], 32);
-		partInit.getAffectedRegisters().add(reg_name[rd % 32], 32);
-		partInit.getAffectedRegisters().add("instructionPointer", 32);
+		cp.getRegisterDependencies().add(reg_name[rs2 % 32U], 32);
+		cp.getAffectedRegisters().add(reg_name[rd % 32U], 32);
+		cp.getAffectedRegisters().add("instructionPointer", 32);
+	}
 
 		return true;
 	},
@@ -1642,26 +1753,35 @@ rs1 += R_rs1_0.read(ba) << 0;
 
 // -----------------------------------------------------------------------------
 
-		CodePart & partInit = cs.append(CodePart::INITIALREQUIRED);
+	{
+		CodePart & cp = cs.append(CodePart::INITIALREQUIRED);
 
-		partInit.code() = std::string("//CJR\n");
+		cp.code() = std::string("//CJR\n");
 
 // -----------------------------------------------------------------------------
-partInit.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
 if (rs1) {
-partInit.code() += "cpu->nextPc = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 % 32U) + "U] & -2;\n";
+cp.code() += "cpu->nextPc = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 % 32U) + "U] & -2;\n";
 }
 else {
-partInit.code() += "cpu->exception = 0; raise(cpu, system, plugin_pointers, 0U, 2U);\n";
-partInit.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
+cp.code() += "cpu->exception = 0; raise(cpu, system, plugin_pointers, 0U, 2U);\n";
+cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 }
-partInit.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
-partInit.code() += "cpu->instructionPointer = cpu->nextPc;\n";
-partInit.code() += "return cpu->exception;\n";
+cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
+cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
+		cp.getRegisterDependencies().add(reg_name[rs1 % 32U], 32);
+		cp.getAffectedRegisters().add("instructionPointer", 32);
+	}
+	{
+		CodePart & cp = cs.append(CodePart::APPENDEDRETURNINGREQUIRED);
 
-		partInit.getRegisterDependencies().add(reg_name[rs1 % 32U], 32);
-		partInit.getAffectedRegisters().add("instructionPointer", 32);
+		cp.code() = std::string("//CJR\n");
+
+// -----------------------------------------------------------------------------
+cp.code() += "return cpu->exception;\n";
+// -----------------------------------------------------------------------------
+	}
 
 		return true;
 	},
@@ -1700,20 +1820,29 @@ static InstructionDefinition __reserved_cmv_ (
 
 // -----------------------------------------------------------------------------
 
-		CodePart & partInit = cs.append(CodePart::INITIALREQUIRED);
+	{
+		CodePart & cp = cs.append(CodePart::INITIALREQUIRED);
 
-		partInit.code() = std::string("//__reserved_cmv\n");
+		cp.code() = std::string("//__reserved_cmv\n");
 
 // -----------------------------------------------------------------------------
-partInit.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
-partInit.code() += "cpu->exception = 0; raise(cpu, system, plugin_pointers, 0U, 2U);\n";
-partInit.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
-partInit.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
-partInit.code() += "cpu->instructionPointer = cpu->nextPc;\n";
-partInit.code() += "if (cpu->return_pending | cpu->exception) return cpu->exception;\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
+cp.code() += "cpu->exception = 0; raise(cpu, system, plugin_pointers, 0U, 2U);\n";
+cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
+cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
+cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
+		cp.getAffectedRegisters().add("instructionPointer", 32);
+	}
+	{
+		CodePart & cp = cs.append(CodePart::APPENDEDRETURNINGREQUIRED);
 
-		partInit.getAffectedRegisters().add("instructionPointer", 32);
+		cp.code() = std::string("//__reserved_cmv\n");
+
+// -----------------------------------------------------------------------------
+cp.code() += "if (cpu->return_pending | cpu->exception) return cpu->exception;\n";
+// -----------------------------------------------------------------------------
+	}
 
 		return true;
 	},
@@ -1755,23 +1884,24 @@ rd += R_rd_0.read(ba) << 0;
 
 // -----------------------------------------------------------------------------
 
-		CodePart & partInit = cs.append(CodePart::INITIALREQUIRED);
+	{
+		CodePart & cp = cs.append(CodePart::INITIALREQUIRED);
 
-		partInit.code() = std::string("//CADD\n");
+		cp.code() = std::string("//CADD\n");
 
 // -----------------------------------------------------------------------------
-partInit.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
 if ((rd % 32U) != 0U) {
-partInit.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd % 32) + "U] = *((RV32IMACFD*)cpu)->X[" + std::to_string(rd % 32U) + "U] + *((RV32IMACFD*)cpu)->X[" + std::to_string(rs2 % 32U) + "U];\n";
+cp.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd % 32U) + "U] = *((RV32IMACFD*)cpu)->X[" + std::to_string(rd % 32U) + "U] + *((RV32IMACFD*)cpu)->X[" + std::to_string(rs2 % 32U) + "U];\n";
 }
-partInit.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
-partInit.code() += "cpu->instructionPointer = cpu->nextPc;\n";
+cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
+cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
-
-		partInit.getRegisterDependencies().add(reg_name[rd % 32U], 32);
-		partInit.getRegisterDependencies().add(reg_name[rs2 % 32U], 32);
-		partInit.getAffectedRegisters().add(reg_name[rd % 32], 32);
-		partInit.getAffectedRegisters().add("instructionPointer", 32);
+		cp.getRegisterDependencies().add(reg_name[rd % 32U], 32);
+		cp.getRegisterDependencies().add(reg_name[rs2 % 32U], 32);
+		cp.getAffectedRegisters().add(reg_name[rd % 32U], 32);
+		cp.getAffectedRegisters().add("instructionPointer", 32);
+	}
 
 		return true;
 	},
@@ -1816,23 +1946,32 @@ rs1 += R_rs1_0.read(ba) << 0;
 
 // -----------------------------------------------------------------------------
 
-		CodePart & partInit = cs.append(CodePart::INITIALREQUIRED);
+	{
+		CodePart & cp = cs.append(CodePart::INITIALREQUIRED);
 
-		partInit.code() = std::string("//CJALR\n");
+		cp.code() = std::string("//CJALR\n");
 
 // -----------------------------------------------------------------------------
-partInit.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
-partInit.code() += "etiss_uint32 new_pc = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 % 32U) + "U];\n";
-partInit.code() += "*((RV32IMACFD*)cpu)->X[1U] = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
-partInit.code() += "cpu->nextPc = new_pc & -2;\n";
-partInit.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
-partInit.code() += "cpu->instructionPointer = cpu->nextPc;\n";
-partInit.code() += "return cpu->exception;\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
+cp.code() += "etiss_uint32 new_pc = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 % 32U) + "U];\n";
+cp.code() += "*((RV32IMACFD*)cpu)->X[1U] = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
+cp.code() += "cpu->nextPc = new_pc & -2;\n";
+cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
+cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
+		cp.getRegisterDependencies().add(reg_name[rs1 % 32U], 32);
+		cp.getAffectedRegisters().add(reg_name[1U], 32);
+		cp.getAffectedRegisters().add("instructionPointer", 32);
+	}
+	{
+		CodePart & cp = cs.append(CodePart::APPENDEDRETURNINGREQUIRED);
 
-		partInit.getRegisterDependencies().add(reg_name[rs1 % 32U], 32);
-		partInit.getAffectedRegisters().add(reg_name[1U], 32);
-		partInit.getAffectedRegisters().add("instructionPointer", 32);
+		cp.code() = std::string("//CJALR\n");
+
+// -----------------------------------------------------------------------------
+cp.code() += "return cpu->exception;\n";
+// -----------------------------------------------------------------------------
+	}
 
 		return true;
 	},
@@ -1871,20 +2010,29 @@ static InstructionDefinition cebreak_ (
 
 // -----------------------------------------------------------------------------
 
-		CodePart & partInit = cs.append(CodePart::INITIALREQUIRED);
+	{
+		CodePart & cp = cs.append(CodePart::INITIALREQUIRED);
 
-		partInit.code() = std::string("//CEBREAK\n");
+		cp.code() = std::string("//CEBREAK\n");
 
 // -----------------------------------------------------------------------------
-partInit.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
-partInit.code() += "cpu->exception = 0; raise(cpu, system, plugin_pointers, 0U, 3U);\n";
-partInit.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
-partInit.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
-partInit.code() += "cpu->instructionPointer = cpu->nextPc;\n";
-partInit.code() += "return cpu->exception;\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
+cp.code() += "cpu->exception = 0; raise(cpu, system, plugin_pointers, 0U, 3U);\n";
+cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
+cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
+cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
+		cp.getAffectedRegisters().add("instructionPointer", 32);
+	}
+	{
+		CodePart & cp = cs.append(CodePart::APPENDEDRETURNINGREQUIRED);
 
-		partInit.getAffectedRegisters().add("instructionPointer", 32);
+		cp.code() = std::string("//CEBREAK\n");
+
+// -----------------------------------------------------------------------------
+cp.code() += "return cpu->exception;\n";
+// -----------------------------------------------------------------------------
+	}
 
 		return true;
 	},
@@ -1928,28 +2076,37 @@ uimm += R_uimm_2.read(ba) << 2;
 
 // -----------------------------------------------------------------------------
 
-		CodePart & partInit = cs.append(CodePart::INITIALREQUIRED);
+	{
+		CodePart & cp = cs.append(CodePart::INITIALREQUIRED);
 
-		partInit.code() = std::string("//CSWSP\n");
+		cp.code() = std::string("//CSWSP\n");
 
 // -----------------------------------------------------------------------------
-partInit.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
-partInit.code() += "etiss_uint32 offs = *((RV32IMACFD*)cpu)->X[2U] + " + std::to_string(uimm) + "U;\n";
-partInit.code() += "etiss_uint32 mem_val_0;\n";
-partInit.code() += "mem_val_0 = (etiss_uint32)(*((RV32IMACFD*)cpu)->X[" + std::to_string(rs2 % 32U) + "U]);\n";
-partInit.code() += "cpu->exception |= (*(system->dwrite))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_0, 4);\n";
-partInit.code() += "if (cpu->exception) {\n";
-partInit.code() += "translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
-partInit.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
-partInit.code() += "}\n";
-partInit.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
-partInit.code() += "cpu->instructionPointer = cpu->nextPc;\n";
-partInit.code() += "if (cpu->return_pending | cpu->exception) return cpu->exception;\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
+cp.code() += "etiss_uint32 offs = *((RV32IMACFD*)cpu)->X[2U] + " + std::to_string(uimm) + "U;\n";
+cp.code() += "etiss_uint32 mem_val_0;\n";
+cp.code() += "mem_val_0 = (etiss_uint32)(*((RV32IMACFD*)cpu)->X[" + std::to_string(rs2 % 32U) + "U]);\n";
+cp.code() += "cpu->exception |= (*(system->dwrite))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_0, 4);\n";
+cp.code() += "if (cpu->exception) {\n";
+cp.code() += "translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
+cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
+cp.code() += "}\n";
+cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
+cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
+		cp.getRegisterDependencies().add(reg_name[2U], 32);
+		cp.getRegisterDependencies().add(reg_name[rs2 % 32U], 32);
+		cp.getAffectedRegisters().add("instructionPointer", 32);
+	}
+	{
+		CodePart & cp = cs.append(CodePart::APPENDEDRETURNINGREQUIRED);
 
-		partInit.getRegisterDependencies().add(reg_name[2U], 32);
-		partInit.getRegisterDependencies().add(reg_name[rs2 % 32U], 32);
-		partInit.getAffectedRegisters().add("instructionPointer", 32);
+		cp.code() = std::string("//CSWSP\n");
+
+// -----------------------------------------------------------------------------
+cp.code() += "if (cpu->return_pending | cpu->exception) return cpu->exception;\n";
+// -----------------------------------------------------------------------------
+	}
 
 		return true;
 	},
@@ -1993,20 +2150,29 @@ static InstructionDefinition dii_ (
 
 // -----------------------------------------------------------------------------
 
-		CodePart & partInit = cs.append(CodePart::INITIALREQUIRED);
+	{
+		CodePart & cp = cs.append(CodePart::INITIALREQUIRED);
 
-		partInit.code() = std::string("//DII\n");
+		cp.code() = std::string("//DII\n");
 
 // -----------------------------------------------------------------------------
-partInit.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
-partInit.code() += "cpu->exception = 0; raise(cpu, system, plugin_pointers, 0U, 2U);\n";
-partInit.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
-partInit.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
-partInit.code() += "cpu->instructionPointer = cpu->nextPc;\n";
-partInit.code() += "return cpu->exception;\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
+cp.code() += "cpu->exception = 0; raise(cpu, system, plugin_pointers, 0U, 2U);\n";
+cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
+cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
+cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
+		cp.getAffectedRegisters().add("instructionPointer", 32);
+	}
+	{
+		CodePart & cp = cs.append(CodePart::APPENDEDRETURNINGREQUIRED);
 
-		partInit.getAffectedRegisters().add("instructionPointer", 32);
+		cp.code() = std::string("//DII\n");
+
+// -----------------------------------------------------------------------------
+cp.code() += "return cpu->exception;\n";
+// -----------------------------------------------------------------------------
+	}
 
 		return true;
 	},

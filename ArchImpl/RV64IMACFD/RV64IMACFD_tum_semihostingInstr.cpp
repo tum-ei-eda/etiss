@@ -1,5 +1,5 @@
 /**
- * Generated on Mon, 05 Dec 2022 22:18:34 +0100.
+ * Generated on Tue, 07 Feb 2023 18:20:18 +0100.
  *
  * This file contains the instruction behavior models of the tum_semihosting
  * instruction set for the RV64IMACFD core architecture.
@@ -31,57 +31,66 @@ static InstructionDefinition ebreak_ (
 
 // -----------------------------------------------------------------------------
 
-		CodePart & partInit = cs.append(CodePart::INITIALREQUIRED);
+	{
+		CodePart & cp = cs.append(CodePart::INITIALREQUIRED);
 
-		partInit.code() = std::string("//EBREAK\n");
+		cp.code() = std::string("//EBREAK\n");
 
 // -----------------------------------------------------------------------------
-partInit.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4UL) + "U;\n";
-partInit.code() += "if (etiss_semihost_enabled()) {\n";
-partInit.code() += "etiss_uint32 mem_val_0;\n";
-partInit.code() += "cpu->exception |= (*(system->dread))(system->handle, cpu, " + std::to_string(ic.current_address_ - 4UL) + "U, (etiss_uint8*)&mem_val_0, 4);\n";
-partInit.code() += "if (cpu->exception) {\n";
-partInit.code() += "translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
-partInit.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
-partInit.code() += "}\n";
-partInit.code() += "etiss_uint32 pre = (etiss_uint32)(mem_val_0);\n";
-partInit.code() += "etiss_uint32 mem_val_1;\n";
-partInit.code() += "cpu->exception |= (*(system->dread))(system->handle, cpu, " + std::to_string(ic.current_address_ + 0UL) + "U, (etiss_uint8*)&mem_val_1, 4);\n";
-partInit.code() += "if (cpu->exception) {\n";
-partInit.code() += "translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
-partInit.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
-partInit.code() += "}\n";
-partInit.code() += "etiss_uint32 ebreak = (etiss_uint32)(mem_val_1);\n";
-partInit.code() += "etiss_uint32 mem_val_2;\n";
-partInit.code() += "cpu->exception |= (*(system->dread))(system->handle, cpu, " + std::to_string(ic.current_address_ + 4UL) + "U, (etiss_uint8*)&mem_val_2, 4);\n";
-partInit.code() += "if (cpu->exception) {\n";
-partInit.code() += "translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
-partInit.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
-partInit.code() += "}\n";
-partInit.code() += "etiss_uint32 post = (etiss_uint32)(mem_val_2);\n";
-partInit.code() += "if (pre == 32509971U && ebreak == 1048691U && post == 1081102355U) {\n";
-partInit.code() += "etiss_uint64 operation = *((RV64IMACFD*)cpu)->X[10U];\n";
-partInit.code() += "etiss_uint64 parameter = *((RV64IMACFD*)cpu)->X[11U];\n";
-partInit.code() += "*((RV64IMACFD*)cpu)->X[10U] = (etiss_int64)(etiss_semihost(cpu, system, plugin_pointers, " + std::to_string(64) + "U, operation, parameter));\n";
-partInit.code() += "}\n";
-partInit.code() += "else {\n";
-partInit.code() += "cpu->exception = 0; raise(cpu, system, plugin_pointers, 0U, " + std::to_string(3) + "U);\n";
-partInit.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
-partInit.code() += "}\n";
-partInit.code() += "}\n";
-partInit.code() += "else {\n";
-partInit.code() += "cpu->exception = 0; raise(cpu, system, plugin_pointers, 0U, " + std::to_string(3) + "U);\n";
-partInit.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
-partInit.code() += "}\n";
-partInit.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
-partInit.code() += "cpu->instructionPointer = cpu->nextPc;\n";
-partInit.code() += "if (cpu->return_pending | cpu->exception | cpu->nextPc != " + std::to_string(ic.current_address_ + 4) + ") return cpu->exception;\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4UL) + "U;\n";
+cp.code() += "if (etiss_semihost_enabled()) {\n";
+cp.code() += "etiss_uint32 mem_val_0;\n";
+cp.code() += "cpu->exception |= (*(system->dread))(system->handle, cpu, " + std::to_string(ic.current_address_ - 4UL) + "U, (etiss_uint8*)&mem_val_0, 4);\n";
+cp.code() += "if (cpu->exception) {\n";
+cp.code() += "translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
+cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
+cp.code() += "}\n";
+cp.code() += "etiss_uint32 pre = (etiss_uint32)(mem_val_0);\n";
+cp.code() += "etiss_uint32 mem_val_1;\n";
+cp.code() += "cpu->exception |= (*(system->dread))(system->handle, cpu, " + std::to_string(ic.current_address_ + 0UL) + "U, (etiss_uint8*)&mem_val_1, 4);\n";
+cp.code() += "if (cpu->exception) {\n";
+cp.code() += "translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
+cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
+cp.code() += "}\n";
+cp.code() += "etiss_uint32 ebreak = (etiss_uint32)(mem_val_1);\n";
+cp.code() += "etiss_uint32 mem_val_2;\n";
+cp.code() += "cpu->exception |= (*(system->dread))(system->handle, cpu, " + std::to_string(ic.current_address_ + 4UL) + "U, (etiss_uint8*)&mem_val_2, 4);\n";
+cp.code() += "if (cpu->exception) {\n";
+cp.code() += "translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
+cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
+cp.code() += "}\n";
+cp.code() += "etiss_uint32 post = (etiss_uint32)(mem_val_2);\n";
+cp.code() += "if (pre == 32509971U && ebreak == 1048691U && post == 1081102355U) {\n";
+cp.code() += "etiss_uint64 operation = *((RV64IMACFD*)cpu)->X[10U];\n";
+cp.code() += "etiss_uint64 parameter = *((RV64IMACFD*)cpu)->X[11U];\n";
+cp.code() += "*((RV64IMACFD*)cpu)->X[10U] = (etiss_int64)(etiss_semihost(cpu, system, plugin_pointers, 64U, operation, parameter));\n";
+cp.code() += "}\n";
+cp.code() += "else {\n";
+cp.code() += "cpu->exception = 0; raise(cpu, system, plugin_pointers, 0U, 3);\n";
+cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
+cp.code() += "}\n";
+cp.code() += "}\n";
+cp.code() += "else {\n";
+cp.code() += "cpu->exception = 0; raise(cpu, system, plugin_pointers, 0U, 3);\n";
+cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
+cp.code() += "}\n";
+cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
+cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
+		cp.getRegisterDependencies().add(reg_name[10U], 64);
+		cp.getRegisterDependencies().add(reg_name[11U], 64);
+		cp.getAffectedRegisters().add(reg_name[10U], 64);
+		cp.getAffectedRegisters().add("instructionPointer", 32);
+	}
+	{
+		CodePart & cp = cs.append(CodePart::APPENDEDRETURNINGREQUIRED);
 
-		partInit.getRegisterDependencies().add(reg_name[10U], 64);
-		partInit.getRegisterDependencies().add(reg_name[11U], 64);
-		partInit.getAffectedRegisters().add(reg_name[10U], 64);
-		partInit.getAffectedRegisters().add("instructionPointer", 32);
+		cp.code() = std::string("//EBREAK\n");
+
+// -----------------------------------------------------------------------------
+cp.code() += "if (cpu->return_pending | cpu->exception | cpu->nextPc != " + std::to_string(ic.current_address_ + 4) + ") return cpu->exception;\n";
+// -----------------------------------------------------------------------------
+	}
 
 		return true;
 	},

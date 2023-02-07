@@ -111,19 +111,28 @@ error_code += R_error_code_0.read(ba) << 0;
 
 // -----------------------------------------------------------------------------
 
-		CodePart & partInit = cs.append(CodePart::INITIALREQUIRED);
+	{
+		CodePart & cp = cs.append(CodePart::INITIALREQUIRED);
 
-		partInit.code() = std::string("//trap_entry 32\n");
+		cp.code() = std::string("//trap_entry 32\n");
 
 // -----------------------------------------------------------------------------
-partInit.code() += "translate_exc_code(cpu, system, plugin_pointers, " + std::to_string(error_code) + "U);\n";
-partInit.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
-partInit.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
-partInit.code() += "cpu->instructionPointer = cpu->nextPc;\n";
-partInit.code() += "return cpu->exception;\n";
+cp.code() += "translate_exc_code(cpu, system, plugin_pointers, " + std::to_string(error_code) + "U);\n";
+cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
+cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
+cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
+		cp.getAffectedRegisters().add("instructionPointer", 32);
+	}
+	{
+		CodePart & cp = cs.append(CodePart::APPENDEDRETURNINGREQUIRED);
 
-		partInit.getAffectedRegisters().add("instructionPointer", 32);
+		cp.code() = std::string("//trap_entry 32\n");
+
+// -----------------------------------------------------------------------------
+cp.code() += "return cpu->exception;\n";
+// -----------------------------------------------------------------------------
+	}
 
 		return true;
 	},
@@ -145,19 +154,28 @@ error_code += R_error_code_0.read(ba) << 0;
 
 // -----------------------------------------------------------------------------
 
-		CodePart & partInit = cs.append(CodePart::INITIALREQUIRED);
+	{
+		CodePart & cp = cs.append(CodePart::INITIALREQUIRED);
 
-		partInit.code() = std::string("//trap_entry 16\n");
+		cp.code() = std::string("//trap_entry 16\n");
 
 // -----------------------------------------------------------------------------
-partInit.code() += "translate_exc_code(cpu, system, plugin_pointers, " + std::to_string(error_code) + "U);\n";
-partInit.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
-partInit.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
-partInit.code() += "cpu->instructionPointer = cpu->nextPc;\n";
-partInit.code() += "return cpu->exception;\n";
+cp.code() += "translate_exc_code(cpu, system, plugin_pointers, " + std::to_string(error_code) + "U);\n";
+cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
+cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
+cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
+		cp.getAffectedRegisters().add("instructionPointer", 32);
+	}
+	{
+		CodePart & cp = cs.append(CodePart::APPENDEDRETURNINGREQUIRED);
 
-		partInit.getAffectedRegisters().add("instructionPointer", 32);
+		cp.code() = std::string("//trap_entry 16\n");
+
+// -----------------------------------------------------------------------------
+cp.code() += "return cpu->exception;\n";
+// -----------------------------------------------------------------------------
+	}
 
 		return true;
 	},

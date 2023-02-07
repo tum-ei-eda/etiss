@@ -1,5 +1,5 @@
 /**
- * Generated on Mon, 05 Dec 2022 22:18:34 +0100.
+ * Generated on Tue, 07 Feb 2023 18:20:18 +0100.
  *
  * This file contains the instruction behavior models of the tum_ret
  * instruction set for the RV64IMACFD core architecture.
@@ -31,29 +31,42 @@ static InstructionDefinition mret_ (
 
 // -----------------------------------------------------------------------------
 
-		CodePart & partInit = cs.append(CodePart::INITIALREQUIRED);
+	{
+		CodePart & cp = cs.append(CodePart::INITIALREQUIRED);
 
-		partInit.code() = std::string("//MRET\n");
+		cp.code() = std::string("//MRET\n");
 
 // -----------------------------------------------------------------------------
-partInit.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4UL) + "U;\n";
-partInit.code() += "cpu->nextPc = *((RV64IMACFD*)cpu)->CSR[833];\n";
-partInit.code() += "etiss_uint64 s = *((RV64IMACFD*)cpu)->CSR[768];\n";
-partInit.code() += "etiss_uint64 prev_prv = get_field(s, " + std::to_string(6144) + "U);\n";
-partInit.code() += "if (prev_prv != 3L) {\n";
-partInit.code() += "s = set_field(s, " + std::to_string(131072) + "U, 0U);\n";
-partInit.code() += "}\n";
-partInit.code() += "s = set_field(s, " + std::to_string(8) + "U, get_field(s, " + std::to_string(128) + "U));\n";
-partInit.code() += "s = set_field(s, " + std::to_string(128) + "U, 1U);\n";
-partInit.code() += "s = set_field(s, " + std::to_string(6144) + "U, " + std::to_string(3) + "U);\n";
-partInit.code() += "*((RV64IMACFD*)cpu)->CSR[" + std::to_string(768) + "U] = s;\n";
-partInit.code() += "((RV64IMACFD*)cpu)->PRIV = (prev_prv) & 0x7;\n";
-partInit.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
-partInit.code() += "cpu->instructionPointer = cpu->nextPc;\n";
-partInit.code() += "return cpu->exception;\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4UL) + "U;\n";
+cp.code() += "if (((RV64IMACFD*)cpu)->PRIV < 3) {\n";
+cp.code() += "cpu->exception = 0; raise(cpu, system, plugin_pointers, 0U, 2);\n";
+cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
+cp.code() += "}\n";
+cp.code() += "cpu->nextPc = *((RV64IMACFD*)cpu)->CSR[833];\n";
+cp.code() += "etiss_uint64 s = *((RV64IMACFD*)cpu)->CSR[768];\n";
+cp.code() += "etiss_uint64 prev_prv = get_field(s, 6144);\n";
+cp.code() += "if (prev_prv != 3L) {\n";
+cp.code() += "s = set_field(s, 131072, 0U);\n";
+cp.code() += "}\n";
+cp.code() += "s = set_field(s, 8, get_field(s, 128));\n";
+cp.code() += "s = set_field(s, 128, 1U);\n";
+cp.code() += "s = set_field(s, 6144, (extension_enabled(cpu, system, plugin_pointers, 85U)) ? (0) : (3));\n";
+cp.code() += "*((RV64IMACFD*)cpu)->CSR[768] = s;\n";
+cp.code() += "((RV64IMACFD*)cpu)->PRIV = (prev_prv) & 0x7;\n";
+cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
+cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
+		cp.getAffectedRegisters().add("instructionPointer", 32);
+	}
+	{
+		CodePart & cp = cs.append(CodePart::APPENDEDRETURNINGREQUIRED);
 
-		partInit.getAffectedRegisters().add("instructionPointer", 32);
+		cp.code() = std::string("//MRET\n");
+
+// -----------------------------------------------------------------------------
+cp.code() += "return cpu->exception;\n";
+// -----------------------------------------------------------------------------
+	}
 
 		return true;
 	},
@@ -67,6 +80,74 @@ partInit.code() += "return cpu->exception;\n";
 		std::stringstream ss;
 // -----------------------------------------------------------------------------
 ss << "mret" << " # " << ba << (" []");
+// -----------------------------------------------------------------------------
+		return ss.str();
+	}
+);
+
+// SRET ------------------------------------------------------------------------
+static InstructionDefinition sret_ (
+	ISA32_RV64IMACFD,
+	"sret",
+	(uint32_t) 0x10200073,
+	(uint32_t) 0xffffffff,
+	[] (BitArray & ba,etiss::CodeSet & cs,InstructionContext & ic)
+	{
+
+// -----------------------------------------------------------------------------
+
+// -----------------------------------------------------------------------------
+
+// -----------------------------------------------------------------------------
+
+// -----------------------------------------------------------------------------
+
+	{
+		CodePart & cp = cs.append(CodePart::INITIALREQUIRED);
+
+		cp.code() = std::string("//SRET\n");
+
+// -----------------------------------------------------------------------------
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4UL) + "U;\n";
+cp.code() += "if (((RV64IMACFD*)cpu)->PRIV < ((get_field(*((RV64IMACFD*)cpu)->CSR[768], 4194304)) ? (3) : (1))) {\n";
+cp.code() += "cpu->exception = 0; raise(cpu, system, plugin_pointers, 0U, 2);\n";
+cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
+cp.code() += "}\n";
+cp.code() += "cpu->nextPc = *((RV64IMACFD*)cpu)->CSR[321];\n";
+cp.code() += "etiss_uint64 s = *((RV64IMACFD*)cpu)->CSR[256];\n";
+cp.code() += "etiss_uint64 prev_prv = get_field(s, 256);\n";
+cp.code() += "s = set_field(s, 2, get_field(s, 32));\n";
+cp.code() += "s = set_field(s, 32, 1U);\n";
+cp.code() += "s = set_field(s, 256, 0);\n";
+cp.code() += "*((RV64IMACFD*)cpu)->CSR[768] = s;\n";
+cp.code() += "((RV64IMACFD*)cpu)->PRIV = (prev_prv) & 0x7;\n";
+cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
+cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
+// -----------------------------------------------------------------------------
+		cp.getAffectedRegisters().add("instructionPointer", 32);
+	}
+	{
+		CodePart & cp = cs.append(CodePart::APPENDEDRETURNINGREQUIRED);
+
+		cp.code() = std::string("//SRET\n");
+
+// -----------------------------------------------------------------------------
+cp.code() += "return cpu->exception;\n";
+// -----------------------------------------------------------------------------
+	}
+
+		return true;
+	},
+	0,
+	[] (BitArray & ba, Instruction & instr)
+	{
+// -----------------------------------------------------------------------------
+
+// -----------------------------------------------------------------------------
+
+		std::stringstream ss;
+// -----------------------------------------------------------------------------
+ss << "sret" << " # " << ba << (" []");
 // -----------------------------------------------------------------------------
 		return ss.str();
 	}
