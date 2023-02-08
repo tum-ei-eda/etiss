@@ -323,6 +323,11 @@ class CPUCore : public VirtualStructSupport, public etiss::ToString
     }
 
     /**
+     * @brief Get a reference to the JIT plugin.
+     */
+    inline std::shared_ptr<etiss::JIT> getJIT() { return jit_; }
+
+    /**
      * @brief Get a string representation of the object.
      */
     inline const std::string &toString() const { return name_; }
