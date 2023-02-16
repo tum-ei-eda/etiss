@@ -41,6 +41,7 @@
 */
 
 #ifndef NO_ETISS
+#include "etiss/fault/XML.h"
 #include "etiss/fault/Fault.h"
 #include "etiss/fault/Trigger.h"
 #include "etiss/fault/Action.h"
@@ -49,6 +50,7 @@
 #include "etiss/fault/Stressor.h"
 #include "pugixml.hpp"
 #else
+#include "fault/XML.h"
 #include "fault/Fault.h"
 #include "fault/Trigger.h"
 #include "fault/Action.h"

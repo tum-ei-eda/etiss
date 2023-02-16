@@ -55,9 +55,6 @@
 
 #ifndef NO_ETISS
 #include "etiss/jit/ReturnCode.h"
-#include "etiss/fault/XML.h"
-#else
-#include "fault/XML.h"
 #endif
 
 #include <iostream>
@@ -150,10 +147,6 @@ class Stressor
      */
     static std::map<int32_t, Fault> &faults();
 };
-
-/** @brief parse a XML document held in \p input stream and return as \p doc
- */
-bool parseXML(pugi::xml_document &doc, std::istream &input, std::ostream &diagnostics_out = std::cout);
 
 } // namespace fault
 

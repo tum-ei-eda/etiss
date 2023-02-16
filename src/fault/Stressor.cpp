@@ -41,6 +41,7 @@
 */
 
 #ifndef NO_ETISS
+#include "etiss/fault/XML.h"
 #include "etiss/fault/Stressor.h"
 #include "etiss/fault/Injector.h"
 #include "etiss/fault/InjectorAddress.h"
@@ -49,6 +50,7 @@
 #include "etiss/fault/Fault.h"
 #include "etiss/Misc.h"
 #else
+#include "fault/XML.h"
 #include "fault/Stressor.h"
 #include "fault/Injector.h"
 #include "fault/InjectorAddress.h"
@@ -506,19 +508,6 @@ void Stressor::clear()
     std::lock_guard<std::mutex> lock(faults_sync());
 #endif
     faults().clear();
-}
-
-bool parseXML(pugi::xml_document &doc, std::istream &input, std::ostream &diagnostics_out)
-{
-    pugi::xml_parse_result pr = doc.load(input); // load from stream
-
-    if (!pr)
-    { // load failure
-        diagnostics_out << "failed to load xml from stream: " << pr.description() << std::endl;
-        return false;
-    }
-
-    return true;
 }
 
 } // namespace fault

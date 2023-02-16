@@ -63,10 +63,8 @@
 #ifndef NO_ETISS
 #include "etiss/Misc.h"
 #include "etiss/fault/Defs.h"
-#include "etiss/fault/XML.h"
 #else
 #include "fault/Defs.h"
-#include "fault/XML.h"
 #endif
 
 /// if true then mutex will be used to create unique ids for faults in a threadsafe way
@@ -118,22 +116,8 @@ class FaultRef : public etiss::ToString
 
 #if ETISS_FAULT_XML
 
-bool parseXML(std::vector<Fault> &vec, const pugi::xml_document &doc, xml::Diagnostics &diag);
-bool parseXML(std::vector<FaultRef> &vec, const pugi::xml_document &doc, xml::Diagnostics &diag);
-
-bool writeXML(const std::vector<Fault> &vec, std::ostream &out, std::ostream &diagnostics_out = std::cout);
-
 namespace xml
 {
-
-template <>
-bool parse<etiss::fault::Fault>(pugi::xml_node node, etiss::fault::Fault &f, Diagnostics &diag);
-template <>
-bool write<etiss::fault::Fault>(pugi::xml_node node, const etiss::fault::Fault &f, Diagnostics &diag);
-template <>
-bool parse<etiss::fault::FaultRef>(pugi::xml_node node, etiss::fault::FaultRef &fref, Diagnostics &diag);
-template <>
-bool write<etiss::fault::FaultRef>(pugi::xml_node node, const etiss::fault::FaultRef &fref, Diagnostics &diag);
 
 } // namespace xml
 

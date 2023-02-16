@@ -290,6 +290,19 @@ pugi::xml_node findSingleNode(pugi::xml_node node, const std::string &name, Diag
 } // namespace xml
 #endif
 
+bool parseXML(pugi::xml_document &doc, std::istream &input, std::ostream &diagnostics_out)
+{
+    pugi::xml_parse_result pr = doc.load(input); // load from stream
+
+    if (!pr)
+    { // load failure
+        diagnostics_out << "failed to load xml from stream: " << pr.description() << std::endl;
+        return false;
+    }
+
+    return true;
+}
+
 } // namespace fault
 
 } // namespace etiss

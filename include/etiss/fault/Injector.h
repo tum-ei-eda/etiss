@@ -55,11 +55,9 @@
 #ifndef NO_ETISS
 #include "etiss/Misc.h"
 #include "etiss/fault/Defs.h"
-#include "etiss/fault/XML.h"
 #include "etiss/fault/Misc.h"
 #else
 #include "fault/Defs.h"
-#include "fault/XML.h"
 #include "fault/Misc.h"
 #endif
 

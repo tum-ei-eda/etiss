@@ -54,6 +54,7 @@
 
 #include <list>
 #include <string>
+#include <vector>
 
 #ifndef NO_ETISS
 #include "etiss/fault/Defs.h"
@@ -70,6 +71,13 @@ namespace etiss
 
 namespace fault
 {
+
+// forwards
+class Trigger;
+class Fault;
+class FaultRef;
+class Action;
+class InjectorAddress;
 
 // some helper for changing Core Names
 extern int coreIDActuallXML;
@@ -211,8 +219,60 @@ pugi::xml_node findSingleNode(pugi::xml_node node, const std::string &name, Diag
 
 ////////////////////////////////////////////
 
+// TRIGGER
+template <>
+bool parse<etiss::fault::Trigger *>(pugi::xml_node node, etiss::fault::Trigger *&f, Diagnostics &diag);
+template <>
+bool write<const etiss::fault::Trigger *>(pugi::xml_node node, const etiss::fault::Trigger *const &f,
+                                          Diagnostics &diag);
+
+template <>
+bool parse<etiss::fault::Trigger>(pugi::xml_node node, etiss::fault::Trigger &f, Diagnostics &diag);
+template <>
+bool write<etiss::fault::Trigger>(pugi::xml_node node, const etiss::fault::Trigger &f, Diagnostics &diag);
+
+// FAULT
+template <>
+bool parse<etiss::fault::Fault>(pugi::xml_node node, etiss::fault::Fault &f, Diagnostics &diag);
+template <>
+bool write<etiss::fault::Fault>(pugi::xml_node node, const etiss::fault::Fault &f, Diagnostics &diag);
+template <>
+bool parse<etiss::fault::FaultRef>(pugi::xml_node node, etiss::fault::FaultRef &fref, Diagnostics &diag);
+template <>
+bool write<etiss::fault::FaultRef>(pugi::xml_node node, const etiss::fault::FaultRef &fref, Diagnostics &diag);
+
+// ACTION
+template <>
+bool parse<etiss::fault::Action>(pugi::xml_node node, etiss::fault::Action &f, Diagnostics &diag);
+template <>
+bool write<etiss::fault::Action>(pugi::xml_node node, const etiss::fault::Action &f, Diagnostics &diag);
+
+// INJECTORADDRESS
+template <>
+bool parse<etiss::fault::InjectorAddress>(pugi::xml_node node, etiss::fault::InjectorAddress &dst, Diagnostics &diag);
+template <>
+bool write<etiss::fault::InjectorAddress>(pugi::xml_node node, const etiss::fault::InjectorAddress &src,
+                                          Diagnostics &diag);
+
+template <>
+bool parse<etiss::fault::InjectorAddress *>(pugi::xml_node node, etiss::fault::InjectorAddress *&dst,
+                                            Diagnostics &diag);
+template <>
+bool write<const etiss::fault::InjectorAddress *>(pugi::xml_node node, const etiss::fault::InjectorAddress *const &src,
+                                                  Diagnostics &diag);
+
 } // namespace xml
 #endif
+
+/** @brief parse a XML document held in \p input stream and return as \p doc
+ */
+bool parseXML(pugi::xml_document &doc, std::istream &input, std::ostream &diagnostics_out = std::cout);
+
+bool parseXML(std::vector<Fault> &vec, const pugi::xml_document &doc, xml::Diagnostics &diag);
+bool parseXML(std::vector<FaultRef> &vec, const pugi::xml_document &doc, xml::Diagnostics &diag);
+
+bool writeXML(const std::vector<Fault> &vec, std::ostream &out, std::ostream &diagnostics_out = std::cout);
+
 } // namespace fault
 
 } // namespace etiss

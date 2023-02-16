@@ -267,23 +267,34 @@ install(TARGETS simpleini
 )
 
 FetchContent_Declare(pugixml_srcs
-	GIT_REPOSITORY https://github.com/zeux/pugixml.git
-	GIT_TAG v1.11.4
+    GIT_REPOSITORY https://github.com/zeux/pugixml.git
+    GIT_TAG v1.11.4
 )
 if(NOT pugixml_srcs_POPULATED)
-	FetchContent_Populate(pugixml_srcs)
-	FetchContent_GetProperties(pugixml_srcs)
+    FetchContent_Populate(pugixml_srcs)
+    FetchContent_GetProperties(pugixml_srcs)
 endif()
 add_subdirectory(${pugixml_srcs_SOURCE_DIR} ${pugixml_srcs_BINARY_DIR} EXCLUDE_FROM_ALL)
 
 FetchContent_Declare(betterenums_srcs
-	GIT_REPOSITORY https://github.com/aantron/better-enums.git
-	GIT_TAG 0.11.3
+    GIT_REPOSITORY https://github.com/aantron/better-enums.git
+    GIT_TAG 0.11.3
 )
 if(NOT betterenums_srcs_POPULATED)
-	FetchContent_Populate(betterenums_srcs)
-	FetchContent_GetProperties(betterenums_srcs)
+    FetchContent_Populate(betterenums_srcs)
+    FetchContent_GetProperties(betterenums_srcs)
 endif()
+add_library(betterenums INTERFACE)
+set_target_properties(betterenums PROPERTIES
+    PUBLIC_HEADER "${betterenums_srcs_SOURCE_DIR}/enum.h"
+)
+target_include_directories(betterenums INTERFACE
+    $<BUILD_INTERFACE:${betterenums_srcs_SOURCE_DIR}>
+    $<INSTALL_INTERFACE:include>
+)
+install(TARGETS betterenums
+    PUBLIC_HEADER DESTINATION include
+)
 
 ### Doxyfile
 set(ETISS_DOX_LOCATIONS ${ETISS_DOX_LOCATIONS} ${PROJECT_BINARY_DIR}/include)
@@ -384,7 +395,7 @@ set_target_properties(ETISS PROPERTIES
   LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib/
 )
 IF(UNIX)
-    TARGET_LINK_LIBRARIES(ETISS PUBLIC ${Boost_LIBRARIES})
+    TARGET_LINK_LIBRARIES(ETISS PUBLIC Boost::filesystem Boost::system Boost::program_options)
 ELSE(UNIX)
     TARGET_LINK_LIBRARIES(ETISS PUBLIC Boost::boost Threads::Threads)
 ENDIF()
@@ -405,10 +416,8 @@ TARGET_INCLUDE_DIRECTORIES(ETISS PUBLIC
     "${PROJECT_SOURCE_DIR}/include_c"
     "${PROJECT_BINARY_DIR}/include_c"
     ${INCGEN_INC_DIR}
-    ${betterenums_srcs_SOURCE_DIR}
 )
-TARGET_LINK_LIBRARIES(ETISS PUBLIC simpleini elfio)
-TARGET_LINK_LIBRARIES(ETISS PUBLIC pugixml)
+TARGET_LINK_LIBRARIES(ETISS PUBLIC simpleini elfio pugixml betterenums)
 
 GENERATE_EXPORT_HEADER(ETISS
           BASE_NAME ETISS_PLUGIN

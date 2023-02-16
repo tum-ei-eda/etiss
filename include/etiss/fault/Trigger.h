@@ -61,10 +61,8 @@
 
 #ifndef NO_ETISS
 #include "etiss/Misc.h"
-#include "etiss/fault/XML.h"
 #include "etiss/fault/Misc.h"
 #else
-#include "fault/XML.h"
 #include "fault/Misc.h"
 #endif
 
@@ -175,16 +173,7 @@ class Trigger : public etiss::ToString
 namespace xml
 {
 
-template <>
-bool parse<etiss::fault::Trigger *>(pugi::xml_node node, etiss::fault::Trigger *&f, Diagnostics &diag);
-template <>
-bool write<const etiss::fault::Trigger *>(pugi::xml_node node, const etiss::fault::Trigger *const &f,
-                                          Diagnostics &diag);
 
-template <>
-bool parse<etiss::fault::Trigger>(pugi::xml_node node, etiss::fault::Trigger &f, Diagnostics &diag);
-template <>
-bool write<etiss::fault::Trigger>(pugi::xml_node node, const etiss::fault::Trigger &f, Diagnostics &diag);
 
 } // namespace xml
 #endif

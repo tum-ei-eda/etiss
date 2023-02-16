@@ -58,11 +58,9 @@
 #ifndef NO_ETISS
 #include "etiss/Misc.h"
 #include "etiss/fault/Defs.h"
-#include "etiss/fault/XML.h"
 #include "enum.h"
 #else
 #include "fault/Defs.h"
-#include "fault/XML.h"
 #include "enum.h"
 #endif
 
@@ -196,11 +194,6 @@ std::string returncode_tostring(int32_t in);
 
 namespace xml
 {
-
-template <>
-bool parse<etiss::fault::Action>(pugi::xml_node node, etiss::fault::Action &f, Diagnostics &diag);
-template <>
-bool write<etiss::fault::Action>(pugi::xml_node node, const etiss::fault::Action &f, Diagnostics &diag);
 
 } // namespace xml
 

@@ -41,12 +41,14 @@
 */
 
 #ifndef NO_ETISS
+#include "etiss/fault/XML.h"
 #include "etiss/fault/Trigger.h"
 #include "etiss/fault/Injector.h"
 #include "etiss/fault/InjectorAddress.h"
 #include "etiss/fault/Fault.h"
 #include "etiss/Misc.h"
 #else
+#include "fault/XML.h"
 #include "fault/Trigger.h"
 #include "fault/Injector.h"
 #include "fault/InjectorAddress.h"
