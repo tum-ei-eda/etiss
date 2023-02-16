@@ -54,6 +54,7 @@
 #include "etiss/Misc.h"
 #include "elfio/elfio.hpp"
 #include <memory>
+#include <algorithm>
 
 using namespace etiss;
 
@@ -171,10 +172,11 @@ void MemoryManipulationSystem::init_manipulation(std::shared_ptr<etiss::VirtualS
                 etiss::int32 return_code;
                 dst_address = std::stoll(split_cmd[1], nullptr, 16);
 
+                std::transform(split_cmd[0].begin(), split_cmd[0].end(), split_cmd[0].begin(), ::toupper);
                 auto mem_manip_cmd = MemoryWordManipulatorBase::mem_manip_cmd_t::_from_string("UNDEF");
                 if (auto maybe = MemoryWordManipulatorBase::mem_manip_cmd_t::_from_string_nothrow(split_cmd[0].c_str()))
                 {
-                    mem_manip_cmd._from_integral(maybe);
+                    mem_manip_cmd = MemoryWordManipulatorBase::mem_manip_cmd_t::_from_integral(maybe);
                 }
 
                 switch (mem_manip_cmd)
