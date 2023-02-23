@@ -53,9 +53,12 @@
 #define ETISS_INJECTOR_H_
 
 #ifndef NO_ETISS
-#include "etiss/fault/Fault.h"
+#include "etiss/Misc.h"
+#include "etiss/fault/Defs.h"
+#include "etiss/fault/Misc.h"
 #else
-#include "fault/Fault.h"
+#include "fault/Defs.h"
+#include "fault/Misc.h"
 #endif
 
 #if CXX0X_UP_SUPPORTED
@@ -73,6 +76,9 @@ namespace fault
 {
 
 class Stressor;
+class Fault;
+class Trigger;
+class Action;
 
 class Injector
 {
