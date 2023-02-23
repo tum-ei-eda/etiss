@@ -46,6 +46,8 @@
 #include <boost/program_options/variables_map.hpp>
 #include <boost/algorithm/string.hpp>
 
+#include "SimpleIni.h"
+
 #if ETISS_USE_DLSYM
 #include <dlfcn.h>
 #endif
@@ -1004,3 +1006,4 @@ std::string etiss::errorMessage(etiss::int32 code, CPUArch *arch)
         }
     }
 }
+
