@@ -31,3 +31,9 @@ add_subdirectory(simpleini)
 # (berkeley) softfloat (used for floating point support in JIT code)
 # Makes CMake target berkeley-softfloat
 add_subdirectory(softfloat)
+
+####################################################################################################
+# pugixml (used in fault injection plugins)
+# Makes CMake target pugixml available
+add_subdirectory(pugixml)
+
