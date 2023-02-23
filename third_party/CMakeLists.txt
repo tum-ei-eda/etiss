@@ -27,3 +27,7 @@ add_subdirectory(elfio)
 # Makes CMake target "simpleini" aka "elfio" available
 add_subdirectory(simpleini)
 
+####################################################################################################
+# (berkeley) softfloat (used for floating point support in JIT code)
+# Makes CMake target berkeley-softfloat
+add_subdirectory(softfloat)
