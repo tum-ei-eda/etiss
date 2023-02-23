@@ -50,20 +50,19 @@ configure_file(
     @ONLY
 )
 
-set(ETISS_DIR ${CMAKE_BINARY_DIR})
 configure_file(
     run_helper.sh.in
-    "${CMAKE_BINARY_DIR}/bin/run_helper.sh"
+    "${ETISS_BINARY_DIR}/bin/run_helper.sh"
     @ONLY
 )
 configure_file(
     base.ini
-    "${CMAKE_BINARY_DIR}/examples/base.ini"
+    "${ETISS_BINARY_DIR}/examples/base.ini"
     COPYONLY
 )
 set_target_properties( bare_etiss_processor
     PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
+    RUNTIME_OUTPUT_DIRECTORY "${ETISS_BINARY_DIR}/bin"
  )
 
 install(TARGETS bare_etiss_processor DESTINATION bin)
