@@ -227,14 +227,16 @@ set(ETISS_HEADER ${ETISS_HEADER} ${TMP_CONFIG_HEADER_REL})
 
 
 include(FetchContent)
+### elfio
 FetchContent_Declare(elfio_srcs
-	GIT_REPOSITORY https://github.com/serge1/ELFIO.git
-	GIT_TAG Release_3.6
+    GIT_REPOSITORY https://github.com/serge1/ELFIO.git
+    GIT_TAG Release_3.11
 )
 if(NOT elfio_srcs_POPULATED)
-	FetchContent_Populate(elfio_srcs)
-	FetchContent_GetProperties(elfio_srcs)
+    FetchContent_Populate(elfio_srcs)
+    FetchContent_GetProperties(elfio_srcs)
 endif()
+add_subdirectory(${elfio_srcs_SOURCE_DIR} ${elfio_srcs_BINARY_DIR} EXCLUDE_FROM_ALL)
 
 ### simpleini
 FetchContent_Declare(simpleini_srcs
@@ -382,9 +384,8 @@ TARGET_INCLUDE_DIRECTORIES(ETISS PUBLIC
     "${PROJECT_SOURCE_DIR}/include_c"
     "${PROJECT_BINARY_DIR}/include_c"
     ${INCGEN_INC_DIR}
-    ${elfio_srcs_SOURCE_DIR}
 )
-TARGET_LINK_LIBRARIES(ETISS PUBLIC simpleini)
+TARGET_LINK_LIBRARIES(ETISS PUBLIC simpleini elfio)
 
 GENERATE_EXPORT_HEADER(ETISS
           BASE_NAME ETISS_PLUGIN
