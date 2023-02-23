@@ -37,3 +37,7 @@ add_subdirectory(softfloat)
 # Makes CMake target pugixml available
 add_subdirectory(pugixml)
 
+####################################################################################################
+# tcc (used in JITImpl)
+# Makes CMake target TinyCC and tcc available (only UNIX)
+add_subdirectory(tcc)
