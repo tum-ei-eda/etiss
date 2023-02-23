@@ -912,7 +912,7 @@ void etiss::initialize_virtualstruct(std::shared_ptr<etiss::CPUCore> cpu_core)
 
     if(!mount_successful)
     {
-        etiss::log(etiss::FATALERROR, std::string("Failed to mount ") + cpu_core->getName() + std::string("'s VirtualStruct, but failed: etiss::CPUCore not created!"));
+        etiss::log(etiss::FATALERROR, std::string("Tried to mount ") + cpu_core->getName() + std::string("'s VirtualStruct, but failed: etiss::CPUCore not created!"));
     }
     else
     {
