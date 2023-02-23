@@ -66,6 +66,10 @@
 
 #include "etiss/LibraryInterface.h"
 #include "SimpleIni.h"
+// SimpleIni includes windows.h which defines NOERROR, clashing with our ReturnCode.
+#ifdef NOERROR
+#undef NOERROR
+#endif
 
 namespace etiss
 {
