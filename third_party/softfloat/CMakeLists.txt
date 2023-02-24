@@ -19,7 +19,7 @@ include(FetchContent)
 
 FetchContent_Declare(softfloat_srcs
     GIT_REPOSITORY https://github.com/ucb-bar/berkeley-softfloat-3.git
-    GIT_TAG master
+    GIT_TAG 5c06db33fc1e2130f67c045327b0ec949032df1d
 )
 if(NOT softfloat_srcs_POPULATED)
     FetchContent_Populate(softfloat_srcs)
