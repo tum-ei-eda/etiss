@@ -1,5 +1,6 @@
 #include <cstdio>
 #include "etiss/ETISS.h"
+#include <unistd.h>
 
 #include "SemihostingCalls.h"
 
@@ -184,7 +185,8 @@ etiss_int64 semihostingCall(ETISS_CPU *const cpu, ETISS_System *const etissSyste
 
             std::vector<etiss_uint8> buffer = semihostReadSystemMemory(etissSystem, address, count);
 
-            size_t num_written = fwrite(buffer.data(), 1, count, file);
+            // size_t num_written = fwrite(buffer.data(), 1, count, file);
+            size_t num_written = write(fd, buffer.data(), count);
             return count - num_written;
         }
         case SYS_READ:
