@@ -63,6 +63,7 @@
 #include "etiss/IntegratedLibrary/PrintInstruction.h"
 #include "etiss/IntegratedLibrary/errorInjection/Plugin.h"
 #include "etiss/IntegratedLibrary/gdb/GDBServer.h"
+#include "etiss/IntegratedLibrary/VanillaAccelerator.h"
 
 extern "C"
 {
@@ -74,7 +75,7 @@ extern "C"
 
     unsigned ETISSINCLUDED_countCPUArch() { return 0; }
 
-    unsigned ETISSINCLUDED_countPlugin() { return 4; }
+    unsigned ETISSINCLUDED_countPlugin() { return 5; }
 
     const char *ETISSINCLUDED_nameJIT(unsigned index) { return 0; }
 
@@ -92,6 +93,9 @@ extern "C"
             return "PrintInstruction";
         case 3:
             return "Logger";
+        
+        case 4:
+            return "VanillaAccelerator";
         }
         return 0;
     }
@@ -133,11 +137,17 @@ extern "C"
         case 2:
             return new etiss::plugin::PrintInstruction();
         case 3:
+        {
             etiss::Configuration cfg;
             cfg.config() = options;
             return new etiss::plugin::Logger(cfg.get<uint64_t>("plugin.logger.logaddr", 0x80000000),
                                              cfg.get<uint64_t>("plugin.logger.logmask", 0xF0000000));
         }
+            
+        case 4:
+            return new etiss::plugin::VanillaAccelerator();
+        }
+         
         return 0;
     }
 

@@ -56,6 +56,7 @@ class MemMappedPeriph : public etiss::plugin::SelectiveSysWrapper
     virtual void write64(etiss_uint64 addr, etiss_uint64 val) { unimpl_write(); }
 
     ETISS_System getWrapInfo(ETISS_System *origSystem) final;
+    
 
   private:
     CustomHandle customHandle_;
