@@ -10,10 +10,10 @@ authors:
   given-names: "Marc"
 - family-names: "Devarajegowda"
   given-names: "Keerthikumara"
-  https://orcid.org/0000-0003-3498-0708
+  orcid: "https://orcid.org/0000-0003-3498-0708"
 - family-names: "Ecker"
   given-names: "Wolfgang"
-  orcid: https://orcid.org/0000-0002-9362-8096
+  orcid: "https://orcid.org/0000-0002-9362-8096"
 - family-names: "Schlichtmann"
   given-names: "Ulf"
   orcid: "https://orcid.org/0000-0003-4431-7619"
@@ -31,14 +31,13 @@ preferred-citation:
     given-names: "Marc"
   - family-names: "Devarajegowda"
     given-names: "Keerthikumara"
-    https://orcid.org/0000-0003-3498-0708
+    orcid: "https://orcid.org/0000-0003-3498-0708"
   - family-names: "Ecker"
     given-names: "Wolfgang"
-    orcid: https://orcid.org/0000-0002-9362-8096
+    orcid: "https://orcid.org/0000-0002-9362-8096"
   - family-names: "Schlichtmann"
     given-names: "Ulf"
     orcid: "https://orcid.org/0000-0003-4431-7619"
-  booktitle: "2017 International Symposium on Rapid System Prototyping (RSP)"
   year: "2017"
   title: "The Extendable Translating Instruction Set Simulator (ETISS) Interlinked with an MDA Framework for Fast RISC Prototyping"
   start: "79"
