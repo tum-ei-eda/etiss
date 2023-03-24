@@ -57,6 +57,7 @@
 #include <algorithm>
 
 using namespace etiss;
+using namespace ELFIO;
 
 std::shared_ptr<VirtualStruct> MemoryManipulationSystem::getStruct(void)
 {
