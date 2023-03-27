@@ -280,7 +280,7 @@ if (csr == 768 || csr == 256) {
 return *((RV32IMACFD*)cpu)->CSR[768] | 8589934592UL | 34359738368UL;
 }
 if (csr == 769) {
-return (((1U) << 31) | ((((*((RV32IMACFD*)cpu)->CSR[769]) >> (0U)) & 2147483647)));
+return (((1U) << 30) | ((((*((RV32IMACFD*)cpu)->CSR[769]) >> (0U)) & 1073741823)));
 }
 return *((RV32IMACFD*)cpu)->CSR[csr];
 }
