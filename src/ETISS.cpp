@@ -909,6 +909,11 @@ bool etiss_shutdownOk = false;
 void etiss::initialize_virtualstruct(std::shared_ptr<etiss::CPUCore> cpu_core)
 {
     auto mount_successful = etiss::VirtualStruct::root()->mountStruct(cpu_core->getName(), cpu_core->getStruct());
+    // check if it the core is already mounted.
+    if( etiss::VirtualStruct::root()->findStruct(cpu_core->getName()) )
+    {
+        mount_successful = true; // already mounted as a substruct to the root()
+    }
 
     if(!mount_successful)
     {
