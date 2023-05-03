@@ -123,7 +123,7 @@ class Stressor
     /** @brief removes a fault's active triggers from their injectors, thus,
      *         deactivating the fault.
      * @param f the fault for adding to the map.
-     * @return false if refernced fault is not the static fault list faults().
+     * @return false if referenced fault is not the static fault list faults().
      */
     static bool removeFault(const Fault &f, bool injected_fault = false);
 

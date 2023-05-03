@@ -330,11 +330,11 @@ bool Stressor::removeFault(const Fault &f, bool injected_fault)
     if (find == faults().end())
     {
 #ifdef NO_ETISS
-        std::cout << "etiss::fault::Stressor::addFault: Fault not registered in Fault definitions:" << f.toString()
+        std::cout << "etiss::fault::Stressor::removeFault: Fault not registered in Fault definitions:" << f.toString()
                   << std::endl;
 #else
         etiss::log(etiss::ERROR,
-                   std::string("etiss::fault::Stressor::addFault:") +
+                   std::string("etiss::fault::Stressor::removeFault:") +
                        std::string(" Fault not registered in Fault definitions. "),
                    f);
 #endif

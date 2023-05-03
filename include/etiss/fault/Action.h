@@ -153,8 +153,8 @@ class Action : public etiss::ToString
     /// INJECTION and EJECTION only
     const FaultRef &getFaultRef() const;
 
+    /// MASK only
     const mask_op_t &getMaskOp() const;
-
     uint64_t getMaskValue() const;
 #ifndef NO_ETISS
     int32_t getEvent() const;
