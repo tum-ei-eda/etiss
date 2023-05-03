@@ -381,6 +381,7 @@ bool Stressor::removeFault(const Fault &f, bool injected_fault)
                                            std::string(" Trigger is a NOP and is does not need to be removed."));
         }
     }
+    faults().erase(find);
 
     return true;
 }
@@ -418,6 +419,7 @@ bool Stressor::firedTrigger(const Trigger &triggered, int32_t fault_id, Injector
                 addFault(iter->getFaultRef().get_fault(), true);
                 break;
             case +etiss::fault::Action_Type::EJECTION:
+                etiss::log(etiss::VERBOSE, std::string("Stressor::firedTrigger: Action is EJECTION"));
                 if (!iter->getFaultRef().is_set())
                 {
                     // try to resolve the reference again
@@ -435,12 +437,12 @@ bool Stressor::firedTrigger(const Trigger &triggered, int32_t fault_id, Injector
             case +etiss::fault::Action_Type::NOP:
                 etiss::log(etiss::VERBOSE,
                            std::string("Stressor::firedTrigger: Discarded - Action is NOP (do not care)."));
-                return true;
+                break;
 #ifndef NO_ETISS
             case +etiss::fault::Action_Type::EVENT:
                 etiss::log(etiss::VERBOSE, std::string("Stressor::firedTrigger: Action is EVENT"));
                 set_event(iter->getEvent());
-                return true;
+                break;
 #endif
             default: // on field actions
             {
