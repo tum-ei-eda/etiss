@@ -63,7 +63,8 @@
 #include "etiss/IntegratedLibrary/PrintInstruction.h"
 #include "etiss/IntegratedLibrary/errorInjection/Plugin.h"
 #include "etiss/IntegratedLibrary/gdb/GDBServer.h"
-#include "etiss/IntegratedLibrary/VanillaAccelerator.h"
+#include "etiss/IntegratedLibrary/QVanillaAccelerator.h"
+// #include "etiss/IntegratedLibrary/VanillaAccelerator.h"
 
 extern "C"
 {
@@ -95,7 +96,8 @@ extern "C"
             return "Logger";
         
         case 4:
-            return "VanillaAccelerator";
+            return "QVanillaAccelerator";
+            // return "VanillaAccelerator";
         }
         return 0;
     }
@@ -145,7 +147,8 @@ extern "C"
         }
             
         case 4:
-            return new etiss::plugin::VanillaAccelerator();
+            return new etiss::plugin::QVanillaAccelerator();
+            // return new etiss::plugin::VanillaAccelerator();
         }
          
         return 0;
