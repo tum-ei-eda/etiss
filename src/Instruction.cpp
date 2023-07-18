@@ -197,14 +197,14 @@ BitArrayRange::BitArrayRange(unsigned endindex_included, unsigned startindex_inc
 
 I BitArrayRange::read(const BitArray& ba)
 {
-    assert(ba.size() > (endpos - startpos + 1) && "BitArrayRange outside of BitArray");
+    assert(ba.size() >= (endpos - startpos + 1) && "BitArrayRange outside of BitArray");
     auto range = ba.get_range(endpos, startpos);
     return range.to_ulong();
 }
 
 void BitArrayRange::write(BitArray &ba, I val)
 {
-    assert(ba.size() > (endpos - startpos + 1) && "BitArrayRange outside of BitArray");
+    assert(ba.size() >= (endpos - startpos + 1) && "BitArrayRange outside of BitArray");
     ba.set_range(val, endpos, startpos);
 }
 
