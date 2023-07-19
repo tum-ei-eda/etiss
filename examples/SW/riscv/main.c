@@ -31,7 +31,7 @@ typedef struct regs
 	int32_t kw; 
 	int32_t i_zp;  // Can be negative
 	int32_t k_zp;  // Can be negative
-	int32_t control;
+	uint32_t control;
 } regs_t;
 
 

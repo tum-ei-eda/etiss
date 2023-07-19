@@ -42,7 +42,7 @@ class QVanillaAccelerator: public etiss::plugin::MemMappedPeriph
             int32_t kw; 
             int32_t i_zp;
             int32_t k_zp;
-            int32_t control;
+            uint32_t control;
         } regs_t;
 
         union RegIF
