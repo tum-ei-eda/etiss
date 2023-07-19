@@ -12,19 +12,23 @@ namespace plugin
 class QVanillaAccelerator: public etiss::plugin::MemMappedPeriph
 {
     public:
-        void write32(uint64_t addr, int32_t val);
 
-        int32_t read32(uint64_t addr);
+        QVanillaAccelerator(uint64_t addr=0x70000000) : regIf{}, base_addr{addr} { }
+
+        void write32(uint64_t addr, uint32_t val);
+
+        uint32 read32(uint64_t addr);
 
         MappedMemory getMappedMem() const {
             MappedMemory mm;
-            mm.base = 0x70000000;
-            mm.size = 0x34;
+            mm.base = base_addr;
+            mm.size = sizeof(RegIF);
             return mm;
         }
 
     private:
-        struct RegIF
+
+        typedef struct regs 
         {
             uint32_t ifmap;   
             uint32_t weights;
@@ -39,11 +43,17 @@ class QVanillaAccelerator: public etiss::plugin::MemMappedPeriph
             int32_t i_zp;
             int32_t k_zp;
             int32_t control;
-        };
+        } regs_t;
 
+        union RegIF
+        {
+            regs_t regs;
+            uint32_t arr[sizeof(regs_t)/sizeof(uint32_t)];
+        };
         RegIF regIf;
         
     protected:
+        uint64_t base_addr;
         std::string _getPluginName() const;
 
 };

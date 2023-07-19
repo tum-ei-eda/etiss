@@ -1,3 +1,4 @@
+#include <cstddef>
 #include "etiss/IntegratedLibrary/VanillaAccelerator.h"
 
 namespace etiss
@@ -11,33 +12,37 @@ int conv2dnchw(float* ifmap, float* weights, float* result, int oc, int iw, int 
 
 void VanillaAccelerator::write32(uint64_t addr, uint32_t val)
 {
-    uint64_t offset = addr - 0x70000000; 
-    *(uint32_t*)((uintptr_t)&regIf + offset) = val;
+    uint64_t offset = addr - base_addr; 
+    size_t reg_index = offset/sizeof(uint32_t);
+    regIf.arr[reg_index] = val;
+    regs_t *p_regs = &regIf.regs;
 
     std::cout << "adr = " << addr << std::endl;
     std::cout << "val = " << val << std::endl;
 
-    if (offset == 0x00000024) {     //if (regIf.control == 0x00000001)
-        
+    // call the "run" function if the control register is written, with a value none zero!
+    if( offset == offsetof(regs_t, control) && p_regs->control != 0UL ) 
+    {
         // copy memory from etiss buffer to own buffer
-        size_t inputSize = regIf.iw * regIf.ih * regIf.ic * sizeof(float);
-        size_t filterSize = regIf.kw * regIf.kh * regIf.ic * regIf.oc * sizeof(float);         
-        size_t resultSize = regIf.iw * regIf.ih * regIf.oc * sizeof(float);
+       
+        size_t inputSize = p_regs->iw * p_regs->ih * p_regs->ic * sizeof(float);
+        size_t filterSize = p_regs->kw * p_regs->kh * p_regs->ic * p_regs->oc * sizeof(float);         
+        size_t resultSize = p_regs->iw * p_regs->ih * p_regs->oc * sizeof(float);
 
-        uint8_t* input_buffer = (uint8_t*)malloc(inputSize);
+        // MK: why not allocated as "float" typed buffer, and just cast for the read, because inside the type if float. 
+        uint8_t* input_buffer = (uint8_t*)malloc(inputSize);  
         uint8_t* filter_buffer = (uint8_t*)malloc(filterSize);
         uint8_t* result_buffer = (uint8_t*)malloc(resultSize);
         
+        // TODO: MK well, might be best, if we add sanity check for the source address and weights address
 
-        plugin_system_->dread(plugin_system_->handle, plugin_cpu_, regIf.ifmap, input_buffer, inputSize); //input data  
-        plugin_system_->dread(plugin_system_->handle, plugin_cpu_, regIf.weights, filter_buffer, filterSize); //filter data   
+        plugin_system_->dread(plugin_system_->handle, plugin_cpu_, p_regs->ifmap, input_buffer, inputSize); //input data  
+        plugin_system_->dread(plugin_system_->handle, plugin_cpu_, p_regs->weights, filter_buffer, filterSize); //filter data   
         // etiss_int32 (*dread)(void *handle, ETISS_CPU *cpu, etiss_uint64 addr, etiss_uint8 *buffer, etiss_uint32 length);
+        conv2dnchw((float*)input_buffer, (float*)filter_buffer, (float*)result_buffer, p_regs->oc, p_regs->iw, p_regs->ih, 
+                                       p_regs->ic, p_regs->kh, p_regs->kw);
 
-        conv2dnchw((float*)input_buffer, (float*)filter_buffer, (float*)result_buffer, regIf.oc, regIf.iw, regIf.ih, 
-                                       regIf.ic, regIf.kh, regIf.kw);
-        
-        // copy from own result buffer to etiss memory
-        plugin_system_->dwrite(plugin_system_->handle, plugin_cpu_, regIf.result, result_buffer, resultSize);
+        plugin_system_->dwrite(plugin_system_->handle, plugin_cpu_, p_regs->result, result_buffer, resultSize);
 
         std::cout << "completed!  " << std::endl;
         //free the allocated space
@@ -49,13 +54,16 @@ void VanillaAccelerator::write32(uint64_t addr, uint32_t val)
 }
 
 
-uint32_t VanillaAccelerator::read32(uint64_t addr)
+etiss_uint32 VanillaAccelerator::read32(uint64_t addr)
 {
-    uint64_t offset = addr - 0x70000000;
-    uint32_t val = *(uint32*)((uintptr_t)&regIf + offset);
-    std::cout << "read" << std::endl;
-    std::cout << "adr = " << addr << std::endl;
-    std::cout << "val = " << val << std::endl;
+
+    uint64_t offset = addr - base_addr; 
+    size_t reg_index = offset/sizeof(uint32_t);
+    uint32_t val = regIf.arr[reg_index];
+
+    // std::cout << "read" << std::endl;
+    // std::cout << "adr = " << addr << std::endl;
+    // std::cout << "val = " << val << std::endl;
     return val;
 }
 
