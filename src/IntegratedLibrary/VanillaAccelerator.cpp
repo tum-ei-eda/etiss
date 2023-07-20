@@ -7,7 +7,7 @@ namespace etiss
 namespace plugin
 {
 
-int conv2dnchw(float* ifmap, float* weights, float* result, int oc, int iw, int ih, int ic,
+uint32_t conv2dnchw(float* ifmap, float* weights, float* result, int oc, int iw, int ih, int ic,
                         int kh, int kw);
 
 void VanillaAccelerator::write32(uint64_t addr, uint32_t val)
@@ -17,8 +17,8 @@ void VanillaAccelerator::write32(uint64_t addr, uint32_t val)
     regIf.arr[reg_index] = val;
     regs_t *p_regs = &regIf.regs;
 
-    std::cout << "adr = " << addr << std::endl;
-    std::cout << "val = " << val << std::endl;
+    // std::cout << "adr = " << addr << std::endl;
+    // std::cout << "val = " << val << std::endl;
 
     // call the "run" function if the control register is written, with a value none zero!
     if( offset == offsetof(regs_t, control) && p_regs->control != 0UL ) 
@@ -29,20 +29,19 @@ void VanillaAccelerator::write32(uint64_t addr, uint32_t val)
         size_t filterSize = p_regs->kw * p_regs->kh * p_regs->ic * p_regs->oc * sizeof(float);         
         size_t resultSize = p_regs->iw * p_regs->ih * p_regs->oc * sizeof(float);
 
-        // MK: why not allocated as "float" typed buffer, and just cast for the read, because inside the type if float. 
-        uint8_t* input_buffer = (uint8_t*)malloc(inputSize);  
-        uint8_t* filter_buffer = (uint8_t*)malloc(filterSize);
-        uint8_t* result_buffer = (uint8_t*)malloc(resultSize);
+        float* input_buffer = (float*)malloc(inputSize);  
+        float* filter_buffer = (float*)malloc(filterSize);
+        float* result_buffer = (float*)malloc(resultSize);
         
         // TODO: MK well, might be best, if we add sanity check for the source address and weights address
 
-        plugin_system_->dread(plugin_system_->handle, plugin_cpu_, p_regs->ifmap, input_buffer, inputSize); //input data  
-        plugin_system_->dread(plugin_system_->handle, plugin_cpu_, p_regs->weights, filter_buffer, filterSize); //filter data   
+        plugin_system_->dread(plugin_system_->handle, plugin_cpu_, p_regs->ifmap, (etiss_uint8 *)input_buffer, inputSize); //input data  
+        plugin_system_->dread(plugin_system_->handle, plugin_cpu_, p_regs->weights, (etiss_uint8 *)filter_buffer, filterSize); //filter data   
         // etiss_int32 (*dread)(void *handle, ETISS_CPU *cpu, etiss_uint64 addr, etiss_uint8 *buffer, etiss_uint32 length);
-        conv2dnchw((float*)input_buffer, (float*)filter_buffer, (float*)result_buffer, p_regs->oc, p_regs->iw, p_regs->ih, 
+        (void) conv2dnchw(input_buffer, filter_buffer, result_buffer, p_regs->oc, p_regs->iw, p_regs->ih, 
                                        p_regs->ic, p_regs->kh, p_regs->kw);
 
-        plugin_system_->dwrite(plugin_system_->handle, plugin_cpu_, p_regs->result, result_buffer, resultSize);
+        plugin_system_->dwrite(plugin_system_->handle, plugin_cpu_, p_regs->result, (etiss_uint8 *)result_buffer, resultSize);
 
         std::cout << "completed!  " << std::endl;
         //free the allocated space
@@ -54,7 +53,7 @@ void VanillaAccelerator::write32(uint64_t addr, uint32_t val)
 }
 
 
-etiss_uint32 VanillaAccelerator::read32(uint64_t addr)
+uint32_t VanillaAccelerator::read32(uint64_t addr)
 {
 
     uint64_t offset = addr - base_addr; 
@@ -75,7 +74,7 @@ std::string VanillaAccelerator::_getPluginName() const
 
 //use the loggger for finding the format of data
 
-int conv2dnchw(float* ifmap, float* weights, float* result, int oc, int iw, int ih, int ic,
+uint32_t conv2dnchw(float* ifmap, float* weights, float* result, int oc, int iw, int ih, int ic,
                         int kh, int kw) {
 
 

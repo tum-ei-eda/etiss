@@ -64,7 +64,7 @@ void QVanillaAccelerator::write32(uint64_t addr, uint32_t val)
         if (status != 0) 
           std::cout << "copy bias failed!" << std::endl;
 
-        conv2dnchw((int8_t*)input_buffer, (int8_t*)filter_buffer, (int32_t*)bias_buffer, (int32_t*)result_buffer, p_regs->oc, p_regs->iw, p_regs->ih, 
+        (void) conv2dnchw((int8_t*)input_buffer, (int8_t*)filter_buffer, (int32_t*)bias_buffer, (int32_t*)result_buffer, p_regs->oc, p_regs->iw, p_regs->ih, 
                                        p_regs->ic, p_regs->kh, p_regs->kw, p_regs->i_zp, p_regs->k_zp);
  
         // copy from own result buffer to etiss memory
