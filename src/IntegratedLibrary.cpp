@@ -64,7 +64,7 @@
 #include "etiss/IntegratedLibrary/errorInjection/Plugin.h"
 #include "etiss/IntegratedLibrary/gdb/GDBServer.h"
 #include "etiss/IntegratedLibrary/QVanillaAccelerator.h"
-// #include "etiss/IntegratedLibrary/VanillaAccelerator.h"
+#include "etiss/IntegratedLibrary/VanillaAccelerator.h"
 
 extern "C"
 {
@@ -76,7 +76,7 @@ extern "C"
 
     unsigned ETISSINCLUDED_countCPUArch() { return 0; }
 
-    unsigned ETISSINCLUDED_countPlugin() { return 5; }
+    unsigned ETISSINCLUDED_countPlugin() { return 6; }
 
     const char *ETISSINCLUDED_nameJIT(unsigned index) { return 0; }
 
@@ -94,11 +94,12 @@ extern "C"
             return "PrintInstruction";
         case 3:
             return "Logger";
-        
         case 4:
             return "QVanillaAccelerator";
-            // return "VanillaAccelerator";
+        case 5:
+            return "VanillaAccelerator";
         }
+        // if you add here something, update also the number returned by "ETISSINCLUDED_countPlugin" :-)
         return 0;
     }
 
@@ -111,46 +112,56 @@ extern "C"
 
     etiss::Plugin *ETISSINCLUDED_createPlugin(unsigned index, std::map<std::string, std::string> options)
     {
+        // for the index, see return of "ETISSINCLUDED_namePlugin"
         switch (index)
         {
-        case 0:
-        {
-            /// expected option format: -rREGISTERNAME -> FILEPATH (e.g. -rR4 -> /home/you/registerErrors.txt)
-            etiss::plugin::errorInjection::BlockAccurateHandler *ret =
-                new etiss::plugin::errorInjection::BlockAccurateHandler();
-            for (auto iter = options.begin(); iter != options.end(); iter++)
+            case 0:
             {
-                if (iter->first.length() > 2 && iter->first[0] == '-' && iter->first[1] == 'r')
+                /// expected option format: -rREGISTERNAME -> FILEPATH (e.g. -rR4 -> /home/you/registerErrors.txt)
+                etiss::plugin::errorInjection::BlockAccurateHandler *ret =
+                    new etiss::plugin::errorInjection::BlockAccurateHandler();
+                for (auto iter = options.begin(); iter != options.end(); iter++)
                 {
-                    std::string regname = iter->first.substr(2);
-                    ret->parseFile(iter->second, regname);
+                    if (iter->first.length() > 2 && iter->first[0] == '-' && iter->first[1] == 'r')
+                    {
+                        std::string regname = iter->first.substr(2);
+                        ret->parseFile(iter->second, regname);
+                    }
+                    else
+                    {
+                        etiss::log(etiss::WARNING,
+                                std::string("IntegratedLibrary: failed to parse option for BlockAccurateHandler: ") +
+                                    iter->first + "->" + iter->second);
+                    }
                 }
-                else
-                {
-                    etiss::log(etiss::WARNING,
-                               std::string("IntegratedLibrary: failed to parse option for BlockAccurateHandler: ") +
-                                   iter->first + "->" + iter->second);
-                }
+                return ret;
             }
-            return ret;
-        }
-        case 1:
-            return etiss::plugin::gdb::Server::createTCPServer(options);
-        case 2:
-            return new etiss::plugin::PrintInstruction();
-        case 3:
-        {
-            etiss::Configuration cfg;
-            cfg.config() = options;
-            return new etiss::plugin::Logger(cfg.get<uint64_t>("plugin.logger.logaddr", 0x80000000),
-                                             cfg.get<uint64_t>("plugin.logger.logmask", 0xF0000000));
-        }
-            
-        case 4:
-            return new etiss::plugin::QVanillaAccelerator();
-            // return new etiss::plugin::VanillaAccelerator();
-        }
-         
+            case 1:
+                return etiss::plugin::gdb::Server::createTCPServer(options);
+            case 2:
+                return new etiss::plugin::PrintInstruction();
+            case 3:
+            {
+                etiss::Configuration cfg;
+                cfg.config() = options;
+                return new etiss::plugin::Logger(cfg.get<uint64_t>("plugin.logger.logaddr", 0x80000000),
+                                                cfg.get<uint64_t>("plugin.logger.logmask", 0xF0000000));
+            }
+            case 4:
+            {
+                etiss::Configuration cfg;
+                cfg.config() = options;
+                return new etiss::plugin::QVanillaAccelerator(cfg.get<uint64_t>("plugin.QVanillaAccelerator.baseaddr", 0x70000000));
+                // return new etiss::plugin::VanillaAccelerator();
+            }
+            case 5:
+            {
+                etiss::Configuration cfg;
+                cfg.config() = options;
+                return new etiss::plugin::VanillaAccelerator(cfg.get<uint64_t>("plugin.VanillaAccelerator.baseaddr", 0x70001000));
+            }
+
+        } 
         return 0;
     }
 

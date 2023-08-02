@@ -24,7 +24,7 @@ static inline void unimpl_write()
 /// @brief Represents a memory region that is associated with a MemMappedPeriph.
 struct MappedMemory
 {
-    uintptr_t base = 0;
+    etiss_uint64 base = 0; 
     size_t size = 0;
 };
 
@@ -48,11 +48,11 @@ class MemMappedPeriph : public etiss::plugin::SelectiveSysWrapper
 
     virtual etiss_uint8 read8(etiss_uint64 addr) { return unimpl_read(); }
     virtual etiss_uint16 read16(etiss_uint64 addr) { return unimpl_read(); }
-    virtual etiss_int32 read32(etiss_uint64 addr) { return unimpl_read(); }  //I changed the return value to signed
+    virtual etiss_uint32 read32(etiss_uint64 addr) { return unimpl_read(); }
     virtual etiss_uint64 read64(etiss_uint64 addr) { return unimpl_read(); }
     virtual void write8(etiss_uint64 addr, etiss_uint8 val) { unimpl_write(); }
     virtual void write16(etiss_uint64 addr, etiss_uint16 val) { unimpl_write(); }
-    virtual void write32(etiss_uint64 addr, etiss_int32 val) { unimpl_write(); } //I changed the written value to signed
+    virtual void write32(etiss_uint64 addr, etiss_uint32 val) { unimpl_write(); }
     virtual void write64(etiss_uint64 addr, etiss_uint64 val) { unimpl_write(); }
 
     ETISS_System getWrapInfo(ETISS_System *origSystem) final;
