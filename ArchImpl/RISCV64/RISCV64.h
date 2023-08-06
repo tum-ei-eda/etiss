@@ -33,6 +33,7 @@
 #define ETISS_RISCV64Arch_RISCV64_H_
 #include <stdio.h>
 #include "etiss/jit/CPU.h"
+#include "etiss/jit/System.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -83,6 +84,12 @@ struct RISCV64 {
 
 #pragma pack(pop) // undo changes
 typedef struct RISCV64 RISCV64; // convenient use of X instead of struct X in generated C code
+
+// manually added
+extern int32_t ETISS_SIGNAL_MMU(ETISS_CPU *cpu, ETISS_System * const system, void * const * const plugin_pointers, etiss_uint64 mmu_signal_);
+extern int32_t ETISS_TLB_FLUSH(ETISS_CPU *cpu, ETISS_System * const system, void * const * const plugin_pointers);
+extern int32_t ETISS_TLB_EVICT_VMA(ETISS_CPU *cpu, ETISS_System * const system, void * const * const plugin_pointers, etiss_uint64 vma_);
+
 #ifdef __cplusplus
 } // extern "C"
 #endif

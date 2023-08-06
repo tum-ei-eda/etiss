@@ -96,6 +96,7 @@ etiss::int32 RISCV64Arch::handleException(etiss::int32 cause, ETISS_CPU *cpu)
                                                                                   etiss_uint32 addr) {
         std::stringstream msg;
 
+        auto ret = etiss::RETURNCODE::NOERROR;
         msg << "Exception is captured with cause code: 0x" << std::hex << causeCode;
         msg << "  Exception message: " << etiss::RETURNCODE::getErrorMessages()[cause] << std::endl;
         msg << "Exception occurs at instruction address: 0x" << std::hex << cpu->instructionPointer << std::endl;
@@ -120,24 +121,81 @@ etiss::int32 RISCV64Arch::handleException(etiss::int32 cause, ETISS_CPU *cpu)
                 // Pop MPIE to MIE
                 (((RISCV64 *)cpu)->CSR[CSR_MSTATUS]) ^=
                     (((((RISCV64 *)cpu)->CSR[CSR_MSTATUS]) & MSTATUS_MPIE) >> 4) ^ ((((RISCV64 *)cpu)->CSR[CSR_MSTATUS]) & MSTATUS_MIE);
-                ((RISCV64 *)cpu)->CSR[CSR_SCAUSE] = causeCode;
-                // Redo the instruction encoutered exception after handling
-                ((RISCV64 *)cpu)->CSR[CSR_SEPC] = cpu->instructionPointer - 4;
+                ((RISCV64 *)cpu)->CSR[CSR_SCAUSE] = causeCode;                
+                switch (causeCode)
+                {
+                    case CAUSE_FETCH_PAGE_FAULT:    [[fallthrough]];
+                    case CAUSE_MISALIGNED_FETCH:    [[fallthrough]];
+                    case CAUSE_FETCH_ACCESS:
+                        // Redo the instruction encoutered exception after handling
+                        ((RISCV64 *)cpu)->CSR[CSR_SEPC] = cpu->instructionPointer;
+                        ((RISCV64 *)cpu)->CSR[CSR_MTVAL] = 0;
+                        break;
+                    case CAUSE_LOAD_PAGE_FAULT:     [[fallthrough]];
+                    case CAUSE_LOAD_ACCESS:         [[fallthrough]];
+                    case CAUSE_MISALIGNED_LOAD:     [[fallthrough]];
+                    case CAUSE_STORE_PAGE_FAULT:    [[fallthrough]];            
+                    case CAUSE_STORE_ACCESS:        [[fallthrough]];
+                    case CAUSE_MISALIGNED_STORE:
+                        // Redo the instruction encoutered exception after handling
+                        ((RISCV64 *)cpu)->CSR[CSR_SEPC] = cpu->instructionPointer - 4;
+                        ((RISCV64 *)cpu)->CSR[CSR_MTVAL] = 0;
+                        break;
+                    default:
+                        // Redo the instruction encoutered exception after handling
+                        ((RISCV64 *)cpu)->CSR[CSR_SEPC] = cpu->instructionPointer - 4;
+                        ((RISCV64 *)cpu)->CSR[CSR_STVAL] = 0;
+                        ((RISCV64 *)cpu)->CSR[CSR_MTVAL] = 0;
+                        break;
+                }
                 ((RISCV64 *)cpu)->CSR[CSR_SSTATUS] ^=
                     (((RISCV64 *)cpu)->CSR[3088] << 8) ^ (((RISCV64 *)cpu)->CSR[CSR_SSTATUS] & MSTATUS_SPP);
+                // Since traps can only be delegated to S-mode, if it originated in S/U-mode, 
+                // trapframes can be accessed without context-switches. Those occur in the traphandler.
                 ((RISCV64 *)cpu)->CSR[3088] = PRV_S;
-                etiss::log(etiss::VERBOSE, "Privilege mode is changed to supervisor mdoe:" + etiss::toString(PRV_S));
+                etiss::log(etiss::VERBOSE, "Privilege mode is changed to supervisor mode:" + etiss::toString(PRV_S));
                 cpu->instructionPointer = ((RISCV64 *)cpu)->CSR[CSR_STVEC] & ~0x3;
             }
             else
             {
                 ((RISCV64 *)cpu)->CSR[CSR_MCAUSE] = causeCode;
-                // Redo the instruction encoutered exception after handling
-                ((RISCV64 *)cpu)->CSR[CSR_MEPC] = cpu->instructionPointer - 4;
+                switch (causeCode)
+                {
+                    case CAUSE_FETCH_PAGE_FAULT:    [[fallthrough]];
+                    case CAUSE_FETCH_ACCESS:        [[fallthrough]];
+                    case CAUSE_MISALIGNED_FETCH:
+                        // Redo the instruction encoutered exception after handling
+                        ((RISCV64 *)cpu)->CSR[CSR_MEPC] = cpu->instructionPointer;
+                        ((RISCV64 *)cpu)->CSR[CSR_STVAL] = 0;
+                        break;
+                    case CAUSE_LOAD_PAGE_FAULT:     [[fallthrough]];
+                    case CAUSE_LOAD_ACCESS:         [[fallthrough]];
+                    case CAUSE_MISALIGNED_LOAD:     [[fallthrough]];
+                    case CAUSE_STORE_PAGE_FAULT:    [[fallthrough]];            
+                    case CAUSE_STORE_ACCESS:        [[fallthrough]];
+                    case CAUSE_MISALIGNED_STORE:
+                        // Redo the instruction encoutered exception after handling
+                        ((RISCV64 *)cpu)->CSR[CSR_MEPC] = cpu->instructionPointer - 4;
+                        ((RISCV64 *)cpu)->CSR[CSR_STVAL] = 0;
+                        break;
+                    default:
+                        // Redo the instruction encoutered exception after handling
+                        ((RISCV64 *)cpu)->CSR[CSR_MEPC] = cpu->instructionPointer - 4;
+                        ((RISCV64 *)cpu)->CSR[CSR_MTVAL] = 0;
+                        ((RISCV64 *)cpu)->CSR[CSR_STVAL] = 0;
+                        break;
+                }
                 (((RISCV64 *)cpu)->CSR[CSR_MSTATUS]) ^=
                     (((RISCV64 *)cpu)->CSR[3088] << 11) ^ ((((RISCV64 *)cpu)->CSR[CSR_MSTATUS]) & MSTATUS_MPP);
-                ((RISCV64 *)cpu)->CSR[3088] = PRV_M;
-                etiss::log(etiss::VERBOSE, "Privilege mode is changed to machine mdoe: " + etiss::toString(PRV_M));
+                // Switch hart into machine mode, if it isn't already in M-mode
+                if (((RISCV64 *)cpu)->CSR[3088] != PRV_M)
+                {
+                    // This means that a context switch occured, therefore etiss-translation-cache must be flushed
+                    ret = etiss::RETURNCODE::RELOADBLOCKS;
+                    ((RISCV64 *)cpu)->CSR[3088] = PRV_M;
+                    etiss::log(etiss::VERBOSE, "Privilege mode is changed to machine mode: " + etiss::toString(PRV_M));
+                }
+                else etiss::log(etiss::VERBOSE, "Privilege mode is already in machine mode: " + etiss::toString(PRV_M));
                 // Customized handler address other than specified in RISC-V ISA
                 // manual
                 if (addr)
@@ -163,8 +221,10 @@ etiss::int32 RISCV64Arch::handleException(etiss::int32 cause, ETISS_CPU *cpu)
                 ((RISCV64 *)cpu)->CSR[CSR_SEPC] = cpu->instructionPointer;
                 ((RISCV64 *)cpu)->CSR[CSR_SSTATUS] ^=
                     (((RISCV64 *)cpu)->CSR[3088] << 8) ^ (((RISCV64 *)cpu)->CSR[CSR_SSTATUS] & MSTATUS_SPP);
+                // Since traps can only be delegated to S-mode, if it originated in S/U-mode, 
+                // trapframes can be accessed without context-switches. Those occur in the traphandler.
                 ((RISCV64 *)cpu)->CSR[3088] = PRV_S;
-                etiss::log(etiss::VERBOSE, "Privilege mode is changed to supervisor mdoe:" + etiss::toString(PRV_S));
+                etiss::log(etiss::VERBOSE, "Privilege mode is changed to supervisor mode:" + etiss::toString(PRV_S));
                 if (((RISCV64 *)cpu)->CSR[CSR_STVEC] & 0x1)
                     cpu->instructionPointer = (((RISCV64 *)cpu)->CSR[CSR_STVEC] & ~0x3) + causeCode * 4;
                 else
@@ -177,8 +237,15 @@ etiss::int32 RISCV64Arch::handleException(etiss::int32 cause, ETISS_CPU *cpu)
                 ((RISCV64 *)cpu)->CSR[CSR_MEPC] = cpu->instructionPointer;
                 (((RISCV64 *)cpu)->CSR[CSR_MSTATUS]) ^=
                     (((RISCV64 *)cpu)->CSR[3088] << 11) ^ ((((RISCV64 *)cpu)->CSR[CSR_MSTATUS]) & MSTATUS_MPP);
-                ((RISCV64 *)cpu)->CSR[3088] = PRV_M;
-                etiss::log(etiss::VERBOSE, "Privilege mode is changed to machine mdoe: " + etiss::toString(PRV_M));
+                // Switch hart into machine mode, if it isn't already in m mode
+                if (((RISCV64 *)cpu)->CSR[3088] != PRV_M)
+                {
+                    // This means that a context switch occured, therefore etiss-translation-cache must be flushed
+                    ret = etiss::RETURNCODE::RELOADBLOCKS;
+                    ((RISCV64 *)cpu)->CSR[3088] = PRV_M;
+                    etiss::log(etiss::VERBOSE, "Privilege mode is changed to machine mode: " + etiss::toString(PRV_M));
+                }
+                else etiss::log(etiss::VERBOSE, "Privilege mode is already in machine mode: " + etiss::toString(PRV_M));
                 // Customized handler address other than specified in RISC-V ISA
                 // manual
                 if (addr)
@@ -196,7 +263,7 @@ etiss::int32 RISCV64Arch::handleException(etiss::int32 cause, ETISS_CPU *cpu)
 
         msg << "Program is redirected to address: 0x" << std::hex << cpu->instructionPointer << std::endl;
         etiss::log(etiss::VERBOSE, msg.str());
-        return etiss::RETURNCODE::NOERROR;
+        return ret;
     };
 
     switch (cause)

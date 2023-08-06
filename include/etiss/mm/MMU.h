@@ -95,14 +95,14 @@ class MMU
      *@see 	etiss::mm::PTEFormatBuilder and etiss::mm::PTEFormat
      *
      */
-    virtual int32_t Translate(const uint64_t vma, uint64_t *const pma_buf, MM_ACCESS access, uint64_t data = 0);
+    virtual int32_t Translate(const uint64_t vma, uint64_t *const pma_buf, MM_ACCESS access, uint32_t* overlap, uint32_t length = 0);
 
     /**
      * @brief Whenever the MMU control register changes, the MMU has to be notified
      *		with the updated control register value.
      *
      */
-    void SignalMMU(uint64_t control_reg_val_);
+    virtual void SignalMMU(uint64_t control_reg_val_);
 
     /**
      * @brief Dump the details of the MMU, when page fault cannot be handled
@@ -150,11 +150,11 @@ class MMU
      * @brief Reserved for some MMU that might update PTE when translating
      *
      */
-    virtual void UpdatePTEFlags(PTE &, MM_ACCESS) {}
+    virtual int32_t UpdatePTEFlags(uint64_t, PTE *, MM_ACCESS) = 0;
 
     bool IsTLBFull() const { return tlb_->IsFull(); }
 
-    PTE EvictTLBEntry(const uint64_t vfn) { return tlb_->EvictPTE(vfn); }
+    void EvictTLBEntry(const uint64_t vma);
 
     bool HasPageTableWalker() { return hw_page_table_walker_; }
 
@@ -174,14 +174,26 @@ class MMU
 
     virtual int32_t GetPid(uint64_t control_reg_val_) { return 0; }
 
-    bool cache_flush_pending;
+    std::shared_ptr<etiss::mm::TLB<0>> GetTLB() { return tlb_; }
+
+    std::map<uint64_t, PTE *> GetTLBEntryMap() { return tlb_entry_map_; }
+
+    /**
+     * @brief Checks if memory access is overlapping page-boundary.
+     *    This is architecture specific and should be implemented by architecture.
+     * 
+     * @param vma virtual memory address of the current page
+     * @param length legth of the memory access
+     * @param pte page-table-element pointing to the current page
+     * @return uint32_t overlap. Where overlap is the amount of bytes, the access overlaps
+     *    into the next page. If there is no overlap, the funtion returns 0.
+     */
+    virtual uint32_t GetPageOverlap(const uint64_t vma, etiss_uint32 length, const PTE &pte) = 0;
 
   protected:
     ETISS_CPU *cpu_;
     ETISS_System *system_;
     bool mmu_enabled_;
-
-  private:
     // Resources in MMU
     std::shared_ptr<etiss::mm::TLB<0>> tlb_;
     // Map the virtual memory address (vma) of TLB entries to its own physical
@@ -191,10 +203,12 @@ class MMU
     std::map<uint64_t, PTE *> tlb_entry_map_;
 
     uint64_t mmu_control_reg_val_;
-    uint32_t pid_;
-    std::string name_;
 
     const bool pid_enabled_;
+
+  private:
+    uint32_t pid_;
+    std::string name_;
     const bool hw_page_table_walker_;
 };
 

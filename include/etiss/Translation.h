@@ -209,15 +209,21 @@ class Translation
 
     etiss::int32 translateBlock(CodeBlock &cb);
 
+    void unloadBlocksAll();
+
     void unloadBlocks(etiss::uint64 startindex = 0, etiss::uint64 endindex = ((etiss::uint64)((etiss::int64)-1)));
 
     std::string disasm(uint8_t *buf, unsigned len, int &append);
+
+    inline etiss::int32 getTranslationError() { return translation_error_; }
 
   private:
     /// unique id used to generate unique function names across translation instances
     const uint64_t id;
     /// countes translated blocks. needed to guarantee unique block function names
     uint64_t tblockcount;
+    // transerror member + getter
+    etiss::int32 translation_error_;
 };
 
 } // namespace etiss

@@ -473,8 +473,16 @@ static void etiss_CPUCore_handleException(ETISS_CPU *cpu, etiss::int32 &code, Bl
         return;
     case RETURNCODE::CPUFINISHED:
         return;
+    case RETURNCODE::JITCOMPILATIONERROR:
+        return;
     default:
         code = arch->handleException(code, cpu);
+        if (code == RETURNCODE::RELOADBLOCKS) // translation-cache-flushes need to be resolved
+        {
+            block_ptr = 0; // doesn't hold a reference and thus might become invalid
+            translator.unloadBlocks(); // flush ETISS-translation cache
+            code = RETURNCODE::NOERROR;
+        }
         return;
     }
 }
@@ -722,32 +730,32 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
             //            std::cout << "instrcounter: " <<  instrcounter <<std::endl;
             for (unsigned bc = 0; bc < bcc_; bc++)
             {
-                // if not block internal jump // NOTE: removed since tests showed that this decreases performance
-                // if (!(blptr != 0 && blptr->valid && blptr->start<=cpu->instructionPointer && blptr->end >
-                // cpu->instructionPointer)){
-                // Transalte virtual address to physical address if MMU is enabled
-                uint64_t pma = cpu_->instructionPointer;
-                if (mmu_enabled_)
-                {
-                    if (mmu_->cache_flush_pending)
-                    {
-                        // FIXME: When flush required, current instruction cache has to be cleared. However, the
-                        // unloadBlocks is much too time-comsuming than expected. It should be optimized later on.
-                        // translation.unloadBlocks(0,(uint64_t)((int64_t)-1));
-                        mmu_->cache_flush_pending = false;
-                        blptr = nullptr;
-                    }
-
-                    // If the exception could be handled by architecture, then continue translation
-                    while ((exception = mmu_->Translate(cpu_->instructionPointer, &pma, etiss::mm::X_ACCESS)))
-                    {
-                        //	translation.unloadBlocks();
-                        if ((exception = arch_->handleException(exception, cpu_)))
-                            goto loopexit;
-                        // Update pma, in case pc is redirected to physical address space
-                        pma = cpu_->instructionPointer;
-                    }
-                }
+                // // if not block internal jump // NOTE: removed since tests showed that this decreases performance
+                // // if (!(blptr != 0 && blptr->valid && blptr->start<=cpu->instructionPointer && blptr->end >
+                // // cpu->instructionPointer)){
+                // // Transalte virtual address to physical address if MMU is enabled
+                // uint64_t pma = cpu_->instructionPointer;
+                // if (mmu_enabled_)
+                // {
+                //     if (mmu_->cache_flush_pending)
+                //     {
+                //         // FIXME: When flush required, current instruction cache has to be cleared. However, the
+                //         // unloadBlocks is much too time-comsuming than expected. It should be optimized later on.
+                //         // translation.unloadBlocks(0,(uint64_t)((int64_t)-1));
+                //         mmu_->cache_flush_pending = false;
+                //         blptr = nullptr;
+                //         translation.unloadBlocks();
+                //     }
+                    
+                //     // If the exception could be handled by architecture, then continue translation
+                //     while ((exception = mmu_->Translate(cpu_->instructionPointer, &pma, etiss::mm::X_ACCESS)))
+                //     {
+                //         if ((exception = arch_->handleException(exception, cpu_)))
+                //             goto loopexit;
+                //         // Update pma, in case pc is redirected to physical address space
+                //         pma = cpu_->instructionPointer;
+                //     }
+                // }
 
                 // FIXME: cpu->instructionPointer contains virtual address, getBlockFast should use physical address
                 // instead to realize physical cache.
@@ -770,8 +778,13 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
                         stream << "CPU execution stopped: Cannot execute from instruction index " << std::hex
                                << cpu_->instructionPointer << std::dec << ": no translated code available" << std::endl;
                         etiss::log(etiss::WARNING, stream.str());
-                        exception = RETURNCODE::JITCOMPILATIONERROR;
-                        goto loopexit;
+                        // check transerror != NOERROR
+                        exception = translation.getTranslationError();
+                        etiss_CPUCore_handleException(cpu_, exception, blptr, translation, arch_.get()); // handle exception
+                        if (unlikely(exception != RETURNCODE::NOERROR)) // check if exception handling failed
+                        {
+                            goto loopexit; // exception; terminate cpu
+                        }
                     }
                 }
                 else

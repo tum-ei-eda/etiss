@@ -76,7 +76,31 @@ RISCV64MMU::RISCV64MMU(bool pid_enabled) : MMU(true, "RISCV-sv39-MMU", pid_enabl
     REGISTER_PAGE_FAULT_HANDLER(PTEOVERLAP, tlb_overlap_handler);
 }
 
-int32_t RISCV64MMU::WalkPageTable(uint64_t vma, MM_ACCESS access)
+void RISCV64MMU::SignalMMU(uint64_t control_reg_val_)
+{   
+    // Enable/Disable MMU
+    uint8_t satp_mode = (control_reg_val_ & SATP64_MODE) >> 60;
+    if (satp_mode == SATP_MODE_OFF)
+        mmu_enabled_ = false;
+    else if (!mmu_enabled_)
+    {
+        mmu_enabled_ = true;
+        etiss::log(etiss::VERBOSE, GetName() + " : MMU is enabled.");
+    }
+    if (control_reg_val_ != mmu_control_reg_val_)
+    {
+        // tlb_->Flush();
+        // tlb_entry_map_.clear();
+        // etiss::log(etiss::VERBOSE, GetName() + " : TLB flushed due to page directory update.");
+        mmu_control_reg_val_ = control_reg_val_;
+        if (pid_enabled_)
+            UpdatePid(GetPid(control_reg_val_));
+    }
+    else
+        etiss::log(etiss::WARNING, "Redundant MMU control register write");
+}
+
+int32_t RISCV64MMU::WalkPageTable(uint64_t vma, MM_ACCESS access) 
 {
 
     if (mmu_enabled_)
@@ -130,22 +154,6 @@ int32_t RISCV64MMU::WalkPageTable(uint64_t vma, MM_ACCESS access)
         {
         }
 
-        if (0 == leaf_pte.GetByName("A"))
-        {
-            leaf_pte_val |= PTE_A;
-            leaf_pte.Update(leaf_pte_val);
-            if ((fault = system_->dwrite(system_->handle, cpu_, addr, buffer, PTESIZE)))
-                return fault;
-        }
-
-        if ((0 == leaf_pte.GetByName("A")) && (W_ACCESS == access))
-        {
-            leaf_pte_val |= PTE_D;
-            leaf_pte.Update(leaf_pte_val);
-            if ((fault = system_->dwrite(system_->handle, cpu_, addr, buffer, PTESIZE)))
-                return fault;
-        }
-
         // TODO: PMA, PMP check should be implemented later on.
 
         uint64_t new_pte_val = leaf_pte.Get();
@@ -169,7 +177,7 @@ int32_t RISCV64MMU::WalkPageTable(uint64_t vma, MM_ACCESS access)
                 new_pte_val |= vma_pte.GetByName(vpn_name.str()) << ((VPN_OFFSET * tmp_i) + 10);
             }
         }
-        PTE new_pte = PTE(new_pte_val);
+        PTE new_pte = PTE(new_pte_val, i, addr);
         AddTLBEntry(vma >> PAGE_OFFSET, new_pte);
         // Map TLB entry to physical address for write-through, because TLB is more or less a cache
         AddTLBEntryMap(addr, new_pte);
@@ -178,6 +186,8 @@ int32_t RISCV64MMU::WalkPageTable(uint64_t vma, MM_ACCESS access)
     return etiss::RETURNCODE::NOERROR;
 
 RETURN_PAGEFAULT:
+    ((RISCV64*)cpu_)->CSR[CSR_STVAL] = vma;
+    ((RISCV64*)cpu_)->CSR[CSR_MTVAL] = vma;
     switch (access)
     {
     case R_ACCESS:
@@ -193,10 +203,43 @@ RETURN_PAGEFAULT:
 
 int32_t RISCV64MMU::CheckProtection(const PTE &pte, MM_ACCESS access)
 {
+    bool priv_violation = false;
+    auto priv = ((RISCV64*)cpu_)->CSR[3088];
+
+    // MPRV check
+    if(unlikely((((RISCV64*)cpu_)->CSR[CSR_MSTATUS] & MSTATUS_MPRV) && (access != X_ACCESS)))
+        priv = ((RISCV64*)cpu_)->CSR[CSR_MSTATUS] & MSTATUS_MPP >> 11;
+
+    // Check if current PRIV has access to page
+    switch (priv)
+    {
+    case PRV_S:
+        if ((pte.GetByName("U") == 1) && (((RISCV64*)cpu_)->CSR[CSR_SSTATUS] & SSTATUS_SUM) == 0)
+            priv_violation = true;
+        break;
+    case PRV_U:
+        if (pte.GetByName("U") != 1)
+            priv_violation = true; 
+        break;
+    }
+    
+    if (priv_violation)
+    {
+        switch (access)
+        {
+        case R_ACCESS:
+            return etiss::RETURNCODE::LOAD_PAGEFAULT;
+        case W_ACCESS:
+            return etiss::RETURNCODE::STORE_PAGEFAULT;
+        case X_ACCESS:
+            return etiss::RETURNCODE::INSTR_PAGEFAULT;
+        }
+    }
+    
     switch (access)
     {
     case R_ACCESS:
-        if (1 == pte.GetByName("R"))
+        if (1 == pte.GetByName("R") || (((RISCV64*)cpu_)->CSR[CSR_MSTATUS] & MSTATUS_MXR && (pte.GetByName("X") == 1)))
             break;
         return etiss::RETURNCODE::LOAD_PAGEFAULT;
     case W_ACCESS:
@@ -209,4 +252,50 @@ int32_t RISCV64MMU::CheckProtection(const PTE &pte, MM_ACCESS access)
         return etiss::RETURNCODE::INSTR_PAGEFAULT;
     }
     return etiss::RETURNCODE::NOERROR;
+}
+
+int32_t RISCV64MMU::UpdatePTEFlags(const uint64_t vfn, PTE *pte, etiss::mm::MM_ACCESS access)
+{
+    uint64_t pte_val = pte->Get();
+    uint64_t pte_addr = pte->GetAddr();
+    unsigned char *buffer = (unsigned char *)(&pte_val);
+    int32_t fault = etiss::RETURNCODE::NOERROR;
+
+    if (0 == pte->GetByName("A"))
+    {
+        pte_val |= PTE_A;
+        fault = tlb_->UpdatePTE(vfn, pte_val);
+        if ((fault = system_->dwrite(system_->handle, cpu_, pte_addr, buffer, PTESIZE)))
+            return fault;
+    }
+
+    if ((0 == pte->GetByName("D")) && (W_ACCESS == access))
+    {
+        pte_val |= PTE_D;
+        fault = tlb_->UpdatePTE(vfn, pte_val);
+        if ((fault = system_->dwrite(system_->handle, cpu_, pte_addr, buffer, PTESIZE)))
+            return fault;
+    }
+
+    return fault;
+}
+
+uint32_t RISCV64MMU::GetPageOverlap(const uint64_t vma, etiss_uint32 length, const PTE &pte)
+{
+    // Quick return to enhance performance
+    if (length == 0)
+        return 0;
+    
+    // Determine what page level is used (ie. normal page, super-page, mega-page)
+    uint32_t page_level = pte.GetLVL();
+    uint64_t page_size = 1 << (PAGE_OFFSET + page_level * VPN_OFFSET);
+    uint64_t offset_mask = ~(page_size - 1);
+
+    // Check if vma + length overlaps page-boundary
+    uint64_t next_page_vma = (vma & offset_mask) + page_size;
+    int64_t overlap = vma - next_page_vma + length;
+
+    if (likely(overlap <= 0))
+        return 0;
+    return overlap;
 }

@@ -65,12 +65,30 @@ static etiss_int32 iread(void *handle, ETISS_CPU *cpu, etiss_uint64 addr, etiss_
 
     // vma to pma translation
     uint64_t pma = 0;
-    if (unlikely(exception = mmu->Translate(addr, &pma, MM_ACCESS::R_ACCESS)))
+    uint32_t overlap = 0;
+    if (unlikely(exception = mmu->Translate(addr, &pma, MM_ACCESS::R_ACCESS, &overlap, length)))
         return exception;
     std::stringstream msg;
     msg << "Virtual memory: 0x" << std::hex << addr << " is translated into physical address 0x:" << std::hex << pma
         << std::endl;
     etiss::log(etiss::VERBOSE, msg.str());
+
+    // check for overlap
+    if (unlikely(overlap))
+    {
+        length -= overlap;
+        uint64_t vma_2 = addr + length;
+        uint64_t pma_2 = 0;
+        uint32_t tmp;
+        if (unlikely(exception = mmu->Translate(vma_2, &pma_2, MM_ACCESS::X_ACCESS, &tmp)))
+            return exception;
+        
+        ETISS_System *sys = msys->orig;
+        if (unlikely(exception = sys->iread(sys->handle, cpu, pma, length)))
+            return exception;
+        return sys->iread(sys->handle, cpu, pma_2, overlap);
+    }
+
     ETISS_System *sys = msys->orig;
     return sys->iread(sys->handle, cpu, pma, length);
 }
@@ -84,12 +102,30 @@ static etiss_int32 iwrite(void *handle, ETISS_CPU *cpu, etiss_uint64 addr, etiss
 
     // vma to pma translation
     uint64_t pma = 0;
-    if (unlikely(exception = mmu->Translate(addr, &pma, MM_ACCESS::W_ACCESS)))
+    uint32_t overlap = 0;
+    if (unlikely(exception = mmu->Translate(addr, &pma, MM_ACCESS::W_ACCESS, &overlap, length)))
         return exception;
     std::stringstream msg;
     msg << "Virtual memory: 0x" << std::hex << addr << " is translated into physical address 0x:" << std::hex << pma
         << std::endl;
     etiss::log(etiss::VERBOSE, msg.str());
+
+    // check for overlap
+    if (unlikely(overlap))
+    {
+        length -= overlap;
+        uint64_t vma_2 = addr + length;
+        uint64_t pma_2 = 0;
+        uint32_t tmp;
+        if (unlikely(exception = mmu->Translate(vma_2, &pma_2, MM_ACCESS::X_ACCESS, &tmp)))
+            return exception;
+        
+        ETISS_System *sys = msys->orig;
+        if (unlikely(exception = sys->iwrite(sys->handle, cpu, pma, buffer, length)))
+            return exception;
+        return sys->iwrite(sys->handle, cpu, pma_2, buffer + length, overlap);
+    }
+
     ETISS_System *sys = msys->orig;
     return sys->iwrite(sys->handle, cpu, pma, buffer, length);
 }
@@ -103,9 +139,25 @@ static etiss_int32 dread(void *handle, ETISS_CPU *cpu, etiss_uint64 addr, etiss_
 
     // vma to pma translation
     uint64_t pma = 0;
-    if (unlikely(exception = mmu->Translate(addr, &pma, MM_ACCESS::R_ACCESS)))
+    uint32_t overlap = 0;
+    if (unlikely(exception = mmu->Translate(addr, &pma, MM_ACCESS::R_ACCESS, &overlap, length)))
         return exception;
-    std::stringstream msg;
+
+    // check for overlap
+    if (unlikely(overlap))
+    {
+        length -= overlap;
+        uint64_t vma_2 = addr + length;
+        uint64_t pma_2 = 0;
+        uint32_t tmp;
+        if (unlikely(exception = mmu->Translate(vma_2, &pma_2, MM_ACCESS::X_ACCESS, &tmp)))
+            return exception;
+        
+        ETISS_System *sys = msys->orig;
+        if (unlikely(exception = sys->dread(sys->handle, cpu, pma, buffer, length)))
+            return exception;
+        return sys->dread(sys->handle, cpu, pma_2, buffer + length, overlap);
+    }
 
     ETISS_System *sys = msys->orig;
     return sys->dread(sys->handle, cpu, pma, buffer, length);
@@ -120,9 +172,25 @@ static etiss_int32 dwrite(void *handle, ETISS_CPU *cpu, etiss_uint64 addr, etiss
 
     // vma to pma translation
     uint64_t pma = 0;
-    if (unlikely(exception = mmu->Translate(addr, &pma, MM_ACCESS::W_ACCESS)))
+    uint32_t overlap = 0;
+    if (unlikely(exception = mmu->Translate(addr, &pma, MM_ACCESS::W_ACCESS, &overlap, length)))
         return exception;
-    std::stringstream msg;
+
+    // check for overlap
+    if (unlikely(overlap))
+    {
+        length -= overlap;
+        uint64_t vma_2 = addr + length;
+        uint64_t pma_2 = 0;
+        uint32_t tmp;
+        if (unlikely(exception = mmu->Translate(vma_2, &pma_2, MM_ACCESS::X_ACCESS, &tmp)))
+            return exception;
+        
+        ETISS_System *sys = msys->orig;
+        if (unlikely(exception = sys->dwrite(sys->handle, cpu, pma, buffer, length)))
+            return exception;
+        return sys->dwrite(sys->handle, cpu, pma_2, buffer + length, overlap);
+    }
 
     ETISS_System *sys = msys->orig;
     return sys->dwrite(sys->handle, cpu, pma, buffer, length);
@@ -137,8 +205,25 @@ static etiss_int32 dbg_read(void *handle, etiss_uint64 addr, etiss_uint8 *buffer
 
     // vma to pma translation
     uint64_t pma = 0;
-    if (unlikely(exception = mmu->Translate(addr, &pma, MM_ACCESS::X_ACCESS)))
-        return etiss::RETURNCODE::PAGEFAULT;
+    uint32_t overlap = 0;
+    if (unlikely(exception = mmu->Translate(addr, &pma, MM_ACCESS::X_ACCESS, &overlap, length)))
+        return exception;
+    
+    // check for overlap
+    if (unlikely(overlap))
+    {
+        length -= overlap;
+        uint64_t vma_2 = addr + length;
+        uint64_t pma_2 = 0;
+        uint32_t tmp;
+        if (unlikely(exception = mmu->Translate(vma_2, &pma_2, MM_ACCESS::X_ACCESS, &tmp)))
+            return exception;
+        
+        ETISS_System *sys = msys->orig;
+        if (unlikely(exception = sys->dbg_read(sys->handle, pma, buffer, length)))
+            return exception;
+        return sys->dbg_read(sys->handle, pma_2, buffer + length, overlap);
+    }
 
     ETISS_System *sys = msys->orig;
     return sys->dbg_read(sys->handle, pma, buffer, length);
@@ -153,12 +238,30 @@ static etiss_int32 dbg_write(void *handle, etiss_uint64 addr, etiss_uint8 *buffe
 
     // vma to pma translation
     uint64_t pma = 0;
-    if (unlikely(exception = mmu->Translate(addr, &pma, MM_ACCESS::W_ACCESS)))
+    uint32_t overlap = 0;
+    if (unlikely(exception = mmu->Translate(addr, &pma, MM_ACCESS::W_ACCESS, &overlap, length)))
         return exception;
     std::stringstream msg;
     msg << "Virtual memory: 0x" << std::hex << addr << " is translated into physical address 0x:" << std::hex << pma
         << std::endl;
     etiss::log(etiss::VERBOSE, msg.str());
+
+    // check for overlap
+    if (unlikely(overlap))
+    {
+        length -= overlap;
+        uint64_t vma_2 = addr + length;
+        uint64_t pma_2 = 0;
+        uint32_t tmp;
+        if (unlikely(exception = mmu->Translate(vma_2, &pma_2, MM_ACCESS::X_ACCESS, &tmp)))
+            return exception;
+        
+        ETISS_System *sys = msys->orig;
+        if (unlikely(exception = sys->dbg_write(sys->handle, pma, buffer, length)))
+            return exception;
+        return sys->dbg_write(sys->handle, pma_2, buffer + length, overlap);
+    }
+
     ETISS_System *sys = msys->orig;
     return sys->dbg_write(sys->handle, pma, buffer, length);
 }

@@ -333,9 +333,9 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
 
     plugins_initCodeBlock_(plugins_array_, block);
 
-    etiss::int32 transerror = translateBlock(block);
+    translation_error_ = translateBlock(block);
 
-    if (transerror != ETISS_RETURNCODE_NOERROR)
+    if (translation_error_ != ETISS_RETURNCODE_NOERROR)
     {
         etiss::log(etiss::ERROR, "Failed to translate block");
         return nullptr;
@@ -489,6 +489,7 @@ etiss::int32 Translation::translateBlock(CodeBlock &cb)
             cb.endaddress_ += mainba.byteCount(); // update end address
             return etiss::RETURNCODE::NOERROR;
         }
+
         if (ret != etiss::RETURNCODE::NOERROR)
         {
             if (count == 0)
@@ -581,8 +582,33 @@ etiss::int32 Translation::translateBlock(CodeBlock &cb)
     return etiss::RETURNCODE::NOERROR;
 }
 
+void Translation::unloadBlocksAll()
+{
+    for (auto &entry:blockmap_)
+    {
+        entry.second.erase(std::remove_if(entry.second.begin(), entry.second.end(), 
+                            [](auto &bl)
+                            {
+                                bl->valid = false;
+                                BlockLink::updateRef(bl->next, 0);
+                                BlockLink::updateRef(bl->branch, 0);
+                                BlockLink::decrRef(bl); // remove reference of map
+                                return true;
+                            }),
+                            entry.second.end());
+    }
+    blockmap_.clear();
+}
+
 void Translation::unloadBlocks(etiss::uint64 startindex, etiss::uint64 endindex)
 {
+    // Hotfix: if everything needs to be deleted, new function unloadBlocksAll()
+    if (startindex == 0 && endindex == ((etiss::uint64)((etiss::int64)-1)))
+    {
+        unloadBlocksAll();
+        return;
+    }
+
     const etiss::uint64 startindexblock = startindex >> 9;
     const etiss::uint64 endindexblock = (endindex >> 9) + ((((endindex >> 9) << 9) == endindex) ? 0 : 1);
     for (etiss::uint64 block = startindexblock; block < endindexblock; block++)
