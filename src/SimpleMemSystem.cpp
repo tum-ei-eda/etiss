@@ -145,10 +145,17 @@ void SimpleMemSystem::load_segments() {
                 buf = new etiss::uint8[fsize];
 
                 ifs.read((char*)buf, fsize);
+            }else{
+                std::stringstream msg;
+                msg << "This memory segment " <<  i  <<  " is initialized with 0x" << std::hex << length << " zeros !";
+                etiss::log(etiss::INFO, msg.str());
+                fsize = length;
+                buf = new etiss::uint8[fsize]();
             }
 
             auto mseg = std::make_unique<MemSegment>(origin, length, static_cast<MemSegment::access_t>(access), sname.str(), nullptr);
             add_memsegment(mseg, buf, fsize);
+            delete[] buf;
         }
     }
 }
