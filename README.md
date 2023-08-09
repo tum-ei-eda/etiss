@@ -30,6 +30,9 @@ If you use ETISS in your academic work you can cite it from this:
 }
 ```
 
+</p>
+</details>
+
 ## Getting Started
 
 The ETISS core and included plugins are built as libraries. To make use of the simulator, a program using the library is needed. A very simple bare-metal processor is included in this repository in [src/bare_etiss_processor](src/bare_etiss_processor). This program is built during the normal build process; its compiled binary will be placed under `<build_-_dir>/bin` and `<etiss_install_dir>/bin`. See its [README](src/bare_etiss_processor/README.md) for more details.
