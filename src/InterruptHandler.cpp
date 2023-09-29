@@ -53,9 +53,9 @@
 
 using namespace etiss;
 
-InterruptHandler::InterruptHandler(etiss::InterruptVector *interruptVector, std::shared_ptr<CPUArch> arch,
+InterruptHandler::InterruptHandler(etiss::InterruptVector *interruptVector, etiss::InterruptEnable *interruptEnable, std::shared_ptr<CPUArch> arch,
                                    InterruptType itype, bool sync)
-    : itype_(itype), sync_(sync), vector_(interruptVector), cpuarch_(arch)
+    : itype_(itype), sync_(sync), vector_(interruptVector), enable_(interruptEnable), cpuarch_(arch)
 {
     empty_ = true;
 }
@@ -161,7 +161,12 @@ etiss::int32 InterruptHandler::execute()
     if (sync_)
         mu_.unlock();
 
-    return (mayinterrupt && vector_->isActive()) ? etiss::RETURNCODE::INTERRUPT : etiss::RETURNCODE::NOERROR;
+    auto active = vector_->isActive();
+    auto enabled = enable_->isEnabled();
+
+    // std::cout << "active: " << active << ", enabled: " << enabled << std::endl;
+
+    return (mayinterrupt && active && enabled) ? etiss::RETURNCODE::INTERRUPT : etiss::RETURNCODE::NOERROR;
 }
 
 std::string InterruptHandler::_getPluginName() const

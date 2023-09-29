@@ -59,6 +59,7 @@
 #include "etiss/Translation.h"
 #include "etiss/System.h"
 #include "etiss/InterruptHandler.h"
+#include "etiss/InterruptEnable.h"
 #include "etiss/Plugin.h"
 #include "etiss/jit/ReturnCode.h"
 #include "etiss/mm/MMU.h"
@@ -185,6 +186,8 @@ class CPUCore : public VirtualStructSupport, public etiss::ToString
      * @return A pointer to the interrupt vector of the simulated CPU.
      */
     inline etiss::InterruptVector *getInterruptVector() { return intwrapper_; }
+
+    inline etiss::InterruptEnable *getInterruptEnable() { return intenable_; }
 
     /**
      * @brief Get the CPU architecture.
@@ -381,6 +384,7 @@ class CPUCore : public VirtualStructSupport, public etiss::ToString
     std::shared_ptr<etiss::VirtualStruct> vcpu_;
     etiss::InterruptVector *intvector_;  /// cpu interrupt vector derived from cpu_ and allocated by arch_
     InterruptVectorWrapper *intwrapper_; /// wrapped interrupt vector to allow interrupt listening
+    etiss::InterruptEnable *intenable_;
     bool timer_enabled_; /// if true the a timer plugin allocated by arch_ will be added in CPUCore::execute
     std::shared_ptr<etiss::JIT>
         jit_;       /// JIT instance to use. may be 0 (etiss::getDefaultJIT() will be used in that case)

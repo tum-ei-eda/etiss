@@ -135,6 +135,13 @@ void CPUArch::deleteInterruptVector(etiss::InterruptVector *vec, ETISS_CPU *cpu)
   // memory leak
 }
 
+etiss::InterruptEnable* CPUArch::createInterruptEnable(ETISS_CPU *cpu) {
+    return new etiss::InterruptEnable();
+}
+void CPUArch::deleteInterruptEnable(etiss::InterruptEnable* en, ETISS_CPU* cpu) {
+    delete en;
+}
+
 etiss::plugin::gdb::GDBCore &CPUArch::getGDBCore()
 { // disfunctional implementation
     return gdbcore_;

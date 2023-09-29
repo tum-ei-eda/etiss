@@ -142,6 +142,7 @@ CPUCore::CPUCore(std::shared_ptr<etiss::CPUArch> arch)
     , cpu_(arch->newCPU())
     , vcpu_(arch->getVirtualStruct(cpu_))
     , intvector_(arch->createInterruptVector(cpu_))
+    , intenable_(arch->createInterruptEnable(cpu_))
     , mmu_enabled_(false)
 {
     arch_->resetCPU(cpu_, 0);
