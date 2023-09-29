@@ -121,6 +121,10 @@ int main(int argc, const char *argv[])
     std::cout << "=== Finished Setting up test system ===" << std::endl << std::endl;
 
     std::cout << "=== Setting up plug-ins ===" << std::endl;
+
+    auto irq_handler = std::make_shared<etiss::InterruptHandler>(cpu->getInterruptVector(), cpu->getInterruptEnable(), cpu->getArch(), etiss::LEVEL_TRIGGERED, false);
+    cpu->addPlugin(irq_handler);
+
     initializer.loadIniPlugins(cpu);
     initializer.loadIniJIT(cpu);
     // here own developped plug-ins can be added with:
