@@ -600,16 +600,16 @@ class CodeBlock
         return lines_.back();
     }
     inline unsigned length() const { return (unsigned)lines_.size(); }
-    inline std::vector<std::string> &fileglobalCode() { return fileglobal_code; }
-    inline std::vector<std::string> &functionglobalCode() { return functionglobal_code; }
+    inline std::set<std::string> &fileglobalCode() { return fileglobal_code; }
+    inline std::set<std::string> &functionglobalCode() { return functionglobal_code; }
     void toCode(std::stringstream &out, const std::string &funcname, std::set<std::string> *fileglobalcode);
 
   private:
     std::vector<Line> lines_;
     etiss::uint64 startindex_;
     etiss::uint64 endaddress_;
-    std::vector<std::string> fileglobal_code;
-    std::vector<std::string> functionglobal_code;
+    std::set<std::string> fileglobal_code;
+    std::set<std::string> functionglobal_code;
 };
 } // namespace etiss
 #endif
