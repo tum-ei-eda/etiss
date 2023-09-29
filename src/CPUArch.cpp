@@ -197,4 +197,9 @@ extern "C"
     {
         CPUArch::signalChangedRegisterValue(cpu, registerName);
     }
+
+    void etiss_icache_flush(ETISS_CPU *cpu, ETISS_System * const system, void * const * const plugin_pointers)
+    {
+        cpu->exception = etiss::RETURNCODE::RELOADBLOCKS;
+    }
 }
