@@ -332,9 +332,37 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
     block.functionglobalCode().push_back("if (cpu->mode != " + toString(cpu_.mode) +
                                       ") return ETISS_RETURNCODE_RELOADCURRENTBLOCK;");
 
+    etiss::int32 transerror = translateBlock(block);
+
+    etiss::instr::InstructionContext err_ctx;
+    etiss::CodeSet err_cs;
+    auto vis = mis_->get(cpu_.mode);
+
+    err_ctx.cf_delay_slot_ = 0;
+    err_ctx.force_block_end_ = false;
+    err_ctx.force_append_next_instr_ = false;
+    err_ctx.force_block_end_ = false;
+    err_ctx.current_address_ = block.endaddress_;
+    err_ctx.current_local_address_ = block.endaddress_ - block.startindex_;
+    err_ctx.instr_width_fully_evaluated_ = true;
+    err_ctx.is_not_default_width_ = false;
+    err_ctx.instr_width_ = vis->width_;
+
+    auto err_ins = &vis->getMain()->getInvalid();
+
+    etiss::instr::BitArray errba(32, 0);
+    errba = etiss::RETURNCODE::ILLEGALINSTRUCTION;
+
+    err_ins->translate(errba, err_cs, err_ctx);
+
+    etiss::RegisterSet dummy;
+    bool err_ok;
+
+    auto err_str = "if (cpu->exception) {\n" + err_cs.toString(dummy, err_ok) + "\n}\n\n";
+
     plugins_initCodeBlock_(plugins_array_, block);
 
-    etiss::int32 transerror = translateBlock(block);
+    block.functionglobalCode().insert(block.functionglobalCode().begin(), err_str);
 
     if (transerror != ETISS_RETURNCODE_NOERROR)
     {
