@@ -62,7 +62,7 @@ using namespace etiss::plugin;
 
 void PrintInstruction::initCodeBlock(etiss::CodeBlock &block) const
 {
-    block.fileglobalCode().insert("extern void PrintInstruction_print(const char *,uint64_t);"); // add print function
+    block.fileglobalCode().push_back("extern void PrintInstruction_print(const char *,uint64_t);"); // add print function
 }
 
 void PrintInstruction::finalizeInstrSet(etiss::instr::ModedInstructionSet &mis) const

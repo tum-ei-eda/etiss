@@ -277,7 +277,7 @@ void Server::finalizeInstrSet(etiss::instr::ModedInstructionSet &mis) const
 void Server::finalizeCodeBlock(etiss::CodeBlock &cb) const
 {
 
-    cb.fileglobalCode().insert("extern etiss_int32 gdb_pre_instruction(ETISS_CPU * ,ETISS_System * ,void * );extern "
+    cb.fileglobalCode().push_back("extern etiss_int32 gdb_pre_instruction(ETISS_CPU * ,ETISS_System * ,void * );extern "
                                "void gdb_pre_instruction_noreturn(ETISS_CPU * ,ETISS_System * ,void * );");
 }
 

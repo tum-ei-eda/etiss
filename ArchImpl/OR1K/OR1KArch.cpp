@@ -389,8 +389,8 @@ void OR1KArch::initInstrSet(etiss::instr::ModedInstructionSet &mis) const
 void OR1KArch::initCodeBlock(etiss::CodeBlock &cb) const
 {
 
-    cb.fileglobalCode().insert("#include \"Arch/OR1K/OR1K.h\"\n");
-    cb.fileglobalCode().insert("#include \"etiss/jit/fpu/softfloat.h\"\n");
+    cb.fileglobalCode().push_back("#include \"Arch/OR1K/OR1K.h\"\n");
+    cb.fileglobalCode().push_back("#include \"etiss/jit/fpu/softfloat.h\"\n");
 }
 
 const std::set<std::string> &OR1KArch::getHeaders() const

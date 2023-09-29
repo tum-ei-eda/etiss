@@ -76,7 +76,7 @@ VariableValueLogger::VariableValueLogger(
 
 void VariableValueLogger::initCodeBlock(etiss::CodeBlock &block) const
 {
-    block.fileglobalCode().insert("extern void etiss_plugin_VariableValueLogger(void *); ");
+    block.fileglobalCode().push_back("extern void etiss_plugin_VariableValueLogger(void *); ");
 }
 
 void VariableValueLogger::finalizeInstrSet(etiss::instr::ModedInstructionSet &mis) const

@@ -84,8 +84,8 @@ InstructionSpecificAddressCallback::~InstructionSpecificAddressCallback() {}
 
 void InstructionSpecificAddressCallback::initCodeBlock(etiss::CodeBlock &block) const
 {
-    block.fileglobalCode().insert("extern int InstructionSpecificAddressCallback_callback(void *);\n");
-    block.functionglobalCode().insert("  if ( (*(uint32_t*)(" + getPointerCode() +
+    block.fileglobalCode().push_back("extern int InstructionSpecificAddressCallback_callback(void *);\n");
+    block.functionglobalCode().push_back("  if ( (*(uint32_t*)(" + getPointerCode() +
                                       ")) != " + etiss::toString(pluginData_.state_) +
                                       ") return ETISS_RETURNCODE_RELOADCURRENTBLOCK;\n"); // add print function
 }

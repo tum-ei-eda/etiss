@@ -318,7 +318,7 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
     }
 
     CodeBlock block(instructionindex);
-    block.fileglobalCode().insert("#include \"etiss/jit/CPU.h\"\n"
+    block.fileglobalCode().push_back("#include \"etiss/jit/CPU.h\"\n"
                                   "#include \"etiss/jit/System.h\"\n"
                                   "#include \"etiss/jit/libresources.h\"\n"
                                   "#include \"etiss/jit/libsemihost.h\"\n"
@@ -326,10 +326,10 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
                                   "#include \"etiss/jit/libCSRCounters.h\"\n");
 
     for(auto &it: jitExtHeaders()){
-        if(it != "") block.fileglobalCode().insert("#include \"" + it + "\"\n");
+        if(it != "") block.fileglobalCode().push_back("#include \"" + it + "\"\n");
     }
 
-    block.functionglobalCode().insert("if (cpu->mode != " + toString(cpu_.mode) +
+    block.functionglobalCode().push_back("if (cpu->mode != " + toString(cpu_.mode) +
                                       ") return ETISS_RETURNCODE_RELOADCURRENTBLOCK;");
 
     plugins_initCodeBlock_(plugins_array_, block);

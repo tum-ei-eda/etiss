@@ -216,7 +216,7 @@ const std::set<std::string> & RISCVArch::getHeaders() const
 		
 void RISCVArch::initCodeBlock(etiss::CodeBlock & cb) const
 {
-    cb.fileglobalCode().insert("#include \"Arch/RISCV/RISCV.h\"\n");
+    cb.fileglobalCode().push_back("#include \"Arch/RISCV/RISCV.h\"\n");
 }
 
 etiss::plugin::gdb::GDBCore & RISCVArch::getGDBCore()

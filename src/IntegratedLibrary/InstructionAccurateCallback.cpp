@@ -64,7 +64,7 @@ InstructionAccurateCallback::~InstructionAccurateCallback() {}
 
 void InstructionAccurateCallback::initCodeBlock(etiss::CodeBlock &block) const
 {
-    block.fileglobalCode().insert("extern void etiss_plugin_InstructionAccurateCallback(void *); ");
+    block.fileglobalCode().push_back("extern void etiss_plugin_InstructionAccurateCallback(void *); ");
 }
 
 void InstructionAccurateCallback::finalizeInstrSet(etiss::instr::ModedInstructionSet &mis) const
