@@ -206,11 +206,11 @@ const std::set<std::string> & RV64IMACFDArch::getHeaders() const
 
 void RV64IMACFDArch::initCodeBlock(etiss::CodeBlock & cb) const
 {
-	cb.fileglobalCode().insert("#include \"Arch/RV64IMACFD/RV64IMACFD.h\"\n");
-	cb.fileglobalCode().insert("#include \"Arch/RV64IMACFD/RV64IMACFDFuncs.h\"\n");
-	cb.functionglobalCode().insert("cpu->exception = 0;\n");
-	cb.functionglobalCode().insert("cpu->return_pending = 0;\n");
-	cb.functionglobalCode().insert("etiss_uint32 mem_ret_code = 0;\n");
+	cb.fileglobalCode().push_back("#include \"Arch/RV64IMACFD/RV64IMACFD.h\"\n");
+	cb.fileglobalCode().push_back("#include \"Arch/RV64IMACFD/RV64IMACFDFuncs.h\"\n");
+	cb.functionglobalCode().push_back("cpu->exception = 0;\n");
+	cb.functionglobalCode().push_back("cpu->return_pending = 0;\n");
+	cb.functionglobalCode().push_back("etiss_uint32 mem_ret_code = 0;\n");
 }
 
 etiss::plugin::gdb::GDBCore & RV64IMACFDArch::getGDBCore()

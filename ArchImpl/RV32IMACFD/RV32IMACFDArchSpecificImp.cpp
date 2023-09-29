@@ -13,6 +13,11 @@
 #include "RV32IMACFDArch.h"
 #include "RV32IMACFDArchSpecificImp.h"
 
+#define ETISS_ARCH_STATIC_FN_ONLY
+extern "C" {
+#include "RV32IMACFDFuncs.h"
+}
+
 /**
 	@brief This function will be called automatically in order to handling exceptions such as interrupt, system call, illegal instructions
 
@@ -29,8 +34,10 @@
 */
 etiss::int32 RV32IMACFDArch::handleException(etiss::int32 cause, ETISS_CPU * cpu)
 {
-    etiss::log(etiss::WARNING, "in old exception handler");
-    return cause;
+    translate_exc_code(cpu, nullptr, nullptr, cause);
+	cpu->instructionPointer = cpu->nextPc;
+
+	return 0;
 }
 
 /**
@@ -117,8 +124,12 @@ error_code += R_error_code_0.read(ba) << 0;
 		cp.code() = std::string("//trap_entry 32\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "translate_exc_code(cpu, system, plugin_pointers, " + std::to_string(error_code) + "U);\n";
+{ // procedure
+cp.code() += "{ // procedure\n";
+cp.code() += "translate_exc_code(cpu, system, plugin_pointers, (cpu->exception) ? (cpu->exception) : (" + std::to_string(error_code) + "ULL));\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
+cp.code() += "} // procedure\n";
+} // procedure
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
 cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
@@ -160,8 +171,12 @@ error_code += R_error_code_0.read(ba) << 0;
 		cp.code() = std::string("//trap_entry 16\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "translate_exc_code(cpu, system, plugin_pointers, " + std::to_string(error_code) + "U);\n";
+{ // procedure
+cp.code() += "{ // procedure\n";
+cp.code() += "translate_exc_code(cpu, system, plugin_pointers, (cpu->exception) ? (cpu->exception) : (" + std::to_string(error_code) + "ULL));\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
+cp.code() += "} // procedure\n";
+} // procedure
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
 cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
@@ -342,10 +357,25 @@ etiss::InterruptVector * RV32IMACFDArch::createInterruptVector(ETISS_CPU * cpu)
 	std::vector<etiss::uint32 *> vec;
 	std::vector<etiss::uint32 *> mask;
 
+	RV32IMACFD* rvcpu = (RV32IMACFD*)cpu;
+
+	vec.push_back(rvcpu->CSR[0x344]);
+	mask.push_back(rvcpu->CSR[0x304]);
+
 	return new etiss::MappedInterruptVector<etiss::uint32>(vec, mask);
 }
 
 void RV32IMACFDArch::deleteInterruptVector(etiss::InterruptVector * vec, ETISS_CPU * cpu)
 {
 	delete vec;
+}
+
+etiss::InterruptEnable* RV32IMACFDArch::createInterruptEnable(ETISS_CPU* cpu) {
+	RV32IMACFD* rvcpu = (RV32IMACFD*)cpu;
+
+	return new etiss::MappedInterruptEnable<etiss::uint32>(rvcpu->CSR[0x300], 0xf);
+}
+
+void RV32IMACFDArch::deleteInterruptEnable(etiss::InterruptEnable* en, ETISS_CPU* cpu) {
+	delete en;
 }

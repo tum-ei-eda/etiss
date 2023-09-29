@@ -1,5 +1,5 @@
 /**
- * Generated on Tue, 07 Feb 2023 18:20:18 +0100.
+ * Generated on Tue, 19 Sep 2023 16:07:36 +0200.
  *
  * This file contains the instruction behavior models of the RV32FC
  * instruction set for the RV32IMACFD core architecture.
@@ -50,20 +50,32 @@ uimm += R_uimm_3.read(ba) << 3;
 		cp.code() = std::string("//CFLW\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
-cp.code() += "etiss_uint32 offs = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 + 8U) + "U] + " + std::to_string(uimm) + "U;\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2ULL) + "ULL;\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "etiss_uint32 offs = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 + 8ULL) + "ULL] + " + std::to_string(uimm) + "ULL;\n";
 cp.code() += "etiss_uint32 mem_val_0;\n";
 cp.code() += "cpu->exception |= (*(system->dread))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_0, 4);\n";
-cp.code() += "if (cpu->exception) {\n";
+cp.code() += "if (cpu->exception) { // conditional\n";
+{ // procedure
+cp.code() += "{ // procedure\n";
 cp.code() += "translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
-cp.code() += "}\n";
+cp.code() += "} // procedure\n";
+} // procedure
+cp.code() += "} // conditional\n";
 cp.code() += "etiss_uint32 res = (etiss_uint32)(mem_val_0);\n";
-cp.code() += "((RV32IMACFD*)cpu)->F[" + std::to_string(rd + 8U) + "U] = -4294967296L | res;\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "((RV32IMACFD*)cpu)->F[" + std::to_string(rd + 8ULL) + "ULL] = -4294967296LL | res;\n";
+cp.code() += "} // block\n";
+} // block
+cp.code() += "} // block\n";
+} // block
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
 cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
-		cp.getRegisterDependencies().add(reg_name[rs1 + 8U], 32);
+		cp.getRegisterDependencies().add(reg_name[rs1 + 8ULL], 32);
 		cp.getAffectedRegisters().add("instructionPointer", 32);
 	}
 	{
@@ -142,19 +154,27 @@ uimm += R_uimm_3.read(ba) << 3;
 		cp.code() = std::string("//CFSW\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
-cp.code() += "etiss_uint32 offs = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 + 8U) + "U] + " + std::to_string(uimm) + "U;\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2ULL) + "ULL;\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "etiss_uint32 offs = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 + 8ULL) + "ULL] + " + std::to_string(uimm) + "ULL;\n";
 cp.code() += "etiss_uint32 mem_val_0;\n";
-cp.code() += "mem_val_0 = (etiss_uint32)(((RV32IMACFD*)cpu)->F[" + std::to_string(rs2 + 8U) + "U]);\n";
+cp.code() += "mem_val_0 = (etiss_uint32)(((RV32IMACFD*)cpu)->F[" + std::to_string(rs2 + 8ULL) + "ULL]);\n";
 cp.code() += "cpu->exception |= (*(system->dwrite))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_0, 4);\n";
-cp.code() += "if (cpu->exception) {\n";
+cp.code() += "if (cpu->exception) { // conditional\n";
+{ // procedure
+cp.code() += "{ // procedure\n";
 cp.code() += "translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
-cp.code() += "}\n";
+cp.code() += "} // procedure\n";
+} // procedure
+cp.code() += "} // conditional\n";
+cp.code() += "} // block\n";
+} // block
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
 cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
-		cp.getRegisterDependencies().add(reg_name[rs1 + 8U], 32);
+		cp.getRegisterDependencies().add(reg_name[rs1 + 8ULL], 32);
 		cp.getAffectedRegisters().add("instructionPointer", 32);
 	}
 	{
@@ -230,20 +250,32 @@ uimm += R_uimm_5.read(ba) << 5;
 		cp.code() = std::string("//CFLWSP\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
-cp.code() += "etiss_uint32 offs = *((RV32IMACFD*)cpu)->X[2U] + " + std::to_string(uimm) + "U;\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2ULL) + "ULL;\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "etiss_uint32 offs = *((RV32IMACFD*)cpu)->X[2ULL] + " + std::to_string(uimm) + "ULL;\n";
 cp.code() += "etiss_uint32 mem_val_0;\n";
 cp.code() += "cpu->exception |= (*(system->dread))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_0, 4);\n";
-cp.code() += "if (cpu->exception) {\n";
+cp.code() += "if (cpu->exception) { // conditional\n";
+{ // procedure
+cp.code() += "{ // procedure\n";
 cp.code() += "translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
-cp.code() += "}\n";
+cp.code() += "} // procedure\n";
+} // procedure
+cp.code() += "} // conditional\n";
 cp.code() += "etiss_uint32 res = (etiss_uint32)(mem_val_0);\n";
-cp.code() += "((RV32IMACFD*)cpu)->F[" + std::to_string(rd) + "U] = -4294967296L | res;\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "((RV32IMACFD*)cpu)->F[" + std::to_string(rd) + "ULL] = -4294967296LL | res;\n";
+cp.code() += "} // block\n";
+} // block
+cp.code() += "} // block\n";
+} // block
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
 cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
-		cp.getRegisterDependencies().add(reg_name[2U], 32);
+		cp.getRegisterDependencies().add(reg_name[2ULL], 32);
 		cp.getAffectedRegisters().add("instructionPointer", 32);
 	}
 	{
@@ -314,19 +346,27 @@ uimm += R_uimm_2.read(ba) << 2;
 		cp.code() = std::string("//CFSWSP\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2U) + "U;\n";
-cp.code() += "etiss_uint32 offs = *((RV32IMACFD*)cpu)->X[2U] + " + std::to_string(uimm) + "U;\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2ULL) + "ULL;\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "etiss_uint32 offs = *((RV32IMACFD*)cpu)->X[2ULL] + " + std::to_string(uimm) + "ULL;\n";
 cp.code() += "etiss_uint32 mem_val_0;\n";
-cp.code() += "mem_val_0 = (etiss_uint32)(((RV32IMACFD*)cpu)->F[" + std::to_string(rs2) + "U]);\n";
+cp.code() += "mem_val_0 = (etiss_uint32)(((RV32IMACFD*)cpu)->F[" + std::to_string(rs2) + "ULL]);\n";
 cp.code() += "cpu->exception |= (*(system->dwrite))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_0, 4);\n";
-cp.code() += "if (cpu->exception) {\n";
+cp.code() += "if (cpu->exception) { // conditional\n";
+{ // procedure
+cp.code() += "{ // procedure\n";
 cp.code() += "translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
-cp.code() += "}\n";
+cp.code() += "} // procedure\n";
+} // procedure
+cp.code() += "} // conditional\n";
+cp.code() += "} // block\n";
+} // block
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
 cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
-		cp.getRegisterDependencies().add(reg_name[2U], 32);
+		cp.getRegisterDependencies().add(reg_name[2ULL], 32);
 		cp.getAffectedRegisters().add("instructionPointer", 32);
 	}
 	{
