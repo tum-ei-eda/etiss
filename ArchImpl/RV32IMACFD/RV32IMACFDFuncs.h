@@ -1,5 +1,5 @@
 /**
- * Generated on Mon, 02 Oct 2023 17:35:59 +0200.
+ * Generated on Mon, 02 Oct 2023 18:56:15 +0200.
  *
  * This file contains the function macros for the RV32IMACFD core architecture.
  */
@@ -78,8 +78,6 @@ extern etiss_uint64 unbox_d(etiss_uint64);
 
 extern etiss_uint64 fclass_d(etiss_uint64);
 
-extern etiss_int32 ETISS_SIGNAL_MMU(ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers, etiss_uint32 mmu_signal_);
-
 extern etiss_uint64 etiss_get_cycles(ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers);
 
 extern etiss_uint64 etiss_get_time();
@@ -93,8 +91,6 @@ static inline etiss_uint32 mstatus_mask(ETISS_CPU * const cpu, ETISS_System * co
 static inline etiss_uint32 csr_read(ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers, etiss_uint32 csr);
 
 static inline void csr_write(ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers, etiss_uint32 csr, etiss_uint32 val);
-
-extern void etiss_icache_flush(ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers);
 
 static inline etiss_uint64 get_field(etiss_uint64 reg, etiss_uint64 mask);
 
@@ -225,9 +221,6 @@ if (csr == 1LL) { // conditional
  else if (csr != 769LL) { // conditional
 *((RV32IMACFD*)cpu)->CSR[csr] = val;
 } // conditional
-if (csr == 384LL) { // conditional
-ETISS_SIGNAL_MMU(cpu, system, plugin_pointers, val);
-} // conditional
 } // block
 }
 
@@ -353,9 +346,6 @@ return;
 } // conditional
  else if (cause == -5LL) { // conditional
 code = 5LL;
-} // conditional
- else if (cause == -13LL) { // conditional
-code = 12LL;
 } // conditional
  else if (cause == -14LL) { // conditional
 code = 13LL;
