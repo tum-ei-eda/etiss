@@ -1,5 +1,5 @@
 /**
- * Generated on Mon, 02 Oct 2023 17:35:59 +0200.
+ * Generated on Mon, 02 Oct 2023 18:26:51 +0200.
  *
  * This file contains the instruction behavior models of the RV64M
  * instruction set for the RV64IMACFD core architecture.
@@ -46,7 +46,11 @@ rs2 += R_rs2_0.read(ba) << 0;
 		cp.code() = std::string("//MULW\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4ULL) + "ULL;\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4) + "ULL;\n";
+cp.code() += "} // block\n";
+} // block
 { // block
 cp.code() += "{ // block\n";
 if ((rd % 32ULL) != 0ULL) { // conditional
@@ -125,7 +129,11 @@ rs2 += R_rs2_0.read(ba) << 0;
 		cp.code() = std::string("//DIVW\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4ULL) + "ULL;\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4) + "ULL;\n";
+cp.code() += "} // block\n";
+} // block
 { // block
 cp.code() += "{ // block\n";
 if ((rd % 32ULL) != 0ULL) { // conditional
@@ -219,7 +227,11 @@ rs2 += R_rs2_0.read(ba) << 0;
 		cp.code() = std::string("//DIVUW\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4ULL) + "ULL;\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4) + "ULL;\n";
+cp.code() += "} // block\n";
+} // block
 { // block
 cp.code() += "{ // block\n";
 if ((rd % 32ULL) != 0ULL) { // conditional
@@ -303,7 +315,11 @@ rs2 += R_rs2_0.read(ba) << 0;
 		cp.code() = std::string("//REMW\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4ULL) + "ULL;\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4) + "ULL;\n";
+cp.code() += "} // block\n";
+} // block
 { // block
 cp.code() += "{ // block\n";
 if ((rd % 32ULL) != 0ULL) { // conditional
@@ -397,7 +413,11 @@ rs2 += R_rs2_0.read(ba) << 0;
 		cp.code() = std::string("//REMUW\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4ULL) + "ULL;\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4) + "ULL;\n";
+cp.code() += "} // block\n";
+} // block
 { // block
 cp.code() += "{ // block\n";
 if ((rd % 32ULL) != 0ULL) { // conditional

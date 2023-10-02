@@ -1,5 +1,5 @@
 /**
- * Generated on Mon, 02 Oct 2023 17:35:59 +0200.
+ * Generated on Mon, 02 Oct 2023 18:26:51 +0200.
  *
  * This file contains the instruction behavior models of the tum_csr
  * instruction set for the RV64IMACFD core architecture.
@@ -46,7 +46,11 @@ csr += R_csr_0.read(ba) << 0;
 		cp.code() = std::string("//CSRRW\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4ULL) + "ULL;\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4) + "ULL;\n";
+cp.code() += "} // block\n";
+} // block
 { // block
 cp.code() += "{ // block\n";
 cp.code() += "etiss_uint64 xrs1 = *((RV64IMACFD*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL];\n";
@@ -134,7 +138,11 @@ csr += R_csr_0.read(ba) << 0;
 		cp.code() = std::string("//CSRRS\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4ULL) + "ULL;\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4) + "ULL;\n";
+cp.code() += "} // block\n";
+} // block
 { // block
 cp.code() += "{ // block\n";
 cp.code() += "etiss_uint64 xrd = csr_read(cpu, system, plugin_pointers, " + std::to_string(csr) + "ULL);\n";
@@ -213,7 +221,11 @@ csr += R_csr_0.read(ba) << 0;
 		cp.code() = std::string("//CSRRC\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4ULL) + "ULL;\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4) + "ULL;\n";
+cp.code() += "} // block\n";
+} // block
 { // block
 cp.code() += "{ // block\n";
 cp.code() += "etiss_uint64 xrd = csr_read(cpu, system, plugin_pointers, " + std::to_string(csr) + "ULL);\n";
@@ -292,7 +304,11 @@ csr += R_csr_0.read(ba) << 0;
 		cp.code() = std::string("//CSRRWI\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4ULL) + "ULL;\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4) + "ULL;\n";
+cp.code() += "} // block\n";
+} // block
 { // block
 cp.code() += "{ // block\n";
 cp.code() += "etiss_uint64 xrd = csr_read(cpu, system, plugin_pointers, " + std::to_string(csr) + "ULL);\n";
@@ -367,7 +383,11 @@ csr += R_csr_0.read(ba) << 0;
 		cp.code() = std::string("//CSRRSI\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4ULL) + "ULL;\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4) + "ULL;\n";
+cp.code() += "} // block\n";
+} // block
 { // block
 cp.code() += "{ // block\n";
 cp.code() += "etiss_uint64 xrd = csr_read(cpu, system, plugin_pointers, " + std::to_string(csr) + "ULL);\n";
@@ -444,7 +464,11 @@ csr += R_csr_0.read(ba) << 0;
 		cp.code() = std::string("//CSRRCI\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4ULL) + "ULL;\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4) + "ULL;\n";
+cp.code() += "} // block\n";
+} // block
 { // block
 cp.code() += "{ // block\n";
 cp.code() += "etiss_uint64 xrd = csr_read(cpu, system, plugin_pointers, " + std::to_string(csr) + "ULL);\n";

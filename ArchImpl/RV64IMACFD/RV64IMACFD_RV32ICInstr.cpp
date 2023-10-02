@@ -1,5 +1,5 @@
 /**
- * Generated on Mon, 02 Oct 2023 17:35:59 +0200.
+ * Generated on Mon, 02 Oct 2023 18:26:51 +0200.
  *
  * This file contains the instruction behavior models of the RV32IC
  * instruction set for the RV64IMACFD core architecture.
@@ -49,7 +49,11 @@ imm += R_imm_4.read(ba) << 4;
 		cp.code() = std::string("//CADDI4SPN\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2ULL) + "ULL;\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2) + "ULL;\n";
+cp.code() += "} // block\n";
+} // block
 if (imm) { // conditional
 cp.code() += "*((RV64IMACFD*)cpu)->X[" + std::to_string(rd + 8ULL) + "ULL] = *((RV64IMACFD*)cpu)->X[2ULL] + " + std::to_string(imm) + "ULL;\n";
 } // conditional
@@ -143,7 +147,11 @@ uimm += R_uimm_3.read(ba) << 3;
 		cp.code() = std::string("//CLW\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2ULL) + "ULL;\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2) + "ULL;\n";
+cp.code() += "} // block\n";
+} // block
 { // block
 cp.code() += "{ // block\n";
 cp.code() += "etiss_uint64 load_address = *((RV64IMACFD*)cpu)->X[" + std::to_string(rs1 + 8ULL) + "ULL] + " + std::to_string(uimm) + "ULL;\n";
@@ -243,7 +251,11 @@ uimm += R_uimm_3.read(ba) << 3;
 		cp.code() = std::string("//CSW\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2ULL) + "ULL;\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2) + "ULL;\n";
+cp.code() += "} // block\n";
+} // block
 { // block
 cp.code() += "{ // block\n";
 cp.code() += "etiss_uint64 load_address = *((RV64IMACFD*)cpu)->X[" + std::to_string(rs1 + 8ULL) + "ULL] + " + std::to_string(uimm) + "ULL;\n";
@@ -338,7 +350,11 @@ imm += R_imm_5.read(ba) << 5;
 		cp.code() = std::string("//CADDI\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2ULL) + "ULL;\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2) + "ULL;\n";
+cp.code() += "} // block\n";
+} // block
 if ((rs1 % 32ULL) != 0ULL) { // conditional
 cp.code() += "*((RV64IMACFD*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] = *((RV64IMACFD*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] + " + std::to_string(((etiss_int8)(((etiss_int8)imm) << (2)) >> (2))) + "LL;\n";
 } // conditional
@@ -403,7 +419,11 @@ nzimm += R_nzimm_5.read(ba) << 5;
 		cp.code() = std::string("//CNOP\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2ULL) + "ULL;\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2) + "ULL;\n";
+cp.code() += "} // block\n";
+} // block
 { // block
 cp.code() += "{ // block\n";
 cp.code() += "} // block\n";
@@ -467,7 +487,11 @@ imm += R_imm_5.read(ba) << 5;
 		cp.code() = std::string("//CLI\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2ULL) + "ULL;\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2) + "ULL;\n";
+cp.code() += "} // block\n";
+} // block
 { // block
 cp.code() += "{ // block\n";
 if ((rd % 32ULL) != 0ULL) { // conditional
@@ -538,7 +562,11 @@ imm += R_imm_17.read(ba) << 17;
 		cp.code() = std::string("//CLUI\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2ULL) + "ULL;\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2) + "ULL;\n";
+cp.code() += "} // block\n";
+} // block
 { // block
 cp.code() += "{ // block\n";
 if (imm == 0ULL) { // conditional
@@ -629,7 +657,11 @@ nzimm += R_nzimm_9.read(ba) << 9;
 		cp.code() = std::string("//CADDI16SP\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2ULL) + "ULL;\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2) + "ULL;\n";
+cp.code() += "} // block\n";
+} // block
 if (nzimm) { // conditional
 cp.code() += "*((RV64IMACFD*)cpu)->X[2ULL] = *((RV64IMACFD*)cpu)->X[2ULL] + " + std::to_string(((etiss_int16)(((etiss_int16)nzimm) << (6)) >> (6))) + "LL;\n";
 } // conditional
@@ -712,7 +744,11 @@ rd += R_rd_0.read(ba) << 0;
 		cp.code() = std::string("//__reserved_clui\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2ULL) + "ULL;\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2) + "ULL;\n";
+cp.code() += "} // block\n";
+} // block
 { // procedure
 cp.code() += "{ // procedure\n";
 cp.code() += "raise(cpu, system, plugin_pointers, 0ULL, 2ULL);\n";
@@ -783,7 +819,11 @@ rs1 += R_rs1_0.read(ba) << 0;
 		cp.code() = std::string("//CSRLI\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2ULL) + "ULL;\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2) + "ULL;\n";
+cp.code() += "} // block\n";
+} // block
 { // block
 cp.code() += "{ // block\n";
 cp.code() += "*((RV64IMACFD*)cpu)->X[" + std::to_string(rs1 + 8ULL) + "ULL] = *((RV64IMACFD*)cpu)->X[" + std::to_string(rs1 + 8ULL) + "ULL] >> " + std::to_string(shamt) + "ULL;\n";
@@ -849,7 +889,11 @@ rs1 += R_rs1_0.read(ba) << 0;
 		cp.code() = std::string("//CSRAI\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2ULL) + "ULL;\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2) + "ULL;\n";
+cp.code() += "} // block\n";
+} // block
 { // block
 cp.code() += "{ // block\n";
 if (shamt) { // conditional
@@ -923,7 +967,11 @@ imm += R_imm_5.read(ba) << 5;
 		cp.code() = std::string("//CANDI\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2ULL) + "ULL;\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2) + "ULL;\n";
+cp.code() += "} // block\n";
+} // block
 { // block
 cp.code() += "{ // block\n";
 cp.code() += "*((RV64IMACFD*)cpu)->X[" + std::to_string(rs1 + 8ULL) + "ULL] = *((RV64IMACFD*)cpu)->X[" + std::to_string(rs1 + 8ULL) + "ULL] & " + std::to_string(((etiss_int8)(((etiss_int8)imm) << (2)) >> (2))) + "LL;\n";
@@ -991,7 +1039,11 @@ rd += R_rd_0.read(ba) << 0;
 		cp.code() = std::string("//CSUB\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2ULL) + "ULL;\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2) + "ULL;\n";
+cp.code() += "} // block\n";
+} // block
 { // block
 cp.code() += "{ // block\n";
 cp.code() += "*((RV64IMACFD*)cpu)->X[" + std::to_string(rd + 8ULL) + "ULL] = *((RV64IMACFD*)cpu)->X[" + std::to_string(rd + 8ULL) + "ULL] - *((RV64IMACFD*)cpu)->X[" + std::to_string(rs2 + 8ULL) + "ULL];\n";
@@ -1058,7 +1110,11 @@ rd += R_rd_0.read(ba) << 0;
 		cp.code() = std::string("//CXOR\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2ULL) + "ULL;\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2) + "ULL;\n";
+cp.code() += "} // block\n";
+} // block
 { // block
 cp.code() += "{ // block\n";
 cp.code() += "*((RV64IMACFD*)cpu)->X[" + std::to_string(rd + 8ULL) + "ULL] = *((RV64IMACFD*)cpu)->X[" + std::to_string(rd + 8ULL) + "ULL] ^ *((RV64IMACFD*)cpu)->X[" + std::to_string(rs2 + 8ULL) + "ULL];\n";
@@ -1125,7 +1181,11 @@ rd += R_rd_0.read(ba) << 0;
 		cp.code() = std::string("//COR\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2ULL) + "ULL;\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2) + "ULL;\n";
+cp.code() += "} // block\n";
+} // block
 { // block
 cp.code() += "{ // block\n";
 cp.code() += "*((RV64IMACFD*)cpu)->X[" + std::to_string(rd + 8ULL) + "ULL] = *((RV64IMACFD*)cpu)->X[" + std::to_string(rd + 8ULL) + "ULL] | *((RV64IMACFD*)cpu)->X[" + std::to_string(rs2 + 8ULL) + "ULL];\n";
@@ -1192,7 +1252,11 @@ rd += R_rd_0.read(ba) << 0;
 		cp.code() = std::string("//CAND\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2ULL) + "ULL;\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2) + "ULL;\n";
+cp.code() += "} // block\n";
+} // block
 { // block
 cp.code() += "{ // block\n";
 cp.code() += "*((RV64IMACFD*)cpu)->X[" + std::to_string(rd + 8ULL) + "ULL] = *((RV64IMACFD*)cpu)->X[" + std::to_string(rd + 8ULL) + "ULL] & *((RV64IMACFD*)cpu)->X[" + std::to_string(rs2 + 8ULL) + "ULL];\n";
@@ -1270,7 +1334,11 @@ imm += R_imm_11.read(ba) << 11;
 		cp.code() = std::string("//CJ\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2ULL) + "ULL;\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2) + "ULL;\n";
+cp.code() += "} // block\n";
+} // block
 cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + ((etiss_int16)(((etiss_int16)imm) << (4)) >> (4))) + "LL;\n";
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
 cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
@@ -1358,7 +1426,11 @@ imm += R_imm_8.read(ba) << 8;
 		cp.code() = std::string("//CBEQZ\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2ULL) + "ULL;\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2) + "ULL;\n";
+cp.code() += "} // block\n";
+} // block
 cp.code() += "if (*((RV64IMACFD*)cpu)->X[" + std::to_string(rs1 + 8ULL) + "ULL] == 0ULL) { // conditional\n";
 cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + ((etiss_int16)(((etiss_int16)imm) << (7)) >> (7))) + "LL;\n";
 cp.code() += "} // conditional\n";
@@ -1446,7 +1518,11 @@ imm += R_imm_8.read(ba) << 8;
 		cp.code() = std::string("//CBNEZ\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2ULL) + "ULL;\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2) + "ULL;\n";
+cp.code() += "} // block\n";
+} // block
 cp.code() += "if (*((RV64IMACFD*)cpu)->X[" + std::to_string(rs1 + 8ULL) + "ULL] != 0ULL) { // conditional\n";
 cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + ((etiss_int16)(((etiss_int16)imm) << (7)) >> (7))) + "LL;\n";
 cp.code() += "} // conditional\n";
@@ -1526,7 +1602,11 @@ rs1 += R_rs1_0.read(ba) << 0;
 		cp.code() = std::string("//CSLLI\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2ULL) + "ULL;\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2) + "ULL;\n";
+cp.code() += "} // block\n";
+} // block
 if (nzuimm) { // conditional
 cp.code() += "*((RV64IMACFD*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] = *((RV64IMACFD*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] << " + std::to_string(nzuimm) + "ULL;\n";
 } // conditional
@@ -1594,7 +1674,11 @@ uimm += R_uimm_5.read(ba) << 5;
 		cp.code() = std::string("//CLWSP\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2ULL) + "ULL;\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2) + "ULL;\n";
+cp.code() += "} // block\n";
+} // block
 { // block
 cp.code() += "{ // block\n";
 if (rd % 32ULL) { // conditional
@@ -1697,7 +1781,11 @@ rd += R_rd_0.read(ba) << 0;
 		cp.code() = std::string("//CMV\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2ULL) + "ULL;\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2) + "ULL;\n";
+cp.code() += "} // block\n";
+} // block
 if ((rd % 32ULL) != 0ULL) { // conditional
 cp.code() += "*((RV64IMACFD*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = *((RV64IMACFD*)cpu)->X[" + std::to_string(rs2 % 32ULL) + "ULL];\n";
 } // conditional
@@ -1758,7 +1846,11 @@ rs1 += R_rs1_0.read(ba) << 0;
 		cp.code() = std::string("//CJR\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2ULL) + "ULL;\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2) + "ULL;\n";
+cp.code() += "} // block\n";
+} // block
 if (rs1) { // conditional
 cp.code() += "cpu->nextPc = *((RV64IMACFD*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] & -2LL;\n";
 } // conditional
@@ -1829,7 +1921,11 @@ static InstructionDefinition __reserved_cmv_ (
 		cp.code() = std::string("//__reserved_cmv\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2ULL) + "ULL;\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2) + "ULL;\n";
+cp.code() += "} // block\n";
+} // block
 { // procedure
 cp.code() += "{ // procedure\n";
 cp.code() += "raise(cpu, system, plugin_pointers, 0ULL, 2ULL);\n";
@@ -1897,7 +1993,11 @@ rd += R_rd_0.read(ba) << 0;
 		cp.code() = std::string("//CADD\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2ULL) + "ULL;\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2) + "ULL;\n";
+cp.code() += "} // block\n";
+} // block
 if ((rd % 32ULL) != 0ULL) { // conditional
 cp.code() += "*((RV64IMACFD*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = *((RV64IMACFD*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] + *((RV64IMACFD*)cpu)->X[" + std::to_string(rs2 % 32ULL) + "ULL];\n";
 } // conditional
@@ -1959,7 +2059,11 @@ rs1 += R_rs1_0.read(ba) << 0;
 		cp.code() = std::string("//CJALR\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2ULL) + "ULL;\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2) + "ULL;\n";
+cp.code() += "} // block\n";
+} // block
 { // block
 cp.code() += "{ // block\n";
 cp.code() += "etiss_uint64 new_pc = *((RV64IMACFD*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL];\n";
@@ -2027,7 +2131,11 @@ static InstructionDefinition cebreak_ (
 		cp.code() = std::string("//CEBREAK\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2ULL) + "ULL;\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2) + "ULL;\n";
+cp.code() += "} // block\n";
+} // block
 { // procedure
 cp.code() += "{ // procedure\n";
 cp.code() += "raise(cpu, system, plugin_pointers, 0ULL, 3ULL);\n";
@@ -2097,7 +2205,11 @@ uimm += R_uimm_2.read(ba) << 2;
 		cp.code() = std::string("//CSWSP\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2ULL) + "ULL;\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2) + "ULL;\n";
+cp.code() += "} // block\n";
+} // block
 { // block
 cp.code() += "{ // block\n";
 cp.code() += "etiss_uint64 offs = *((RV64IMACFD*)cpu)->X[2ULL] + " + std::to_string(uimm) + "ULL;\n";
@@ -2179,7 +2291,11 @@ static InstructionDefinition dii_ (
 		cp.code() = std::string("//DII\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2ULL) + "ULL;\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2) + "ULL;\n";
+cp.code() += "} // block\n";
+} // block
 { // procedure
 cp.code() += "{ // procedure\n";
 cp.code() += "raise(cpu, system, plugin_pointers, 0ULL, 2ULL);\n";

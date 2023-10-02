@@ -126,7 +126,7 @@ error_code += R_error_code_0.read(ba) << 0;
 // -----------------------------------------------------------------------------
 { // procedure
 cp.code() += "{ // procedure\n";
-cp.code() += "translate_exc_code(cpu, system, plugin_pointers, (cpu->exception) ? (cpu->exception) : (" + std::to_string(error_code) + "ULL));\n";
+cp.code() += "translate_exc_code(cpu, system, plugin_pointers, " + std::to_string(error_code) + "ULL);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 cp.code() += "} // procedure\n";
 } // procedure
@@ -173,7 +173,7 @@ error_code += R_error_code_0.read(ba) << 0;
 // -----------------------------------------------------------------------------
 { // procedure
 cp.code() += "{ // procedure\n";
-cp.code() += "translate_exc_code(cpu, system, plugin_pointers, (cpu->exception) ? (cpu->exception) : (" + std::to_string(error_code) + "ULL));\n";
+cp.code() += "translate_exc_code(cpu, system, plugin_pointers, " + std::to_string(error_code) + "ULL);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 cp.code() += "} // procedure\n";
 } // procedure

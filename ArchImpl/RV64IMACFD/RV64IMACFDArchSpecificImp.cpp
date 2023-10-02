@@ -125,7 +125,7 @@ error_code += R_error_code_0.read(ba) << 0;
 // -----------------------------------------------------------------------------
 { // procedure
 cp.code() += "{ // procedure\n";
-cp.code() += "translate_exc_code(cpu, system, plugin_pointers, (cpu->exception) ? (cpu->exception) : (" + std::to_string(error_code) + "ULL));\n";
+cp.code() += "translate_exc_code(cpu, system, plugin_pointers, " + std::to_string(error_code) + "ULL);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 cp.code() += "} // procedure\n";
 } // procedure
@@ -172,7 +172,7 @@ error_code += R_error_code_0.read(ba) << 0;
 // -----------------------------------------------------------------------------
 { // procedure
 cp.code() += "{ // procedure\n";
-cp.code() += "translate_exc_code(cpu, system, plugin_pointers, (cpu->exception) ? (cpu->exception) : (" + std::to_string(error_code) + "ULL));\n";
+cp.code() += "translate_exc_code(cpu, system, plugin_pointers, " + std::to_string(error_code) + "ULL);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 cp.code() += "} // procedure\n";
 } // procedure
@@ -345,13 +345,6 @@ etiss::InterruptVector * RV64IMACFDArch::createInterruptVector(ETISS_CPU * cpu)
 {
 	if (cpu == 0)
 		return 0;
-
-	/**************************************************************************
-	*		            Implementation of interrupt vector              	  *
-	***************************************************************************/
-
-	// This is a default vector, implemented to avoid segfaults. Replace
-	// with actual implementation if necessary.
 
 	std::vector<etiss::uint64 *> vec;
 	std::vector<etiss::uint64 *> mask;
