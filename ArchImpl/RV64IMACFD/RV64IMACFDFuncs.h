@@ -1,5 +1,5 @@
 /**
- * Generated on Thu, 28 Sep 2023 00:51:23 +0200.
+ * Generated on Mon, 02 Oct 2023 17:35:59 +0200.
  *
  * This file contains the function macros for the RV64IMACFD core architecture.
  */
@@ -49,6 +49,8 @@ extern etiss_uint32 unbox_s(etiss_uint64);
 extern etiss_uint32 fclass_s(etiss_uint32);
 
 extern etiss_uint32 fget_flags();
+
+static inline etiss_uint8 get_rm(ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers, etiss_uint8 rm);
 
 extern etiss_uint64 fadd_d(etiss_uint64, etiss_uint64, etiss_uint8);
 
@@ -116,6 +118,19 @@ static inline etiss_uint8 extension_enabled(ETISS_CPU * const cpu, ETISS_System 
 {
 { // block
 return (*((RV64IMACFD*)cpu)->CSR[769LL] >> (extension - 65ULL)) & 1ULL;
+} // block
+}
+
+static inline etiss_uint8 get_rm(ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers, etiss_uint8 rm)
+{
+{ // block
+if (rm == 7ULL) { // conditional
+rm = ((((((RV64IMACFD*)cpu)->FCSR) >> (5ULL)) & 7)) & 0x7;
+} // conditional
+if (rm > 4ULL) { // conditional
+raise(cpu, system, plugin_pointers, 0ULL, 2LL);
+} // conditional
+return rm;
 } // block
 }
 
@@ -290,7 +305,7 @@ etiss_int32 irq2 = (mcause & 9223372036854775808ULL) != 0ULL;
 if (irq2) { // conditional
 { // block
 deleg = ((((RV64IMACFD*)cpu)->PRIV <= 1LL)) ? (*((RV64IMACFD*)cpu)->CSR[771LL]) : (0ULL);
-bit = bit & -9223372036854775809LL;
+bit = bit & 9223372036854775807ULL;
 } // block
 } // conditional
 else { // conditional

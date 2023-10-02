@@ -1,5 +1,5 @@
 /**
- * Generated on Thu, 24 Feb 2022 17:15:20 +0100.
+ * Generated on Mon, 02 Oct 2023 17:35:59 +0200.
  *
  * This file contains the architecture class for the RV32IMACFD core architecture.
  */
@@ -90,8 +90,8 @@ public:
 	*/
 	virtual etiss::InterruptVector * createInterruptVector(ETISS_CPU * cpu);
 	virtual void deleteInterruptVector(etiss::InterruptVector * vec, ETISS_CPU * cpu);
-    virtual etiss::InterruptEnable* createInterruptEnable(ETISS_CPU *cpu);
-    virtual void deleteInterruptEnable(etiss::InterruptEnable* en, ETISS_CPU* cpu);
+	virtual etiss::InterruptEnable* createInterruptEnable(ETISS_CPU *cpu);
+	virtual void deleteInterruptEnable(etiss::InterruptEnable* en, ETISS_CPU* cpu);
 
 	/**
 		@brief get the GDBcore for RV32IMACFD architecture

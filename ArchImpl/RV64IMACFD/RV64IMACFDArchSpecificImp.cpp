@@ -356,10 +356,8 @@ etiss::InterruptVector * RV64IMACFDArch::createInterruptVector(ETISS_CPU * cpu)
 	std::vector<etiss::uint64 *> vec;
 	std::vector<etiss::uint64 *> mask;
 
-	RV64IMACFD* rvcpu = (RV64IMACFD*)cpu;
-
-	vec.push_back(rvcpu->CSR[0x344]);
-	mask.push_back(rvcpu->CSR[0x304]);
+	vec.push_back(&((RV64IMACFD*)cpu)->MIE);
+	mask.push_back(&((RV64IMACFD*)cpu)->MIP);
 
 	return new etiss::MappedInterruptVector<etiss::uint64>(vec, mask);
 }
@@ -370,9 +368,7 @@ void RV64IMACFDArch::deleteInterruptVector(etiss::InterruptVector * vec, ETISS_C
 }
 
 etiss::InterruptEnable* RV64IMACFDArch::createInterruptEnable(ETISS_CPU* cpu) {
-	RV64IMACFD* rvcpu = (RV64IMACFD*)cpu;
-
-	return new etiss::MappedInterruptEnable<etiss::uint64>(rvcpu->CSR[0x300], 0xf);
+ 	return new etiss::MappedInterruptEnable<etiss::uint64>(&((RV64IMACFD*)cpu)->MSTATUS, 15);
 }
 
 void RV64IMACFDArch::deleteInterruptEnable(etiss::InterruptEnable* en, ETISS_CPU* cpu) {

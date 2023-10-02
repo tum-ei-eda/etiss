@@ -347,20 +347,11 @@ etiss::InterruptVector * RV32IMACFDArch::createInterruptVector(ETISS_CPU * cpu)
 	if (cpu == 0)
 		return 0;
 
-	/**************************************************************************
-	*		            Implementation of interrupt vector              	  *
-	***************************************************************************/
-
-	// This is a default vector, implemented to avoid segfaults. Replace
-	// with actual implementation if necessary.
-
 	std::vector<etiss::uint32 *> vec;
 	std::vector<etiss::uint32 *> mask;
 
-	RV32IMACFD* rvcpu = (RV32IMACFD*)cpu;
-
-	vec.push_back(rvcpu->CSR[0x344]);
-	mask.push_back(rvcpu->CSR[0x304]);
+	vec.push_back(&((RV32IMACFD*)cpu)->MIE);
+	mask.push_back(&((RV32IMACFD*)cpu)->MIP);
 
 	return new etiss::MappedInterruptVector<etiss::uint32>(vec, mask);
 }
@@ -371,9 +362,7 @@ void RV32IMACFDArch::deleteInterruptVector(etiss::InterruptVector * vec, ETISS_C
 }
 
 etiss::InterruptEnable* RV32IMACFDArch::createInterruptEnable(ETISS_CPU* cpu) {
-	RV32IMACFD* rvcpu = (RV32IMACFD*)cpu;
-
-	return new etiss::MappedInterruptEnable<etiss::uint32>(rvcpu->CSR[0x300], 0xf);
+ 	return new etiss::MappedInterruptEnable<etiss::uint32>(&((RV32IMACFD*)cpu)->MSTATUS, 15);
 }
 
 void RV32IMACFDArch::deleteInterruptEnable(etiss::InterruptEnable* en, ETISS_CPU* cpu) {

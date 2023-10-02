@@ -1,5 +1,5 @@
 /**
- * Generated on Wed, 12 Oct 2022 12:54:05 +0200.
+ * Generated on Mon, 02 Oct 2023 17:35:59 +0200.
  *
  * This file contains the registers for the RV64IMACFD core architecture.
  */
@@ -54,6 +54,9 @@ struct RV64IMACFD {
 	etiss_uint8 PRIV;
 	etiss_uint64 DPC;
 	etiss_uint64 FCSR;
+	etiss_uint64 MSTATUS;
+	etiss_uint64 MIE;
+	etiss_uint64 MIP;
 	etiss_uint64 *CSR[4096];
 	etiss_uint64 ins_CSR[4096];
 	etiss_uint64 F[32];
