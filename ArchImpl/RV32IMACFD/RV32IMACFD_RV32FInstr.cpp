@@ -1,5 +1,5 @@
 /**
- * Generated on Mon, 02 Oct 2023 18:56:15 +0200.
+ * Generated on Wed, 04 Oct 2023 17:01:33 +0200.
  *
  * This file contains the instruction behavior models of the RV32F
  * instruction set for the RV32IMACFD core architecture.
@@ -75,7 +75,6 @@ cp.code() += "} // block\n";
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
 cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
-		cp.getRegisterDependencies().add(reg_name[rs1 % 32ULL], 32);
 		cp.getAffectedRegisters().add("instructionPointer", 32);
 	}
 	{
@@ -172,7 +171,6 @@ cp.code() += "} // block\n";
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
 cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
-		cp.getRegisterDependencies().add(reg_name[rs1 % 32ULL], 32);
 		cp.getAffectedRegisters().add("instructionPointer", 32);
 	}
 	{
@@ -1494,7 +1492,6 @@ cp.code() += "} // block\n";
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
 cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
-		cp.getAffectedRegisters().add(reg_name[rd % 32ULL], 32);
 		cp.getAffectedRegisters().add("instructionPointer", 32);
 	}
 
@@ -1580,7 +1577,6 @@ cp.code() += "} // block\n";
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
 cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
-		cp.getAffectedRegisters().add(reg_name[rd % 32ULL], 32);
 		cp.getAffectedRegisters().add("instructionPointer", 32);
 	}
 
@@ -1667,7 +1663,6 @@ cp.code() += "} // block\n";
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
 cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
-		cp.getAffectedRegisters().add(reg_name[rd % 32ULL], 32);
 		cp.getAffectedRegisters().add("instructionPointer", 32);
 	}
 
@@ -1754,7 +1749,6 @@ cp.code() += "} // block\n";
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
 cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
-		cp.getAffectedRegisters().add(reg_name[rd % 32ULL], 32);
 		cp.getAffectedRegisters().add("instructionPointer", 32);
 	}
 
@@ -1841,7 +1835,6 @@ cp.code() += "} // block\n";
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
 cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
-		cp.getAffectedRegisters().add(reg_name[rd % 32ULL], 32);
 		cp.getAffectedRegisters().add("instructionPointer", 32);
 	}
 
@@ -1917,7 +1910,6 @@ cp.code() += "} // block\n";
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
 cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
-		cp.getAffectedRegisters().add(reg_name[rd % 32ULL], 32);
 		cp.getAffectedRegisters().add("instructionPointer", 32);
 	}
 
@@ -1994,7 +1986,6 @@ cp.code() += "} // block\n";
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
 cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
-		cp.getRegisterDependencies().add(reg_name[rs1 % 32ULL], 32);
 		cp.getAffectedRegisters().add("instructionPointer", 32);
 	}
 
@@ -2074,7 +2065,6 @@ cp.code() += "} // block\n";
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
 cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
-		cp.getRegisterDependencies().add(reg_name[rs1 % 32ULL], 32);
 		cp.getAffectedRegisters().add("instructionPointer", 32);
 	}
 
@@ -2148,7 +2138,6 @@ cp.code() += "} // block\n";
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
 cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
-		cp.getAffectedRegisters().add(reg_name[rd % 32ULL], 32);
 		cp.getAffectedRegisters().add("instructionPointer", 32);
 	}
 
@@ -2221,7 +2210,6 @@ cp.code() += "} // block\n";
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
 cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
-		cp.getRegisterDependencies().add(reg_name[rs1 % 32ULL], 32);
 		cp.getAffectedRegisters().add("instructionPointer", 32);
 	}
 
