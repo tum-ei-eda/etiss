@@ -46,6 +46,12 @@
 #include <boost/program_options/variables_map.hpp>
 #include <boost/algorithm/string.hpp>
 
+#include "SimpleIni.h"
+// SimpleIni includes windows.h which defines NOERROR, clashing with our ReturnCode.
+#ifdef NOERROR
+#undef NOERROR
+#endif
+
 #if ETISS_USE_DLSYM
 #include <dlfcn.h>
 #endif
@@ -1005,3 +1011,4 @@ std::string etiss::errorMessage(etiss::int32 code, CPUArch *arch)
         }
     }
 }
+

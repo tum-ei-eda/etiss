@@ -65,6 +65,7 @@
 #define MAX_MEMSEGS 99
 
 using namespace etiss;
+using namespace ELFIO;
 
 std::unordered_map<std::string, uint32_t> map_messageCounter;
 uint32_t printMessage(std::string key, std::string message, uint32_t maxCount)

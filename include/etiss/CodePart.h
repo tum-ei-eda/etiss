@@ -593,6 +593,7 @@ class CodeBlock
 
   public:
     inline CodeBlock(etiss::uint64 startindex) : startindex_(startindex) {}
+    inline void reserve(int num) { lines_.reserve(num); }
     inline Line &get(unsigned index) { return lines_[index]; }
     inline Line &append(etiss::uint64 addr)
     {
