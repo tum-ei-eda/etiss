@@ -57,12 +57,13 @@ extern "C"
 
 #include "etiss/IntegratedLibrary/PrintInstruction.h"
 #include "etiss/CPUArch.h"
+#include <sstream>
 
 using namespace etiss::plugin;
 
 void PrintInstruction::initCodeBlock(etiss::CodeBlock &block) const
 {
-    block.fileglobalCode().insert("extern void PrintInstruction_print(const char *,uint64_t);"); // add print function
+    block.fileglobalCode().insert("extern void PrintInstruction_print(const char *,uint64_t, uint32_t);"); // add print function
 }
 
 void PrintInstruction::finalizeInstrSet(etiss::instr::ModedInstructionSet &mis) const
@@ -81,9 +82,29 @@ void PrintInstruction::finalizeInstrSet(etiss::instr::ModedInstructionSet &mis) 
 
                         ss << instr.printASM(ba);
 
-                        ss << "\\n";
+                        ss << std::dec;
+                        etiss_uint32 found = instr.printASM(ba).find("rd=");
+                        etiss_uint32 rd = 0;
+                        
+                        if (found != std::string::npos)
+                        {
+                            found += 3;
+                            if(instr.printASM(ba)[found + 1] <= '9' && instr.printASM(ba)[found + 1] >= '0')
+                            {
+                                rd = ((instr.printASM(ba)[found] - '0') * 10) + (instr.printASM(ba)[found + 1] - '0'); 
+                            }
+                            else
+                            {
+                                rd =  (instr.printASM(ba)[found] - '0');
+                            }
+                            
+                        }
+                        ss << " ";
+                        //ss << cpu->X[std::to_string(2 % 32U)];
+                        //.substr(instr.printASM(ba).find("rd="), 5);
 
-                        ss << "\",cpu->instructionPointer);\n";
+                        ss << "\",*((RV32IMACFD*)cpu)->X[" + std::to_string(rd % 32U)+ "], cpu->mode);";
+                        //*((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 % 32U) + "]
 
                         cs.append(CodePart::PREINITIALDEBUGRETURNING).code() = ss.str();
 
@@ -107,12 +128,8 @@ void *PrintInstruction::getPluginHandle()
 
 extern "C"
 {
-    void PrintInstruction_print(const char *c, uint64_t addr)
+    void PrintInstruction_print(const char *c, uint64_t rd_value, uint32_t mode)
     {
-        std::cout << c;
-        if (addr == 0x6cac)
-        {
-            // std::cout << "TCOUNT: " << std::dec << ++pi_6cac << "\n";
-        }
+        std::cout << c << std::hex <<" X[affected]= " << rd_value << " mode= " << mode << std::endl;
     }
 }
