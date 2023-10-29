@@ -57,7 +57,6 @@ extern "C"
 
 #include "etiss/IntegratedLibrary/PrintInstruction.h"
 #include "etiss/CPUArch.h"
-#include <sstream>
 
 using namespace etiss::plugin;
 
