@@ -8,7 +8,9 @@
 #include "RV64IMACFDArch.h"
 
 #define ETISS_ARCH_STATIC_FN_ONLY
+extern "C" {
 #include "RV64IMACFDFuncs.h"
+}
 
 using namespace etiss;
 using namespace etiss::instr;

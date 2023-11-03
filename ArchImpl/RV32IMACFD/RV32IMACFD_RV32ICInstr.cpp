@@ -1,13 +1,11 @@
 /**
- * Generated on Wed, 04 Oct 2023 17:01:33 +0200.
+ * Generated on Fri, 03 Nov 2023 13:22:23 +0100.
  *
  * This file contains the instruction behavior models of the RV32IC
  * instruction set for the RV32IMACFD core architecture.
  */
 
 #include "RV32IMACFDArch.h"
-
-#define ETISS_ARCH_STATIC_FN_ONLY
 #include "RV32IMACFDFuncs.h"
 
 using namespace etiss;
@@ -60,7 +58,7 @@ cp.code() += "*((RV32IMACFD*)cpu)->X[" + std::to_string(rd + 8ULL) + "ULL] = *((
 else { // conditional
 { // procedure
 cp.code() += "{ // procedure\n";
-cp.code() += "raise(cpu, system, plugin_pointers, 0ULL, 2ULL);\n";
+cp.code() += "RV32IMACFD_raise(cpu, system, plugin_pointers, 0ULL, 2ULL);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 cp.code() += "} // procedure\n";
 } // procedure
@@ -158,7 +156,7 @@ cp.code() += "cpu->exception |= (*(system->dread))(system->handle, cpu, load_add
 cp.code() += "if (cpu->exception) { // conditional\n";
 { // procedure
 cp.code() += "{ // procedure\n";
-cp.code() += "translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
+cp.code() += "RV32IMACFD_translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 cp.code() += "} // procedure\n";
 } // procedure
@@ -261,7 +259,7 @@ cp.code() += "cpu->exception |= (*(system->dwrite))(system->handle, cpu, load_ad
 cp.code() += "if (cpu->exception) { // conditional\n";
 { // procedure
 cp.code() += "{ // procedure\n";
-cp.code() += "translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
+cp.code() += "RV32IMACFD_translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 cp.code() += "} // procedure\n";
 } // procedure
@@ -663,7 +661,7 @@ cp.code() += "{ // block\n";
 if (imm == 0ULL) { // conditional
 { // procedure
 cp.code() += "{ // procedure\n";
-cp.code() += "raise(cpu, system, plugin_pointers, 0ULL, 2ULL);\n";
+cp.code() += "RV32IMACFD_raise(cpu, system, plugin_pointers, 0ULL, 2ULL);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 cp.code() += "} // procedure\n";
 } // procedure
@@ -758,7 +756,7 @@ cp.code() += "*((RV32IMACFD*)cpu)->X[2ULL] = *((RV32IMACFD*)cpu)->X[2ULL] + " + 
 else { // conditional
 { // procedure
 cp.code() += "{ // procedure\n";
-cp.code() += "raise(cpu, system, plugin_pointers, 0ULL, 2ULL);\n";
+cp.code() += "RV32IMACFD_raise(cpu, system, plugin_pointers, 0ULL, 2ULL);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 cp.code() += "} // procedure\n";
 } // procedure
@@ -839,7 +837,7 @@ cp.code() += "} // block\n";
 } // block
 { // procedure
 cp.code() += "{ // procedure\n";
-cp.code() += "raise(cpu, system, plugin_pointers, 0ULL, 2ULL);\n";
+cp.code() += "RV32IMACFD_raise(cpu, system, plugin_pointers, 0ULL, 2ULL);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 cp.code() += "} // procedure\n";
 } // procedure
@@ -1755,7 +1753,7 @@ cp.code() += "cpu->exception |= (*(system->dread))(system->handle, cpu, *((RV32I
 cp.code() += "if (cpu->exception) { // conditional\n";
 { // procedure
 cp.code() += "{ // procedure\n";
-cp.code() += "translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
+cp.code() += "RV32IMACFD_translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 cp.code() += "} // procedure\n";
 } // procedure
@@ -1768,7 +1766,7 @@ cp.code() += "} // block\n";
 else { // conditional
 { // procedure
 cp.code() += "{ // procedure\n";
-cp.code() += "raise(cpu, system, plugin_pointers, 0ULL, 2ULL);\n";
+cp.code() += "RV32IMACFD_raise(cpu, system, plugin_pointers, 0ULL, 2ULL);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 cp.code() += "} // procedure\n";
 } // procedure
@@ -1920,7 +1918,7 @@ cp.code() += "cpu->nextPc = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 % 32UL
 else { // conditional
 { // procedure
 cp.code() += "{ // procedure\n";
-cp.code() += "raise(cpu, system, plugin_pointers, 0ULL, 2ULL);\n";
+cp.code() += "RV32IMACFD_raise(cpu, system, plugin_pointers, 0ULL, 2ULL);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 cp.code() += "} // procedure\n";
 } // procedure
@@ -1990,7 +1988,7 @@ cp.code() += "} // block\n";
 } // block
 { // procedure
 cp.code() += "{ // procedure\n";
-cp.code() += "raise(cpu, system, plugin_pointers, 0ULL, 2ULL);\n";
+cp.code() += "RV32IMACFD_raise(cpu, system, plugin_pointers, 0ULL, 2ULL);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 cp.code() += "} // procedure\n";
 } // procedure
@@ -2195,7 +2193,7 @@ cp.code() += "} // block\n";
 } // block
 { // procedure
 cp.code() += "{ // procedure\n";
-cp.code() += "raise(cpu, system, plugin_pointers, 0ULL, 3ULL);\n";
+cp.code() += "RV32IMACFD_raise(cpu, system, plugin_pointers, 0ULL, 3ULL);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 cp.code() += "} // procedure\n";
 } // procedure
@@ -2276,7 +2274,7 @@ cp.code() += "cpu->exception |= (*(system->dwrite))(system->handle, cpu, offs, (
 cp.code() += "if (cpu->exception) { // conditional\n";
 { // procedure
 cp.code() += "{ // procedure\n";
-cp.code() += "translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
+cp.code() += "RV32IMACFD_translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 cp.code() += "} // procedure\n";
 } // procedure
@@ -2353,7 +2351,7 @@ cp.code() += "} // block\n";
 } // block
 { // procedure
 cp.code() += "{ // procedure\n";
-cp.code() += "raise(cpu, system, plugin_pointers, 0ULL, 2ULL);\n";
+cp.code() += "RV32IMACFD_raise(cpu, system, plugin_pointers, 0ULL, 2ULL);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 cp.code() += "} // procedure\n";
 } // procedure

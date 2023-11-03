@@ -1,13 +1,11 @@
 /**
- * Generated on Wed, 04 Oct 2023 17:01:33 +0200.
+ * Generated on Fri, 03 Nov 2023 13:22:23 +0100.
  *
  * This file contains the instruction behavior models of the RV32M
  * instruction set for the RV32IMACFD core architecture.
  */
 
 #include "RV32IMACFDArch.h"
-
-#define ETISS_ARCH_STATIC_FN_ONLY
 #include "RV32IMACFDFuncs.h"
 
 using namespace etiss;

@@ -1,13 +1,11 @@
 /**
- * Generated on Wed, 04 Oct 2023 17:01:33 +0200.
+ * Generated on Fri, 03 Nov 2023 13:22:23 +0100.
  *
  * This file contains the instruction behavior models of the RV32F
  * instruction set for the RV64IMACFD core architecture.
  */
 
 #include "RV64IMACFDArch.h"
-
-#define ETISS_ARCH_STATIC_FN_ONLY
 #include "RV64IMACFDFuncs.h"
 
 using namespace etiss;
@@ -59,7 +57,7 @@ cp.code() += "cpu->exception |= (*(system->dread))(system->handle, cpu, offs, (e
 cp.code() += "if (cpu->exception) { // conditional\n";
 { // procedure
 cp.code() += "{ // procedure\n";
-cp.code() += "translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
+cp.code() += "RV64IMACFD_translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 cp.code() += "} // procedure\n";
 } // procedure
@@ -161,7 +159,7 @@ cp.code() += "cpu->exception |= (*(system->dwrite))(system->handle, cpu, offs, (
 cp.code() += "if (cpu->exception) { // conditional\n";
 { // procedure
 cp.code() += "{ // procedure\n";
-cp.code() += "translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
+cp.code() += "RV64IMACFD_translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 cp.code() += "} // procedure\n";
 } // procedure
@@ -258,7 +256,7 @@ cp.code() += "} // block\n";
 cp.code() += "{ // block\n";
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "etiss_uint32 res = fmadd_s(unbox_s(((RV64IMACFD*)cpu)->F[" + std::to_string(rs1) + "ULL]), unbox_s(((RV64IMACFD*)cpu)->F[" + std::to_string(rs2) + "ULL]), unbox_s(((RV64IMACFD*)cpu)->F[" + std::to_string(rs3) + "ULL]), 0ULL, get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
+cp.code() += "etiss_uint32 res = fmadd_s(unbox_s(((RV64IMACFD*)cpu)->F[" + std::to_string(rs1) + "ULL]), unbox_s(((RV64IMACFD*)cpu)->F[" + std::to_string(rs2) + "ULL]), unbox_s(((RV64IMACFD*)cpu)->F[" + std::to_string(rs3) + "ULL]), 0ULL, RV64IMACFD_get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
 cp.code() += "((RV64IMACFD*)cpu)->F[" + std::to_string(rd) + "ULL] = -4294967296LL | (etiss_uint64)(res);\n";
 cp.code() += "} // block\n";
 } // block
@@ -351,7 +349,7 @@ cp.code() += "} // block\n";
 cp.code() += "{ // block\n";
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "etiss_uint32 res = fmadd_s(unbox_s(((RV64IMACFD*)cpu)->F[" + std::to_string(rs1) + "ULL]), unbox_s(((RV64IMACFD*)cpu)->F[" + std::to_string(rs2) + "ULL]), unbox_s(((RV64IMACFD*)cpu)->F[" + std::to_string(rs3) + "ULL]), 1ULL, get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
+cp.code() += "etiss_uint32 res = fmadd_s(unbox_s(((RV64IMACFD*)cpu)->F[" + std::to_string(rs1) + "ULL]), unbox_s(((RV64IMACFD*)cpu)->F[" + std::to_string(rs2) + "ULL]), unbox_s(((RV64IMACFD*)cpu)->F[" + std::to_string(rs3) + "ULL]), 1ULL, RV64IMACFD_get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
 cp.code() += "((RV64IMACFD*)cpu)->F[" + std::to_string(rd) + "ULL] = -4294967296LL | (etiss_uint64)(res);\n";
 cp.code() += "} // block\n";
 } // block
@@ -447,7 +445,7 @@ cp.code() += "{ // block\n";
 cp.code() += "etiss_uint32 frs1 = unbox_s(((RV64IMACFD*)cpu)->F[" + std::to_string(rs1) + "ULL]);\n";
 cp.code() += "etiss_uint32 frs2 = unbox_s(((RV64IMACFD*)cpu)->F[" + std::to_string(rs2) + "ULL]);\n";
 cp.code() += "etiss_uint32 frs3 = unbox_s(((RV64IMACFD*)cpu)->F[" + std::to_string(rs3) + "ULL]);\n";
-cp.code() += "etiss_uint32 res = fmadd_s(frs1, frs2, frs3, 2ULL, get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
+cp.code() += "etiss_uint32 res = fmadd_s(frs1, frs2, frs3, 2ULL, RV64IMACFD_get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
 cp.code() += "((RV64IMACFD*)cpu)->F[" + std::to_string(rd) + "ULL] = -4294967296LL | (etiss_uint64)(res);\n";
 cp.code() += "} // block\n";
 } // block
@@ -543,7 +541,7 @@ cp.code() += "{ // block\n";
 cp.code() += "etiss_uint32 frs1 = unbox_s(((RV64IMACFD*)cpu)->F[" + std::to_string(rs1) + "ULL]);\n";
 cp.code() += "etiss_uint32 frs2 = unbox_s(((RV64IMACFD*)cpu)->F[" + std::to_string(rs2) + "ULL]);\n";
 cp.code() += "etiss_uint32 frs3 = unbox_s(((RV64IMACFD*)cpu)->F[" + std::to_string(rs3) + "ULL]);\n";
-cp.code() += "etiss_uint32 res = fmadd_s(frs1, frs2, frs3, 3ULL, get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
+cp.code() += "etiss_uint32 res = fmadd_s(frs1, frs2, frs3, 3ULL, RV64IMACFD_get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
 cp.code() += "((RV64IMACFD*)cpu)->F[" + std::to_string(rd) + "ULL] = -4294967296LL | (etiss_uint64)(res);\n";
 cp.code() += "} // block\n";
 } // block
@@ -635,7 +633,7 @@ cp.code() += "{ // block\n";
 cp.code() += "{ // block\n";
 cp.code() += "etiss_uint32 frs1 = unbox_s(((RV64IMACFD*)cpu)->F[" + std::to_string(rs1) + "ULL]);\n";
 cp.code() += "etiss_uint32 frs2 = unbox_s(((RV64IMACFD*)cpu)->F[" + std::to_string(rs2) + "ULL]);\n";
-cp.code() += "etiss_uint32 res = fadd_s(frs1, frs2, get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
+cp.code() += "etiss_uint32 res = fadd_s(frs1, frs2, RV64IMACFD_get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
 cp.code() += "((RV64IMACFD*)cpu)->F[" + std::to_string(rd) + "ULL] = -4294967296LL | (etiss_uint64)(res);\n";
 cp.code() += "} // block\n";
 } // block
@@ -724,7 +722,7 @@ cp.code() += "{ // block\n";
 cp.code() += "{ // block\n";
 cp.code() += "etiss_uint32 frs1 = unbox_s(((RV64IMACFD*)cpu)->F[" + std::to_string(rs1) + "ULL]);\n";
 cp.code() += "etiss_uint32 frs2 = unbox_s(((RV64IMACFD*)cpu)->F[" + std::to_string(rs2) + "ULL]);\n";
-cp.code() += "etiss_uint32 res = fsub_s(frs1, frs2, get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
+cp.code() += "etiss_uint32 res = fsub_s(frs1, frs2, RV64IMACFD_get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
 cp.code() += "((RV64IMACFD*)cpu)->F[" + std::to_string(rd) + "ULL] = -4294967296LL | (etiss_uint64)(res);\n";
 cp.code() += "} // block\n";
 } // block
@@ -813,7 +811,7 @@ cp.code() += "{ // block\n";
 cp.code() += "{ // block\n";
 cp.code() += "etiss_uint32 frs1 = unbox_s(((RV64IMACFD*)cpu)->F[" + std::to_string(rs1) + "ULL]);\n";
 cp.code() += "etiss_uint32 frs2 = unbox_s(((RV64IMACFD*)cpu)->F[" + std::to_string(rs2) + "ULL]);\n";
-cp.code() += "etiss_uint32 res = fmul_s(frs1, frs2, get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
+cp.code() += "etiss_uint32 res = fmul_s(frs1, frs2, RV64IMACFD_get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
 cp.code() += "((RV64IMACFD*)cpu)->F[" + std::to_string(rd) + "ULL] = -4294967296LL | (etiss_uint64)(res);\n";
 cp.code() += "} // block\n";
 } // block
@@ -902,7 +900,7 @@ cp.code() += "{ // block\n";
 cp.code() += "{ // block\n";
 cp.code() += "etiss_uint32 frs1 = unbox_s(((RV64IMACFD*)cpu)->F[" + std::to_string(rs1) + "ULL]);\n";
 cp.code() += "etiss_uint32 frs2 = unbox_s(((RV64IMACFD*)cpu)->F[" + std::to_string(rs2) + "ULL]);\n";
-cp.code() += "etiss_uint32 res = fdiv_s(frs1, frs2, get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
+cp.code() += "etiss_uint32 res = fdiv_s(frs1, frs2, RV64IMACFD_get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
 cp.code() += "((RV64IMACFD*)cpu)->F[" + std::to_string(rd) + "ULL] = -4294967296LL | (etiss_uint64)(res);\n";
 cp.code() += "} // block\n";
 } // block
@@ -987,7 +985,7 @@ cp.code() += "{ // block\n";
 { // block
 cp.code() += "{ // block\n";
 cp.code() += "etiss_uint32 frs1 = unbox_s(((RV64IMACFD*)cpu)->F[" + std::to_string(rs1) + "ULL]);\n";
-cp.code() += "etiss_uint32 res = fsqrt_s(frs1, get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
+cp.code() += "etiss_uint32 res = fsqrt_s(frs1, RV64IMACFD_get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
 cp.code() += "((RV64IMACFD*)cpu)->F[" + std::to_string(rd) + "ULL] = -4294967296LL | (etiss_uint64)(res);\n";
 cp.code() += "} // block\n";
 } // block

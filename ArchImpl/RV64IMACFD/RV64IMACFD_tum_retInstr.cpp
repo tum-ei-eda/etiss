@@ -1,13 +1,11 @@
 /**
- * Generated on Wed, 04 Oct 2023 17:01:33 +0200.
+ * Generated on Fri, 03 Nov 2023 13:22:23 +0100.
  *
  * This file contains the instruction behavior models of the tum_ret
  * instruction set for the RV64IMACFD core architecture.
  */
 
 #include "RV64IMACFDArch.h"
-
-#define ETISS_ARCH_STATIC_FN_ONLY
 #include "RV64IMACFDFuncs.h"
 
 using namespace etiss;
@@ -46,7 +44,7 @@ cp.code() += "} // block\n";
 cp.code() += "{ // block\n";
 { // procedure
 cp.code() += "{ // procedure\n";
-cp.code() += "raise(cpu, system, plugin_pointers, 0ULL, 8LL + ((RV64IMACFD*)cpu)->PRIV);\n";
+cp.code() += "RV64IMACFD_raise(cpu, system, plugin_pointers, 0ULL, 8LL + ((RV64IMACFD*)cpu)->PRIV);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 cp.code() += "} // procedure\n";
 } // procedure
@@ -117,21 +115,21 @@ cp.code() += "{ // block\n";
 cp.code() += "if (((RV64IMACFD*)cpu)->PRIV < 3LL) { // conditional\n";
 { // procedure
 cp.code() += "{ // procedure\n";
-cp.code() += "raise(cpu, system, plugin_pointers, 0ULL, 2LL);\n";
+cp.code() += "RV64IMACFD_raise(cpu, system, plugin_pointers, 0ULL, 2LL);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 cp.code() += "} // procedure\n";
 } // procedure
 cp.code() += "} // conditional\n";
 cp.code() += "cpu->nextPc = *((RV64IMACFD*)cpu)->CSR[833LL];\n";
-cp.code() += "etiss_uint64 s = csr_read(cpu, system, plugin_pointers, 768LL);\n";
-cp.code() += "etiss_uint64 prev_prv = get_field(s, 6144LL);\n";
+cp.code() += "etiss_uint64 s = RV64IMACFD_csr_read(cpu, system, plugin_pointers, 768LL);\n";
+cp.code() += "etiss_uint64 prev_prv = RV64IMACFD_get_field(s, 6144LL);\n";
 cp.code() += "if (prev_prv != 3LL) { // conditional\n";
-cp.code() += "s = set_field(s, 131072LL, 0ULL);\n";
+cp.code() += "s = RV64IMACFD_set_field(s, 131072LL, 0ULL);\n";
 cp.code() += "} // conditional\n";
-cp.code() += "s = set_field(s, 8LL, get_field(s, 128LL));\n";
-cp.code() += "s = set_field(s, 128LL, 1ULL);\n";
-cp.code() += "s = set_field(s, 6144LL, (extension_enabled(cpu, system, plugin_pointers, 85ULL)) ? (0LL) : (3LL));\n";
-cp.code() += "csr_write(cpu, system, plugin_pointers, 768LL, s);\n";
+cp.code() += "s = RV64IMACFD_set_field(s, 8LL, RV64IMACFD_get_field(s, 128LL));\n";
+cp.code() += "s = RV64IMACFD_set_field(s, 128LL, 1ULL);\n";
+cp.code() += "s = RV64IMACFD_set_field(s, 6144LL, (RV64IMACFD_extension_enabled(cpu, system, plugin_pointers, 85ULL)) ? (0LL) : (3LL));\n";
+cp.code() += "RV64IMACFD_csr_write(cpu, system, plugin_pointers, 768LL, s);\n";
 cp.code() += "((RV64IMACFD*)cpu)->PRIV = (prev_prv) & 0x7;\n";
 cp.code() += "} // block\n";
 } // block
@@ -261,21 +259,21 @@ cp.code() += "} // block\n";
 } // block
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "if (((RV64IMACFD*)cpu)->PRIV < ((get_field(csr_read(cpu, system, plugin_pointers, 768LL), 4194304LL)) ? (3LL) : (1LL))) { // conditional\n";
+cp.code() += "if (((RV64IMACFD*)cpu)->PRIV < ((RV64IMACFD_get_field(RV64IMACFD_csr_read(cpu, system, plugin_pointers, 768LL), 4194304LL)) ? (3LL) : (1LL))) { // conditional\n";
 { // procedure
 cp.code() += "{ // procedure\n";
-cp.code() += "raise(cpu, system, plugin_pointers, 0ULL, 2LL);\n";
+cp.code() += "RV64IMACFD_raise(cpu, system, plugin_pointers, 0ULL, 2LL);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 cp.code() += "} // procedure\n";
 } // procedure
 cp.code() += "} // conditional\n";
 cp.code() += "cpu->nextPc = *((RV64IMACFD*)cpu)->CSR[321LL];\n";
-cp.code() += "etiss_uint64 s = csr_read(cpu, system, plugin_pointers, 256LL);\n";
-cp.code() += "etiss_uint64 prev_prv = get_field(s, 256LL);\n";
-cp.code() += "s = set_field(s, 2LL, get_field(s, 32LL));\n";
-cp.code() += "s = set_field(s, 32LL, 1ULL);\n";
-cp.code() += "s = set_field(s, 256LL, 0LL);\n";
-cp.code() += "csr_write(cpu, system, plugin_pointers, 768LL, s);\n";
+cp.code() += "etiss_uint64 s = RV64IMACFD_csr_read(cpu, system, plugin_pointers, 256LL);\n";
+cp.code() += "etiss_uint64 prev_prv = RV64IMACFD_get_field(s, 256LL);\n";
+cp.code() += "s = RV64IMACFD_set_field(s, 2LL, RV64IMACFD_get_field(s, 32LL));\n";
+cp.code() += "s = RV64IMACFD_set_field(s, 32LL, 1ULL);\n";
+cp.code() += "s = RV64IMACFD_set_field(s, 256LL, 0LL);\n";
+cp.code() += "RV64IMACFD_csr_write(cpu, system, plugin_pointers, 768LL, s);\n";
 cp.code() += "((RV64IMACFD*)cpu)->PRIV = (prev_prv) & 0x7;\n";
 cp.code() += "} // block\n";
 } // block

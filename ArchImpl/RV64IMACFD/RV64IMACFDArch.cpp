@@ -1,5 +1,5 @@
 /**
- * Generated on Mon, 02 Oct 2023 18:56:15 +0200.
+ * Generated on Fri, 03 Nov 2023 13:22:23 +0100.
  *
  * This file contains the architecture class for the RV64IMACFD core architecture.
  */
@@ -35,8 +35,6 @@
  *********************************************************************************************************************************/
 
 #include "RV64IMACFDArch.h"
-
-#define ETISS_ARCH_STATIC_FN_ONLY
 #include "RV64IMACFDFuncs.h"
 
 #define RV64IMACFD_DEBUG_CALL 0
