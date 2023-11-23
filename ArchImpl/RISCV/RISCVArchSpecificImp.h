@@ -638,12 +638,16 @@ std::shared_ptr<etiss::VirtualStruct> RISCVArch::getVirtualStruct(ETISS_CPU *cpu
     addCSRCustom(3, &((RISCV *)cpu)->FCSR);
     ret->addField(new FFLAGSField_RISCV(*ret));
     ret->addField(new FRMField_RISCV(*ret));
+    addCSR(CSR_MSTATUS);
     addCSR(CSR_MISA);
     addCSR(CSR_MIE);
     addCSR(CSR_MTVEC);
+    addCSR(CSR_MCOUNTEREN);
+    addCSR(CSR_MSCRATCH);
     addCSR(CSR_MEPC);
     addCSR(CSR_MCAUSE);
     addCSR(CSR_MTVAL);
+    addCSR(CSR_MIP);
 
     return ret;
 }

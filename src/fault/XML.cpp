@@ -143,18 +143,14 @@ bool parse_hex(pugi::xml_node node, uint64_t &dst, Diagnostics &diag)
         return false;
     }
     uint64_t val;
-    std::stringstream ss;
-    ss << std::hex << ret;
-    ss >> val;
+    val = std::stoll(ret, nullptr, 16);
     dst = val;
     return true;
 }
 template <>
 bool write<uint64_t>(pugi::xml_node node, const uint64_t &src, Diagnostics &diag)
 {
-    std::stringstream ss;
-    ss << src;
-    return write<std::string>(node, ss.str(), diag);
+    return write<std::string>(node, std::to_string(src), diag);
 }
 
 template <>
@@ -170,9 +166,7 @@ bool parse<unsigned>(pugi::xml_node node, unsigned &dst, Diagnostics &diag)
 template <>
 bool write<unsigned>(pugi::xml_node node, const unsigned &src, Diagnostics &diag)
 {
-    std::stringstream ss;
-    ss << src;
-    return write<std::string>(node, ss.str(), diag);
+    return write<std::string>(node, std::to_string(src), diag);
 }
 
 template <>
@@ -295,6 +289,19 @@ pugi::xml_node findSingleNode(pugi::xml_node node, const std::string &name, Diag
 
 } // namespace xml
 #endif
+
+bool parseXML(pugi::xml_document &doc, std::istream &input, std::ostream &diagnostics_out)
+{
+    pugi::xml_parse_result pr = doc.load(input); // load from stream
+
+    if (!pr)
+    { // load failure
+        diagnostics_out << "failed to load xml from stream: " << pr.description() << std::endl;
+        return false;
+    }
+
+    return true;
+}
 
 } // namespace fault
 

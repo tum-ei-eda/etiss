@@ -74,4 +74,5 @@ install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/
     DESTINATION examples
     FILES_MATCHING
     PATTERN "*.ini"
+    PATTERN "*.xml"
 )

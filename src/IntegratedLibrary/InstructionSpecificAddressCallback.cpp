@@ -76,6 +76,7 @@ extern "C"
 using namespace etiss::plugin;
 
 InstructionSpecificAddressCallback::InstructionSpecificAddressCallback()
+    : uid_{get_uid_once()}
 {
     pluginData_.state_ = 0;
     pluginData_.this_ = this;
@@ -107,14 +108,14 @@ void InstructionSpecificAddressCallback::finalizeInstrSet(etiss::instr::ModedIns
 
                             ss.str("");
                             ss.clear();
-                            ss << "      uint32_t callbackCalled = InstructionSpecificAddressCallback_callback("
+                            ss << "      uint32_t callbackCalled" << uid_ <<" = InstructionSpecificAddressCallback_callback("
                                << getPointerCode() << ");";
                             // cs.append(CodePart::APPENDEDREQUIRED).code() = ss.str();
                             cs.append(CodePart::PREINITIALDEBUGRETURNING).code() = ss.str();
 
                             ss.str("");
                             ss.clear();
-                            ss << "      if(callbackCalled)\n"
+                            ss << "      if(callbackCalled" << uid_ <<")\n"
                                << "        return ETISS_RETURNCODE_NOERROR;";
                             // cs.append(CodePart::APPENDEDRETURNINGREQUIRED).code() = ss.str();
                             cs.append(CodePart::PREINITIALDEBUGRETURNING).code() = ss.str();

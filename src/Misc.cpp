@@ -391,7 +391,7 @@ std::pair<std::string, std::string> etiss::Configuration::set_cmd_line_boost(con
     etiss::Configuration sobj;
     if (s.length() > 2)
     {
-        if (s.find("-f") == 0) 
+        if (s.find("-f") == 0)
         {
             size_t epos = s.find_first_of('=');
             if (s.length() > 5 && s.substr(2, 3) == "no-")
@@ -412,8 +412,8 @@ std::pair<std::string, std::string> etiss::Configuration::set_cmd_line_boost(con
                     etiss::log(etiss::VERBOSE, std::string("CONFIG: removed ") + tmp);
                     return make_pair(std::string(), std::string());
                 }
-            }   
-            else 
+            }
+            else
             {
                 if (epos == std::string::npos)
                 {
@@ -434,8 +434,8 @@ std::pair<std::string, std::string> etiss::Configuration::set_cmd_line_boost(con
                     return make_pair(s.substr(2), tval);
                 }
                 return make_pair(std::string(), std::string());
-            }  
-        }  
+            }
+        }
     }
     return make_pair(std::string(), std::string());
 }
