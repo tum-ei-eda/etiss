@@ -1,5 +1,5 @@
 /**
- * Generated on Fri, 03 Nov 2023 13:22:23 +0100.
+ * Generated on Tue, 28 Nov 2023 09:45:19 +0100.
  *
  * This file contains the function prototypes for the RV32IMACFD core architecture.
  */

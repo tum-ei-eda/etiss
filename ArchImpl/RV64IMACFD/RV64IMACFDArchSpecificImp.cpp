@@ -345,8 +345,8 @@ etiss::InterruptVector * RV64IMACFDArch::createInterruptVector(ETISS_CPU * cpu)
 	std::vector<etiss::uint64 *> vec;
 	std::vector<etiss::uint64 *> mask;
 
-	vec.push_back(&((RV64IMACFD*)cpu)->MIE);
-	mask.push_back(&((RV64IMACFD*)cpu)->MIP);
+	vec.push_back(&((RV64IMACFD*)cpu)->MIP);
+	mask.push_back(&((RV64IMACFD*)cpu)->MIE);
 
 	return new etiss::MappedInterruptVector<etiss::uint64>(vec, mask);
 }
