@@ -44,6 +44,7 @@
 #define ETISS_PLUGIN_LOGGER_H_
 
 #include "etiss/Plugin.h"
+#include "etiss/IntegratedLibrary/SelectiveSysWrapper.h"
 
 namespace etiss
 {
@@ -52,33 +53,28 @@ namespace plugin
 {
 
 /**
-        simple logger implementation.
-        by overriding log it would also be possible to use this as a device mounted to a certain memory address. due to
-   the function call overhead this is only suggested for testing purposes
+  simple logger implementation.
 */
-class Logger : public etiss::SystemWrapperPlugin
+class Logger : public etiss::plugin::SelectiveSysWrapper
 {
+  public:
+    struct CustomHandle
+    {
+        uint64_t addr = 0;
+        uint64_t mask = 0;
+        ETISS_System *origSys = nullptr;
+    };
+
   public:
     Logger(uint64_t addr_value, uint64_t addr_mask);
 
-    virtual ETISS_System *wrap(ETISS_CPU *cpu, ETISS_System *system); // wrap read/write redirection
-
-    virtual ETISS_System *unwrap(ETISS_CPU *cpu, ETISS_System *system); // undo wrapping
-
-    /** @brief this function writes the content of buf with length len to std::cout.
-     *        It is called by write functions if the write address is the specified
-     *        logger address.
-     * @attention if called by iread then the buf pointer is NULL
-     */
-    virtual int32_t log(bool isread, uint64_t local_addr, uint8_t *buf,
-                        unsigned len); // called whenever a write(or read) occured to logger address
+    ETISS_System getWrapInfo(ETISS_System *origSystem) final;
 
   protected:
     inline virtual std::string _getPluginName() const { return std::string("Logger"); }
 
   private:
-    uint64_t addr;
-    uint64_t mask;
+    CustomHandle customHandle_;
 };
 
 } // namespace plugin
