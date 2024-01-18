@@ -115,7 +115,6 @@ void _exit_(int exit_status)
 #ifdef DEBUG_SYSTEM
     printf_fromisr("exit called with code: %i\n", exit_status);
 #endif
-    asm("ebreak");
     while (1)
         ;
 }

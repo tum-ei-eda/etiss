@@ -1,7 +1,9 @@
 MACRO(InstallJitLib TARGET_NAME)
+    set_property(GLOBAL APPEND PROPERTY etiss_jitlibs ${TARGET_NAME})
     INSTALL(TARGETS ${TARGET_NAME} DESTINATION include/jit/etiss/jit)
 ENDMACRO()
 
 ADD_SUBDIRECTORY(softfloat)
 ADD_SUBDIRECTORY(resources)
+ADD_SUBDIRECTORY(semihost)
 ADD_SUBDIRECTORY(CSRCounters)

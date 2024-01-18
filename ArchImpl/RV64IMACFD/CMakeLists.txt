@@ -1,0 +1,46 @@
+# Generated on Tue, 28 Nov 2023 09:45:19 +0100.
+#
+# This file contains the CMake build info for the RV64IMACFD core architecture.
+
+PROJECT(RV64IMACFD)
+
+SET(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
+SET(CMAKE_INSTALL_RPATH "\$ORIGIN/../../include/jit/etiss/jit")
+
+ADD_LIBRARY(${PROJECT_NAME} SHARED
+	RV64IMACFDArch.cpp
+	RV64IMACFDArchLib.cpp
+	RV64IMACFDArchSpecificImp.cpp
+	RV64IMACFDFuncs.c
+	RV64IMACFDInstr.cpp
+	RV64IMACFD_RV32IInstr.cpp
+	RV64IMACFD_RV64IInstr.cpp
+	RV64IMACFD_RV32ICInstr.cpp
+	RV64IMACFD_RV64ICInstr.cpp
+	RV64IMACFD_RV32MInstr.cpp
+	RV64IMACFD_RV64MInstr.cpp
+	RV64IMACFD_RV32FInstr.cpp
+	RV64IMACFD_RV64FInstr.cpp
+	RV64IMACFD_RV32DInstr.cpp
+	RV64IMACFD_RV64DInstr.cpp
+	RV64IMACFD_RV32DCInstr.cpp
+	RV64IMACFD_RV32AInstr.cpp
+	RV64IMACFD_RV64AInstr.cpp
+	RV64IMACFD_ZifenceiInstr.cpp
+	RV64IMACFD_tum_csrInstr.cpp
+	RV64IMACFD_tum_retInstr.cpp
+	RV64IMACFD_tum_rvaInstr.cpp
+	RV64IMACFD_tum_rva64Instr.cpp
+	RV64IMACFD_tum_rvmInstr.cpp
+	RV64IMACFD_tum_semihostingInstr.cpp
+)
+
+add_custom_command(
+	TARGET ${PROJECT_NAME} POST_BUILD
+	COMMAND ${CMAKE_COMMAND} -E copy
+		"${CMAKE_CURRENT_LIST_DIR}/${PROJECT_NAME}Funcs.h"
+		"${ETISS_BINARY_DIR}/include/jit/Arch/${PROJECT_NAME}"
+)
+INSTALL(FILES "${CMAKE_CURRENT_LIST_DIR}/${PROJECT_NAME}Funcs.h" DESTINATION "include/jit/Arch/${PROJECT_NAME}")
+
+ETISSPluginArch(${PROJECT_NAME})

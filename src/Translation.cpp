@@ -321,6 +321,7 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
     block.fileglobalCode().insert("#include \"etiss/jit/CPU.h\"\n"
                                   "#include \"etiss/jit/System.h\"\n"
                                   "#include \"etiss/jit/libresources.h\"\n"
+                                  "#include \"etiss/jit/libsemihost.h\"\n"
                                   "#include \"etiss/jit/ReturnCode.h\"\n"
                                   "#include \"etiss/jit/libCSRCounters.h\"\n");
 
@@ -370,6 +371,7 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
     std::set<std::string> libs;
     //libs.insert("ETISS");
     libs.insert("resources");
+    libs.insert("semihost");
     libs.insert("CSRCounters");
     for(auto & it: jitExtLibraries()){
        if(it != "") libs.insert(it);
@@ -475,19 +477,22 @@ etiss::int32 Translation::translateBlock(CodeBlock &cb)
         context.is_not_default_width_ = false;
         context.instr_width_ = vis_->width_;
 
+        etiss::instr::BitArray errba(32, 0);
+
+        etiss::instr::BitArray errba(32, 0);
+
         buffer = etiss::instr::Buffer(mainba.intCount());
         // read instruction
         etiss::int32 ret = (*system_.dbg_read)(system_.handle, cb.endaddress_, (etiss_uint8*)buffer.internalBuffer(), mainba.byteCount()); // read instruction
         mainba.set_value(buffer.data());
-        if (ret == etiss::RETURNCODE::IBUS_READ_ERROR)
+        if (ret == etiss::RETURNCODE::IBUS_READ_ERROR || ret == etiss::RETURNCODE::DBUS_READ_ERROR)
         {
             std::cout << "Instruction bus read error while translating!" << std::endl;
-            CodeBlock::Line &line = cb.append(cb.endaddress_); // allocate codeSet for Instruction
-            line.getCodeSet().append(CodePart::PREINITIALDEBUGRETURNING).code() =
-                std::string("cpu->cpuTime_ps += "
-                            "cpu->cpuCycleTime_ps;cpu->instructionPointer += ") +
-                std::to_string(mainba.byteCount()) + std::string(";return ETISS_RETURNCODE_IBUS_READ_ERROR;");
+            errba = etiss::RETURNCODE::IBUS_READ_ERROR;
             // std::cout << "mainba.byteCount = " << mainba.byteCount() << std::endl;
+            auto instr = &vis_->getMain()->getInvalid();
+            CodeBlock::Line &line = cb.append(cb.endaddress_); // allocate codeset for instruction
+            bool ok = instr->translate(errba, line.getCodeSet(), context);
             cb.endaddress_ += mainba.byteCount(); // update end address
             return etiss::RETURNCODE::NOERROR;
         }
@@ -540,6 +545,7 @@ etiss::int32 Translation::translateBlock(CodeBlock &cb)
             etiss::instr::InstructionSet *instrSet = vis_->get(secba->size());
             if (unlikely(!instrSet))
             {
+                errba = etiss::RETURNCODE::ILLEGALINSTRUCTION;
                 instr = &vis_->getMain()->getInvalid();
             }
             else
@@ -547,11 +553,12 @@ etiss::int32 Translation::translateBlock(CodeBlock &cb)
                 instr = instrSet->resolve(*secba);
                 if (unlikely(!instr))
                 {
+                    errba = etiss::RETURNCODE::ILLEGALINSTRUCTION;
                     instr = &instrSet->getInvalid();
                 }
             }
             CodeBlock::Line &line = cb.append(cb.endaddress_); // allocate codeset for instruction
-            bool ok = instr->translate(*secba, line.getCodeSet(), context);
+            bool ok = instr->translate(errba != etiss::instr::BitArray(32, 0) ? errba : *secba, line.getCodeSet(), context);
             if (unlikely(!ok))
             {
                 delete secba;
@@ -566,10 +573,11 @@ etiss::int32 Translation::translateBlock(CodeBlock &cb)
             etiss::instr::Instruction *instr = instrSet->resolve(mainba);
             if (unlikely(instr == 0))
             {
+                errba = etiss::RETURNCODE::ILLEGALINSTRUCTION;
                 instr = &instrSet->getInvalid();
             }
             CodeBlock::Line &line = cb.append(cb.endaddress_); // allocate codeset for instruction
-            bool ok = instr->translate(mainba, line.getCodeSet(), context);
+            bool ok = instr->translate(errba != etiss::instr::BitArray(32, 0) ? errba : mainba, line.getCodeSet(), context);
             if (unlikely(!ok))
             {
                 return etiss::RETURNCODE::GENERALERROR;
@@ -583,8 +591,33 @@ etiss::int32 Translation::translateBlock(CodeBlock &cb)
     return etiss::RETURNCODE::NOERROR;
 }
 
+void Translation::unloadBlocksAll()
+{
+    for (auto &entry:blockmap_)
+    {
+        entry.second.erase(std::remove_if(entry.second.begin(), entry.second.end(),
+                            [](auto &bl)
+                            {
+                                bl->valid = false;
+                                BlockLink::updateRef(bl->next, 0);
+                                BlockLink::updateRef(bl->branch, 0);
+                                BlockLink::decrRef(bl); // remove reference of map
+                                return true;
+                            }),
+                            entry.second.end());
+    }
+    blockmap_.clear();
+}
+
 void Translation::unloadBlocks(etiss::uint64 startindex, etiss::uint64 endindex)
 {
+    // Hotfix: if everything needs to be deleted, new function unloadBlocksAll()
+    if (startindex == 0 && endindex == ((etiss::uint64)((etiss::int64)-1)))
+    {
+        unloadBlocksAll();
+        return;
+    }
+
     const etiss::uint64 startindexblock = startindex >> 9;
     const etiss::uint64 endindexblock = (endindex >> 9) + ((((endindex >> 9) << 9) == endindex) ? 0 : 1);
     for (etiss::uint64 block = startindexblock; block < endindexblock; block++)
