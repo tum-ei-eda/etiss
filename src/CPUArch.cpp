@@ -180,7 +180,9 @@ void CPUArch::finalizeInstrSet(etiss::instr::ModedInstructionSet &mis) const
 
 void CPUArch::compensateEndianess(ETISS_CPU *cpu, etiss::instr::BitArray &ba) const
 {
-    ba.recoverFromEndianness(4, etiss::_BIG_ENDIAN_);
+    etiss::instr::Buffer buffer(ba.intCount(), ba.to_ulong());
+    buffer.recoverFromEndianness(4, etiss::_BIG_ENDIAN_);
+    ba.set_value(buffer.data());
 }
 
 extern "C"

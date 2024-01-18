@@ -69,6 +69,7 @@
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <boost/dynamic_bitset.hpp>
 
 namespace etiss
 {
@@ -78,219 +79,57 @@ namespace instr
 
 typedef uint32_t I;
 
+class Instruction;
+class VariableInstructionSet;
+class ModedInstructionSet;
+class InstructionClass;
+class InstructionGroup;
+class InstructionDefinition;
+
 /**
-        @brief stores a bit vector
+Buffer for reading data from memory while instructions are being fetched
 */
-class BitArray
-{
-  public:
-  private:
-    static_assert(std::is_unsigned<I>::value, "etiss::instr::BitArray may only be used with unsigned integral types");
-    static_assert(std::is_integral<I>::value, "etiss::instr::BitArray may only be used with unsigned integral types");
-    friend class BitArrayRange;
-
-  private:
-    static const unsigned aaddr_mask_;
-    static const unsigned aaddr_shift_;
-    static unsigned gen_mask(unsigned width, unsigned intcount)
-    {
-        unsigned bc = intcount * sizeof(I) * 8;
-        bc = bc - width;
-        bc = sizeof(I) * 8 - bc;
-        I ret = 0;
-        for (unsigned i = 0; i < bc; i++)
-            ret = (ret << 1) | 1;
-        return ret;
+class Buffer {
+public:
+    I* d_;
+    unsigned intcount_;
+public:
+    Buffer(): d_(nullptr), intcount_(0) {}
+    Buffer(const Buffer& o) : d_(new I[o.intcount_]), intcount_(o.intcount_){
+        *this = o;
     }
-    static unsigned gen_intcount(unsigned width)
-    {
-        unsigned mod = width % (sizeof(I) * 8);
-        unsigned ret = (width - mod) / (sizeof(I) * 8);
-        if (mod > 0)
-            ret++;
-        return ret;
+    Buffer(Buffer&& o) : d_(o.d_), intcount_(o.intcount_){
+        o.d_ = nullptr;
     }
-    static unsigned gen_bytecount(unsigned width)
-    {
-        unsigned mod = width % (8);
-        unsigned ret = (width - mod) / (8);
-        if (mod > 0)
-            ret++;
-        return ret;
+    Buffer(unsigned intcount) : d_(new I[intcount]), intcount_(intcount) {
+        for (unsigned i = 0; i < intcount_; i++) d_[i] = 0;
+    }
+    Buffer(unsigned intcount, I val) : Buffer(intcount) {
+        *d_ = val;
+    }
+    ~Buffer() {
+        clear();
     }
 
-  private:
-    const unsigned intcount_;   ///< number of I's required to store the data
-    I *d_;                      ///< stored data
-    const unsigned w_;          ///< bit width
-    const unsigned bw_;         ///< byte width
-    const unsigned endmask_;    ///< mask to remove additional bits due to width/sizeof(I) missmatch
-    mutable bool bsvalid_;      ///< @see getBitSetCount
-    mutable unsigned *bscount_; ///< @see getBitSetCount
-  public:
-    /**
-        constructs a bit array with the given width in bits.
-    */
-    BitArray(unsigned width);
-    template <typename T, typename = typename std::enable_if<std::is_integral<T>::value, T>::type>
-    /**
-        constructs a bit array with the given width in bits. the passed value is used to initialize the array and may be
-       longer or shorter than the storage type I
-    */
-    BitArray(unsigned width, const T val)
-        : intcount_(gen_intcount(width))
-        , d_(new I[intcount_])
-        , w_(width)
-        , bw_(gen_bytecount(width))
-        , endmask_(gen_mask(width, intcount_))
-        , bsvalid_(false)
-        , bscount_(nullptr)
-    {
-        int start = (int)sizeof(T);
-        int mod = start % sizeof(I);
-        start = (start - mod) / sizeof(I);
-        if (mod > 0)
-        {
-            start++;
-        }
-        for (unsigned i = start; start >= 0 && i < intcount_; i++)
-        {
-            d_[i] = 0;
-        }
-        *this = val;
-    }
-    /**
-        copy ctor
-    */
-    BitArray(const BitArray &o);
-    /**
-        move ctor
-    */
-    BitArray(BitArray &&o);
-    /**
-        dtor
-    */
-    ~BitArray();
-
-    /**
-        @return number of internal number of I variables used to store the bit
-       array
-    */
-    inline unsigned wordCount() const { return intcount_; }
-    /**
-        @return number of bytes stored in this array (rounded up if neccessary)
-    */
-    inline unsigned byteCount() const { return bw_; }
-    /**
-        @return number of bits in this array. this equals the width value passed
-       to the constructor
-    */
-    inline unsigned width() const { return w_; }
-    /**
-        returns a reference to the word at the given index.
-        @attention the index is not check. use wordCount() to get the size of the internal storage array
-        @attention the array size in bits may be smaller then the total count of bits in the storage array. in this case
-       the additional bits MUST be zero
-    */
-    inline I &getWord(unsigned index) { return d_[index]; }
-    /**
-        const version. @see getWord(unsigned index)
-    */
-    inline const I &getWord(unsigned index) const { return d_[index]; }
-    /**
-        @return the value of the bit at the given index
-    */
-    bool get(unsigned index) const;
-    /**
-        sets the value of the bit at the given index
-    */
-    void set(unsigned index, bool val);
-    /**
-        sets all bits in the array to the given value
-    */
-    void setAll(bool val);
-    /// bitwise or operator
-    BitArray operator|(const BitArray &o) const;
-    /// bitwise and operator
-    BitArray operator&(const BitArray &o) const;
-    /// bitwise not operator
-    BitArray operator~() const;
-    /// less than operator
-    bool operator<(const BitArray &o) const;
-    /// equals operator
-    bool operator==(const BitArray &o) const;
-    inline bool operator!=(const BitArray &o) const { return !((*this) == o); }
-
-    template <typename LI>
-    /**
-        assign operator. allows to use any type of integral value
-        @attention if LI is larger than this bit array the most significant bits will be silently discarded
-        @attention signed variables will have their msb extended
-    */
-    typename std::enable_if<std::is_integral<LI>::value && (sizeof(LI) > sizeof(I)), BitArray &>::type operator=(LI val)
-    {
-        if (intcount_ > 0)
-        {
-            unsigned pos = 0;
-            while (pos < intcount_)
-            {
-                d_[pos++] = (I)val;
-                val = val >> (sizeof(I) * 8);
-            }
-            d_[intcount_ - 1] = d_[intcount_ - 1] & endmask_;
-        }
-        return *this;
-    }
-    template <typename LI>
-    /**
-        assign operator. allows to use any type of integral value
-        @attention signed variables will have their msb extended.
-    */
-    typename std::enable_if<std::is_integral<LI>::value && (sizeof(LI) <= sizeof(I)), BitArray &>::type operator=(
-        LI val)
-    {
-        typedef typename std::conditional<std::is_signed<LI>::value, typename std::make_signed<I>::type,
-                                          typename std::make_unsigned<I>::type>::type CI; // conversion type
-        if (intcount_ > 0)
-        {
-            d_[0] = (I)((CI)val);
-            if (intcount_ == 1)
-            {
-                d_[0] = d_[0] & endmask_;
-            }
-            else
-            {
-                // force correct msb expansion
-                val = val >> ((sizeof(LI) * 8) >> 1);
-                val = val >> ((sizeof(LI) * 8) >> 1);
-                val = val >> (1);
-                // apply expanded msb
-                for (unsigned i = 1; i < intcount_; i++)
-                {
-                    d_[i] = (I)((CI)val);
-                }
-                // unset additional bits
-                d_[intcount_ - 1] = d_[intcount_ - 1] & endmask_;
-            }
-        }
+    Buffer& operator=(const Buffer& o){
+        if (o.intcount_ != intcount_)
+            throw std::runtime_error("operator= called with incompatible bit array");
+        for (unsigned i = 0; i < intcount_; i++)
+            d_[i] = o.d_[i];
         return *this;
     }
 
-    /**
-        copy operator
-    */
-    BitArray &operator=(const BitArray &o);
-    /**
-        move operator
-    */
-    BitArray &operator=(BitArray &&o);
+    Buffer& operator=(Buffer&& o){
+        clear();
+        intcount_ = o.intcount_;
+        d_ = o.d_;
+        o.d_ = nullptr;
+        return *this;
+    }
 
-    /**
-        returns the number of consecutive bits set upwards from given address. e.g. b1011 -> getBitSetCount(0) returns
-       2,getBitSetCount(1) returns 1, getBitSetCount(2) returns 0
-    */
-    unsigned getBitSetCount(unsigned index) const;
-
+    void clear(){
+        if(d_) delete[] d_;
+    }
     /**
         @brief get the internal buffer
         @attention call recoverFromEndianness() to order the bytes after writing data
@@ -301,6 +140,8 @@ class BitArray
         @return same as width * sizeof(I)
     */
     unsigned internalBufferSize();
+
+    I data(){return *d_;}
     /**
         changes byte positions as needed to resove endiannes incompabilities after
        using the internal buffer to write
@@ -309,78 +150,92 @@ class BitArray
 };
 
 /**
-        @attention only use if val has only one bit set to 1
+ * Holding unique instruction sets code chunks after permutation.
 */
-CONSTEXPR unsigned etiss_instr_sqrt_2pow(unsigned val)
-{
-    return val == 1 ? 0 : (1 + etiss_instr_sqrt_2pow(val >> 1));
-}
+typedef std::set<Instruction*> Node;
 
 /**
-    creates a mask to get the lower address of a bitwise address. e.g. for sizeof(I)==4, address 33:
-   (33&etiss_instr_generateMask()) is 1
+    @brief stores a bit vector
 */
-CONSTEXPR I etiss_instr_generateMask()
+class BitArray : public boost::dynamic_bitset<>
 {
-    return ~(((I)-1) << (etiss_instr_sqrt_2pow(sizeof(I) * 8)));
-}
+private:
+    typedef boost::dynamic_bitset<> super;
+public:
+    using super::dynamic_bitset;
+    BitArray(const super& a) : super(a){} // hack for parent's explicit constructors
 
-/// allow printing of bit arrays (always hex)
-std::ostream &operator<<(std::ostream &os, const BitArray tf);
+    /**
+        @return number of bytes stored in this array (rounded up if neccessary)
+    */
+    unsigned byteCount() const;
+    /**
+        @return number of I's required to store the data
+    */
+    unsigned intCount() const;
+    /**
+        @brief change the value the object is holding
+    */
+    void set_value(size_type width, unsigned long value);
+    void set_value(unsigned long value);
+    /**
+        @brief get the interval [end, start]
+    */
+    BitArray get_range(size_type end, size_type start) const;
+    /**
+        @brief set the value to the interval [end, start]
+    */
+    void set_range(unsigned long val, size_type end, size_type start);
+    /**
+        @brief permutates the given input at the specified indexes.
+            Ex: the bit array of 0101 with indexes 1 and 3 will be
+            permutated to 0101, 0111, 1101, 1111
+        @return List of BitArray
+    */
+    static std::vector<BitArray> permutate(const BitArray& input, std::vector<size_type> indexes);
+    /**
+        @brief string representation of the BitArray
+    */
+    std::string to_string() const;
+};
 
 /**
- * Acts as a view/filter to a BitArray. Reading through it will only return bits
- * within the range. Writing through it will only set bits within the range.
+ * Reading through it will only return bits within the range.
  *
  * The length of the range may not be larger than sizeof(I)*8.
  */
 class BitArrayRange
 {
-  public:
+public:
     etiss_del_como(BitArrayRange)
-
-        private : unsigned filterStart_;
-    unsigned filterEnd_;
-    unsigned filterLen_;
-    unsigned lowPartShift_ = 0;
-    I lowPartMask_ = 0;
-    unsigned dataArrayIndex_ = 0;
-    bool needsSplitAccess_ = false;
-    I highPartMask_ = 0;
-    unsigned highPartShift_ = 0;
-
-    static const size_t Ibits = sizeof(I) * 8;
-
-  public:
+private:
+    BitArray::size_type startpos;
+    BitArray::size_type endpos;
+public:
     /**
         @attention startindex_included MUST be the higher valued index. Only exception is for zero length ranges where
        startindex_included+1==endindex_included
     */
-    BitArrayRange(unsigned startindex_included, unsigned endindex_included);
+    BitArrayRange(unsigned endindex_included, unsigned startindex_included);
 
     /**
         reads bits from the range to the return value starting at the lsb. higher
        bits are set to zero
     */
-    I read(const BitArray &ba);
+    I read(const BitArray& ba);
     /**
         write the bit from the passed value starting at the lsb to the range.
     */
-    void write(const BitArray &ba, I val);
-    /**
-        sets all bits of the range to the specified value (true =1;false =0)
-    */
-    void setAll(const BitArray &ba, bool val);
-
+    void write(BitArray &ba, I val);
     /**
         highest bit of the range (included)
     */
-    unsigned start();
+    BitArray::size_type start();
     /**
         lowest bit of the range (included).
         @attention for zero length ranges end() equals start()+1
     */
-    unsigned end();
+    BitArray::size_type end();
 };
 
 /**
@@ -412,12 +267,9 @@ class BitArrayRange
     uint32_t code = parse_i32("6x32 16x0 2x0 4x0 4x0"); // or  parse_i32("6x32 26x0") or parse_i32("6x32 15x0 1x0 2x0
    4x0 4x0") uint32_t mask = parse_i32("6xFF 16x0 2xF 4x0 4xF");
 
-
-
 */
 class OPCode
 {
-
   public:
     const BitArray code_;
     const BitArray mask_;
@@ -468,60 +320,6 @@ class OPCode
 struct less
 {
     bool operator()(const OPCode *const &o1, const OPCode *const &o2) const;
-};
-
-class Instruction;
-
-/**
-    base class that is used to build the instruction translation tree within an
-   InstructionSet object
-    @attention any change to virtual functions must be applied to
-   etiss::instr::Instruction aswell
-*/
-class Node
-{
-  private:
-    /// no copy/moce operations
-    etiss_del_como(Node)
-        /// array of sub nodes
-        Node **subs_;
-    /// reader to extract the bits to identify a sub node
-    BitArrayRange *reader_;
-
-  public:
-    /**
-        ctor
-    */
-    Node();
-    /**
-        dtor
-    */
-    virtual ~Node();
-    /**
-        called by InstructionSet::compile()
-        calls Node::compile() of sub nodes
-        @param instrmap_ a subset of instructions that will be put into/linked as sub nodes.
-        @param used bits that have already been used in previous nodes and cannot be used by this node to distinguish
-       instruction opcodes
-    */
-    virtual void compile(const std::map<const OPCode *, Instruction *, etiss::instr::less> &instrmap_,
-                         const BitArray &used, bool &ok, std::list<std::string> &warnings,
-                         std::list<std::string> &errors);
-    /**
-        performs a lookup for the matching Instruction for the passed instruction
-       in the bit array.
-    */
-    virtual Instruction *resolve(BitArray &instr);
-    /**
-        returns true if this object is an instance of etiss::instr::Instruction
-    */
-    virtual bool isInstruction();
-    /**
-        recursive print function to produce a human readable text that represents the structure of this node and sub
-       nodes
-        @see InstructionSet::print()
-    */
-    virtual std::string print(std::string indent, I pos, unsigned pfillwidth, bool printunused = false);
 };
 
 /**
@@ -587,31 +385,18 @@ class InstructionContext
     ModedInstructionSet
         ↳ VariableInstructionSet (e.g. for mode 0)
             ↳ InstructionSet (e.g. 32 bit)
-                ↳ Node
-                    ↳ ...
-                    .
-                    .
-                    .
-                ↳ Node
-                    ↳ ...
-                    .
-                    .
-                    .
-                    ↳ ...
-                        ↳ <b>Instruction</b>
+                ↳ Instruction (e.g. LDR, STR)
             ↳ InstructionSet (e.g. 16 bit)
 </pre>
 */
-class Instruction : public Node, public etiss::ToString
+class Instruction : public etiss::ToString
 {
   private:
     std::list<std::tuple<std::function<bool(BitArray &, etiss::CodeSet &, InstructionContext &)>, uint32_t,
-                         std::set<uint32_t>>>
-        callbacks_;
+                         std::set<uint32_t>>> callbacks_;
     uint32_t builtinGroups_;
     std::set<uint32_t> groups_;
     std::function<std::string(BitArray &, Instruction &)> printer_;
-
   public:
     etiss_del_como(Instruction)
 
@@ -620,6 +405,7 @@ class Instruction : public Node, public etiss::ToString
                                    ///< increase the time by one cycle if no callback with that flag is present
         };
 
+    const BitArray::size_type width;
     const OPCode opc_;
     const std::string name_;
 
@@ -628,14 +414,9 @@ class Instruction : public Node, public etiss::ToString
     Instruction(const OPCode &opc, const std::string &name);
     template <typename T, typename = typename std::enable_if<std::is_integral<T>::value, T>::type>
     Instruction(unsigned width, const T code, const T mask, const std::string &name)
-        : builtinGroups_(0), printer_(printASMSimple), opc_(OPCode(width, code, mask)), name_(name)
+        : width(width), builtinGroups_(0), printer_(printASMSimple), opc_(OPCode(width, code, mask)), name_(name)
     {
     }
-    virtual void compile(const std::map<const OPCode *, Instruction *, etiss::instr::less> &instrmap_,
-                         const BitArray &used, bool &ok, std::list<std::string> &warnings,
-                         std::list<std::string> &errors);
-    virtual Instruction *resolve(BitArray &instr);
-    virtual bool isInstruction();
     virtual std::string print(std::string indent, I pos, unsigned pfillwidth, bool printunused = false);
     bool addCallback(std::function<bool(BitArray &, etiss::CodeSet &, InstructionContext &)> callback,
                      uint32_t builtinGroups, const std::set<uint32_t> &groups = std::set<uint32_t>());
@@ -647,39 +428,26 @@ class Instruction : public Node, public etiss::ToString
     inline std::string toString() const { return name_; }
 };
 
-class VariableInstructionSet;
 /**
     holds etiss::instr::Instruction instances and handles automatic instruction
 tree creation. <pre> Location in an instruction translation tree:
     ModedInstructionSet
         ↳ VariableInstructionSet (e.g. for mode 0)
             ↳ <b>InstructionSet</b> (e.g. 32 bit)
-                ↳ Node
-                    ↳ ...
-                    .
-                    .
-                    .
-                ↳ Node
-                    ↳ ...
-                    .
-                    .
-                    .
-                    ↳ ...
-                        ↳ Instruction
-            ↳ InstructionSet (e.g. 16 bit)
+                ↳ Instruction (e.g. LDR, STR)
+            ↳ <b>InstructionSet</b> (e.g. 16 bit)
 </pre>
 */
 class InstructionSet : public etiss::ToString
 {
-  private:
   public:
     etiss_del_como(InstructionSet)
 
-        VariableInstructionSet &parent_;
+    VariableInstructionSet &parent_;
     const std::string name_;
     const unsigned width_;
-
-    InstructionSet(VariableInstructionSet &parent, unsigned width, const std::string &name);
+    const unsigned chunk_size;
+    InstructionSet(VariableInstructionSet &parent, unsigned width, const std::string &name, unsigned c_size=4);
     ~InstructionSet();
 
     Instruction *get(const OPCode &key);
@@ -693,8 +461,10 @@ class InstructionSet : public etiss::ToString
     }
 
     bool compile();
+    bool compile(Node* node, BitArray code, Instruction* instr);
 
     Instruction *resolve(BitArray &instr);
+    Instruction *resolve(Node* node, BitArray &instr);
 
     std::string print(std::string prefix, bool printunused = false);
 
@@ -709,32 +479,20 @@ class InstructionSet : public etiss::ToString
   private:
     std::map<const OPCode *, Instruction *, etiss::instr::less> instrmap_;
 
-    Node *root_;
+    Node** root_; // holds the entry of the bucket tree in decoding and compilition algorithm
 
     Instruction invalid;
 };
 
-class ModedInstructionSet;
 /**
     holds etiss::instr::InstructionSet instances with different bit widths.
 
 <pre>
     Location in an instruction translation tree:
-    <b>ModedInstructionSet<b>
-        ↳ VariableInstructionSet (e.g. for mode 0)
+    ModedInstructionSet
+        ↳ <b>VariableInstructionSet</b> (e.g. for mode 0)
             ↳ InstructionSet (e.g. 32 bit)
-                ↳ Node
-                    ↳ ...
-                    .
-                    .
-                    .
-                ↳ Node
-                    ↳ ...
-                    .
-                    .
-                    .
-                    ↳ ...
-                        ↳ Instruction
+                ↳ Instruction (e.g. LDR, STR)
             ↳ InstructionSet (e.g. 16 bit)
 </pre>
 */
@@ -796,18 +554,7 @@ the same mode as the current mode. If the modes mismatch the block will be disca
     <b>ModedInstructionSet</b>
         ↳ VariableInstructionSet (e.g. for mode 0)
             ↳ InstructionSet (e.g. 32 bit)
-                ↳ Node
-                    ↳ ...
-                    .
-                    .
-                    .
-                ↳ Node
-                    ↳ ...
-                    .
-                    .
-                    .
-                    ↳ ...
-                        ↳ Instruction
+                ↳ Instruction (e.g. LDR, STR)
             ↳ InstructionSet (e.g. 16 bit)
 </pre>
 */
@@ -851,9 +598,8 @@ class ModedInstructionSet
     std::string print(std::string prefix = std::string());
 };
 
-class InstructionClass;
 /**
-        maps to ModedInstructionSet
+    maps to ModedInstructionSet
 */
 class InstructionCollection
 {
@@ -885,9 +631,8 @@ class InstructionCollection
     }
     void addTo(ModedInstructionSet &set, bool &ok);
 };
-class InstructionGroup;
 /**
-        maps to VariableInstructionSet
+    maps to VariableInstructionSet
 */
 class InstructionClass
 {
@@ -924,9 +669,9 @@ class InstructionClass
     }
     void addTo(VariableInstructionSet &set, bool &ok);
 };
-class InstructionDefinition;
+
 /**
-        maps to InstructionSet
+    maps to InstructionSet
 */
 class InstructionGroup : public etiss::ToString
 {
@@ -955,8 +700,9 @@ class InstructionGroup : public etiss::ToString
     void addTo(InstructionSet &set, bool &ok);
     inline std::string toString() const { return name_; }
 };
+
 /**
-        maps to Instruction
+    maps to Instruction
 */
 class InstructionDefinition : public etiss::ToString
 {
