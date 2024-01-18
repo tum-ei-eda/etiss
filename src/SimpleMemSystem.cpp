@@ -183,13 +183,6 @@ void SimpleMemSystem::load_elf()
                 etiss::log(etiss::FATALERROR, "System architecture is neither 64 nor 32 bit!");
             }
         }
-        else if (reader.get_machine() == EM_OPENRISC)
-        {
-            if ((reader.get_class() == ELFCLASS32))
-                etiss::cfg().set<std::string>("arch.cpu", "OR1K");
-            if ((reader.get_class() == ELFCLASS64))
-                etiss::log(etiss::FATALERROR, "OR1k 64 is not supported");
-        }
         else
         {
             std::stringstream ss;
