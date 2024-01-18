@@ -64,6 +64,7 @@
 #include "etiss/IntegratedLibrary/errorInjection/Plugin.h"
 #include "etiss/IntegratedLibrary/gdb/GDBServer.h"
 #include "etiss/IntegratedLibrary/QVanillaAccelerator.h"
+#include "etiss/IntegratedLibrary/QVanillaAcceleratorT.h"
 #include "etiss/IntegratedLibrary/VanillaAccelerator.h"
 
 extern "C"
@@ -76,7 +77,7 @@ extern "C"
 
     unsigned ETISSINCLUDED_countCPUArch() { return 0; }
 
-    unsigned ETISSINCLUDED_countPlugin() { return 6; }
+    unsigned ETISSINCLUDED_countPlugin() { return 7; }
 
     const char *ETISSINCLUDED_nameJIT(unsigned index) { return 0; }
 
@@ -98,6 +99,8 @@ extern "C"
             return "QVanillaAccelerator";
         case 5:
             return "VanillaAccelerator";
+        case 6: 
+            return "QVanillaAcceleratorT";
         }
         // if you add here something, update also the number returned by "ETISSINCLUDED_countPlugin" :-)
         return 0;
@@ -159,6 +162,13 @@ extern "C"
                 etiss::Configuration cfg;
                 cfg.config() = options;
                 return new etiss::plugin::VanillaAccelerator(cfg.get<uint64_t>("plugin.VanillaAccelerator.baseaddr", 0x70001000));
+            }
+            case 6:
+            {
+                etiss::Configuration cfg;
+                cfg.config() = options;
+                return new etiss::plugin::QVanillaAcceleratorT(cfg.get<uint64_t>("plugin.QVanillaAcceleratorT.baseaddr", 0x70002000));
+                // return new etiss::plugin::VanillaAccelerator();
             }
 
         } 
