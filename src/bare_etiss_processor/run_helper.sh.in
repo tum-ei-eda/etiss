@@ -42,6 +42,7 @@ ENABLE_DMI="true"
 LOG_PC="false"
 LOG_LEVEL=4
 DO_TRACE=0
+NOLOOP=0
 JIT="TCCJIT"
 shift
 while [ "$#" -gt 0 ];
@@ -68,6 +69,8 @@ do
         JIT="TCCJIT"
     elif [ "$arg" = "llvm" ]; then
         JIT="LLVMJIT"
+    elif [ "$arg" = "noloop" ]; then
+        NOLOOP=1
     elif [ "$arg" = "vp" ]; then
         VP_EXE="$2"
         shift
@@ -88,6 +91,10 @@ echo -e "etiss.log_pc=${LOG_PC}" >> $DYN_INI
 if [ "${DO_TRACE}" -eq 1 ]; then
     echo -e "simple_mem_system.print_dbus_access=true" >> $DYN_INI
     echo -e "simple_mem_system.print_to_file=true" >> $DYN_INI
+fi
+
+if [ "${NOLOOP}" -eq 1 ]; then
+    echo -e "etiss.exit_on_loop=true" >> $DYN_INI
 fi
 
 echo -e "\n[IntConfigurations]\n" >> $DYN_INI
