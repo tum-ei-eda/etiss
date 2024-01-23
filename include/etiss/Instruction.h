@@ -414,7 +414,7 @@ class Instruction : public etiss::ToString
     Instruction(const OPCode &opc, const std::string &name);
     template <typename T, typename = typename std::enable_if<std::is_integral<T>::value, T>::type>
     Instruction(unsigned width, const T code, const T mask, const std::string &name)
-        : width(width), builtinGroups_(0), printer_(printASMSimple), opc_(OPCode(width, code, mask)), name_(name)
+        : builtinGroups_(0), printer_(printASMSimple), width(width), opc_(OPCode(width, code, mask)), name_(name)
     {
     }
     virtual std::string print(std::string indent, I pos, unsigned pfillwidth, bool printunused = false);

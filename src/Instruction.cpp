@@ -264,7 +264,7 @@ unsigned &InstructionContext::ufield(std::string name)
 }
 
 Instruction::Instruction(const OPCode &opc, const std::string &name)
-    : builtinGroups_(0), printer_(printASMSimple), opc_(opc), name_(name), width(opc.code_.size())
+    : builtinGroups_(0), printer_(printASMSimple), width(opc.code_.size()), opc_(opc), name_(name)
 {
 }
 std::string Instruction::printASMSimple(BitArray &ba, Instruction &instr)
@@ -349,7 +349,7 @@ void Instruction::setASMPrinter(std::function<std::string(BitArray &, Instructio
 }
 
 InstructionSet::InstructionSet(VariableInstructionSet &parent, unsigned width, const std::string &name, unsigned c_size)
-    : parent_(parent), name_(name), width_(width), root_(nullptr), invalid(width, -1, -1, "INVALID"), chunk_size(c_size)
+    : parent_(parent), name_(name), width_(width), chunk_size(c_size), root_(nullptr), invalid(width, -1, -1, "INVALID")
 {
 
 }
@@ -365,7 +365,7 @@ InstructionSet::~InstructionSet()
         iter = instrmap_.begin();
         delete i;
     }
-    for(int i = 0; i < width_ / chunk_size; i++)
+    for(unsigned int i = 0; i < width_ / chunk_size; i++)
         delete[] root_[i];
     delete root_;
 }

@@ -137,7 +137,7 @@ cp.code() += "{ // block\n";
 cp.code() += "if (*((RV64IMACFD*)cpu)->X[" + std::to_string(rs2 % 32ULL) + "ULL] != 0ULL) { // conditional\n";
 { // block
 cp.code() += "{ // block\n";
-etiss_int32 MMIN = 2147483648ULL;
+etiss_int32 MMIN = -2147483648LL;
 cp.code() += "if ((etiss_int32)(*((RV64IMACFD*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL]) == " + std::to_string(MMIN) + "LL && (etiss_int32)(*((RV64IMACFD*)cpu)->X[" + std::to_string(rs2 % 32ULL) + "ULL]) == -1LL) { // conditional\n";
 cp.code() += "*((RV64IMACFD*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = -2147483648LL;\n";
 cp.code() += "} // conditional\n";
@@ -317,7 +317,7 @@ cp.code() += "{ // block\n";
 cp.code() += "if (*((RV64IMACFD*)cpu)->X[" + std::to_string(rs2 % 32ULL) + "ULL] != 0ULL) { // conditional\n";
 { // block
 cp.code() += "{ // block\n";
-etiss_int32 MMIN = 2147483648ULL;
+etiss_int32 MMIN = -2147483648LL;
 cp.code() += "if ((etiss_int32)(*((RV64IMACFD*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL]) == " + std::to_string(MMIN) + "LL && (etiss_int32)(*((RV64IMACFD*)cpu)->X[" + std::to_string(rs2 % 32ULL) + "ULL]) == -1LL) { // conditional\n";
 cp.code() += "*((RV64IMACFD*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = 0ULL;\n";
 cp.code() += "} // conditional\n";

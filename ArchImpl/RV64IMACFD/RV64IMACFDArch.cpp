@@ -171,7 +171,7 @@ void RV64IMACFDArch::resetCPU(ETISS_CPU * cpu,etiss::uint64 * startpointer)
  	*rv64imacfdcpu->CSR[0] = 11;
 	*rv64imacfdcpu->CSR[256] = 11;
 	*rv64imacfdcpu->CSR[768] = 11;
-	*rv64imacfdcpu->CSR[769] = 9223372036856090925;
+	*rv64imacfdcpu->CSR[769] = 9223372036856090925ULL;
 	*rv64imacfdcpu->CSR[3088] = 3;
 	*rv64imacfdcpu->CSR[772] = 4294966203;
 	*rv64imacfdcpu->CSR[260] = 4294964019;
