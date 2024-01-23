@@ -491,6 +491,9 @@ etiss::int32 Translation::translateBlock(CodeBlock &cb)
             auto instr = &vis_->getMain()->getInvalid();
             CodeBlock::Line &line = cb.append(cb.endaddress_); // allocate codeset for instruction
             bool ok = instr->translate(errba, line.getCodeSet(), context);
+            if (unlikely(!ok)) {
+                return etiss::RETURNCODE::GENERALERROR;
+            }
             cb.endaddress_ += mainba.byteCount(); // update end address
             return etiss::RETURNCODE::NOERROR;
         }
