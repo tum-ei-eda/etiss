@@ -41,12 +41,22 @@
 */
 
 #ifndef NO_ETISS
+#include "etiss/fault/XML.h"
 #include "etiss/fault/Stressor.h"
-#include "etiss/Misc.h"
 #include "etiss/fault/Injector.h"
+#include "etiss/fault/InjectorAddress.h"
+#include "etiss/fault/Trigger.h"
+#include "etiss/fault/Action.h"
+#include "etiss/fault/Fault.h"
+#include "etiss/Misc.h"
 #else
-#include "fault/Injector.h"
+#include "fault/XML.h"
 #include "fault/Stressor.h"
+#include "fault/Injector.h"
+#include "fault/InjectorAddress.h"
+#include "fault/Trigger.h"
+#include "fault/Action.h"
+#include "fault/Fault.h"
 #endif
 
 #include <fstream>
@@ -104,7 +114,9 @@ bool Stressor::loadXML(const std::string &file, const int coreID)
 #endif
         return false;
     }
-    if (!etiss::fault::parseXML(faults, in, std::cout))
+    pugi::xml_document doc;
+
+    if (!etiss::fault::parseXML(doc, in, std::cout))
     {
 #ifdef NO_ETISS
         std::cout << "etiss::fault::Stressor::loadXML: Failed parse file " << file << std::endl;
