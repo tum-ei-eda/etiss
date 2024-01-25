@@ -110,6 +110,7 @@ extern "C"
     void PrintInstruction_print(const char *c, uint64_t addr)
     {
         std::cout << c;
+        std::cout.flush();
         if (addr == 0x6cac)
         {
             // std::cout << "TCOUNT: " << std::dec << ++pi_6cac << "\n";

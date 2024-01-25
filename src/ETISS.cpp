@@ -46,6 +46,12 @@
 #include <boost/program_options/variables_map.hpp>
 #include <boost/algorithm/string.hpp>
 
+#include "SimpleIni.h"
+// SimpleIni includes windows.h which defines NOERROR, clashing with our ReturnCode.
+#ifdef NOERROR
+#undef NOERROR
+#endif
+
 #if ETISS_USE_DLSYM
 #include <dlfcn.h>
 #endif
@@ -725,6 +731,7 @@ void etiss_initialize(const std::vector<std::string>& args, bool forced = false)
             ("arch.or1k.ignore_sr_iee", po::value<bool>(), "Ignore exception on OpenRISC.")
             ("arch.or1k.if_stall_cycles", po::value<int>(), "Add instruction stall cycles on OpenRISC.")
             ("arch.cpu_cycle_time_ps", po::value<int>(), "Sets CPU cycles time on OpenRISC and ARM.")
+            ("arch.enable_semihosting", po::value<bool>(), "Enables semihosting operations")
             ("etiss.enable_dmi", po::value<bool>(), "Enables the Direct Memory Interface feature of SystemC to speed up memory accesses. This needs to be disabled for memory tracing.")
             ("etiss.log_pc", po::value<bool>(), "Enables logging of the program counter.")
             ("etiss.max_block_size", po::value<int>(), "Sets maximum amount of instructions in a block.")
@@ -1004,3 +1011,4 @@ std::string etiss::errorMessage(etiss::int32 code, CPUArch *arch)
         }
     }
 }
+

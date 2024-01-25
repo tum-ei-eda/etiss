@@ -98,6 +98,11 @@ extern "C"
     typedef etiss_int64 etiss_intMax;
     typedef etiss_uint64 etiss_uintMax;
 
+#ifdef __GNUC__
+    typedef __int128_t etiss_int128;
+    typedef __uint128_t etiss_uint128;
+#endif
+
 #ifdef __cplusplus
 }
 #endif
@@ -120,6 +125,11 @@ typedef etiss_uint64 uint64;
 
 typedef etiss_intMax intMax;
 typedef etiss_uintMax uintMax;
+
+#ifdef __GNUC__
+typedef __int128_t etiss_int128;
+typedef __uint128_t etiss_uint128;
+#endif
 
 } // namespace etiss
 #endif

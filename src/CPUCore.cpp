@@ -142,6 +142,7 @@ CPUCore::CPUCore(std::shared_ptr<etiss::CPUArch> arch)
     , cpu_(arch->newCPU())
     , vcpu_(arch->getVirtualStruct(cpu_))
     , intvector_(arch->createInterruptVector(cpu_))
+    , intenable_(arch->createInterruptEnable(cpu_))
     , mmu_enabled_(false)
 {
     arch_->resetCPU(cpu_, 0);
@@ -685,6 +686,7 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
 
     // start execution loop
 
+    bool exit_on_loop = etiss::cfg().get<bool>("etiss.exit_on_loop", false);
 
     float startTime = (float)clock() / CLOCKS_PER_SEC; // TESTING
 
@@ -727,6 +729,11 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
                 // cpu->instructionPointer)){
                 // Transalte virtual address to physical address if MMU is enabled
                 uint64_t pma = cpu_->instructionPointer;
+
+                // remember pc and cpu time to check for loop to self instructions
+                uint64_t old_pc = cpu_->instructionPointer;
+                uint64_t old_time = cpu_->cpuTime_ps;
+
                 if (mmu_enabled_)
                 {
                     if (mmu_->cache_flush_pending)
@@ -784,6 +791,14 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
                     // In the generated code these plugin handles are named "plugin_pointers" and can be used to access
                     // a variable of the plugin
                     exception = (*(blptr->execBlock))(cpu_, system, plugins_handle_);
+
+                    // exit simulator when a loop to self instruction is encountered
+                    if (exit_on_loop && !exception &&
+                            old_time + cpu_->cpuCycleTime_ps == cpu_->cpuTime_ps &&
+                            old_pc == cpu_->instructionPointer)
+                    {
+                        exception = RETURNCODE::CPUFINISHED;
+                    }
 
 #if ETISS_CPUCORE_DBG_APPROXIMATE_INSTRUCTION_COUNTER
                     instrcounter +=

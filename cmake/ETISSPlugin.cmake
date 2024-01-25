@@ -27,4 +27,6 @@ ENDMACRO()
 
 MACRO(ETISSPluginArch ProjName)
     ETISSPluginArchName(${ProjName} ${ProjName})
+    get_property(jitlibs GLOBAL PROPERTY etiss_jitlibs)
+    TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC "${jitlibs}")
 ENDMACRO()

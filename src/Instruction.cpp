@@ -53,7 +53,7 @@
 
 #include <sstream>
 #include <cassert>
-
+#include <cmath>
 #if ETISS_USE_BYTESWAP_H
 #include <byteswap.h>
 #endif
@@ -64,247 +64,18 @@ namespace etiss
 namespace instr
 {
 
-BitArray::BitArray(unsigned width)
-    : intcount_(gen_intcount(width))
-    , d_(new I[intcount_])
-    , w_(width)
-    , bw_(gen_bytecount(width))
-    , endmask_(gen_mask(width, intcount_))
-    , bsvalid_(false)
-    , bscount_(nullptr)
-{
-    for (unsigned i = 0; i < intcount_; i++)
-    {
-        d_[i] = 0;
-    }
-}
+typedef BitArray::size_type size_type;
 
-BitArray::BitArray(const BitArray &o)
-    : intcount_(o.intcount_)
-    , d_(new I[o.intcount_])
-    , w_(o.w_)
-    , bw_(o.bw_)
-    , endmask_(o.endmask_)
-    , bsvalid_(o.bsvalid_)
-    , bscount_(bsvalid_ ? new unsigned[w_] : nullptr)
-{
-    for (unsigned i = 0; i < intcount_; i++)
-    {
-        d_[i] = o.d_[i];
-    }
-    if (bsvalid_)
-    {
-        for (unsigned i = 0; i < w_; i++)
-        {
-            bscount_[i] = o.bscount_[i];
-        }
-    }
-}
-BitArray::BitArray(BitArray &&o)
-    : intcount_(o.intcount_)
-    , d_(o.d_)
-    , w_(o.w_)
-    , bw_(o.bw_)
-    , endmask_(o.endmask_)
-    , bsvalid_(o.bsvalid_)
-    , bscount_(o.bscount_)
-{
-    o.d_ = nullptr;
-    o.bscount_ = nullptr;
-}
-BitArray &BitArray::operator=(BitArray &&o)
-{
-    if (w_ == o.w_)
-    { // move if same length
-        delete[] d_;
-        d_ = o.d_;
-        o.d_ = nullptr;
-        delete[] bscount_;
-        bscount_ = o.bscount_;
-        o.bscount_ = nullptr;
-    }
-    else
-    { // copy
-        BitArray &ba = o;
-        *this = ba;
-    }
-
-    return *this;
-}
-BitArray::~BitArray()
-{
-    delete[] d_;
-    delete[] bscount_;
-}
-
-bool BitArray::get(unsigned index) const
-{
-
-#if DEBUG
-    if (index >= w_)
-    {
-        throw "Index out of bounds";
-    }
-#endif
-
-    return ((d_[index >> aaddr_shift_] >> (index & aaddr_mask_)) & 1) != 0;
-}
-void BitArray::set(unsigned index, bool val)
-{
-
-#if DEBUG
-    if (index >= w_)
-    {
-        throw "Index out of bounds";
-    }
-#endif
-    bsvalid_ = false;
-    I &cur = d_[index >> aaddr_shift_];
-    I v = 1 << (index & aaddr_mask_);
-    if (val)
-    {
-        cur = cur | v;
-    }
-    else
-    {
-        cur = cur & ~v;
-    }
-}
-void BitArray::setAll(bool val)
-{
-    if (!val)
-    {
-        for (unsigned i = 0; i < intcount_; i++)
-        {
-            d_[i] = 0;
-        }
-    }
-    else
-    {
-        typedef std::make_signed<I>::type SI;
-        for (unsigned i = 0; i < intcount_; i++)
-        {
-            d_[i] = (I)((SI)-1);
-        }
-    }
-}
-BitArray BitArray::operator|(const BitArray &o) const
-{
-    unsigned width = (w_ > o.w_) ? w_ : o.w_;
-    unsigned intmin = (w_ < o.w_) ? intcount_ : o.intcount_;
-    BitArray ret(width);
-    for (unsigned i = 0; i < intmin; i++)
-    {
-        ret.d_[i] = d_[i] | o.d_[i];
-    }
-    return ret;
-}
-BitArray BitArray::operator&(const BitArray &o) const
-{
-    unsigned width = (w_ > o.w_) ? w_ : o.w_;
-    unsigned intmin = (w_ < o.w_) ? intcount_ : o.intcount_;
-    BitArray ret(width);
-    for (unsigned i = 0; i < intmin; i++)
-    {
-        ret.d_[i] = d_[i] & o.d_[i];
-    }
-    return ret;
-}
-BitArray BitArray::operator~() const
-{
-    BitArray ret(*this);
-    for (unsigned i = 0; i < intcount_; i++)
-    {
-        ret.d_[i] = ~ret.d_[i];
-    }
-    return ret;
-}
-bool BitArray::operator<(const BitArray &o) const
-{
-    if (w_ != o.w_)
-    {
-        return w_ < o.w_;
-    }
-    for (unsigned i = intcount_; i > 0; i--)
-    {
-        if (d_[i - 1] != o.d_[i - 1])
-            return d_[i - 1] < o.d_[i - 1];
-    }
-    return false;
-}
-bool BitArray::operator==(const BitArray &o) const
-{
-    if (w_ != o.w_)
-    {
-        return false;
-    }
-    for (unsigned i = intcount_; i > 0; i--)
-    {
-        if (d_[i - 1] != o.d_[i - 1])
-            return false;
-    }
-    return true;
-}
-
-BitArray &BitArray::operator=(const BitArray &o)
-{
-    if (o.w_ != w_)
-        throw std::runtime_error("operator= called with incompatible bit array");
-    for (unsigned i = 0; i < intcount_; i++)
-    {
-        d_[i] = o.d_[i];
-    }
-    bsvalid_ = o.bsvalid_;
-    if (bsvalid_)
-    {
-        if (bscount_ == nullptr)
-            bscount_ = new unsigned[w_];
-        for (unsigned i = 0; i < w_; i++)
-        {
-            bscount_[i] = o.bscount_[i];
-        }
-    }
-    return *this;
-}
-
-unsigned BitArray::getBitSetCount(unsigned index) const
-{
-    if (bscount_ == nullptr)
-        bscount_ = new unsigned[w_];
-    if (!bsvalid_)
-    {
-        unsigned p = 0;
-        for (unsigned i = 0; i < w_; i++)
-        {
-            bscount_[i] = 0;
-            if (!get(i))
-            {
-                for (unsigned j = p; j < i; j++)
-                {
-                    bscount_[j] = i - j;
-                }
-                p = i + 1;
-            }
-        }
-        for (unsigned j = p; j < w_; j++)
-        {
-            bscount_[j] = w_ - j;
-        }
-        bsvalid_ = true;
-    }
-    return bscount_[index];
-}
-
-char *BitArray::internalBuffer()
+char* Buffer::internalBuffer()
 {
     return static_cast<char *>(static_cast<void *>(d_));
 }
-unsigned BitArray::internalBufferSize()
+unsigned Buffer::internalBufferSize()
 {
     return intcount_ * sizeof(I);
 }
 
-void BitArray::recoverFromEndianness(unsigned alignment, endian_t endianness)
+void Buffer::recoverFromEndianness(unsigned alignment, endian_t endianness)
 {
     if (intcount_ <= 0)
         return;
@@ -360,113 +131,96 @@ void BitArray::recoverFromEndianness(unsigned alignment, endian_t endianness)
 #endif
 }
 
-const unsigned etiss::instr::BitArray::aaddr_mask_ = etiss_instr_generateMask();
-const unsigned etiss::instr::BitArray::aaddr_shift_ = etiss_instr_sqrt_2pow(sizeof(I) * 8);
-
-std::ostream &operator<<(std::ostream &os, const BitArray tf)
-{
-    os << "0x";
-    if (tf.wordCount() <= 0)
-    {
-        return os;
-    }
-    auto flagold = os.flags();
-    auto widthold = os.width();
-    auto fillold = os.fill();
-    os.flags(std::ios::right | std::ios::hex);
-    os.fill('0');
-    os.width((tf.byteCount() - sizeof(I) * (tf.wordCount() - 1)) * 2);
-    os << std::setw((tf.byteCount() * 8 - sizeof(I) * (tf.wordCount() - 1) * 8) >> 2)
-       << tf.getWord((tf.wordCount() - 1));
-    for (int i = ((int)tf.wordCount()) - 2; i >= 0; i--)
-        os << std::setw((sizeof(I) * 8) >> 2) << tf.getWord(i);
-    os.flags(flagold);
-    os.width(widthold);
-    os.fill(fillold);
-    return os;
-}
-
-BitArrayRange::BitArrayRange(unsigned startindex_included, unsigned endindex_included)
-    : filterStart_(startindex_included), filterEnd_(endindex_included), filterLen_(filterStart_ + 1 - filterEnd_)
-{
-    assert(filterStart_ + 1 >= filterEnd_ && "Invalid BitArrayRange constructor arguments");
-    assert(filterLen_ <= sizeof(I) * 8 && "Invalid BitArrayRange width");
-
-    lowPartShift_ = filterEnd_ % Ibits;
-    if (lowPartShift_ + filterLen_ <= Ibits)
-    {
-        needsSplitAccess_ = false;
-        dataArrayIndex_ = (filterEnd_ - lowPartShift_) / Ibits;
-        for (unsigned i = 0; i < filterLen_; i++)
-        {
-            lowPartMask_ = (lowPartMask_ << 1) | 1;
-        }
-    }
-    else
-    {
-        needsSplitAccess_ = true;
-        highPartShift_ = Ibits - lowPartShift_;
-        dataArrayIndex_ = (filterEnd_ - lowPartShift_) / Ibits;
-        for (unsigned i = 0; i < highPartShift_; i++)
-        {
-            lowPartMask_ = (lowPartMask_ << 1) | 1;
-        }
-        for (unsigned i = 0; i < (lowPartShift_ + filterLen_) * Ibits; i++)
-        {
-            highPartMask_ = (highPartMask_ << 1) | 1;
-        }
-    }
-}
-
-I BitArrayRange::read(const BitArray &ba)
-{
-    assert(ba.w_ > filterStart_ && "BitArrayRange outside of BitArray");
-
-    I ret = (ba.d_[dataArrayIndex_] >> lowPartShift_) & lowPartMask_;
-    if (needsSplitAccess_)
-    {
-        ret |= (ba.d_[dataArrayIndex_ + 1] & highPartMask_) << highPartShift_;
-    }
+unsigned BitArray::byteCount() const {
+    unsigned mod = size() % (8);
+    unsigned ret = (size() - mod) / (8);
+    if (mod > 0) ret++;
     return ret;
 }
-void BitArrayRange::write(const BitArray &ba, I val)
-{
-    assert(ba.w_ > filterStart_ && "BitArrayRange outside of BitArray");
-
-    ba.d_[dataArrayIndex_] =
-        ((val & lowPartMask_) << lowPartShift_) | (ba.d_[dataArrayIndex_] & ~(lowPartMask_ << lowPartShift_));
-    if (needsSplitAccess_)
-    {
-        ba.d_[dataArrayIndex_ + 1] =
-            ((val >> highPartShift_) & highPartMask_) | (ba.d_[dataArrayIndex_ + 1] & ~highPartMask_);
-    }
+unsigned BitArray::intCount() const {
+    unsigned mod = size() % (sizeof(I) * 8);
+    unsigned ret = (size() - mod) / (sizeof(I) * 8);
+    if (mod > 0) ret++;
+    return ret;
 }
 
-void BitArrayRange::setAll(const BitArray &ba, bool val)
+std::vector<BitArray> BitArray::permutate(const BitArray& input, std::vector<size_type> indexes)
 {
-    if (!val)
-    {
-        write(ba, 0);
+    std::vector<BitArray> results{input};
+    int count = 0;
+    for(const auto& i : indexes){
+        for(int j=0; j<(1<<count); j++){
+            results.push_back(results[j]);
+            results[j].flip(i);
+            results.push_back(results[j]);
+        }
+        results.erase(results.begin(), results.begin() + (1<<count));
+        count++;
     }
-    else
-    {
-        typedef std::make_signed<I>::type SI;
-        write(ba, (I)((SI)-1));
-    }
+    return results;
 }
 
-unsigned BitArrayRange::start()
-{
-    return filterStart_;
+void BitArray::set_value(size_type width, unsigned long value){
+    BitArray b(width, value);
+    *this = b;
 }
-unsigned BitArrayRange::end()
+
+void BitArray::set_value(unsigned long value){
+    set_value(size(), value);
+}
+
+BitArray BitArray::get_range(size_type end, size_type start) const
 {
-    return filterEnd_;
+    // shift the bits and resize it accordingly
+    BitArray ret = *this;
+    ret >>= start;
+    ret.resize(end-start+1);
+    return ret;
+}
+
+void BitArray::set_range(unsigned long val, size_type end, size_type start){
+    auto len = end - start + 1;
+    BitArray range(len, val);
+    for(size_type i = 0; i < len; ++i)
+        (*this)[i+start] = range[i];
+}
+
+std::string BitArray::to_string() const
+{
+    std::string s;
+    boost::to_string(*this, s);
+    return s;
+}
+
+BitArrayRange::BitArrayRange(unsigned endindex_included, unsigned startindex_included)
+    : startpos(startindex_included), endpos(endindex_included) {}
+
+I BitArrayRange::read(const BitArray& ba)
+{
+    assert(ba.size() >= (endpos - startpos + 1) && "BitArrayRange outside of BitArray");
+    auto range = ba.get_range(endpos, startpos);
+    return range.to_ulong();
+}
+
+void BitArrayRange::write(BitArray &ba, I val)
+{
+    assert(ba.size() >= (endpos - startpos + 1) && "BitArrayRange outside of BitArray");
+    ba.set_range(val, endpos, startpos);
+}
+
+BitArray::size_type BitArrayRange::start()
+{
+    return startpos;
+}
+
+BitArray::size_type BitArrayRange::end()
+{
+    return endpos;
 }
 
 OPCode::OPCode(const BitArray &code, const BitArray &mask) : code_(code & mask), mask_(mask)
 {
-    if (code_.width() != mask_.width())
+    if (code_.size() != mask_.size())
     {
         etiss::log(etiss::ERROR, "etiss::instr::OPCode constructed with code and mask of different widths");
         throw std::runtime_error("etiss::instr::OPCode constructed with code and mask of different widths");
@@ -504,294 +258,13 @@ bool less::operator()(const OPCode *const &o1, const OPCode *const &o2) const
     return (*o1) < (*o2);
 }
 
-Node::Node() : subs_(nullptr), reader_(nullptr) {}
-Node::~Node()
-{
-    if (subs_ != nullptr && reader_ != nullptr)
-    {
-        const unsigned w(reader_->start() + 1 - reader_->end());
-        for (I i = 0; i < (I(1) << w); i++)
-        {
-            if (subs_[i])
-            {
-                if (!subs_[i]->isInstruction()) // instruction objects are managed by InstructionSet
-                {
-                    delete subs_[i];
-                }
-            }
-        }
-        delete[] subs_;
-        delete reader_;
-    }
-}
-// Helper node to differentiate between instructions that have the same opcode
-// but a different mask. The more specific mask will match first, the delegate
-// to another node which may also be an OverlappedNode.
-class OverlappedNode : public Node, public etiss::ToString
-{
-public:
-    etiss_del_como(OverlappedNode)
-
-    OverlappedNode(Instruction *matchInstr, Node *delegateNode)
-        : m_matchInstr(matchInstr)
-        , m_delegateNode(delegateNode)
-    {
-    }
-
-    Instruction *resolve(BitArray &instr) override
-    {
-        auto &mask = m_matchInstr->opc_.mask_;
-        BitArrayRange reader(mask.width() - 1, 0);
-        if ((reader.read(instr) & reader.read(mask)) == reader.read(m_matchInstr->opc_.code_))
-        {
-            return m_matchInstr;
-        }
-        return m_delegateNode->resolve(instr);
-    }
-
-    std::string print(std::string indent, I pos, unsigned pfillwidth, bool printunused) override
-    {
-        std::stringstream ss;
-        ss.fill('0');
-        ss << indent << "@0x" << std::hex << std::setw(pfillwidth) << pos << std::dec << " OverlappedNode\n";
-        ss << m_matchInstr->print(indent + "\t", pos, pfillwidth, printunused);
-        ss << m_delegateNode->print(indent + "\t", pos, pfillwidth, printunused);
-        return ss.str();
-    }
-
-    Instruction *m_matchInstr;
-    Node *m_delegateNode;
-};
-static void AssertOnTrueCollision(Instruction *i1, Instruction *i2)
-{
-    if (i1->opc_ == i2->opc_)
-    {
-        etiss::log(etiss::FATALERROR, "ISA contains the same instruction multiple times!");
-    }
-}
-static void HandleCollision(Instruction *instr, Node *&node)
-{
-    auto otherInstr = dynamic_cast<Instruction*>(node);
-    if (otherInstr)
-    {
-        AssertOnTrueCollision(instr, otherInstr);
-        if ((instr->opc_.mask_ & otherInstr->opc_.mask_) == instr->opc_.mask_)
-        {
-            node = new OverlappedNode(otherInstr, instr);
-        } else {
-            node = new OverlappedNode(instr, node);
-        }
-    } else {
-        auto otherNode = dynamic_cast<OverlappedNode*>(node);
-        if (otherNode)
-        {
-            AssertOnTrueCollision(instr, otherNode->m_matchInstr);
-            if ((instr->opc_.mask_ & otherNode->m_matchInstr->opc_.mask_) == instr->opc_.mask_)
-            {
-                auto replacedNode = otherNode->m_delegateNode;
-                auto replInstr = dynamic_cast<Instruction*>(replacedNode);
-                BitArray replacedMask(instr->opc_.mask_.width());
-                if (replInstr)
-                {
-                    AssertOnTrueCollision(instr, replInstr);
-                    replacedMask = replInstr->opc_.mask_;
-                } else {
-                    auto replSpecNode = dynamic_cast<OverlappedNode*>(replacedNode);
-                    if (replSpecNode)
-                    {
-                        replacedMask = replSpecNode->m_matchInstr->opc_.mask_;
-                    } else {
-                        etiss::log(etiss::FATALERROR, "OverlappedNode delegate must not be a plain Node");
-                    }
-                }
-                if ((instr->opc_.mask_ & replacedMask) == instr->opc_.mask_)
-                {
-                    if (replInstr) {
-                        otherNode->m_delegateNode = new OverlappedNode(replInstr, instr);
-                    } else {
-                        auto replSpecNode = dynamic_cast<OverlappedNode *>(replacedNode);
-                        if (replSpecNode)
-                        {
-                            otherNode->m_delegateNode = new OverlappedNode(instr, replSpecNode);
-                        } else {
-                            etiss::log(etiss::FATALERROR, "OverlappedNode delegate must not be a plain Node");
-                        }
-                    }
-                } else {
-                    otherNode->m_delegateNode = new OverlappedNode(instr, replacedNode);
-                }
-            } else {
-                node = new OverlappedNode(instr, otherNode);
-            }
-        } else {
-            etiss::log(etiss::FATALERROR, "OverlappedNode delegate must not be a plain Node");
-        }
-    }
-}
-void Node::compile(const std::map<const OPCode *, Instruction *, etiss::instr::less> &instrmap_, const BitArray &used,
-                   bool &ok, std::list<std::string> &warnings, std::list<std::string> &errors)
-{
-    using MapType = std::remove_const<std::remove_reference<decltype(instrmap_)>::type>::type;
-
-    // This masks bits that have already been compiled.
-    BitArray mask(~used);
-    // Build mask that has only the bits set that are present in all masks.
-    for (const auto &op2instr : instrmap_)
-    {
-        mask = mask & op2instr.first->mask_;
-    }
-
-    for (unsigned i = 0; i < mask.width(); i++)
-    {
-        unsigned bsc = mask.getBitSetCount(i);
-        bsc = std::min(bsc, (unsigned)(sizeof(I) * 8) - 1);
-        if (bsc == 0)
-            continue;
-
-        reader_ = new BitArrayRange(i + bsc - 1, i);
-        size_t size = static_cast<size_t>(1) << bsc;
-        subs_ = new Node *[size]();
-        auto sub_maps = new MapType *[size]();
-
-        // Only set the bits from the current bit set being examined.
-        mask.setAll(false);
-        reader_->setAll(mask, true);
-        const BitArray newused(used | mask);
-
-        for (const auto &op2instr : instrmap_)
-        {
-            auto &op = op2instr.first;
-            auto &instr = op2instr.second;
-            auto &node = subs_[reader_->read(op->code_)];
-            auto &sub_map = sub_maps[reader_->read(op->code_)];
-
-            // Is this a finalized instruction?
-            if (op->mask_ == newused)
-            {
-                // Check if there was already a node.
-                if (node)
-                {
-                    // Try to convert existing node to overlap node.
-                    if (!sub_map || sub_map->empty())
-                    {
-                        etiss::log(etiss::FATALERROR, "Expecting non-empty sub_map for existing node");
-                    }
-                    else
-                    {
-                        Node *replaceNode = sub_map->begin()->second;
-                        for (const auto &subInstr : *sub_map)
-                        {
-                            HandleCollision(subInstr.second, replaceNode);
-                        }
-                        HandleCollision(instr, replaceNode);
-                        delete node;
-                        node = replaceNode;
-                    }
-                }
-                else
-                {
-                    node = instr;
-                }
-            }
-            else
-            {
-                if (!sub_map)
-                {
-                    if (node)
-                    {
-                        HandleCollision(instr, node);
-                    }
-                    else
-                    {
-                        node = new Node();
-                        sub_map = new MapType();
-                    }
-                }
-                if (sub_map)
-                {
-                    if (!sub_map->insert(op2instr).second)
-                    {
-                        etiss_log(ERROR, "failed to store instruction in map");
-                    }
-                }
-            }
-        }
-
-        for (size_t j = 0; j < size; j++)
-        {
-            if (sub_maps[j])
-            {
-                subs_[j]->compile(*sub_maps[j], newused, ok, warnings, errors);
-                delete sub_maps[j];
-            }
-        }
-        delete[] sub_maps;
-        // Done with the given tree.
-        return;
-    }
-
-    ok = true;
-}
-Instruction *Node::resolve(BitArray &instr)
-{
-#if DEBUG
-    if (subs_ == nullptr || reader_ == nullptr)
-        etiss::log(etiss::FATALERROR, "etiss::instr::Node::resolve called witout a previous valid compilation call");
-#endif
-    Node *sub = subs_[reader_->read(instr)];
-    if (unlikely(sub == nullptr))
-    {
-        return nullptr;
-    }
-    return sub->resolve(instr);
-}
-bool Node::isInstruction()
-{
-    return false;
-}
-std::string Node::print(std::string indent, I pos, unsigned pfillwidth, bool printunused)
-{
-    std::stringstream ss;
-    if (reader_ != nullptr && subs_ != nullptr)
-    {
-        ss << indent << "@0x" << std::hex << std::setw(pfillwidth) << pos << std::dec << " Node[" << reader_->start()
-           << ":" << reader_->end() << "]\n";
-        ss.fill('0');
-        std::string newindent = indent + "\t";
-        const unsigned w(reader_->start() + 1 - reader_->end());
-        int fillwidth = w >> 2;
-        if (w % 4)
-            fillwidth++;
-        for (I i = 0; i < (I(1) << w); i++)
-        {
-            Node *n = subs_[i];
-            if (n == nullptr)
-            {
-                if (printunused)
-                {
-                    ss << indent << "\t@0x" << std::hex << std::setw(fillwidth) << i << std::dec << " UNUSED\n";
-                }
-            }
-            else
-            {
-                ss << n->print(newindent, i, fillwidth, printunused);
-            }
-        }
-    }
-    else
-    {
-        ss << indent << "@0x" << std::hex << pos << std::dec << " Uninitialized Node\n";
-    }
-    return ss.str();
-}
-
 unsigned &InstructionContext::ufield(std::string name)
 {
     return ufields_[name];
 }
 
 Instruction::Instruction(const OPCode &opc, const std::string &name)
-    : builtinGroups_(0), printer_(printASMSimple), opc_(opc), name_(name)
+    : builtinGroups_(0), printer_(printASMSimple), width(opc.code_.size()), opc_(opc), name_(name)
 {
 }
 std::string Instruction::printASMSimple(BitArray &ba, Instruction &instr)
@@ -801,20 +274,6 @@ std::string Instruction::printASMSimple(BitArray &ba, Instruction &instr)
     return ss.str();
 }
 
-void Instruction::compile(const std::map<const OPCode *, Instruction *, etiss::instr::less> &instrmap_,
-                          const BitArray &used, bool &ok, std::list<std::string> &warnings,
-                          std::list<std::string> &errors)
-{
-    etiss::log(etiss::FATALERROR, "Instruction::compile should NEVER be called.");
-}
-Instruction *Instruction::resolve(BitArray &instr)
-{
-    return this; // already parse instruction?
-}
-bool Instruction::isInstruction()
-{
-    return true;
-}
 std::string Instruction::print(std::string indent, I pos, unsigned pfillwidth, bool printunused)
 {
     std::stringstream ss;
@@ -889,26 +348,14 @@ void Instruction::setASMPrinter(std::function<std::string(BitArray &, Instructio
         printer_ = printASMSimple;
 }
 
-InstructionSet::InstructionSet(VariableInstructionSet &parent, unsigned width, const std::string &name)
-    : parent_(parent), name_(name), width_(width), root_(nullptr), invalid(width, -1, -1, "INVALID")
+InstructionSet::InstructionSet(VariableInstructionSet &parent, unsigned width, const std::string &name, unsigned c_size)
+    : parent_(parent), name_(name), width_(width), chunk_size(c_size), root_(nullptr), invalid(width, -1, -1, "INVALID")
 {
 
-    invalid.addCallback(
-        [](BitArray &ba, CodeSet &cs, InstructionContext &ic) {
-            std::stringstream ss;
-            ss << "\t\treturn ETISS_RETURNCODE_ILLEGALINSTRUCTION;";
-            //#if DEBUG
-            ss << " // @0x" << std::hex << ic.current_address_ << std::dec << ": " << ba;
-            //#endif
-            ss << "\n";
-            cs.append(CodePart::APPENDEDRETURNINGREQUIRED).code() = ss.str();
-            return true;
-        },
-        0);
 }
+
 InstructionSet::~InstructionSet()
 {
-    delete root_;
     auto iter = instrmap_.begin();
     // delete instructions
     while (iter != instrmap_.end())
@@ -918,6 +365,9 @@ InstructionSet::~InstructionSet()
         iter = instrmap_.begin();
         delete i;
     }
+    for(unsigned int i = 0; i < width_ / chunk_size; i++)
+        delete[] root_[i];
+    delete root_;
 }
 
 Instruction *InstructionSet::get(const OPCode &key)
@@ -963,38 +413,72 @@ Instruction *InstructionSet::create(const OPCode &key, const std::string &name)
 bool InstructionSet::compile()
 {
     delete root_; // cleanup
-    root_ = nullptr;
 
-    root_ = new Node();
-
-    std::list<std::string> warnings;
-    std::list<std::string> errors;
+    root_ = new Node*[width_ / chunk_size](); // number of groups = width_ / chunk_size
 
     bool ok = true;
 
-    BitArray emptymask(width_);
-    emptymask.setAll(false);
+    std::vector<size_type> indexes;
+    for (const auto& op2instr : instrmap_){ // iterate through all instructions
+        Instruction* inst = op2instr.second; // current instruction to be assigned
+        BitArray code = op2instr.first->code_; // opcode of the current instruction
+        BitArray mask = op2instr.first->mask_; // mask of the opcode
 
-    root_->compile(instrmap_, emptymask, ok, warnings, errors);
+        // iterate through chunks and permutate chunks. then put them into nodes
+        for (size_type i = 0; i < mask.size() / chunk_size; ++i){
+            auto chunk_bits_code = code.get_range((i+1)*chunk_size-1, i*chunk_size); // ith chunk of the opcode
+            auto chunk_bits_mask = mask.get_range((i+1)*chunk_size-1, i*chunk_size); // ith chunk of the mask
 
-    for (auto iter = warnings.begin(); iter != warnings.end(); iter++)
-        etiss::log(etiss::WARNING, *iter);
+            indexes.clear();
+            for (size_type j = 0; j < chunk_bits_mask.size(); ++j)
+                if (!chunk_bits_mask[j]) indexes.push_back(j); // these indexed should be permutated since
+                                                               // they dont have associated mask bit
 
-    for (auto iter = errors.begin(); iter != errors.end(); iter++)
-        etiss::log(etiss::ERROR, *iter);
+            if(!(root_[i])) // not initialized
+                root_[i] = new Node[(int)std::pow(2, chunk_size)]; // each group has 2^(chunksize) nodes
 
-    if (!ok)
-    {
-        delete root_;
-        root_ = nullptr;
+            auto permutated_chunk_codes = BitArray::permutate(chunk_bits_code, indexes); // put permutated codes
+
+            for(const auto& permutated_chunk : permutated_chunk_codes){
+                auto val = permutated_chunk.to_ulong(); // index of the node based on the value of the chunk
+                root_[i][val].insert(inst); // assign the current instruction to the associated node
+            }
+        }
     }
-
     return ok;
 }
 
 Instruction *InstructionSet::resolve(BitArray &instr)
 {
-    return root_->resolve(instr);
+    std::set<Instruction*> results;
+    for (size_type i = 0; i < instr.size() / chunk_size; ++i){ // divide the incoming bitarray into chunks
+        auto chunk_bits_code = instr.get_range((i+1)*chunk_size-1, i*chunk_size); // get ith chunk
+
+        auto val = chunk_bits_code.to_ulong(); // the value chunk is evaluated to,
+                                               // which is also the index of the associated node
+        auto instrs_in_node = root_[i][val]; // val'th node
+
+        if(i==0) results = instrs_in_node;
+        else{ // intersect all the associated nodes, the result will be the decoded instruction
+            std::set<Instruction*> results_o;
+            std::set_intersection(results.begin(), results.end(), // intersect the ith node with the
+                instrs_in_node.begin(), instrs_in_node.end(),     // current results
+                std::inserter(results_o, results_o.begin()));     // put overlapped instructions to results_o
+            results = results_o; // write the overlapped instructions to results
+        }
+    }
+
+    if(results.empty()) return nullptr; // there is no overlapped instruction after the decoding
+    else if(results.size() == 1) return *(results.begin()); // instruction is found succesfully
+    else{
+        // sometimes an instruction can be a subset of another instruction and hence the
+        // algorithm can find multiple instruction. In such cases, it is returning the parent
+        // instruction by simply returning the instrucion whose opcode is the longest,
+        // i.e mask has the most 1-bits.
+        auto longest = std::max_element(results.begin(), results.end(),
+            [](const Instruction* lhs, const Instruction* rhs) { return lhs->opc_.mask_.count() < rhs->opc_.mask_.count();});
+        return *longest;
+    }
 }
 
 std::string InstructionSet::print(std::string prefix, bool printunused)
@@ -1003,7 +487,6 @@ std::string InstructionSet::print(std::string prefix, bool printunused)
     {
         std::stringstream ss;
         ss << prefix << name_ << "[" << width_ << "]:\n";
-        ss << root_->print(prefix + "\t", 0, 1, printunused);
         return ss.str();
     }
     else

@@ -1,5 +1,5 @@
 /**
- * Generated on Tue, 01 Mar 2022 00:20:25 +0100.
+ * Generated on Tue, 28 Nov 2023 09:45:19 +0100.
  *
  * This file contains the architecture class for the RV32IMACFD core architecture.
  */
@@ -35,8 +35,6 @@
  *********************************************************************************************************************************/
 
 #include "RV32IMACFDArch.h"
-
-#define ETISS_ARCH_STATIC_FN_ONLY
 #include "RV32IMACFDFuncs.h"
 
 #define RV32IMACFD_DEBUG_CALL 0
@@ -67,6 +65,7 @@ void RV32IMACFDArch::resetCPU(ETISS_CPU * cpu,etiss::uint64 * startpointer)
 
 	if (startpointer) cpu->instructionPointer = *startpointer & ~((etiss::uint64)0x1);
 	else cpu->instructionPointer = 0x0;   //  reference to manual
+	cpu->nextPc = cpu->instructionPointer;
 	cpu->mode = 1;
 	cpu->cpuTime_ps = 0;
 	cpu->cpuCycleTime_ps = 31250;
@@ -122,6 +121,9 @@ void RV32IMACFDArch::resetCPU(ETISS_CPU * cpu,etiss::uint64 * startpointer)
 	rv32imacfdcpu->PRIV = 0;
 	rv32imacfdcpu->DPC = 0;
 	rv32imacfdcpu->FCSR = 0;
+	rv32imacfdcpu->MSTATUS = 0;
+	rv32imacfdcpu->MIE = 0;
+	rv32imacfdcpu->MIP = 0;
 	for (int i = 0; i < 32; ++i) {
 		rv32imacfdcpu->F[i] = 0;
 	}
@@ -160,6 +162,9 @@ void RV32IMACFDArch::resetCPU(ETISS_CPU * cpu,etiss::uint64 * startpointer)
  	rv32imacfdcpu->X[30] = &rv32imacfdcpu->T5;
  	rv32imacfdcpu->X[31] = &rv32imacfdcpu->T6;
  	rv32imacfdcpu->CSR[3] = &rv32imacfdcpu->FCSR;
+ 	rv32imacfdcpu->CSR[768] = &rv32imacfdcpu->MSTATUS;
+ 	rv32imacfdcpu->CSR[772] = &rv32imacfdcpu->MIE;
+ 	rv32imacfdcpu->CSR[836] = &rv32imacfdcpu->MIP;
 
  	rv32imacfdcpu->PRIV = 3;
  	rv32imacfdcpu->DPC = 0;
@@ -207,7 +212,9 @@ void RV32IMACFDArch::initCodeBlock(etiss::CodeBlock & cb) const
 {
 	cb.fileglobalCode().insert("#include \"Arch/RV32IMACFD/RV32IMACFD.h\"\n");
 	cb.fileglobalCode().insert("#include \"Arch/RV32IMACFD/RV32IMACFDFuncs.h\"\n");
-	cb.functionglobalCode().insert("etiss_uint32 exception = 0;\n");
+	cb.functionglobalCode().insert("cpu->exception = 0;\n");
+	cb.functionglobalCode().insert("cpu->return_pending = 0;\n");
+	cb.functionglobalCode().insert("etiss_uint32 mem_ret_code = 0;\n");
 }
 
 etiss::plugin::gdb::GDBCore & RV32IMACFDArch::getGDBCore()

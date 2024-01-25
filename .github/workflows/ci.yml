@@ -11,8 +11,8 @@ jobs:
       matrix:
         config:
           - {name: "Linux", os: ubuntu-latest, cmakegen: "", llvm: "linux-gnu-ubuntu-20.04", llvm-ext: ".tar.xz", tc: "linux-ubuntu14", tc-ext: ".tar.gz", unpack: "tar xf"}
-          - {name: "Windows", os: windows-latest, cmakegen: "-G \"Unix Makefiles\" -DCMAKE_MAKE_PROGRAM=make", llvm: "", llvm-ext: "", tc: "w64-mingw32", tc-ext: ".zip", unpack: "unzip"}
-          - {name: "Mac", os: macos-10.15, cmakegen: "", llvm: "apple-darwin", llvm-ext: ".tar.xz", tc: "apple-darwin", tc-ext: ".tar.gz", unpack: "tar xf"}
+          #- {name: "Windows", os: windows-latest, cmakegen: "-G \"Unix Makefiles\" -DCMAKE_MAKE_PROGRAM=make", llvm: "", llvm-ext: "", tc: "w64-mingw32", tc-ext: ".zip", unpack: "unzip"}
+          #- {name: "Mac", os: macos-10.15, cmakegen: "", llvm: "apple-darwin", llvm-ext: ".tar.xz", tc: "apple-darwin", tc-ext: ".tar.gz", unpack: "tar xf"}
 
     runs-on: ${{ matrix.config.os }}
     name: ${{ matrix.config.name }}_build
@@ -127,8 +127,8 @@ jobs:
       matrix:
         config:
           - {name: "Linux", os: ubuntu-latest, cmakegen: "", llvm: "linux-gnu-ubuntu-20.04", llvm-ext: ".tar.xz", tc: "linux-ubuntu14", tc-ext: ".tar.gz", unpack: "tar xf"}
-          - {name: "Windows", os: windows-latest, cmakegen: "-G \"MinGW Makefiles\"", llvm: "", llvm-ext: "", tc: "w64-mingw32", tc-ext: ".zip", unpack: "unzip"}
-          - {name: "Mac", os: macos-10.15, cmakegen: "", llvm: "apple-darwin", llvm-ext: ".tar.xz", tc: "apple-darwin", tc-ext: ".tar.gz", unpack: "tar xf"}
+          #- {name: "Windows", os: windows-latest, cmakegen: "-G \"MinGW Makefiles\"", llvm: "", llvm-ext: "", tc: "w64-mingw32", tc-ext: ".zip", unpack: "unzip"}
+          #- {name: "Mac", os: macos-10.15, cmakegen: "", llvm: "apple-darwin", llvm-ext: ".tar.xz", tc: "apple-darwin", tc-ext: ".tar.gz", unpack: "tar xf"}
 
     needs: build
     runs-on: ${{ matrix.config.os }}
@@ -171,14 +171,14 @@ jobs:
       if: matrix.config.name == 'Linux'
       shell: bash
       run: |
-        ./run_helper.sh ../examples/SW/riscv/build/riscv_example.elf
-        ./run_helper.sh ../examples/SW/riscv/build/riscv_example.elf gcc
-        ./run_helper.sh ../examples/SW/riscv/build/riscv_example.elf llvm
-        ./run_helper.sh ../examples/SW/riscv_cpp/build/riscv_example.elf
-        ./run_helper.sh ../examples/SW/riscv_cpp/build/riscv_example.elf gcc
-        ./run_helper.sh ../examples/SW/riscv_cpp/build/riscv_example.elf llvm
-        ./run_helper.sh ../examples/SW/riscv/build64/riscv_example.elf
-        ./run_helper.sh ../examples/SW/riscv_cpp/build64/riscv_example.elf
+        ./run_helper.sh ../examples/SW/riscv/build/riscv_example.elf noloop
+        ./run_helper.sh ../examples/SW/riscv/build/riscv_example.elf gcc noloop
+        ./run_helper.sh ../examples/SW/riscv/build/riscv_example.elf llvm noloop
+        ./run_helper.sh ../examples/SW/riscv_cpp/build/riscv_example.elf noloop
+        ./run_helper.sh ../examples/SW/riscv_cpp/build/riscv_example.elf gcc noloop
+        ./run_helper.sh ../examples/SW/riscv_cpp/build/riscv_example.elf llvm noloop
+        ./run_helper.sh ../examples/SW/riscv/build64/riscv_example.elf noloop
+        ./run_helper.sh ../examples/SW/riscv_cpp/build64/riscv_example.elf noloop
 
     # - name: Test (Windows)
     #   working-directory: ${{runner.workspace}}/install/examples/bare_etiss_processor/build
@@ -218,7 +218,7 @@ jobs:
     - name: Requirements (Linux)
       run: |
         sudo apt-get install libboost-system-dev libboost-filesystem-dev libboost-program-options-dev
-      
+
     - name: create directory to store results
       working-directory: ${{runner.workspace}}
       run: mkdir ${{runner.workspace}}/results
@@ -226,7 +226,7 @@ jobs:
     - name: Run Benchmarks
       working-directory: ${{runner.workspace}}/install/bin
       run: |
-        ./run_helper.sh ../examples/SW/riscv_dhry/build/riscv_example ${{matrix.jit-engine}} --vp.stats_file_path=${{runner.workspace}}/results/run.json
+        ./run_helper.sh ../examples/SW/riscv_dhry/build/riscv_example ${{matrix.jit-engine}} noloop --vp.stats_file_path=${{runner.workspace}}/results/run.json
         mv ${{runner.workspace}}/results/run.json ${{runner.workspace}}/results/run_${{matrix.jit-engine}}_${{matrix.run-no}}.json
 
     - name: Save Benchmark Results
@@ -441,7 +441,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Delete Artifact
-        uses: geekyeggo/delete-artifact@1-glob-support
+        uses: geekyeggo/delete-artifact@v2
         with:
           name: "*"
           useGlob: true
