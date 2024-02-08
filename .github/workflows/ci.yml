@@ -18,7 +18,7 @@ jobs:
     name: ${{ matrix.config.name }}_build
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
 
     - name: Requirements (Linux)
       if: matrix.config.name == 'Linux'
@@ -117,7 +117,7 @@ jobs:
       run: tar -C ${{runner.workspace}} -cvf ${{runner.workspace}}/etiss.tar install
 
     - name: Upload Compiled System
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: etiss-${{matrix.config.name}}.tar
         path: ${{runner.workspace}}/etiss.tar
@@ -136,7 +136,7 @@ jobs:
 
     steps:
     - name: Fetch Compiled System
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v4
       with:
         name: etiss-${{matrix.config.name}}.tar
         path: ${{runner.workspace}}
@@ -206,7 +206,7 @@ jobs:
 
     steps:
     - name: Fetch Compiled System
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v4
       with:
         name: etiss-Linux.tar
         path: ${{runner.workspace}}
@@ -230,7 +230,7 @@ jobs:
         mv ${{runner.workspace}}/results/run.json ${{runner.workspace}}/results/run_${{matrix.jit-engine}}_${{matrix.run-no}}.json
 
     - name: Save Benchmark Results
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: run_${{matrix.jit-engine}}_${{matrix.run-no}}.json
         path: ${{runner.workspace}}/results/run_${{matrix.jit-engine}}_${{matrix.run-no}}.json
@@ -240,10 +240,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Fetch results
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           path: artifacts
 
@@ -258,7 +258,7 @@ jobs:
         run: pip install -r script/requirements.txt
 
       - name: get old benchmark results
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           ref: benchmark_results
           path: benchmark_results_old
@@ -287,27 +287,27 @@ jobs:
           enable_jekyll: true
 
       - name: uploading benchmark_results
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: stats_file.json
 
           path: benchmark_results_old/stats_file.json
 
       - name: uploading image
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: performance_metrics.svg
           path: results_/performance_metrics.svg
 
       - name: Upload comment text
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: issue.md
 
           path: results_/issue.md
 
       - name: Upload wiki text
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: wiki.md
           path: results_/wiki.md
@@ -319,7 +319,7 @@ jobs:
 #
 #    steps:
 #      - name: Get comment text
-#        uses: actions/download-artifact@v2
+#        uses: actions/download-artifact@v4
 #        with:
 #          name: issue.md
 #
@@ -362,7 +362,7 @@ jobs:
 
     steps:
       - name: Get comment text
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: issue.md
 
@@ -407,12 +407,12 @@ jobs:
 
     steps:
       - name: Get comment text
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: wiki.md
 
       - name: Get performance_metrics.svg
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: performance_metrics.svg
 
@@ -438,7 +438,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Delete Artifact
         uses: geekyeggo/delete-artifact@v2
