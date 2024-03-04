@@ -43,7 +43,7 @@
 #include "TracePrinter.h"
 #include "etiss/SimpleMemSystem.h"
 #include "etiss/ETISS.h"
-
+#include "etiss/CoreDSLCoverage.h"
 
 int main(int argc, const char *argv[])
 {
@@ -149,6 +149,7 @@ int main(int argc, const char *argv[])
     std::cout << "CPU0 exited with exception: 0x" << std::hex << exception << std::dec << ": "
               << etiss::RETURNCODE::getErrorMessages()[exception] << std::endl;
 
+    auto test = coverage_map.find(15);
 
     switch(exception){
         case etiss::RETURNCODE::CPUFINISHED:
