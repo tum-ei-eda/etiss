@@ -1,5 +1,5 @@
 /**
- * Generated on Tue, 28 Nov 2023 09:45:19 +0100.
+ * Generated on Mon, 04 Mar 2024 18:55:53 +0100.
  *
  * This file contains the instruction behavior models of the RV32DC
  * instruction set for the RV32IMACFD core architecture.
@@ -49,11 +49,13 @@ uimm += R_uimm_3.read(ba) << 3;
 { // block
 cp.code() += "{ // block\n";
 cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2) + "ULL;\n";
+cp.code() += "etiss_coverage_count(3, 833, 829, 832);\n";
 cp.code() += "} // block\n";
 } // block
 { // block
 cp.code() += "{ // block\n";
 cp.code() += "etiss_uint32 offs = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 + 8ULL) + "ULL] + " + std::to_string(uimm) + "ULL;\n";
+cp.code() += "etiss_coverage_count(2, 5138, 5137);\n";
 cp.code() += "etiss_uint64 mem_val_0;\n";
 cp.code() += "cpu->exception |= (*(system->dread))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_0, 8);\n";
 cp.code() += "if (cpu->exception) { // conditional\n";
@@ -65,7 +67,9 @@ cp.code() += "} // procedure\n";
 } // procedure
 cp.code() += "} // conditional\n";
 cp.code() += "etiss_uint64 res = (etiss_uint64)(mem_val_0);\n";
+cp.code() += "etiss_coverage_count(1, 5142);\n";
 cp.code() += "((RV32IMACFD*)cpu)->F[" + std::to_string(rd + 8ULL) + "ULL] = res;\n";
+cp.code() += "etiss_coverage_count(3, 5150, 5148, 5149);\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
@@ -148,13 +152,16 @@ uimm += R_uimm_3.read(ba) << 3;
 { // block
 cp.code() += "{ // block\n";
 cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2) + "ULL;\n";
+cp.code() += "etiss_coverage_count(3, 833, 829, 832);\n";
 cp.code() += "} // block\n";
 } // block
 { // block
 cp.code() += "{ // block\n";
 cp.code() += "etiss_uint32 offs = *((RV32IMACFD*)cpu)->X[" + std::to_string(rs1 + 8ULL) + "ULL] + " + std::to_string(uimm) + "ULL;\n";
+cp.code() += "etiss_coverage_count(2, 5171, 5170);\n";
 cp.code() += "etiss_uint64 mem_val_0;\n";
 cp.code() += "mem_val_0 = (etiss_uint64)(((RV32IMACFD*)cpu)->F[" + std::to_string(rs2 + 8ULL) + "ULL]);\n";
+cp.code() += "etiss_coverage_count(2, 5179, 5174);\n";
 cp.code() += "cpu->exception |= (*(system->dwrite))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_0, 8);\n";
 cp.code() += "if (cpu->exception) { // conditional\n";
 { // procedure
@@ -245,11 +252,13 @@ uimm += R_uimm_5.read(ba) << 5;
 { // block
 cp.code() += "{ // block\n";
 cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2) + "ULL;\n";
+cp.code() += "etiss_coverage_count(3, 833, 829, 832);\n";
 cp.code() += "} // block\n";
 } // block
 { // block
 cp.code() += "{ // block\n";
 cp.code() += "etiss_uint32 offs = *((RV32IMACFD*)cpu)->X[2ULL] + " + std::to_string(uimm) + "ULL;\n";
+cp.code() += "etiss_coverage_count(2, 5186, 5185);\n";
 cp.code() += "etiss_uint64 mem_val_0;\n";
 cp.code() += "cpu->exception |= (*(system->dread))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_0, 8);\n";
 cp.code() += "if (cpu->exception) { // conditional\n";
@@ -261,7 +270,9 @@ cp.code() += "} // procedure\n";
 } // procedure
 cp.code() += "} // conditional\n";
 cp.code() += "etiss_uint64 res = (etiss_uint64)(mem_val_0);\n";
+cp.code() += "etiss_coverage_count(1, 5190);\n";
 cp.code() += "((RV32IMACFD*)cpu)->F[" + std::to_string(rd) + "ULL] = res;\n";
+cp.code() += "etiss_coverage_count(3, 5197, 5195, 5196);\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
@@ -340,13 +351,16 @@ uimm += R_uimm_3.read(ba) << 3;
 { // block
 cp.code() += "{ // block\n";
 cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 2) + "ULL;\n";
+cp.code() += "etiss_coverage_count(3, 833, 829, 832);\n";
 cp.code() += "} // block\n";
 } // block
 { // block
 cp.code() += "{ // block\n";
 cp.code() += "etiss_uint32 offs = *((RV32IMACFD*)cpu)->X[2ULL] + " + std::to_string(uimm) + "ULL;\n";
+cp.code() += "etiss_coverage_count(2, 5215, 5214);\n";
 cp.code() += "etiss_uint64 mem_val_0;\n";
 cp.code() += "mem_val_0 = (etiss_uint64)(((RV32IMACFD*)cpu)->F[" + std::to_string(rs2) + "ULL]);\n";
+cp.code() += "etiss_coverage_count(2, 5222, 5218);\n";
 cp.code() += "cpu->exception |= (*(system->dwrite))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_0, 8);\n";
 cp.code() += "if (cpu->exception) { // conditional\n";
 { // procedure

@@ -1,5 +1,5 @@
 /**
- * Generated on Tue, 28 Nov 2023 09:45:19 +0100.
+ * Generated on Mon, 04 Mar 2024 18:11:21 +0100.
  *
  * This file contains the architecture class for the RV32IMACFD core architecture.
  */
@@ -124,6 +124,7 @@ void RV32IMACFDArch::resetCPU(ETISS_CPU * cpu,etiss::uint64 * startpointer)
 	rv32imacfdcpu->MSTATUS = 0;
 	rv32imacfdcpu->MIE = 0;
 	rv32imacfdcpu->MIP = 0;
+	rv32imacfdcpu->MHARTID = 0;
 	for (int i = 0; i < 32; ++i) {
 		rv32imacfdcpu->F[i] = 0;
 	}
@@ -165,6 +166,7 @@ void RV32IMACFDArch::resetCPU(ETISS_CPU * cpu,etiss::uint64 * startpointer)
  	rv32imacfdcpu->CSR[768] = &rv32imacfdcpu->MSTATUS;
  	rv32imacfdcpu->CSR[772] = &rv32imacfdcpu->MIE;
  	rv32imacfdcpu->CSR[836] = &rv32imacfdcpu->MIP;
+ 	rv32imacfdcpu->CSR[3860] = &rv32imacfdcpu->MHARTID;
 
  	rv32imacfdcpu->PRIV = 3;
  	rv32imacfdcpu->DPC = 0;
