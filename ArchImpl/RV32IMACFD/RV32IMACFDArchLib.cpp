@@ -1,5 +1,5 @@
 /**
- * Generated on Tue, 28 Nov 2023 09:45:19 +0100.
+ * Generated on Tue, 05 Mar 2024 20:17:20 +0100.
  *
  * This file contains the library interface for the RV32IMACFD core architecture.
  */
@@ -10,6 +10,7 @@
 #define ETISS_LIBNAME RV32IMACFD
 #include "etiss/helper/CPUArchLibrary.h" // defines the following functions
 #include "RV32IMACFDArch.h"
+#include <string>
 extern "C" {
 
 	ETISS_LIBRARYIF_VERSION_FUNC_IMPL
@@ -36,7 +37,16 @@ extern "C" {
 		switch (index)
 		{
 		case 0:
-			return new RV32IMACFDArch();
+			{
+				auto it = options.find("coreno");
+				unsigned int coreno = 0;
+				if (it != options.end())
+					coreno = std::stoul(it->second);
+				else
+					etiss::log(etiss::WARNING, "no core number provided for core, using 0");
+
+				return new RV32IMACFDArch(coreno);
+			}
 		default:
 			return 0;
 		}

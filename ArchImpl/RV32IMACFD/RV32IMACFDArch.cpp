@@ -1,5 +1,5 @@
 /**
- * Generated on Mon, 04 Mar 2024 18:11:21 +0100.
+ * Generated on Tue, 05 Mar 2024 20:17:20 +0100.
  *
  * This file contains the architecture class for the RV32IMACFD core architecture.
  */
@@ -41,7 +41,7 @@
 using namespace etiss ;
 using namespace etiss::instr ;
 
-RV32IMACFDArch::RV32IMACFDArch():CPUArch("RV32IMACFD")
+RV32IMACFDArch::RV32IMACFDArch(unsigned int coreno):CPUArch("RV32IMACFD"), coreno_(coreno)
 {
 	headers_.insert("Arch/RV32IMACFD/RV32IMACFD.h");
 }
@@ -124,7 +124,6 @@ void RV32IMACFDArch::resetCPU(ETISS_CPU * cpu,etiss::uint64 * startpointer)
 	rv32imacfdcpu->MSTATUS = 0;
 	rv32imacfdcpu->MIE = 0;
 	rv32imacfdcpu->MIP = 0;
-	rv32imacfdcpu->MHARTID = 0;
 	for (int i = 0; i < 32; ++i) {
 		rv32imacfdcpu->F[i] = 0;
 	}
@@ -166,7 +165,6 @@ void RV32IMACFDArch::resetCPU(ETISS_CPU * cpu,etiss::uint64 * startpointer)
  	rv32imacfdcpu->CSR[768] = &rv32imacfdcpu->MSTATUS;
  	rv32imacfdcpu->CSR[772] = &rv32imacfdcpu->MIE;
  	rv32imacfdcpu->CSR[836] = &rv32imacfdcpu->MIP;
- 	rv32imacfdcpu->CSR[3860] = &rv32imacfdcpu->MHARTID;
 
  	rv32imacfdcpu->PRIV = 3;
  	rv32imacfdcpu->DPC = 0;
@@ -179,6 +177,7 @@ void RV32IMACFDArch::resetCPU(ETISS_CPU * cpu,etiss::uint64 * startpointer)
 	*rv32imacfdcpu->CSR[260] = 4294964019;
 	*rv32imacfdcpu->CSR[4] = 4294963473;
  	rv32imacfdcpu->RES_ADDR = -1;
+
 }
 
 void RV32IMACFDArch::deleteCPU(ETISS_CPU *cpu)

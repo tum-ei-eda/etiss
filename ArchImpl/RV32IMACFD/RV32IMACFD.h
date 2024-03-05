@@ -1,5 +1,5 @@
 /**
- * Generated on Mon, 04 Mar 2024 18:11:21 +0100.
+ * Generated on Tue, 05 Mar 2024 20:17:20 +0100.
  *
  * This file contains the registers for the RV32IMACFD core architecture.
  */
@@ -57,7 +57,6 @@ struct RV32IMACFD {
 	etiss_uint32 MSTATUS;
 	etiss_uint32 MIE;
 	etiss_uint32 MIP;
-	etiss_uint32 MHARTID;
 	etiss_uint32 *CSR[4096];
 	etiss_uint32 ins_CSR[4096];
 	etiss_uint64 F[32];

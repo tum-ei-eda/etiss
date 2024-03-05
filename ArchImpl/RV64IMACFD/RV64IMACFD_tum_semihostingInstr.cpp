@@ -1,5 +1,5 @@
 /**
- * Generated on Tue, 28 Nov 2023 09:45:19 +0100.
+ * Generated on Tue, 05 Mar 2024 21:20:27 +0100.
  *
  * This file contains the instruction behavior models of the tum_semihosting
  * instruction set for the RV64IMACFD core architecture.
@@ -36,14 +36,19 @@ static InstructionDefinition ebreak_ (
 
 // -----------------------------------------------------------------------------
 { // block
+cp.code() += "etiss_coverage_count(1, 6540);\n";
 cp.code() += "{ // block\n";
 cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4) + "ULL;\n";
+cp.code() += "etiss_coverage_count(3, 6539, 6535, 6538);\n";
 cp.code() += "} // block\n";
 } // block
 { // block
+cp.code() += "etiss_coverage_count(1, 7496);\n";
 cp.code() += "{ // block\n";
 cp.code() += "if (etiss_semihost_enabled()) { // conditional\n";
+cp.code() += "etiss_coverage_count(1, 7446);\n";
 { // block
+cp.code() += "etiss_coverage_count(1, 7491);\n";
 cp.code() += "{ // block\n";
 cp.code() += "etiss_uint32 mem_val_0;\n";
 cp.code() += "cpu->exception |= (*(system->dread))(system->handle, cpu, " + std::to_string(ic.current_address_ - 4ULL) + "ULL, (etiss_uint8*)&mem_val_0, 4);\n";
@@ -56,6 +61,7 @@ cp.code() += "} // procedure\n";
 } // procedure
 cp.code() += "} // conditional\n";
 cp.code() += "etiss_uint32 pre = (etiss_uint32)(mem_val_0);\n";
+cp.code() += "etiss_coverage_count(1, 7451);\n";
 cp.code() += "etiss_uint32 mem_val_1;\n";
 cp.code() += "cpu->exception |= (*(system->dread))(system->handle, cpu, " + std::to_string(ic.current_address_ + 0ULL) + "ULL, (etiss_uint8*)&mem_val_1, 4);\n";
 cp.code() += "if (cpu->exception) { // conditional\n";
@@ -67,6 +73,7 @@ cp.code() += "} // procedure\n";
 } // procedure
 cp.code() += "} // conditional\n";
 cp.code() += "etiss_uint32 ebreak = (etiss_uint32)(mem_val_1);\n";
+cp.code() += "etiss_coverage_count(1, 7456);\n";
 cp.code() += "etiss_uint32 mem_val_2;\n";
 cp.code() += "cpu->exception |= (*(system->dread))(system->handle, cpu, " + std::to_string(ic.current_address_ + 4ULL) + "ULL, (etiss_uint8*)&mem_val_2, 4);\n";
 cp.code() += "if (cpu->exception) { // conditional\n";
@@ -78,21 +85,29 @@ cp.code() += "} // procedure\n";
 } // procedure
 cp.code() += "} // conditional\n";
 cp.code() += "etiss_uint32 post = (etiss_uint32)(mem_val_2);\n";
+cp.code() += "etiss_coverage_count(1, 7461);\n";
 cp.code() += "if (pre == 32509971ULL && ebreak == 1048691ULL && post == 1081102355ULL) { // conditional\n";
+cp.code() += "etiss_coverage_count(3, 7469, 7466, 7468);\n";
 { // block
+cp.code() += "etiss_coverage_count(1, 7486);\n";
 cp.code() += "{ // block\n";
 cp.code() += "etiss_uint64 operation = *((RV64IMACFD*)cpu)->X[10ULL];\n";
+cp.code() += "etiss_coverage_count(2, 7473, 7472);\n";
 cp.code() += "etiss_uint64 parameter = *((RV64IMACFD*)cpu)->X[11ULL];\n";
+cp.code() += "etiss_coverage_count(2, 7477, 7476);\n";
 cp.code() += "*((RV64IMACFD*)cpu)->X[10ULL] = (etiss_int64)(etiss_semihost(cpu, system, plugin_pointers, 64ULL, operation, parameter));\n";
+cp.code() += "etiss_coverage_count(2, 7485, 7479);\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "} // conditional\n";
 cp.code() += "else { // conditional\n";
 { // block
+cp.code() += "etiss_coverage_count(1, 7489);\n";
 cp.code() += "{ // block\n";
 { // procedure
 cp.code() += "{ // procedure\n";
 cp.code() += "RV64IMACFD_raise(cpu, system, plugin_pointers, 0ULL, 3LL);\n";
+cp.code() += "etiss_coverage_count(1, 7488);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 cp.code() += "} // procedure\n";
 } // procedure
@@ -104,10 +119,12 @@ cp.code() += "} // block\n";
 cp.code() += "} // conditional\n";
 cp.code() += "else { // conditional\n";
 { // block
+cp.code() += "etiss_coverage_count(1, 7494);\n";
 cp.code() += "{ // block\n";
 { // procedure
 cp.code() += "{ // procedure\n";
 cp.code() += "RV64IMACFD_raise(cpu, system, plugin_pointers, 0ULL, 3LL);\n";
+cp.code() += "etiss_coverage_count(1, 7493);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 cp.code() += "} // procedure\n";
 } // procedure
