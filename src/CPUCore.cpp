@@ -33,6 +33,7 @@
 */
 #include "etiss/CPUCore.h"
 #include "etiss/ETISS.h"
+#include "etiss/CoreDSLCoverage.h"
 
 using namespace etiss;
 
@@ -854,6 +855,15 @@ loopexit:
     {
         std::ofstream json_output(valid_json_output_path);
         json_output << "{\"mips\": " << mips << ", \"Simulation_Time\": " << simulation_time << ", \"CPU_Time\": " << cpu_time << ", \"CPU_cycle\": " << cpu_cycle << "}" << std::endl;
+    }
+
+    std::string coverage_output_path = etiss::cfg().get<std::string>("vp.coredsl_coverage_path", "coverage.csv");
+    if (!coverage_map.empty()) {
+        std::ofstream coverage_output(coverage_output_path);
+        coverage_output << "ID;Count" << std::endl;
+        for (auto it : coverage_map) {
+            coverage_output << it.first << ";" << it.second << std::endl;
+        }
     }
 
 
