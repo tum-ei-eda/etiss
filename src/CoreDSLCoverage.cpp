@@ -2,6 +2,7 @@
 #include <map>
 
 #include "etiss/CoreDSLCoverage.h"
+#include "etiss/jit/Coverage.h"
 
 void vetiss_coverage_count(int count, va_list args);
 

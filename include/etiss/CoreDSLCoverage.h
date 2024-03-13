@@ -1,11 +1,7 @@
-#ifndef JITLIB_COVERAGE_H
-#define JITLIB_COVERAGE_H
+#ifndef __COREDSL_COVERAGE_ H__
+#define __COREDSL_COVERAGE_ H__
 
 #include <map>
-
-extern "C" {
-void etiss_coverage_count(int count, ...);
-}
 
 extern std::map<int, int> coverage_map;
 
