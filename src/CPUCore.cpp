@@ -860,6 +860,7 @@ loopexit:
     std::string coverage_output_path = etiss::cfg().get<std::string>("vp.coredsl_coverage_path", "coverage.csv");
     if (!coverage_map.empty()) {
         std::ofstream coverage_output(coverage_output_path);
+        coverage_output << arch_->getArchName() << std::endl;
         coverage_output << "ID;Count" << std::endl;
         for (auto it : coverage_map) {
             coverage_output << it.first << ";" << it.second << std::endl;
