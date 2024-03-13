@@ -1,5 +1,5 @@
 /**
- * Generated on Mon, 04 Mar 2024 18:11:21 +0100.
+ * Generated on Wed, 13 Mar 2024 21:23:08 +0100.
  *
  * This file contains the function prototypes for the RV32IMACFD core architecture.
  */
@@ -15,8 +15,8 @@ extern "C" {
 #include "etiss/jit/CPU.h"
 #include "etiss/jit/System.h"
 #include "etiss/jit/ReturnCode.h"
+#include "etiss/jit/Coverage.h"
 
-void etiss_coverage_count(int count, ...);
 
 void leave(etiss_int32 priv_lvl);
 
@@ -80,8 +80,6 @@ etiss_uint64 unbox_d(etiss_uint64);
 
 etiss_uint64 fclass_d(etiss_uint64);
 
-etiss_int32 ETISS_SIGNAL_MMU(ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers, etiss_uint32 mmu_signal_);
-
 etiss_uint64 etiss_get_cycles(ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers);
 
 etiss_uint64 etiss_get_time();
@@ -95,8 +93,6 @@ etiss_uint32 RV32IMACFD_mstatus_mask(ETISS_CPU * const cpu, ETISS_System * const
 etiss_uint32 RV32IMACFD_csr_read(ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers, etiss_uint32 csr);
 
 void RV32IMACFD_csr_write(ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers, etiss_uint32 csr, etiss_uint32 val);
-
-void etiss_icache_flush(ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers);
 
 etiss_uint64 RV32IMACFD_get_field(etiss_uint64 reg, etiss_uint64 mask);
 
