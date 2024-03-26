@@ -11,12 +11,12 @@ MACRO(ETISSPlugin ProjName)
     INSTALL(CODE
         "FILE(APPEND
             \"${CMAKE_INSTALL_PREFIX}/lib/plugins/list.txt\"
-            \"${ProjName},\${CMAKE_INSTALL_PREFIX}/lib/plugins,${ProjName}\\n\"
+            \"${ProjName},./lib/plugins,${ProjName}\\n\"
         )"
     )
 
     # mimicing installation in build tree as well
-    file(APPEND ${ETISS_BINARY_DIR}/lib/plugins/list.txt
+    file(APPEND ./lib/plugins/list.txt
     "${ProjName},${ETISS_BINARY_DIR}/lib/plugins,${ProjName}\n")
 ENDMACRO()
 
