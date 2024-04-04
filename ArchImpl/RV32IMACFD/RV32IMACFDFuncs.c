@@ -1,5 +1,5 @@
 /**
- * Generated on Thu, 04 Apr 2024 12:50:47 +0200.
+ * Generated on Thu, 04 Apr 2024 17:06:54 +0200.
  *
  * This file contains the function implementations for the RV32IMACFD core architecture.
  */
@@ -25,7 +25,7 @@ etiss_coverage_count(1, 277);
 etiss_coverage_count(1, 260);
 if (rm == 7ULL) { // conditional
 etiss_coverage_count(3, 258, 259, 267);
-rm = ((((((RV32IMACFD*)cpu)->FCSR) >> (5ULL)) & 7)) & 0x7;
+rm = ((((((RV32IMACFD*)cpu)->FCSR) >> (5ULL)) & 7ULL)) & 0x7;
 etiss_coverage_count(6, 266, 261, 265, 262, 263, 264);
 } // conditional
 etiss_coverage_count(1, 270);
@@ -170,7 +170,7 @@ etiss_coverage_count(1, 461);
 if (csr == 769LL) { // conditional
 etiss_coverage_count(2, 459, 478);
 etiss_coverage_count(1, 477);
-return (((1ULL) << 30) | ((((*((RV32IMACFD*)cpu)->CSR[769LL]) >> (0LL)) & 1073741823)));
+return (((1ULL) << 30) | ((((*((RV32IMACFD*)cpu)->CSR[769LL]) >> (0LL)) & 1073741823ULL)));
 etiss_coverage_count(4, 476, 475, 470, 474);
 } // conditional
 etiss_coverage_count(1, 482);

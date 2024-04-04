@@ -1,5 +1,5 @@
 /**
- * Generated on Wed, 13 Mar 2024 21:23:08 +0100.
+ * Generated on Thu, 04 Apr 2024 17:06:54 +0200.
  *
  * This file contains the architecture class for the RV64IMACFD core architecture.
  */
@@ -166,17 +166,17 @@ void RV64IMACFDArch::resetCPU(ETISS_CPU * cpu,etiss::uint64 * startpointer)
  	rv64imacfdcpu->CSR[772] = &rv64imacfdcpu->MIE;
  	rv64imacfdcpu->CSR[836] = &rv64imacfdcpu->MIP;
 
- 	rv64imacfdcpu->PRIV = 3;
- 	rv64imacfdcpu->DPC = 0;
- 	*rv64imacfdcpu->CSR[0] = 11;
-	*rv64imacfdcpu->CSR[256] = 11;
-	*rv64imacfdcpu->CSR[768] = 11;
-	*rv64imacfdcpu->CSR[769] = 9223372036856090925ULL;
-	*rv64imacfdcpu->CSR[3088] = 3;
-	*rv64imacfdcpu->CSR[772] = 4294966203;
-	*rv64imacfdcpu->CSR[260] = 4294964019;
-	*rv64imacfdcpu->CSR[4] = 4294963473;
- 	rv64imacfdcpu->RES_ADDR = -1;
+   	rv64imacfdcpu->PRIV = 3ULL;
+   	rv64imacfdcpu->DPC = 0LL;
+  	*rv64imacfdcpu->CSR[0] = 11ULL;
+ 	*rv64imacfdcpu->CSR[256] = 11ULL;
+ 	*rv64imacfdcpu->CSR[768] = 11ULL;
+ 	*rv64imacfdcpu->CSR[769] = 9223372036856090925ULL;
+ 	*rv64imacfdcpu->CSR[3088] = 3ULL;
+ 	*rv64imacfdcpu->CSR[772] = 4294966203ULL;
+ 	*rv64imacfdcpu->CSR[260] = 4294964019ULL;
+ 	*rv64imacfdcpu->CSR[4] = 4294963473ULL;
+   	rv64imacfdcpu->RES_ADDR = -1LL;
 
 }
 
