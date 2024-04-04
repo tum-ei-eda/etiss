@@ -1,5 +1,5 @@
 /**
- * Generated on Wed, 13 Mar 2024 21:23:08 +0100.
+ * Generated on Thu, 04 Apr 2024 12:50:47 +0200.
  *
  * This file contains the instruction behavior models of the tum_ret
  * instruction set for the RV32IMACFD core architecture.
@@ -48,7 +48,7 @@ cp.code() += "etiss_coverage_count(1, 2191);\n";
 cp.code() += "{ // block\n";
 { // procedure
 cp.code() += "{ // procedure\n";
-cp.code() += "RV32IMACFD_raise(cpu, system, plugin_pointers, 0ULL, 8LL + ((RV32IMACFD*)cpu)->PRIV);\n";
+cp.code() += "RV32IMACFD_raise(cpu, system, plugin_pointers, 0LL, 8LL + ((RV32IMACFD*)cpu)->PRIV);\n";
 cp.code() += "etiss_coverage_count(4, 2190, 2186, 2189, 2188);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 cp.code() += "} // procedure\n";
@@ -126,7 +126,7 @@ cp.code() += "if (((RV32IMACFD*)cpu)->PRIV < 3LL) { // conditional\n";
 cp.code() += "etiss_coverage_count(2, 2264, 2270);\n";
 { // procedure
 cp.code() += "{ // procedure\n";
-cp.code() += "RV32IMACFD_raise(cpu, system, plugin_pointers, 0ULL, 2LL);\n";
+cp.code() += "RV32IMACFD_raise(cpu, system, plugin_pointers, 0LL, 2LL);\n";
 cp.code() += "etiss_coverage_count(2, 2269, 2267);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 cp.code() += "} // procedure\n";
@@ -141,7 +141,7 @@ cp.code() += "etiss_coverage_count(3, 2284, 2283, 2281);\n";
 cp.code() += "etiss_coverage_count(1, 2287);\n";
 cp.code() += "if (prev_prv != 3LL) { // conditional\n";
 cp.code() += "etiss_coverage_count(2, 2285, 2294);\n";
-cp.code() += "s = RV32IMACFD_set_field(s, 131072LL, 0ULL);\n";
+cp.code() += "s = RV32IMACFD_set_field(s, 131072LL, 0LL);\n";
 cp.code() += "etiss_coverage_count(5, 2293, 2288, 2292, 2289, 2291);\n";
 cp.code() += "} // conditional\n";
 cp.code() += "s = RV32IMACFD_set_field(s, 8LL, RV32IMACFD_get_field(s, 128LL));\n";
@@ -295,7 +295,7 @@ cp.code() += "if (((RV32IMACFD*)cpu)->PRIV < ((RV32IMACFD_get_field(RV32IMACFD_c
 cp.code() += "etiss_coverage_count(6, 6361, 6368, 6365, 6363, 6369, 6374);\n";
 { // procedure
 cp.code() += "{ // procedure\n";
-cp.code() += "RV32IMACFD_raise(cpu, system, plugin_pointers, 0ULL, 2LL);\n";
+cp.code() += "RV32IMACFD_raise(cpu, system, plugin_pointers, 0LL, 2LL);\n";
 cp.code() += "etiss_coverage_count(2, 6373, 6371);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 cp.code() += "} // procedure\n";

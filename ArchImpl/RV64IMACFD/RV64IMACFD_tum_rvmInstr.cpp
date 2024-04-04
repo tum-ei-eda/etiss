@@ -1,5 +1,5 @@
 /**
- * Generated on Wed, 13 Mar 2024 21:23:08 +0100.
+ * Generated on Thu, 04 Apr 2024 12:50:47 +0200.
  *
  * This file contains the instruction behavior models of the tum_rvm
  * instruction set for the RV64IMACFD core architecture.
@@ -56,7 +56,7 @@ cp.code() += "} // block\n";
 cp.code() += "etiss_coverage_count(1, 7655);\n";
 cp.code() += "{ // block\n";
 cp.code() += "etiss_coverage_count(1, 7628);\n";
-if ((rd % 32ULL) != 0ULL) { // conditional
+if ((rd % 32ULL) != 0LL) { // conditional
 cp.code() += "etiss_coverage_count(5, 7625, 7623, 7626, 7627, 7654);\n";
 { // block
 cp.code() += "etiss_coverage_count(1, 7653);\n";
@@ -146,7 +146,7 @@ cp.code() += "} // block\n";
 cp.code() += "etiss_coverage_count(1, 7683);\n";
 cp.code() += "{ // block\n";
 cp.code() += "etiss_coverage_count(1, 7661);\n";
-if ((rd % 32ULL) != 0ULL) { // conditional
+if ((rd % 32ULL) != 0LL) { // conditional
 cp.code() += "etiss_coverage_count(5, 7658, 7656, 7659, 7660, 7682);\n";
 { // block
 cp.code() += "etiss_coverage_count(1, 7681);\n";
@@ -234,7 +234,7 @@ cp.code() += "} // block\n";
 cp.code() += "etiss_coverage_count(1, 7710);\n";
 cp.code() += "{ // block\n";
 cp.code() += "etiss_coverage_count(1, 7689);\n";
-if ((rd % 32ULL) != 0ULL) { // conditional
+if ((rd % 32ULL) != 0LL) { // conditional
 cp.code() += "etiss_coverage_count(5, 7686, 7684, 7687, 7688, 7709);\n";
 { // block
 cp.code() += "etiss_coverage_count(1, 7708);\n";
@@ -322,7 +322,7 @@ cp.code() += "} // block\n";
 cp.code() += "etiss_coverage_count(1, 7736);\n";
 cp.code() += "{ // block\n";
 cp.code() += "etiss_coverage_count(1, 7716);\n";
-if ((rd % 32ULL) != 0ULL) { // conditional
+if ((rd % 32ULL) != 0LL) { // conditional
 cp.code() += "etiss_coverage_count(5, 7713, 7711, 7714, 7715, 7735);\n";
 { // block
 cp.code() += "etiss_coverage_count(1, 7734);\n";
