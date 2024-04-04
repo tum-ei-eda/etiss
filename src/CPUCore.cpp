@@ -857,6 +857,12 @@ loopexit:
         json_output << "{\"mips\": " << mips << ", \"Simulation_Time\": " << simulation_time << ", \"CPU_Time\": " << cpu_time << ", \"CPU_cycle\": " << cpu_cycle << "}" << std::endl;
     }
 
+    #ifndef ETISS_USE_COREDSL_COVERAGE
+    if (etiss::cfg().isSet("vp.coredsl_coverage_path")) {
+        etiss::log(etiss::WARNING, "Coverage Analysis is disabled but vp.coredsl_coverage_path is set. To enable coverage analysis, build ETISS with -DETISS_USE_COREDSL_COVERAGE");
+    }
+    #endif
+
     std::string coverage_output_path = etiss::cfg().get<std::string>("vp.coredsl_coverage_path", "coverage.csv");
     if (!coverage_map.empty()) {
         std::ofstream coverage_output(coverage_output_path);

@@ -6,6 +6,7 @@
 
 void vetiss_coverage_count(int count, va_list args);
 
+#ifdef ETISS_USE_COREDSL_COVERAGE
 extern "C" {
 	void etiss_coverage_count(int count, ...) {
 		std::va_list args;
@@ -14,6 +15,7 @@ extern "C" {
 		va_end(args);
 	}
 }
+#endif
 
 std::map<int, int> coverage_map;
 
