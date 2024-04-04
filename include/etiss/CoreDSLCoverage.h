@@ -1,5 +1,5 @@
-#ifndef __COREDSL_COVERAGE_ H__
-#define __COREDSL_COVERAGE_ H__
+#ifndef __COREDSL_COVERAGE_H__
+#define __COREDSL_COVERAGE_H__
 
 #include <map>
 
