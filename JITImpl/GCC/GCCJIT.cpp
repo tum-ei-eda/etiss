@@ -113,9 +113,9 @@ void *GCCJIT::translate(std::string code, std::set<std::string> headerpaths, std
         codeFile.close();
     }
     std::stringstream ss;
-    ss << "gcc -c -std=c99 -fPIC -march=native -mtune=native -pipe "; // CHANGED -Wall eliminated
+    ss << "gcc -c -std=c99 -fPIC -march=native -mtune=native -pipe ";
     if (debug)
-        ss << "-g -O0 ";
+        ss << "-g -O0 -Wall ";
     else
         ss << "-Ofast ";
     for (std::set<std::string>::const_iterator iter = headerpaths.begin(); iter != headerpaths.end(); iter++)
