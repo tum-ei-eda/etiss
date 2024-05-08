@@ -115,7 +115,7 @@ void *GCCJIT::translate(std::string code, std::set<std::string> headerpaths, std
     std::stringstream ss;
     ss << "gcc -c -std=c99 -fPIC -march=native -mtune=native -pipe ";
     if (debug)
-        ss << "-g -O0 -Wall ";
+        ss << "-g -O0 -Wall -Wno-unused-label ";
     else
         ss << "-Ofast ";
     for (std::set<std::string>::const_iterator iter = headerpaths.begin(); iter != headerpaths.end(); iter++)
