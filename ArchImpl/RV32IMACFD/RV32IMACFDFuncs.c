@@ -1,5 +1,5 @@
 /**
- * Generated on Tue, 28 Nov 2023 09:45:19 +0100.
+ * Generated on Wed, 08 May 2024 17:36:07 +0200.
  *
  * This file contains the function implementations for the RV32IMACFD core architecture.
  */
@@ -17,10 +17,10 @@ etiss_uint8 RV32IMACFD_get_rm(ETISS_CPU * const cpu, ETISS_System * const system
 {
 { // block
 if (rm == 7ULL) { // conditional
-rm = ((((((RV32IMACFD*)cpu)->FCSR) >> (5ULL)) & 7)) & 0x7;
+rm = ((((((RV32IMACFD*)cpu)->FCSR) >> (5ULL)) & 7ULL)) & 0x7;
 } // conditional
 if (rm > 4ULL) { // conditional
-RV32IMACFD_raise(cpu, system, plugin_pointers, 0ULL, 2LL);
+RV32IMACFD_raise(cpu, system, plugin_pointers, 0LL, 2LL);
 } // conditional
 return rm;
 } // block
@@ -29,7 +29,7 @@ return rm;
 etiss_uint32 RV32IMACFD_sstatus_mask(ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers)
 {
 { // block
-etiss_uint32 mask = 0ULL;
+etiss_uint32 mask = 0LL;
 if (RV32IMACFD_extension_enabled(cpu, system, plugin_pointers, 83ULL)) { // conditional
 { // block
 mask = mask | 5767458ULL;
@@ -90,7 +90,7 @@ if (csr == 768LL || csr == 256LL) { // conditional
 return *((RV32IMACFD*)cpu)->CSR[768LL] | 8589934592ULL | 34359738368ULL;
 } // conditional
 if (csr == 769LL) { // conditional
-return (((1ULL) << 30) | ((((*((RV32IMACFD*)cpu)->CSR[769LL]) >> (0ULL)) & 1073741823)));
+return (((1ULL) << 30) | ((((*((RV32IMACFD*)cpu)->CSR[769LL]) >> (0LL)) & 1073741823ULL)));
 } // conditional
 return *((RV32IMACFD*)cpu)->CSR[csr];
 } // block
@@ -124,7 +124,7 @@ etiss_uint64 RV32IMACFD_get_field(etiss_uint64 reg, etiss_uint64 mask)
 {
 { // block
 if (!(mask)) { // conditional
-return 0ULL;
+return 0LL;
 } // conditional
 return (reg & mask) / (mask & ~((mask << 1ULL)));
 } // block
@@ -141,40 +141,40 @@ etiss_uint8 RV32IMACFD_ctz(etiss_uint64 val)
 {
 { // block
 if (!(val)) { // conditional
-return 0ULL;
+return 0LL;
 } // conditional
-etiss_uint8 res = 0ULL;
-if ((val << 32ULL) == 0ULL) { // conditional
+etiss_uint8 res = 0LL;
+if ((val << 32ULL) == 0LL) { // conditional
 { // block
 res = res + 32ULL;
 val = val >> 32ULL;
 } // block
 } // conditional
-if ((val << 48ULL) == 0ULL) { // conditional
+if ((val << 48ULL) == 0LL) { // conditional
 { // block
 res = res + 16ULL;
 val = val >> 16ULL;
 } // block
 } // conditional
-if ((val << 56ULL) == 0ULL) { // conditional
+if ((val << 56ULL) == 0LL) { // conditional
 { // block
 res = res + 8ULL;
 val = val >> 8ULL;
 } // block
 } // conditional
-if ((val << 60ULL) == 0ULL) { // conditional
+if ((val << 60ULL) == 0LL) { // conditional
 { // block
 res = res + 4ULL;
 val = val >> 4ULL;
 } // block
 } // conditional
-if ((val << 62ULL) == 0ULL) { // conditional
+if ((val << 62ULL) == 0LL) { // conditional
 { // block
 res = res + 2ULL;
 val = val >> 2ULL;
 } // block
 } // conditional
-if ((val << 63ULL) == 0ULL) { // conditional
+if ((val << 63ULL) == 0LL) { // conditional
 { // block
 res = res + 1ULL;
 val = val >> 1ULL;
@@ -190,45 +190,45 @@ cpu->return_pending = 1;
 cpu->exception = 0;
 { // block
 etiss_uint32 epc = cpu->instructionPointer;
-etiss_uint32 deleg = 0ULL;
-etiss_uint32 vector = 0ULL;
+etiss_uint32 deleg = 0LL;
+etiss_uint32 vector = 0LL;
 etiss_uint32 bit = mcause;
-etiss_int32 irq2 = (mcause & 2147483648ULL) != 0ULL;
+etiss_int32 irq2 = (mcause & 2147483648ULL) != 0LL;
 if (irq2) { // conditional
 { // block
-deleg = ((((RV32IMACFD*)cpu)->PRIV <= 1LL)) ? (*((RV32IMACFD*)cpu)->CSR[771LL]) : (0ULL);
+deleg = ((((RV32IMACFD*)cpu)->PRIV <= 1LL)) ? (*((RV32IMACFD*)cpu)->CSR[771LL]) : (0LL);
 bit = bit & 2147483647ULL;
 } // block
 } // conditional
 else { // conditional
 { // block
-deleg = ((((RV32IMACFD*)cpu)->PRIV <= 1LL)) ? (*((RV32IMACFD*)cpu)->CSR[770LL]) : (0ULL);
+deleg = ((((RV32IMACFD*)cpu)->PRIV <= 1LL)) ? (*((RV32IMACFD*)cpu)->CSR[770LL]) : (0LL);
 } // block
 } // conditional
 if (((RV32IMACFD*)cpu)->PRIV <= 1LL && (deleg >> bit) & 1ULL) { // conditional
 { // block
-vector = ((*((RV32IMACFD*)cpu)->CSR[261LL] & 1ULL) && irq2) ? (bit * 4ULL) : (0ULL);
+vector = ((*((RV32IMACFD*)cpu)->CSR[261LL] & 1ULL) && irq2) ? (bit * 4ULL) : (0LL);
 cpu->nextPc = (*((RV32IMACFD*)cpu)->CSR[261LL] & -2LL) + vector;
 *((RV32IMACFD*)cpu)->CSR[321LL] = epc;
 *((RV32IMACFD*)cpu)->CSR[322LL] = mcause;
 etiss_uint32 s = RV32IMACFD_csr_read(cpu, system, plugin_pointers, 256LL);
 s = RV32IMACFD_set_field(s, 32LL, RV32IMACFD_get_field(s, 2LL));
 s = RV32IMACFD_set_field(s, 256LL, ((RV32IMACFD*)cpu)->PRIV);
-s = RV32IMACFD_set_field(s, 2LL, 0ULL);
+s = RV32IMACFD_set_field(s, 2LL, 0LL);
 RV32IMACFD_csr_write(cpu, system, plugin_pointers, 256LL, s);
 ((RV32IMACFD*)cpu)->PRIV = (1LL) & 0x7;
 } // block
 } // conditional
 else { // conditional
 { // block
-vector = ((*((RV32IMACFD*)cpu)->CSR[773LL] & 1ULL) && irq2) ? (bit * 4ULL) : (0ULL);
+vector = ((*((RV32IMACFD*)cpu)->CSR[773LL] & 1ULL) && irq2) ? (bit * 4ULL) : (0LL);
 cpu->nextPc = (*((RV32IMACFD*)cpu)->CSR[773LL] & -2LL) + vector;
 *((RV32IMACFD*)cpu)->CSR[833LL] = epc;
 *((RV32IMACFD*)cpu)->CSR[834LL] = mcause;
 etiss_uint32 s = RV32IMACFD_csr_read(cpu, system, plugin_pointers, 768LL);
 s = RV32IMACFD_set_field(s, 128LL, RV32IMACFD_get_field(s, 8LL));
 s = RV32IMACFD_set_field(s, 6144LL, ((RV32IMACFD*)cpu)->PRIV);
-s = RV32IMACFD_set_field(s, 8LL, 0ULL);
+s = RV32IMACFD_set_field(s, 8LL, 0LL);
 RV32IMACFD_csr_write(cpu, system, plugin_pointers, 768LL, s);
 ((RV32IMACFD*)cpu)->PRIV = (3LL) & 0x7;
 } // block
@@ -239,7 +239,7 @@ RV32IMACFD_csr_write(cpu, system, plugin_pointers, 768LL, s);
 void RV32IMACFD_translate_exc_code(ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers, etiss_int32 cause)
 {
 { // block
-etiss_uint32 code = 0ULL;
+etiss_uint32 code = 0LL;
 if (cause == -2147483648LL) { // conditional
 return;
 } // conditional
@@ -269,7 +269,7 @@ return;
 else { // conditional
 code = 2LL;
 } // conditional
-RV32IMACFD_raise(cpu, system, plugin_pointers, 0ULL, code);
+RV32IMACFD_raise(cpu, system, plugin_pointers, 0LL, code);
 } // block
 }
 
@@ -278,12 +278,12 @@ etiss_uint32 RV32IMACFD_calc_irq_mcause(ETISS_CPU * const cpu, ETISS_System * co
 { // block
 etiss_uint32 pending_interrupts = *((RV32IMACFD*)cpu)->CSR[772LL] & *((RV32IMACFD*)cpu)->CSR[836LL];
 if (!(pending_interrupts)) { // conditional
-return 0ULL;
+return 0LL;
 } // conditional
 etiss_uint32 mie = RV32IMACFD_get_field(*((RV32IMACFD*)cpu)->CSR[768LL], 8LL);
 etiss_uint32 m_enabled = ((RV32IMACFD*)cpu)->PRIV < 3LL || (((RV32IMACFD*)cpu)->PRIV == 3LL && mie);
 etiss_uint32 enabled_interrupts = pending_interrupts & ~(*((RV32IMACFD*)cpu)->CSR[771LL]) & -(m_enabled);
-if (enabled_interrupts == 0ULL) { // conditional
+if (enabled_interrupts == 0LL) { // conditional
 { // block
 etiss_uint32 deleg = *((RV32IMACFD*)cpu)->CSR[771LL];
 etiss_uint32 sie = RV32IMACFD_get_field(RV32IMACFD_csr_read(cpu, system, plugin_pointers, 256LL), 2LL);
@@ -327,12 +327,12 @@ enabled_interrupts = 4LL;
 enabled_interrupts = 64LL;
 } // conditional
 else { // conditional
-return 0ULL;
+return 0LL;
 } // conditional
 return 2147483648ULL | RV32IMACFD_ctz(enabled_interrupts);
 } // block
 } // conditional
-return 0ULL;
+return 0LL;
 } // block
 }
 
