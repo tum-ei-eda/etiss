@@ -313,8 +313,12 @@ static void trace(ETISS_CPU *cpu, etiss::uint64 addr, etiss::uint32 len, bool is
 {
     uint64 time = 0;
     uint64 pc = 0;
-    if (cpu) time = cpu->cpuTime_ps;
-    if (cpu) pc = cpu->instructionPointer;
+
+    if (cpu)
+    {
+        time = cpu->cpuTime_ps;
+        pc = cpu->instructionPointer;
+    }
 
     std::stringstream text;
     text << time << ";"                                           // time
