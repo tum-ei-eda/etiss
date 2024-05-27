@@ -275,6 +275,7 @@ SimpleMemSystem::SimpleMemSystem() :
     print_dbgbus_access_(etiss::cfg().get<bool>("simple_mem_system.print_dbgbus_access", false)),
     print_to_file_(etiss::cfg().get<bool>("simple_mem_system.print_to_file", false)),
     error_on_seg_mismatch_(etiss::cfg().get<bool>("simple_mem_system.error_on_seg_mismatch", false)),
+    error_on_invalid_access_(etiss::cfg().get<bool>("simple_mem_system.error_on_invalid_access", false)),
     message_max_cnt_(etiss::cfg().get<int>("simple_mem_system.message_max_cnt", 100))
 {
     if (print_dbus_access_)
@@ -343,7 +344,8 @@ etiss::int32 SimpleMemSystem::dbus_access(ETISS_CPU *cpu, etiss::uint64 addr, et
         MemSegment::access_t access = write ? MemSegment::WRITE : MemSegment::READ;
 
         if (!(mseg->mode_ & access)) {
-            access_error(cpu, addr, len, std::string("dbus ") + (write ? "write" : "read") + " forbidden", etiss::WARNING);
+            access_error(cpu, addr, len, std::string("dbus ") + (write ? "write" : "read") + " forbidden",
+                         error_on_invalid_access_ ? etiss::ERROR : etiss::WARNING);
         }
 
         size_t offset = addr - mseg->start_addr_;

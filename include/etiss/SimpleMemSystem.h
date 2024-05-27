@@ -183,6 +183,7 @@ class SimpleMemSystem : public System
     bool print_to_file_;
 
     bool error_on_seg_mismatch_;
+    bool error_on_invalid_access_;
 
     int message_max_cnt_;
 
