@@ -312,13 +312,21 @@ etiss::int32 SimpleMemSystem::iwrite(ETISS_CPU *cpu, etiss::uint64 addr, etiss::
 static void trace(ETISS_CPU *cpu, etiss::uint64 addr, etiss::uint32 len, bool isWrite, bool toFile, std::ofstream &file)
 {
     uint64 time = 0;
-    if (cpu) time = cpu->cpuTime_ps;
+    uint64 pc = 0;
+
+    if (cpu)
+    {
+        time = cpu->cpuTime_ps;
+        pc = cpu->instructionPointer;
+    }
 
     std::stringstream text;
-    text << time                                                  // time
-         << (isWrite ? ";w;" : ";r;")                             // type
-         << std::setw(8) << std::setfill('0') << std::hex << addr // addr
-         << ";" << len << std::endl;
+    text << time << ";"                                           // time
+         << std::setw(8) << std::setfill('0') << std::hex         // (formatting)
+         << pc << ";"                                             // pc
+         << (isWrite ? "w" : "r") << ";"                          // type
+         << addr << ";"                                           // addr
+         << len << std::endl;
 
     if (toFile)
         file << text.str();
