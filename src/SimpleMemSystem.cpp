@@ -97,6 +97,10 @@ void SimpleMemSystem::load_segments() {
         }
         std::stringstream().swap(ss);
 
+        ss << "simple_mem_system.memseg_initelement_" << std::setw(2) << std::setfill('0') << i;
+        uint8_t initVal = static_cast<uint8_t>(etiss::cfg().get<uint64_t>(ss.str(), 0));
+        std::stringstream().swap(ss);
+
         ss << "simple_mem_system.memseg_image_" << std::setw(2) << std::setfill('0') << i;
         std::string image = etiss::cfg().get<std::string>(ss.str(), "");
         std::stringstream().swap(ss);
@@ -131,6 +135,8 @@ void SimpleMemSystem::load_segments() {
             etiss::uint8 *buf = nullptr;
             size_t fsize = 0;
 
+            std::stringstream mem_msg;
+
             if (image != "")
             {
                 std::ifstream ifs(image, std::ifstream::binary | std::ifstream::ate);
@@ -145,15 +151,19 @@ void SimpleMemSystem::load_segments() {
                 buf = new etiss::uint8[fsize];
 
                 ifs.read((char*)buf, fsize);
+
+                mem_msg << "The memory segment " <<  i  <<  " is initialized with 0x" << std::hex << length << " bytes from input_image !";
+                etiss::log(etiss::INFO, mem_msg.str());
+            }else if (initVal != 0){
+                mem_msg << "The memory segment " <<  i  <<  " is initialized with 0x" << std::hex << length << " elements with value: " << static_cast<uint16_t>(initVal);
+                etiss::log(etiss::INFO, mem_msg.str());
             }else{
-                std::stringstream msg;
-                msg << "This memory segment " <<  i  <<  " is initialized with 0x" << std::hex << length << " zeros !";
-                etiss::log(etiss::INFO, msg.str());
-                fsize = length;
-                buf = new etiss::uint8[fsize]();
+                mem_msg << "The memory segment " <<  i  <<  " is initialized with 0x" << std::hex << length << " random values !";
+                etiss::log(etiss::INFO, mem_msg.str());
             }
 
-            auto mseg = std::make_unique<MemSegment>(origin, length, static_cast<MemSegment::access_t>(access), sname.str(), nullptr);
+
+            auto mseg = std::make_unique<MemSegment>(origin, length, static_cast<MemSegment::access_t>(access), sname.str(), buf, initVal);
             add_memsegment(mseg, buf, fsize);
             delete[] buf;
         }

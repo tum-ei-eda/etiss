@@ -53,6 +53,7 @@
 #include "etiss/System.h"
 #include "etiss/make_unique.h"
 #include <fstream>
+#include <random>
 
 #include <cstring>
 #include <iostream>
@@ -89,7 +90,7 @@ class MemSegment
     access_t mode_;
 
     MemSegment(etiss::uint64 start_addr, etiss::uint64 size, access_t mode, const std::string name,
-               etiss::uint8 *mem = nullptr)
+               etiss::uint8 *mem = nullptr, uint8_t initVal = 0)
         : name_(name), start_addr_(start_addr), end_addr_(start_addr + size - 1), size_(size), mode_(mode)
     {
         if (mem)
@@ -99,9 +100,36 @@ class MemSegment
         else
         {
             mem_ = new etiss::uint8[size];
+            memInit(initVal);
             self_allocated_ = true;
         }
     }
+
+    // Can be overwritten afterwards with load_elf
+    void memInit(uint8_t initVal = 0)
+    {
+        static std::default_random_engine generator{ static_cast<uint64_t>(0) };
+        std::uniform_int_distribution<int> random_char_{ 0, 255 };
+
+        if (initVal == 0){
+            for (etiss::uint64 i = 0; i < size_; ++i)
+            {
+                mem_[i] = random_char_(generator);
+            }
+        }
+        else
+        {
+            memset(mem_, initVal, size_);
+        }
+        // std::stringstream mem_msg;
+        // mem_msg << "This memory segment "  <<  " is initialized with 0x" << std::hex << size_ << " bytes! \n";
+        // for (etiss::uint64 i = 0; i < size_; ++i)
+        // {
+        //     mem_msg << static_cast<uint16_t>( mem_[i]) << ":";
+        // }
+        // etiss::log(etiss::INFO, mem_msg.str());
+    }
+
 
     virtual ~MemSegment(void)
     {
