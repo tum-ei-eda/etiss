@@ -97,7 +97,7 @@ class MemSegment
     /// @param mem Pre-allocated Memory (not overwritten with initString)
     /// @param initString String for initialization with imple_mem_system.memseg_initelement_ attr/ If not specified random value allocation
     MemSegment(etiss::uint64 start_addr, etiss::uint64 size, access_t mode, const std::string name,
-               etiss::uint8 *mem = nullptr, std::string initString = 0)
+               etiss::uint8 *mem = nullptr, std::string initString)
         : name_(name), start_addr_(start_addr), end_addr_(start_addr + size - 1), size_(size), mode_(mode)
     {
         if (mem)
@@ -113,7 +113,7 @@ class MemSegment
     }
 
     // Can be overwritten afterwards with load_elf
-    void memInit(std::string initString = 0)
+    void memInit(std::string initString)
     {
         static std::default_random_engine generator{ static_cast<uint64_t>(0) };
         std::uniform_int_distribution<int> random_char_{ 0, 255 };
