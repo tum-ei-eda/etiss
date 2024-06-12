@@ -89,8 +89,15 @@ class MemSegment
     const etiss::uint64 size_;
     access_t mode_;
 
+    /// @brief Constructor of Memory Segment
+    /// @param start_addr Start address of segment
+    /// @param size Size in bytes
+    /// @param mode Access Mode (R/W/X)
+    /// @param name Segment name
+    /// @param mem Pre-allocated Memory (not overwritten with initString)
+    /// @param initString String for initialization with imple_mem_system.memseg_initelement_ attr/ If not specified random value allocation
     MemSegment(etiss::uint64 start_addr, etiss::uint64 size, access_t mode, const std::string name,
-               etiss::uint8 *mem = nullptr, uint8_t initVal = 0)
+               etiss::uint8 *mem = nullptr, std::string initString = 0)
         : name_(name), start_addr_(start_addr), end_addr_(start_addr + size - 1), size_(size), mode_(mode)
     {
         if (mem)
@@ -100,18 +107,19 @@ class MemSegment
         else
         {
             mem_ = new etiss::uint8[size];
-            memInit(initVal);
+            memInit(initString);
             self_allocated_ = true;
         }
     }
 
     // Can be overwritten afterwards with load_elf
-    void memInit(uint8_t initVal = 0)
+    void memInit(std::string initString = 0)
     {
         static std::default_random_engine generator{ static_cast<uint64_t>(0) };
         std::uniform_int_distribution<int> random_char_{ 0, 255 };
 
-        if (initVal == 0){
+        if (initString == "")
+        {
             for (etiss::uint64 i = 0; i < size_; ++i)
             {
                 mem_[i] = random_char_(generator);
@@ -119,15 +127,12 @@ class MemSegment
         }
         else
         {
-            memset(mem_, initVal, size_);
+            const char* data = initString.c_str();
+            for (etiss::uint64 i = 0; i < size_; ++i)
+            {
+                mem_[i] = data[i%strlen(data)];
+            }
         }
-        // std::stringstream mem_msg;
-        // mem_msg << "This memory segment "  <<  " is initialized with 0x" << std::hex << size_ << " bytes! \n";
-        // for (etiss::uint64 i = 0; i < size_; ++i)
-        // {
-        //     mem_msg << static_cast<uint16_t>( mem_[i]) << ":";
-        // }
-        // etiss::log(etiss::INFO, mem_msg.str());
     }
 
 

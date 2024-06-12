@@ -98,7 +98,7 @@ void SimpleMemSystem::load_segments() {
         std::stringstream().swap(ss);
 
         ss << "simple_mem_system.memseg_initelement_" << std::setw(2) << std::setfill('0') << i;
-        uint8_t initVal = static_cast<uint8_t>(etiss::cfg().get<uint64_t>(ss.str(), 0));
+        std::string initString = etiss::cfg().get<std::string>(ss.str(), "");
         std::stringstream().swap(ss);
 
         ss << "simple_mem_system.memseg_image_" << std::setw(2) << std::setfill('0') << i;
@@ -137,8 +137,7 @@ void SimpleMemSystem::load_segments() {
 
             std::stringstream mem_msg;
 
-            if (image != "")
-            {
+            if (image != "") {
                 std::ifstream ifs(image, std::ifstream::binary | std::ifstream::ate);
                 if (!ifs) {
                     std::stringstream msg;
@@ -154,16 +153,16 @@ void SimpleMemSystem::load_segments() {
 
                 mem_msg << "The memory segment " <<  i  <<  " is initialized with 0x" << std::hex << length << " bytes from input_image !";
                 etiss::log(etiss::INFO, mem_msg.str());
-            }else if (initVal != 0){
-                mem_msg << "The memory segment " <<  i  <<  " is initialized with 0x" << std::hex << length << " elements with value: " << static_cast<uint16_t>(initVal);
+            } else if (initString != "") {
+                mem_msg << "The memory segment " <<  i  <<  " is initialized with 0x" << std::hex << length << " elements with value: " << initString;
                 etiss::log(etiss::INFO, mem_msg.str());
-            }else{
+            } else {
                 mem_msg << "The memory segment " <<  i  <<  " is initialized with 0x" << std::hex << length << " random values !";
                 etiss::log(etiss::INFO, mem_msg.str());
             }
 
 
-            auto mseg = std::make_unique<MemSegment>(origin, length, static_cast<MemSegment::access_t>(access), sname.str(), buf, initVal);
+            auto mseg = std::make_unique<MemSegment>(origin, length, static_cast<MemSegment::access_t>(access), sname.str(), buf, initString);
             add_memsegment(mseg, buf, fsize);
             delete[] buf;
         }
