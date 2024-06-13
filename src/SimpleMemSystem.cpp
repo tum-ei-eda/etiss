@@ -99,6 +99,7 @@ void SimpleMemSystem::load_segments() {
 
         ss << "simple_mem_system.memseg_initelement_" << std::setw(2) << std::setfill('0') << i;
         std::string initString = etiss::cfg().get<std::string>(ss.str(), "");
+        bool initEleSet = etiss::cfg().isSet(ss.str());
         std::stringstream().swap(ss);
 
         ss << "simple_mem_system.memseg_image_" << std::setw(2) << std::setfill('0') << i;
@@ -153,16 +154,25 @@ void SimpleMemSystem::load_segments() {
 
                 mem_msg << "The memory segment " <<  i  <<  " is initialized with 0x" << std::hex << length << " bytes from input_image !";
                 etiss::log(etiss::INFO, mem_msg.str());
-            } else if (initString != "") {
-                mem_msg << "The memory segment " <<  i  <<  " is initialized with 0x" << std::hex << length << " elements with value: " << initString;
-                etiss::log(etiss::INFO, mem_msg.str());
+            } else if (initEleSet) {
+                if (initString.find("random") == 0 || initString.find("RANDOM")== 0) {
+                    mem_msg << "The memory segment " <<  i  <<  " is initialized with 0x" << std::hex << length << " random bytes !";
+                    etiss::log(etiss::INFO, mem_msg.str());
+                } else if (initString.find("0x") == 0) {
+                    mem_msg << "The memory segment " <<  i  <<  " is initialized with 0x" << std::hex << length << " elements with hex value: " << initString;
+                    etiss::log(etiss::INFO, mem_msg.str());
+                }
+                else
+                {
+                    mem_msg << "The memory segment " <<  i  <<  " is initialized with 0x" << std::hex << length << " elements with the string: " << initString;
+                    etiss::log(etiss::INFO, mem_msg.str());
+                }
             } else {
-                mem_msg << "The memory segment " <<  i  <<  " is initialized with 0x" << std::hex << length << " random values !";
+                mem_msg << "The memory segment " <<  i  <<  " is allocated uninitialized with length 0x" << std::hex << length << " !";
                 etiss::log(etiss::INFO, mem_msg.str());
             }
 
-
-            auto mseg = std::make_unique<MemSegment>(origin, length, static_cast<MemSegment::access_t>(access), sname.str(), buf, initString);
+            auto mseg = std::make_unique<MemSegment>(origin, length, static_cast<MemSegment::access_t>(access), sname.str(), buf, initString, initEleSet);
             add_memsegment(mseg, buf, fsize);
             delete[] buf;
         }

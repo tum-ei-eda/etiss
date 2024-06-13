@@ -97,7 +97,7 @@ class MemSegment
     /// @param mem Pre-allocated Memory (not overwritten with initString)
     /// @param initString String for initialization with imple_mem_system.memseg_initelement_ attr/ If not specified random value allocation
     MemSegment(etiss::uint64 start_addr, etiss::uint64 size, access_t mode, const std::string name,
-               etiss::uint8 *mem = nullptr, std::string initString)
+               etiss::uint8 *mem = nullptr, std::string initString = "", bool InitEleSet = false)
         : name_(name), start_addr_(start_addr), end_addr_(start_addr + size - 1), size_(size), mode_(mode)
     {
         if (mem)
@@ -107,7 +107,8 @@ class MemSegment
         else
         {
             mem_ = new etiss::uint8[size];
-            memInit(initString);
+            if (InitEleSet)
+                memInit(initString);
             self_allocated_ = true;
         }
     }
@@ -118,11 +119,30 @@ class MemSegment
         static std::default_random_engine generator{ static_cast<uint64_t>(0) };
         std::uniform_int_distribution<int> random_char_{ 0, 255 };
 
-        if (initString == "")
+        if (initString.find("0x") == 0)
         {
+            initString.erase(initString.begin(),initString.begin()+2);
+            std::stringstream mem_msg;
             for (etiss::uint64 i = 0; i < size_; ++i)
             {
-                mem_[i] = random_char_(generator);
+                const char* dataPtr = initString.substr(i%initString.length(),1).c_str();
+                char** endPtr = nullptr;
+                errno = 0;
+                uint8_t hexVal = static_cast<uint8_t>(strtol(dataPtr, endPtr, 16));
+                mem_[i] =  hexVal;
+
+                if (errno != 0){
+                        etiss::log(etiss::WARNING, "Hex Value MemSegment input is erronous (typo?)");
+                        throw "MemSegmentInit for hex value is errnounous";
+                }
+            }
+        }
+        else if (initString.find("random") == 0 || initString.find("RANDOM") == 0)
+        {
+            const char* data = initString.c_str();
+            for (etiss::uint64 i = 0; i < size_; ++i)
+            {
+                mem_[i] = data[i%strlen(data)];
             }
         }
         else
