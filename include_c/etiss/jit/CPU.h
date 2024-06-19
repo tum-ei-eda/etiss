@@ -92,6 +92,8 @@ extern "C"
             instructionPointer; ///< pointer to next instruction. NOTE: not neccessarily the instruction address (e.g
                                 ///< instruction minimal size: 4; instruction pointer: 2  -> instruction address: 2*4)
 
+        etiss_uint64 nextPc;
+
         etiss_uint64 cpuTime_ps; ///< simulation time of cpu
 
         etiss_uint64 resourceUsages[ETISS_MAX_RESOURCES]; ///<how many cycles each resource is used
@@ -105,6 +107,9 @@ extern "C"
         void *_etiss_private_handle_; ///< private helper handle for plugins
 
         etiss_uint32 mode; ///< instruction set mode of the processor
+
+        etiss_uint32 exception; // currently active exception of the processor
+        etiss_uint32 return_pending; // flags whether a return from the JIT code is needed
     };
 #pragma pack(pop)
 

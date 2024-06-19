@@ -55,6 +55,7 @@
 
 #include "etiss/CPUArch.h"
 #include "etiss/InterruptVector.h"
+#include "etiss/InterruptHandler.h"
 #include "etiss/LibraryInterface.h"
 #include "etiss/Plugin.h"
 #include "etiss/jit/types.h"
@@ -84,7 +85,7 @@ enum InterruptType
 class InterruptHandler : public etiss::CoroutinePlugin
 {
   public:
-    InterruptHandler(etiss::InterruptVector *interruptVector, std::shared_ptr<etiss::CPUArch> arch,
+    InterruptHandler(etiss::InterruptVector *interruptVector, etiss::InterruptEnable *interruptEnable, std::shared_ptr<etiss::CPUArch> arch,
                      InterruptType itype = EDGE_TRIGGERED, bool sync = true);
     virtual ~InterruptHandler();
     /**
@@ -104,6 +105,7 @@ class InterruptHandler : public etiss::CoroutinePlugin
     std::mutex mu_;
     const bool sync_;
     InterruptVector *const vector_;
+    InterruptEnable *const enable_;
     /** list: (time , (line ,state) ) */
     std::list<std::pair<etiss::uint64, std::pair<unsigned, bool>>> pending_;
     const std::shared_ptr<etiss::CPUArch> cpuarch_;

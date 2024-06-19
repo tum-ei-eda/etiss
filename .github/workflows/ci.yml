@@ -11,14 +11,14 @@ jobs:
       matrix:
         config:
           - {name: "Linux", os: ubuntu-latest, cmakegen: "", llvm: "linux-gnu-ubuntu-20.04", llvm-ext: ".tar.xz", tc: "linux-ubuntu14", tc-ext: ".tar.gz", unpack: "tar xf"}
-          - {name: "Windows", os: windows-latest, cmakegen: "-G \"Unix Makefiles\" -DCMAKE_MAKE_PROGRAM=make", llvm: "", llvm-ext: "", tc: "w64-mingw32", tc-ext: ".zip", unpack: "unzip"}
-          # - {name: "Mac", os: macos-10.15, cmakegen: "", llvm: "apple-darwin", llvm-ext: ".tar.xz", tc: "apple-darwin", tc-ext: ".tar.gz", unpack: "tar xf"}
+          #- {name: "Windows", os: windows-latest, cmakegen: "-G \"Unix Makefiles\" -DCMAKE_MAKE_PROGRAM=make", llvm: "", llvm-ext: "", tc: "w64-mingw32", tc-ext: ".zip", unpack: "unzip"}
+          #- {name: "Mac", os: macos-10.15, cmakegen: "", llvm: "apple-darwin", llvm-ext: ".tar.xz", tc: "apple-darwin", tc-ext: ".tar.gz", unpack: "tar xf"}
 
     runs-on: ${{ matrix.config.os }}
     name: ${{ matrix.config.name }}_build
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
 
     - name: Requirements (Linux)
       if: matrix.config.name == 'Linux'
@@ -117,7 +117,7 @@ jobs:
       run: tar -C ${{runner.workspace}} -cvf ${{runner.workspace}}/etiss.tar install
 
     - name: Upload Compiled System
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: etiss-${{matrix.config.name}}.tar
         path: ${{runner.workspace}}/etiss.tar
@@ -126,9 +126,9 @@ jobs:
     strategy:
       matrix:
         config:
-          - {name: "Linux", os: ubuntu-20.04, cmakegen: "", llvm: "linux-gnu-ubuntu-20.04", llvm-ext: ".tar.xz", tc: "linux-ubuntu14", tc-ext: ".tar.gz", unpack: "tar xf"}
-          - {name: "Windows", os: windows-latest, cmakegen: "-G \"MinGW Makefiles\"", llvm: "", llvm-ext: "", tc: "w64-mingw32", tc-ext: ".zip", unpack: "unzip"}
-          - {name: "Mac", os: macos-10.15, cmakegen: "", llvm: "apple-darwin", llvm-ext: ".tar.xz", tc: "apple-darwin", tc-ext: ".tar.gz", unpack: "tar xf"}
+          - {name: "Linux", os: ubuntu-latest, cmakegen: "", llvm: "linux-gnu-ubuntu-20.04", llvm-ext: ".tar.xz", tc: "linux-ubuntu14", tc-ext: ".tar.gz", unpack: "tar xf"}
+          #- {name: "Windows", os: windows-latest, cmakegen: "-G \"MinGW Makefiles\"", llvm: "", llvm-ext: "", tc: "w64-mingw32", tc-ext: ".zip", unpack: "unzip"}
+          #- {name: "Mac", os: macos-10.15, cmakegen: "", llvm: "apple-darwin", llvm-ext: ".tar.xz", tc: "apple-darwin", tc-ext: ".tar.gz", unpack: "tar xf"}
 
     needs: build
     runs-on: ${{ matrix.config.os }}
@@ -136,7 +136,7 @@ jobs:
 
     steps:
     - name: Fetch Compiled System
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v4
       with:
         name: etiss-${{matrix.config.name}}.tar
         path: ${{runner.workspace}}
@@ -145,19 +145,40 @@ jobs:
       working-directory: ${{runner.workspace}}
       run: tar -xf etiss.tar
 
+    - name: Requirements (Linux)
+      if: matrix.config.name == 'Linux'
+      run: |
+        sudo apt-get install libboost-system-dev libboost-filesystem-dev libboost-program-options-dev
+
+    # - name: Requirements (Windows)
+    #   if: matrix.config.name == 'Windows'
+    #   working-directory: ${{runner.workspace}}
+    #   shell: bash
+    #   run: |
+    #     choco install boost-msvc-14.2
+    #     choco install wget unzip
+    #     choco install llvm --version=11.0.0 --allow-downgrade
+    #     choco install make
+    #     ln -s "/c/Program Files/LLVM" llvm-lib
+
+    - name: Requirements (Mac)
+      if: matrix.config.name == 'Mac'
+      run: |
+        brew install boost coreutils
+
     - name: Test (Linux/Mac)
       working-directory: ${{runner.workspace}}/install/bin
       if: matrix.config.name == 'Linux'
       shell: bash
       run: |
-        ./run_helper.sh ../examples/SW/riscv/build/riscv_example.elf
-        ./run_helper.sh ../examples/SW/riscv/build/riscv_example.elf gcc
-        ./run_helper.sh ../examples/SW/riscv/build/riscv_example.elf llvm
-        ./run_helper.sh ../examples/SW/riscv_cpp/build/riscv_example.elf
-        ./run_helper.sh ../examples/SW/riscv_cpp/build/riscv_example.elf gcc
-        ./run_helper.sh ../examples/SW/riscv_cpp/build/riscv_example.elf llvm
-        ./run_helper.sh ../examples/SW/riscv/build64/riscv_example.elf
-        ./run_helper.sh ../examples/SW/riscv_cpp/build64/riscv_example.elf
+        ./run_helper.sh ../examples/SW/riscv/build/riscv_example.elf noloop
+        ./run_helper.sh ../examples/SW/riscv/build/riscv_example.elf gcc noloop
+        ./run_helper.sh ../examples/SW/riscv/build/riscv_example.elf llvm noloop
+        ./run_helper.sh ../examples/SW/riscv_cpp/build/riscv_example.elf noloop
+        ./run_helper.sh ../examples/SW/riscv_cpp/build/riscv_example.elf gcc noloop
+        ./run_helper.sh ../examples/SW/riscv_cpp/build/riscv_example.elf llvm noloop
+        ./run_helper.sh ../examples/SW/riscv/build64/riscv_example.elf noloop
+        ./run_helper.sh ../examples/SW/riscv_cpp/build64/riscv_example.elf noloop
 
     # - name: Test (Windows)
     #   working-directory: ${{runner.workspace}}/install/examples/bare_etiss_processor/build
@@ -185,7 +206,7 @@ jobs:
 
     steps:
     - name: Fetch Compiled System
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v4
       with:
         name: etiss-Linux.tar
         path: ${{runner.workspace}}
@@ -194,6 +215,10 @@ jobs:
       working-directory: ${{runner.workspace}}
       run: tar -xf etiss.tar
 
+    - name: Requirements (Linux)
+      run: |
+        sudo apt-get install libboost-system-dev libboost-filesystem-dev libboost-program-options-dev
+
     - name: create directory to store results
       working-directory: ${{runner.workspace}}
       run: mkdir ${{runner.workspace}}/results
@@ -201,11 +226,11 @@ jobs:
     - name: Run Benchmarks
       working-directory: ${{runner.workspace}}/install/bin
       run: |
-        ./run_helper.sh ../examples/SW/riscv_dhry/build/riscv_example ${{matrix.jit-engine}} --vp.stats_file_path=${{runner.workspace}}/results/run.json
+        ./run_helper.sh ../examples/SW/riscv_dhry/build/riscv_example ${{matrix.jit-engine}} noloop --vp.stats_file_path=${{runner.workspace}}/results/run.json
         mv ${{runner.workspace}}/results/run.json ${{runner.workspace}}/results/run_${{matrix.jit-engine}}_${{matrix.run-no}}.json
 
     - name: Save Benchmark Results
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: run_${{matrix.jit-engine}}_${{matrix.run-no}}.json
         path: ${{runner.workspace}}/results/run_${{matrix.jit-engine}}_${{matrix.run-no}}.json
@@ -215,10 +240,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Fetch results
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           path: artifacts
 
@@ -233,7 +258,7 @@ jobs:
         run: pip install -r script/requirements.txt
 
       - name: get old benchmark results
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           ref: benchmark_results
           path: benchmark_results_old
@@ -262,27 +287,27 @@ jobs:
           enable_jekyll: true
 
       - name: uploading benchmark_results
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: stats_file.json
 
           path: benchmark_results_old/stats_file.json
 
       - name: uploading image
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: performance_metrics.svg
           path: results_/performance_metrics.svg
 
       - name: Upload comment text
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: issue.md
 
           path: results_/issue.md
 
       - name: Upload wiki text
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: wiki.md
           path: results_/wiki.md
@@ -294,7 +319,7 @@ jobs:
 #
 #    steps:
 #      - name: Get comment text
-#        uses: actions/download-artifact@v2
+#        uses: actions/download-artifact@v4
 #        with:
 #          name: issue.md
 #
@@ -337,7 +362,7 @@ jobs:
 
     steps:
       - name: Get comment text
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: issue.md
 
@@ -382,12 +407,12 @@ jobs:
 
     steps:
       - name: Get comment text
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: wiki.md
 
       - name: Get performance_metrics.svg
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: performance_metrics.svg
 
@@ -413,10 +438,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Delete Artifact
-        uses: geekyeggo/delete-artifact@1-glob-support
+        uses: geekyeggo/delete-artifact@v2
         with:
           name: "*"
           useGlob: true

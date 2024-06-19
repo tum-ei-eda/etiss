@@ -62,7 +62,7 @@ class TracePrinter : public etiss::CoroutinePlugin
   public:
     // ctor
     TracePrinter(etiss::uint32 terminateAddr, bool printOnScreen = false, char terminateHit = 1)
-        : terminateAddr_(terminateAddr), printOnScreen_(printOnScreen), terminateHit_(terminateHit), CoroutinePlugin()
+        : CoroutinePlugin(), printOnScreen_(printOnScreen), terminateAddr_(terminateAddr), terminateHit_(terminateHit)
     {
     }
 

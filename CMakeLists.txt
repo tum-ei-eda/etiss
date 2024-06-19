@@ -60,6 +60,7 @@ option(ETISS_USE_PYTHON "Support python within ETISS" OFF)
 option(ETISS_BUILD_MANUAL_DOC "If enabled then the documentation will not be build by target all. run $make doc to create the documentation. default is ON for debug build OFF otherwise" ON)
 option(ETISS_BUILD_DEFAULTSUB "If enabled then the ArchImpl,JITImpl,PluginImpl and projects folder will be added as subfolders. Please have a look at the CMakeLists.txt files of those folders for further information" ON)
 option(ETISS_USE_PROFILEFLAGS "Enable or disable the -pg compiler and linker flags." OFF)
+option(ETISS_USE_COREDSL_COVERAGE "Enable the CoreDSL coverage analyzer" OFF)
 
 # Global configuration
 SET(CMAKE_POSITION_INDEPENDENT_CODE ON)
@@ -104,6 +105,10 @@ ENDIF()
 IF(ETISS_USE_PROFILEFLAGS)
     SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pg")
 ENDIF()
+ENDIF()
+
+IF(ETISS_USE_COREDSL_COVERAGE)
+    ADD_DEFINITIONS(-DETISS_USE_COREDSL_COVERAGE)
 ENDIF()
 
 # Include modules.
@@ -227,14 +232,39 @@ set(ETISS_HEADER ${ETISS_HEADER} ${TMP_CONFIG_HEADER_REL})
 
 
 include(FetchContent)
+### elfio
 FetchContent_Declare(elfio_srcs
-	GIT_REPOSITORY https://github.com/serge1/ELFIO.git
-	GIT_TAG Release_3.6
+    GIT_REPOSITORY https://github.com/serge1/ELFIO.git
+    GIT_TAG Release_3.11
 )
 if(NOT elfio_srcs_POPULATED)
-	FetchContent_Populate(elfio_srcs)
-	FetchContent_GetProperties(elfio_srcs)
+    FetchContent_Populate(elfio_srcs)
+    FetchContent_GetProperties(elfio_srcs)
 endif()
+add_subdirectory(${elfio_srcs_SOURCE_DIR} ${elfio_srcs_BINARY_DIR} EXCLUDE_FROM_ALL)
+
+### simpleini
+FetchContent_Declare(simpleini_srcs
+	GIT_REPOSITORY https://github.com/brofield/simpleini.git
+	GIT_TAG v4.19
+)
+if(NOT simpleini_srcs_POPULATED)
+	FetchContent_Populate(simpleini_srcs)
+	FetchContent_GetProperties(simpleini_srcs)
+endif()
+add_library(simpleini OBJECT
+    "${simpleini_srcs_SOURCE_DIR}/ConvertUTF.c"
+)
+set_target_properties(simpleini PROPERTIES
+    PUBLIC_HEADER "${simpleini_srcs_SOURCE_DIR}/SimpleIni.h;${simpleini_srcs_SOURCE_DIR}/ConvertUTF.h"
+)
+target_include_directories(simpleini PUBLIC
+    $<BUILD_INTERFACE:${simpleini_srcs_SOURCE_DIR}>
+    $<INSTALL_INTERFACE:include/simpleini>
+)
+install(TARGETS simpleini
+    PUBLIC_HEADER DESTINATION include/simpleini
+)
 
 ### Doxyfile
 set(ETISS_DOX_LOCATIONS ${ETISS_DOX_LOCATIONS} ${PROJECT_BINARY_DIR}/include)
@@ -310,9 +340,6 @@ ADD_SUBDIRECTORY(ArchImpl)
 ADD_SUBDIRECTORY(JITImpl)
 ADD_SUBDIRECTORY(PluginImpl)
 
-ADD_SUBDIRECTORY(examples)
-
-
 
 # Register files required by the JIT engines.
 FILE(GLOB_RECURSE ETISS_JITFILES_ADD RELATIVE "${CMAKE_CURRENT_LIST_DIR}" "${CMAKE_CURRENT_LIST_DIR}/include_c/*.h")
@@ -359,8 +386,8 @@ TARGET_INCLUDE_DIRECTORIES(ETISS PUBLIC
     "${PROJECT_SOURCE_DIR}/include_c"
     "${PROJECT_BINARY_DIR}/include_c"
     ${INCGEN_INC_DIR}
-    ${elfio_srcs_SOURCE_DIR}
 )
+TARGET_LINK_LIBRARIES(ETISS PUBLIC simpleini elfio)
 
 GENERATE_EXPORT_HEADER(ETISS
           BASE_NAME ETISS_PLUGIN
@@ -410,5 +437,6 @@ install(FILES
 message(STATUS "ETISS_VERSION_FULL: ${ETISS_VERSION_FULL}")
 message(STATUS "ETISS_USE_PYTHON: ${ETISS_USE_PYTHON}")
 message(STATUS "ETISS_USE_PROFILEFLAGS: ${ETISS_USE_PROFILEFLAGS}")
+message(STATUS "ETISS_USE_COREDSL_COVERAGE: ${ETISS_USE_COREDSL_COVERAGE}")
 message(STATUS "ETISS_USE_DLSYM: ${ETISS_USE_DLSYM}")
 message(STATUS "ETISS_BUILD_MANUAL_DOC: ${ETISS_BUILD_MANUAL_DOC}")

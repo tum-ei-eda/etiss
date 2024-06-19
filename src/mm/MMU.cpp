@@ -264,6 +264,8 @@ extern "C"
                                      "indirectly from ETISS_signalChangedRegisterValue()");
             return;
         }
-        core->getMMU()->SignalMMU(mmu_signal_);
+        auto mmu = core->getMMU();
+        if (mmu)
+            mmu->SignalMMU(mmu_signal_);
     }
 }

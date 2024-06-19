@@ -33,6 +33,7 @@
 */
 #include "etiss/CPUCore.h"
 #include "etiss/ETISS.h"
+#include "etiss/CoreDSLCoverage.h"
 
 using namespace etiss;
 
@@ -142,6 +143,7 @@ CPUCore::CPUCore(std::shared_ptr<etiss::CPUArch> arch)
     , cpu_(arch->newCPU())
     , vcpu_(arch->getVirtualStruct(cpu_))
     , intvector_(arch->createInterruptVector(cpu_))
+    , intenable_(arch->createInterruptEnable(cpu_))
     , mmu_enabled_(false)
 {
     arch_->resetCPU(cpu_, 0);
@@ -685,6 +687,7 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
 
     // start execution loop
 
+    bool exit_on_loop = etiss::cfg().get<bool>("etiss.exit_on_loop", false);
 
     float startTime = (float)clock() / CLOCKS_PER_SEC; // TESTING
 
@@ -727,6 +730,11 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
                 // cpu->instructionPointer)){
                 // Transalte virtual address to physical address if MMU is enabled
                 uint64_t pma = cpu_->instructionPointer;
+
+                // remember pc and cpu time to check for loop to self instructions
+                uint64_t old_pc = cpu_->instructionPointer;
+                uint64_t old_time = cpu_->cpuTime_ps;
+
                 if (mmu_enabled_)
                 {
                     if (mmu_->cache_flush_pending)
@@ -785,6 +793,14 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
                     // a variable of the plugin
                     exception = (*(blptr->execBlock))(cpu_, system, plugins_handle_);
 
+                    // exit simulator when a loop to self instruction is encountered
+                    if (exit_on_loop && !exception &&
+                            old_time + cpu_->cpuCycleTime_ps == cpu_->cpuTime_ps &&
+                            old_pc == cpu_->instructionPointer)
+                    {
+                        exception = RETURNCODE::CPUFINISHED;
+                    }
+
 #if ETISS_CPUCORE_DBG_APPROXIMATE_INSTRUCTION_COUNTER
                     instrcounter +=
                         blptr->end - oldinstrptr; // TESTING ///TODO handle early exception exit? ///BUG:
@@ -839,6 +855,22 @@ loopexit:
     {
         std::ofstream json_output(valid_json_output_path);
         json_output << "{\"mips\": " << mips << ", \"Simulation_Time\": " << simulation_time << ", \"CPU_Time\": " << cpu_time << ", \"CPU_cycle\": " << cpu_cycle << "}" << std::endl;
+    }
+
+    #ifndef ETISS_USE_COREDSL_COVERAGE
+    if (etiss::cfg().isSet("vp.coredsl_coverage_path")) {
+        etiss::log(etiss::WARNING, "Coverage Analysis is disabled but vp.coredsl_coverage_path is set. To enable coverage analysis, build ETISS with -DETISS_USE_COREDSL_COVERAGE");
+    }
+    #endif
+
+    std::string coverage_output_path = etiss::cfg().get<std::string>("vp.coredsl_coverage_path", "coverage.csv");
+    if (!coverage_map.empty()) {
+        std::ofstream coverage_output(coverage_output_path);
+        coverage_output << arch_->getArchName() << std::endl;
+        coverage_output << "ID;Count" << std::endl;
+        for (auto it : coverage_map) {
+            coverage_output << it.first << ";" << it.second << std::endl;
+        }
     }
 
 

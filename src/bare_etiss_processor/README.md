@@ -48,7 +48,7 @@ Set the PATH variable to include files in the build/installed/lib/ folder and th
 
   > NOTE: $BUILD_TYPE is either Release or Debug depending on how it was compiled.)
 
-	$ main --vp.elf_file=X:/path/to/build/installed/examples/SW/riscv/build/riscv_example --arch.cpu=RISCV --jit.type=TCCJIT --etiss.loglevel=4 -pLogger
+	$ main --vp.elf_file=X:/path/to/build/installed/examples/SW/riscv/build/riscv_example --arch.cpu=RV32IMACFD --jit.type=TCCJIT --etiss.loglevel=4 -pLogger
 
 ## Debugging
 

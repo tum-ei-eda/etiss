@@ -42,7 +42,6 @@
 
 #include "etiss/IntegratedLibrary/Logger.h"
 #include <cstring>
-
 #include <iomanip>
 
 namespace etiss
@@ -51,148 +50,12 @@ namespace etiss
 namespace plugin
 {
 
-// NOTE: no "pragma pack" needed since ETISS_System is already packed and this structure will not be accessed from
-// runtime compiled code
-
-// callbacks for system structure
-// namespace {
-
-struct LoggerSystem
+etiss_int32 log(void *handle, ETISS_CPU *cpu, etiss_uint64 addr, etiss_uint8 *buf, etiss_uint32 len)
 {
-
-    struct ETISS_System sys;
-
-    Logger *this_;
-
-    ETISS_System *orig;
-
-    uint64_t mask;
-    uint64_t addr;
-};
-
-etiss_int32 iread(void *handle, ETISS_CPU *cpu, etiss_uint64 addr, etiss_uint32 length)
-{
-    LoggerSystem *lsys = ((LoggerSystem *)handle);
-    if ((addr & lsys->mask) == lsys->addr)
+    auto customH = (Logger::CustomHandle *)handle;
+    if ((addr & customH->mask) != customH->addr)
     {
-        return lsys->this_->log(true, addr & ~lsys->mask, 0, length);
-    }
-    ETISS_System *sys = lsys->orig;
-    return sys->iread(sys->handle, cpu, addr, length);
-}
-etiss_int32 iwrite(void *handle, ETISS_CPU *cpu, etiss_uint64 addr, etiss_uint8 *buffer, etiss_uint32 length)
-{
-    LoggerSystem *lsys = ((LoggerSystem *)handle);
-    if ((addr & lsys->mask) == lsys->addr)
-    {
-        return lsys->this_->log(false, addr & ~lsys->mask, buffer, length);
-    }
-    ETISS_System *sys = lsys->orig;
-    return sys->iwrite(sys->handle, cpu, addr, buffer, length);
-}
-
-etiss_int32 dread(void *handle, ETISS_CPU *cpu, etiss_uint64 addr, etiss_uint8 *buffer, etiss_uint32 length)
-{
-    LoggerSystem *lsys = ((LoggerSystem *)handle);
-    //	if ((addr&lsys->mask) == lsys->addr){
-    //		return lsys->this_->log(true,addr&~lsys->mask,buffer,length);
-    //	}
-    //	std::cout <<  std::hex << addr << std::endl;
-    ETISS_System *sys = lsys->orig;
-    return sys->dread(sys->handle, cpu, addr, buffer, length);
-}
-etiss_int32 dwrite(void *handle, ETISS_CPU *cpu, etiss_uint64 addr, etiss_uint8 *buffer, etiss_uint32 length)
-{
-    LoggerSystem *lsys = ((LoggerSystem *)handle);
-    if ((addr & lsys->mask) == lsys->addr)
-    {
-        return lsys->this_->log(false, addr & ~lsys->mask, buffer, length);
-    }
-    ETISS_System *sys = lsys->orig;
-    return sys->dwrite(sys->handle, cpu, addr, buffer, length);
-}
-
-etiss_int32 dbg_read(void *handle, etiss_uint64 addr, etiss_uint8 *buffer, etiss_uint32 length)
-{
-    LoggerSystem *lsys = ((LoggerSystem *)handle);
-    if ((addr & lsys->mask) == lsys->addr)
-    {
-        return lsys->this_->log(true, addr & ~lsys->mask, buffer, length);
-    }
-    ETISS_System *sys = lsys->orig;
-    return sys->dbg_read(sys->handle, addr, buffer, length);
-}
-
-etiss_int32 dbg_write(void *handle, etiss_uint64 addr, etiss_uint8 *buffer, etiss_uint32 length)
-{
-    LoggerSystem *lsys = ((LoggerSystem *)handle);
-    if ((addr & lsys->mask) == lsys->addr)
-    {
-        return lsys->this_->log(false, addr & ~lsys->mask, buffer, length);
-    }
-    ETISS_System *sys = lsys->orig;
-    return sys->dbg_write(sys->handle, addr, buffer, length);
-}
-
-void syncTime(void *handle, ETISS_CPU *cpu)
-{
-    LoggerSystem *lsys = ((LoggerSystem *)handle);
-    ETISS_System *sys = lsys->orig;
-    sys->syncTime(sys->handle, cpu);
-}
-
-//}
-
-Logger::Logger(uint64_t addr_value, uint64_t addr_mask) : addr(addr_value & addr_mask), mask(addr_mask)
-{
-    if (mask == 0 && addr == 0)
-    {
-        etiss::log(etiss::WARNING, "Logger instantiated with mask and address set to 0. this will redirect all "
-                                   "read/writes exclusively to this logger instance.");
-    }
-}
-
-ETISS_System *Logger::wrap(ETISS_CPU *cpu, ETISS_System *system)
-{
-
-    LoggerSystem *ret = new LoggerSystem();
-
-    ret->sys.iread = &iread;
-    ret->sys.iwrite = &iwrite;
-    ret->sys.dread = &dread;
-    ret->sys.dwrite = &dwrite;
-    ret->sys.dbg_read = &dbg_read;
-    ret->sys.dbg_write = &dbg_write;
-    ret->sys.syncTime = &syncTime;
-
-    ret->sys.handle = (void *)ret;
-
-    ret->this_ = this;
-
-    ret->orig = system;
-
-    ret->addr = addr;
-    ret->mask = mask;
-
-    return (ETISS_System *)ret;
-}
-
-ETISS_System *Logger::unwrap(ETISS_CPU *cpu, ETISS_System *system)
-{
-
-    ETISS_System *ret = ((LoggerSystem *)system)->orig;
-
-    delete system;
-
-    return ret;
-}
-
-int32_t Logger::log(bool isread, uint64_t local_addr, uint8_t *buf, unsigned len)
-{
-    if (isread)
-    {
-        // memset(buf,0,len); //Produces segfault when iread is called!
-        return 0;
+        return customH->origSys->dwrite(customH->origSys->handle, cpu, addr, buf, len);
     }
 
     if (len <= 0)
@@ -228,14 +91,31 @@ int32_t Logger::log(bool isread, uint64_t local_addr, uint8_t *buf, unsigned len
         std::cout << " | <float>  " << *fout;
         std::cout << std::endl;
     }
-    /*for(unsigned i = 0; i < len; i++)
-        {
-            std::cout << (char) buf[i];
-        }*/
 
     std::flush(std::cout);
 
     return 0;
+}
+
+Logger::Logger(uint64_t addr_value, uint64_t addr_mask)
+{
+    customHandle_.addr = addr_value & addr_mask;
+    customHandle_.mask = addr_mask;
+    if (customHandle_.addr == 0 && customHandle_.mask == 0)
+    {
+        etiss::log(etiss::WARNING, "Logger instantiated with mask and address set to 0. this will redirect all "
+                                   "read/writes exclusively to this logger instance.");
+    }
+}
+
+ETISS_System Logger::getWrapInfo(ETISS_System *origSystem)
+{
+    customHandle_.origSys = origSystem;
+
+    ETISS_System wrapInfo = {};
+    wrapInfo.handle = &customHandle_;
+    wrapInfo.dwrite = &log;
+    return wrapInfo;
 }
 
 } // namespace plugin

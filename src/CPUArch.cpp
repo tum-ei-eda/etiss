@@ -135,6 +135,13 @@ void CPUArch::deleteInterruptVector(etiss::InterruptVector *vec, ETISS_CPU *cpu)
   // memory leak
 }
 
+etiss::InterruptEnable* CPUArch::createInterruptEnable(ETISS_CPU *cpu) {
+    return new etiss::InterruptEnable();
+}
+void CPUArch::deleteInterruptEnable(etiss::InterruptEnable* en, ETISS_CPU* cpu) {
+    delete en;
+}
+
 etiss::plugin::gdb::GDBCore &CPUArch::getGDBCore()
 { // disfunctional implementation
     return gdbcore_;
@@ -191,5 +198,10 @@ extern "C"
     void ETISS_signalChangedRegisterValue(ETISS_CPU *cpu, const char *registerName)
     {
         CPUArch::signalChangedRegisterValue(cpu, registerName);
+    }
+
+    void etiss_icache_flush(ETISS_CPU *cpu, ETISS_System * const system, void * const * const plugin_pointers)
+    {
+        cpu->exception = etiss::RETURNCODE::RELOADBLOCKS;
     }
 }
