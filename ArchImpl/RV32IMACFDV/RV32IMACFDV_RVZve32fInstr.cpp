@@ -2,11 +2,11 @@
  * Generated on Wed, 19 Jun 2024 07:44:30 +0200.
  *
  * This file contains the instruction behavior models of the RVZve32f
- * instruction set for the RV32IMACFDPV core architecture.
+ * instruction set for the RV32IMACFDV core architecture.
  */
 
-#include "RV32IMACFDPVArch.h"
-#include "RV32IMACFDPVFuncs.h"
+#include "RV32IMACFDVArch.h"
+#include "RV32IMACFDVFuncs.h"
 
 using namespace etiss;
 using namespace etiss::instr;
@@ -14,7 +14,7 @@ using namespace etiss::instr;
 
 // VFMERGE ---------------------------------------------------------------------
 static InstructionDefinition vfmerge_vd_rs1_vs2 (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"vfmerge",
 	(uint32_t) 0x5c005057,
 	(uint32_t) 0xfe00707f,
@@ -51,7 +51,7 @@ cp.code() += "} // block\n";
 } // block
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "etiss_uint32 _vstart = *((RV32IMACFDPV*)cpu)->CSR[8ULL];\n";
+cp.code() += "etiss_uint32 _vstart = *((RV32IMACFDV*)cpu)->CSR[8ULL];\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
@@ -88,7 +88,7 @@ ss << "vfmerge" << " # " << ba << (" [vd=" + std::to_string(vd) + " | rs1=" + st
 
 // VFMV_V_F --------------------------------------------------------------------
 static InstructionDefinition vfmv_v_f_vd_rs1 (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"vfmv_v_f",
 	(uint32_t) 0x5e005057,
 	(uint32_t) 0xfff0707f,
@@ -122,7 +122,7 @@ cp.code() += "} // block\n";
 } // block
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "etiss_uint32 _vstart = *((RV32IMACFDPV*)cpu)->CSR[8ULL];\n";
+cp.code() += "etiss_uint32 _vstart = *((RV32IMACFDV*)cpu)->CSR[8ULL];\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";

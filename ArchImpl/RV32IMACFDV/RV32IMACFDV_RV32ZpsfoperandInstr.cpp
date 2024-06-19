@@ -2,13 +2,13 @@
  * Generated on Mon, 04 Jul 2022 02:39:16 +0200.
  *
  * This file contains the instruction behavior models of the RV32Zpsfoperand
- * instruction set for the RV32IMACFDPV core architecture.
+ * instruction set for the RV32IMACFDV core architecture.
  */
 
-#include "RV32IMACFDPVArch.h"
+#include "RV32IMACFDVArch.h"
 
 #define ETISS_ARCH_STATIC_FN_ONLY
-#include "RV32IMACFDPVFuncs.h"
+#include "RV32IMACFDVFuncs.h"
 
 using namespace etiss;
 using namespace etiss::instr;
@@ -16,7 +16,7 @@ using namespace etiss::instr;
 
 // ADD64 -----------------------------------------------------------------------
 static InstructionDefinition add64_rd_rs1_rs2 (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"add64",
 	(uint32_t) 0xc0001077,
 	(uint32_t) 0xfe00707f,
@@ -46,15 +46,15 @@ rs2 += R_rs2_0.read(ba) << 0;
 
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
-partInit.code() += "etiss_int64 rs1_val_hi = *((RV32IMACFDPV*)cpu)->X[" + std::to_string((((rs1) >> (1U)) & 15) * 2U + 1U) + "];\n";
-partInit.code() += "etiss_uint32 rs1_val_lo = *((RV32IMACFDPV*)cpu)->X[" + std::to_string((((rs1) >> (1U)) & 15) * 2U) + "];\n";
+partInit.code() += "etiss_int64 rs1_val_hi = *((RV32IMACFDV*)cpu)->X[" + std::to_string((((rs1) >> (1U)) & 15) * 2U + 1U) + "];\n";
+partInit.code() += "etiss_uint32 rs1_val_lo = *((RV32IMACFDV*)cpu)->X[" + std::to_string((((rs1) >> (1U)) & 15) * 2U) + "];\n";
 partInit.code() += "etiss_int64 rs1_val = (((rs1_val_hi) << 32) | (rs1_val_lo));\n";
-partInit.code() += "etiss_int64 rs2_val_hi = *((RV32IMACFDPV*)cpu)->X[" + std::to_string((((rs2) >> (1U)) & 15) * 2U + 1U) + "];\n";
-partInit.code() += "etiss_uint32 rs2_val_lo = *((RV32IMACFDPV*)cpu)->X[" + std::to_string((((rs2) >> (1U)) & 15) * 2U) + "];\n";
+partInit.code() += "etiss_int64 rs2_val_hi = *((RV32IMACFDV*)cpu)->X[" + std::to_string((((rs2) >> (1U)) & 15) * 2U + 1U) + "];\n";
+partInit.code() += "etiss_uint32 rs2_val_lo = *((RV32IMACFDV*)cpu)->X[" + std::to_string((((rs2) >> (1U)) & 15) * 2U) + "];\n";
 partInit.code() += "etiss_int64 rs2_val = (((rs2_val_hi) << 32) | (rs2_val_lo));\n";
 partInit.code() += "etiss_int64 sum = rs1_val + rs2_val;\n";
-partInit.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string((((rd) >> (1U)) & 15) * 2U + 1U) + "] = (((sum) >> (32U)) & 4294967295);\n";
-partInit.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string((((rd) >> (1U)) & 15) * 2U) + "] = (((sum) >> (0U)) & 4294967295);\n";
+partInit.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string((((rd) >> (1U)) & 15) * 2U + 1U) + "] = (((sum) >> (32U)) & 4294967295);\n";
+partInit.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string((((rd) >> (1U)) & 15) * 2U) + "] = (((sum) >> (0U)) & 4294967295);\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getRegisterDependencies().add(reg_name[(((rs1) >> (1U)) & 15) * 2U], 32);
@@ -93,7 +93,7 @@ ss << "add64" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std:
 
 // SUB64 -----------------------------------------------------------------------
 static InstructionDefinition sub64_rd_rs1_rs2 (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"sub64",
 	(uint32_t) 0xc2001077,
 	(uint32_t) 0xfe00707f,
@@ -123,15 +123,15 @@ rs2 += R_rs2_0.read(ba) << 0;
 
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
-partInit.code() += "etiss_int64 rs1_val_hi = *((RV32IMACFDPV*)cpu)->X[" + std::to_string((((rs1) >> (1U)) & 15) * 2U + 1U) + "];\n";
-partInit.code() += "etiss_int32 rs1_val_lo = *((RV32IMACFDPV*)cpu)->X[" + std::to_string((((rs1) >> (1U)) & 15) * 2U) + "];\n";
+partInit.code() += "etiss_int64 rs1_val_hi = *((RV32IMACFDV*)cpu)->X[" + std::to_string((((rs1) >> (1U)) & 15) * 2U + 1U) + "];\n";
+partInit.code() += "etiss_int32 rs1_val_lo = *((RV32IMACFDV*)cpu)->X[" + std::to_string((((rs1) >> (1U)) & 15) * 2U) + "];\n";
 partInit.code() += "etiss_int64 rs1_val = (((rs1_val_hi) << 32) | (rs1_val_lo));\n";
-partInit.code() += "etiss_int64 rs2_val_hi = *((RV32IMACFDPV*)cpu)->X[" + std::to_string((((rs2) >> (1U)) & 15) * 2U + 1U) + "];\n";
-partInit.code() += "etiss_int32 rs2_val_lo = *((RV32IMACFDPV*)cpu)->X[" + std::to_string((((rs2) >> (1U)) & 15) * 2U) + "];\n";
+partInit.code() += "etiss_int64 rs2_val_hi = *((RV32IMACFDV*)cpu)->X[" + std::to_string((((rs2) >> (1U)) & 15) * 2U + 1U) + "];\n";
+partInit.code() += "etiss_int32 rs2_val_lo = *((RV32IMACFDV*)cpu)->X[" + std::to_string((((rs2) >> (1U)) & 15) * 2U) + "];\n";
 partInit.code() += "etiss_int64 rs2_val = (((rs2_val_hi) << 32) | (rs2_val_lo));\n";
 partInit.code() += "etiss_int64 sum = rs1_val - rs2_val;\n";
-partInit.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string((((rd) >> (1U)) & 15) * 2U + 1U) + "] = (((sum) >> (32U)) & 4294967295);\n";
-partInit.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string((((rd) >> (1U)) & 15) * 2U) + "] = (((sum) >> (0U)) & 4294967295);\n";
+partInit.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string((((rd) >> (1U)) & 15) * 2U + 1U) + "] = (((sum) >> (32U)) & 4294967295);\n";
+partInit.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string((((rd) >> (1U)) & 15) * 2U) + "] = (((sum) >> (0U)) & 4294967295);\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getRegisterDependencies().add(reg_name[(((rs1) >> (1U)) & 15) * 2U], 32);

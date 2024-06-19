@@ -1,23 +1,23 @@
 /**
  * Generated on Wed, 19 Jun 2024 07:44:30 +0200.
  *
- * This file contains the GDBCore adapter for the RV32IMACFDPV core architecture.
+ * This file contains the GDBCore adapter for the RV32IMACFDV core architecture.
  *
  * WARNING: This file contains user-added code, be mindful when overwriting this with
  * generated code!
  */
 
-#ifndef ETISS_RV32IMACFDPVArch_RV32IMACFDPVGDBCORE_H_
-#define ETISS_RV32IMACFDPVArch_RV32IMACFDPVGDBCORE_H_
+#ifndef ETISS_RV32IMACFDVArch_RV32IMACFDVGDBCORE_H_
+#define ETISS_RV32IMACFDVArch_RV32IMACFDVGDBCORE_H_
 
 #include "etiss/IntegratedLibrary/gdb/GDBCore.h"
 #include <sstream>
 
 /**
-	@brief This class is the brige between RV32IMACFDPV architecture and gdbserver
+	@brief This class is the brige between RV32IMACFDV architecture and gdbserver
 
 	@details Gdbserver integrated in ETISS calls GDBCore to read/write registers via virtualStrruct
-				The index in mapRegister() should strictly follow the RV32IMACFDPV gdb tool defined register
+				The index in mapRegister() should strictly follow the RV32IMACFDV gdb tool defined register
 				order. Because gdbserver will send raw register data sequentially in strict order over
 				RSP ->TCP/IP ->RSP protocal
 
@@ -27,10 +27,10 @@
 
 				By default only general purpose register and instruction pointer are supported. Further
 				Special Function Register/Control and Status Register could be added manually. Meanwhile
-				virtualStruct in RV32IMACFDPVArch.cpp should be modified as well as well
+				virtualStruct in RV32IMACFDVArch.cpp should be modified as well as well
 
 */
-class RV32IMACFDPVGDBCore : public etiss::plugin::gdb::GDBCore {
+class RV32IMACFDVGDBCore : public etiss::plugin::gdb::GDBCore {
 public:
 	std::string mapRegister(unsigned index){
 		if (index < 32){
@@ -62,7 +62,7 @@ public:
 	}
 
 	bool isLittleEndian(){
-		// Modify according to RV32IMACFDPV manual
+		// Modify according to RV32IMACFDV manual
 		return true;
 	}
 };

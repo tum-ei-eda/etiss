@@ -1,11 +1,11 @@
 /**
  * Generated on Wed, 19 Jun 2024 07:44:30 +0200.
  *
- * This file contains the registers for the RV32IMACFDPV core architecture.
+ * This file contains the registers for the RV32IMACFDV core architecture.
  */
 
-#ifndef ETISS_RV32IMACFDPVArch_RV32IMACFDPV_H_
-#define ETISS_RV32IMACFDPVArch_RV32IMACFDPV_H_
+#ifndef ETISS_RV32IMACFDVArch_RV32IMACFDV_H_
+#define ETISS_RV32IMACFDVArch_RV32IMACFDV_H_
 #include <stdio.h>
 #include "etiss/jit/CPU.h"
 
@@ -13,7 +13,7 @@
 extern "C" {
 #endif
 #pragma pack(push, 1)
-struct RV32IMACFDPV {
+struct RV32IMACFDV {
 	ETISS_CPU cpu; // original cpu struct must be defined as the first field of the new structure. this allows to cast X * to ETISS_CPU * and vice vers
 	etiss_uint32 ZERO;
 	etiss_uint32 RA;
@@ -72,7 +72,7 @@ struct RV32IMACFDPV {
 };
 
 #pragma pack(pop) // undo changes
-typedef struct RV32IMACFDPV RV32IMACFDPV; // convenient use of X instead of struct X in generated C code
+typedef struct RV32IMACFDV RV32IMACFDV; // convenient use of X instead of struct X in generated C code
 #ifdef __cplusplus
 } // extern "C"
 #endif

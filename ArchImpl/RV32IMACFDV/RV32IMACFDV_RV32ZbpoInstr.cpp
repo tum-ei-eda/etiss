@@ -2,13 +2,13 @@
  * Generated on Wed, 06 Jul 2022 16:52:28 +0200.
  *
  * This file contains the instruction behavior models of the RV32Zbpo
- * instruction set for the RV32IMACFDPV core architecture.
+ * instruction set for the RV32IMACFDV core architecture.
  */
 
-#include "RV32IMACFDPVArch.h"
+#include "RV32IMACFDVArch.h"
 
 #define ETISS_ARCH_STATIC_FN_ONLY
-#include "RV32IMACFDPVFuncs.h"
+#include "RV32IMACFDVFuncs.h"
 
 using namespace etiss;
 using namespace etiss::instr;
@@ -16,7 +16,7 @@ using namespace etiss::instr;
 
 // CLZ -------------------------------------------------------------------------
 static InstructionDefinition clz_rd_rs1 (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"clz",
 	(uint32_t) 0x60001013,
 	(uint32_t) 0xfff0707f,
@@ -44,7 +44,7 @@ rs1 += R_rs1_0.read(ba) << 0;
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
 if (rd != 0U) {
-partInit.code() += "etiss_uint32 rs1_val = *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1) + "];\n";
+partInit.code() += "etiss_uint32 rs1_val = *((RV32IMACFDV*)cpu)->X[" + std::to_string(rs1) + "];\n";
 partInit.code() += "etiss_uint32 count = 0U;\n";
 partInit.code() += "etiss_uint32 i = 32U;\n";
 partInit.code() += "while (i > 0U) {\n";
@@ -56,7 +56,7 @@ partInit.code() += " else {\n";
 partInit.code() += "i = 0U;\n";
 partInit.code() += "}\n";
 partInit.code() += "}\n";
-partInit.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd) + "] = count;\n";
+partInit.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string(rd) + "] = count;\n";
 }
 // -----------------------------------------------------------------------------
 

@@ -1,7 +1,7 @@
 /**
  * Generated on Thu, 24 Feb 2022 17:15:20 +0100.
  *
- * This file contains the architecture specific implementation for the RV32IMACFDPV
+ * This file contains the architecture specific implementation for the RV32IMACFDV
  * core architecture.
  *
  * WARNING: This file contains user-added code, be mindful when overwriting this with
@@ -10,9 +10,9 @@
 
 #include <vector>
 
-#include "RV32IMACFDPVArch.h"
-#include "RV32IMACFDPVArchSpecificImp.h"
-#include "RV32IMACFDPVFuncs.h"
+#include "RV32IMACFDVArch.h"
+#include "RV32IMACFDVArchSpecificImp.h"
+#include "RV32IMACFDVFuncs.h"
 
 /**
 	@brief This function will be called automatically in order to handling exceptions such as interrupt, system call, illegal instructions
@@ -28,9 +28,9 @@
 						break;
 
 */
-etiss::int32 RV32IMACFDPVArch::handleException(etiss::int32 cause, ETISS_CPU * cpu)
+etiss::int32 RV32IMACFDVArch::handleException(etiss::int32 cause, ETISS_CPU * cpu)
 {
-	RV32IMACFDPV_translate_exc_code(cpu, nullptr, nullptr, cause);
+	RV32IMACFDV_translate_exc_code(cpu, nullptr, nullptr, cause);
 	cpu->instructionPointer = cpu->nextPc;
 	return 0;
 }
@@ -57,7 +57,7 @@ etiss::int32 RV32IMACFDPVArch::handleException(etiss::int32 cause, ETISS_CPU * c
 				};
 
 */
-void RV32IMACFDPVArch::initInstrSet(etiss::instr::ModedInstructionSet & mis) const
+void RV32IMACFDVArch::initInstrSet(etiss::instr::ModedInstructionSet & mis) const
 {
 
     {
@@ -79,9 +79,9 @@ void RV32IMACFDPVArch::initInstrSet(etiss::instr::ModedInstructionSet & mis) con
 
     if (false) {
         // Pre-compilation of instruction set to view instruction tree. Could be disabled.
-        etiss::instr::ModedInstructionSet iset("RV32IMACFDPVISA");
+        etiss::instr::ModedInstructionSet iset("RV32IMACFDVISA");
 		bool ok = true;
-		RV32IMACFDPVISA.addTo(iset,ok);
+		RV32IMACFDVISA.addTo(iset,ok);
 
 		iset.compile();
 
@@ -89,9 +89,9 @@ void RV32IMACFDPVArch::initInstrSet(etiss::instr::ModedInstructionSet & mis) con
 	}
 
 	bool ok = true;
-	RV32IMACFDPVISA.addTo(mis,ok);
+	RV32IMACFDVISA.addTo(mis,ok);
 	if (!ok)
-		etiss::log(etiss::FATALERROR,"Failed to add instructions for RV32IMACFDPVISA");
+		etiss::log(etiss::FATALERROR,"Failed to add instructions for RV32IMACFDVISA");
 
     etiss::instr::VariableInstructionSet *vis = mis.get(1);
 
@@ -121,7 +121,7 @@ error_code += R_error_code_0.read(ba) << 0;
 // -----------------------------------------------------------------------------
 { // procedure
 cp.code() += "{ // procedure\n";
-cp.code() += "RV32IMACFDPV_translate_exc_code(cpu, system, plugin_pointers, " + std::to_string(error_code) + "ULL);\n";
+cp.code() += "RV32IMACFDV_translate_exc_code(cpu, system, plugin_pointers, " + std::to_string(error_code) + "ULL);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 cp.code() += "} // procedure\n";
 } // procedure
@@ -168,7 +168,7 @@ error_code += R_error_code_0.read(ba) << 0;
 // -----------------------------------------------------------------------------
 { // procedure
 cp.code() += "{ // procedure\n";
-cp.code() += "RV32IMACFDPV_translate_exc_code(cpu, system, plugin_pointers, " + std::to_string(error_code) + "ULL);\n";
+cp.code() += "RV32IMACFDV_translate_exc_code(cpu, system, plugin_pointers, " + std::to_string(error_code) + "ULL);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 cp.code() += "} // procedure\n";
 } // procedure
@@ -193,7 +193,7 @@ cp.code() += "return cpu->exception;\n";
 	);
 
     vis->length_updater_ = [](VariableInstructionSet &, InstructionContext &ic, BitArray &ba) {
-        std::function<void(InstructionContext & ic, etiss_uint32 opRd)> updateRV32IMACFDPVInstrLength =
+        std::function<void(InstructionContext & ic, etiss_uint32 opRd)> updateRV32IMACFDVInstrLength =
             [](InstructionContext &ic, etiss_uint32 opRd) {
                 ic.instr_width_fully_evaluated_ = true;
                 ic.is_not_default_width_ = true;
@@ -234,7 +234,7 @@ cp.code() += "return cpu->exception;\n";
             }
             else
             {
-                updateRV32IMACFDPVInstrLength(ic, opRd);
+                updateRV32IMACFDVInstrLength(ic, opRd);
                 break;
             }
         case 4:
@@ -245,12 +245,12 @@ cp.code() += "return cpu->exception;\n";
             }
             else if(opRd == 0x7f) /* P-Extension instructions */
             {
-                updateRV32IMACFDPVInstrLength(ic, opRd);
+                updateRV32IMACFDVInstrLength(ic, opRd);
                 break;
             }
             else
             {
-                updateRV32IMACFDPVInstrLength(ic, opRd);
+                updateRV32IMACFDVInstrLength(ic, opRd);
                 break;
             }
         case 6:
@@ -261,7 +261,7 @@ cp.code() += "return cpu->exception;\n";
             }
             else
             {
-                updateRV32IMACFDPVInstrLength(ic, opRd);
+                updateRV32IMACFDVInstrLength(ic, opRd);
                 break;
             }
         case 8:
@@ -272,7 +272,7 @@ cp.code() += "return cpu->exception;\n";
             }
             else
             {
-                updateRV32IMACFDPVInstrLength(ic, opRd);
+                updateRV32IMACFDVInstrLength(ic, opRd);
                 break;
             }
         default:
@@ -306,14 +306,14 @@ cp.code() += "return cpu->exception;\n";
 	@attention Default endianess: little-endian
 
 */
-void RV32IMACFDPVArch::compensateEndianess(ETISS_CPU * cpu, etiss::instr::BitArray & ba) const
+void RV32IMACFDVArch::compensateEndianess(ETISS_CPU * cpu, etiss::instr::BitArray & ba) const
 {
 	/**************************************************************************
 	*		                Endianess compensation	                    	  *
 	***************************************************************************/
 }
 
-std::shared_ptr<etiss::VirtualStruct> RV32IMACFDPVArch::getVirtualStruct(ETISS_CPU * cpu)
+std::shared_ptr<etiss::VirtualStruct> RV32IMACFDVArch::getVirtualStruct(ETISS_CPU * cpu)
 {
 	auto ret = etiss::VirtualStruct::allocate(
 		cpu,
@@ -323,10 +323,10 @@ std::shared_ptr<etiss::VirtualStruct> RV32IMACFDPVArch::getVirtualStruct(ETISS_C
 	);
 
 	for (uint32_t i = 0; i < 32; ++i){
-		ret->addField(new RegField_RV32IMACFDPV(*ret,i));
+		ret->addField(new RegField_RV32IMACFDV(*ret,i));
 	}
 
-	ret->addField(new pcField_RV32IMACFDPV(*ret));
+	ret->addField(new pcField_RV32IMACFDV(*ret));
 	return ret;
 }
 
@@ -337,7 +337,7 @@ std::shared_ptr<etiss::VirtualStruct> RV32IMACFDPVArch::getVirtualStruct(ETISS_C
 				incoming. The content of interrupt vector could be a special register or standalone interrupt
 				lines.
 */
-etiss::InterruptVector * RV32IMACFDPVArch::createInterruptVector(ETISS_CPU * cpu)
+etiss::InterruptVector * RV32IMACFDVArch::createInterruptVector(ETISS_CPU * cpu)
 {
 	if (cpu == 0)
 		return 0;
@@ -345,21 +345,21 @@ etiss::InterruptVector * RV32IMACFDPVArch::createInterruptVector(ETISS_CPU * cpu
 	std::vector<etiss::uint32 *> vec;
 	std::vector<etiss::uint32 *> mask;
 
-	vec.push_back(&((RV32IMACFDPV*)cpu)->MIP);
-	mask.push_back(&((RV32IMACFDPV*)cpu)->MIE);
+	vec.push_back(&((RV32IMACFDV*)cpu)->MIP);
+	mask.push_back(&((RV32IMACFDV*)cpu)->MIE);
 
 	return new etiss::MappedInterruptVector<etiss::uint32>(vec, mask);
 }
 
-void RV32IMACFDPVArch::deleteInterruptVector(etiss::InterruptVector * vec, ETISS_CPU * cpu)
+void RV32IMACFDVArch::deleteInterruptVector(etiss::InterruptVector * vec, ETISS_CPU * cpu)
 {
 	delete vec;
 }
 
-etiss::InterruptEnable* RV32IMACFDPVArch::createInterruptEnable(ETISS_CPU* cpu) {
- 	return new etiss::MappedInterruptEnable<etiss::uint32>(&((RV32IMACFDPV*)cpu)->MSTATUS, 15);
+etiss::InterruptEnable* RV32IMACFDVArch::createInterruptEnable(ETISS_CPU* cpu) {
+ 	return new etiss::MappedInterruptEnable<etiss::uint32>(&((RV32IMACFDV*)cpu)->MSTATUS, 15);
 }
 
-void RV32IMACFDPVArch::deleteInterruptEnable(etiss::InterruptEnable* en, ETISS_CPU* cpu) {
+void RV32IMACFDVArch::deleteInterruptEnable(etiss::InterruptEnable* en, ETISS_CPU* cpu) {
 	delete en;
 }

@@ -1,17 +1,17 @@
 /**
  * Generated on Wed, 19 Jun 2024 07:44:30 +0200.
  *
- * This file contains the function prototypes for the RV32IMACFDPV core architecture.
+ * This file contains the function prototypes for the RV32IMACFDV core architecture.
  */
 
-#ifndef __RV32IMACFDPV_FUNCS_H
-#define __RV32IMACFDPV_FUNCS_H
+#ifndef __RV32IMACFDV_FUNCS_H
+#define __RV32IMACFDV_FUNCS_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include "RV32IMACFDPV.h"
+#include "RV32IMACFDV.h"
 #include "etiss/jit/CPU.h"
 #include "etiss/jit/System.h"
 #include "etiss/jit/ReturnCode.h"
@@ -22,7 +22,7 @@ void leave(etiss_int32 priv_lvl);
 
 void wait(etiss_int32 flag);
 
-etiss_uint8 RV32IMACFDPV_extension_enabled(ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers, etiss_int8 extension);
+etiss_uint8 RV32IMACFDV_extension_enabled(ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers, etiss_int8 extension);
 
 etiss_uint8 vtype_extractSEW(etiss_uint16);
 
@@ -207,7 +207,7 @@ etiss_uint32 fclass_s(etiss_uint32);
 
 etiss_uint32 fget_flags();
 
-etiss_uint8 RV32IMACFDPV_get_rm(ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers, etiss_uint8 rm);
+etiss_uint8 RV32IMACFDV_get_rm(ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers, etiss_uint8 rm);
 
 etiss_uint64 fadd_d(etiss_uint64, etiss_uint64, etiss_uint8);
 
@@ -241,27 +241,27 @@ etiss_uint64 etiss_get_time();
 
 etiss_uint64 etiss_get_instret(ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers);
 
-etiss_uint32 RV32IMACFDPV_sstatus_mask(ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers);
+etiss_uint32 RV32IMACFDV_sstatus_mask(ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers);
 
-etiss_uint32 RV32IMACFDPV_mstatus_mask(ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers);
+etiss_uint32 RV32IMACFDV_mstatus_mask(ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers);
 
-etiss_uint32 RV32IMACFDPV_csr_read(ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers, etiss_uint32 csr);
+etiss_uint32 RV32IMACFDV_csr_read(ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers, etiss_uint32 csr);
 
-void RV32IMACFDPV_csr_write(ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers, etiss_uint32 csr, etiss_uint32 val);
+void RV32IMACFDV_csr_write(ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers, etiss_uint32 csr, etiss_uint32 val);
 
-etiss_uint64 RV32IMACFDPV_get_field(etiss_uint64 reg, etiss_uint64 mask);
+etiss_uint64 RV32IMACFDV_get_field(etiss_uint64 reg, etiss_uint64 mask);
 
-etiss_uint64 RV32IMACFDPV_set_field(etiss_uint64 reg, etiss_uint64 mask, etiss_uint64 val);
+etiss_uint64 RV32IMACFDV_set_field(etiss_uint64 reg, etiss_uint64 mask, etiss_uint64 val);
 
-etiss_uint8 RV32IMACFDPV_ctz(etiss_uint64 val);
+etiss_uint8 RV32IMACFDV_ctz(etiss_uint64 val);
 
-void RV32IMACFDPV_raise(ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers, etiss_int32 irq, etiss_uint32 mcause);
+void RV32IMACFDV_raise(ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers, etiss_int32 irq, etiss_uint32 mcause);
 
-void RV32IMACFDPV_translate_exc_code(ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers, etiss_int32 cause);
+void RV32IMACFDV_translate_exc_code(ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers, etiss_int32 cause);
 
-etiss_uint32 RV32IMACFDPV_calc_irq_mcause(ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers);
+etiss_uint32 RV32IMACFDV_calc_irq_mcause(ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers);
 
-void RV32IMACFDPV_check_irq(ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers);
+void RV32IMACFDV_check_irq(ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers);
 
 etiss_uint8 etiss_semihost_enabled();
 

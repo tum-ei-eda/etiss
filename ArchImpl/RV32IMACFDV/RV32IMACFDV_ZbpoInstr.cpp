@@ -2,13 +2,13 @@
  * Generated on Mon, 04 Jul 2022 08:07:06 +0200.
  *
  * This file contains the instruction behavior models of the Zbpo
- * instruction set for the RV32IMACFDPV core architecture.
+ * instruction set for the RV32IMACFDV core architecture.
  */
 
-#include "RV32IMACFDPVArch.h"
+#include "RV32IMACFDVArch.h"
 
 #define ETISS_ARCH_STATIC_FN_ONLY
-#include "RV32IMACFDPVFuncs.h"
+#include "RV32IMACFDVFuncs.h"
 
 using namespace etiss;
 using namespace etiss::instr;
@@ -16,7 +16,7 @@ using namespace etiss::instr;
 
 // PACK ------------------------------------------------------------------------
 static InstructionDefinition pack_rd_rs1_rs2 (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"pack",
 	(uint32_t) 0x8004033,
 	(uint32_t) 0xfe00707f,
@@ -47,12 +47,12 @@ rs2 += R_rs2_0.read(ba) << 0;
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
 if (rd != 0U) {
-partInit.code() += "etiss_uint32 rs1_val = *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1) + "];\n";
-partInit.code() += "etiss_uint32 rs2_val = *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs2) + "];\n";
+partInit.code() += "etiss_uint32 rs1_val = *((RV32IMACFDV*)cpu)->X[" + std::to_string(rs1) + "];\n";
+partInit.code() += "etiss_uint32 rs2_val = *((RV32IMACFDV*)cpu)->X[" + std::to_string(rs2) + "];\n";
 partInit.code() += "etiss_uint16 rd_val_lo = (((rs1_val) >> (0U)) & 65535);\n";
 partInit.code() += "etiss_uint16 rd_val_hi = (((rs2_val) >> (0U)) & 65535);\n";
 partInit.code() += "etiss_uint32 rd_val = (((rd_val_hi) << 16) | (rd_val_lo));\n";
-partInit.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd) + "] = rd_val;\n";
+partInit.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string(rd) + "] = rd_val;\n";
 }
 // -----------------------------------------------------------------------------
 
@@ -89,7 +89,7 @@ ss << "pack" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std::
 
 // PACKU -----------------------------------------------------------------------
 static InstructionDefinition packu_rd_rs1_rs2 (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"packu",
 	(uint32_t) 0x48004033,
 	(uint32_t) 0xfe00707f,
@@ -120,12 +120,12 @@ rs2 += R_rs2_0.read(ba) << 0;
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
 if (rd != 0U) {
-partInit.code() += "etiss_uint32 rs1_val = *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1) + "];\n";
-partInit.code() += "etiss_uint32 rs2_val = *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs2) + "];\n";
+partInit.code() += "etiss_uint32 rs1_val = *((RV32IMACFDV*)cpu)->X[" + std::to_string(rs1) + "];\n";
+partInit.code() += "etiss_uint32 rs2_val = *((RV32IMACFDV*)cpu)->X[" + std::to_string(rs2) + "];\n";
 partInit.code() += "etiss_uint16 rd_val_lo = (((rs1_val) >> (16U)) & 65535);\n";
 partInit.code() += "etiss_uint16 rd_val_hi = (((rs2_val) >> (16U)) & 65535);\n";
 partInit.code() += "etiss_uint32 rd_val = (((rd_val_hi) << 16) | (rd_val_lo));\n";
-partInit.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd) + "] = rd_val;\n";
+partInit.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string(rd) + "] = rd_val;\n";
 }
 // -----------------------------------------------------------------------------
 
@@ -162,7 +162,7 @@ ss << "packu" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std:
 
 // MIN -------------------------------------------------------------------------
 static InstructionDefinition min_rd_rs1_rs2 (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"min",
 	(uint32_t) 0xa004033,
 	(uint32_t) 0xfe00707f,
@@ -193,10 +193,10 @@ rs2 += R_rs2_0.read(ba) << 0;
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
 if (rd != 0U) {
-partInit.code() += "etiss_int32 rs1_val = *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1) + "];\n";
-partInit.code() += "etiss_int32 rs2_val = *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs2) + "];\n";
+partInit.code() += "etiss_int32 rs1_val = *((RV32IMACFDV*)cpu)->X[" + std::to_string(rs1) + "];\n";
+partInit.code() += "etiss_int32 rs2_val = *((RV32IMACFDV*)cpu)->X[" + std::to_string(rs2) + "];\n";
 partInit.code() += "etiss_int32 rd_val = (rs1_val < rs2_val) ? (rs1_val) : (rs2_val);\n";
-partInit.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd) + "] = rd_val;\n";
+partInit.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string(rd) + "] = rd_val;\n";
 }
 // -----------------------------------------------------------------------------
 
@@ -233,7 +233,7 @@ ss << "min" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std::t
 
 // MAX -------------------------------------------------------------------------
 static InstructionDefinition max_rd_rs1_rs2 (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"max",
 	(uint32_t) 0xa006033,
 	(uint32_t) 0xfe00707f,
@@ -264,10 +264,10 @@ rs2 += R_rs2_0.read(ba) << 0;
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
 if (rd != 0U) {
-partInit.code() += "etiss_int32 rs1_val = *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1) + "];\n";
-partInit.code() += "etiss_int32 rs2_val = *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs2) + "];\n";
+partInit.code() += "etiss_int32 rs1_val = *((RV32IMACFDV*)cpu)->X[" + std::to_string(rs1) + "];\n";
+partInit.code() += "etiss_int32 rs2_val = *((RV32IMACFDV*)cpu)->X[" + std::to_string(rs2) + "];\n";
 partInit.code() += "etiss_int32 rd_val = (rs1_val >= rs2_val) ? (rs1_val) : (rs2_val);\n";
-partInit.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd) + "] = rd_val;\n";
+partInit.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string(rd) + "] = rd_val;\n";
 }
 // -----------------------------------------------------------------------------
 

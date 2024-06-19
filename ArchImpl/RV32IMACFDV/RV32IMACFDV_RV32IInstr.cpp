@@ -2,11 +2,11 @@
  * Generated on Wed, 19 Jun 2024 07:44:30 +0200.
  *
  * This file contains the instruction behavior models of the RV32I
- * instruction set for the RV32IMACFDPV core architecture.
+ * instruction set for the RV32IMACFDV core architecture.
  */
 
-#include "RV32IMACFDPVArch.h"
-#include "RV32IMACFDPVFuncs.h"
+#include "RV32IMACFDVArch.h"
+#include "RV32IMACFDVFuncs.h"
 
 using namespace etiss;
 using namespace etiss::instr;
@@ -14,7 +14,7 @@ using namespace etiss::instr;
 
 // LUI -------------------------------------------------------------------------
 static InstructionDefinition lui_rd_imm (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"lui",
 	(uint32_t) 0x000037,
 	(uint32_t) 0x00007f,
@@ -47,7 +47,7 @@ cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4) + "ULL;\
 cp.code() += "} // block\n";
 } // block
 if ((rd % 32ULL) != 0LL) { // conditional
-cp.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = " + std::to_string((etiss_uint32)(((etiss_int32)(imm)))) + "ULL;\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = " + std::to_string((etiss_uint32)(((etiss_int32)(imm)))) + "ULL;\n";
 } // conditional
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
 cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
@@ -80,7 +80,7 @@ ss << "lui" << " # " << ba << (" [rd=" + std::to_string(rd) + " | imm=" + std::t
 
 // AUIPC -----------------------------------------------------------------------
 static InstructionDefinition auipc_rd_imm (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"auipc",
 	(uint32_t) 0x000017,
 	(uint32_t) 0x00007f,
@@ -113,7 +113,7 @@ cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4) + "ULL;\
 cp.code() += "} // block\n";
 } // block
 if ((rd % 32ULL) != 0LL) { // conditional
-cp.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = " + std::to_string(ic.current_address_ + (etiss_int32)(imm)) + "LL;\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = " + std::to_string(ic.current_address_ + (etiss_int32)(imm)) + "LL;\n";
 } // conditional
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
 cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
@@ -146,7 +146,7 @@ ss << "auipc" << " # " << ba << (" [rd=" + std::to_string(rd) + " | imm=" + std:
 
 // JAL -------------------------------------------------------------------------
 static InstructionDefinition jal_rd_imm (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"jal",
 	(uint32_t) 0x00006f,
 	(uint32_t) 0x00007f,
@@ -191,7 +191,7 @@ if (imm % 2ULL) { // conditional
 cp.code() += "{ // block\n";
 { // procedure
 cp.code() += "{ // procedure\n";
-cp.code() += "RV32IMACFDPV_raise(cpu, system, plugin_pointers, 0LL, 0LL);\n";
+cp.code() += "RV32IMACFDV_raise(cpu, system, plugin_pointers, 0LL, 0LL);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 cp.code() += "} // procedure\n";
 } // procedure
@@ -202,7 +202,7 @@ else { // conditional
 { // block
 cp.code() += "{ // block\n";
 if ((rd % 32ULL) != 0LL) { // conditional
-cp.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = " + std::to_string(ic.current_address_ + 4ULL) + "ULL;\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = " + std::to_string(ic.current_address_ + 4ULL) + "ULL;\n";
 } // conditional
 cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + ((etiss_int32)(((etiss_int32)imm) << (11)) >> (11))) + "LL;\n";
 cp.code() += "} // block\n";
@@ -256,7 +256,7 @@ ss << "jal" << " # " << ba << (" [rd=" + std::to_string(rd) + " | imm=" + std::t
 
 // JALR ------------------------------------------------------------------------
 static InstructionDefinition jalr_rd_rs1_imm (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"jalr",
 	(uint32_t) 0x000067,
 	(uint32_t) 0x00707f,
@@ -293,13 +293,13 @@ cp.code() += "} // block\n";
 } // block
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "etiss_uint32 new_pc = (*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] + " + std::to_string(((etiss_int16)(((etiss_int16)imm) << (4)) >> (4))) + "LL) & -2LL;\n";
+cp.code() += "etiss_uint32 new_pc = (*((RV32IMACFDV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] + " + std::to_string(((etiss_int16)(((etiss_int16)imm) << (4)) >> (4))) + "LL) & -2LL;\n";
 cp.code() += "if (new_pc % 2ULL) { // conditional\n";
 { // block
 cp.code() += "{ // block\n";
 { // procedure
 cp.code() += "{ // procedure\n";
-cp.code() += "RV32IMACFDPV_raise(cpu, system, plugin_pointers, 0LL, 0LL);\n";
+cp.code() += "RV32IMACFDV_raise(cpu, system, plugin_pointers, 0LL, 0LL);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 cp.code() += "} // procedure\n";
 } // procedure
@@ -310,7 +310,7 @@ cp.code() += "else { // conditional\n";
 { // block
 cp.code() += "{ // block\n";
 if ((rd % 32ULL) != 0LL) { // conditional
-cp.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = " + std::to_string(ic.current_address_ + 4ULL) + "ULL;\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = " + std::to_string(ic.current_address_ + 4ULL) + "ULL;\n";
 } // conditional
 cp.code() += "cpu->nextPc = new_pc & -2LL;\n";
 cp.code() += "} // block\n";
@@ -361,7 +361,7 @@ ss << "jalr" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std::
 
 // BEQ -------------------------------------------------------------------------
 static InstructionDefinition beq_imm_rs1_rs2 (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"beq",
 	(uint32_t) 0x000063,
 	(uint32_t) 0x00707f,
@@ -404,7 +404,7 @@ cp.code() += "} // block\n";
 } // block
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "if (*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] == *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs2 % 32ULL) + "ULL]) { // conditional\n";
+cp.code() += "if (*((RV32IMACFDV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] == *((RV32IMACFDV*)cpu)->X[" + std::to_string(rs2 % 32ULL) + "ULL]) { // conditional\n";
 { // block
 cp.code() += "{ // block\n";
 if (imm % 2ULL) { // conditional
@@ -412,7 +412,7 @@ if (imm % 2ULL) { // conditional
 cp.code() += "{ // block\n";
 { // procedure
 cp.code() += "{ // procedure\n";
-cp.code() += "RV32IMACFDPV_raise(cpu, system, plugin_pointers, 0LL, 0LL);\n";
+cp.code() += "RV32IMACFDV_raise(cpu, system, plugin_pointers, 0LL, 0LL);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 cp.code() += "} // procedure\n";
 } // procedure
@@ -480,7 +480,7 @@ ss << "beq" << " # " << ba << (" [imm=" + std::to_string(imm) + " | rs1=" + std:
 
 // BNE -------------------------------------------------------------------------
 static InstructionDefinition bne_imm_rs1_rs2 (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"bne",
 	(uint32_t) 0x001063,
 	(uint32_t) 0x00707f,
@@ -523,7 +523,7 @@ cp.code() += "} // block\n";
 } // block
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "if (*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] != *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs2 % 32ULL) + "ULL]) { // conditional\n";
+cp.code() += "if (*((RV32IMACFDV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] != *((RV32IMACFDV*)cpu)->X[" + std::to_string(rs2 % 32ULL) + "ULL]) { // conditional\n";
 { // block
 cp.code() += "{ // block\n";
 if (imm % 2ULL) { // conditional
@@ -531,7 +531,7 @@ if (imm % 2ULL) { // conditional
 cp.code() += "{ // block\n";
 { // procedure
 cp.code() += "{ // procedure\n";
-cp.code() += "RV32IMACFDPV_raise(cpu, system, plugin_pointers, 0LL, 0LL);\n";
+cp.code() += "RV32IMACFDV_raise(cpu, system, plugin_pointers, 0LL, 0LL);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 cp.code() += "} // procedure\n";
 } // procedure
@@ -599,7 +599,7 @@ ss << "bne" << " # " << ba << (" [imm=" + std::to_string(imm) + " | rs1=" + std:
 
 // BLT -------------------------------------------------------------------------
 static InstructionDefinition blt_imm_rs1_rs2 (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"blt",
 	(uint32_t) 0x004063,
 	(uint32_t) 0x00707f,
@@ -642,7 +642,7 @@ cp.code() += "} // block\n";
 } // block
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "if ((etiss_int32)(*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL]) < (etiss_int32)(*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs2 % 32ULL) + "ULL])) { // conditional\n";
+cp.code() += "if ((etiss_int32)(*((RV32IMACFDV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL]) < (etiss_int32)(*((RV32IMACFDV*)cpu)->X[" + std::to_string(rs2 % 32ULL) + "ULL])) { // conditional\n";
 { // block
 cp.code() += "{ // block\n";
 if (imm % 2ULL) { // conditional
@@ -650,7 +650,7 @@ if (imm % 2ULL) { // conditional
 cp.code() += "{ // block\n";
 { // procedure
 cp.code() += "{ // procedure\n";
-cp.code() += "RV32IMACFDPV_raise(cpu, system, plugin_pointers, 0LL, 0LL);\n";
+cp.code() += "RV32IMACFDV_raise(cpu, system, plugin_pointers, 0LL, 0LL);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 cp.code() += "} // procedure\n";
 } // procedure
@@ -718,7 +718,7 @@ ss << "blt" << " # " << ba << (" [imm=" + std::to_string(imm) + " | rs1=" + std:
 
 // BGE -------------------------------------------------------------------------
 static InstructionDefinition bge_imm_rs1_rs2 (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"bge",
 	(uint32_t) 0x005063,
 	(uint32_t) 0x00707f,
@@ -761,7 +761,7 @@ cp.code() += "} // block\n";
 } // block
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "if ((etiss_int32)(*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL]) >= (etiss_int32)(*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs2 % 32ULL) + "ULL])) { // conditional\n";
+cp.code() += "if ((etiss_int32)(*((RV32IMACFDV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL]) >= (etiss_int32)(*((RV32IMACFDV*)cpu)->X[" + std::to_string(rs2 % 32ULL) + "ULL])) { // conditional\n";
 { // block
 cp.code() += "{ // block\n";
 if (imm % 2ULL) { // conditional
@@ -769,7 +769,7 @@ if (imm % 2ULL) { // conditional
 cp.code() += "{ // block\n";
 { // procedure
 cp.code() += "{ // procedure\n";
-cp.code() += "RV32IMACFDPV_raise(cpu, system, plugin_pointers, 0LL, 0LL);\n";
+cp.code() += "RV32IMACFDV_raise(cpu, system, plugin_pointers, 0LL, 0LL);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 cp.code() += "} // procedure\n";
 } // procedure
@@ -837,7 +837,7 @@ ss << "bge" << " # " << ba << (" [imm=" + std::to_string(imm) + " | rs1=" + std:
 
 // BLTU ------------------------------------------------------------------------
 static InstructionDefinition bltu_imm_rs1_rs2 (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"bltu",
 	(uint32_t) 0x006063,
 	(uint32_t) 0x00707f,
@@ -880,7 +880,7 @@ cp.code() += "} // block\n";
 } // block
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "if (*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] < *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs2 % 32ULL) + "ULL]) { // conditional\n";
+cp.code() += "if (*((RV32IMACFDV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] < *((RV32IMACFDV*)cpu)->X[" + std::to_string(rs2 % 32ULL) + "ULL]) { // conditional\n";
 { // block
 cp.code() += "{ // block\n";
 if (imm % 2ULL) { // conditional
@@ -888,7 +888,7 @@ if (imm % 2ULL) { // conditional
 cp.code() += "{ // block\n";
 { // procedure
 cp.code() += "{ // procedure\n";
-cp.code() += "RV32IMACFDPV_raise(cpu, system, plugin_pointers, 0LL, 0LL);\n";
+cp.code() += "RV32IMACFDV_raise(cpu, system, plugin_pointers, 0LL, 0LL);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 cp.code() += "} // procedure\n";
 } // procedure
@@ -956,7 +956,7 @@ ss << "bltu" << " # " << ba << (" [imm=" + std::to_string(imm) + " | rs1=" + std
 
 // BGEU ------------------------------------------------------------------------
 static InstructionDefinition bgeu_imm_rs1_rs2 (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"bgeu",
 	(uint32_t) 0x007063,
 	(uint32_t) 0x00707f,
@@ -999,7 +999,7 @@ cp.code() += "} // block\n";
 } // block
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "if (*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] >= *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs2 % 32ULL) + "ULL]) { // conditional\n";
+cp.code() += "if (*((RV32IMACFDV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] >= *((RV32IMACFDV*)cpu)->X[" + std::to_string(rs2 % 32ULL) + "ULL]) { // conditional\n";
 { // block
 cp.code() += "{ // block\n";
 if (imm % 2ULL) { // conditional
@@ -1007,7 +1007,7 @@ if (imm % 2ULL) { // conditional
 cp.code() += "{ // block\n";
 { // procedure
 cp.code() += "{ // procedure\n";
-cp.code() += "RV32IMACFDPV_raise(cpu, system, plugin_pointers, 0LL, 0LL);\n";
+cp.code() += "RV32IMACFDV_raise(cpu, system, plugin_pointers, 0LL, 0LL);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 cp.code() += "} // procedure\n";
 } // procedure
@@ -1075,7 +1075,7 @@ ss << "bgeu" << " # " << ba << (" [imm=" + std::to_string(imm) + " | rs1=" + std
 
 // LB --------------------------------------------------------------------------
 static InstructionDefinition lb_rd_rs1_imm (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"lb",
 	(uint32_t) 0x000003,
 	(uint32_t) 0x00707f,
@@ -1112,20 +1112,20 @@ cp.code() += "} // block\n";
 } // block
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "etiss_uint32 load_address = *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] + " + std::to_string(((etiss_int16)(((etiss_int16)imm) << (4)) >> (4))) + "LL;\n";
+cp.code() += "etiss_uint32 load_address = *((RV32IMACFDV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] + " + std::to_string(((etiss_int16)(((etiss_int16)imm) << (4)) >> (4))) + "LL;\n";
 cp.code() += "etiss_uint8 mem_val_0;\n";
 cp.code() += "cpu->exception |= (*(system->dread))(system->handle, cpu, load_address, (etiss_uint8*)&mem_val_0, 1);\n";
 cp.code() += "if (cpu->exception) { // conditional\n";
 { // procedure
 cp.code() += "{ // procedure\n";
-cp.code() += "RV32IMACFDPV_translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
+cp.code() += "RV32IMACFDV_translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 cp.code() += "} // procedure\n";
 } // procedure
 cp.code() += "} // conditional\n";
 cp.code() += "etiss_int8 res = (etiss_int8)(mem_val_0);\n";
 if ((rd % 32ULL) != 0LL) { // conditional
-cp.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = (etiss_uint32)(res);\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = (etiss_uint32)(res);\n";
 } // conditional
 cp.code() += "} // block\n";
 } // block
@@ -1172,7 +1172,7 @@ ss << "lb" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std::to
 
 // LH --------------------------------------------------------------------------
 static InstructionDefinition lh_rd_rs1_imm (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"lh",
 	(uint32_t) 0x001003,
 	(uint32_t) 0x00707f,
@@ -1209,20 +1209,20 @@ cp.code() += "} // block\n";
 } // block
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "etiss_uint32 load_address = *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] + " + std::to_string(((etiss_int16)(((etiss_int16)imm) << (4)) >> (4))) + "LL;\n";
+cp.code() += "etiss_uint32 load_address = *((RV32IMACFDV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] + " + std::to_string(((etiss_int16)(((etiss_int16)imm) << (4)) >> (4))) + "LL;\n";
 cp.code() += "etiss_uint16 mem_val_0;\n";
 cp.code() += "cpu->exception |= (*(system->dread))(system->handle, cpu, load_address, (etiss_uint8*)&mem_val_0, 2);\n";
 cp.code() += "if (cpu->exception) { // conditional\n";
 { // procedure
 cp.code() += "{ // procedure\n";
-cp.code() += "RV32IMACFDPV_translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
+cp.code() += "RV32IMACFDV_translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 cp.code() += "} // procedure\n";
 } // procedure
 cp.code() += "} // conditional\n";
 cp.code() += "etiss_int16 res = (etiss_int16)(mem_val_0);\n";
 if ((rd % 32ULL) != 0LL) { // conditional
-cp.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = (etiss_uint32)(res);\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = (etiss_uint32)(res);\n";
 } // conditional
 cp.code() += "} // block\n";
 } // block
@@ -1269,7 +1269,7 @@ ss << "lh" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std::to
 
 // LW --------------------------------------------------------------------------
 static InstructionDefinition lw_rd_rs1_imm (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"lw",
 	(uint32_t) 0x002003,
 	(uint32_t) 0x00707f,
@@ -1306,20 +1306,20 @@ cp.code() += "} // block\n";
 } // block
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "etiss_uint32 load_address = *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] + " + std::to_string(((etiss_int16)(((etiss_int16)imm) << (4)) >> (4))) + "LL;\n";
+cp.code() += "etiss_uint32 load_address = *((RV32IMACFDV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] + " + std::to_string(((etiss_int16)(((etiss_int16)imm) << (4)) >> (4))) + "LL;\n";
 cp.code() += "etiss_uint32 mem_val_0;\n";
 cp.code() += "cpu->exception |= (*(system->dread))(system->handle, cpu, load_address, (etiss_uint8*)&mem_val_0, 4);\n";
 cp.code() += "if (cpu->exception) { // conditional\n";
 { // procedure
 cp.code() += "{ // procedure\n";
-cp.code() += "RV32IMACFDPV_translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
+cp.code() += "RV32IMACFDV_translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 cp.code() += "} // procedure\n";
 } // procedure
 cp.code() += "} // conditional\n";
 cp.code() += "etiss_int32 res = (etiss_int32)(mem_val_0);\n";
 if ((rd % 32ULL) != 0LL) { // conditional
-cp.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = (etiss_uint32)(res);\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = (etiss_uint32)(res);\n";
 } // conditional
 cp.code() += "} // block\n";
 } // block
@@ -1366,7 +1366,7 @@ ss << "lw" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std::to
 
 // LBU -------------------------------------------------------------------------
 static InstructionDefinition lbu_rd_rs1_imm (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"lbu",
 	(uint32_t) 0x004003,
 	(uint32_t) 0x00707f,
@@ -1403,20 +1403,20 @@ cp.code() += "} // block\n";
 } // block
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "etiss_uint32 load_address = *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] + " + std::to_string(((etiss_int16)(((etiss_int16)imm) << (4)) >> (4))) + "LL;\n";
+cp.code() += "etiss_uint32 load_address = *((RV32IMACFDV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] + " + std::to_string(((etiss_int16)(((etiss_int16)imm) << (4)) >> (4))) + "LL;\n";
 cp.code() += "etiss_uint8 mem_val_0;\n";
 cp.code() += "cpu->exception |= (*(system->dread))(system->handle, cpu, load_address, (etiss_uint8*)&mem_val_0, 1);\n";
 cp.code() += "if (cpu->exception) { // conditional\n";
 { // procedure
 cp.code() += "{ // procedure\n";
-cp.code() += "RV32IMACFDPV_translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
+cp.code() += "RV32IMACFDV_translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 cp.code() += "} // procedure\n";
 } // procedure
 cp.code() += "} // conditional\n";
 cp.code() += "etiss_uint8 res = (etiss_uint8)(mem_val_0);\n";
 if ((rd % 32ULL) != 0LL) { // conditional
-cp.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = (etiss_uint32)(res);\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = (etiss_uint32)(res);\n";
 } // conditional
 cp.code() += "} // block\n";
 } // block
@@ -1463,7 +1463,7 @@ ss << "lbu" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std::t
 
 // LHU -------------------------------------------------------------------------
 static InstructionDefinition lhu_rd_rs1_imm (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"lhu",
 	(uint32_t) 0x005003,
 	(uint32_t) 0x00707f,
@@ -1500,20 +1500,20 @@ cp.code() += "} // block\n";
 } // block
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "etiss_uint32 load_address = *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] + " + std::to_string(((etiss_int16)(((etiss_int16)imm) << (4)) >> (4))) + "LL;\n";
+cp.code() += "etiss_uint32 load_address = *((RV32IMACFDV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] + " + std::to_string(((etiss_int16)(((etiss_int16)imm) << (4)) >> (4))) + "LL;\n";
 cp.code() += "etiss_uint16 mem_val_0;\n";
 cp.code() += "cpu->exception |= (*(system->dread))(system->handle, cpu, load_address, (etiss_uint8*)&mem_val_0, 2);\n";
 cp.code() += "if (cpu->exception) { // conditional\n";
 { // procedure
 cp.code() += "{ // procedure\n";
-cp.code() += "RV32IMACFDPV_translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
+cp.code() += "RV32IMACFDV_translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 cp.code() += "} // procedure\n";
 } // procedure
 cp.code() += "} // conditional\n";
 cp.code() += "etiss_uint16 res = (etiss_uint16)(mem_val_0);\n";
 if ((rd % 32ULL) != 0LL) { // conditional
-cp.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = (etiss_uint32)(res);\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = (etiss_uint32)(res);\n";
 } // conditional
 cp.code() += "} // block\n";
 } // block
@@ -1560,7 +1560,7 @@ ss << "lhu" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std::t
 
 // SB --------------------------------------------------------------------------
 static InstructionDefinition sb_imm_rs1_rs2 (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"sb",
 	(uint32_t) 0x000023,
 	(uint32_t) 0x00707f,
@@ -1599,14 +1599,14 @@ cp.code() += "} // block\n";
 } // block
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "etiss_uint32 store_address = *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] + " + std::to_string(((etiss_int16)(((etiss_int16)imm) << (4)) >> (4))) + "LL;\n";
+cp.code() += "etiss_uint32 store_address = *((RV32IMACFDV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] + " + std::to_string(((etiss_int16)(((etiss_int16)imm) << (4)) >> (4))) + "LL;\n";
 cp.code() += "etiss_uint8 mem_val_0;\n";
-cp.code() += "mem_val_0 = (etiss_int8)(*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs2 % 32ULL) + "ULL]);\n";
+cp.code() += "mem_val_0 = (etiss_int8)(*((RV32IMACFDV*)cpu)->X[" + std::to_string(rs2 % 32ULL) + "ULL]);\n";
 cp.code() += "cpu->exception |= (*(system->dwrite))(system->handle, cpu, store_address, (etiss_uint8*)&mem_val_0, 1);\n";
 cp.code() += "if (cpu->exception) { // conditional\n";
 { // procedure
 cp.code() += "{ // procedure\n";
-cp.code() += "RV32IMACFDPV_translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
+cp.code() += "RV32IMACFDV_translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 cp.code() += "} // procedure\n";
 } // procedure
@@ -1658,7 +1658,7 @@ ss << "sb" << " # " << ba << (" [imm=" + std::to_string(imm) + " | rs1=" + std::
 
 // SH --------------------------------------------------------------------------
 static InstructionDefinition sh_imm_rs1_rs2 (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"sh",
 	(uint32_t) 0x001023,
 	(uint32_t) 0x00707f,
@@ -1697,14 +1697,14 @@ cp.code() += "} // block\n";
 } // block
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "etiss_uint32 store_address = *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] + " + std::to_string(((etiss_int16)(((etiss_int16)imm) << (4)) >> (4))) + "LL;\n";
+cp.code() += "etiss_uint32 store_address = *((RV32IMACFDV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] + " + std::to_string(((etiss_int16)(((etiss_int16)imm) << (4)) >> (4))) + "LL;\n";
 cp.code() += "etiss_uint16 mem_val_0;\n";
-cp.code() += "mem_val_0 = (etiss_int16)(*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs2 % 32ULL) + "ULL]);\n";
+cp.code() += "mem_val_0 = (etiss_int16)(*((RV32IMACFDV*)cpu)->X[" + std::to_string(rs2 % 32ULL) + "ULL]);\n";
 cp.code() += "cpu->exception |= (*(system->dwrite))(system->handle, cpu, store_address, (etiss_uint8*)&mem_val_0, 2);\n";
 cp.code() += "if (cpu->exception) { // conditional\n";
 { // procedure
 cp.code() += "{ // procedure\n";
-cp.code() += "RV32IMACFDPV_translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
+cp.code() += "RV32IMACFDV_translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 cp.code() += "} // procedure\n";
 } // procedure
@@ -1756,7 +1756,7 @@ ss << "sh" << " # " << ba << (" [imm=" + std::to_string(imm) + " | rs1=" + std::
 
 // SW --------------------------------------------------------------------------
 static InstructionDefinition sw_imm_rs1_rs2 (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"sw",
 	(uint32_t) 0x002023,
 	(uint32_t) 0x00707f,
@@ -1795,14 +1795,14 @@ cp.code() += "} // block\n";
 } // block
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "etiss_uint32 store_address = *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] + " + std::to_string(((etiss_int16)(((etiss_int16)imm) << (4)) >> (4))) + "LL;\n";
+cp.code() += "etiss_uint32 store_address = *((RV32IMACFDV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] + " + std::to_string(((etiss_int16)(((etiss_int16)imm) << (4)) >> (4))) + "LL;\n";
 cp.code() += "etiss_uint32 mem_val_0;\n";
-cp.code() += "mem_val_0 = (etiss_int32)(*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs2 % 32ULL) + "ULL]);\n";
+cp.code() += "mem_val_0 = (etiss_int32)(*((RV32IMACFDV*)cpu)->X[" + std::to_string(rs2 % 32ULL) + "ULL]);\n";
 cp.code() += "cpu->exception |= (*(system->dwrite))(system->handle, cpu, store_address, (etiss_uint8*)&mem_val_0, 4);\n";
 cp.code() += "if (cpu->exception) { // conditional\n";
 { // procedure
 cp.code() += "{ // procedure\n";
-cp.code() += "RV32IMACFDPV_translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
+cp.code() += "RV32IMACFDV_translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 cp.code() += "} // procedure\n";
 } // procedure
@@ -1854,7 +1854,7 @@ ss << "sw" << " # " << ba << (" [imm=" + std::to_string(imm) + " | rs1=" + std::
 
 // ADDI ------------------------------------------------------------------------
 static InstructionDefinition addi_rd_rs1_imm (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"addi",
 	(uint32_t) 0x000013,
 	(uint32_t) 0x00707f,
@@ -1890,7 +1890,7 @@ cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4) + "ULL;\
 cp.code() += "} // block\n";
 } // block
 if ((rd % 32ULL) != 0LL) { // conditional
-cp.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] + " + std::to_string(((etiss_int16)(((etiss_int16)imm) << (4)) >> (4))) + "LL;\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = *((RV32IMACFDV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] + " + std::to_string(((etiss_int16)(((etiss_int16)imm) << (4)) >> (4))) + "LL;\n";
 } // conditional
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
 cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
@@ -1926,7 +1926,7 @@ ss << "addi" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std::
 
 // SLTI ------------------------------------------------------------------------
 static InstructionDefinition slti_rd_rs1_imm (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"slti",
 	(uint32_t) 0x002013,
 	(uint32_t) 0x00707f,
@@ -1962,7 +1962,7 @@ cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4) + "ULL;\
 cp.code() += "} // block\n";
 } // block
 if ((rd % 32ULL) != 0LL) { // conditional
-cp.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = (((etiss_int32)(*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL]) < " + std::to_string(((etiss_int16)(((etiss_int16)imm) << (4)) >> (4))) + "LL)) ? (1ULL) : (0LL);\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = (((etiss_int32)(*((RV32IMACFDV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL]) < " + std::to_string(((etiss_int16)(((etiss_int16)imm) << (4)) >> (4))) + "LL)) ? (1ULL) : (0LL);\n";
 } // conditional
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
 cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
@@ -1998,7 +1998,7 @@ ss << "slti" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std::
 
 // SLTIU -----------------------------------------------------------------------
 static InstructionDefinition sltiu_rd_rs1_imm (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"sltiu",
 	(uint32_t) 0x003013,
 	(uint32_t) 0x00707f,
@@ -2034,7 +2034,7 @@ cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4) + "ULL;\
 cp.code() += "} // block\n";
 } // block
 if ((rd % 32ULL) != 0LL) { // conditional
-cp.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = ((*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] < " + std::to_string((etiss_uint32)((((etiss_int16)(((etiss_int16)imm) << (4)) >> (4))))) + "ULL)) ? (1ULL) : (0LL);\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = ((*((RV32IMACFDV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] < " + std::to_string((etiss_uint32)((((etiss_int16)(((etiss_int16)imm) << (4)) >> (4))))) + "ULL)) ? (1ULL) : (0LL);\n";
 } // conditional
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
 cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
@@ -2070,7 +2070,7 @@ ss << "sltiu" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std:
 
 // XORI ------------------------------------------------------------------------
 static InstructionDefinition xori_rd_rs1_imm (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"xori",
 	(uint32_t) 0x004013,
 	(uint32_t) 0x00707f,
@@ -2106,7 +2106,7 @@ cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4) + "ULL;\
 cp.code() += "} // block\n";
 } // block
 if ((rd % 32ULL) != 0LL) { // conditional
-cp.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] ^ " + std::to_string((etiss_uint32)((((etiss_int16)(((etiss_int16)imm) << (4)) >> (4))))) + "ULL;\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = *((RV32IMACFDV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] ^ " + std::to_string((etiss_uint32)((((etiss_int16)(((etiss_int16)imm) << (4)) >> (4))))) + "ULL;\n";
 } // conditional
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
 cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
@@ -2142,7 +2142,7 @@ ss << "xori" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std::
 
 // ORI -------------------------------------------------------------------------
 static InstructionDefinition ori_rd_rs1_imm (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"ori",
 	(uint32_t) 0x006013,
 	(uint32_t) 0x00707f,
@@ -2178,7 +2178,7 @@ cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4) + "ULL;\
 cp.code() += "} // block\n";
 } // block
 if ((rd % 32ULL) != 0LL) { // conditional
-cp.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] | " + std::to_string((etiss_uint32)((((etiss_int16)(((etiss_int16)imm) << (4)) >> (4))))) + "ULL;\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = *((RV32IMACFDV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] | " + std::to_string((etiss_uint32)((((etiss_int16)(((etiss_int16)imm) << (4)) >> (4))))) + "ULL;\n";
 } // conditional
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
 cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
@@ -2214,7 +2214,7 @@ ss << "ori" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std::t
 
 // ANDI ------------------------------------------------------------------------
 static InstructionDefinition andi_rd_rs1_imm (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"andi",
 	(uint32_t) 0x007013,
 	(uint32_t) 0x00707f,
@@ -2250,7 +2250,7 @@ cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4) + "ULL;\
 cp.code() += "} // block\n";
 } // block
 if ((rd % 32ULL) != 0LL) { // conditional
-cp.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] & " + std::to_string((etiss_uint32)((((etiss_int16)(((etiss_int16)imm) << (4)) >> (4))))) + "ULL;\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = *((RV32IMACFDV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] & " + std::to_string((etiss_uint32)((((etiss_int16)(((etiss_int16)imm) << (4)) >> (4))))) + "ULL;\n";
 } // conditional
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
 cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
@@ -2286,7 +2286,7 @@ ss << "andi" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std::
 
 // SLLI ------------------------------------------------------------------------
 static InstructionDefinition slli_rd_rs1_shamt (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"slli",
 	(uint32_t) 0x001013,
 	(uint32_t) 0xfe00707f,
@@ -2322,7 +2322,7 @@ cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4) + "ULL;\
 cp.code() += "} // block\n";
 } // block
 if ((rd % 32ULL) != 0LL) { // conditional
-cp.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] << " + std::to_string(shamt) + "ULL;\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = *((RV32IMACFDV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] << " + std::to_string(shamt) + "ULL;\n";
 } // conditional
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
 cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
@@ -2358,7 +2358,7 @@ ss << "slli" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std::
 
 // SRLI ------------------------------------------------------------------------
 static InstructionDefinition srli_rd_rs1_shamt (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"srli",
 	(uint32_t) 0x005013,
 	(uint32_t) 0xfe00707f,
@@ -2394,7 +2394,7 @@ cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4) + "ULL;\
 cp.code() += "} // block\n";
 } // block
 if ((rd % 32ULL) != 0LL) { // conditional
-cp.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] >> " + std::to_string(shamt) + "ULL;\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = *((RV32IMACFDV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] >> " + std::to_string(shamt) + "ULL;\n";
 } // conditional
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
 cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
@@ -2430,7 +2430,7 @@ ss << "srli" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std::
 
 // SRAI ------------------------------------------------------------------------
 static InstructionDefinition srai_rd_rs1_shamt (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"srai",
 	(uint32_t) 0x40005013,
 	(uint32_t) 0xfe00707f,
@@ -2466,7 +2466,7 @@ cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4) + "ULL;\
 cp.code() += "} // block\n";
 } // block
 if ((rd % 32ULL) != 0LL) { // conditional
-cp.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = (etiss_int32)(*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL]) >> " + std::to_string(shamt) + "ULL;\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = (etiss_int32)(*((RV32IMACFDV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL]) >> " + std::to_string(shamt) + "ULL;\n";
 } // conditional
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
 cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
@@ -2502,7 +2502,7 @@ ss << "srai" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std::
 
 // ADD -------------------------------------------------------------------------
 static InstructionDefinition add_rd_rs1_rs2 (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"add",
 	(uint32_t) 0x000033,
 	(uint32_t) 0xfe00707f,
@@ -2538,7 +2538,7 @@ cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4) + "ULL;\
 cp.code() += "} // block\n";
 } // block
 if ((rd % 32ULL) != 0LL) { // conditional
-cp.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] + *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs2 % 32ULL) + "ULL];\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = *((RV32IMACFDV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] + *((RV32IMACFDV*)cpu)->X[" + std::to_string(rs2 % 32ULL) + "ULL];\n";
 } // conditional
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
 cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
@@ -2574,7 +2574,7 @@ ss << "add" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std::t
 
 // SUB -------------------------------------------------------------------------
 static InstructionDefinition sub_rd_rs1_rs2 (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"sub",
 	(uint32_t) 0x40000033,
 	(uint32_t) 0xfe00707f,
@@ -2610,7 +2610,7 @@ cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4) + "ULL;\
 cp.code() += "} // block\n";
 } // block
 if ((rd % 32ULL) != 0LL) { // conditional
-cp.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] - *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs2 % 32ULL) + "ULL];\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = *((RV32IMACFDV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] - *((RV32IMACFDV*)cpu)->X[" + std::to_string(rs2 % 32ULL) + "ULL];\n";
 } // conditional
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
 cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
@@ -2646,7 +2646,7 @@ ss << "sub" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std::t
 
 // SLL -------------------------------------------------------------------------
 static InstructionDefinition sll_rd_rs1_rs2 (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"sll",
 	(uint32_t) 0x001033,
 	(uint32_t) 0xfe00707f,
@@ -2682,7 +2682,7 @@ cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4) + "ULL;\
 cp.code() += "} // block\n";
 } // block
 if ((rd % 32ULL) != 0LL) { // conditional
-cp.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] << (*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs2 % 32ULL) + "ULL] & 31ULL);\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = *((RV32IMACFDV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] << (*((RV32IMACFDV*)cpu)->X[" + std::to_string(rs2 % 32ULL) + "ULL] & 31ULL);\n";
 } // conditional
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
 cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
@@ -2718,7 +2718,7 @@ ss << "sll" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std::t
 
 // SLT -------------------------------------------------------------------------
 static InstructionDefinition slt_rd_rs1_rs2 (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"slt",
 	(uint32_t) 0x002033,
 	(uint32_t) 0xfe00707f,
@@ -2754,7 +2754,7 @@ cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4) + "ULL;\
 cp.code() += "} // block\n";
 } // block
 if ((rd % 32ULL) != 0LL) { // conditional
-cp.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = ((etiss_int32)(*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL]) < (etiss_int32)(*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs2 % 32ULL) + "ULL])) ? (1ULL) : (0LL);\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = ((etiss_int32)(*((RV32IMACFDV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL]) < (etiss_int32)(*((RV32IMACFDV*)cpu)->X[" + std::to_string(rs2 % 32ULL) + "ULL])) ? (1ULL) : (0LL);\n";
 } // conditional
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
 cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
@@ -2790,7 +2790,7 @@ ss << "slt" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std::t
 
 // SLTU ------------------------------------------------------------------------
 static InstructionDefinition sltu_rd_rs1_rs2 (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"sltu",
 	(uint32_t) 0x003033,
 	(uint32_t) 0xfe00707f,
@@ -2826,7 +2826,7 @@ cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4) + "ULL;\
 cp.code() += "} // block\n";
 } // block
 if ((rd % 32ULL) != 0LL) { // conditional
-cp.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = (*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] < *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs2 % 32ULL) + "ULL]) ? (1ULL) : (0LL);\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = (*((RV32IMACFDV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] < *((RV32IMACFDV*)cpu)->X[" + std::to_string(rs2 % 32ULL) + "ULL]) ? (1ULL) : (0LL);\n";
 } // conditional
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
 cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
@@ -2862,7 +2862,7 @@ ss << "sltu" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std::
 
 // XOR -------------------------------------------------------------------------
 static InstructionDefinition xor_rd_rs1_rs2 (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"xor",
 	(uint32_t) 0x004033,
 	(uint32_t) 0xfe00707f,
@@ -2898,7 +2898,7 @@ cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4) + "ULL;\
 cp.code() += "} // block\n";
 } // block
 if ((rd % 32ULL) != 0LL) { // conditional
-cp.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] ^ *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs2 % 32ULL) + "ULL];\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = *((RV32IMACFDV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] ^ *((RV32IMACFDV*)cpu)->X[" + std::to_string(rs2 % 32ULL) + "ULL];\n";
 } // conditional
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
 cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
@@ -2934,7 +2934,7 @@ ss << "xor" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std::t
 
 // SRL -------------------------------------------------------------------------
 static InstructionDefinition srl_rd_rs1_rs2 (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"srl",
 	(uint32_t) 0x005033,
 	(uint32_t) 0xfe00707f,
@@ -2970,7 +2970,7 @@ cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4) + "ULL;\
 cp.code() += "} // block\n";
 } // block
 if ((rd % 32ULL) != 0LL) { // conditional
-cp.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] >> (*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs2 % 32ULL) + "ULL] & 31ULL);\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = *((RV32IMACFDV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] >> (*((RV32IMACFDV*)cpu)->X[" + std::to_string(rs2 % 32ULL) + "ULL] & 31ULL);\n";
 } // conditional
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
 cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
@@ -3006,7 +3006,7 @@ ss << "srl" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std::t
 
 // SRA -------------------------------------------------------------------------
 static InstructionDefinition sra_rd_rs1_rs2 (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"sra",
 	(uint32_t) 0x40005033,
 	(uint32_t) 0xfe00707f,
@@ -3042,7 +3042,7 @@ cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4) + "ULL;\
 cp.code() += "} // block\n";
 } // block
 if ((rd % 32ULL) != 0LL) { // conditional
-cp.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = (etiss_int32)(*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL]) >> (*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs2 % 32ULL) + "ULL] & 31ULL);\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = (etiss_int32)(*((RV32IMACFDV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL]) >> (*((RV32IMACFDV*)cpu)->X[" + std::to_string(rs2 % 32ULL) + "ULL] & 31ULL);\n";
 } // conditional
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
 cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
@@ -3078,7 +3078,7 @@ ss << "sra" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std::t
 
 // OR --------------------------------------------------------------------------
 static InstructionDefinition or_rd_rs1_rs2 (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"or",
 	(uint32_t) 0x006033,
 	(uint32_t) 0xfe00707f,
@@ -3114,7 +3114,7 @@ cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4) + "ULL;\
 cp.code() += "} // block\n";
 } // block
 if ((rd % 32ULL) != 0LL) { // conditional
-cp.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] | *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs2 % 32ULL) + "ULL];\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = *((RV32IMACFDV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] | *((RV32IMACFDV*)cpu)->X[" + std::to_string(rs2 % 32ULL) + "ULL];\n";
 } // conditional
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
 cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
@@ -3150,7 +3150,7 @@ ss << "or" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std::to
 
 // AND -------------------------------------------------------------------------
 static InstructionDefinition and_rd_rs1_rs2 (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"and",
 	(uint32_t) 0x007033,
 	(uint32_t) 0xfe00707f,
@@ -3186,7 +3186,7 @@ cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4) + "ULL;\
 cp.code() += "} // block\n";
 } // block
 if ((rd % 32ULL) != 0LL) { // conditional
-cp.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] & *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs2 % 32ULL) + "ULL];\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = *((RV32IMACFDV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] & *((RV32IMACFDV*)cpu)->X[" + std::to_string(rs2 % 32ULL) + "ULL];\n";
 } // conditional
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
 cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
@@ -3222,7 +3222,7 @@ ss << "and" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std::t
 
 // FENCE -----------------------------------------------------------------------
 static InstructionDefinition fence_rd_rs1_succ_pred_fm (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"fence",
 	(uint32_t) 0x00000f,
 	(uint32_t) 0x00707f,
@@ -3263,7 +3263,7 @@ cp.code() += "{ // block\n";
 cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4) + "ULL;\n";
 cp.code() += "} // block\n";
 } // block
-cp.code() += "((RV32IMACFDPV*)cpu)->FENCE[0ULL] = " + std::to_string(pred << 4ULL | succ) + "ULL;\n";
+cp.code() += "((RV32IMACFDV*)cpu)->FENCE[0ULL] = " + std::to_string(pred << 4ULL | succ) + "ULL;\n";
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
 cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------

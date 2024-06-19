@@ -2,13 +2,13 @@
  * Generated on Mon, 04 Jul 2022 02:39:16 +0200.
  *
  * This file contains the instruction behavior models of the Zpsfoperand
- * instruction set for the RV32IMACFDPV core architecture.
+ * instruction set for the RV32IMACFDV core architecture.
  */
 
-#include "RV32IMACFDPVArch.h"
+#include "RV32IMACFDVArch.h"
 
 #define ETISS_ARCH_STATIC_FN_ONLY
-#include "RV32IMACFDPVFuncs.h"
+#include "RV32IMACFDVFuncs.h"
 
 using namespace etiss;
 using namespace etiss::instr;
@@ -16,7 +16,7 @@ using namespace etiss::instr;
 
 // SMAR64 ----------------------------------------------------------------------
 static InstructionDefinition smar64_rd_rs1_rs2 (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"smar64",
 	(uint32_t) 0x84001077,
 	(uint32_t) 0xfe00707f,
@@ -46,14 +46,14 @@ rs2 += R_rs2_0.read(ba) << 0;
 
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
-partInit.code() += "etiss_int64 rs1_val = *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1) + "];\n";
-partInit.code() += "etiss_int64 rs2_val = *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs2) + "];\n";
-partInit.code() += "etiss_int64 rd_hi = *((RV32IMACFDPV*)cpu)->X[" + std::to_string((((rd) >> (1U)) & 15) * 2U + 1U) + "];\n";
-partInit.code() += "etiss_int32 rd_lo = *((RV32IMACFDPV*)cpu)->X[" + std::to_string((((rd) >> (1U)) & 15) * 2U) + "];\n";
+partInit.code() += "etiss_int64 rs1_val = *((RV32IMACFDV*)cpu)->X[" + std::to_string(rs1) + "];\n";
+partInit.code() += "etiss_int64 rs2_val = *((RV32IMACFDV*)cpu)->X[" + std::to_string(rs2) + "];\n";
+partInit.code() += "etiss_int64 rd_hi = *((RV32IMACFDV*)cpu)->X[" + std::to_string((((rd) >> (1U)) & 15) * 2U + 1U) + "];\n";
+partInit.code() += "etiss_int32 rd_lo = *((RV32IMACFDV*)cpu)->X[" + std::to_string((((rd) >> (1U)) & 15) * 2U) + "];\n";
 partInit.code() += "etiss_int64 temp = (((rd_hi) << 32) | (rd_lo));\n";
 partInit.code() += "etiss_int64 temp2 = temp + rs1_val * rs2_val;\n";
-partInit.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string((((rd) >> (1U)) & 15) * 2U + 1U) + "] = (((temp2) >> (32U)) & 4294967295);\n";
-partInit.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string((((rd) >> (1U)) & 15) * 2U) + "] = (((temp2) >> (0U)) & 4294967295);\n";
+partInit.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string((((rd) >> (1U)) & 15) * 2U + 1U) + "] = (((temp2) >> (32U)) & 4294967295);\n";
+partInit.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string((((rd) >> (1U)) & 15) * 2U) + "] = (((temp2) >> (0U)) & 4294967295);\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getRegisterDependencies().add(reg_name[(((rd) >> (1U)) & 15) * 2U], 32);
@@ -92,7 +92,7 @@ ss << "smar64" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std
 
 // MULR64 ----------------------------------------------------------------------
 static InstructionDefinition mulr64_rd_rs1_rs2 (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"mulr64",
 	(uint32_t) 0xf0001077,
 	(uint32_t) 0xfe00707f,
@@ -122,11 +122,11 @@ rs2 += R_rs2_0.read(ba) << 0;
 
 // -----------------------------------------------------------------------------
 partInit.code() += "cpu->instructionPointer = " + std::to_string(ic.current_address_ + 4U) + ";\n";
-partInit.code() += "etiss_uint64 rs1_val = (*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1) + "]) & 0x1ffffffff;\n";
-partInit.code() += "etiss_uint64 rs2_val = (*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs2) + "]) & 0x1ffffffff;\n";
+partInit.code() += "etiss_uint64 rs1_val = (*((RV32IMACFDV*)cpu)->X[" + std::to_string(rs1) + "]) & 0x1ffffffff;\n";
+partInit.code() += "etiss_uint64 rs2_val = (*((RV32IMACFDV*)cpu)->X[" + std::to_string(rs2) + "]) & 0x1ffffffff;\n";
 partInit.code() += "etiss_uint64 product = rs1_val * rs2_val;\n";
-partInit.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string((((rd) >> (1U)) & 15) * 2U + 1U) + "] = (((product) >> (32U)) & 4294967295);\n";
-partInit.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string((((rd) >> (1U)) & 15) * 2U) + "] = (((product) >> (0U)) & 4294967295);\n";
+partInit.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string((((rd) >> (1U)) & 15) * 2U + 1U) + "] = (((product) >> (32U)) & 4294967295);\n";
+partInit.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string((((rd) >> (1U)) & 15) * 2U) + "] = (((product) >> (0U)) & 4294967295);\n";
 // -----------------------------------------------------------------------------
 
 		partInit.getRegisterDependencies().add(reg_name[rs1], 32);

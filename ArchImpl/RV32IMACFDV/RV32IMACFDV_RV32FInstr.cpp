@@ -2,11 +2,11 @@
  * Generated on Wed, 19 Jun 2024 07:44:30 +0200.
  *
  * This file contains the instruction behavior models of the RV32F
- * instruction set for the RV32IMACFDPV core architecture.
+ * instruction set for the RV32IMACFDV core architecture.
  */
 
-#include "RV32IMACFDPVArch.h"
-#include "RV32IMACFDPVFuncs.h"
+#include "RV32IMACFDVArch.h"
+#include "RV32IMACFDVFuncs.h"
 
 using namespace etiss;
 using namespace etiss::instr;
@@ -14,7 +14,7 @@ using namespace etiss::instr;
 
 // FLW -------------------------------------------------------------------------
 static InstructionDefinition flw_rd_rs1_imm (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"flw",
 	(uint32_t) 0x002007,
 	(uint32_t) 0x00707f,
@@ -51,13 +51,13 @@ cp.code() += "} // block\n";
 } // block
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "etiss_uint32 offs = *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] + " + std::to_string(((etiss_int16)(((etiss_int16)imm) << (4)) >> (4))) + "LL;\n";
+cp.code() += "etiss_uint32 offs = *((RV32IMACFDV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] + " + std::to_string(((etiss_int16)(((etiss_int16)imm) << (4)) >> (4))) + "LL;\n";
 cp.code() += "etiss_uint32 mem_val_0;\n";
 cp.code() += "cpu->exception |= (*(system->dread))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_0, 4);\n";
 cp.code() += "if (cpu->exception) { // conditional\n";
 { // procedure
 cp.code() += "{ // procedure\n";
-cp.code() += "RV32IMACFDPV_translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
+cp.code() += "RV32IMACFDV_translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 cp.code() += "} // procedure\n";
 } // procedure
@@ -65,7 +65,7 @@ cp.code() += "} // conditional\n";
 cp.code() += "etiss_uint32 res = (etiss_uint32)(mem_val_0);\n";
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "((RV32IMACFDPV*)cpu)->F[" + std::to_string(rd) + "ULL] = -4294967296LL | (etiss_uint64)(res);\n";
+cp.code() += "((RV32IMACFDV*)cpu)->F[" + std::to_string(rd) + "ULL] = -4294967296LL | (etiss_uint64)(res);\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "} // block\n";
@@ -113,7 +113,7 @@ ss << "flw" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std::t
 
 // FSW -------------------------------------------------------------------------
 static InstructionDefinition fsw_imm_rs1_rs2 (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"fsw",
 	(uint32_t) 0x002027,
 	(uint32_t) 0x00707f,
@@ -152,14 +152,14 @@ cp.code() += "} // block\n";
 } // block
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "etiss_uint32 offs = *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] + " + std::to_string(((etiss_int16)(((etiss_int16)imm) << (4)) >> (4))) + "LL;\n";
+cp.code() += "etiss_uint32 offs = *((RV32IMACFDV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] + " + std::to_string(((etiss_int16)(((etiss_int16)imm) << (4)) >> (4))) + "LL;\n";
 cp.code() += "etiss_uint32 mem_val_0;\n";
-cp.code() += "mem_val_0 = (etiss_uint32)(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs2) + "ULL]);\n";
+cp.code() += "mem_val_0 = (etiss_uint32)(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs2) + "ULL]);\n";
 cp.code() += "cpu->exception |= (*(system->dwrite))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_0, 4);\n";
 cp.code() += "if (cpu->exception) { // conditional\n";
 { // procedure
 cp.code() += "{ // procedure\n";
-cp.code() += "RV32IMACFDPV_translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
+cp.code() += "RV32IMACFDV_translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 cp.code() += "} // procedure\n";
 } // procedure
@@ -211,7 +211,7 @@ ss << "fsw" << " # " << ba << (" [imm=" + std::to_string(imm) + " | rs1=" + std:
 
 // FMADD_S ---------------------------------------------------------------------
 static InstructionDefinition fmadd_s_rd_rm_rs1_rs2_rs3 (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"fmadd_s",
 	(uint32_t) 0x000043,
 	(uint32_t) 0x600007f,
@@ -256,12 +256,12 @@ cp.code() += "} // block\n";
 cp.code() += "{ // block\n";
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "etiss_uint32 res = fmadd_s(unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs1) + "ULL]), unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs2) + "ULL]), unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs3) + "ULL]), 0LL, RV32IMACFDPV_get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
-cp.code() += "((RV32IMACFDPV*)cpu)->F[" + std::to_string(rd) + "ULL] = -4294967296LL | (etiss_uint64)(res);\n";
+cp.code() += "etiss_uint32 res = fmadd_s(unbox_s(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL]), unbox_s(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs2) + "ULL]), unbox_s(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs3) + "ULL]), 0LL, RV32IMACFDV_get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
+cp.code() += "((RV32IMACFDV*)cpu)->F[" + std::to_string(rd) + "ULL] = -4294967296LL | (etiss_uint64)(res);\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "etiss_uint32 flags = fget_flags();\n";
-cp.code() += "((RV32IMACFDPV*)cpu)->FCSR = (((RV32IMACFDPV*)cpu)->FCSR & -32LL) | (flags & 31ULL);\n";
+cp.code() += "((RV32IMACFDV*)cpu)->FCSR = (((RV32IMACFDV*)cpu)->FCSR & -32LL) | (flags & 31ULL);\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
@@ -304,7 +304,7 @@ ss << "fmadd_s" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rm=" + std
 
 // FMSUB_S ---------------------------------------------------------------------
 static InstructionDefinition fmsub_s_rd_rm_rs1_rs2_rs3 (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"fmsub_s",
 	(uint32_t) 0x000047,
 	(uint32_t) 0x600007f,
@@ -349,12 +349,12 @@ cp.code() += "} // block\n";
 cp.code() += "{ // block\n";
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "etiss_uint32 res = fmadd_s(unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs1) + "ULL]), unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs2) + "ULL]), unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs3) + "ULL]), 1ULL, RV32IMACFDPV_get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
-cp.code() += "((RV32IMACFDPV*)cpu)->F[" + std::to_string(rd) + "ULL] = -4294967296LL | (etiss_uint64)(res);\n";
+cp.code() += "etiss_uint32 res = fmadd_s(unbox_s(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL]), unbox_s(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs2) + "ULL]), unbox_s(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs3) + "ULL]), 1ULL, RV32IMACFDV_get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
+cp.code() += "((RV32IMACFDV*)cpu)->F[" + std::to_string(rd) + "ULL] = -4294967296LL | (etiss_uint64)(res);\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "etiss_uint32 flags = fget_flags();\n";
-cp.code() += "((RV32IMACFDPV*)cpu)->FCSR = (((RV32IMACFDPV*)cpu)->FCSR & -32LL) | (flags & 31ULL);\n";
+cp.code() += "((RV32IMACFDV*)cpu)->FCSR = (((RV32IMACFDV*)cpu)->FCSR & -32LL) | (flags & 31ULL);\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
@@ -397,7 +397,7 @@ ss << "fmsub_s" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rm=" + std
 
 // FNMADD_S --------------------------------------------------------------------
 static InstructionDefinition fnmadd_s_rd_rm_rs1_rs2_rs3 (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"fnmadd_s",
 	(uint32_t) 0x00004f,
 	(uint32_t) 0x600007f,
@@ -442,15 +442,15 @@ cp.code() += "} // block\n";
 cp.code() += "{ // block\n";
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "etiss_uint32 frs1 = unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs1) + "ULL]);\n";
-cp.code() += "etiss_uint32 frs2 = unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs2) + "ULL]);\n";
-cp.code() += "etiss_uint32 frs3 = unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs3) + "ULL]);\n";
-cp.code() += "etiss_uint32 res = fmadd_s(frs1, frs2, frs3, 2ULL, RV32IMACFDPV_get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
-cp.code() += "((RV32IMACFDPV*)cpu)->F[" + std::to_string(rd) + "ULL] = -4294967296LL | (etiss_uint64)(res);\n";
+cp.code() += "etiss_uint32 frs1 = unbox_s(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL]);\n";
+cp.code() += "etiss_uint32 frs2 = unbox_s(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs2) + "ULL]);\n";
+cp.code() += "etiss_uint32 frs3 = unbox_s(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs3) + "ULL]);\n";
+cp.code() += "etiss_uint32 res = fmadd_s(frs1, frs2, frs3, 2ULL, RV32IMACFDV_get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
+cp.code() += "((RV32IMACFDV*)cpu)->F[" + std::to_string(rd) + "ULL] = -4294967296LL | (etiss_uint64)(res);\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "etiss_uint32 flags = fget_flags();\n";
-cp.code() += "((RV32IMACFDPV*)cpu)->FCSR = (((RV32IMACFDPV*)cpu)->FCSR & -32LL) | (flags & 31ULL);\n";
+cp.code() += "((RV32IMACFDV*)cpu)->FCSR = (((RV32IMACFDV*)cpu)->FCSR & -32LL) | (flags & 31ULL);\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
@@ -493,7 +493,7 @@ ss << "fnmadd_s" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rm=" + st
 
 // FNMSUB_S --------------------------------------------------------------------
 static InstructionDefinition fnmsub_s_rd_rm_rs1_rs2_rs3 (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"fnmsub_s",
 	(uint32_t) 0x00004b,
 	(uint32_t) 0x600007f,
@@ -538,15 +538,15 @@ cp.code() += "} // block\n";
 cp.code() += "{ // block\n";
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "etiss_uint32 frs1 = unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs1) + "ULL]);\n";
-cp.code() += "etiss_uint32 frs2 = unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs2) + "ULL]);\n";
-cp.code() += "etiss_uint32 frs3 = unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs3) + "ULL]);\n";
-cp.code() += "etiss_uint32 res = fmadd_s(frs1, frs2, frs3, 3ULL, RV32IMACFDPV_get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
-cp.code() += "((RV32IMACFDPV*)cpu)->F[" + std::to_string(rd) + "ULL] = -4294967296LL | (etiss_uint64)(res);\n";
+cp.code() += "etiss_uint32 frs1 = unbox_s(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL]);\n";
+cp.code() += "etiss_uint32 frs2 = unbox_s(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs2) + "ULL]);\n";
+cp.code() += "etiss_uint32 frs3 = unbox_s(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs3) + "ULL]);\n";
+cp.code() += "etiss_uint32 res = fmadd_s(frs1, frs2, frs3, 3ULL, RV32IMACFDV_get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
+cp.code() += "((RV32IMACFDV*)cpu)->F[" + std::to_string(rd) + "ULL] = -4294967296LL | (etiss_uint64)(res);\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "etiss_uint32 flags = fget_flags();\n";
-cp.code() += "((RV32IMACFDPV*)cpu)->FCSR = (((RV32IMACFDPV*)cpu)->FCSR & -32LL) | (flags & 31ULL);\n";
+cp.code() += "((RV32IMACFDV*)cpu)->FCSR = (((RV32IMACFDV*)cpu)->FCSR & -32LL) | (flags & 31ULL);\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
@@ -589,7 +589,7 @@ ss << "fnmsub_s" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rm=" + st
 
 // FADD_S ----------------------------------------------------------------------
 static InstructionDefinition fadd_s_rd_rm_rs1_rs2 (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"fadd_s",
 	(uint32_t) 0x000053,
 	(uint32_t) 0xfe00007f,
@@ -631,14 +631,14 @@ cp.code() += "} // block\n";
 cp.code() += "{ // block\n";
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "etiss_uint32 frs1 = unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs1) + "ULL]);\n";
-cp.code() += "etiss_uint32 frs2 = unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs2) + "ULL]);\n";
-cp.code() += "etiss_uint32 res = fadd_s(frs1, frs2, RV32IMACFDPV_get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
-cp.code() += "((RV32IMACFDPV*)cpu)->F[" + std::to_string(rd) + "ULL] = -4294967296LL | (etiss_uint64)(res);\n";
+cp.code() += "etiss_uint32 frs1 = unbox_s(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL]);\n";
+cp.code() += "etiss_uint32 frs2 = unbox_s(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs2) + "ULL]);\n";
+cp.code() += "etiss_uint32 res = fadd_s(frs1, frs2, RV32IMACFDV_get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
+cp.code() += "((RV32IMACFDV*)cpu)->F[" + std::to_string(rd) + "ULL] = -4294967296LL | (etiss_uint64)(res);\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "etiss_uint32 flags = fget_flags();\n";
-cp.code() += "((RV32IMACFDPV*)cpu)->FCSR = (((RV32IMACFDPV*)cpu)->FCSR & -32LL) | (flags & 31ULL);\n";
+cp.code() += "((RV32IMACFDV*)cpu)->FCSR = (((RV32IMACFDV*)cpu)->FCSR & -32LL) | (flags & 31ULL);\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
@@ -678,7 +678,7 @@ ss << "fadd_s" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rm=" + std:
 
 // FSUB_S ----------------------------------------------------------------------
 static InstructionDefinition fsub_s_rd_rm_rs1_rs2 (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"fsub_s",
 	(uint32_t) 0x8000053,
 	(uint32_t) 0xfe00007f,
@@ -720,14 +720,14 @@ cp.code() += "} // block\n";
 cp.code() += "{ // block\n";
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "etiss_uint32 frs1 = unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs1) + "ULL]);\n";
-cp.code() += "etiss_uint32 frs2 = unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs2) + "ULL]);\n";
-cp.code() += "etiss_uint32 res = fsub_s(frs1, frs2, RV32IMACFDPV_get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
-cp.code() += "((RV32IMACFDPV*)cpu)->F[" + std::to_string(rd) + "ULL] = -4294967296LL | (etiss_uint64)(res);\n";
+cp.code() += "etiss_uint32 frs1 = unbox_s(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL]);\n";
+cp.code() += "etiss_uint32 frs2 = unbox_s(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs2) + "ULL]);\n";
+cp.code() += "etiss_uint32 res = fsub_s(frs1, frs2, RV32IMACFDV_get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
+cp.code() += "((RV32IMACFDV*)cpu)->F[" + std::to_string(rd) + "ULL] = -4294967296LL | (etiss_uint64)(res);\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "etiss_uint32 flags = fget_flags();\n";
-cp.code() += "((RV32IMACFDPV*)cpu)->FCSR = (((RV32IMACFDPV*)cpu)->FCSR & -32LL) | (flags & 31ULL);\n";
+cp.code() += "((RV32IMACFDV*)cpu)->FCSR = (((RV32IMACFDV*)cpu)->FCSR & -32LL) | (flags & 31ULL);\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
@@ -767,7 +767,7 @@ ss << "fsub_s" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rm=" + std:
 
 // FMUL_S ----------------------------------------------------------------------
 static InstructionDefinition fmul_s_rd_rm_rs1_rs2 (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"fmul_s",
 	(uint32_t) 0x10000053,
 	(uint32_t) 0xfe00007f,
@@ -809,14 +809,14 @@ cp.code() += "} // block\n";
 cp.code() += "{ // block\n";
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "etiss_uint32 frs1 = unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs1) + "ULL]);\n";
-cp.code() += "etiss_uint32 frs2 = unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs2) + "ULL]);\n";
-cp.code() += "etiss_uint32 res = fmul_s(frs1, frs2, RV32IMACFDPV_get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
-cp.code() += "((RV32IMACFDPV*)cpu)->F[" + std::to_string(rd) + "ULL] = -4294967296LL | (etiss_uint64)(res);\n";
+cp.code() += "etiss_uint32 frs1 = unbox_s(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL]);\n";
+cp.code() += "etiss_uint32 frs2 = unbox_s(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs2) + "ULL]);\n";
+cp.code() += "etiss_uint32 res = fmul_s(frs1, frs2, RV32IMACFDV_get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
+cp.code() += "((RV32IMACFDV*)cpu)->F[" + std::to_string(rd) + "ULL] = -4294967296LL | (etiss_uint64)(res);\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "etiss_uint32 flags = fget_flags();\n";
-cp.code() += "((RV32IMACFDPV*)cpu)->FCSR = (((RV32IMACFDPV*)cpu)->FCSR & -32LL) | (flags & 31ULL);\n";
+cp.code() += "((RV32IMACFDV*)cpu)->FCSR = (((RV32IMACFDV*)cpu)->FCSR & -32LL) | (flags & 31ULL);\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
@@ -856,7 +856,7 @@ ss << "fmul_s" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rm=" + std:
 
 // FDIV_S ----------------------------------------------------------------------
 static InstructionDefinition fdiv_s_rd_rm_rs1_rs2 (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"fdiv_s",
 	(uint32_t) 0x18000053,
 	(uint32_t) 0xfe00007f,
@@ -898,14 +898,14 @@ cp.code() += "} // block\n";
 cp.code() += "{ // block\n";
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "etiss_uint32 frs1 = unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs1) + "ULL]);\n";
-cp.code() += "etiss_uint32 frs2 = unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs2) + "ULL]);\n";
-cp.code() += "etiss_uint32 res = fdiv_s(frs1, frs2, RV32IMACFDPV_get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
-cp.code() += "((RV32IMACFDPV*)cpu)->F[" + std::to_string(rd) + "ULL] = -4294967296LL | (etiss_uint64)(res);\n";
+cp.code() += "etiss_uint32 frs1 = unbox_s(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL]);\n";
+cp.code() += "etiss_uint32 frs2 = unbox_s(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs2) + "ULL]);\n";
+cp.code() += "etiss_uint32 res = fdiv_s(frs1, frs2, RV32IMACFDV_get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
+cp.code() += "((RV32IMACFDV*)cpu)->F[" + std::to_string(rd) + "ULL] = -4294967296LL | (etiss_uint64)(res);\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "etiss_uint32 flags = fget_flags();\n";
-cp.code() += "((RV32IMACFDPV*)cpu)->FCSR = (((RV32IMACFDPV*)cpu)->FCSR & -32LL) | (flags & 31ULL);\n";
+cp.code() += "((RV32IMACFDV*)cpu)->FCSR = (((RV32IMACFDV*)cpu)->FCSR & -32LL) | (flags & 31ULL);\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
@@ -945,7 +945,7 @@ ss << "fdiv_s" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rm=" + std:
 
 // FSQRT_S ---------------------------------------------------------------------
 static InstructionDefinition fsqrt_s_rd_rm_rs1 (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"fsqrt_s",
 	(uint32_t) 0x58000053,
 	(uint32_t) 0xfff0007f,
@@ -984,13 +984,13 @@ cp.code() += "} // block\n";
 cp.code() += "{ // block\n";
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "etiss_uint32 frs1 = unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs1) + "ULL]);\n";
-cp.code() += "etiss_uint32 res = fsqrt_s(frs1, RV32IMACFDPV_get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
-cp.code() += "((RV32IMACFDPV*)cpu)->F[" + std::to_string(rd) + "ULL] = -4294967296LL | (etiss_uint64)(res);\n";
+cp.code() += "etiss_uint32 frs1 = unbox_s(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL]);\n";
+cp.code() += "etiss_uint32 res = fsqrt_s(frs1, RV32IMACFDV_get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
+cp.code() += "((RV32IMACFDV*)cpu)->F[" + std::to_string(rd) + "ULL] = -4294967296LL | (etiss_uint64)(res);\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "etiss_uint32 flags = fget_flags();\n";
-cp.code() += "((RV32IMACFDPV*)cpu)->FCSR = (((RV32IMACFDPV*)cpu)->FCSR & -32LL) | (flags & 31ULL);\n";
+cp.code() += "((RV32IMACFDV*)cpu)->FCSR = (((RV32IMACFDV*)cpu)->FCSR & -32LL) | (flags & 31ULL);\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
@@ -1027,7 +1027,7 @@ ss << "fsqrt_s" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rm=" + std
 
 // FSGNJ_S ---------------------------------------------------------------------
 static InstructionDefinition fsgnj_s_rd_rs1_rs2 (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"fsgnj_s",
 	(uint32_t) 0x20000053,
 	(uint32_t) 0xfe00707f,
@@ -1066,10 +1066,10 @@ cp.code() += "} // block\n";
 cp.code() += "{ // block\n";
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "etiss_uint32 frs1 = unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs1) + "ULL]);\n";
-cp.code() += "etiss_uint32 frs2 = unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs2) + "ULL]);\n";
+cp.code() += "etiss_uint32 frs1 = unbox_s(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL]);\n";
+cp.code() += "etiss_uint32 frs2 = unbox_s(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs2) + "ULL]);\n";
 cp.code() += "etiss_uint32 res = ((((((frs2) >> (31ULL)) & 1ULL)) << 31) | ((((frs1) >> (0LL)) & 2147483647ULL)));\n";
-cp.code() += "((RV32IMACFDPV*)cpu)->F[" + std::to_string(rd) + "ULL] = -4294967296LL | (etiss_uint64)(res);\n";
+cp.code() += "((RV32IMACFDV*)cpu)->F[" + std::to_string(rd) + "ULL] = -4294967296LL | (etiss_uint64)(res);\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "} // block\n";
@@ -1108,7 +1108,7 @@ ss << "fsgnj_s" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + st
 
 // FSGNJN_S --------------------------------------------------------------------
 static InstructionDefinition fsgnjn_s_rd_rs1_rs2 (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"fsgnjn_s",
 	(uint32_t) 0x20001053,
 	(uint32_t) 0xfe00707f,
@@ -1147,10 +1147,10 @@ cp.code() += "} // block\n";
 cp.code() += "{ // block\n";
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "etiss_uint32 frs1 = unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs1) + "ULL]);\n";
-cp.code() += "etiss_uint32 frs2 = unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs2) + "ULL]);\n";
+cp.code() += "etiss_uint32 frs1 = unbox_s(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL]);\n";
+cp.code() += "etiss_uint32 frs2 = unbox_s(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs2) + "ULL]);\n";
 cp.code() += "etiss_uint32 res = (((~((((frs2) >> (31ULL)) & 1ULL))) << 31) | ((((frs1) >> (0LL)) & 2147483647ULL)));\n";
-cp.code() += "((RV32IMACFDPV*)cpu)->F[" + std::to_string(rd) + "ULL] = -4294967296LL | (etiss_uint64)(res);\n";
+cp.code() += "((RV32IMACFDV*)cpu)->F[" + std::to_string(rd) + "ULL] = -4294967296LL | (etiss_uint64)(res);\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "} // block\n";
@@ -1189,7 +1189,7 @@ ss << "fsgnjn_s" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + s
 
 // FSGNJX_S --------------------------------------------------------------------
 static InstructionDefinition fsgnjx_s_rd_rs1_rs2 (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"fsgnjx_s",
 	(uint32_t) 0x20002053,
 	(uint32_t) 0xfe00707f,
@@ -1228,10 +1228,10 @@ cp.code() += "} // block\n";
 cp.code() += "{ // block\n";
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "etiss_uint32 frs1 = unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs1) + "ULL]);\n";
-cp.code() += "etiss_uint32 frs2 = unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs2) + "ULL]);\n";
+cp.code() += "etiss_uint32 frs1 = unbox_s(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL]);\n";
+cp.code() += "etiss_uint32 frs2 = unbox_s(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs2) + "ULL]);\n";
 cp.code() += "etiss_uint32 res = frs1 ^ (frs2 & 2147483648ULL);\n";
-cp.code() += "((RV32IMACFDPV*)cpu)->F[" + std::to_string(rd) + "ULL] = -4294967296LL | (etiss_uint64)(res);\n";
+cp.code() += "((RV32IMACFDV*)cpu)->F[" + std::to_string(rd) + "ULL] = -4294967296LL | (etiss_uint64)(res);\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "} // block\n";
@@ -1270,7 +1270,7 @@ ss << "fsgnjx_s" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + s
 
 // FMIN_S ----------------------------------------------------------------------
 static InstructionDefinition fmin_s_rd_rs1_rs2 (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"fmin_s",
 	(uint32_t) 0x28000053,
 	(uint32_t) 0xfe00707f,
@@ -1309,14 +1309,14 @@ cp.code() += "} // block\n";
 cp.code() += "{ // block\n";
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "etiss_uint32 frs1 = unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs1) + "ULL]);\n";
-cp.code() += "etiss_uint32 frs2 = unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs2) + "ULL]);\n";
+cp.code() += "etiss_uint32 frs1 = unbox_s(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL]);\n";
+cp.code() += "etiss_uint32 frs2 = unbox_s(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs2) + "ULL]);\n";
 cp.code() += "etiss_uint32 res = fsel_s(frs1, frs2, 0LL);\n";
-cp.code() += "((RV32IMACFDPV*)cpu)->F[" + std::to_string(rd) + "ULL] = -4294967296LL | (etiss_uint64)(res);\n";
+cp.code() += "((RV32IMACFDV*)cpu)->F[" + std::to_string(rd) + "ULL] = -4294967296LL | (etiss_uint64)(res);\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "etiss_uint32 flags = fget_flags();\n";
-cp.code() += "((RV32IMACFDPV*)cpu)->FCSR = (((RV32IMACFDPV*)cpu)->FCSR & -32LL) | (flags & 31ULL);\n";
+cp.code() += "((RV32IMACFDV*)cpu)->FCSR = (((RV32IMACFDV*)cpu)->FCSR & -32LL) | (flags & 31ULL);\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
@@ -1353,7 +1353,7 @@ ss << "fmin_s" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std
 
 // FMAX_S ----------------------------------------------------------------------
 static InstructionDefinition fmax_s_rd_rs1_rs2 (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"fmax_s",
 	(uint32_t) 0x28001053,
 	(uint32_t) 0xfe00707f,
@@ -1392,14 +1392,14 @@ cp.code() += "} // block\n";
 cp.code() += "{ // block\n";
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "etiss_uint32 frs1 = unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs1) + "ULL]);\n";
-cp.code() += "etiss_uint32 frs2 = unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs2) + "ULL]);\n";
+cp.code() += "etiss_uint32 frs1 = unbox_s(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL]);\n";
+cp.code() += "etiss_uint32 frs2 = unbox_s(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs2) + "ULL]);\n";
 cp.code() += "etiss_uint32 res = fsel_s(frs1, frs2, 1ULL);\n";
-cp.code() += "((RV32IMACFDPV*)cpu)->F[" + std::to_string(rd) + "ULL] = -4294967296LL | (etiss_uint64)(res);\n";
+cp.code() += "((RV32IMACFDV*)cpu)->F[" + std::to_string(rd) + "ULL] = -4294967296LL | (etiss_uint64)(res);\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "etiss_uint32 flags = fget_flags();\n";
-cp.code() += "((RV32IMACFDPV*)cpu)->FCSR = (((RV32IMACFDPV*)cpu)->FCSR & -32LL) | (flags & 31ULL);\n";
+cp.code() += "((RV32IMACFDV*)cpu)->FCSR = (((RV32IMACFDV*)cpu)->FCSR & -32LL) | (flags & 31ULL);\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
@@ -1436,7 +1436,7 @@ ss << "fmax_s" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std
 
 // FCVT_W_S --------------------------------------------------------------------
 static InstructionDefinition fcvt_w_s_rd_rm_rs1 (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"fcvt_w_s",
 	(uint32_t) 0xc0000053,
 	(uint32_t) 0xfff0007f,
@@ -1476,15 +1476,15 @@ cp.code() += "{ // block\n";
 cp.code() += "etiss_int32 res = 0LL;\n";
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "etiss_uint32 frs1 = unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs1) + "ULL]);\n";
+cp.code() += "etiss_uint32 frs1 = unbox_s(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL]);\n";
 cp.code() += "res = fcvt_s(frs1, 0LL, " + std::to_string(rm) + "ULL);\n";
 cp.code() += "} // block\n";
 } // block
 if ((rd % 32ULL) != 0LL) { // conditional
-cp.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = res;\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = res;\n";
 } // conditional
 cp.code() += "etiss_uint32 flags = fget_flags();\n";
-cp.code() += "((RV32IMACFDPV*)cpu)->FCSR = (((RV32IMACFDPV*)cpu)->FCSR & -32LL) | (flags & 31ULL);\n";
+cp.code() += "((RV32IMACFDV*)cpu)->FCSR = (((RV32IMACFDV*)cpu)->FCSR & -32LL) | (flags & 31ULL);\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
@@ -1521,7 +1521,7 @@ ss << "fcvt_w_s" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rm=" + st
 
 // FCVT_WU_S -------------------------------------------------------------------
 static InstructionDefinition fcvt_wu_s_rd_rm_rs1 (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"fcvt_wu_s",
 	(uint32_t) 0xc0100053,
 	(uint32_t) 0xfff0007f,
@@ -1561,15 +1561,15 @@ cp.code() += "{ // block\n";
 cp.code() += "etiss_uint32 res = 0LL;\n";
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "etiss_uint32 frs1 = unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs1) + "ULL]);\n";
+cp.code() += "etiss_uint32 frs1 = unbox_s(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL]);\n";
 cp.code() += "res = fcvt_s(frs1, 1ULL, " + std::to_string(rm) + "ULL);\n";
 cp.code() += "} // block\n";
 } // block
 if ((rd % 32ULL) != 0LL) { // conditional
-cp.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = (etiss_uint32)((etiss_int32)(res));\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = (etiss_uint32)((etiss_int32)(res));\n";
 } // conditional
 cp.code() += "etiss_uint32 flags = fget_flags();\n";
-cp.code() += "((RV32IMACFDPV*)cpu)->FCSR = (((RV32IMACFDPV*)cpu)->FCSR & -32LL) | (flags & 31ULL);\n";
+cp.code() += "((RV32IMACFDV*)cpu)->FCSR = (((RV32IMACFDV*)cpu)->FCSR & -32LL) | (flags & 31ULL);\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
@@ -1606,7 +1606,7 @@ ss << "fcvt_wu_s" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rm=" + s
 
 // FEQ_S -----------------------------------------------------------------------
 static InstructionDefinition feq_s_rd_rs1_rs2 (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"feq_s",
 	(uint32_t) 0xa0002053,
 	(uint32_t) 0xfe00707f,
@@ -1646,16 +1646,16 @@ cp.code() += "{ // block\n";
 cp.code() += "etiss_uint32 res = 0LL;\n";
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "etiss_uint32 frs1 = unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs1) + "ULL]);\n";
-cp.code() += "etiss_uint32 frs2 = unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs2) + "ULL]);\n";
+cp.code() += "etiss_uint32 frs1 = unbox_s(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL]);\n";
+cp.code() += "etiss_uint32 frs2 = unbox_s(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs2) + "ULL]);\n";
 cp.code() += "res = fcmp_s(frs1, frs2, 0LL);\n";
 cp.code() += "} // block\n";
 } // block
 if ((rd % 32ULL) != 0LL) { // conditional
-cp.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = res;\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = res;\n";
 } // conditional
 cp.code() += "etiss_uint32 flags = fget_flags();\n";
-cp.code() += "((RV32IMACFDPV*)cpu)->FCSR = (((RV32IMACFDPV*)cpu)->FCSR & -32LL) | (flags & 31ULL);\n";
+cp.code() += "((RV32IMACFDV*)cpu)->FCSR = (((RV32IMACFDV*)cpu)->FCSR & -32LL) | (flags & 31ULL);\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
@@ -1692,7 +1692,7 @@ ss << "feq_s" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std:
 
 // FLT_S -----------------------------------------------------------------------
 static InstructionDefinition flt_s_rd_rs1_rs2 (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"flt_s",
 	(uint32_t) 0xa0001053,
 	(uint32_t) 0xfe00707f,
@@ -1732,16 +1732,16 @@ cp.code() += "{ // block\n";
 cp.code() += "etiss_uint32 res = 0LL;\n";
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "etiss_uint32 frs1 = unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs1) + "ULL]);\n";
-cp.code() += "etiss_uint32 frs2 = unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs2) + "ULL]);\n";
+cp.code() += "etiss_uint32 frs1 = unbox_s(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL]);\n";
+cp.code() += "etiss_uint32 frs2 = unbox_s(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs2) + "ULL]);\n";
 cp.code() += "res = fcmp_s(frs1, frs2, 2ULL);\n";
 cp.code() += "} // block\n";
 } // block
 if ((rd % 32ULL) != 0LL) { // conditional
-cp.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = res;\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = res;\n";
 } // conditional
 cp.code() += "etiss_uint32 flags = fget_flags();\n";
-cp.code() += "((RV32IMACFDPV*)cpu)->FCSR = (((RV32IMACFDPV*)cpu)->FCSR & -32LL) | (flags & 31ULL);\n";
+cp.code() += "((RV32IMACFDV*)cpu)->FCSR = (((RV32IMACFDV*)cpu)->FCSR & -32LL) | (flags & 31ULL);\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
@@ -1778,7 +1778,7 @@ ss << "flt_s" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std:
 
 // FLE_S -----------------------------------------------------------------------
 static InstructionDefinition fle_s_rd_rs1_rs2 (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"fle_s",
 	(uint32_t) 0xa0000053,
 	(uint32_t) 0xfe00707f,
@@ -1818,16 +1818,16 @@ cp.code() += "{ // block\n";
 cp.code() += "etiss_uint32 res = 0LL;\n";
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "etiss_uint32 frs1 = unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs1) + "ULL]);\n";
-cp.code() += "etiss_uint32 frs2 = unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs2) + "ULL]);\n";
+cp.code() += "etiss_uint32 frs1 = unbox_s(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL]);\n";
+cp.code() += "etiss_uint32 frs2 = unbox_s(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs2) + "ULL]);\n";
 cp.code() += "res = fcmp_s(frs1, frs2, 1ULL);\n";
 cp.code() += "} // block\n";
 } // block
 if ((rd % 32ULL) != 0LL) { // conditional
-cp.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = res;\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = res;\n";
 } // conditional
 cp.code() += "etiss_uint32 flags = fget_flags();\n";
-cp.code() += "((RV32IMACFDPV*)cpu)->FCSR = (((RV32IMACFDPV*)cpu)->FCSR & -32LL) | (flags & 31ULL);\n";
+cp.code() += "((RV32IMACFDV*)cpu)->FCSR = (((RV32IMACFDV*)cpu)->FCSR & -32LL) | (flags & 31ULL);\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
@@ -1864,7 +1864,7 @@ ss << "fle_s" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std:
 
 // FCLASS_S --------------------------------------------------------------------
 static InstructionDefinition fclass_s_rd_rs1 (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"fclass_s",
 	(uint32_t) 0xe0001053,
 	(uint32_t) 0xfff0707f,
@@ -1899,9 +1899,9 @@ cp.code() += "} // block\n";
 { // block
 cp.code() += "{ // block\n";
 cp.code() += "etiss_uint32 res = 0LL;\n";
-cp.code() += "res = fclass_s(unbox_s(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs1) + "ULL]));\n";
+cp.code() += "res = fclass_s(unbox_s(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL]));\n";
 if ((rd % 32ULL) != 0LL) { // conditional
-cp.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = res;\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = res;\n";
 } // conditional
 cp.code() += "} // block\n";
 } // block
@@ -1936,7 +1936,7 @@ ss << "fclass_s" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + s
 
 // FCVT_S_W --------------------------------------------------------------------
 static InstructionDefinition fcvt_s_w_rd_rm_rs1 (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"fcvt_s_w",
 	(uint32_t) 0xd0000053,
 	(uint32_t) 0xfff0007f,
@@ -1975,8 +1975,8 @@ cp.code() += "} // block\n";
 cp.code() += "{ // block\n";
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "etiss_uint32 res = fcvt_s((etiss_uint32)(*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL]), 2ULL, " + std::to_string(rm) + "ULL);\n";
-cp.code() += "((RV32IMACFDPV*)cpu)->F[" + std::to_string(rd) + "ULL] = -4294967296LL | (etiss_uint64)(res);\n";
+cp.code() += "etiss_uint32 res = fcvt_s((etiss_uint32)(*((RV32IMACFDV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL]), 2ULL, " + std::to_string(rm) + "ULL);\n";
+cp.code() += "((RV32IMACFDV*)cpu)->F[" + std::to_string(rd) + "ULL] = -4294967296LL | (etiss_uint64)(res);\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "} // block\n";
@@ -2015,7 +2015,7 @@ ss << "fcvt_s_w" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rm=" + st
 
 // FCVT_S_WU -------------------------------------------------------------------
 static InstructionDefinition fcvt_s_wu_rd_rm_rs1 (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"fcvt_s_wu",
 	(uint32_t) 0xd0100053,
 	(uint32_t) 0xfff0007f,
@@ -2054,8 +2054,8 @@ cp.code() += "} // block\n";
 cp.code() += "{ // block\n";
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "etiss_uint32 res = fcvt_s((etiss_uint32)(*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL]), 3ULL, " + std::to_string(rm) + "ULL);\n";
-cp.code() += "((RV32IMACFDPV*)cpu)->F[" + std::to_string(rd) + "ULL] = -4294967296LL | (etiss_uint64)(res);\n";
+cp.code() += "etiss_uint32 res = fcvt_s((etiss_uint32)(*((RV32IMACFDV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL]), 3ULL, " + std::to_string(rm) + "ULL);\n";
+cp.code() += "((RV32IMACFDV*)cpu)->F[" + std::to_string(rd) + "ULL] = -4294967296LL | (etiss_uint64)(res);\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "} // block\n";
@@ -2094,7 +2094,7 @@ ss << "fcvt_s_wu" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rm=" + s
 
 // FMV_X_W ---------------------------------------------------------------------
 static InstructionDefinition fmv_x_w_rd_rs1 (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"fmv_x_w",
 	(uint32_t) 0xe0000053,
 	(uint32_t) 0xfff0707f,
@@ -2129,7 +2129,7 @@ cp.code() += "} // block\n";
 { // block
 cp.code() += "{ // block\n";
 if ((rd % 32ULL) != 0LL) { // conditional
-cp.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = (etiss_uint32)((etiss_int32)(((RV32IMACFDPV*)cpu)->F[" + std::to_string(rs1) + "ULL]));\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = (etiss_uint32)((etiss_int32)(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL]));\n";
 } // conditional
 cp.code() += "} // block\n";
 } // block
@@ -2164,7 +2164,7 @@ ss << "fmv_x_w" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + st
 
 // FMV_W_X ---------------------------------------------------------------------
 static InstructionDefinition fmv_w_x_rd_rs1 (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"fmv_w_x",
 	(uint32_t) 0xf0000053,
 	(uint32_t) 0xfff0707f,
@@ -2200,7 +2200,7 @@ cp.code() += "} // block\n";
 cp.code() += "{ // block\n";
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "((RV32IMACFDPV*)cpu)->F[" + std::to_string(rd) + "ULL] = -4294967296LL | (etiss_uint64)(*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL]);\n";
+cp.code() += "((RV32IMACFDV*)cpu)->F[" + std::to_string(rd) + "ULL] = -4294967296LL | (etiss_uint64)(*((RV32IMACFDV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL]);\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "} // block\n";

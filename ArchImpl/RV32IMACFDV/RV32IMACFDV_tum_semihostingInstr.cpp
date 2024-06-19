@@ -2,11 +2,11 @@
  * Generated on Wed, 19 Jun 2024 07:44:30 +0200.
  *
  * This file contains the instruction behavior models of the tum_semihosting
- * instruction set for the RV32IMACFDPV core architecture.
+ * instruction set for the RV32IMACFDV core architecture.
  */
 
-#include "RV32IMACFDPVArch.h"
-#include "RV32IMACFDPVFuncs.h"
+#include "RV32IMACFDVArch.h"
+#include "RV32IMACFDVFuncs.h"
 
 using namespace etiss;
 using namespace etiss::instr;
@@ -14,7 +14,7 @@ using namespace etiss::instr;
 
 // EBREAK ----------------------------------------------------------------------
 static InstructionDefinition ebreak_ (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"ebreak",
 	(uint32_t) 0x100073,
 	(uint32_t) 0xffffffff,
@@ -50,7 +50,7 @@ cp.code() += "cpu->exception |= (*(system->dread))(system->handle, cpu, " + std:
 cp.code() += "if (cpu->exception) { // conditional\n";
 { // procedure
 cp.code() += "{ // procedure\n";
-cp.code() += "RV32IMACFDPV_translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
+cp.code() += "RV32IMACFDV_translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 cp.code() += "} // procedure\n";
 } // procedure
@@ -61,7 +61,7 @@ cp.code() += "cpu->exception |= (*(system->dread))(system->handle, cpu, " + std:
 cp.code() += "if (cpu->exception) { // conditional\n";
 { // procedure
 cp.code() += "{ // procedure\n";
-cp.code() += "RV32IMACFDPV_translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
+cp.code() += "RV32IMACFDV_translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 cp.code() += "} // procedure\n";
 } // procedure
@@ -72,7 +72,7 @@ cp.code() += "cpu->exception |= (*(system->dread))(system->handle, cpu, " + std:
 cp.code() += "if (cpu->exception) { // conditional\n";
 { // procedure
 cp.code() += "{ // procedure\n";
-cp.code() += "RV32IMACFDPV_translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
+cp.code() += "RV32IMACFDV_translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 cp.code() += "} // procedure\n";
 } // procedure
@@ -81,9 +81,9 @@ cp.code() += "etiss_uint32 post = (etiss_uint32)(mem_val_2);\n";
 cp.code() += "if (pre == 32509971ULL && ebreak == 1048691ULL && post == 1081102355ULL) { // conditional\n";
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "etiss_uint32 operation = *((RV32IMACFDPV*)cpu)->X[10ULL];\n";
-cp.code() += "etiss_uint32 parameter = *((RV32IMACFDPV*)cpu)->X[11ULL];\n";
-cp.code() += "*((RV32IMACFDPV*)cpu)->X[10ULL] = (etiss_int32)(etiss_semihost(cpu, system, plugin_pointers, 32ULL, operation, parameter));\n";
+cp.code() += "etiss_uint32 operation = *((RV32IMACFDV*)cpu)->X[10ULL];\n";
+cp.code() += "etiss_uint32 parameter = *((RV32IMACFDV*)cpu)->X[11ULL];\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->X[10ULL] = (etiss_int32)(etiss_semihost(cpu, system, plugin_pointers, 32ULL, operation, parameter));\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "} // conditional\n";
@@ -92,7 +92,7 @@ cp.code() += "else { // conditional\n";
 cp.code() += "{ // block\n";
 { // procedure
 cp.code() += "{ // procedure\n";
-cp.code() += "RV32IMACFDPV_raise(cpu, system, plugin_pointers, 0LL, 3LL);\n";
+cp.code() += "RV32IMACFDV_raise(cpu, system, plugin_pointers, 0LL, 3LL);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 cp.code() += "} // procedure\n";
 } // procedure
@@ -107,7 +107,7 @@ cp.code() += "else { // conditional\n";
 cp.code() += "{ // block\n";
 { // procedure
 cp.code() += "{ // procedure\n";
-cp.code() += "RV32IMACFDPV_raise(cpu, system, plugin_pointers, 0LL, 3LL);\n";
+cp.code() += "RV32IMACFDV_raise(cpu, system, plugin_pointers, 0LL, 3LL);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 cp.code() += "} // procedure\n";
 } // procedure

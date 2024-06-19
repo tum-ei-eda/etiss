@@ -1,7 +1,7 @@
 /**
  * Generated on Wed, 19 Jun 2024 07:44:30 +0200.
  *
- * This file contains the architecture class for the RV32IMACFDPV core architecture.
+ * This file contains the architecture class for the RV32IMACFDV core architecture.
  */
 
 /*********************************************************************************************************************************
@@ -28,40 +28,40 @@
 		 correct it.
 
 	 7. Implementation dependent functionalities such as exception handling should be manully added. Corresponding interfaces
-		 are provided in RV32IMACFDPVArchSpecificImp.h
+		 are provided in RV32IMACFDVArchSpecificImp.h
 
-	 8. RV32IMACFDPVGDBCore.h provides the GDBCore class to support gdb flavor debugging feature, modify iy if in need.
+	 8. RV32IMACFDVGDBCore.h provides the GDBCore class to support gdb flavor debugging feature, modify iy if in need.
 
  *********************************************************************************************************************************/
 
-#include "RV32IMACFDPVArch.h"
-#include "RV32IMACFDPVFuncs.h"
+#include "RV32IMACFDVArch.h"
+#include "RV32IMACFDVFuncs.h"
 
-#define RV32IMACFDPV_DEBUG_CALL 0
+#define RV32IMACFDV_DEBUG_CALL 0
 using namespace etiss ;
 using namespace etiss::instr ;
 
-RV32IMACFDPVArch::RV32IMACFDPVArch(unsigned int coreno):CPUArch("RV32IMACFDPV"), coreno_(coreno)
+RV32IMACFDVArch::RV32IMACFDVArch(unsigned int coreno):CPUArch("RV32IMACFDV"), coreno_(coreno)
 {
-	headers_.insert("Arch/RV32IMACFDPV/RV32IMACFDPV.h");
+	headers_.insert("Arch/RV32IMACFDV/RV32IMACFDV.h");
 }
 
-const std::set<std::string> & RV32IMACFDPVArch::getListenerSupportedRegisters()
+const std::set<std::string> & RV32IMACFDVArch::getListenerSupportedRegisters()
 {
 	return listenerSupportedRegisters_;
 }
 
-ETISS_CPU * RV32IMACFDPVArch::newCPU()
+ETISS_CPU * RV32IMACFDVArch::newCPU()
 {
-	ETISS_CPU * ret = (ETISS_CPU *) new RV32IMACFDPV() ;
+	ETISS_CPU * ret = (ETISS_CPU *) new RV32IMACFDV() ;
 	resetCPU (ret, 0);
 	return ret;
 }
 
-void RV32IMACFDPVArch::resetCPU(ETISS_CPU * cpu,etiss::uint64 * startpointer)
+void RV32IMACFDVArch::resetCPU(ETISS_CPU * cpu,etiss::uint64 * startpointer)
 {
-	memset (cpu, 0, sizeof(RV32IMACFDPV));
-	RV32IMACFDPV * rv32imacfdpvcpu = (RV32IMACFDPV *) cpu;
+	memset (cpu, 0, sizeof(RV32IMACFDV));
+	RV32IMACFDV * rv32imacfdpvcpu = (RV32IMACFDV *) cpu;
 
 	if (startpointer) cpu->instructionPointer = *startpointer & ~((etiss::uint64)0x1);
 	else cpu->instructionPointer = 0x0;   //  reference to manual
@@ -200,15 +200,15 @@ void RV32IMACFDPVArch::resetCPU(ETISS_CPU * cpu,etiss::uint64 * startpointer)
 
 }
 
-void RV32IMACFDPVArch::deleteCPU(ETISS_CPU *cpu)
+void RV32IMACFDVArch::deleteCPU(ETISS_CPU *cpu)
 {
-	delete (RV32IMACFDPV *) cpu ;
+	delete (RV32IMACFDV *) cpu ;
 }
 
 /**
 	@return 8 (jump instruction + instruction of delay slot)
 */
-unsigned RV32IMACFDPVArch::getMaximumInstructionSizeInBytes()
+unsigned RV32IMACFDVArch::getMaximumInstructionSizeInBytes()
 {
 	return 8;
 }
@@ -216,29 +216,29 @@ unsigned RV32IMACFDPVArch::getMaximumInstructionSizeInBytes()
 /**
 	@return 2
 */
-unsigned RV32IMACFDPVArch::getInstructionSizeInBytes()
+unsigned RV32IMACFDVArch::getInstructionSizeInBytes()
 {
 	return 2;
 }
 
 /**
-	@brief required headers (RV32IMACFDPV.h)
+	@brief required headers (RV32IMACFDV.h)
 */
-const std::set<std::string> & RV32IMACFDPVArch::getHeaders() const
+const std::set<std::string> & RV32IMACFDVArch::getHeaders() const
 {
 	return headers_ ;
 }
 
-void RV32IMACFDPVArch::initCodeBlock(etiss::CodeBlock & cb) const
+void RV32IMACFDVArch::initCodeBlock(etiss::CodeBlock & cb) const
 {
-	cb.fileglobalCode().insert("#include \"Arch/RV32IMACFDPV/RV32IMACFDPV.h\"\n");
-	cb.fileglobalCode().insert("#include \"Arch/RV32IMACFDPV/RV32IMACFDPVFuncs.h\"\n");
+	cb.fileglobalCode().insert("#include \"Arch/RV32IMACFDV/RV32IMACFDV.h\"\n");
+	cb.fileglobalCode().insert("#include \"Arch/RV32IMACFDV/RV32IMACFDVFuncs.h\"\n");
 	cb.functionglobalCode().insert("cpu->exception = 0;\n");
 	cb.functionglobalCode().insert("cpu->return_pending = 0;\n");
 	cb.functionglobalCode().insert("etiss_uint32 mem_ret_code = 0;\n");
 }
 
-etiss::plugin::gdb::GDBCore & RV32IMACFDPVArch::getGDBCore()
+etiss::plugin::gdb::GDBCore & RV32IMACFDVArch::getGDBCore()
 {
 	return gdbcore_;
 }
@@ -279,9 +279,9 @@ const char * const reg_name[] =
 	"X31",
 };
 
-etiss::instr::InstructionGroup ISA16_RV32IMACFDPV("ISA16_RV32IMACFDPV", 16);
-etiss::instr::InstructionClass ISA16_RV32IMACFDPVClass(1, "ISA16_RV32IMACFDPV", 16, ISA16_RV32IMACFDPV);
-etiss::instr::InstructionGroup ISA32_RV32IMACFDPV("ISA32_RV32IMACFDPV", 32);
-etiss::instr::InstructionClass ISA32_RV32IMACFDPVClass(1, "ISA32_RV32IMACFDPV", 32, ISA32_RV32IMACFDPV);
+etiss::instr::InstructionGroup ISA16_RV32IMACFDV("ISA16_RV32IMACFDV", 16);
+etiss::instr::InstructionClass ISA16_RV32IMACFDVClass(1, "ISA16_RV32IMACFDV", 16, ISA16_RV32IMACFDV);
+etiss::instr::InstructionGroup ISA32_RV32IMACFDV("ISA32_RV32IMACFDV", 32);
+etiss::instr::InstructionClass ISA32_RV32IMACFDVClass(1, "ISA32_RV32IMACFDV", 32, ISA32_RV32IMACFDV);
 
-etiss::instr::InstructionCollection RV32IMACFDPVISA("RV32IMACFDPVISA", ISA16_RV32IMACFDPVClass, ISA32_RV32IMACFDPVClass);
+etiss::instr::InstructionCollection RV32IMACFDVISA("RV32IMACFDVISA", ISA16_RV32IMACFDVClass, ISA32_RV32IMACFDVClass);

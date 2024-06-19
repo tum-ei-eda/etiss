@@ -2,11 +2,11 @@
  * Generated on Wed, 19 Jun 2024 07:44:30 +0200.
  *
  * This file contains the instruction behavior models of the tum_csr
- * instruction set for the RV32IMACFDPV core architecture.
+ * instruction set for the RV32IMACFDV core architecture.
  */
 
-#include "RV32IMACFDPVArch.h"
-#include "RV32IMACFDPVFuncs.h"
+#include "RV32IMACFDVArch.h"
+#include "RV32IMACFDVFuncs.h"
 
 using namespace etiss;
 using namespace etiss::instr;
@@ -14,7 +14,7 @@ using namespace etiss::instr;
 
 // CSRRW -----------------------------------------------------------------------
 static InstructionDefinition csrrw_rd_rs1_csr (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"csrrw",
 	(uint32_t) 0x001073,
 	(uint32_t) 0x00707f,
@@ -51,20 +51,20 @@ cp.code() += "} // block\n";
 } // block
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "etiss_uint32 xrs1 = *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL];\n";
+cp.code() += "etiss_uint32 xrs1 = *((RV32IMACFDV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL];\n";
 if ((rd % 32ULL) != 0LL) { // conditional
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "etiss_uint32 xrd = RV32IMACFDPV_csr_read(cpu, system, plugin_pointers, " + std::to_string(csr) + "ULL);\n";
-cp.code() += "RV32IMACFDPV_csr_write(cpu, system, plugin_pointers, " + std::to_string(csr) + "ULL, xrs1);\n";
-cp.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = xrd;\n";
+cp.code() += "etiss_uint32 xrd = RV32IMACFDV_csr_read(cpu, system, plugin_pointers, " + std::to_string(csr) + "ULL);\n";
+cp.code() += "RV32IMACFDV_csr_write(cpu, system, plugin_pointers, " + std::to_string(csr) + "ULL, xrs1);\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = xrd;\n";
 cp.code() += "} // block\n";
 } // block
 } // conditional
 else { // conditional
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "RV32IMACFDPV_csr_write(cpu, system, plugin_pointers, " + std::to_string(csr) + "ULL, xrs1);\n";
+cp.code() += "RV32IMACFDV_csr_write(cpu, system, plugin_pointers, " + std::to_string(csr) + "ULL, xrs1);\n";
 cp.code() += "} // block\n";
 } // block
 } // conditional
@@ -104,7 +104,7 @@ ss << "csrrw" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std:
 
 // CSRRS -----------------------------------------------------------------------
 static InstructionDefinition csrrs_rd_rs1_csr (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"csrrs",
 	(uint32_t) 0x002073,
 	(uint32_t) 0x00707f,
@@ -141,13 +141,13 @@ cp.code() += "} // block\n";
 } // block
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "etiss_uint32 xrd = RV32IMACFDPV_csr_read(cpu, system, plugin_pointers, " + std::to_string(csr) + "ULL);\n";
-cp.code() += "etiss_uint32 xrs1 = *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL];\n";
+cp.code() += "etiss_uint32 xrd = RV32IMACFDV_csr_read(cpu, system, plugin_pointers, " + std::to_string(csr) + "ULL);\n";
+cp.code() += "etiss_uint32 xrs1 = *((RV32IMACFDV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL];\n";
 if (rs1 != 0LL) { // conditional
-cp.code() += "RV32IMACFDPV_csr_write(cpu, system, plugin_pointers, " + std::to_string(csr) + "ULL, xrd | xrs1);\n";
+cp.code() += "RV32IMACFDV_csr_write(cpu, system, plugin_pointers, " + std::to_string(csr) + "ULL, xrd | xrs1);\n";
 } // conditional
 if ((rd % 32ULL) != 0LL) { // conditional
-cp.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = xrd;\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = xrd;\n";
 } // conditional
 cp.code() += "} // block\n";
 } // block
@@ -185,7 +185,7 @@ ss << "csrrs" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std:
 
 // CSRRC -----------------------------------------------------------------------
 static InstructionDefinition csrrc_rd_rs1_csr (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"csrrc",
 	(uint32_t) 0x003073,
 	(uint32_t) 0x00707f,
@@ -222,13 +222,13 @@ cp.code() += "} // block\n";
 } // block
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "etiss_uint32 xrd = RV32IMACFDPV_csr_read(cpu, system, plugin_pointers, " + std::to_string(csr) + "ULL);\n";
-cp.code() += "etiss_uint32 xrs1 = *((RV32IMACFDPV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL];\n";
+cp.code() += "etiss_uint32 xrd = RV32IMACFDV_csr_read(cpu, system, plugin_pointers, " + std::to_string(csr) + "ULL);\n";
+cp.code() += "etiss_uint32 xrs1 = *((RV32IMACFDV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL];\n";
 if (rs1 != 0LL) { // conditional
-cp.code() += "RV32IMACFDPV_csr_write(cpu, system, plugin_pointers, " + std::to_string(csr) + "ULL, xrd & ~(xrs1));\n";
+cp.code() += "RV32IMACFDV_csr_write(cpu, system, plugin_pointers, " + std::to_string(csr) + "ULL, xrd & ~(xrs1));\n";
 } // conditional
 if ((rd % 32ULL) != 0LL) { // conditional
-cp.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = xrd;\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = xrd;\n";
 } // conditional
 cp.code() += "} // block\n";
 } // block
@@ -266,7 +266,7 @@ ss << "csrrc" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std:
 
 // CSRRWI ----------------------------------------------------------------------
 static InstructionDefinition csrrwi_rd_zimm_csr (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"csrrwi",
 	(uint32_t) 0x005073,
 	(uint32_t) 0x00707f,
@@ -303,10 +303,10 @@ cp.code() += "} // block\n";
 } // block
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "etiss_uint32 xrd = RV32IMACFDPV_csr_read(cpu, system, plugin_pointers, " + std::to_string(csr) + "ULL);\n";
-cp.code() += "RV32IMACFDPV_csr_write(cpu, system, plugin_pointers, " + std::to_string(csr) + "ULL, " + std::to_string((etiss_uint32)(zimm)) + "ULL);\n";
+cp.code() += "etiss_uint32 xrd = RV32IMACFDV_csr_read(cpu, system, plugin_pointers, " + std::to_string(csr) + "ULL);\n";
+cp.code() += "RV32IMACFDV_csr_write(cpu, system, plugin_pointers, " + std::to_string(csr) + "ULL, " + std::to_string((etiss_uint32)(zimm)) + "ULL);\n";
 if ((rd % 32ULL) != 0LL) { // conditional
-cp.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = xrd;\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = xrd;\n";
 } // conditional
 cp.code() += "} // block\n";
 } // block
@@ -344,7 +344,7 @@ ss << "csrrwi" << " # " << ba << (" [rd=" + std::to_string(rd) + " | zimm=" + st
 
 // CSRRSI ----------------------------------------------------------------------
 static InstructionDefinition csrrsi_rd_zimm_csr (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"csrrsi",
 	(uint32_t) 0x006073,
 	(uint32_t) 0x00707f,
@@ -381,12 +381,12 @@ cp.code() += "} // block\n";
 } // block
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "etiss_uint32 xrd = RV32IMACFDPV_csr_read(cpu, system, plugin_pointers, " + std::to_string(csr) + "ULL);\n";
+cp.code() += "etiss_uint32 xrd = RV32IMACFDV_csr_read(cpu, system, plugin_pointers, " + std::to_string(csr) + "ULL);\n";
 if (zimm != 0LL) { // conditional
-cp.code() += "RV32IMACFDPV_csr_write(cpu, system, plugin_pointers, " + std::to_string(csr) + "ULL, xrd | " + std::to_string((etiss_uint32)(zimm)) + "ULL);\n";
+cp.code() += "RV32IMACFDV_csr_write(cpu, system, plugin_pointers, " + std::to_string(csr) + "ULL, xrd | " + std::to_string((etiss_uint32)(zimm)) + "ULL);\n";
 } // conditional
 if ((rd % 32ULL) != 0LL) { // conditional
-cp.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = xrd;\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = xrd;\n";
 } // conditional
 cp.code() += "} // block\n";
 } // block
@@ -424,7 +424,7 @@ ss << "csrrsi" << " # " << ba << (" [rd=" + std::to_string(rd) + " | zimm=" + st
 
 // CSRRCI ----------------------------------------------------------------------
 static InstructionDefinition csrrci_rd_zimm_csr (
-	ISA32_RV32IMACFDPV,
+	ISA32_RV32IMACFDV,
 	"csrrci",
 	(uint32_t) 0x007073,
 	(uint32_t) 0x00707f,
@@ -461,12 +461,12 @@ cp.code() += "} // block\n";
 } // block
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "etiss_uint32 xrd = RV32IMACFDPV_csr_read(cpu, system, plugin_pointers, " + std::to_string(csr) + "ULL);\n";
+cp.code() += "etiss_uint32 xrd = RV32IMACFDV_csr_read(cpu, system, plugin_pointers, " + std::to_string(csr) + "ULL);\n";
 if (zimm != 0LL) { // conditional
-cp.code() += "RV32IMACFDPV_csr_write(cpu, system, plugin_pointers, " + std::to_string(csr) + "ULL, xrd & " + std::to_string(~(((etiss_uint32)(zimm)))) + "ULL);\n";
+cp.code() += "RV32IMACFDV_csr_write(cpu, system, plugin_pointers, " + std::to_string(csr) + "ULL, xrd & " + std::to_string(~(((etiss_uint32)(zimm)))) + "ULL);\n";
 } // conditional
 if ((rd % 32ULL) != 0LL) { // conditional
-cp.code() += "*((RV32IMACFDPV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = xrd;\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = xrd;\n";
 } // conditional
 cp.code() += "} // block\n";
 } // block
