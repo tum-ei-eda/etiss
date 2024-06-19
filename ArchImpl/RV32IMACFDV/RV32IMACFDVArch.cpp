@@ -1,5 +1,5 @@
 /**
- * Generated on Wed, 19 Jun 2024 07:44:30 +0200.
+ * Generated on Wed, 19 Jun 2024 09:34:35 +0200.
  *
  * This file contains the architecture class for the RV32IMACFDV core architecture.
  */
@@ -61,7 +61,7 @@ ETISS_CPU * RV32IMACFDVArch::newCPU()
 void RV32IMACFDVArch::resetCPU(ETISS_CPU * cpu,etiss::uint64 * startpointer)
 {
 	memset (cpu, 0, sizeof(RV32IMACFDV));
-	RV32IMACFDV * rv32imacfdpvcpu = (RV32IMACFDV *) cpu;
+	RV32IMACFDV * rv32imacfdvcpu = (RV32IMACFDV *) cpu;
 
 	if (startpointer) cpu->instructionPointer = *startpointer & ~((etiss::uint64)0x1);
 	else cpu->instructionPointer = 0x0;   //  reference to manual
@@ -72,131 +72,131 @@ void RV32IMACFDVArch::resetCPU(ETISS_CPU * cpu,etiss::uint64 * startpointer)
 
 
 	for (int i = 0; i < 32; ++i) {
-		rv32imacfdpvcpu->ins_X[i] = 0;
-		rv32imacfdpvcpu->X[i] = &rv32imacfdpvcpu->ins_X[i];
+		rv32imacfdvcpu->ins_X[i] = 0;
+		rv32imacfdvcpu->X[i] = &rv32imacfdvcpu->ins_X[i];
 	}
 	for (int i = 0; i < 4096; ++i) {
-		rv32imacfdpvcpu->ins_CSR[i] = 0;
-		rv32imacfdpvcpu->CSR[i] = &rv32imacfdpvcpu->ins_CSR[i];
+		rv32imacfdvcpu->ins_CSR[i] = 0;
+		rv32imacfdvcpu->CSR[i] = &rv32imacfdvcpu->ins_CSR[i];
 	}
 
-	rv32imacfdpvcpu->ZERO = 0;
-	rv32imacfdpvcpu->RA = 0;
-	rv32imacfdpvcpu->SP = 0;
-	rv32imacfdpvcpu->GP = 0;
-	rv32imacfdpvcpu->TP = 0;
-	rv32imacfdpvcpu->T0 = 0;
-	rv32imacfdpvcpu->T1 = 0;
-	rv32imacfdpvcpu->T2 = 0;
-	rv32imacfdpvcpu->S0 = 0;
-	rv32imacfdpvcpu->S1 = 0;
-	rv32imacfdpvcpu->A0 = 0;
-	rv32imacfdpvcpu->A1 = 0;
-	rv32imacfdpvcpu->A2 = 0;
-	rv32imacfdpvcpu->A3 = 0;
-	rv32imacfdpvcpu->A4 = 0;
-	rv32imacfdpvcpu->A5 = 0;
-	rv32imacfdpvcpu->A6 = 0;
-	rv32imacfdpvcpu->A7 = 0;
-	rv32imacfdpvcpu->S2 = 0;
-	rv32imacfdpvcpu->S3 = 0;
-	rv32imacfdpvcpu->S4 = 0;
-	rv32imacfdpvcpu->S5 = 0;
-	rv32imacfdpvcpu->S6 = 0;
-	rv32imacfdpvcpu->S7 = 0;
-	rv32imacfdpvcpu->S8 = 0;
-	rv32imacfdpvcpu->S9 = 0;
-	rv32imacfdpvcpu->S10 = 0;
-	rv32imacfdpvcpu->S11 = 0;
-	rv32imacfdpvcpu->T3 = 0;
-	rv32imacfdpvcpu->T4 = 0;
-	rv32imacfdpvcpu->T5 = 0;
-	rv32imacfdpvcpu->T6 = 0;
+	rv32imacfdvcpu->ZERO = 0;
+	rv32imacfdvcpu->RA = 0;
+	rv32imacfdvcpu->SP = 0;
+	rv32imacfdvcpu->GP = 0;
+	rv32imacfdvcpu->TP = 0;
+	rv32imacfdvcpu->T0 = 0;
+	rv32imacfdvcpu->T1 = 0;
+	rv32imacfdvcpu->T2 = 0;
+	rv32imacfdvcpu->S0 = 0;
+	rv32imacfdvcpu->S1 = 0;
+	rv32imacfdvcpu->A0 = 0;
+	rv32imacfdvcpu->A1 = 0;
+	rv32imacfdvcpu->A2 = 0;
+	rv32imacfdvcpu->A3 = 0;
+	rv32imacfdvcpu->A4 = 0;
+	rv32imacfdvcpu->A5 = 0;
+	rv32imacfdvcpu->A6 = 0;
+	rv32imacfdvcpu->A7 = 0;
+	rv32imacfdvcpu->S2 = 0;
+	rv32imacfdvcpu->S3 = 0;
+	rv32imacfdvcpu->S4 = 0;
+	rv32imacfdvcpu->S5 = 0;
+	rv32imacfdvcpu->S6 = 0;
+	rv32imacfdvcpu->S7 = 0;
+	rv32imacfdvcpu->S8 = 0;
+	rv32imacfdvcpu->S9 = 0;
+	rv32imacfdvcpu->S10 = 0;
+	rv32imacfdvcpu->S11 = 0;
+	rv32imacfdvcpu->T3 = 0;
+	rv32imacfdvcpu->T4 = 0;
+	rv32imacfdvcpu->T5 = 0;
+	rv32imacfdvcpu->T6 = 0;
 	for (int i = 0; i < 8; ++i) {
-		rv32imacfdpvcpu->FENCE[i] = 0;
+		rv32imacfdvcpu->FENCE[i] = 0;
 	}
 	for (int i = 0; i < 8; ++i) {
-		rv32imacfdpvcpu->RES[i] = 0;
+		rv32imacfdvcpu->RES[i] = 0;
 	}
-	rv32imacfdpvcpu->PRIV = 0;
-	rv32imacfdpvcpu->DPC = 0;
-	rv32imacfdpvcpu->VSTART_CSR = 0;
-	rv32imacfdpvcpu->VXSAT_CSR = 0;
-	rv32imacfdpvcpu->VXRM_CSR = 0;
-	rv32imacfdpvcpu->VCSR_CSR = 0;
-	rv32imacfdpvcpu->VL_CSR = 0;
-	rv32imacfdpvcpu->VTYPE_CSR = 0;
-	rv32imacfdpvcpu->VLENB_CSR = 0;
-	rv32imacfdpvcpu->FCSR = 0;
-	rv32imacfdpvcpu->MSTATUS = 0;
-	rv32imacfdpvcpu->MIE = 0;
-	rv32imacfdpvcpu->MIP = 0;
+	rv32imacfdvcpu->PRIV = 0;
+	rv32imacfdvcpu->DPC = 0;
+	rv32imacfdvcpu->VSTART_CSR = 0;
+	rv32imacfdvcpu->VXSAT_CSR = 0;
+	rv32imacfdvcpu->VXRM_CSR = 0;
+	rv32imacfdvcpu->VCSR_CSR = 0;
+	rv32imacfdvcpu->VL_CSR = 0;
+	rv32imacfdvcpu->VTYPE_CSR = 0;
+	rv32imacfdvcpu->VLENB_CSR = 0;
+	rv32imacfdvcpu->FCSR = 0;
+	rv32imacfdvcpu->MSTATUS = 0;
+	rv32imacfdvcpu->MIE = 0;
+	rv32imacfdvcpu->MIP = 0;
 	for (int i = 0; i < 32768; ++i) {
-		rv32imacfdpvcpu->V[i] = 0;
+		rv32imacfdvcpu->V[i] = 0;
 	}
 	for (int i = 0; i < 32; ++i) {
-		rv32imacfdpvcpu->F[i] = 0;
+		rv32imacfdvcpu->F[i] = 0;
 	}
-	rv32imacfdpvcpu->RES_ADDR = 0;
+	rv32imacfdvcpu->RES_ADDR = 0;
 
- 	rv32imacfdpvcpu->X[0] = &rv32imacfdpvcpu->ZERO;
- 	rv32imacfdpvcpu->X[1] = &rv32imacfdpvcpu->RA;
- 	rv32imacfdpvcpu->X[2] = &rv32imacfdpvcpu->SP;
- 	rv32imacfdpvcpu->X[3] = &rv32imacfdpvcpu->GP;
- 	rv32imacfdpvcpu->X[4] = &rv32imacfdpvcpu->TP;
- 	rv32imacfdpvcpu->X[5] = &rv32imacfdpvcpu->T0;
- 	rv32imacfdpvcpu->X[6] = &rv32imacfdpvcpu->T1;
- 	rv32imacfdpvcpu->X[7] = &rv32imacfdpvcpu->T2;
- 	rv32imacfdpvcpu->X[8] = &rv32imacfdpvcpu->S0;
- 	rv32imacfdpvcpu->X[9] = &rv32imacfdpvcpu->S1;
- 	rv32imacfdpvcpu->X[10] = &rv32imacfdpvcpu->A0;
- 	rv32imacfdpvcpu->X[11] = &rv32imacfdpvcpu->A1;
- 	rv32imacfdpvcpu->X[12] = &rv32imacfdpvcpu->A2;
- 	rv32imacfdpvcpu->X[13] = &rv32imacfdpvcpu->A3;
- 	rv32imacfdpvcpu->X[14] = &rv32imacfdpvcpu->A4;
- 	rv32imacfdpvcpu->X[15] = &rv32imacfdpvcpu->A5;
- 	rv32imacfdpvcpu->X[16] = &rv32imacfdpvcpu->A6;
- 	rv32imacfdpvcpu->X[17] = &rv32imacfdpvcpu->A7;
- 	rv32imacfdpvcpu->X[18] = &rv32imacfdpvcpu->S2;
- 	rv32imacfdpvcpu->X[19] = &rv32imacfdpvcpu->S3;
- 	rv32imacfdpvcpu->X[20] = &rv32imacfdpvcpu->S4;
- 	rv32imacfdpvcpu->X[21] = &rv32imacfdpvcpu->S5;
- 	rv32imacfdpvcpu->X[22] = &rv32imacfdpvcpu->S6;
- 	rv32imacfdpvcpu->X[23] = &rv32imacfdpvcpu->S7;
- 	rv32imacfdpvcpu->X[24] = &rv32imacfdpvcpu->S8;
- 	rv32imacfdpvcpu->X[25] = &rv32imacfdpvcpu->S9;
- 	rv32imacfdpvcpu->X[26] = &rv32imacfdpvcpu->S10;
- 	rv32imacfdpvcpu->X[27] = &rv32imacfdpvcpu->S11;
- 	rv32imacfdpvcpu->X[28] = &rv32imacfdpvcpu->T3;
- 	rv32imacfdpvcpu->X[29] = &rv32imacfdpvcpu->T4;
- 	rv32imacfdpvcpu->X[30] = &rv32imacfdpvcpu->T5;
- 	rv32imacfdpvcpu->X[31] = &rv32imacfdpvcpu->T6;
- 	rv32imacfdpvcpu->CSR[8] = &rv32imacfdpvcpu->VSTART_CSR;
- 	rv32imacfdpvcpu->CSR[9] = &rv32imacfdpvcpu->VXSAT_CSR;
- 	rv32imacfdpvcpu->CSR[10] = &rv32imacfdpvcpu->VXRM_CSR;
- 	rv32imacfdpvcpu->CSR[15] = &rv32imacfdpvcpu->VCSR_CSR;
- 	rv32imacfdpvcpu->CSR[3104] = &rv32imacfdpvcpu->VL_CSR;
- 	rv32imacfdpvcpu->CSR[3105] = &rv32imacfdpvcpu->VTYPE_CSR;
- 	rv32imacfdpvcpu->CSR[3106] = &rv32imacfdpvcpu->VLENB_CSR;
- 	rv32imacfdpvcpu->CSR[3] = &rv32imacfdpvcpu->FCSR;
- 	rv32imacfdpvcpu->CSR[768] = &rv32imacfdpvcpu->MSTATUS;
- 	rv32imacfdpvcpu->CSR[772] = &rv32imacfdpvcpu->MIE;
- 	rv32imacfdpvcpu->CSR[836] = &rv32imacfdpvcpu->MIP;
+ 	rv32imacfdvcpu->X[0] = &rv32imacfdvcpu->ZERO;
+ 	rv32imacfdvcpu->X[1] = &rv32imacfdvcpu->RA;
+ 	rv32imacfdvcpu->X[2] = &rv32imacfdvcpu->SP;
+ 	rv32imacfdvcpu->X[3] = &rv32imacfdvcpu->GP;
+ 	rv32imacfdvcpu->X[4] = &rv32imacfdvcpu->TP;
+ 	rv32imacfdvcpu->X[5] = &rv32imacfdvcpu->T0;
+ 	rv32imacfdvcpu->X[6] = &rv32imacfdvcpu->T1;
+ 	rv32imacfdvcpu->X[7] = &rv32imacfdvcpu->T2;
+ 	rv32imacfdvcpu->X[8] = &rv32imacfdvcpu->S0;
+ 	rv32imacfdvcpu->X[9] = &rv32imacfdvcpu->S1;
+ 	rv32imacfdvcpu->X[10] = &rv32imacfdvcpu->A0;
+ 	rv32imacfdvcpu->X[11] = &rv32imacfdvcpu->A1;
+ 	rv32imacfdvcpu->X[12] = &rv32imacfdvcpu->A2;
+ 	rv32imacfdvcpu->X[13] = &rv32imacfdvcpu->A3;
+ 	rv32imacfdvcpu->X[14] = &rv32imacfdvcpu->A4;
+ 	rv32imacfdvcpu->X[15] = &rv32imacfdvcpu->A5;
+ 	rv32imacfdvcpu->X[16] = &rv32imacfdvcpu->A6;
+ 	rv32imacfdvcpu->X[17] = &rv32imacfdvcpu->A7;
+ 	rv32imacfdvcpu->X[18] = &rv32imacfdvcpu->S2;
+ 	rv32imacfdvcpu->X[19] = &rv32imacfdvcpu->S3;
+ 	rv32imacfdvcpu->X[20] = &rv32imacfdvcpu->S4;
+ 	rv32imacfdvcpu->X[21] = &rv32imacfdvcpu->S5;
+ 	rv32imacfdvcpu->X[22] = &rv32imacfdvcpu->S6;
+ 	rv32imacfdvcpu->X[23] = &rv32imacfdvcpu->S7;
+ 	rv32imacfdvcpu->X[24] = &rv32imacfdvcpu->S8;
+ 	rv32imacfdvcpu->X[25] = &rv32imacfdvcpu->S9;
+ 	rv32imacfdvcpu->X[26] = &rv32imacfdvcpu->S10;
+ 	rv32imacfdvcpu->X[27] = &rv32imacfdvcpu->S11;
+ 	rv32imacfdvcpu->X[28] = &rv32imacfdvcpu->T3;
+ 	rv32imacfdvcpu->X[29] = &rv32imacfdvcpu->T4;
+ 	rv32imacfdvcpu->X[30] = &rv32imacfdvcpu->T5;
+ 	rv32imacfdvcpu->X[31] = &rv32imacfdvcpu->T6;
+ 	rv32imacfdvcpu->CSR[8] = &rv32imacfdvcpu->VSTART_CSR;
+ 	rv32imacfdvcpu->CSR[9] = &rv32imacfdvcpu->VXSAT_CSR;
+ 	rv32imacfdvcpu->CSR[10] = &rv32imacfdvcpu->VXRM_CSR;
+ 	rv32imacfdvcpu->CSR[15] = &rv32imacfdvcpu->VCSR_CSR;
+ 	rv32imacfdvcpu->CSR[3104] = &rv32imacfdvcpu->VL_CSR;
+ 	rv32imacfdvcpu->CSR[3105] = &rv32imacfdvcpu->VTYPE_CSR;
+ 	rv32imacfdvcpu->CSR[3106] = &rv32imacfdvcpu->VLENB_CSR;
+ 	rv32imacfdvcpu->CSR[3] = &rv32imacfdvcpu->FCSR;
+ 	rv32imacfdvcpu->CSR[768] = &rv32imacfdvcpu->MSTATUS;
+ 	rv32imacfdvcpu->CSR[772] = &rv32imacfdvcpu->MIE;
+ 	rv32imacfdvcpu->CSR[836] = &rv32imacfdvcpu->MIP;
 
-   	rv32imacfdpvcpu->PRIV = 3ULL;
-   	rv32imacfdpvcpu->DPC = 0LL;
-  	*rv32imacfdpvcpu->CSR[0] = 11ULL;
- 	*rv32imacfdpvcpu->CSR[256] = 11ULL;
- 	*rv32imacfdpvcpu->CSR[768] = 1536ULL;
- 	*rv32imacfdpvcpu->CSR[769] = 1075056941ULL;
- 	*rv32imacfdpvcpu->CSR[3088] = 3ULL;
- 	*rv32imacfdpvcpu->CSR[772] = 4294966203ULL;
- 	*rv32imacfdpvcpu->CSR[260] = 4294964019ULL;
- 	*rv32imacfdpvcpu->CSR[4] = 4294963473ULL;
- 	*rv32imacfdpvcpu->CSR[3105] = 2147483648ULL;
- 	*rv32imacfdpvcpu->CSR[3104] = 0LL;
- 	*rv32imacfdpvcpu->CSR[3106] = 128ULL;
-   	rv32imacfdpvcpu->RES_ADDR = -1LL;
+   	rv32imacfdvcpu->PRIV = 3ULL;
+   	rv32imacfdvcpu->DPC = 0LL;
+  	*rv32imacfdvcpu->CSR[0] = 11ULL;
+ 	*rv32imacfdvcpu->CSR[256] = 11ULL;
+ 	*rv32imacfdvcpu->CSR[768] = 1536ULL;
+ 	*rv32imacfdvcpu->CSR[769] = 1075056941ULL;
+ 	*rv32imacfdvcpu->CSR[3088] = 3ULL;
+ 	*rv32imacfdvcpu->CSR[772] = 4294966203ULL;
+ 	*rv32imacfdvcpu->CSR[260] = 4294964019ULL;
+ 	*rv32imacfdvcpu->CSR[4] = 4294963473ULL;
+ 	*rv32imacfdvcpu->CSR[3105] = 2147483648ULL;
+ 	*rv32imacfdvcpu->CSR[3104] = 0LL;
+ 	*rv32imacfdvcpu->CSR[3106] = 128ULL;
+   	rv32imacfdvcpu->RES_ADDR = -1LL;
 
 }
 
