@@ -1,5 +1,5 @@
 /**
- * Generated on Thu, 12 May 2022 16:30:21 +0200.
+ * Generated on Wed, 19 Jun 2024 07:44:30 +0200.
  *
  * This file contains the registers for the RV32IMACFDPV core architecture.
  */
@@ -15,8 +15,6 @@ extern "C" {
 #pragma pack(push, 1)
 struct RV32IMACFDPV {
 	ETISS_CPU cpu; // original cpu struct must be defined as the first field of the new structure. this allows to cast X * to ETISS_CPU * and vice vers
-	etiss_uint32 exception;
-	etiss_uint32 exception_pending;
 	etiss_uint32 ZERO;
 	etiss_uint32 RA;
 	etiss_uint32 SP;
@@ -55,9 +53,6 @@ struct RV32IMACFDPV {
 	etiss_uint8 RES[8];
 	etiss_uint8 PRIV;
 	etiss_uint32 DPC;
-	etiss_uint32 FCSR;
-	etiss_uint32 VXSAT_CSR__;
-	etiss_uint32 VXSAT_CSR_;
 	etiss_uint32 VSTART_CSR;
 	etiss_uint32 VXSAT_CSR;
 	etiss_uint32 VXRM_CSR;
@@ -65,10 +60,14 @@ struct RV32IMACFDPV {
 	etiss_uint32 VL_CSR;
 	etiss_uint32 VTYPE_CSR;
 	etiss_uint32 VLENB_CSR;
+	etiss_uint32 FCSR;
+	etiss_uint32 MSTATUS;
+	etiss_uint32 MIE;
+	etiss_uint32 MIP;
 	etiss_uint32 *CSR[4096];
 	etiss_uint32 ins_CSR[4096];
-	etiss_uint64 F[32];
 	etiss_uint8 V[32768];
+	etiss_uint64 F[32];
 	etiss_uint32 RES_ADDR;
 };
 

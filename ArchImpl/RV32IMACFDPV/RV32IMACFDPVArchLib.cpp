@@ -1,5 +1,5 @@
 /**
- * Generated on Thu, 12 May 2022 16:30:21 +0200.
+ * Generated on Wed, 19 Jun 2024 07:44:30 +0200.
  *
  * This file contains the library interface for the RV32IMACFDPV core architecture.
  */
@@ -10,6 +10,7 @@
 #define ETISS_LIBNAME RV32IMACFDPV
 #include "etiss/helper/CPUArchLibrary.h" // defines the following functions
 #include "RV32IMACFDPVArch.h"
+#include <string>
 extern "C" {
 
 	ETISS_LIBRARYIF_VERSION_FUNC_IMPL
@@ -36,7 +37,16 @@ extern "C" {
 		switch (index)
 		{
 		case 0:
-			return new RV32IMACFDPVArch();
+			{
+				auto it = options.find("coreno");
+				unsigned int coreno = 0;
+				if (it != options.end())
+					coreno = std::stoul(it->second);
+				else
+					etiss::log(etiss::WARNING, "no core number provided for core, using 0");
+
+				return new RV32IMACFDPVArch(coreno);
+			}
 		default:
 			return 0;
 		}

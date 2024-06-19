@@ -1,5 +1,5 @@
 /**
- * Generated on Thu, 12 May 2022 16:30:21 +0200.
+ * Generated on Wed, 19 Jun 2024 07:44:30 +0200.
  *
  * This file contains the architecture class for the RV32IMACFDPV core architecture.
  */
@@ -10,6 +10,7 @@
 #include "etiss/CPUArch.h"
 #include "etiss/Instruction.h"
 #include "etiss/InterruptVector.h"
+#include "etiss/InterruptEnable.h"
 #include "RV32IMACFDPV.h"
 #include "RV32IMACFDPVGDBCore.h"
 
@@ -27,7 +28,7 @@ extern etiss::instr::InstructionCollection RV32IMACFDPVISA;
 class RV32IMACFDPVArch : public etiss::CPUArch {
 
 public:
-	RV32IMACFDPVArch();
+	RV32IMACFDPVArch(unsigned int);
 
 	virtual const std::set<std::string> & getListenerSupportedRegisters();
 
@@ -89,6 +90,8 @@ public:
 	*/
 	virtual etiss::InterruptVector * createInterruptVector(ETISS_CPU * cpu);
 	virtual void deleteInterruptVector(etiss::InterruptVector * vec, ETISS_CPU * cpu);
+	virtual etiss::InterruptEnable* createInterruptEnable(ETISS_CPU *cpu);
+	virtual void deleteInterruptEnable(etiss::InterruptEnable* en, ETISS_CPU* cpu);
 
 	/**
 		@brief get the GDBcore for RV32IMACFDPV architecture
@@ -101,5 +104,6 @@ private:
 	std::set<std::string> listenerSupportedRegisters_;
 	std::set<std::string> headers_;
 	RV32IMACFDPVGDBCore gdbcore_;
+	unsigned int coreno_;
 };
 #endif

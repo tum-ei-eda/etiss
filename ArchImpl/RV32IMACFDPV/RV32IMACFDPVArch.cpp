@@ -1,5 +1,5 @@
 /**
- * Generated on Thu, 12 May 2022 16:30:21 +0200.
+ * Generated on Wed, 19 Jun 2024 07:44:30 +0200.
  *
  * This file contains the architecture class for the RV32IMACFDPV core architecture.
  */
@@ -35,15 +35,13 @@
  *********************************************************************************************************************************/
 
 #include "RV32IMACFDPVArch.h"
-
-#define ETISS_ARCH_STATIC_FN_ONLY
 #include "RV32IMACFDPVFuncs.h"
 
 #define RV32IMACFDPV_DEBUG_CALL 0
 using namespace etiss ;
 using namespace etiss::instr ;
 
-RV32IMACFDPVArch::RV32IMACFDPVArch():CPUArch("RV32IMACFDPV")
+RV32IMACFDPVArch::RV32IMACFDPVArch(unsigned int coreno):CPUArch("RV32IMACFDPV"), coreno_(coreno)
 {
 	headers_.insert("Arch/RV32IMACFDPV/RV32IMACFDPV.h");
 }
@@ -67,6 +65,7 @@ void RV32IMACFDPVArch::resetCPU(ETISS_CPU * cpu,etiss::uint64 * startpointer)
 
 	if (startpointer) cpu->instructionPointer = *startpointer & ~((etiss::uint64)0x1);
 	else cpu->instructionPointer = 0x0;   //  reference to manual
+	cpu->nextPc = cpu->instructionPointer;
 	cpu->mode = 1;
 	cpu->cpuTime_ps = 0;
 	cpu->cpuCycleTime_ps = 31250;
@@ -121,9 +120,6 @@ void RV32IMACFDPVArch::resetCPU(ETISS_CPU * cpu,etiss::uint64 * startpointer)
 	}
 	rv32imacfdpvcpu->PRIV = 0;
 	rv32imacfdpvcpu->DPC = 0;
-	rv32imacfdpvcpu->FCSR = 0;
-	rv32imacfdpvcpu->VXSAT_CSR__ = 0;
-	rv32imacfdpvcpu->VXSAT_CSR_ = 0;
 	rv32imacfdpvcpu->VSTART_CSR = 0;
 	rv32imacfdpvcpu->VXSAT_CSR = 0;
 	rv32imacfdpvcpu->VXRM_CSR = 0;
@@ -131,11 +127,15 @@ void RV32IMACFDPVArch::resetCPU(ETISS_CPU * cpu,etiss::uint64 * startpointer)
 	rv32imacfdpvcpu->VL_CSR = 0;
 	rv32imacfdpvcpu->VTYPE_CSR = 0;
 	rv32imacfdpvcpu->VLENB_CSR = 0;
-	for (int i = 0; i < 32; ++i) {
-		rv32imacfdpvcpu->F[i] = 0;
-	}
+	rv32imacfdpvcpu->FCSR = 0;
+	rv32imacfdpvcpu->MSTATUS = 0;
+	rv32imacfdpvcpu->MIE = 0;
+	rv32imacfdpvcpu->MIP = 0;
 	for (int i = 0; i < 32768; ++i) {
 		rv32imacfdpvcpu->V[i] = 0;
+	}
+	for (int i = 0; i < 32; ++i) {
+		rv32imacfdpvcpu->F[i] = 0;
 	}
 	rv32imacfdpvcpu->RES_ADDR = 0;
 
@@ -171,9 +171,6 @@ void RV32IMACFDPVArch::resetCPU(ETISS_CPU * cpu,etiss::uint64 * startpointer)
  	rv32imacfdpvcpu->X[29] = &rv32imacfdpvcpu->T4;
  	rv32imacfdpvcpu->X[30] = &rv32imacfdpvcpu->T5;
  	rv32imacfdpvcpu->X[31] = &rv32imacfdpvcpu->T6;
- 	rv32imacfdpvcpu->CSR[3] = &rv32imacfdpvcpu->FCSR;
- 	rv32imacfdpvcpu->CSR[9] = &rv32imacfdpvcpu->VXSAT_CSR__;
- 	rv32imacfdpvcpu->CSR[9] = &rv32imacfdpvcpu->VXSAT_CSR_;
  	rv32imacfdpvcpu->CSR[8] = &rv32imacfdpvcpu->VSTART_CSR;
  	rv32imacfdpvcpu->CSR[9] = &rv32imacfdpvcpu->VXSAT_CSR;
  	rv32imacfdpvcpu->CSR[10] = &rv32imacfdpvcpu->VXRM_CSR;
@@ -181,21 +178,26 @@ void RV32IMACFDPVArch::resetCPU(ETISS_CPU * cpu,etiss::uint64 * startpointer)
  	rv32imacfdpvcpu->CSR[3104] = &rv32imacfdpvcpu->VL_CSR;
  	rv32imacfdpvcpu->CSR[3105] = &rv32imacfdpvcpu->VTYPE_CSR;
  	rv32imacfdpvcpu->CSR[3106] = &rv32imacfdpvcpu->VLENB_CSR;
+ 	rv32imacfdpvcpu->CSR[3] = &rv32imacfdpvcpu->FCSR;
+ 	rv32imacfdpvcpu->CSR[768] = &rv32imacfdpvcpu->MSTATUS;
+ 	rv32imacfdpvcpu->CSR[772] = &rv32imacfdpvcpu->MIE;
+ 	rv32imacfdpvcpu->CSR[836] = &rv32imacfdpvcpu->MIP;
 
- 	rv32imacfdpvcpu->PRIV = 3;
- 	rv32imacfdpvcpu->DPC = 0;
- 	*rv32imacfdpvcpu->CSR[0] = 11;
-	*rv32imacfdpvcpu->CSR[256] = 11;
-	*rv32imacfdpvcpu->CSR[768] = 1536;
-	*rv32imacfdpvcpu->CSR[769] = 1075056941;
-	*rv32imacfdpvcpu->CSR[3088] = 3;
-	*rv32imacfdpvcpu->CSR[772] = 4294966203;
-	*rv32imacfdpvcpu->CSR[260] = 4294964019;
-	*rv32imacfdpvcpu->CSR[4] = 4294963473;
-	*rv32imacfdpvcpu->CSR[3105] = 2147483648;
-	*rv32imacfdpvcpu->CSR[3104] = 0;
-	*rv32imacfdpvcpu->CSR[3106] = 128;
- 	rv32imacfdpvcpu->RES_ADDR = -1;
+   	rv32imacfdpvcpu->PRIV = 3ULL;
+   	rv32imacfdpvcpu->DPC = 0LL;
+  	*rv32imacfdpvcpu->CSR[0] = 11ULL;
+ 	*rv32imacfdpvcpu->CSR[256] = 11ULL;
+ 	*rv32imacfdpvcpu->CSR[768] = 1536ULL;
+ 	*rv32imacfdpvcpu->CSR[769] = 1075056941ULL;
+ 	*rv32imacfdpvcpu->CSR[3088] = 3ULL;
+ 	*rv32imacfdpvcpu->CSR[772] = 4294966203ULL;
+ 	*rv32imacfdpvcpu->CSR[260] = 4294964019ULL;
+ 	*rv32imacfdpvcpu->CSR[4] = 4294963473ULL;
+ 	*rv32imacfdpvcpu->CSR[3105] = 2147483648ULL;
+ 	*rv32imacfdpvcpu->CSR[3104] = 0LL;
+ 	*rv32imacfdpvcpu->CSR[3106] = 128ULL;
+   	rv32imacfdpvcpu->RES_ADDR = -1LL;
+
 }
 
 void RV32IMACFDPVArch::deleteCPU(ETISS_CPU *cpu)
@@ -231,8 +233,9 @@ void RV32IMACFDPVArch::initCodeBlock(etiss::CodeBlock & cb) const
 {
 	cb.fileglobalCode().insert("#include \"Arch/RV32IMACFDPV/RV32IMACFDPV.h\"\n");
 	cb.fileglobalCode().insert("#include \"Arch/RV32IMACFDPV/RV32IMACFDPVFuncs.h\"\n");
-	cb.functionglobalCode().insert("((RV32IMACFDPV*)cpu)->exception = 0;\n");
-	cb.functionglobalCode().insert("((RV32IMACFDPV*)cpu)->exception_pending = 0;\n");
+	cb.functionglobalCode().insert("cpu->exception = 0;\n");
+	cb.functionglobalCode().insert("cpu->return_pending = 0;\n");
+	cb.functionglobalCode().insert("etiss_uint32 mem_ret_code = 0;\n");
 }
 
 etiss::plugin::gdb::GDBCore & RV32IMACFDPVArch::getGDBCore()
