@@ -112,9 +112,9 @@ class MemSegment
 
     void load(const void *data, size_t offset, size_t file_size_bytes);
 
-    inline bool addr_in_range(etiss::uint64 addr) const;
+    bool addr_in_range(etiss::uint64 addr) const;
 
-    inline bool payload_in_range(etiss::uint64 addr, etiss::uint64 payload_size) const;
+    bool payload_in_range(etiss::uint64 addr, etiss::uint64 payload_size) const;
 };
 
 /**

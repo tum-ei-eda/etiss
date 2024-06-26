@@ -175,12 +175,12 @@ void MemSegment::load(const void *data, size_t offset, size_t file_size_bytes)
     }
 }
 
-inline bool MemSegment::addr_in_range(etiss::uint64 addr) const
+bool MemSegment::addr_in_range(etiss::uint64 addr) const
 {
     return ((addr >= start_addr_ && addr <= end_addr_) ? true : false);
 }
 
-inline bool MemSegment::payload_in_range(etiss::uint64 addr, etiss::uint64 payload_size) const
+bool MemSegment::payload_in_range(etiss::uint64 addr, etiss::uint64 payload_size) const
 {
     if (addr_in_range(addr))
     {
