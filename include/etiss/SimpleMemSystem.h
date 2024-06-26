@@ -99,95 +99,10 @@ class MemSegment
     /// @param InitEleSet Should self allocated MemSegment be initialized?
     /// @param randomRoot If initString==Random use this value as generator root
     MemSegment(etiss::uint64 start_addr, etiss::uint64 size, access_t mode, const std::string name,
-               etiss::uint8 *mem = nullptr, std::string initString = "", bool InitEleSet = false, uint64_t randomRoot = 0)
-        : name_(name), start_addr_(start_addr), end_addr_(start_addr + size - 1), size_(size), mode_(mode)
-    {
-        if (mem)
-        { // use reserved memory
-            mem_ = mem;
-        }
-        else
-        {
-            mem_ = new etiss::uint8[size];
-            if (InitEleSet)
-            {
-                memInit(initString, randomRoot);
-            }
-            else
-            {
-                std::stringstream memMsg;
-                memMsg << "The memory segment is allocated uninitialized with length 0x" << std::hex << size_ << " !";
-                etiss::log(etiss::INFO, memMsg.str());
-            }
-            self_allocated_ = true;
-        }
-    }
+               etiss::uint8 *mem = nullptr, std::string initString = "", bool InitEleSet = false, uint64_t randomRoot = 0);
 
     // Can be overwritten afterwards with load_elf
-    void memInit(std::string initString, uint64_t randomRoot = 0)
-    {
-
-        std::stringstream memMsg;
-        if (initString.find("0x") == 0)
-        {
-            memMsg << "The memory segment is initialized with 0x" << std::hex << size_ << " elements with hex value: " << initString;
-            etiss::log(etiss::INFO, memMsg.str());
-
-            // actual conversion from hex string to corresponding hex val
-            initString.erase(initString.begin(),initString.begin()+2);
-            const char* dataPtr;
-            size_t j{0};
-            for (etiss::uint64 i = 0; i < size_; ++i)
-            {
-                if( j != (initString.length()-1))
-                {
-                    dataPtr = initString.substr(j, 2).c_str();
-                }
-                else
-                {
-                    dataPtr = initString.substr(j, 1).c_str();
-                }
-
-                j = (j+2 <=  initString.length()-1)  ?   j+2 : 0;
-
-                try
-                {
-                    uint8_t hexVal = static_cast<uint8_t>(std::stoi(dataPtr, 0 ,16));
-                    mem_[i] =  hexVal;
-                }
-                catch (std::invalid_argument const& exp)
-                {
-                    memMsg << "\n Hex Value MemSegment input is erronous (typo?) at " << exp.what();
-                    etiss::log(etiss::FATALERROR, memMsg.str());
-                }
-            }
-        }
-        else if (initString.find("random") == 0 || initString.find("RANDOM") == 0)
-        {
-            memMsg << "The memory segment is initialized with 0x" << std::hex << size_ << " random bytes and root: " << randomRoot;
-            etiss::log(etiss::INFO, memMsg.str());
-
-            static std::default_random_engine generator{randomRoot};
-            std::uniform_int_distribution<int> random_char_{ 0, 255 };
-            for (etiss::uint64 i = 0; i < size_; ++i)
-            {
-                mem_[i] = random_char_(generator);
-            }
-
-        }
-        else
-        {
-            memMsg << "The memory segment is initialized with 0x" << std::hex << size_ << " elements with the string: " << initString;
-            etiss::log(etiss::INFO, memMsg.str());
-
-            const char* data = initString.c_str();
-            for (etiss::uint64 i = 0; i < size_; ++i)
-            {
-                mem_[i] = data[i%strlen(data)];
-            }
-        }
-    }
-
+    void memInit(std::string initString, uint64_t randomRoot = 0);
 
     virtual ~MemSegment(void)
     {
@@ -195,27 +110,11 @@ class MemSegment
             delete[] mem_;
     }
 
-    void load(const void *data, size_t offset, size_t file_size_bytes)
-    {
-        if (data != nullptr && (offset + file_size_bytes) <= size_)
-        {
-            memcpy(mem_ + offset, data, file_size_bytes);
-        }
-    }
+    void load(const void *data, size_t offset, size_t file_size_bytes);
 
-    inline bool addr_in_range(etiss::uint64 addr) const
-    {
-        return ((addr >= start_addr_ && addr <= end_addr_) ? true : false);
-    }
+    inline bool addr_in_range(etiss::uint64 addr) const;
 
-    inline bool payload_in_range(etiss::uint64 addr, etiss::uint64 payload_size) const
-    {
-        if (addr_in_range(addr))
-        {
-            return (((addr + payload_size - 1) <= end_addr_) ? true : false);
-        }
-        return false;
-    }
+    inline bool payload_in_range(etiss::uint64 addr, etiss::uint64 payload_size) const;
 };
 
 /**
