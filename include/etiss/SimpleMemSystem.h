@@ -53,6 +53,7 @@
 #include "etiss/System.h"
 #include "etiss/make_unique.h"
 #include <fstream>
+#include <random>
 
 #include <cstring>
 #include <iostream>
@@ -88,8 +89,17 @@ class MemSegment
     const etiss::uint64 size_;
     access_t mode_;
 
+    /// @brief Constructor of Memory Segment
+    /// @param start_addr Start address of segment
+    /// @param size Size in bytes
+    /// @param mode Access Mode (R/W/X)
+    /// @param name Segment name
+    /// @param mem Pre-allocated Memory (not overwritten with initString)
+    /// @param initString String for initialization with imple_mem_system.memseg_initelement_ value: hex_string with 0x... / string /random options
+    /// @param InitEleSet Should self allocated MemSegment be initialized?
+    /// @param randomRoot If initString==Random use this value as generator root
     MemSegment(etiss::uint64 start_addr, etiss::uint64 size, access_t mode, const std::string name,
-               etiss::uint8 *mem = nullptr)
+               etiss::uint8 *mem = nullptr, std::string initString = "", bool InitEleSet = false, uint64_t randomRoot = 0)
         : name_(name), start_addr_(start_addr), end_addr_(start_addr + size - 1), size_(size), mode_(mode)
     {
         if (mem)
@@ -99,9 +109,85 @@ class MemSegment
         else
         {
             mem_ = new etiss::uint8[size];
+            if (InitEleSet)
+            {
+                memInit(initString, randomRoot);
+            }
+            else
+            {
+                std::stringstream memMsg;
+                memMsg << "The memory segment is allocated uninitialized with length 0x" << std::hex << size_ << " !";
+                etiss::log(etiss::INFO, memMsg.str());
+            }
             self_allocated_ = true;
         }
     }
+
+    // Can be overwritten afterwards with load_elf
+    void memInit(std::string initString, uint64_t randomRoot = 0)
+    {
+
+        std::stringstream memMsg;
+        if (initString.find("0x") == 0)
+        {
+            memMsg << "The memory segment is initialized with 0x" << std::hex << size_ << " elements with hex value: " << initString;
+            etiss::log(etiss::INFO, memMsg.str());
+
+            // actual conversion from hex string to corresponding hex val
+            initString.erase(initString.begin(),initString.begin()+2);
+            const char* dataPtr;
+            size_t j{0};
+            for (etiss::uint64 i = 0; i < size_; ++i)
+            {
+                if( j != (initString.length()-1))
+                {
+                    dataPtr = initString.substr(j, 2).c_str();
+                }
+                else
+                {
+                    dataPtr = initString.substr(j, 1).c_str();
+                }
+
+                j = (j+2 <=  initString.length()-1)  ?   j+2 : 0;
+
+                try
+                {
+                    uint8_t hexVal = static_cast<uint8_t>(std::stoi(dataPtr, 0 ,16));
+                    mem_[i] =  hexVal;
+                }
+                catch (std::invalid_argument const& exp)
+                {
+                    memMsg << "\n Hex Value MemSegment input is erronous (typo?) at " << exp.what();
+                    etiss::log(etiss::FATALERROR, memMsg.str());
+                }
+            }
+        }
+        else if (initString.find("random") == 0 || initString.find("RANDOM") == 0)
+        {
+            memMsg << "The memory segment is initialized with 0x" << std::hex << size_ << " random bytes and root: " << randomRoot;
+            etiss::log(etiss::INFO, memMsg.str());
+
+            static std::default_random_engine generator{randomRoot};
+            std::uniform_int_distribution<int> random_char_{ 0, 255 };
+            for (etiss::uint64 i = 0; i < size_; ++i)
+            {
+                mem_[i] = random_char_(generator);
+            }
+
+        }
+        else
+        {
+            memMsg << "The memory segment is initialized with 0x" << std::hex << size_ << " elements with the string: " << initString;
+            etiss::log(etiss::INFO, memMsg.str());
+
+            const char* data = initString.c_str();
+            for (etiss::uint64 i = 0; i < size_; ++i)
+            {
+                mem_[i] = data[i%strlen(data)];
+            }
+        }
+    }
+
 
     virtual ~MemSegment(void)
     {

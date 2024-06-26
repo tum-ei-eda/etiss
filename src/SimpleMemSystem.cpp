@@ -97,6 +97,15 @@ void SimpleMemSystem::load_segments() {
         }
         std::stringstream().swap(ss);
 
+        ss << "simple_mem_system.memseg_initelement_" << std::setw(2) << std::setfill('0') << i;
+        std::string initString = etiss::cfg().get<std::string>(ss.str(), "");
+        bool initEleSet = etiss::cfg().isSet(ss.str());
+        std::stringstream().swap(ss);
+
+        ss << "simple_mem_system.memseg_initelement_random_root_" << std::setw(2) << std::setfill('0') << i;
+        uint64_t randomRoot = etiss::cfg().get<uint64_t>(ss.str(), 0);
+        std::stringstream().swap(ss);
+
         ss << "simple_mem_system.memseg_image_" << std::setw(2) << std::setfill('0') << i;
         std::string image = etiss::cfg().get<std::string>(ss.str(), "");
         std::stringstream().swap(ss);
@@ -131,8 +140,8 @@ void SimpleMemSystem::load_segments() {
             etiss::uint8 *buf = nullptr;
             size_t fsize = 0;
 
-            if (image != "")
-            {
+
+            if (image != "") {
                 std::ifstream ifs(image, std::ifstream::binary | std::ifstream::ate);
                 if (!ifs) {
                     std::stringstream msg;
@@ -145,10 +154,16 @@ void SimpleMemSystem::load_segments() {
                 buf = new etiss::uint8[fsize];
 
                 ifs.read((char*)buf, fsize);
+
+                std::stringstream mem_msg;
+                mem_msg << "The memory segment " <<  i  <<  " is initialized with 0x" << std::hex << length << " bytes from input_image !";
+                etiss::log(etiss::INFO, mem_msg.str());
             }
 
-            auto mseg = std::make_unique<MemSegment>(origin, length, static_cast<MemSegment::access_t>(access), sname.str(), nullptr);
+            auto mseg = std::make_unique<MemSegment>(origin, length, static_cast<MemSegment::access_t>(access), sname.str(),
+                                                        buf, initString, initEleSet, randomRoot);
             add_memsegment(mseg, buf, fsize);
+            delete[] buf;
         }
     }
 }
