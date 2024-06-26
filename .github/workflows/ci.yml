@@ -134,7 +134,7 @@ jobs:
     needs: run_benchmarks
 
     steps:
-    - name: Download artifacts
+    - name: Merge artifacts
       uses: actions/upload-artifact/merge@v4
       with:
         name: dhry_results
