@@ -103,6 +103,7 @@ MemSegment::MemSegment(etiss::uint64 start_addr, etiss::uint64 size, access_t mo
 
 void MemSegment::memInit(std::string initString, uint64_t randomRoot) {
     std::stringstream memMsg;
+
     if (initString.find("0x") == 0)
     {
         memMsg << "The memory segment is initialized with 0x" << std::hex << size_ << " elements with hex value: " << initString;
@@ -112,9 +113,10 @@ void MemSegment::memInit(std::string initString, uint64_t randomRoot) {
         initString.erase(initString.begin(),initString.begin()+2);
         const char* dataPtr;
         size_t j{0};
+
         for (etiss::uint64 i = 0; i < size_; ++i)
         {
-            if( j != (initString.length()-1))
+            if (j != (initString.length() - 1))
             {
                 dataPtr = initString.substr(j, 2).c_str();
             }
@@ -123,12 +125,12 @@ void MemSegment::memInit(std::string initString, uint64_t randomRoot) {
                 dataPtr = initString.substr(j, 1).c_str();
             }
 
-            j = (j+2 <=  initString.length()-1)  ?   j+2 : 0;
+            j = (j + 2 <= initString.length() - 1) ? j + 2 : 0;
 
             try
             {
                 uint8_t hexVal = static_cast<uint8_t>(std::stoi(dataPtr, 0 ,16));
-                mem_[i] =  hexVal;
+                mem_[i] = hexVal;
             }
             catch (std::invalid_argument const& exp)
             {
@@ -137,6 +139,7 @@ void MemSegment::memInit(std::string initString, uint64_t randomRoot) {
             }
         }
     }
+
     else if (initString.find("random") == 0 || initString.find("RANDOM") == 0)
     {
         memMsg << "The memory segment is initialized with 0x" << std::hex << size_ << " random bytes and root: " << randomRoot;
@@ -150,6 +153,7 @@ void MemSegment::memInit(std::string initString, uint64_t randomRoot) {
         }
 
     }
+
     else
     {
         memMsg << "The memory segment is initialized with 0x" << std::hex << size_ << " elements with the string: " << initString;
