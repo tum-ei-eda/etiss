@@ -53,6 +53,7 @@
 #include "etiss/System.h"
 #include "etiss/make_unique.h"
 #include <fstream>
+#include <random>
 
 #include <cstring>
 #include <iostream>
@@ -88,20 +89,20 @@ class MemSegment
     const etiss::uint64 size_;
     access_t mode_;
 
+    /// @brief Constructor of Memory Segment
+    /// @param start_addr Start address of segment
+    /// @param size Size in bytes
+    /// @param mode Access Mode (R/W/X)
+    /// @param name Segment name
+    /// @param mem Pre-allocated Memory (not overwritten with initString)
+    /// @param initString String for initialization with imple_mem_system.memseg_initelement_ value: hex_string with 0x... / string /random options
+    /// @param InitEleSet Should self allocated MemSegment be initialized?
+    /// @param randomRoot If initString==Random use this value as generator root
     MemSegment(etiss::uint64 start_addr, etiss::uint64 size, access_t mode, const std::string name,
-               etiss::uint8 *mem = nullptr)
-        : name_(name), start_addr_(start_addr), end_addr_(start_addr + size - 1), size_(size), mode_(mode)
-    {
-        if (mem)
-        { // use reserved memory
-            mem_ = mem;
-        }
-        else
-        {
-            mem_ = new etiss::uint8[size];
-            self_allocated_ = true;
-        }
-    }
+               etiss::uint8 *mem = nullptr, std::string initString = "", bool InitEleSet = false, uint64_t randomRoot = 0);
+
+    // Can be overwritten afterwards with load_elf
+    void memInit(std::string initString, uint64_t randomRoot = 0);
 
     virtual ~MemSegment(void)
     {
@@ -109,27 +110,11 @@ class MemSegment
             delete[] mem_;
     }
 
-    void load(const void *data, size_t offset, size_t file_size_bytes)
-    {
-        if (data != nullptr && (offset + file_size_bytes) <= size_)
-        {
-            memcpy(mem_ + offset, data, file_size_bytes);
-        }
-    }
+    void load(const void *data, size_t offset, size_t file_size_bytes);
 
-    inline bool addr_in_range(etiss::uint64 addr) const
-    {
-        return ((addr >= start_addr_ && addr <= end_addr_) ? true : false);
-    }
+    inline bool addr_in_range(etiss::uint64 addr) const;
 
-    inline bool payload_in_range(etiss::uint64 addr, etiss::uint64 payload_size) const
-    {
-        if (addr_in_range(addr))
-        {
-            return (((addr + payload_size - 1) <= end_addr_) ? true : false);
-        }
-        return false;
-    }
+    inline bool payload_in_range(etiss::uint64 addr, etiss::uint64 payload_size) const;
 };
 
 /**
