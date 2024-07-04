@@ -16,8 +16,10 @@ MACRO(ETISSPlugin ProjName)
     )
 
     # mimicing installation in build tree as well
-    file(APPEND ${ETISS_BINARY_DIR}/lib/plugins/list.txt
-    "${ProjName},${ETISS_BINARY_DIR}/lib/plugins,${ProjName}\n")
+    IF(ETISS_BINARY_DIR)
+        file(APPEND ${ETISS_BINARY_DIR}/lib/plugins/list.txt
+        "${ProjName},${ETISS_BINARY_DIR}/lib/plugins,${ProjName}\n")
+    ENDIF()
 ENDMACRO()
 
 MACRO(ETISSPluginArchName ProjName ArchName)
