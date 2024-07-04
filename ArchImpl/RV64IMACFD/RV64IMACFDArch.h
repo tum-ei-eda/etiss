@@ -1,5 +1,5 @@
 /**
- * Generated on Tue, 28 Nov 2023 09:45:19 +0100.
+ * Generated on Wed, 08 May 2024 17:36:07 +0200.
  *
  * This file contains the architecture class for the RV64IMACFD core architecture.
  */
@@ -28,7 +28,7 @@ extern etiss::instr::InstructionCollection RV64IMACFDISA;
 class RV64IMACFDArch : public etiss::CPUArch {
 
 public:
-	RV64IMACFDArch();
+	RV64IMACFDArch(unsigned int);
 
 	virtual const std::set<std::string> & getListenerSupportedRegisters();
 
@@ -104,5 +104,6 @@ private:
 	std::set<std::string> listenerSupportedRegisters_;
 	std::set<std::string> headers_;
 	RV64IMACFDGDBCore gdbcore_;
+	unsigned int coreno_;
 };
 #endif

@@ -1,5 +1,5 @@
 /**
- * Generated on Tue, 28 Nov 2023 09:45:19 +0100.
+ * Generated on Wed, 08 May 2024 17:36:07 +0200.
  *
  * This file contains the instruction behavior models of the RV64I
  * instruction set for the RV64IMACFD core architecture.
@@ -63,7 +63,7 @@ cp.code() += "} // procedure\n";
 } // procedure
 cp.code() += "} // conditional\n";
 cp.code() += "etiss_uint32 res = (etiss_uint32)(mem_val_0);\n";
-if ((rd % 32ULL) != 0ULL) { // conditional
+if ((rd % 32ULL) != 0LL) { // conditional
 cp.code() += "*((RV64IMACFD*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = (etiss_uint64)(res);\n";
 } // conditional
 cp.code() += "} // block\n";
@@ -79,7 +79,7 @@ cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 		cp.code() = std::string("//LWU\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "if (cpu->return_pending | cpu->exception) return cpu->exception;\n";
+cp.code() += "if (cpu->return_pending || cpu->exception) return cpu->exception;\n";
 // -----------------------------------------------------------------------------
 	}
 
@@ -160,7 +160,7 @@ cp.code() += "} // procedure\n";
 } // procedure
 cp.code() += "} // conditional\n";
 cp.code() += "etiss_int64 res = (etiss_int64)(mem_val_0);\n";
-if ((rd % 32ULL) != 0ULL) { // conditional
+if ((rd % 32ULL) != 0LL) { // conditional
 cp.code() += "*((RV64IMACFD*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = (etiss_uint64)(res);\n";
 } // conditional
 cp.code() += "} // block\n";
@@ -176,7 +176,7 @@ cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 		cp.code() = std::string("//LD\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "if (cpu->return_pending | cpu->exception) return cpu->exception;\n";
+cp.code() += "if (cpu->return_pending || cpu->exception) return cpu->exception;\n";
 // -----------------------------------------------------------------------------
 	}
 
@@ -272,7 +272,7 @@ cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 		cp.code() = std::string("//SD\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "if (cpu->return_pending | cpu->exception) return cpu->exception;\n";
+cp.code() += "if (cpu->return_pending || cpu->exception) return cpu->exception;\n";
 // -----------------------------------------------------------------------------
 	}
 
@@ -341,7 +341,7 @@ cp.code() += "{ // block\n";
 cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4) + "ULL;\n";
 cp.code() += "} // block\n";
 } // block
-if ((rd % 32ULL) != 0ULL) { // conditional
+if ((rd % 32ULL) != 0LL) { // conditional
 cp.code() += "*((RV64IMACFD*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = *((RV64IMACFD*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] << " + std::to_string(shamt) + "ULL;\n";
 } // conditional
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
@@ -413,7 +413,7 @@ cp.code() += "{ // block\n";
 cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4) + "ULL;\n";
 cp.code() += "} // block\n";
 } // block
-if ((rd % 32ULL) != 0ULL) { // conditional
+if ((rd % 32ULL) != 0LL) { // conditional
 cp.code() += "*((RV64IMACFD*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = *((RV64IMACFD*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] >> " + std::to_string(shamt) + "ULL;\n";
 } // conditional
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
@@ -485,7 +485,7 @@ cp.code() += "{ // block\n";
 cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4) + "ULL;\n";
 cp.code() += "} // block\n";
 } // block
-if ((rd % 32ULL) != 0ULL) { // conditional
+if ((rd % 32ULL) != 0LL) { // conditional
 cp.code() += "*((RV64IMACFD*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = ((etiss_int64)(*((RV64IMACFD*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL])) >> " + std::to_string(shamt) + "ULL;\n";
 } // conditional
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
@@ -559,7 +559,7 @@ cp.code() += "} // block\n";
 } // block
 { // block
 cp.code() += "{ // block\n";
-if ((rd % 32ULL) != 0ULL) { // conditional
+if ((rd % 32ULL) != 0LL) { // conditional
 { // block
 cp.code() += "{ // block\n";
 cp.code() += "etiss_int32 res = *((RV64IMACFD*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] + " + std::to_string(((etiss_int16)(((etiss_int16)imm) << (4)) >> (4))) + "LL;\n";
@@ -640,7 +640,7 @@ cp.code() += "} // block\n";
 } // block
 { // block
 cp.code() += "{ // block\n";
-if ((rd % 32ULL) != 0ULL) { // conditional
+if ((rd % 32ULL) != 0LL) { // conditional
 { // block
 cp.code() += "{ // block\n";
 cp.code() += "etiss_uint32 sh_val = ((etiss_uint32)(*((RV64IMACFD*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL])) << " + std::to_string(shamt) + "ULL;\n";
@@ -721,7 +721,7 @@ cp.code() += "} // block\n";
 } // block
 { // block
 cp.code() += "{ // block\n";
-if ((rd % 32ULL) != 0ULL) { // conditional
+if ((rd % 32ULL) != 0LL) { // conditional
 { // block
 cp.code() += "{ // block\n";
 cp.code() += "etiss_uint32 sh_val = ((etiss_uint32)(*((RV64IMACFD*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL])) >> " + std::to_string(shamt) + "ULL;\n";
@@ -802,7 +802,7 @@ cp.code() += "} // block\n";
 } // block
 { // block
 cp.code() += "{ // block\n";
-if ((rd % 32ULL) != 0ULL) { // conditional
+if ((rd % 32ULL) != 0LL) { // conditional
 { // block
 cp.code() += "{ // block\n";
 cp.code() += "etiss_int32 sh_val = ((etiss_int32)(*((RV64IMACFD*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL])) >> " + std::to_string(shamt) + "ULL;\n";
@@ -883,7 +883,7 @@ cp.code() += "} // block\n";
 } // block
 { // block
 cp.code() += "{ // block\n";
-if ((rd % 32ULL) != 0ULL) { // conditional
+if ((rd % 32ULL) != 0LL) { // conditional
 { // block
 cp.code() += "{ // block\n";
 cp.code() += "etiss_int32 res = (etiss_int32)(*((RV64IMACFD*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL]) + (etiss_int32)(*((RV64IMACFD*)cpu)->X[" + std::to_string(rs2 % 32ULL) + "ULL]);\n";
@@ -964,7 +964,7 @@ cp.code() += "} // block\n";
 } // block
 { // block
 cp.code() += "{ // block\n";
-if ((rd % 32ULL) != 0ULL) { // conditional
+if ((rd % 32ULL) != 0LL) { // conditional
 { // block
 cp.code() += "{ // block\n";
 cp.code() += "etiss_int32 res = (etiss_int32)(*((RV64IMACFD*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL]) - (etiss_int32)(*((RV64IMACFD*)cpu)->X[" + std::to_string(rs2 % 32ULL) + "ULL]);\n";
@@ -1045,7 +1045,7 @@ cp.code() += "} // block\n";
 } // block
 { // block
 cp.code() += "{ // block\n";
-if ((rd % 32ULL) != 0ULL) { // conditional
+if ((rd % 32ULL) != 0LL) { // conditional
 { // block
 cp.code() += "{ // block\n";
 cp.code() += "etiss_uint32 count = (etiss_uint64)(*((RV64IMACFD*)cpu)->X[" + std::to_string(rs2 % 32ULL) + "ULL]) & 31ULL;\n";
@@ -1127,7 +1127,7 @@ cp.code() += "} // block\n";
 } // block
 { // block
 cp.code() += "{ // block\n";
-if ((rd % 32ULL) != 0ULL) { // conditional
+if ((rd % 32ULL) != 0LL) { // conditional
 { // block
 cp.code() += "{ // block\n";
 cp.code() += "etiss_uint32 count = (etiss_uint64)(*((RV64IMACFD*)cpu)->X[" + std::to_string(rs2 % 32ULL) + "ULL]) & 31ULL;\n";
@@ -1209,7 +1209,7 @@ cp.code() += "} // block\n";
 } // block
 { // block
 cp.code() += "{ // block\n";
-if ((rd % 32ULL) != 0ULL) { // conditional
+if ((rd % 32ULL) != 0LL) { // conditional
 { // block
 cp.code() += "{ // block\n";
 cp.code() += "etiss_uint32 count = (etiss_uint64)(*((RV64IMACFD*)cpu)->X[" + std::to_string(rs2 % 32ULL) + "ULL]) & 31ULL;\n";

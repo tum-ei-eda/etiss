@@ -1,5 +1,5 @@
 /**
- * Generated on Tue, 28 Nov 2023 09:45:19 +0100.
+ * Generated on Wed, 08 May 2024 17:36:07 +0200.
  *
  * This file contains the instruction behavior models of the RV32FC
  * instruction set for the RV32IMACFD core architecture.
@@ -85,7 +85,7 @@ cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 		cp.code() = std::string("//CFLW\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "if (cpu->return_pending | cpu->exception) return cpu->exception;\n";
+cp.code() += "if (cpu->return_pending || cpu->exception) return cpu->exception;\n";
 // -----------------------------------------------------------------------------
 	}
 
@@ -187,7 +187,7 @@ cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 		cp.code() = std::string("//CFSW\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "if (cpu->return_pending | cpu->exception) return cpu->exception;\n";
+cp.code() += "if (cpu->return_pending || cpu->exception) return cpu->exception;\n";
 // -----------------------------------------------------------------------------
 	}
 
@@ -291,7 +291,7 @@ cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 		cp.code() = std::string("//CFLWSP\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "if (cpu->return_pending | cpu->exception) return cpu->exception;\n";
+cp.code() += "if (cpu->return_pending || cpu->exception) return cpu->exception;\n";
 // -----------------------------------------------------------------------------
 	}
 
@@ -385,7 +385,7 @@ cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 		cp.code() = std::string("//CFSWSP\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "if (cpu->return_pending | cpu->exception) return cpu->exception;\n";
+cp.code() += "if (cpu->return_pending || cpu->exception) return cpu->exception;\n";
 // -----------------------------------------------------------------------------
 	}
 

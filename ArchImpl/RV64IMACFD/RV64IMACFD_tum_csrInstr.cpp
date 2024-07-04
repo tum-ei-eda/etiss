@@ -1,5 +1,5 @@
 /**
- * Generated on Tue, 28 Nov 2023 09:45:19 +0100.
+ * Generated on Wed, 08 May 2024 17:36:07 +0200.
  *
  * This file contains the instruction behavior models of the tum_csr
  * instruction set for the RV64IMACFD core architecture.
@@ -52,7 +52,7 @@ cp.code() += "} // block\n";
 { // block
 cp.code() += "{ // block\n";
 cp.code() += "etiss_uint64 xrs1 = *((RV64IMACFD*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL];\n";
-if ((rd % 32ULL) != 0ULL) { // conditional
+if ((rd % 32ULL) != 0LL) { // conditional
 { // block
 cp.code() += "{ // block\n";
 cp.code() += "etiss_uint64 xrd = RV64IMACFD_csr_read(cpu, system, plugin_pointers, " + std::to_string(csr) + "ULL);\n";
@@ -143,10 +143,10 @@ cp.code() += "} // block\n";
 cp.code() += "{ // block\n";
 cp.code() += "etiss_uint64 xrd = RV64IMACFD_csr_read(cpu, system, plugin_pointers, " + std::to_string(csr) + "ULL);\n";
 cp.code() += "etiss_uint64 xrs1 = *((RV64IMACFD*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL];\n";
-if (rs1 != 0ULL) { // conditional
+if (rs1 != 0LL) { // conditional
 cp.code() += "RV64IMACFD_csr_write(cpu, system, plugin_pointers, " + std::to_string(csr) + "ULL, xrd | xrs1);\n";
 } // conditional
-if ((rd % 32ULL) != 0ULL) { // conditional
+if ((rd % 32ULL) != 0LL) { // conditional
 cp.code() += "*((RV64IMACFD*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = xrd;\n";
 } // conditional
 cp.code() += "} // block\n";
@@ -224,10 +224,10 @@ cp.code() += "} // block\n";
 cp.code() += "{ // block\n";
 cp.code() += "etiss_uint64 xrd = RV64IMACFD_csr_read(cpu, system, plugin_pointers, " + std::to_string(csr) + "ULL);\n";
 cp.code() += "etiss_uint64 xrs1 = *((RV64IMACFD*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL];\n";
-if (rs1 != 0ULL) { // conditional
+if (rs1 != 0LL) { // conditional
 cp.code() += "RV64IMACFD_csr_write(cpu, system, plugin_pointers, " + std::to_string(csr) + "ULL, xrd & ~(xrs1));\n";
 } // conditional
-if ((rd % 32ULL) != 0ULL) { // conditional
+if ((rd % 32ULL) != 0LL) { // conditional
 cp.code() += "*((RV64IMACFD*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = xrd;\n";
 } // conditional
 cp.code() += "} // block\n";
@@ -305,7 +305,7 @@ cp.code() += "} // block\n";
 cp.code() += "{ // block\n";
 cp.code() += "etiss_uint64 xrd = RV64IMACFD_csr_read(cpu, system, plugin_pointers, " + std::to_string(csr) + "ULL);\n";
 cp.code() += "RV64IMACFD_csr_write(cpu, system, plugin_pointers, " + std::to_string(csr) + "ULL, " + std::to_string((etiss_uint64)(zimm)) + "ULL);\n";
-if ((rd % 32ULL) != 0ULL) { // conditional
+if ((rd % 32ULL) != 0LL) { // conditional
 cp.code() += "*((RV64IMACFD*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = xrd;\n";
 } // conditional
 cp.code() += "} // block\n";
@@ -382,10 +382,10 @@ cp.code() += "} // block\n";
 { // block
 cp.code() += "{ // block\n";
 cp.code() += "etiss_uint64 xrd = RV64IMACFD_csr_read(cpu, system, plugin_pointers, " + std::to_string(csr) + "ULL);\n";
-if (zimm != 0ULL) { // conditional
+if (zimm != 0LL) { // conditional
 cp.code() += "RV64IMACFD_csr_write(cpu, system, plugin_pointers, " + std::to_string(csr) + "ULL, xrd | " + std::to_string((etiss_uint64)(zimm)) + "ULL);\n";
 } // conditional
-if ((rd % 32ULL) != 0ULL) { // conditional
+if ((rd % 32ULL) != 0LL) { // conditional
 cp.code() += "*((RV64IMACFD*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = xrd;\n";
 } // conditional
 cp.code() += "} // block\n";
@@ -462,10 +462,10 @@ cp.code() += "} // block\n";
 { // block
 cp.code() += "{ // block\n";
 cp.code() += "etiss_uint64 xrd = RV64IMACFD_csr_read(cpu, system, plugin_pointers, " + std::to_string(csr) + "ULL);\n";
-if (zimm != 0ULL) { // conditional
+if (zimm != 0LL) { // conditional
 cp.code() += "RV64IMACFD_csr_write(cpu, system, plugin_pointers, " + std::to_string(csr) + "ULL, xrd & " + std::to_string(~(((etiss_uint64)(zimm)))) + "ULL);\n";
 } // conditional
-if ((rd % 32ULL) != 0ULL) { // conditional
+if ((rd % 32ULL) != 0LL) { // conditional
 cp.code() += "*((RV64IMACFD*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = xrd;\n";
 } // conditional
 cp.code() += "} // block\n";
