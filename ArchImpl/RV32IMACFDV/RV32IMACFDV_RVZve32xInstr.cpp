@@ -9206,13 +9206,47 @@ cp.code() += "} // block\n";
 } // block
 { // block
 cp.code() += "{ // block\n";
+cp.code() += "etiss_uint32 _vtype = *((RV32IMACFDV*)cpu)->CSR[3105ULL];\n";
+cp.code() += "etiss_uint32 _eew = vcfg_concatEEW(0LL, 0LL);\n";
 cp.code() += "etiss_uint32 _vstart = *((RV32IMACFDV*)cpu)->CSR[8ULL];\n";
+cp.code() += "etiss_uint32 _vl = *((RV32IMACFDV*)cpu)->CSR[3104ULL];\n";
+cp.code() += "etiss_uint32 _vlen = *((RV32IMACFDV*)cpu)->CSR[3106ULL] * 8ULL;\n";
+cp.code() += "etiss_uint32 ret = etiss_vload_encoded_unitstride(cpu, system, plugin_pointers, ((RV32IMACFDV*)cpu)->V, _vtype, " + std::to_string(vm) + "ULL, _eew, " + std::to_string(vd) + "ULL, _vstart, _vlen, _vl, (etiss_uint64)(*((RV32IMACFDV*)cpu)->X[" + std::to_string(rs1) + "ULL]));\n";
+cp.code() += "if (ret != 0LL) { // conditional\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->CSR[8ULL] = ret >> 8ULL;\n";
+{ // procedure
+cp.code() += "{ // procedure\n";
+cp.code() += "RV32IMACFDV_raise(cpu, system, plugin_pointers, 0LL, 2ULL);\n";
+cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
+cp.code() += "} // procedure\n";
+} // procedure
+cp.code() += "} // block\n";
+} // block
+cp.code() += "} // conditional\n";
+cp.code() += "else { // conditional\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->CSR[8ULL] = 0LL;\n";
+cp.code() += "} // block\n";
+} // block
+cp.code() += "} // conditional\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
 cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
 		cp.getAffectedRegisters().add("instructionPointer", 32);
+	}
+	{
+		CodePart & cp = cs.append(CodePart::APPENDEDRETURNINGREQUIRED);
+
+		cp.code() = std::string("//VLE8_V\n");
+
+// -----------------------------------------------------------------------------
+cp.code() += "if (cpu->return_pending || cpu->exception) return cpu->exception;\n";
+// -----------------------------------------------------------------------------
 	}
 
 		return true;
