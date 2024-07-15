@@ -51,18 +51,6 @@ cp.code() += "} // block\n";
 } // block
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "if (!((*((RV32IMACFDV*)cpu)->CSR[768LL] & 1536LL))) { // conditional\n";
-{ // block
-cp.code() += "{ // block\n";
-{ // procedure
-cp.code() += "{ // procedure\n";
-cp.code() += "RV32IMACFDV_raise(cpu, system, plugin_pointers, 0LL, 2ULL);\n";
-cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
-cp.code() += "} // procedure\n";
-} // procedure
-cp.code() += "} // block\n";
-} // block
-cp.code() += "} // conditional\n";
 cp.code() += "etiss_uint8 sew = (vtype_extractSEW(" + std::to_string(zimm) + "ULL)) & 0x7;\n";
 cp.code() += "etiss_uint8 lmul = (vtype_extractLMUL(" + std::to_string(zimm) + "ULL)) & 0x7;\n";
 cp.code() += "etiss_uint8 vta = (vtype_extractTA(" + std::to_string(zimm) + "ULL)) & 0x1;\n";
@@ -189,15 +177,6 @@ cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
 cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
 		cp.getAffectedRegisters().add("instructionPointer", 32);
-	}
-	{
-		CodePart & cp = cs.append(CodePart::APPENDEDRETURNINGREQUIRED);
-
-		cp.code() = std::string("//VSETVLI\n");
-
-// -----------------------------------------------------------------------------
-cp.code() += "if (cpu->return_pending || cpu->exception) return cpu->exception;\n";
-// -----------------------------------------------------------------------------
 	}
 
 		return true;
