@@ -400,6 +400,7 @@ void Server::handlePacket(bool block)
             break;
             case 'P': // write a register
             {
+                std::cout << "write reg" << std::endl;
                 size_t off = 1;
                 unsigned regIndex = 0;
                 std::string valToWrite;
@@ -416,6 +417,8 @@ void Server::handlePacket(bool block)
                         answer = "OK";
                     }
                 }
+                std::cout << "valToWrite=" << valToWrite << std::endl;
+                std::cout << "regIndex=" << regIndex << std::endl;
                 auto f = plugin_core_->getStruct()->findName(arch_->getGDBCore().mapRegister(regIndex));
                 if (!f)
                 {
@@ -424,6 +427,7 @@ void Server::handlePacket(bool block)
                                arch_->getGDBCore().mapRegister(regIndex), *plugin_core_);
                     break;
                 }
+                std::cout << "field found" << std::endl;
                 switch (f->width_)
                 {
                 case 1:
@@ -438,15 +442,21 @@ void Server::handlePacket(bool block)
                 case 8:
                     f->write(hex::toInt<uint64_t>(valToWrite, arch_->getGDBCore().isLittleEndian(), off));
                     break;
+                case 16:  // 128 bits
+                    answer = "EFF";
+                    etiss::log(etiss::ERROR, "GDB P: >64 bit fields not supported");
+                    break;
                 default:
                     answer = "EFF";
                     etiss::log(etiss::ERROR, "GDB P: Invalid write length");
                 }
                 off += f->width_ * 2;
             }
+            std::cout << "write_done" << std::endl;
             break;
             case 'p': // read a register
             {
+                std::cout << "read reg" << std::endl;
                 unsigned regIndex = 0;
                 if (command.length() > 1)
                 {
@@ -455,6 +465,7 @@ void Server::handlePacket(bool block)
                         regIndex = (regIndex << 4) | hex::fromHex(command[i]);
                     }
                 }
+                std::cout << "regIndex=" << regIndex << std::endl;
                 auto f = plugin_core_->getStruct()->findName(arch_->getGDBCore().mapRegister(regIndex));
                 if (!f)
                 {
@@ -463,6 +474,7 @@ void Server::handlePacket(bool block)
                                arch_->getGDBCore().mapRegister(regIndex), *plugin_core_);
                     break;
                 }
+                std::cout << "field found" << std::endl;
                 switch (f->width_)
                 {
                 case 1:
@@ -477,11 +489,16 @@ void Server::handlePacket(bool block)
                 case 8:
                     hex::fromInt(answer, (uint64_t)f->read(), arch_->getGDBCore().isLittleEndian());
                     break;
+                case 16:  // 128 bits
+                    answer = "EFF";
+                    etiss::log(etiss::ERROR, "GDB p: >64 bit fields not supported");
+                    break;
                 default:
                     answer = "EFF";
                     etiss::log(etiss::ERROR, "GDB p: Invalid read length");
                 }
             }
+            std::cout << "read done" << std::endl;
             break;
             case 'm': // read memory
             {
