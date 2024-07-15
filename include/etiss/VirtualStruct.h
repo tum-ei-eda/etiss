@@ -223,11 +223,11 @@ class VirtualStruct : public std::enable_shared_from_this<VirtualStruct>, public
         const AccessMode accessMode_;
 
       public: // read write
-        uint64_t read()
+        uint64_t read(size_t)
             const; ///< function to read bits/a value from the Field. may only be called if the R flag is set. in case
                    ///< of less than 64 bit values the msb should be extended according to the default c++ conversion
                    ///< behavior. e.g. int32_t read_value = X; return (uint64_t)read_value;
-        void write(uint64_t); ///< function to write bits/a value to the Field. may only be called if the W flag is set.
+        void write(uint64_t, size_t); ///< function to write bits/a value to the Field. may only be called if the W flag is set.
                               ///< additional bits are silently discarded if the targt field has less than 64 bits. e.g.
                               ///< int64_t write_target = (int32_t) write_uint64_t;
         bool applyBitflip(unsigned position, uint64_t fault_id); ///< function to write a bitflip to a field
@@ -238,10 +238,10 @@ class VirtualStruct : public std::enable_shared_from_this<VirtualStruct>, public
                             ///< the listener flag is set.
       protected:            // read write implementation
         /// override this function to implement reads in case of AccessMode::VIRTUAL / AccessMode::PREFER_LAMBDA
-        virtual uint64_t _read() const;
+        virtual uint64_t _read(size_t) const;
         /// override this function to implement writes in case of
         /// AccessMode::VIRTUAL / AccessMode::PREFER_LAMBDA
-        virtual void _write(uint64_t);
+        virtual void _write(uint64_t, size_t);
         /// override this function to implement bitflip applying to a field
         virtual bool _applyBitflip(unsigned position, uint64_t fault_id);
         /// override this function to implement advanced action handling
