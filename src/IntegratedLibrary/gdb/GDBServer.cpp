@@ -493,8 +493,13 @@ void Server::handlePacket(bool block)
                     hex::fromInt(answer, (uint64_t)f->read(0), arch_->getGDBCore().isLittleEndian());
                     break;
                 case 16:  // 128 bits
-                    hex::fromInt(answer, (uint64_t)f->read(0), arch_->getGDBCore().isLittleEndian());
-                    hex::fromInt(answer, (uint64_t)f->read(1), arch_->getGDBCore().isLittleEndian()); // TODO: use
+                    if (arch_->getGDBCore().isLittleEndian()) {
+                        hex::fromInt(answer, (uint64_t)f->read(0), arch_->getGDBCore().isLittleEndian());
+                        hex::fromInt(answer, (uint64_t)f->read(1), arch_->getGDBCore().isLittleEndian()); // TODO: use
+                    } else {
+                        hex::fromInt(answer, (uint64_t)f->read(1), arch_->getGDBCore().isLittleEndian());
+                        hex::fromInt(answer, (uint64_t)f->read(0), arch_->getGDBCore().isLittleEndian()); // TODO: use
+                    }
                     // answer = "EFF";
                     // etiss::log(etiss::ERROR, "GDB p: >64 bit fields not supported");
                     break;
