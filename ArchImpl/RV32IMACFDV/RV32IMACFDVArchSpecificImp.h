@@ -131,13 +131,15 @@ public:
 protected:
 	virtual uint64_t _read(size_t offset) const {
 		printf("v_read with gprid_ %d\n", gprid_);
-		return (uint64_t) *((RV32IMACFDV*)parent_.structure_)->X[gprid_];  // TODO: read V[grpid_] instead
+    // TODO: check for out of bounds? (offset < width_/8)
+		return (uint64_t) *((uint64_t*)&((RV32IMACFDV*)parent_.structure_)->V[gprid_ + sizeof(uint64_t) * offset]);
 	}
 
 	virtual void _write(uint64_t val, size_t offset) {
 		etiss::log(etiss::VERBOSE, "write to ETISS cpu state", name_, val);
 		printf("v_write (%lu) with gprid_ %d\n", val, gprid_);
-		*((RV32IMACFDV*)parent_.structure_)->X[gprid_] = (etiss_uint64) val;  // TODO: write V[gprid_] instead
+    // TODO: check for out of bounds? (offset < width_/8)
+		*((uint64_t*)&((RV32IMACFDV*)parent_.structure_)->V[gprid_ + sizeof(uint64_t)]) = (etiss_uint64) val;  // TODO: write V[gprid_] instead
 	}
 };
 
