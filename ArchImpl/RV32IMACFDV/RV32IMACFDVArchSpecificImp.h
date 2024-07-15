@@ -54,7 +54,8 @@ protected:
 
 	virtual void _write(uint64_t val) {
 		etiss::log(etiss::VERBOSE, "write to ETISS cpu state", name_, val);
-		*((RV32IMACFDV*)parent_.structure_)->X[gprid_] = (etiss_uint32) val;
+		printf("x_write (%lu) with gprid_ %d\n", val, gprid_);
+		*((RV32IMACFDV*)parent_.structure_)->X[gprid_ = (etiss_uint32) val;
 	}
 };
 
@@ -92,6 +93,7 @@ protected:
 
 	virtual void _write(uint64_t val) {
 		etiss::log(etiss::VERBOSE, "write to ETISS cpu state", name_, val);
+		printf("f_write (%lu) with gprid_ %d\n", val, gprid_);
 		*((RV32IMACFDV*)parent_.structure_)->F[gprid_] = (etiss_uint64) val;
 	}
 };
@@ -173,6 +175,7 @@ protected:
 
 	virtual void _write(uint64_t val) {
 		etiss::log(etiss::VERBOSE, "write to ETISS cpu state", name_, val);
+		printf("csr_write (%lu) with gprid_ %d\n", val, gprid_);
 		RV32IMACFDV_csr_write((ETISS_CPU*)parent_.structure_, nullptr, nullptr, gprid_, (etiss_uint32) val);
 	}
 };
