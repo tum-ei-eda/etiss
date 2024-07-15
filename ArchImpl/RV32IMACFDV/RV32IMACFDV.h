@@ -126,7 +126,7 @@ struct RV32IMACFDV {
 	etiss_uint64 FT11;
 	etiss_uint64 *F[32];
 	etiss_uint64 ins_F[32];
-	etiss_uint8 V[4096];
+	etiss_uint8 V[512];
 	etiss_uint32 RES_ADDR;
 };
 
