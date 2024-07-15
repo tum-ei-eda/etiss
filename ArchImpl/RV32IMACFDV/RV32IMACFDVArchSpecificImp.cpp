@@ -375,6 +375,10 @@ std::shared_ptr<etiss::VirtualStruct> RV32IMACFDVArch::getVirtualStruct(ETISS_CP
 	ret->addField(new CSRField_RV32IMACFDV(*ret,3858));
 	ret->addField(new CSRField_RV32IMACFDV(*ret,3859));
 	ret->addField(new CSRField_RV32IMACFDV(*ret,3860));
+	// V0-V31
+	for (uint32_t i = 0; i < 32; ++i){
+		ret->addField(new VectorRegField_RV32IMACFDV(*ret,i));
+	}
 
 	printf("added all fields in ArchSpecImp.cpp");
  	return ret;
