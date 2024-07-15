@@ -1,5 +1,5 @@
 /**
- * Generated on Thu, 18 Apr 2024 00:50:41 +0200.
+ * Generated on Tue, 25 Apr 2023 11:23:36 +0200.
  *
  * This file contains the architecture class for the RV32IMACFD core architecture.
  */
@@ -35,13 +35,15 @@
  *********************************************************************************************************************************/
 
 #include "RV32IMACFDArch.h"
+
+#define ETISS_ARCH_STATIC_FN_ONLY
 #include "RV32IMACFDFuncs.h"
 
 #define RV32IMACFD_DEBUG_CALL 0
 using namespace etiss ;
 using namespace etiss::instr ;
 
-RV32IMACFDArch::RV32IMACFDArch(unsigned int coreno):CPUArch("RV32IMACFD"), coreno_(coreno)
+RV32IMACFDArch::RV32IMACFDArch():CPUArch("RV32IMACFD")
 {
 	headers_.insert("Arch/RV32IMACFD/RV32IMACFD.h");
 }
@@ -65,7 +67,6 @@ void RV32IMACFDArch::resetCPU(ETISS_CPU * cpu,etiss::uint64 * startpointer)
 
 	if (startpointer) cpu->instructionPointer = *startpointer & ~((etiss::uint64)0x1);
 	else cpu->instructionPointer = 0x0;   //  reference to manual
-	cpu->nextPc = cpu->instructionPointer;
 	cpu->mode = 1;
 	cpu->cpuTime_ps = 0;
 	cpu->cpuCycleTime_ps = 31250;
@@ -78,6 +79,10 @@ void RV32IMACFDArch::resetCPU(ETISS_CPU * cpu,etiss::uint64 * startpointer)
 	for (int i = 0; i < 4096; ++i) {
 		rv32imacfdcpu->ins_CSR[i] = 0;
 		rv32imacfdcpu->CSR[i] = &rv32imacfdcpu->ins_CSR[i];
+	}
+	for (int i = 0; i < 32; ++i) {
+		rv32imacfdcpu->ins_F[i] = 0;
+		rv32imacfdcpu->F[i] = &rv32imacfdcpu->ins_F[i];
 	}
 
 	rv32imacfdcpu->ZERO = 0;
@@ -121,12 +126,40 @@ void RV32IMACFDArch::resetCPU(ETISS_CPU * cpu,etiss::uint64 * startpointer)
 	rv32imacfdcpu->PRIV = 0;
 	rv32imacfdcpu->DPC = 0;
 	rv32imacfdcpu->FCSR = 0;
-	rv32imacfdcpu->MSTATUS = 0;
-	rv32imacfdcpu->MIE = 0;
-	rv32imacfdcpu->MIP = 0;
-	for (int i = 0; i < 32; ++i) {
-		rv32imacfdcpu->F[i] = 0;
-	}
+	rv32imacfdcpu->FFLAGS = 0;
+	rv32imacfdcpu->FRM = 0;
+	rv32imacfdcpu->FT0 = 0;
+	rv32imacfdcpu->FT1 = 0;
+	rv32imacfdcpu->FT2 = 0;
+	rv32imacfdcpu->FT3 = 0;
+	rv32imacfdcpu->FT4 = 0;
+	rv32imacfdcpu->FT5 = 0;
+	rv32imacfdcpu->FT6 = 0;
+	rv32imacfdcpu->FT7 = 0;
+	rv32imacfdcpu->FS0 = 0;
+	rv32imacfdcpu->FS1 = 0;
+	rv32imacfdcpu->FA0 = 0;
+	rv32imacfdcpu->FA1 = 0;
+	rv32imacfdcpu->FA2 = 0;
+	rv32imacfdcpu->FA3 = 0;
+	rv32imacfdcpu->FA4 = 0;
+	rv32imacfdcpu->FA5 = 0;
+	rv32imacfdcpu->FA6 = 0;
+	rv32imacfdcpu->FA7 = 0;
+	rv32imacfdcpu->FS2 = 0;
+	rv32imacfdcpu->FS3 = 0;
+	rv32imacfdcpu->FS4 = 0;
+	rv32imacfdcpu->FS5 = 0;
+	rv32imacfdcpu->FS6 = 0;
+	rv32imacfdcpu->FS7 = 0;
+	rv32imacfdcpu->FS8 = 0;
+	rv32imacfdcpu->FS9 = 0;
+	rv32imacfdcpu->FS10 = 0;
+	rv32imacfdcpu->FS11 = 0;
+	rv32imacfdcpu->FT8 = 0;
+	rv32imacfdcpu->FT9 = 0;
+	rv32imacfdcpu->FT10 = 0;
+	rv32imacfdcpu->FT11 = 0;
 	rv32imacfdcpu->RES_ADDR = 0;
 
  	rv32imacfdcpu->X[0] = &rv32imacfdcpu->ZERO;
@@ -161,23 +194,79 @@ void RV32IMACFDArch::resetCPU(ETISS_CPU * cpu,etiss::uint64 * startpointer)
  	rv32imacfdcpu->X[29] = &rv32imacfdcpu->T4;
  	rv32imacfdcpu->X[30] = &rv32imacfdcpu->T5;
  	rv32imacfdcpu->X[31] = &rv32imacfdcpu->T6;
- 	rv32imacfdcpu->CSR[3] = &rv32imacfdcpu->FCSR;
- 	rv32imacfdcpu->CSR[768] = &rv32imacfdcpu->MSTATUS;
- 	rv32imacfdcpu->CSR[772] = &rv32imacfdcpu->MIE;
- 	rv32imacfdcpu->CSR[836] = &rv32imacfdcpu->MIP;
+ 	
+	rv32imacfdcpu->CSR[3] = &rv32imacfdcpu->FCSR;
+ 	rv32imacfdcpu->CSR[1] = &rv32imacfdcpu->FFLAGS;
+	rv32imacfdcpu->CSR[2] = &rv32imacfdcpu->FRM;
+	
+	rv32imacfdcpu->CSR[3072] = &rv32imacfdcpu->CYCLE;
+	rv32imacfdcpu->CSR[3200] = &rv32imacfdcpu->CYCLEH;
+        rv32imacfdcpu->CSR[3073] = &rv32imacfdcpu->TIME;
+        rv32imacfdcpu->CSR[3201] = &rv32imacfdcpu->TIMEH;
+        rv32imacfdcpu->CSR[3274] = &rv32imacfdcpu->INSTRET;
+        rv32imacfdcpu->CSR[3202] = &rv32imacfdcpu->INSTRETH;
+   
+        rv32imacfdcpu->CSR[3857] = &rv32imacfdcpu->MVENDORID;
+        rv32imacfdcpu->CSR[3858] = &rv32imacfdcpu->MARCHID;
+        rv32imacfdcpu->CSR[3859] = &rv32imacfdcpu->MIMPID;
+        rv32imacfdcpu->CSR[3860] = &rv32imacfdcpu->MHARTID;
+        rv32imacfdcpu->CSR[768] = &rv32imacfdcpu->MSTATUS;
+        rv32imacfdcpu->CSR[769] = &rv32imacfdcpu->MISA;
+        rv32imacfdcpu->CSR[770] = &rv32imacfdcpu->MEDELEG;
+        rv32imacfdcpu->CSR[771] = &rv32imacfdcpu->MIDELEG;
+        rv32imacfdcpu->CSR[772] = &rv32imacfdcpu->MIE;
+        rv32imacfdcpu->CSR[773] = &rv32imacfdcpu->MTVEC;
+        rv32imacfdcpu->CSR[774] = &rv32imacfdcpu->MCOUNTEREN;
+        rv32imacfdcpu->CSR[832] = &rv32imacfdcpu->MSCRATCH;
+        rv32imacfdcpu->CSR[833] = &rv32imacfdcpu->MEPC;
+        rv32imacfdcpu->CSR[834] = &rv32imacfdcpu->MCAUSE;
+        rv32imacfdcpu->CSR[835] = &rv32imacfdcpu->MTVAL;
+        rv32imacfdcpu->CSR[836] = &rv32imacfdcpu->MIP;
+	
+	rv32imacfdcpu->F[0] = &rv32imacfdcpu->FT0;
+ 	rv32imacfdcpu->F[1] = &rv32imacfdcpu->FT1;
+ 	rv32imacfdcpu->F[2] = &rv32imacfdcpu->FT2;
+ 	rv32imacfdcpu->F[3] = &rv32imacfdcpu->FT3;
+ 	rv32imacfdcpu->F[4] = &rv32imacfdcpu->FT4;
+ 	rv32imacfdcpu->F[5] = &rv32imacfdcpu->FT5;
+ 	rv32imacfdcpu->F[6] = &rv32imacfdcpu->FT6;
+ 	rv32imacfdcpu->F[7] = &rv32imacfdcpu->FT7;
+ 	rv32imacfdcpu->F[8] = &rv32imacfdcpu->FS0;
+ 	rv32imacfdcpu->F[9] = &rv32imacfdcpu->FS1;
+ 	rv32imacfdcpu->F[10] = &rv32imacfdcpu->FA0;
+ 	rv32imacfdcpu->F[11] = &rv32imacfdcpu->FA1;
+ 	rv32imacfdcpu->F[12] = &rv32imacfdcpu->FA2;
+ 	rv32imacfdcpu->F[13] = &rv32imacfdcpu->FA3;
+ 	rv32imacfdcpu->F[14] = &rv32imacfdcpu->FA4;
+ 	rv32imacfdcpu->F[15] = &rv32imacfdcpu->FA5;
+ 	rv32imacfdcpu->F[16] = &rv32imacfdcpu->FA6;
+ 	rv32imacfdcpu->F[17] = &rv32imacfdcpu->FA7;
+ 	rv32imacfdcpu->F[18] = &rv32imacfdcpu->FS2;
+ 	rv32imacfdcpu->F[19] = &rv32imacfdcpu->FS3;
+ 	rv32imacfdcpu->F[20] = &rv32imacfdcpu->FS4;
+ 	rv32imacfdcpu->F[21] = &rv32imacfdcpu->FS5;
+ 	rv32imacfdcpu->F[22] = &rv32imacfdcpu->FS6;
+ 	rv32imacfdcpu->F[23] = &rv32imacfdcpu->FS7;
+ 	rv32imacfdcpu->F[24] = &rv32imacfdcpu->FS8;
+ 	rv32imacfdcpu->F[25] = &rv32imacfdcpu->FS9;
+ 	rv32imacfdcpu->F[26] = &rv32imacfdcpu->FS10;
+ 	rv32imacfdcpu->F[27] = &rv32imacfdcpu->FS11;
+ 	rv32imacfdcpu->F[28] = &rv32imacfdcpu->FT8;
+ 	rv32imacfdcpu->F[29] = &rv32imacfdcpu->FT9;
+ 	rv32imacfdcpu->F[30] = &rv32imacfdcpu->FT10;
+ 	rv32imacfdcpu->F[31] = &rv32imacfdcpu->FT11;
 
-   	rv32imacfdcpu->PRIV = 3ULL;
-   	rv32imacfdcpu->DPC = 0LL;
-  	*rv32imacfdcpu->CSR[0] = 11ULL;
- 	*rv32imacfdcpu->CSR[256] = 11ULL;
- 	*rv32imacfdcpu->CSR[768] = 11ULL;
- 	*rv32imacfdcpu->CSR[769] = 1075056941ULL;
- 	*rv32imacfdcpu->CSR[3088] = 3ULL;
- 	*rv32imacfdcpu->CSR[772] = 4294966203ULL;
- 	*rv32imacfdcpu->CSR[260] = 4294964019ULL;
- 	*rv32imacfdcpu->CSR[4] = 4294963473ULL;
-   	rv32imacfdcpu->RES_ADDR = -1LL;
-
+ 	rv32imacfdcpu->PRIV = 3;
+ 	rv32imacfdcpu->DPC = 0;
+ 	*rv32imacfdcpu->CSR[0] = 11;
+	*rv32imacfdcpu->CSR[256] = 24576;
+	*rv32imacfdcpu->CSR[768] = 11;
+	*rv32imacfdcpu->CSR[769] = 1075056941;
+	*rv32imacfdcpu->CSR[3088] = 3;
+	*rv32imacfdcpu->CSR[772] = 4294966203;
+	*rv32imacfdcpu->CSR[260] = 4294964019;
+	*rv32imacfdcpu->CSR[4] = 4294963473;
+ 	rv32imacfdcpu->RES_ADDR = -1;
 }
 
 void RV32IMACFDArch::deleteCPU(ETISS_CPU *cpu)
@@ -213,9 +302,8 @@ void RV32IMACFDArch::initCodeBlock(etiss::CodeBlock & cb) const
 {
 	cb.fileglobalCode().insert("#include \"Arch/RV32IMACFD/RV32IMACFD.h\"\n");
 	cb.fileglobalCode().insert("#include \"Arch/RV32IMACFD/RV32IMACFDFuncs.h\"\n");
-	cb.functionglobalCode().insert("cpu->exception = 0;\n");
-	cb.functionglobalCode().insert("cpu->return_pending = 0;\n");
-	cb.functionglobalCode().insert("etiss_uint32 mem_ret_code = 0;\n");
+	cb.functionglobalCode().insert("((RV32IMACFD*)cpu)->exception = 0;\n");
+	cb.functionglobalCode().insert("((RV32IMACFD*)cpu)->exception_pending = 0;\n");
 }
 
 etiss::plugin::gdb::GDBCore & RV32IMACFDArch::getGDBCore()
@@ -257,6 +345,43 @@ const char * const reg_name[] =
 	"X29",
 	"X30",
 	"X31",
+	"",
+	"F0",
+	"F1",
+	"F2",
+	"F3",
+	"F4",
+	"F5",
+	"F6",
+	"F7",
+	"F8",
+	"F9",
+	"F10",
+	"F11",
+	"F12",
+	"F13",
+	"F14",
+	"F15",
+	"F16",
+	"F17",
+	"F18",
+	"F19",
+	"F20",
+	"F21",
+	"F22",
+	"F23",
+	"F24",
+	"F25",
+	"F26",
+	"F27",
+	"F28",
+	"F29",
+	"F30",
+	"F31",
+	"CSR0",
+	"CSR1",
+	"CSR2",
+	"CSR3",
 };
 
 etiss::instr::InstructionGroup ISA16_RV32IMACFD("ISA16_RV32IMACFD", 16);

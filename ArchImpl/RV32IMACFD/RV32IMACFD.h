@@ -1,5 +1,5 @@
 /**
- * Generated on Thu, 18 Apr 2024 00:50:41 +0200.
+ * Generated on Tue, 25 Apr 2023 11:23:36 +0200.
  *
  * This file contains the registers for the RV32IMACFD core architecture.
  */
@@ -15,6 +15,8 @@ extern "C" {
 #pragma pack(push, 1)
 struct RV32IMACFD {
 	ETISS_CPU cpu; // original cpu struct must be defined as the first field of the new structure. this allows to cast X * to ETISS_CPU * and vice vers
+	etiss_uint32 exception;
+	etiss_uint32 exception_pending;
 	etiss_uint32 ZERO;
 	etiss_uint32 RA;
 	etiss_uint32 SP;
@@ -53,13 +55,71 @@ struct RV32IMACFD {
 	etiss_uint8 RES[8];
 	etiss_uint8 PRIV;
 	etiss_uint32 DPC;
+
 	etiss_uint32 FCSR;
-	etiss_uint32 MSTATUS;
-	etiss_uint32 MIE;
-	etiss_uint32 MIP;
+	etiss_uint32 FFLAGS;
+	etiss_uint32 FRM;
+
+        etiss_uint32 CYCLE;                                                                                      
+        etiss_uint32 CYCLEH;                                                                                     
+        etiss_uint32 TIME;                                                                                       
+        etiss_uint32 TIMEH;                                                                                      
+        etiss_uint32 INSTRET;                                                                                    
+        etiss_uint32 INSTRETH;                                                                                   
+                                                                                                              
+        etiss_uint32 MVENDORID;                                    
+        etiss_uint32 MARCHID;                                      
+        etiss_uint32 MIMPID;                                       
+        etiss_uint32 MHARTID;                                      
+        etiss_uint32 MSTATUS;                                      
+        etiss_uint32 MISA;                                         
+        etiss_uint32 MEDELEG;                                      
+        etiss_uint32 MIDELEG;                                      
+        etiss_uint32 MIE;                                          
+        etiss_uint32 MTVEC;                                        
+        etiss_uint32 MCOUNTEREN;                                   
+        etiss_uint32 MSCRATCH;                                     
+        etiss_uint32 MEPC;                                         
+        etiss_uint32 MCAUSE;                                       
+        etiss_uint32 MTVAL;                                        
+        etiss_uint32 MIP;                                          
+	
 	etiss_uint32 *CSR[4096];
 	etiss_uint32 ins_CSR[4096];
-	etiss_uint64 F[32];
+	etiss_uint64 FT0;
+	etiss_uint64 FT1;
+	etiss_uint64 FT2;
+	etiss_uint64 FT3;
+	etiss_uint64 FT4;
+	etiss_uint64 FT5;
+	etiss_uint64 FT6;
+	etiss_uint64 FT7;
+	etiss_uint64 FS0;
+	etiss_uint64 FS1;
+	etiss_uint64 FA0;
+	etiss_uint64 FA1;
+	etiss_uint64 FA2;
+	etiss_uint64 FA3;
+	etiss_uint64 FA4;
+	etiss_uint64 FA5;
+	etiss_uint64 FA6;
+	etiss_uint64 FA7;
+	etiss_uint64 FS2;
+	etiss_uint64 FS3;
+	etiss_uint64 FS4;
+	etiss_uint64 FS5;
+	etiss_uint64 FS6;
+	etiss_uint64 FS7;
+	etiss_uint64 FS8;
+	etiss_uint64 FS9;
+	etiss_uint64 FS10;
+	etiss_uint64 FS11;
+	etiss_uint64 FT8;
+	etiss_uint64 FT9;
+	etiss_uint64 FT10;
+	etiss_uint64 FT11;
+	etiss_uint64 *F[32];
+	etiss_uint64 ins_F[32];
 	etiss_uint32 RES_ADDR;
 };
 

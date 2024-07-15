@@ -111,11 +111,21 @@ ARGS="-i${ETISS_DIR}/examples/base.ini -i${DYN_INI} ${CMD_OPTIONS}"
 
 if [ "${USE_TGDB}" -eq 1 ]; then
     if [ "${DO_NOT_ATTACH}" -eq 0 ]; then
+	# original
         konsole --workdir $(pwd) -e "bash -c '/usr/local/research/projects/SystemDesign/tools/riscv/current/bin/riscv64-unknown-elf-gdb -ex \"tar rem :2222\" $TARGETSW_PATH_ELF'" &
+        # konsole --workdir $(pwd) -e "bash -c '/usr/local/research/projects/SystemDesign/tools/riscv/current/bin/riscv64-unknown-elf-gdb -tui -ex \"tar rem :2222\" $TARGETSW_PATH_ELF'" &
     fi
 fi
 if [ "${USE_GDB}" -eq 1 ]; then
-    gdb --args ${VP_EXE} ${ARGS}
+    # working option to run target
+    # gdb --args ${VP_EXE} ${ARGS}
+
+    # working option to debug target
+    # gdb --tui --args ${VP_EXE} ${ARGS}
+
+    # working option to debug ETISS (and debug ETISS under target)
+    gdbserver localhost:2000 ${VP_EXE} ${ARGS}
+
 else
     ${VP_EXE} ${ARGS}
 fi

@@ -11,6 +11,8 @@
 #ifndef ETISS_RV32IMACFDVArch_RV32IMACFDVARCHSPECIFICIMP_H_
 #define ETISS_RV32IMACFDVArch_RV32IMACFDVARCHSPECIFICIMP_H_
 
+#include "RV32IMACFDVFuncs.h"
+
 /**
 	@brief VirtualStruct for RV32IMACFDV architecture to faciliate register acess
 
@@ -46,6 +48,7 @@ public:
 
 protected:
 	virtual uint64_t _read() const {
+		printf("x_read with gprid_ %d\n", gprid_);
 		return (uint64_t) *((RV32IMACFDV*)parent_.structure_)->X[gprid_];
 	}
 
@@ -83,6 +86,7 @@ public:
 
 protected:
 	virtual uint64_t _read() const {
+		printf("f_read with gprid_ %d\n", gprid_);
 		return (uint64_t) *((RV32IMACFDV*)parent_.structure_)->F[gprid_];
 	}
 
@@ -91,6 +95,46 @@ protected:
 		*((RV32IMACFDV*)parent_.structure_)->F[gprid_] = (etiss_uint64) val;
 	}
 };
+
+class CSRField_RV32IMACFDV : public etiss::VirtualStruct::Field{
+private:
+	const unsigned gprid_;
+public:
+	CSRField_RV32IMACFDV(etiss::VirtualStruct & parent,unsigned gprid)
+		: Field(parent,
+			std::string("CSR")+etiss::toString(gprid),
+			std::string("CSR")+etiss::toString(gprid),
+			R|W,
+			4
+		),
+		gprid_(gprid)
+	{}
+
+	CSRField_RV32IMACFDV(etiss::VirtualStruct & parent, std::string name, unsigned gprid)
+		: Field(parent,
+			name,
+			name,
+			R|W,
+			4
+		),
+		gprid_(gprid)
+	{}
+
+	virtual ~CSRField_RV32IMACFDV(){}
+
+protected:
+	virtual uint64_t _read() const {
+		printf("csr_read with gprid_ %d\n", gprid_);
+		return (uint64_t) RV32IMACFDV_csr_read((ETISS_CPU*)parent_.structure_, nullptr, nullptr, (etiss_uint32) gprid_);
+	}
+
+	virtual void _write(uint64_t val) {
+		etiss::log(etiss::VERBOSE, "write to ETISS cpu state", name_, val);
+		RV32IMACFDV_csr_write((ETISS_CPU*)parent_.structure_, nullptr, nullptr, gprid_, (etiss_uint32) val);
+	}
+};
+
+
 
 class pcField_RV32IMACFDV : public etiss::VirtualStruct::Field{
 public:

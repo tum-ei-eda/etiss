@@ -7,8 +7,9 @@
 
 using namespace etiss;
 
-extern "C"
-{
+#ifdef __cplusplus
+extern "C" {
+#endif
 
     uint64 etiss_get_cycles(ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers)
     {
@@ -28,4 +29,6 @@ extern "C"
         return cpu->cpuTime_ps / cpu->cpuCycleTime_ps;
     }
 
+#ifdef __cplusplus
 }
+#endif

@@ -381,6 +381,18 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
     for(auto & it: jitExtLibraries()){
        if(it != "") libs.insert(it);
     }
+    /* DEBUG HELPER: write code files to work directory
+    {
+            static unsigned count = 0;
+            std::stringstream ss;
+            ss << "code" << ++count;
+            std::ofstream out;
+            out.open(ss.str().c_str());
+            out << code;
+            std::cout << "Code file " << count << std::endl;
+    }
+    */
+
 #ifndef ETISS_DEBUG
 #define ETISS_DEBUG 1
 #endif
