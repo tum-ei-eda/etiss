@@ -137,7 +137,7 @@ void RV32IMACFDVArch::resetCPU(ETISS_CPU * cpu,etiss::uint64 * startpointer)
 	rv32imacfdvcpu->MSTATUS = 0;
 	rv32imacfdvcpu->MIE = 0;
 	rv32imacfdvcpu->MIP = 0;
-	for (int i = 0; i < 512; ++i) {
+	for (int i = 0; i < 4096; ++i) {
 		rv32imacfdvcpu->V[i] = 0;
 	}
 	rv32imacfdvcpu->FT0 = 0;
@@ -312,7 +312,7 @@ void RV32IMACFDVArch::resetCPU(ETISS_CPU * cpu,etiss::uint64 * startpointer)
  	*rv32imacfdvcpu->CSR[4] = 4294963473ULL;
  	*rv32imacfdvcpu->CSR[3105] = 2147483648ULL;
  	*rv32imacfdvcpu->CSR[3104] = 0LL;
- 	*rv32imacfdvcpu->CSR[3106] = 16ULL;
+ 	*rv32imacfdvcpu->CSR[3106] = 128ULL;
    	rv32imacfdvcpu->RES_ADDR = -1LL;
 
 }
