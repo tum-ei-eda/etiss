@@ -55,7 +55,7 @@ protected:
 	virtual void _write(uint64_t val) {
 		etiss::log(etiss::VERBOSE, "write to ETISS cpu state", name_, val);
 		printf("x_write (%lu) with gprid_ %d\n", val, gprid_);
-		*((RV32IMACFDV*)parent_.structure_)->X[gprid_ = (etiss_uint32) val;
+		*((RV32IMACFDV*)parent_.structure_)->X[gprid_] = (etiss_uint32) val;
 	}
 };
 
