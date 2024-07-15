@@ -107,9 +107,9 @@ public:
 			std::string("V")+etiss::toString(gprid),
 			std::string("V")+etiss::toString(gprid),
 			R|W,
-			// 16  // 128 bits!
+			16  // 128 bits!
 			// 8  // 64 bits!
-			4  // 32 bits!
+			// 4  // 32 bits!
 		),
 		gprid_(gprid)
 	{}
