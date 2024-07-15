@@ -443,8 +443,11 @@ void Server::handlePacket(bool block)
                     f->write(hex::toInt<uint64_t>(valToWrite, arch_->getGDBCore().isLittleEndian(), off), 0);
                     break;
                 case 16:  // 128 bits
-                    answer = "EFF";
-                    etiss::log(etiss::ERROR, "GDB P: >64 bit fields not supported");
+                    // answer = "EFF";
+                    // etiss::log(etiss::ERROR, "GDB P: >64 bit fields not supported");
+                    // TODO; input is 128 bits hex!
+                    f->write(hex::toInt<uint64_t>(valToWrite, arch_->getGDBCore().isLittleEndian(), off), 0);
+                    f->write(hex::toInt<uint64_t>(valToWrite, arch_->getGDBCore().isLittleEndian(), off), 1);
                     break;
                 default:
                     answer = "EFF";
@@ -490,8 +493,10 @@ void Server::handlePacket(bool block)
                     hex::fromInt(answer, (uint64_t)f->read(0), arch_->getGDBCore().isLittleEndian());
                     break;
                 case 16:  // 128 bits
-                    answer = "EFF";
-                    etiss::log(etiss::ERROR, "GDB p: >64 bit fields not supported");
+                    hex::fromInt(answer, (uint64_t)f->read(0), arch_->getGDBCore().isLittleEndian());
+                    hex::fromInt(answer, (uint64_t)f->read(1), arch_->getGDBCore().isLittleEndian()); // TODO: use
+                    // answer = "EFF";
+                    // etiss::log(etiss::ERROR, "GDB p: >64 bit fields not supported");
                     break;
                 default:
                     answer = "EFF";
