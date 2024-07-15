@@ -495,10 +495,87 @@ void Server::handlePacket(bool block)
                 case 16:  // 128 bits
                     if (arch_->getGDBCore().isLittleEndian()) {
                         hex::fromInt(answer, (uint64_t)f->read(0), arch_->getGDBCore().isLittleEndian());
-                        hex::fromInt(answer, (uint64_t)f->read(1), arch_->getGDBCore().isLittleEndian()); // TODO: use
+                        hex::fromInt(answer, (uint64_t)f->read(1), arch_->getGDBCore().isLittleEndian());
                     } else {
                         hex::fromInt(answer, (uint64_t)f->read(1), arch_->getGDBCore().isLittleEndian());
-                        hex::fromInt(answer, (uint64_t)f->read(0), arch_->getGDBCore().isLittleEndian()); // TODO: use
+                        hex::fromInt(answer, (uint64_t)f->read(0), arch_->getGDBCore().isLittleEndian());
+                    }
+                    // answer = "EFF";
+                    // etiss::log(etiss::ERROR, "GDB p: >64 bit fields not supported");
+                    break;
+                case 32:  // 256 bits
+                    if (arch_->getGDBCore().isLittleEndian()) {
+                        hex::fromInt(answer, (uint64_t)f->read(0), arch_->getGDBCore().isLittleEndian());
+                        hex::fromInt(answer, (uint64_t)f->read(1), arch_->getGDBCore().isLittleEndian());
+                        hex::fromInt(answer, (uint64_t)f->read(2), arch_->getGDBCore().isLittleEndian());
+                        hex::fromInt(answer, (uint64_t)f->read(3), arch_->getGDBCore().isLittleEndian());
+                    } else {
+                        hex::fromInt(answer, (uint64_t)f->read(3), arch_->getGDBCore().isLittleEndian());
+                        hex::fromInt(answer, (uint64_t)f->read(2), arch_->getGDBCore().isLittleEndian());
+                        hex::fromInt(answer, (uint64_t)f->read(1), arch_->getGDBCore().isLittleEndian());
+                        hex::fromInt(answer, (uint64_t)f->read(0), arch_->getGDBCore().isLittleEndian());
+                    }
+                    // answer = "EFF";
+                    // etiss::log(etiss::ERROR, "GDB p: >64 bit fields not supported");
+                    break;
+                case 64:  // 512 bits
+                    if (arch_->getGDBCore().isLittleEndian()) {
+                        hex::fromInt(answer, (uint64_t)f->read(0), arch_->getGDBCore().isLittleEndian());
+                        hex::fromInt(answer, (uint64_t)f->read(1), arch_->getGDBCore().isLittleEndian());
+                        hex::fromInt(answer, (uint64_t)f->read(2), arch_->getGDBCore().isLittleEndian());
+                        hex::fromInt(answer, (uint64_t)f->read(3), arch_->getGDBCore().isLittleEndian());
+                        hex::fromInt(answer, (uint64_t)f->read(4), arch_->getGDBCore().isLittleEndian());
+                        hex::fromInt(answer, (uint64_t)f->read(5), arch_->getGDBCore().isLittleEndian());
+                        hex::fromInt(answer, (uint64_t)f->read(6), arch_->getGDBCore().isLittleEndian());
+                        hex::fromInt(answer, (uint64_t)f->read(7), arch_->getGDBCore().isLittleEndian());
+                    } else {
+                        hex::fromInt(answer, (uint64_t)f->read(7), arch_->getGDBCore().isLittleEndian());
+                        hex::fromInt(answer, (uint64_t)f->read(6), arch_->getGDBCore().isLittleEndian());
+                        hex::fromInt(answer, (uint64_t)f->read(5), arch_->getGDBCore().isLittleEndian());
+                        hex::fromInt(answer, (uint64_t)f->read(4), arch_->getGDBCore().isLittleEndian());
+                        hex::fromInt(answer, (uint64_t)f->read(3), arch_->getGDBCore().isLittleEndian());
+                        hex::fromInt(answer, (uint64_t)f->read(2), arch_->getGDBCore().isLittleEndian());
+                        hex::fromInt(answer, (uint64_t)f->read(1), arch_->getGDBCore().isLittleEndian());
+                        hex::fromInt(answer, (uint64_t)f->read(0), arch_->getGDBCore().isLittleEndian());
+                    }
+                    // answer = "EFF";
+                    // etiss::log(etiss::ERROR, "GDB p: >64 bit fields not supported");
+                    break;
+                case 128:  // 1024 bits
+                    if (arch_->getGDBCore().isLittleEndian()) {
+                        hex::fromInt(answer, (uint64_t)f->read(0), arch_->getGDBCore().isLittleEndian());
+                        hex::fromInt(answer, (uint64_t)f->read(1), arch_->getGDBCore().isLittleEndian());
+                        hex::fromInt(answer, (uint64_t)f->read(2), arch_->getGDBCore().isLittleEndian());
+                        hex::fromInt(answer, (uint64_t)f->read(3), arch_->getGDBCore().isLittleEndian());
+                        // hex::fromInt(answer, (uint64_t)f->read(4), arch_->getGDBCore().isLittleEndian());
+                        // hex::fromInt(answer, (uint64_t)f->read(5), arch_->getGDBCore().isLittleEndian());
+                        // hex::fromInt(answer, (uint64_t)f->read(6), arch_->getGDBCore().isLittleEndian());
+                        // hex::fromInt(answer, (uint64_t)f->read(7), arch_->getGDBCore().isLittleEndian());
+                        // hex::fromInt(answer, (uint64_t)f->read(8), arch_->getGDBCore().isLittleEndian());
+                        // hex::fromInt(answer, (uint64_t)f->read(9), arch_->getGDBCore().isLittleEndian());
+                        // hex::fromInt(answer, (uint64_t)f->read(10), arch_->getGDBCore().isLittleEndian());
+                        // hex::fromInt(answer, (uint64_t)f->read(11), arch_->getGDBCore().isLittleEndian());
+                        // hex::fromInt(answer, (uint64_t)f->read(12), arch_->getGDBCore().isLittleEndian());
+                        // hex::fromInt(answer, (uint64_t)f->read(13), arch_->getGDBCore().isLittleEndian());
+                        // hex::fromInt(answer, (uint64_t)f->read(14), arch_->getGDBCore().isLittleEndian());
+                        // hex::fromInt(answer, (uint64_t)f->read(15), arch_->getGDBCore().isLittleEndian());
+                    } else {
+                        // hex::fromInt(answer, (uint64_t)f->read(15), arch_->getGDBCore().isLittleEndian());
+                        // hex::fromInt(answer, (uint64_t)f->read(14), arch_->getGDBCore().isLittleEndian());
+                        // hex::fromInt(answer, (uint64_t)f->read(13), arch_->getGDBCore().isLittleEndian());
+                        // hex::fromInt(answer, (uint64_t)f->read(12), arch_->getGDBCore().isLittleEndian());
+                        // hex::fromInt(answer, (uint64_t)f->read(11), arch_->getGDBCore().isLittleEndian());
+                        // hex::fromInt(answer, (uint64_t)f->read(10), arch_->getGDBCore().isLittleEndian());
+                        // hex::fromInt(answer, (uint64_t)f->read(9), arch_->getGDBCore().isLittleEndian());
+                        // hex::fromInt(answer, (uint64_t)f->read(8), arch_->getGDBCore().isLittleEndian());
+                        // hex::fromInt(answer, (uint64_t)f->read(7), arch_->getGDBCore().isLittleEndian());
+                        // hex::fromInt(answer, (uint64_t)f->read(6), arch_->getGDBCore().isLittleEndian());
+                        // hex::fromInt(answer, (uint64_t)f->read(5), arch_->getGDBCore().isLittleEndian());
+                        // hex::fromInt(answer, (uint64_t)f->read(4), arch_->getGDBCore().isLittleEndian());
+                        hex::fromInt(answer, (uint64_t)f->read(3), arch_->getGDBCore().isLittleEndian());
+                        hex::fromInt(answer, (uint64_t)f->read(2), arch_->getGDBCore().isLittleEndian());
+                        hex::fromInt(answer, (uint64_t)f->read(1), arch_->getGDBCore().isLittleEndian());
+                        hex::fromInt(answer, (uint64_t)f->read(0), arch_->getGDBCore().isLittleEndian());
                     }
                     // answer = "EFF";
                     // etiss::log(etiss::ERROR, "GDB p: >64 bit fields not supported");
