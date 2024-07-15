@@ -69,7 +69,7 @@ cp.code() += "} // conditional\n";
 cp.code() += "etiss_uint32 res = (etiss_uint32)(mem_val_0);\n";
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "((RV32IMACFDV*)cpu)->F[" + std::to_string(rd + 8ULL) + "ULL] = -4294967296LL | res;\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->F[" + std::to_string(rd + 8ULL) + "ULL] = -4294967296LL | res;\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "} // block\n";
@@ -164,7 +164,7 @@ cp.code() += "} // block\n";
 cp.code() += "{ // block\n";
 cp.code() += "etiss_uint32 offs = *((RV32IMACFDV*)cpu)->X[" + std::to_string(rs1 + 8ULL) + "ULL] + " + std::to_string(uimm) + "ULL;\n";
 cp.code() += "etiss_uint32 mem_val_0;\n";
-cp.code() += "mem_val_0 = (etiss_uint32)(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs2 + 8ULL) + "ULL]);\n";
+cp.code() += "mem_val_0 = (etiss_uint32)(*((RV32IMACFDV*)cpu)->F[" + std::to_string(rs2 + 8ULL) + "ULL]);\n";
 cp.code() += "cpu->exception |= (*(system->dwrite))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_0, 4);\n";
 cp.code() += "if (cpu->exception) { // conditional\n";
 { // procedure
@@ -275,7 +275,7 @@ cp.code() += "} // conditional\n";
 cp.code() += "etiss_uint32 res = (etiss_uint32)(mem_val_0);\n";
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "((RV32IMACFDV*)cpu)->F[" + std::to_string(rd) + "ULL] = -4294967296LL | res;\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->F[" + std::to_string(rd) + "ULL] = -4294967296LL | res;\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "} // block\n";
@@ -362,7 +362,7 @@ cp.code() += "} // block\n";
 cp.code() += "{ // block\n";
 cp.code() += "etiss_uint32 offs = *((RV32IMACFDV*)cpu)->X[2ULL] + " + std::to_string(uimm) + "ULL;\n";
 cp.code() += "etiss_uint32 mem_val_0;\n";
-cp.code() += "mem_val_0 = (etiss_uint32)(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs2) + "ULL]);\n";
+cp.code() += "mem_val_0 = (etiss_uint32)(*((RV32IMACFDV*)cpu)->F[" + std::to_string(rs2) + "ULL]);\n";
 cp.code() += "cpu->exception |= (*(system->dwrite))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_0, 4);\n";
 cp.code() += "if (cpu->exception) { // conditional\n";
 { // procedure

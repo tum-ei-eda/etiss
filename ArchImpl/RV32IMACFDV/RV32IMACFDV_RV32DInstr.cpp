@@ -63,7 +63,7 @@ cp.code() += "} // procedure\n";
 } // procedure
 cp.code() += "} // conditional\n";
 cp.code() += "etiss_uint64 res = (etiss_uint64)(mem_val_0);\n";
-cp.code() += "((RV32IMACFDV*)cpu)->F[" + std::to_string(rd) + "ULL] = res;\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->F[" + std::to_string(rd) + "ULL] = res;\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
@@ -150,7 +150,7 @@ cp.code() += "} // block\n";
 cp.code() += "{ // block\n";
 cp.code() += "etiss_uint32 offs = *((RV32IMACFDV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] + " + std::to_string(((etiss_int16)(((etiss_int16)imm) << (4)) >> (4))) + "LL;\n";
 cp.code() += "etiss_uint64 mem_val_0;\n";
-cp.code() += "mem_val_0 = (etiss_uint64)(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs2) + "ULL]);\n";
+cp.code() += "mem_val_0 = (etiss_uint64)(*((RV32IMACFDV*)cpu)->F[" + std::to_string(rs2) + "ULL]);\n";
 cp.code() += "cpu->exception |= (*(system->dwrite))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_0, 8);\n";
 cp.code() += "if (cpu->exception) { // conditional\n";
 { // procedure
@@ -250,8 +250,8 @@ cp.code() += "} // block\n";
 } // block
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "etiss_uint64 res = fmadd_d((etiss_uint64)(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL]), (etiss_uint64)(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs2) + "ULL]), (etiss_uint64)(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs3) + "ULL]), 0LL, RV32IMACFDV_get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
-cp.code() += "((RV32IMACFDV*)cpu)->F[" + std::to_string(rd) + "ULL] = res;\n";
+cp.code() += "etiss_uint64 res = fmadd_d((etiss_uint64)(*((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL]), (etiss_uint64)(*((RV32IMACFDV*)cpu)->F[" + std::to_string(rs2) + "ULL]), (etiss_uint64)(*((RV32IMACFDV*)cpu)->F[" + std::to_string(rs3) + "ULL]), 0LL, RV32IMACFDV_get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->F[" + std::to_string(rd) + "ULL] = res;\n";
 cp.code() += "etiss_uint32 flags = fget_flags();\n";
 cp.code() += "((RV32IMACFDV*)cpu)->FCSR = (((RV32IMACFDV*)cpu)->FCSR & -32LL) | (flags & 31ULL);\n";
 cp.code() += "} // block\n";
@@ -339,8 +339,8 @@ cp.code() += "} // block\n";
 } // block
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "etiss_uint64 res = fmadd_d((etiss_uint64)(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL]), (etiss_uint64)(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs2) + "ULL]), (etiss_uint64)(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs3) + "ULL]), 1ULL, RV32IMACFDV_get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
-cp.code() += "((RV32IMACFDV*)cpu)->F[" + std::to_string(rd) + "ULL] = res;\n";
+cp.code() += "etiss_uint64 res = fmadd_d((etiss_uint64)(*((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL]), (etiss_uint64)(*((RV32IMACFDV*)cpu)->F[" + std::to_string(rs2) + "ULL]), (etiss_uint64)(*((RV32IMACFDV*)cpu)->F[" + std::to_string(rs3) + "ULL]), 1ULL, RV32IMACFDV_get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->F[" + std::to_string(rd) + "ULL] = res;\n";
 cp.code() += "etiss_uint32 flags = fget_flags();\n";
 cp.code() += "((RV32IMACFDV*)cpu)->FCSR = (((RV32IMACFDV*)cpu)->FCSR & -32LL) | (flags & 31ULL);\n";
 cp.code() += "} // block\n";
@@ -428,8 +428,8 @@ cp.code() += "} // block\n";
 } // block
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "etiss_uint64 res = fmadd_d((etiss_uint64)(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL]), (etiss_uint64)(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs2) + "ULL]), (etiss_uint64)(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs3) + "ULL]), 2ULL, RV32IMACFDV_get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
-cp.code() += "((RV32IMACFDV*)cpu)->F[" + std::to_string(rd) + "ULL] = res;\n";
+cp.code() += "etiss_uint64 res = fmadd_d((etiss_uint64)(*((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL]), (etiss_uint64)(*((RV32IMACFDV*)cpu)->F[" + std::to_string(rs2) + "ULL]), (etiss_uint64)(*((RV32IMACFDV*)cpu)->F[" + std::to_string(rs3) + "ULL]), 2ULL, RV32IMACFDV_get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->F[" + std::to_string(rd) + "ULL] = res;\n";
 cp.code() += "etiss_uint32 flags = fget_flags();\n";
 cp.code() += "((RV32IMACFDV*)cpu)->FCSR = (((RV32IMACFDV*)cpu)->FCSR & -32LL) | (flags & 31ULL);\n";
 cp.code() += "} // block\n";
@@ -517,8 +517,8 @@ cp.code() += "} // block\n";
 } // block
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "etiss_uint64 res = fmadd_d((etiss_uint64)(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL]), (etiss_uint64)(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs2) + "ULL]), (etiss_uint64)(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs3) + "ULL]), 3ULL, RV32IMACFDV_get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
-cp.code() += "((RV32IMACFDV*)cpu)->F[" + std::to_string(rd) + "ULL] = res;\n";
+cp.code() += "etiss_uint64 res = fmadd_d((etiss_uint64)(*((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL]), (etiss_uint64)(*((RV32IMACFDV*)cpu)->F[" + std::to_string(rs2) + "ULL]), (etiss_uint64)(*((RV32IMACFDV*)cpu)->F[" + std::to_string(rs3) + "ULL]), 3ULL, RV32IMACFDV_get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->F[" + std::to_string(rd) + "ULL] = res;\n";
 cp.code() += "etiss_uint32 flags = fget_flags();\n";
 cp.code() += "((RV32IMACFDV*)cpu)->FCSR = (((RV32IMACFDV*)cpu)->FCSR & -32LL) | (flags & 31ULL);\n";
 cp.code() += "} // block\n";
@@ -603,8 +603,8 @@ cp.code() += "} // block\n";
 } // block
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "etiss_uint64 res = fadd_d((etiss_uint64)(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL]), (etiss_uint64)(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs2) + "ULL]), RV32IMACFDV_get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
-cp.code() += "((RV32IMACFDV*)cpu)->F[" + std::to_string(rd) + "ULL] = res;\n";
+cp.code() += "etiss_uint64 res = fadd_d((etiss_uint64)(*((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL]), (etiss_uint64)(*((RV32IMACFDV*)cpu)->F[" + std::to_string(rs2) + "ULL]), RV32IMACFDV_get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->F[" + std::to_string(rd) + "ULL] = res;\n";
 cp.code() += "etiss_uint32 flags = fget_flags();\n";
 cp.code() += "((RV32IMACFDV*)cpu)->FCSR = (((RV32IMACFDV*)cpu)->FCSR & -32LL) | (flags & 31ULL);\n";
 cp.code() += "} // block\n";
@@ -686,8 +686,8 @@ cp.code() += "} // block\n";
 } // block
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "etiss_uint64 res = fsub_d((etiss_uint64)(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL]), (etiss_uint64)(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs2) + "ULL]), RV32IMACFDV_get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
-cp.code() += "((RV32IMACFDV*)cpu)->F[" + std::to_string(rd) + "ULL] = res;\n";
+cp.code() += "etiss_uint64 res = fsub_d((etiss_uint64)(*((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL]), (etiss_uint64)(*((RV32IMACFDV*)cpu)->F[" + std::to_string(rs2) + "ULL]), RV32IMACFDV_get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->F[" + std::to_string(rd) + "ULL] = res;\n";
 cp.code() += "etiss_uint32 flags = fget_flags();\n";
 cp.code() += "((RV32IMACFDV*)cpu)->FCSR = (((RV32IMACFDV*)cpu)->FCSR & -32LL) | (flags & 31ULL);\n";
 cp.code() += "} // block\n";
@@ -769,8 +769,8 @@ cp.code() += "} // block\n";
 } // block
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "etiss_uint64 res = fmul_d((etiss_uint64)(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL]), (etiss_uint64)(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs2) + "ULL]), RV32IMACFDV_get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
-cp.code() += "((RV32IMACFDV*)cpu)->F[" + std::to_string(rd) + "ULL] = res;\n";
+cp.code() += "etiss_uint64 res = fmul_d((etiss_uint64)(*((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL]), (etiss_uint64)(*((RV32IMACFDV*)cpu)->F[" + std::to_string(rs2) + "ULL]), RV32IMACFDV_get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->F[" + std::to_string(rd) + "ULL] = res;\n";
 cp.code() += "etiss_uint32 flags = fget_flags();\n";
 cp.code() += "((RV32IMACFDV*)cpu)->FCSR = (((RV32IMACFDV*)cpu)->FCSR & -32LL) | (flags & 31ULL);\n";
 cp.code() += "} // block\n";
@@ -852,8 +852,8 @@ cp.code() += "} // block\n";
 } // block
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "etiss_uint64 res = fdiv_d((etiss_uint64)(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL]), (etiss_uint64)(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs2) + "ULL]), RV32IMACFDV_get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
-cp.code() += "((RV32IMACFDV*)cpu)->F[" + std::to_string(rd) + "ULL] = res;\n";
+cp.code() += "etiss_uint64 res = fdiv_d((etiss_uint64)(*((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL]), (etiss_uint64)(*((RV32IMACFDV*)cpu)->F[" + std::to_string(rs2) + "ULL]), RV32IMACFDV_get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->F[" + std::to_string(rd) + "ULL] = res;\n";
 cp.code() += "etiss_uint32 flags = fget_flags();\n";
 cp.code() += "((RV32IMACFDV*)cpu)->FCSR = (((RV32IMACFDV*)cpu)->FCSR & -32LL) | (flags & 31ULL);\n";
 cp.code() += "} // block\n";
@@ -932,8 +932,8 @@ cp.code() += "} // block\n";
 } // block
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "etiss_uint64 res = fsqrt_d((etiss_uint64)(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL]), RV32IMACFDV_get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
-cp.code() += "((RV32IMACFDV*)cpu)->F[" + std::to_string(rd) + "ULL] = res;\n";
+cp.code() += "etiss_uint64 res = fsqrt_d((etiss_uint64)(*((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL]), RV32IMACFDV_get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->F[" + std::to_string(rd) + "ULL] = res;\n";
 cp.code() += "etiss_uint32 flags = fget_flags();\n";
 cp.code() += "((RV32IMACFDV*)cpu)->FCSR = (((RV32IMACFDV*)cpu)->FCSR & -32LL) | (flags & 31ULL);\n";
 cp.code() += "} // block\n";
@@ -1009,8 +1009,8 @@ cp.code() += "} // block\n";
 } // block
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "etiss_uint64 res = ((((((((RV32IMACFDV*)cpu)->F[" + std::to_string(rs2) + "ULL]) >> (63ULL)) & 1ULL)) << 63) | ((((((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL]) >> (0LL)) & 9223372036854775807ULL)));\n";
-cp.code() += "((RV32IMACFDV*)cpu)->F[" + std::to_string(rd) + "ULL] = res;\n";
+cp.code() += "etiss_uint64 res = ((((((*((RV32IMACFDV*)cpu)->F[" + std::to_string(rs2) + "ULL]) >> (63ULL)) & 1ULL)) << 63) | ((((*((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL]) >> (0LL)) & 9223372036854775807ULL)));\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->F[" + std::to_string(rd) + "ULL] = res;\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
@@ -1084,8 +1084,8 @@ cp.code() += "} // block\n";
 } // block
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "etiss_uint64 res = (((~((((((RV32IMACFDV*)cpu)->F[" + std::to_string(rs2) + "ULL]) >> (63ULL)) & 1ULL))) << 63) | ((((((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL]) >> (0LL)) & 9223372036854775807ULL)));\n";
-cp.code() += "((RV32IMACFDV*)cpu)->F[" + std::to_string(rd) + "ULL] = res;\n";
+cp.code() += "etiss_uint64 res = (((~((((*((RV32IMACFDV*)cpu)->F[" + std::to_string(rs2) + "ULL]) >> (63ULL)) & 1ULL))) << 63) | ((((*((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL]) >> (0LL)) & 9223372036854775807ULL)));\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->F[" + std::to_string(rd) + "ULL] = res;\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
@@ -1159,8 +1159,8 @@ cp.code() += "} // block\n";
 } // block
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "etiss_uint64 res = (etiss_uint64)(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL]) ^ ((etiss_uint64)(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs2) + "ULL]) & 9223372036854775808ULL);\n";
-cp.code() += "((RV32IMACFDV*)cpu)->F[" + std::to_string(rd) + "ULL] = res;\n";
+cp.code() += "etiss_uint64 res = (etiss_uint64)(*((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL]) ^ ((etiss_uint64)(*((RV32IMACFDV*)cpu)->F[" + std::to_string(rs2) + "ULL]) & 9223372036854775808ULL);\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->F[" + std::to_string(rd) + "ULL] = res;\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
@@ -1234,8 +1234,8 @@ cp.code() += "} // block\n";
 } // block
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "etiss_uint64 res = fsel_d((etiss_uint64)(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL]), (etiss_uint64)(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs2) + "ULL]), 0LL);\n";
-cp.code() += "((RV32IMACFDV*)cpu)->F[" + std::to_string(rd) + "ULL] = res;\n";
+cp.code() += "etiss_uint64 res = fsel_d((etiss_uint64)(*((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL]), (etiss_uint64)(*((RV32IMACFDV*)cpu)->F[" + std::to_string(rs2) + "ULL]), 0LL);\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->F[" + std::to_string(rd) + "ULL] = res;\n";
 cp.code() += "etiss_uint32 flags = fget_flags();\n";
 cp.code() += "((RV32IMACFDV*)cpu)->FCSR = (((RV32IMACFDV*)cpu)->FCSR & -32LL) | (flags & 31ULL);\n";
 cp.code() += "} // block\n";
@@ -1311,8 +1311,8 @@ cp.code() += "} // block\n";
 } // block
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "etiss_uint64 res = fsel_d((etiss_uint64)(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL]), (etiss_uint64)(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs2) + "ULL]), 1ULL);\n";
-cp.code() += "((RV32IMACFDV*)cpu)->F[" + std::to_string(rd) + "ULL] = res;\n";
+cp.code() += "etiss_uint64 res = fsel_d((etiss_uint64)(*((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL]), (etiss_uint64)(*((RV32IMACFDV*)cpu)->F[" + std::to_string(rs2) + "ULL]), 1ULL);\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->F[" + std::to_string(rd) + "ULL] = res;\n";
 cp.code() += "etiss_uint32 flags = fget_flags();\n";
 cp.code() += "((RV32IMACFDV*)cpu)->FCSR = (((RV32IMACFDV*)cpu)->FCSR & -32LL) | (flags & 31ULL);\n";
 cp.code() += "} // block\n";
@@ -1388,8 +1388,8 @@ cp.code() += "} // block\n";
 } // block
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "etiss_uint32 res = fconv_d2f(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL], " + std::to_string(rm) + "ULL);\n";
-cp.code() += "((RV32IMACFDV*)cpu)->F[" + std::to_string(rd) + "ULL] = -4294967296LL + res;\n";
+cp.code() += "etiss_uint32 res = fconv_d2f(*((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL], " + std::to_string(rm) + "ULL);\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->F[" + std::to_string(rd) + "ULL] = -4294967296LL + res;\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
@@ -1463,10 +1463,10 @@ cp.code() += "} // block\n";
 } // block
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "etiss_uint64 res = fconv_f2d((etiss_uint64)(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL]), " + std::to_string(rm) + "ULL);\n";
+cp.code() += "etiss_uint64 res = fconv_f2d((etiss_uint64)(*((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL]), " + std::to_string(rm) + "ULL);\n";
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "((RV32IMACFDV*)cpu)->F[" + std::to_string(rd) + "ULL] = res;\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->F[" + std::to_string(rd) + "ULL] = res;\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "} // block\n";
@@ -1543,7 +1543,7 @@ cp.code() += "} // block\n";
 { // block
 cp.code() += "{ // block\n";
 cp.code() += "etiss_uint64 res = 0LL;\n";
-cp.code() += "res = fcmp_d(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL], ((RV32IMACFDV*)cpu)->F[" + std::to_string(rs2) + "ULL], 0LL);\n";
+cp.code() += "res = fcmp_d(*((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL], *((RV32IMACFDV*)cpu)->F[" + std::to_string(rs2) + "ULL], 0LL);\n";
 if ((rd % 32ULL) != 0LL) { // conditional
 cp.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = res;\n";
 } // conditional
@@ -1623,7 +1623,7 @@ cp.code() += "} // block\n";
 { // block
 cp.code() += "{ // block\n";
 cp.code() += "etiss_uint64 res = 0LL;\n";
-cp.code() += "res = fcmp_d(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL], ((RV32IMACFDV*)cpu)->F[" + std::to_string(rs2) + "ULL], 2ULL);\n";
+cp.code() += "res = fcmp_d(*((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL], *((RV32IMACFDV*)cpu)->F[" + std::to_string(rs2) + "ULL], 2ULL);\n";
 if ((rd % 32ULL) != 0LL) { // conditional
 cp.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = res;\n";
 } // conditional
@@ -1703,7 +1703,7 @@ cp.code() += "} // block\n";
 { // block
 cp.code() += "{ // block\n";
 cp.code() += "etiss_uint64 res = 0LL;\n";
-cp.code() += "res = fcmp_d(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL], ((RV32IMACFDV*)cpu)->F[" + std::to_string(rs2) + "ULL], 1ULL);\n";
+cp.code() += "res = fcmp_d(*((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL], *((RV32IMACFDV*)cpu)->F[" + std::to_string(rs2) + "ULL], 1ULL);\n";
 if ((rd % 32ULL) != 0LL) { // conditional
 cp.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = res;\n";
 } // conditional
@@ -1779,7 +1779,7 @@ cp.code() += "} // block\n";
 } // block
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = fclass_d((etiss_uint64)(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL]));\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = fclass_d((etiss_uint64)(*((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL]));\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
@@ -1851,7 +1851,7 @@ cp.code() += "} // block\n";
 { // block
 cp.code() += "{ // block\n";
 cp.code() += "etiss_int32 res = 0LL;\n";
-cp.code() += "res = fcvt_64_32(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL], 0LL, " + std::to_string(rm) + "ULL);\n";
+cp.code() += "res = fcvt_64_32(*((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL], 0LL, " + std::to_string(rm) + "ULL);\n";
 if ((rd % 32ULL) != 0LL) { // conditional
 cp.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = res;\n";
 } // conditional
@@ -1931,7 +1931,7 @@ cp.code() += "} // block\n";
 { // block
 cp.code() += "{ // block\n";
 cp.code() += "etiss_uint32 res = 0LL;\n";
-cp.code() += "res = fcvt_64_32(((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL], 1ULL, " + std::to_string(rm) + "ULL);\n";
+cp.code() += "res = fcvt_64_32(*((RV32IMACFDV*)cpu)->F[" + std::to_string(rs1) + "ULL], 1ULL, " + std::to_string(rm) + "ULL);\n";
 if ((rd % 32ULL) != 0LL) { // conditional
 cp.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = (etiss_uint64)((etiss_int32)(res));\n";
 } // conditional
@@ -2011,7 +2011,7 @@ cp.code() += "} // block\n";
 { // block
 cp.code() += "{ // block\n";
 cp.code() += "etiss_int64 res = fcvt_32_64((etiss_uint32)(*((RV32IMACFDV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL]), 2ULL, " + std::to_string(rm) + "ULL);\n";
-cp.code() += "((RV32IMACFDV*)cpu)->F[" + std::to_string(rd) + "ULL] = res;\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->F[" + std::to_string(rd) + "ULL] = res;\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
@@ -2086,7 +2086,7 @@ cp.code() += "} // block\n";
 { // block
 cp.code() += "{ // block\n";
 cp.code() += "etiss_uint64 res = fcvt_32_64((etiss_uint32)(*((RV32IMACFDV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL]), 3ULL, " + std::to_string(rm) + "ULL);\n";
-cp.code() += "((RV32IMACFDV*)cpu)->F[" + std::to_string(rd) + "ULL] = res;\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->F[" + std::to_string(rd) + "ULL] = res;\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
