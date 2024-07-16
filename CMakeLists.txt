@@ -209,8 +209,10 @@ else()
 endif()
 
 
-ADD_SUBDIRECTORY(src)
+### Third party libraries/targets
+ADD_SUBDIRECTORY(third_party)
 
+ADD_SUBDIRECTORY(src)
 
 ########### INSTALLATION ############
 
@@ -225,41 +227,6 @@ unset(TMP_CONFIG_HEADER_REL)
 file(GLOB TMP_CONFIG_HEADER_REL RELATIVE ${ETISS_ROOT} ${PROJECT_BINARY_DIR}/include/etiss/config.h)
 set(ETISS_HEADER ${ETISS_HEADER} ${TMP_CONFIG_HEADER_REL})
 
-
-include(FetchContent)
-### elfio
-FetchContent_Declare(elfio_srcs
-    GIT_REPOSITORY https://github.com/serge1/ELFIO.git
-    GIT_TAG Release_3.11
-)
-if(NOT elfio_srcs_POPULATED)
-    FetchContent_Populate(elfio_srcs)
-    FetchContent_GetProperties(elfio_srcs)
-endif()
-add_subdirectory(${elfio_srcs_SOURCE_DIR} ${elfio_srcs_BINARY_DIR} EXCLUDE_FROM_ALL)
-
-### simpleini
-FetchContent_Declare(simpleini_srcs
-	GIT_REPOSITORY https://github.com/brofield/simpleini.git
-	GIT_TAG v4.19
-)
-if(NOT simpleini_srcs_POPULATED)
-	FetchContent_Populate(simpleini_srcs)
-	FetchContent_GetProperties(simpleini_srcs)
-endif()
-add_library(simpleini OBJECT
-    "${simpleini_srcs_SOURCE_DIR}/ConvertUTF.c"
-)
-set_target_properties(simpleini PROPERTIES
-    PUBLIC_HEADER "${simpleini_srcs_SOURCE_DIR}/SimpleIni.h;${simpleini_srcs_SOURCE_DIR}/ConvertUTF.h"
-)
-target_include_directories(simpleini PUBLIC
-    $<BUILD_INTERFACE:${simpleini_srcs_SOURCE_DIR}>
-    $<INSTALL_INTERFACE:include/simpleini>
-)
-install(TARGETS simpleini
-    PUBLIC_HEADER DESTINATION include/simpleini
-)
 
 ### Doxyfile
 set(ETISS_DOX_LOCATIONS ${ETISS_DOX_LOCATIONS} ${PROJECT_BINARY_DIR}/include)
@@ -382,7 +349,11 @@ TARGET_INCLUDE_DIRECTORIES(ETISS PUBLIC
     "${PROJECT_BINARY_DIR}/include_c"
     ${INCGEN_INC_DIR}
 )
-TARGET_LINK_LIBRARIES(ETISS PUBLIC simpleini elfio)
+TARGET_LINK_LIBRARIES(ETISS PUBLIC
+    simpleini
+    elfio
+    pugixml
+)
 
 GENERATE_EXPORT_HEADER(ETISS
           BASE_NAME ETISS_PLUGIN

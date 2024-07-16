@@ -55,6 +55,10 @@
 #include "etiss/Misc.h"
 #include "etiss/fault/Injector.h"
 
+#include "etiss/fault/Trigger.h"
+#include "etiss/fault/Action.h"
+#include "etiss/fault/Fault.h"
+
 #include <cstddef>
 
 #include <memory>
