@@ -105,6 +105,8 @@ extern "C"
 
     etiss::Plugin *ETISSINCLUDED_createPlugin(unsigned index, std::map<std::string, std::string> options)
     {
+        etiss::Configuration cfg;
+        cfg.config() = options;
         switch (index)
         {
         case 0:
@@ -131,10 +133,8 @@ extern "C"
         case 1:
             return etiss::plugin::gdb::Server::createTCPServer(options);
         case 2:
-            return new etiss::plugin::PrintInstruction();
+            return new etiss::plugin::PrintInstruction(cfg.get<bool>("plugin.printinstruction.print_to_file", false));
         case 3:
-            etiss::Configuration cfg;
-            cfg.config() = options;
             return new etiss::plugin::Logger(cfg.get<uint64_t>("plugin.logger.logaddr", 0x80000000),
                                              cfg.get<uint64_t>("plugin.logger.logmask", 0xF0000000));
         }

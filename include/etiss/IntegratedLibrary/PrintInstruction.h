@@ -62,7 +62,11 @@ namespace plugin
 */
 class PrintInstruction : public etiss::TranslationPlugin
 {
+  private:
+    bool print_to_file_ = false;
   public:
+    PrintInstruction(bool print_to_file);
+    ~PrintInstruction();
     virtual void finalizeInstrSet(etiss::instr::ModedInstructionSet &) const;
     virtual void initCodeBlock(etiss::CodeBlock &block) const;
     virtual std::string _getPluginName() const;

@@ -60,22 +60,47 @@ extern "C"
 
 using namespace etiss::plugin;
 
+static std::ofstream outfile;
+
+PrintInstruction::PrintInstruction(bool print_to_file) : print_to_file_(print_to_file)
+{
+    if (print_to_file_) {
+        std::string prefix = etiss::cfg().get<std::string>("etiss.output_path_prefix", "");
+        std::string path = prefix + "instr_trace.csv";
+        outfile.open(path);
+    } else {
+    }
+}
+
+PrintInstruction::~PrintInstruction()
+{
+    if (print_to_file_) {
+        outfile.close();
+    }
+}
+
 void PrintInstruction::initCodeBlock(etiss::CodeBlock &block) const
 {
     block.fileglobalCode().insert("extern void PrintInstruction_print(const char *,uint64_t);"); // add print function
+    block.fileglobalCode().insert("extern void PrintInstruction_tofile(const char *,uint64_t);"); // add tofile function
 }
 
 void PrintInstruction::finalizeInstrSet(etiss::instr::ModedInstructionSet &mis) const
 {
 
-    mis.foreach ([](etiss::instr::VariableInstructionSet &vis) {
-        vis.foreach ([](etiss::instr::InstructionSet &set) {
-            set.foreach ([](etiss::instr::Instruction &instr) {
+    bool print_to_file = print_to_file_;
+    mis.foreach ([print_to_file](etiss::instr::VariableInstructionSet &vis) {
+        vis.foreach ([print_to_file](etiss::instr::InstructionSet &set) {
+            set.foreach ([print_to_file](etiss::instr::Instruction &instr) {
                 instr.addCallback(
-                    [&instr](etiss::instr::BitArray &ba, etiss::CodeSet &cs, etiss::instr::InstructionContext &ic) {
+                    [&instr,print_to_file](etiss::instr::BitArray &ba, etiss::CodeSet &cs, etiss::instr::InstructionContext &ic) {
                         std::stringstream ss;
 
-                        ss << "PrintInstruction_print(\"";
+                        if (print_to_file) {
+                            ss << "PrintInstruction_tofile(\"";
+                        } else {
+                            ss << "PrintInstruction_print(\"";
+                        }
 
                         ss << "0x" << std::hex << std::setfill('0') << std::setw(16) << ic.current_address_ << ": ";
 
@@ -115,5 +140,10 @@ extern "C"
         {
             // std::cout << "TCOUNT: " << std::dec << ++pi_6cac << "\n";
         }
+    }
+    void PrintInstruction_tofile(const char *c, uint64_t addr)
+    {
+        outfile << c;
+        outfile.flush();
     }
 }
