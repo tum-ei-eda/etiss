@@ -206,7 +206,7 @@ void etiss::preloadLibraries()
     loadLibraryList(installDir() + "/lib/plugins");
 
     // load libraries from user folder
-    std::string etiss_path = etiss::cfg().get<std::string>("etiss_wd", "");
+    std::string etiss_path = etiss::cfg().get<std::string>("etiss_wd", ".");
     std::vector<std::string> lib_dirs{ std::string("ArchImpl"), std::string("JITImpl"), std::string("PluginImpl") };
     if (!etiss_path.empty())
     {
