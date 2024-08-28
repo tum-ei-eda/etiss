@@ -592,7 +592,10 @@ void etiss::Initializer::loadIniPlugins(std::shared_ptr<etiss::CPUCore> cpu)
                 continue;
             }
             etiss::log(etiss::INFO, "  Adding Plugin " + *pluginName + "\n");
-            cpu->addPlugin(etiss::getPlugin(*pluginName, options));
+            std::shared_ptr<Plugin> plugin = etiss::getPlugin(*pluginName, options);
+            if (!plugin)
+                etiss::log(etiss::FATALERROR, "Plugin not found: " + *pluginName + "\n");
+            cpu->addPlugin(plugin);
         }
     }
     if (!po_simpleIni)
@@ -658,7 +661,10 @@ void etiss::Initializer::loadIniPlugins(std::shared_ptr<etiss::CPUCore> cpu)
                     etiss::log(etiss::WARNING, "Multiple values for option. Took only last one!");
             }
         }
-        cpu->addPlugin(etiss::getPlugin(pluginName, options));
+        std::shared_ptr<Plugin> plugin = etiss::getPlugin(pluginName, options);
+        if (!plugin)
+            etiss::log(etiss::FATALERROR, "Plugin not found: " + pluginName + "\n");
+        cpu->addPlugin(plugin);
     }
 }
 
