@@ -213,7 +213,7 @@ void etiss::preloadLibraries()
         std::vector<std::string> libs;
         for (auto itr = lib_dirs.begin(); itr != lib_dirs.end(); ++itr)
         {
-            findLibs(boost::filesystem::path(etiss_path + *itr), libs);
+            findLibs(boost::filesystem::path(etiss_path) / *itr, libs);
         }
         for (auto itr = libs.begin(); itr != libs.end(); ++itr)
         {
