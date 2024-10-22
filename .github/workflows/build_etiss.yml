@@ -69,7 +69,7 @@ jobs:
    #     ref: coverage
         
     - run: |
-       git clone git@github.com:wysiwyng/etiss.git etiss_source--branch coverage
+       git clone git@github.com:wysiwyng/etiss.git etiss_source -branch coverage
        cp -r etiss-s4e-mac/* etiss_source/ArchImpl/
        cd etiss_source
        cp ArchImpl/RV32IMACFD/RV32IMACFDArchSpecificImp.cpp ArchImpl/RV32IMCXS4EMAC/RV32IMCXS4EMACArchSpecificImp.cpp
