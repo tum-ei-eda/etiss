@@ -1,0 +1,130 @@
+name: Build ETISS
+
+on:
+  repository_dispatch:
+    types: [s4e-cdl-event, seal5-event]
+#push:
+ #   branches: [ "master" ]
+ # pull_request:
+ #   branches: [ "master" ]
+
+env:
+  BUILD_TYPE: Release
+  SEAL5_PREBUILT_DIR: /home/runner/work/etiss/etiss/seal5_prebuilt/release
+  RISCV_GCC_NAME: riscv32-unknown-elf
+  ARCH: rv32imc_xs4emac
+  ETISS_ARCH: RV32IMCXS4EMAC
+  PROG: s4emac
+  ABI: ilp32
+
+jobs:
+  setup-run-M2ISAR:
+    runs-on: ubuntu-22.04
+    
+    steps:
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        pip install virtualenv
+    
+    - name: Setup M2-ISA-R
+      run: |
+       git config --global url."https://github.com/".insteadOf git@github.com:
+       git config --global url."https://".insteadOf git://
+       git clone https://github.com/PhilippvK/riscv-coredsl-extensions.git --branch etiss --recursive
+       git clone https://github.com/tum-ei-eda/etiss_arch_riscv.git --recursive --branch coredsl_exceptions
+       git clone https://github.com/tum-ei-eda/M2-ISA-R.git --branch coredsl2
+       cd M2-ISA-R
+       virtualenv -p python3.10 venv  #Alternative (requires `apt install python3-venv`): python3 -m venv venv
+       source venv/bin/activate
+       pip install -e .
+      
+    - name: Run M2-ISA-R
+      run: |
+        cd M2-ISA-R
+        source venv/bin/activate
+        python -m m2isar.frontends.coredsl2.parser ../riscv-coredsl-extensions/etiss-s4e-mac.core_desc
+        python -m m2isar.backends.etiss.writer ../riscv-coredsl-extensions/gen_model/etiss-s4e-mac.m2isarmodel --separate --static-scalars
+       
+    - name: Upload M2ISAR Model artifacts
+      uses: actions/upload-artifact@v4
+      with:
+         name: m2isar-model-files
+         path: |
+           riscv-coredsl-extensions/gen_output
+            
+  patch-etiss-arch:
+    runs-on: ubuntu-22.04
+    needs: [setup-run-M2ISAR]
+    steps:   
+    - name: Download Patched Etiss
+      uses: actions/download-artifact@v4
+      with:
+        name: m2isar-model-files
+        github-token: ${{ secrets.REPO_ACCESS_TOKEN }}
+       
+    - uses: actions/checkout@v4
+      with:
+        path: etiss_source
+        ref: coverage
+        
+    - run: |
+       cp -r etiss-s4e-mac/* etiss_source/ArchImpl/
+       cd etiss_source
+       cp ArchImpl/RV32IMACFD/RV32IMACFDArchSpecificImp.cpp ArchImpl/RV32IMCXS4EMAC/RV32IMCXS4EMACArchSpecificImp.cpp
+       sed -i "s/RV32IMACFD/RV32IMCXS4EMAC/g" ArchImpl/RV32IMCXS4EMAC/RV32IMCXS4EMACArchSpecificImp.cpp
+       git config --global user.email "bewoayia.kebianyor@dlr.de"
+       git config --global user.name "Bewoayia Kebianyor"
+       git add --all
+       git commit -m 'update etiss architectures'
+       
+    - name: Upload M2ISAR Model artifacts
+      uses: actions/upload-artifact@v4
+      with:
+         name: patched_etiss
+         path: |
+           etiss_source
+           
+  build-etiss:
+    runs-on: ubuntu-22.04
+    needs: [patch-etiss-arch]
+    steps:
+    - name: Install Build Dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libboost-filesystem-dev libboost-program-options-dev \
+          llvm-11-dev libclang-11-dev clang-11
+
+    - name: Download Patched Etiss
+      uses: actions/download-artifact@v4
+      with:
+        name: patched_etiss
+        github-token: ${{ secrets.REPO_ACCESS_TOKEN }}
+        path: etiss_source
+      
+    - name: CMake config
+      run: |
+        cmake -B etiss_build -S etiss_source -DCMAKE_INSTALL_PREFIX=/home/runner/work/etiss_prebuilt -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+        
+    - name: CMake build
+      run: |
+        cmake --build etiss_build -j$(nproc)
+        
+    - name: CMake install
+      run: |
+        cmake --build etiss_build --target install
+        
+    - name: Upload compiled ETISS
+      uses: actions/upload-artifact@v4
+      with:
+        name: etiss_prebuilt
+        path: /home/runner/work/etiss_prebuilt  
+
+    - name: Send ETISS RUN-ID to Seal5
+      uses: peter-evans/repository-dispatch@v3
+      with:
+         token: ${{ secrets.REPO_ACCESS_TOKEN }}
+         repository: ${{ 'kebi-be/seal5' }}
+         event-type: etiss-event
+         client-payload: '{"parent_repo_run-id": "${{ github.event.client_payload.run_id }}", "etiss_run_id": "${{ github.run_id }}"}'
+              
