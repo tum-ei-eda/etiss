@@ -34,20 +34,31 @@ class MemRange:
         self.min = min
         self.max = max
         assert self.min <= self.max, "Invalid MemRange"
-        self.count = 0
+        self.num_reads = 0
+        self.num_writes = 0
+        self.read_bytes = 0
+        self.written_bytes = 0
         self.low = 0xFFFFFFFF
         self.high = 0
 
     def contains(self, adr):
         return adr >= self.min and adr < self.max
 
-    def trace(self, adr):
+    def trace(self, adr, mode, pc, sz):
         self.low = min(adr, self.low)
         self.high = max(adr, self.high)
-        self.count = self.count + 1
+        if mode == "r":
+            self.num_reads += 1
+            self.read_bytes += sz
+        elif mode == "w":
+            self.num_writes += 1
+            self.written_bytes += sz
+        else:
+            raise ValueError(f"Invalid mode: {mode}")
 
+    @property
     def count(self):
-        return self.count
+        return self.num_reads + self.num_writes
 
     def usage(self):
         if self.low > self.high:
@@ -57,7 +68,7 @@ class MemRange:
     def stats(self):
         if self.low > self.high:
             return self.name + "\t[not accessed]"
-        return self.name + "\t[" + hex(self.low) + "-" + hex(self.high) + "] \t(" + str(self.count) + " times)"
+        return self.name + f"\t[0x{self.low:x}-0x{self.high:x}] \t({self.count} times, reads: {self.num_reads} <{self.read_bytes}B>, writes: {self.num_writes} <{self.written_bytes}B>)"
 
 
 def parseElf(inFile):
@@ -180,10 +191,14 @@ if __name__ == "__main__":
         with open(traceFile) as f:
             reader = csv.reader(f, skipinitialspace=True, delimiter=";")
             for r in reader:
-                adr = int(r[2], 16)
+                # ts = int(r[0])
+                pc = int(r[1], 16)
+                mode = r[2]   # r/w
+                adr = int(r[3], 16)
+                sz = int(r[4], 16)
                 for mem in mems:
                     if mem.contains(adr):
-                        mem.trace(adr)
+                        mem.trace(adr, mode, pc, sz)
 
         for mem in mems:
             print(mem.stats())
