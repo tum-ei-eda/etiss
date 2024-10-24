@@ -1,5 +1,5 @@
 /**
- * Generated on Mon, 15 Apr 2024 16:50:50 +0200.
+ * Generated on Thu, 24 Oct 2024 10:16:12 +0200.
  *
  * This file contains the instruction behavior models of the RV64A
  * instruction set for the RV64IMACFD core architecture.
@@ -605,7 +605,7 @@ cp.code() += "etiss_coverage_count(5, 8607, 8604, 8602, 8605, 8606);\n";
 cp.code() += "*((RV64IMACFD*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = res;\n";
 cp.code() += "etiss_coverage_count(5, 8614, 8612, 8611, 8609, 8613);\n";
 } // conditional
-cp.code() += "etiss_uint64 res2 = (((res) << 64) | (*((RV64IMACFD*)cpu)->X[" + std::to_string(rs2 % 32ULL) + "ULL]));\n";
+cp.code() += "etiss_uint64 res2 = res | *((RV64IMACFD*)cpu)->X[" + std::to_string(rs2 % 32ULL) + "ULL];\n";
 cp.code() += "etiss_coverage_count(6, 8623, 8622, 8616, 8621, 8620, 8618);\n";
 cp.code() += "etiss_uint64 mem_val_1;\n";
 cp.code() += "mem_val_1 = res2;\n";
