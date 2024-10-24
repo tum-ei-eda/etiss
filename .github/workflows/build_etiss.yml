@@ -1,4 +1,4 @@
-name: Build ETISS for S4EMac
+name: Build ETISS for Custom Instructions
 
 on:
   repository_dispatch:
@@ -27,7 +27,7 @@ jobs:
         sudo apt-get update
         pip install virtualenv
     
-    - name: Setup m2isar
+    - name: Setup M2-ISA-R
       run: |
        git config --global url."https://github.com/".insteadOf git@github.com:
        git config --global url."https://".insteadOf git://
