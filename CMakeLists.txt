@@ -60,6 +60,7 @@ option(ETISS_USE_PYTHON "Support python within ETISS" OFF)
 option(ETISS_BUILD_MANUAL_DOC "If enabled then the documentation will not be build by target all. run $make doc to create the documentation. default is ON for debug build OFF otherwise" ON)
 option(ETISS_BUILD_DEFAULTSUB "If enabled then the ArchImpl,JITImpl,PluginImpl and projects folder will be added as subfolders. Please have a look at the CMakeLists.txt files of those folders for further information" ON)
 option(ETISS_USE_PROFILEFLAGS "Enable or disable the -pg compiler and linker flags." OFF)
+option(ETISS_USE_COREDSL_COVERAGE "Enable the CoreDSL coverage analyzer" OFF)
 
 # Global configuration
 SET(CMAKE_POSITION_INDEPENDENT_CODE ON)
@@ -104,6 +105,10 @@ ENDIF()
 IF(ETISS_USE_PROFILEFLAGS)
     SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pg")
 ENDIF()
+ENDIF()
+
+IF(ETISS_USE_COREDSL_COVERAGE)
+    ADD_DEFINITIONS(-DETISS_USE_COREDSL_COVERAGE)
 ENDIF()
 
 # Include modules.
@@ -432,5 +437,6 @@ install(FILES
 message(STATUS "ETISS_VERSION_FULL: ${ETISS_VERSION_FULL}")
 message(STATUS "ETISS_USE_PYTHON: ${ETISS_USE_PYTHON}")
 message(STATUS "ETISS_USE_PROFILEFLAGS: ${ETISS_USE_PROFILEFLAGS}")
+message(STATUS "ETISS_USE_COREDSL_COVERAGE: ${ETISS_USE_COREDSL_COVERAGE}")
 message(STATUS "ETISS_USE_DLSYM: ${ETISS_USE_DLSYM}")
 message(STATUS "ETISS_BUILD_MANUAL_DOC: ${ETISS_BUILD_MANUAL_DOC}")

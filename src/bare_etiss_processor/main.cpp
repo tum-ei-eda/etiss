@@ -44,7 +44,6 @@
 #include "etiss/SimpleMemSystem.h"
 #include "etiss/ETISS.h"
 
-
 int main(int argc, const char *argv[])
 {
     // by default etiss wil search for plugin libraries in its install path and
@@ -148,7 +147,6 @@ int main(int argc, const char *argv[])
     // print the exception code returned by the cpu core
     std::cout << "CPU0 exited with exception: 0x" << std::hex << exception << std::dec << ": "
               << etiss::RETURNCODE::getErrorMessages()[exception] << std::endl;
-
 
     switch(exception){
         case etiss::RETURNCODE::CPUFINISHED:
