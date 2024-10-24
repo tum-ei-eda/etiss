@@ -8,6 +8,10 @@ on:
   pull_request:
     branches: [ "master" ]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+  
 env:
   BUILD_TYPE: Release
   SEAL5_PREBUILT_DIR: /home/runner/work/etiss/etiss/seal5_prebuilt/release
