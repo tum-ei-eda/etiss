@@ -1,12 +1,12 @@
-name: Build ETISS
+name: Build ETISS for S4EMac
 
 on:
   repository_dispatch:
-    types: [s4e-cdl-event, seal5-event]
-#push:
- #   branches: [ "master" ]
- # pull_request:
- #   branches: [ "master" ]
+    types: [s4e-cdsl-event, seal5-event]
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
 
 env:
   BUILD_TYPE: Release
@@ -18,7 +18,7 @@ env:
   ABI: ilp32
 
 jobs:
-  setup-run-M2ISAR:
+  setup-run-m2isar:
     runs-on: ubuntu-22.04
     
     steps:
@@ -27,7 +27,7 @@ jobs:
         sudo apt-get update
         pip install virtualenv
     
-    - name: Setup M2-ISA-R
+    - name: Setup m2isar
       run: |
        git config --global url."https://github.com/".insteadOf git@github.com:
        git config --global url."https://".insteadOf git://
@@ -35,7 +35,7 @@ jobs:
        git clone https://github.com/tum-ei-eda/etiss_arch_riscv.git --recursive --branch coredsl_exceptions
        git clone https://github.com/tum-ei-eda/M2-ISA-R.git --branch coredsl2
        cd M2-ISA-R
-       virtualenv -p python3.10 venv  #Alternative (requires `apt install python3-venv`): python3 -m venv venv
+       virtualenv -p python3.10 venv
        source venv/bin/activate
        pip install -e .
       
@@ -55,7 +55,7 @@ jobs:
             
   patch-etiss-arch:
     runs-on: ubuntu-22.04
-    needs: [setup-run-M2ISAR]
+    needs: [setup-run-m2isar]
     steps:   
     - name: Download Patched Etiss
       uses: actions/download-artifact@v4
@@ -76,8 +76,8 @@ jobs:
        cd etiss_source
        cp ArchImpl/RV32IMACFD/RV32IMACFDArchSpecificImp.cpp ArchImpl/RV32IMCXS4EMAC/RV32IMCXS4EMACArchSpecificImp.cpp
        sed -i "s/RV32IMACFD/RV32IMCXS4EMAC/g" ArchImpl/RV32IMCXS4EMAC/RV32IMCXS4EMACArchSpecificImp.cpp
-       git config --global user.email "bewoayia.kebianyor@dlr.de"
-       git config --global user.name "Bewoayia Kebianyor"
+       git config --global user.name "${GITHUB_ACTOR}"
+       git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
        git add --all
        git commit -m 'update etiss architectures'
        
