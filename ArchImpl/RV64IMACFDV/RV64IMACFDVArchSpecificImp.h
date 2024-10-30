@@ -11,6 +11,8 @@
 #ifndef ETISS_RV64IMACFDVArch_RV64IMACFDVARCHSPECIFICIMP_H_
 #define ETISS_RV64IMACFDVArch_RV64IMACFDVARCHSPECIFICIMP_H_
 
+#include "RV64IMACFDVFuncs.h"
+
 /**
 	@brief VirtualStruct for RV64IMACFDV architecture to faciliate register acess
 
@@ -45,12 +47,14 @@ public:
 	virtual ~RegField_RV64IMACFDV(){}
 
 protected:
-	virtual uint64_t _read() const {
+	virtual uint64_t _read(size_t offset) const {
+		printf("x_read with gprid_ %d\n", gprid_);
 		return (uint64_t) *((RV64IMACFDV*)parent_.structure_)->X[gprid_];
 	}
 
-	virtual void _write(uint64_t val) {
+	virtual void _write(uint64_t val, size_t offset) {
 		etiss::log(etiss::VERBOSE, "write to ETISS cpu state", name_, val);
+		printf("x_write (%lu) with gprid_ %d\n", val, gprid_);
 		*((RV64IMACFDV*)parent_.structure_)->X[gprid_] = (etiss_uint64) val;
 	}
 };
@@ -82,15 +86,106 @@ public:
 	virtual ~FloatRegField_RV64IMACFDV(){}
 
 protected:
-	virtual uint64_t _read() const {
+	virtual uint64_t _read(size_t offset) const {
+		printf("f_read with gprid_ %d\n", gprid_);
 		return (uint64_t) *((RV64IMACFDV*)parent_.structure_)->F[gprid_];
 	}
 
-	virtual void _write(uint64_t val) {
+	virtual void _write(uint64_t val, size_t offset) {
 		etiss::log(etiss::VERBOSE, "write to ETISS cpu state", name_, val);
+		printf("f_write (%lu) with gprid_ %d\n", val, gprid_);
 		*((RV64IMACFDV*)parent_.structure_)->F[gprid_] = (etiss_uint64) val;
 	}
 };
+
+class VectorRegField_RV64IMACFDV : public etiss::VirtualStruct::Field{
+private:
+	const unsigned gprid_;
+public:
+	VectorRegField_RV64IMACFDV(etiss::VirtualStruct & parent,unsigned gprid)
+		: Field(parent,
+			std::string("V")+etiss::toString(gprid),
+			std::string("V")+etiss::toString(gprid),
+			R|W,
+			128  // 1024 bits!
+			// 64  // 512 bits!
+			// 32  // 256 bits!
+			// 16  // 128 bits!
+			// 8  // 64 bits!
+			// 4  // 32 bits!
+		),
+		gprid_(gprid)
+	{}
+
+	VectorRegField_RV64IMACFDV(etiss::VirtualStruct & parent, std::string name, unsigned gprid)
+		: Field(parent,
+			name,
+			name,
+			R|W,
+			// 16   // 128 bits!
+			// 8   // 64 bits!
+			4   // 32 bits!
+		),
+		gprid_(gprid)
+	{}
+
+	virtual ~VectorRegField_RV64IMACFDV(){}
+
+protected:
+	virtual uint64_t _read(size_t offset) const {
+		printf("v_read with gprid_ %d\n", gprid_);
+    // TODO: check for out of bounds? (offset < width_/8)
+		return (uint64_t) *((uint64_t*)&((RV64IMACFDV*)parent_.structure_)->V[gprid_ * width_ + sizeof(uint64_t) * offset]);
+	}
+
+	virtual void _write(uint64_t val, size_t offset) {
+		etiss::log(etiss::VERBOSE, "write to ETISS cpu state", name_, val);
+		printf("v_write (%lu) with gprid_ %d\n", val, gprid_);
+    // TODO: check for out of bounds? (offset < width_/8)
+		*((uint64_t*)&((RV64IMACFDV*)parent_.structure_)->V[gprid_ * width_ + sizeof(uint64_t)]) = (etiss_uint64) val;  // TODO: write V[gprid_] instead
+	}
+};
+
+class CSRField_RV64IMACFDV : public etiss::VirtualStruct::Field{
+private:
+	const unsigned gprid_;
+public:
+	CSRField_RV64IMACFDV(etiss::VirtualStruct & parent,unsigned gprid)
+		: Field(parent,
+			std::string("CSR")+etiss::toString(gprid),
+			std::string("CSR")+etiss::toString(gprid),
+			R|W,
+			8
+		),
+		gprid_(gprid)
+	{}
+
+	CSRField_RV64IMACFDV(etiss::VirtualStruct & parent, std::string name, unsigned gprid)
+		: Field(parent,
+			name,
+			name,
+			R|W,
+			8
+		),
+		gprid_(gprid)
+	{}
+
+	virtual ~CSRField_RV64IMACFDV(){}
+
+protected:
+	virtual uint64_t _read(size_t offset) const {
+		printf("csr_read with gprid_ %d\n", gprid_);
+		return (uint64_t) RV64IMACFDV_csr_read((ETISS_CPU*)parent_.structure_, nullptr, nullptr, (etiss_uint64) gprid_);
+	}
+
+	virtual void _write(uint64_t val, size_t offset) {
+		etiss::log(etiss::VERBOSE, "write to ETISS cpu state", name_, val);
+		printf("csr_write (%lu) with gprid_ %d\n", val, gprid_);
+		RV64IMACFDV_csr_write((ETISS_CPU*)parent_.structure_, nullptr, nullptr, gprid_, (etiss_uint64) val);
+	}
+};
+
+
 
 class pcField_RV64IMACFDV : public etiss::VirtualStruct::Field{
 public:
@@ -106,11 +201,11 @@ public:
 	virtual ~pcField_RV64IMACFDV(){}
 
 protected:
-	virtual uint64_t _read() const {
+	virtual uint64_t _read(size_t offset) const {
 		return (uint64_t) ((ETISS_CPU *)parent_.structure_)->instructionPointer;
 	}
 
-	virtual void _write(uint64_t val) {
+	virtual void _write(uint64_t val, size_t offset) {
 		etiss::log(etiss::VERBOSE, "write to ETISS cpu state", name_, val);
 		((ETISS_CPU *)parent_.structure_)->instructionPointer = (etiss_uint64) val;
 	}
