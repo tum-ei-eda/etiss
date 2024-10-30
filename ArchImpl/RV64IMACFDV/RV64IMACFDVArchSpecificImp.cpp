@@ -1,5 +1,5 @@
 /**
- * Generated on Wed, 30 Oct 2024 10:54:30 +0100.
+ * Generated on Thu, 24 Feb 2022 17:15:20 +0100.
  *
  * This file contains the architecture specific implementation for the RV64IMACFDV
  * core architecture.
@@ -59,10 +59,27 @@ etiss::int32 RV64IMACFDVArch::handleException(etiss::int32 cause, ETISS_CPU * cp
 */
 void RV64IMACFDVArch::initInstrSet(etiss::instr::ModedInstructionSet & mis) const
 {
-	if (false) {
-		// Pre-compilation of instruction set to view instruction tree. Enable by setting 'true' above.
 
-		etiss::instr::ModedInstructionSet iset("RV64IMACFDVISA");
+    {
+     /* Set default JIT Extensions. Read Parameters set from ETISS configuration and append with architecturally needed */
+     std::string cfgPar = "";
+     cfgPar = etiss::cfg().get<std::string>("jit.external_headers", ";");
+     etiss::cfg().set<std::string>("jit.external_headers", cfgPar + "etiss/jit/libsoftfloat.h;etiss/jit/softvector.h;etiss/jit/libsoftvector.h");
+
+     cfgPar = etiss::cfg().get<std::string>("jit.external_libs", ";");
+     etiss::cfg().set<std::string>("jit.external_libs", cfgPar + "softfloat;softvector;etiss_softvector");
+
+     cfgPar = etiss::cfg().get<std::string>("jit.external_header_paths", ";");
+     etiss::cfg().set<std::string>("jit.external_header_paths", cfgPar + "/etiss/jit");
+
+     cfgPar = etiss::cfg().get<std::string>("jit.external_lib_paths", ";");
+     etiss::cfg().set<std::string>("jit.external_lib_paths", cfgPar + "/etiss/jit");
+
+    }
+
+    if (false) {
+        // Pre-compilation of instruction set to view instruction tree. Could be disabled.
+        etiss::instr::ModedInstructionSet iset("RV64IMACFDVISA");
 		bool ok = true;
 		RV64IMACFDVISA.addTo(iset,ok);
 
@@ -76,12 +93,12 @@ void RV64IMACFDVArch::initInstrSet(etiss::instr::ModedInstructionSet & mis) cons
 	if (!ok)
 		etiss::log(etiss::FATALERROR,"Failed to add instructions for RV64IMACFDVISA");
 
-	etiss::instr::VariableInstructionSet * vis = mis.get(1);
+    etiss::instr::VariableInstructionSet *vis = mis.get(1);
 
-	using namespace etiss;
-	using namespace etiss::instr;
+    using namespace etiss;
+    using namespace etiss::instr;
 
-	vis->get(32)->getInvalid().addCallback(
+    	vis->get(32)->getInvalid().addCallback(
 	[] (BitArray & ba,etiss::CodeSet & cs,InstructionContext & ic)
 	{
 
@@ -175,10 +192,95 @@ cp.code() += "return cpu->exception;\n";
 	0
 	);
 
+    vis->length_updater_ = [](VariableInstructionSet &, InstructionContext &ic, BitArray &ba) {
+        std::function<void(InstructionContext & ic, etiss_uint32 opRd)> updateRV64IMACFDVInstrLength =
+            [](InstructionContext &ic, etiss_uint32 opRd) {
+                ic.instr_width_fully_evaluated_ = true;
+                ic.is_not_default_width_ = true;
+                if (opRd == 0x3f)
+                    ic.instr_width_ = 64;
+                else if ((opRd & 0x3f) == 0x1f)
+                    ic.instr_width_ = 48;
+                else if (((opRd & 0x1f) >= 0x3) && ((opRd & 0x1f) < 0x1f))
+                    ic.instr_width_ = 32;
+                else if(opRd == 0x7f) /* P-Extension instructions */
+                    ic.instr_width_ = 32;
+                else if ((opRd & 0x3) != 0x3)
+                    ic.instr_width_ = 16;
+                else
+                    // This might happen when code is followed by data.
+                    ic.is_not_default_width_ = false;
+            };
 
-	/**************************************************************************
-	*		      vis->length_updater_ should be replaced here	         	  *
-	***************************************************************************/
+        BitArrayRange op(6, 0);
+        etiss_uint32 opRd = op.read(ba);
+
+        /*BitArrayRange fullOp(ba.byteCount()*8-1,0);
+        etiss_uint32 fullOpRd = fullOp.read(ba);
+
+        std::stringstream ss;
+        ss << "Byte count: " << ba.byteCount()<< std::endl;
+        ss << "opcode: 0x" <<std::hex<< fullOpRd << std::endl;
+        ss << "Current PC: 0x" <<std::hex<< ic.current_address_ << std::endl;
+        std::cout << ss.str() << std::endl;*/
+
+        switch (ba.byteCount())
+        {
+        case 2:
+            if (((opRd & 0x3) != 0x3) || (opRd == 0))
+            {
+                ic.is_not_default_width_ = false;
+                break;
+            }
+            else
+            {
+                updateRV64IMACFDVInstrLength(ic, opRd);
+                break;
+            }
+        case 4:
+            if ((((opRd & 0x1f) >= 0x3) || ((opRd & 0x1f) < 0x1f)) || (opRd == 0))
+            {
+                ic.is_not_default_width_ = false;
+                break;
+            }
+            else if(opRd == 0x7f) /* P-Extension instructions */
+            {
+                updateRV64IMACFDVInstrLength(ic, opRd);
+                break;
+            }
+            else
+            {
+                updateRV64IMACFDVInstrLength(ic, opRd);
+                break;
+            }
+        case 6:
+            if (((opRd & 0x3f) == 0x1f) || (opRd == 0))
+            {
+                ic.is_not_default_width_ = false;
+                break;
+            }
+            else
+            {
+                updateRV64IMACFDVInstrLength(ic, opRd);
+                break;
+            }
+        case 8:
+            if ((opRd == 0x3f) || (opRd == 0))
+            {
+                ic.is_not_default_width_ = false;
+                break;
+            }
+            else
+            {
+                updateRV64IMACFDVInstrLength(ic, opRd);
+                break;
+            }
+        default:
+            // This might happen when code is followed by data.
+            ic.is_not_default_width_ = false;
+        }
+    };
+
 }
 
 /**
@@ -225,7 +327,57 @@ std::shared_ptr<etiss::VirtualStruct> RV64IMACFDVArch::getVirtualStruct(ETISS_CP
 	}
 
 	ret->addField(new pcField_RV64IMACFDV(*ret));
-	return ret;
+
+	for (uint32_t i = 0; i < 32; ++i){
+		ret->addField(new FloatRegField_RV64IMACFDV(*ret,i));
+	}
+
+	//for (uint32_t i = 0; i < 4; ++i){
+	//	ret->addField(new CSRField_RV64IMACFDV(*ret,i));
+	//}
+
+	// FCSR
+	ret->addField(new CSRField_RV64IMACFDV(*ret,1));
+	ret->addField(new CSRField_RV64IMACFDV(*ret,2));
+	ret->addField(new CSRField_RV64IMACFDV(*ret,3));
+	// VCSR
+	ret->addField(new CSRField_RV64IMACFDV(*ret,8));
+	ret->addField(new CSRField_RV64IMACFDV(*ret,9));
+	ret->addField(new CSRField_RV64IMACFDV(*ret,10));
+	ret->addField(new CSRField_RV64IMACFDV(*ret,15));
+	// M CSR
+	ret->addField(new CSRField_RV64IMACFDV(*ret,768));
+	ret->addField(new CSRField_RV64IMACFDV(*ret,769));
+	ret->addField(new CSRField_RV64IMACFDV(*ret,770));
+	ret->addField(new CSRField_RV64IMACFDV(*ret,771));
+	ret->addField(new CSRField_RV64IMACFDV(*ret,772));
+	ret->addField(new CSRField_RV64IMACFDV(*ret,773));
+	ret->addField(new CSRField_RV64IMACFDV(*ret,774));
+	ret->addField(new CSRField_RV64IMACFDV(*ret,832));
+	ret->addField(new CSRField_RV64IMACFDV(*ret,833));
+	ret->addField(new CSRField_RV64IMACFDV(*ret,834));
+	ret->addField(new CSRField_RV64IMACFDV(*ret,835));
+	ret->addField(new CSRField_RV64IMACFDV(*ret,836));
+	//
+	ret->addField(new CSRField_RV64IMACFDV(*ret,3072));
+	ret->addField(new CSRField_RV64IMACFDV(*ret,3073));
+	ret->addField(new CSRField_RV64IMACFDV(*ret,3074));
+	// VCSR
+	ret->addField(new CSRField_RV64IMACFDV(*ret,3104));
+	ret->addField(new CSRField_RV64IMACFDV(*ret,3105));
+	ret->addField(new CSRField_RV64IMACFDV(*ret,3106));
+	// M CSR
+	ret->addField(new CSRField_RV64IMACFDV(*ret,3857));
+	ret->addField(new CSRField_RV64IMACFDV(*ret,3858));
+	ret->addField(new CSRField_RV64IMACFDV(*ret,3859));
+	ret->addField(new CSRField_RV64IMACFDV(*ret,3860));
+	// V0-V31
+	for (uint32_t i = 0; i < 32; ++i){
+		ret->addField(new VectorRegField_RV64IMACFDV(*ret,i));
+	}
+
+	printf("added all fields in ArchSpecImp.cpp");
+ 	return ret;
 }
 
 /**
@@ -240,7 +392,7 @@ etiss::InterruptVector * RV64IMACFDVArch::createInterruptVector(ETISS_CPU * cpu)
 	if (cpu == 0)
 		return 0;
 
-  	std::vector<etiss::uint64 *> vec;
+	std::vector<etiss::uint64 *> vec;
 	std::vector<etiss::uint64 *> mask;
 
 	vec.push_back(&((RV64IMACFDV*)cpu)->MIP);
