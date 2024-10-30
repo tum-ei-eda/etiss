@@ -1,5 +1,5 @@
 /**
- * Generated on Wed, 19 Jun 2024 11:26:11 +0200.
+ * Generated on Wed, 30 Oct 2024 10:46:47 +0100.
  *
  * This file contains the architecture class for the RV32IMACFDV core architecture.
  */
@@ -137,6 +137,25 @@ void RV32IMACFDVArch::resetCPU(ETISS_CPU * cpu,etiss::uint64 * startpointer)
 	rv32imacfdvcpu->MSTATUS = 0;
 	rv32imacfdvcpu->MIE = 0;
 	rv32imacfdvcpu->MIP = 0;
+	rv32imacfdvcpu->CYCLE = 0;
+	rv32imacfdvcpu->CYCLEH = 0;
+	rv32imacfdvcpu->TIME = 0;
+	rv32imacfdvcpu->TIMEH = 0;
+	rv32imacfdvcpu->INSTRET = 0;
+	rv32imacfdvcpu->INSTRETH = 0;
+	rv32imacfdvcpu->MVENDORID = 0;
+	rv32imacfdvcpu->MARCHID = 0;
+	rv32imacfdvcpu->MIMPID = 0;
+	rv32imacfdvcpu->MHARTID = 0;
+	rv32imacfdvcpu->MISA = 0;
+	rv32imacfdvcpu->MEDELEG = 0;
+	rv32imacfdvcpu->MIDELEG = 0;
+	rv32imacfdvcpu->MTVEC = 0;
+	rv32imacfdvcpu->MCOUNTEREN = 0;
+	rv32imacfdvcpu->MSCRATCH = 0;
+	rv32imacfdvcpu->MEPC = 0;
+	rv32imacfdvcpu->MCAUSE = 0;
+	rv32imacfdvcpu->MTVAL = 0;
 	for (int i = 0; i < 4096; ++i) {
 		rv32imacfdvcpu->V[i] = 0;
 	}
@@ -172,31 +191,6 @@ void RV32IMACFDVArch::resetCPU(ETISS_CPU * cpu,etiss::uint64 * startpointer)
 	rv32imacfdvcpu->FT9 = 0;
 	rv32imacfdvcpu->FT10 = 0;
 	rv32imacfdvcpu->FT11 = 0;
-	rv32imacfdvcpu->FFLAGS = 0;
-	rv32imacfdvcpu->FRM = 0;
- 	rv32imacfdvcpu->CYCLE = 0;
- 	rv32imacfdvcpu->CYCLEH = 0;
- 	rv32imacfdvcpu->TIME = 0;
- 	rv32imacfdvcpu->TIMEH = 0;
- 	rv32imacfdvcpu->INSTRET = 0;
- 	rv32imacfdvcpu->INSTRETH = 0;
- 	rv32imacfdvcpu->MVENDORID= 0;
- 	rv32imacfdvcpu->MARCHID= 0;
- 	rv32imacfdvcpu->MIMPID = 0;
- 	rv32imacfdvcpu->MHARTID= 0;
-	rv32imacfdvcpu->MSTATUS =0;
-	rv32imacfdvcpu->MISA =0;
-	rv32imacfdvcpu->MEDELEG =0;
-	rv32imacfdvcpu->MIDELEG =0;
-	rv32imacfdvcpu->MIE =0;
-	rv32imacfdvcpu->MTVEC =0;
-	rv32imacfdvcpu->MCOUNTEREN =0;
-	rv32imacfdvcpu->MSCRATCH=0;
-	rv32imacfdvcpu->MEPC=0;
-	rv32imacfdvcpu->MCAUSE=0;
-	rv32imacfdvcpu->MTVAL=0;
-	rv32imacfdvcpu->MIP=0;
-
 	rv32imacfdvcpu->RES_ADDR = 0;
 
  	rv32imacfdvcpu->X[0] = &rv32imacfdvcpu->ZERO;
@@ -231,43 +225,39 @@ void RV32IMACFDVArch::resetCPU(ETISS_CPU * cpu,etiss::uint64 * startpointer)
  	rv32imacfdvcpu->X[29] = &rv32imacfdvcpu->T4;
  	rv32imacfdvcpu->X[30] = &rv32imacfdvcpu->T5;
  	rv32imacfdvcpu->X[31] = &rv32imacfdvcpu->T6;
- 	rv32imacfdvcpu->CSR[3] = &rv32imacfdvcpu->FCSR;
- 	rv32imacfdvcpu->CSR[1] = &rv32imacfdvcpu->FFLAGS;
- 	rv32imacfdvcpu->CSR[2] = &rv32imacfdvcpu->FRM;
-
-	rv32imacfdvcpu->CSR[8] = &rv32imacfdvcpu->VSTART_CSR;
+ 	rv32imacfdvcpu->CSR[8] = &rv32imacfdvcpu->VSTART_CSR;
  	rv32imacfdvcpu->CSR[9] = &rv32imacfdvcpu->VXSAT_CSR;
  	rv32imacfdvcpu->CSR[10] = &rv32imacfdvcpu->VXRM_CSR;
  	rv32imacfdvcpu->CSR[15] = &rv32imacfdvcpu->VCSR_CSR;
  	rv32imacfdvcpu->CSR[3104] = &rv32imacfdvcpu->VL_CSR;
  	rv32imacfdvcpu->CSR[3105] = &rv32imacfdvcpu->VTYPE_CSR;
  	rv32imacfdvcpu->CSR[3106] = &rv32imacfdvcpu->VLENB_CSR;
-
-	rv32imacfdvcpu->CSR[3072] = &rv32imacfdvcpu->CYCLE;
+ 	rv32imacfdvcpu->CSR[3] = &rv32imacfdvcpu->FCSR;
+ 	rv32imacfdvcpu->CSR[1] = &rv32imacfdvcpu->FFLAGS;
+ 	rv32imacfdvcpu->CSR[2] = &rv32imacfdvcpu->FRM;
+ 	rv32imacfdvcpu->CSR[768] = &rv32imacfdvcpu->MSTATUS;
+ 	rv32imacfdvcpu->CSR[772] = &rv32imacfdvcpu->MIE;
+ 	rv32imacfdvcpu->CSR[836] = &rv32imacfdvcpu->MIP;
+ 	rv32imacfdvcpu->CSR[3072] = &rv32imacfdvcpu->CYCLE;
  	rv32imacfdvcpu->CSR[3200] = &rv32imacfdvcpu->CYCLEH;
  	rv32imacfdvcpu->CSR[3073] = &rv32imacfdvcpu->TIME;
  	rv32imacfdvcpu->CSR[3201] = &rv32imacfdvcpu->TIMEH;
- 	rv32imacfdvcpu->CSR[3274] = &rv32imacfdvcpu->INSTRET;
+ 	rv32imacfdvcpu->CSR[3074] = &rv32imacfdvcpu->INSTRET;
  	rv32imacfdvcpu->CSR[3202] = &rv32imacfdvcpu->INSTRETH;
-
-	rv32imacfdvcpu->CSR[3857] = &rv32imacfdvcpu->MVENDORID;
-	rv32imacfdvcpu->CSR[3858] = &rv32imacfdvcpu->MARCHID;
+ 	rv32imacfdvcpu->CSR[3857] = &rv32imacfdvcpu->MVENDORID;
+ 	rv32imacfdvcpu->CSR[3858] = &rv32imacfdvcpu->MARCHID;
  	rv32imacfdvcpu->CSR[3859] = &rv32imacfdvcpu->MIMPID;
  	rv32imacfdvcpu->CSR[3860] = &rv32imacfdvcpu->MHARTID;
- 	rv32imacfdvcpu->CSR[768] = &rv32imacfdvcpu->MSTATUS;
  	rv32imacfdvcpu->CSR[769] = &rv32imacfdvcpu->MISA;
  	rv32imacfdvcpu->CSR[770] = &rv32imacfdvcpu->MEDELEG;
  	rv32imacfdvcpu->CSR[771] = &rv32imacfdvcpu->MIDELEG;
- 	rv32imacfdvcpu->CSR[772] = &rv32imacfdvcpu->MIE;
  	rv32imacfdvcpu->CSR[773] = &rv32imacfdvcpu->MTVEC;
  	rv32imacfdvcpu->CSR[774] = &rv32imacfdvcpu->MCOUNTEREN;
  	rv32imacfdvcpu->CSR[832] = &rv32imacfdvcpu->MSCRATCH;
  	rv32imacfdvcpu->CSR[833] = &rv32imacfdvcpu->MEPC;
  	rv32imacfdvcpu->CSR[834] = &rv32imacfdvcpu->MCAUSE;
  	rv32imacfdvcpu->CSR[835] = &rv32imacfdvcpu->MTVAL;
- 	rv32imacfdvcpu->CSR[836] = &rv32imacfdvcpu->MIP;
-
-	rv32imacfdvcpu->F[0] = &rv32imacfdvcpu->FT0;
+ 	rv32imacfdvcpu->F[0] = &rv32imacfdvcpu->FT0;
  	rv32imacfdvcpu->F[1] = &rv32imacfdvcpu->FT1;
  	rv32imacfdvcpu->F[2] = &rv32imacfdvcpu->FT2;
  	rv32imacfdvcpu->F[3] = &rv32imacfdvcpu->FT3;
