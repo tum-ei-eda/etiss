@@ -1,0 +1,49 @@
+# Generated on Wed, 30 Oct 2024 10:54:30 +0100.
+#
+# This file contains the CMake build info for the RV64IMACFDV core architecture.
+
+PROJECT(RV64IMACFDV)
+
+SET(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
+SET(CMAKE_INSTALL_RPATH "\$ORIGIN/../../include/jit/etiss/jit")
+
+ADD_LIBRARY(${PROJECT_NAME} SHARED
+	RV64IMACFDVArch.cpp
+	RV64IMACFDVArchLib.cpp
+	RV64IMACFDVArchSpecificImp.cpp
+	RV64IMACFDVFuncs.c
+	RV64IMACFDVInstr.cpp
+	RV64IMACFDV_RV32IInstr.cpp
+	RV64IMACFDV_RV64IInstr.cpp
+	RV64IMACFDV_RV32ICInstr.cpp
+	RV64IMACFDV_RV64ICInstr.cpp
+	RV64IMACFDV_RV32MInstr.cpp
+	RV64IMACFDV_RV64MInstr.cpp
+	RV64IMACFDV_RVZve32xInstr.cpp
+	RV64IMACFDV_RVZve64xInstr.cpp
+	RV64IMACFDV_RVZve32fInstr.cpp
+	RV64IMACFDV_RV32FInstr.cpp
+	RV64IMACFDV_RV64FInstr.cpp
+	RV64IMACFDV_RV32DInstr.cpp
+	RV64IMACFDV_RV64DInstr.cpp
+	RV64IMACFDV_RV32DCInstr.cpp
+	RV64IMACFDV_RV32AInstr.cpp
+	RV64IMACFDV_RV64AInstr.cpp
+	RV64IMACFDV_ZifenceiInstr.cpp
+	RV64IMACFDV_tum_csrInstr.cpp
+	RV64IMACFDV_tum_retInstr.cpp
+	RV64IMACFDV_tum_rvaInstr.cpp
+	RV64IMACFDV_tum_rva64Instr.cpp
+	RV64IMACFDV_tum_rvmInstr.cpp
+	RV64IMACFDV_tum_semihostingInstr.cpp
+)
+
+add_custom_command(
+	TARGET ${PROJECT_NAME} POST_BUILD
+	COMMAND ${CMAKE_COMMAND} -E copy
+		"${CMAKE_CURRENT_LIST_DIR}/${PROJECT_NAME}Funcs.h"
+		"${ETISS_BINARY_DIR}/include/jit/Arch/${PROJECT_NAME}"
+)
+INSTALL(FILES "${CMAKE_CURRENT_LIST_DIR}/${PROJECT_NAME}Funcs.h" DESTINATION "include/jit/Arch/${PROJECT_NAME}")
+
+ETISSPluginArch(${PROJECT_NAME})
