@@ -61,11 +61,11 @@
 
 #ifndef NO_ETISS
 #include "etiss/Misc.h"
+#include "etiss/fault/Misc.h"
 #include "etiss/fault/InjectorAddress.h"
-#include "etiss/fault/XML.h"
 #else
+#include "fault/Misc.h"
 #include "fault/InjectorAddress.h"
-#include "fault/XML.h"
 #endif
 
 namespace etiss
@@ -74,6 +74,7 @@ namespace fault
 {
 
 class Injector;
+class InjectorAddress;
 
 #if CXX0X_UP_SUPPORTED
 typedef std::shared_ptr<Injector> Injector_ptr;
@@ -176,16 +177,7 @@ class Trigger : public etiss::ToString
 namespace xml
 {
 
-template <>
-bool parse<etiss::fault::Trigger *>(pugi::xml_node node, etiss::fault::Trigger *&f, Diagnostics &diag);
-template <>
-bool write<const etiss::fault::Trigger *>(pugi::xml_node node, const etiss::fault::Trigger *const &f,
-                                          Diagnostics &diag);
 
-template <>
-bool parse<etiss::fault::Trigger>(pugi::xml_node node, etiss::fault::Trigger &f, Diagnostics &diag);
-template <>
-bool write<etiss::fault::Trigger>(pugi::xml_node node, const etiss::fault::Trigger &f, Diagnostics &diag);
 
 } // namespace xml
 #endif
