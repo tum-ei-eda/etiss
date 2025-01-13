@@ -48,7 +48,7 @@ uint8_t etiss_vload_encoded_unitstride(
     (*(pSystem->dread))(pSystem->handle, pCpu, addr, buff, len);
   };
 
-  VLSU::load_eew(f_readMem, VectorRegField, _z_emul, _n_emul, pEEW/8, pVL, pVLEN/8, pVd, pMSTART, pVSTART, pVm, 0);
+  VLSU::load_eew(f_readMem, VectorRegField, _z_emul, _n_emul, pEEW/8, pVL, pVLEN/8, pVd, pMSTART, pVSTART, pVm, pEEW/8);
   return (0);
 }
 
@@ -155,7 +155,7 @@ uint8_t etiss_vstore_encoded_unitstride(
     (*(pSystem->dwrite))(pSystem->handle, pCpu, addr, buff, len);
   };
 
-  VLSU::store_eew(f_writeMem, VectorRegField, _z_emul, _n_emul, pEEW/8, pVL, pVLEN/8, pVd, pMSTART, pVSTART, pVm, 0);
+  VLSU::store_eew(f_writeMem, VectorRegField, _z_emul, _n_emul, pEEW/8, pVL, pVLEN/8, pVd, pMSTART, pVSTART, pVm, pEEW/8);
 
   return (0);
 }
