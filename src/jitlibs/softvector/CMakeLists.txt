@@ -8,9 +8,9 @@ SET(TARGET_ARCH "RV64GCV")
 
 include(FetchContent)
 FetchContent_Declare(softvector_srcs
-	GIT_REPOSITORY https://github.com/tum-ei-eda/softvector.git
+	GIT_REPOSITORY https://github.com/danielschloms/softvector.git
 	# GIT_TAG master
-	GIT_TAG rvv1.0
+	GIT_TAG daniel-dev
 )
 
 if(NOT softvector_srcs_POPULATED)
