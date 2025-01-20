@@ -206,9 +206,10 @@ uint8_t etiss_vstore_segment_unitstride(
   uint16_t _vstart = pVSTART;
   uint64_t _moffset = pMSTART;
   for(int i = 0; i< pNF; ++i){
-    VLSU::store_eew(f_writeMem, VectorRegField, _z_emul, _n_emul, pEEW/8, pVL, pVLEN/8, pVd + (i*_z_emul/_n_emul), _moffset, _vstart, pVm, 0);
-    _moffset+= (pVL-_vstart)*pEEW/8;
-    _vstart = 0;
+    VLSU::store_eew(f_writeMem, VectorRegField, _z_emul, _n_emul, pEEW/8, pVL, pVLEN/8, pVd + (i*_z_emul/_n_emul), _moffset, _vstart, pVm, pNF * (pEEW/8));
+    _moffset+= pEEW/8;
+    // TODO: Why reset _vstart?
+    // _vstart = 0;
   }
   return (0);
 }
