@@ -1,5 +1,5 @@
 /**
- * Generated on Mon, 13 Jan 2025 14:27:20 +0000.
+ * Generated on Mon, 20 Jan 2025 16:02:49 +0000.
  *
  * This file contains the instruction behavior models of the RVZve32x
  * instruction set for the RV32IMACFDV core architecture.
@@ -11075,13 +11075,47 @@ cp.code() += "} // block\n";
 } // block
 { // block
 cp.code() += "{ // block\n";
+cp.code() += "etiss_uint32 _vtype = *((RV32IMACFDV*)cpu)->CSR[3105ULL];\n";
+cp.code() += "etiss_uint32 _eew = vcfg_concatEEW(0LL, 0LL);\n";
 cp.code() += "etiss_uint32 _vstart = *((RV32IMACFDV*)cpu)->CSR[8ULL];\n";
+cp.code() += "etiss_uint32 _vl = *((RV32IMACFDV*)cpu)->CSR[3104ULL];\n";
+cp.code() += "etiss_uint32 _vlen = *((RV32IMACFDV*)cpu)->CSR[3106ULL] * 8ULL;\n";
+cp.code() += "etiss_uint32 ret = etiss_vstore_segment_unitstride(cpu, system, plugin_pointers, ((RV32IMACFDV*)cpu)->V, _vtype, " + std::to_string(vm) + "ULL, _eew, " + std::to_string((nf & 7ULL) + 1ULL) + "ULL, " + std::to_string(vs3) + "ULL, _vstart, _vlen, _vl, (etiss_uint64)(*((RV32IMACFDV*)cpu)->X[" + std::to_string(rs1) + "ULL]));\n";
+cp.code() += "if (ret != 0LL) { // conditional\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->CSR[8ULL] = ret >> 8ULL;\n";
+{ // procedure
+cp.code() += "{ // procedure\n";
+cp.code() += "RV32IMACFDV_raise(cpu, system, plugin_pointers, 0LL, 2ULL);\n";
+cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
+cp.code() += "} // procedure\n";
+} // procedure
+cp.code() += "} // block\n";
+} // block
+cp.code() += "} // conditional\n";
+cp.code() += "else { // conditional\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->CSR[8ULL] = 0LL;\n";
+cp.code() += "} // block\n";
+} // block
+cp.code() += "} // conditional\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
 cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
 		cp.getAffectedRegisters().add("instructionPointer", 32);
+	}
+	{
+		CodePart & cp = cs.append(CodePart::APPENDEDRETURNINGREQUIRED);
+
+		cp.code() = std::string("//VSSEGE8_V\n");
+
+// -----------------------------------------------------------------------------
+cp.code() += "if (cpu->return_pending || cpu->exception) return cpu->exception;\n";
+// -----------------------------------------------------------------------------
 	}
 
 		return true;
@@ -11155,13 +11189,47 @@ cp.code() += "} // block\n";
 } // block
 { // block
 cp.code() += "{ // block\n";
+cp.code() += "etiss_uint32 _vtype = *((RV32IMACFDV*)cpu)->CSR[3105ULL];\n";
+cp.code() += "etiss_uint32 _eew = vcfg_concatEEW(0LL, 5ULL);\n";
 cp.code() += "etiss_uint32 _vstart = *((RV32IMACFDV*)cpu)->CSR[8ULL];\n";
+cp.code() += "etiss_uint32 _vl = *((RV32IMACFDV*)cpu)->CSR[3104ULL];\n";
+cp.code() += "etiss_uint32 _vlen = *((RV32IMACFDV*)cpu)->CSR[3106ULL] * 8ULL;\n";
+cp.code() += "etiss_uint32 ret = etiss_vstore_segment_unitstride(cpu, system, plugin_pointers, ((RV32IMACFDV*)cpu)->V, _vtype, " + std::to_string(vm) + "ULL, _eew, " + std::to_string((nf & 7ULL) + 1ULL) + "ULL, " + std::to_string(vs3) + "ULL, _vstart, _vlen, _vl, (etiss_uint64)(*((RV32IMACFDV*)cpu)->X[" + std::to_string(rs1) + "ULL]));\n";
+cp.code() += "if (ret != 0LL) { // conditional\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->CSR[8ULL] = ret >> 8ULL;\n";
+{ // procedure
+cp.code() += "{ // procedure\n";
+cp.code() += "RV32IMACFDV_raise(cpu, system, plugin_pointers, 0LL, 2ULL);\n";
+cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
+cp.code() += "} // procedure\n";
+} // procedure
+cp.code() += "} // block\n";
+} // block
+cp.code() += "} // conditional\n";
+cp.code() += "else { // conditional\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->CSR[8ULL] = 0LL;\n";
+cp.code() += "} // block\n";
+} // block
+cp.code() += "} // conditional\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
 cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
 		cp.getAffectedRegisters().add("instructionPointer", 32);
+	}
+	{
+		CodePart & cp = cs.append(CodePart::APPENDEDRETURNINGREQUIRED);
+
+		cp.code() = std::string("//VSSEGE16_V\n");
+
+// -----------------------------------------------------------------------------
+cp.code() += "if (cpu->return_pending || cpu->exception) return cpu->exception;\n";
+// -----------------------------------------------------------------------------
 	}
 
 		return true;
@@ -11235,13 +11303,47 @@ cp.code() += "} // block\n";
 } // block
 { // block
 cp.code() += "{ // block\n";
+cp.code() += "etiss_uint32 _vtype = *((RV32IMACFDV*)cpu)->CSR[3105ULL];\n";
+cp.code() += "etiss_uint32 _eew = vcfg_concatEEW(0LL, 6ULL);\n";
 cp.code() += "etiss_uint32 _vstart = *((RV32IMACFDV*)cpu)->CSR[8ULL];\n";
+cp.code() += "etiss_uint32 _vl = *((RV32IMACFDV*)cpu)->CSR[3104ULL];\n";
+cp.code() += "etiss_uint32 _vlen = *((RV32IMACFDV*)cpu)->CSR[3106ULL] * 8ULL;\n";
+cp.code() += "etiss_uint32 ret = etiss_vstore_segment_unitstride(cpu, system, plugin_pointers, ((RV32IMACFDV*)cpu)->V, _vtype, " + std::to_string(vm) + "ULL, _eew, " + std::to_string((nf & 7ULL) + 1ULL) + "ULL, " + std::to_string(vs3) + "ULL, _vstart, _vlen, _vl, (etiss_uint64)(*((RV32IMACFDV*)cpu)->X[" + std::to_string(rs1) + "ULL]));\n";
+cp.code() += "if (ret != 0LL) { // conditional\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->CSR[8ULL] = ret >> 8ULL;\n";
+{ // procedure
+cp.code() += "{ // procedure\n";
+cp.code() += "RV32IMACFDV_raise(cpu, system, plugin_pointers, 0LL, 2ULL);\n";
+cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
+cp.code() += "} // procedure\n";
+} // procedure
+cp.code() += "} // block\n";
+} // block
+cp.code() += "} // conditional\n";
+cp.code() += "else { // conditional\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->CSR[8ULL] = 0LL;\n";
+cp.code() += "} // block\n";
+} // block
+cp.code() += "} // conditional\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
 cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
 		cp.getAffectedRegisters().add("instructionPointer", 32);
+	}
+	{
+		CodePart & cp = cs.append(CodePart::APPENDEDRETURNINGREQUIRED);
+
+		cp.code() = std::string("//VSSEGE32_V\n");
+
+// -----------------------------------------------------------------------------
+cp.code() += "if (cpu->return_pending || cpu->exception) return cpu->exception;\n";
+// -----------------------------------------------------------------------------
 	}
 
 		return true;
