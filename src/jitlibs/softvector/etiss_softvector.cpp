@@ -219,7 +219,7 @@ uint8_t etiss_vstore_segment_stride(
   ETISS_System* const pSystem,
   void * const * const plugin_pointers,
   uint8_t* pV,
-  uint16_t pVTYPE, uint8_t  pVm, uint16_t pEEW, uint8_t pNF, uint8_t pVd, uint16_t pVSTART, uint16_t pVLEN, uint16_t pVL, uint64_t pMSTART, int16_t pStride)
+  uint16_t pVTYPE, uint8_t pVm, uint16_t pEEW, uint8_t pNF, uint8_t pVd, uint16_t pVSTART, uint16_t pVLEN, uint16_t pVL, uint64_t pMSTART, int16_t pStride)
 {
   VTYPE::VTYPE _vt(pVTYPE);
   uint64_t _z_emul = pEEW*_vt._z_lmul;
@@ -236,11 +236,26 @@ uint8_t etiss_vstore_segment_stride(
 
   uint16_t _vstart = pVSTART;
   uint64_t _moffset = pMSTART;
-  for(int i = 0; i< pNF; ++i){
-    _moffset = pMSTART + i*pEEW/8;
-    VLSU::store_eew(f_writeMem, VectorRegField, _z_emul, _n_emul, pEEW/8, pVL, pVLEN/8, pVd + (i*_z_emul/_n_emul), _moffset, _vstart, pVm, 0);
-    _moffset+= (pVL-_vstart)*pEEW/8;
-    _vstart = 0;
+
+  // Memory order problem: 
+  // Which stores come first? According to the spec: 
+  // "Accesses to the fields within each segment can occur in any order, 
+  // including the case where the byte stride is such that segments overlap in memory."
+  // For now, we change order depending on positive/negative stride.
+  if (pStride < 0){
+    for(int i = 0; i < pNF; i++) {
+      // _moffset = pMSTART + i*pEEW/8;
+      VLSU::store_eew(f_writeMem, VectorRegField, _z_emul, _n_emul, pEEW/8, pVL, pVLEN/8, pVd + (i*_z_emul/_n_emul), _moffset, _vstart, pVm, pStride);
+      _moffset+= pEEW/8;
+      // _vstart = 0;
+    }
+  }
+  else{
+    for(int i = pNF - 1; i >= 0; i--) {
+      _moffset = pMSTART + i * (pEEW / 8);
+      VLSU::store_eew(f_writeMem, VectorRegField, _z_emul, _n_emul, pEEW/8, pVL, pVLEN/8, pVd + (i * (_z_emul / _n_emul)), _moffset, _vstart, pVm, pStride);
+      // _vstart = 0;
+    }
   }
   return (0);
 }
