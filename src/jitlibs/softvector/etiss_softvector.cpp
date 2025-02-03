@@ -20,6 +20,8 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 //#include "softvector.h"
+#include <algorithm>
+
 #include "base/base.hpp"
 #include "lsu/lsu.hpp"
 
@@ -136,8 +138,8 @@ uint8_t etiss_vload_segment_unitstride(
   uint64_t _moffset = pMSTART;
   auto const eew_bytes = pEEW >> 3U;
 
-  for(int i = 0; i < pNF; ++i){
-    VLSU::load_eew(f_readMem, VectorRegField, _z_emul, _n_emul, eew_bytes, pVL, pVLEN/8, pVd + (i*_z_emul/_n_emul), _moffset, _vstart, pVm, pNF * eew_bytes);
+  for(size_t i = 0; i < pNF; ++i){
+    VLSU::load_eew(f_readMem, VectorRegField, _z_emul, _n_emul, eew_bytes, pVL, pVLEN/8, pVd + std::max(i, i * (_z_emul/_n_emul)), _moffset, _vstart, pVm, pNF * eew_bytes);
     _moffset += eew_bytes;
     // _vstart = 0;
   }
@@ -168,9 +170,9 @@ uint8_t etiss_vload_segment_stride(
   uint64_t _moffset = pMSTART;
   auto const eew_bytes = pEEW >> 3U;
 
-  for(int i = 0; i < pNF; ++i){
+  for(size_t i = 0; i < pNF; ++i){
     _moffset = pMSTART + i * (eew_bytes);
-    VLSU::load_eew(f_readMem, VectorRegField, _z_emul, _n_emul, eew_bytes, pVL, pVLEN/8, pVd + (i*_z_emul/_n_emul), _moffset, _vstart, pVm, pSTRIDE);
+    VLSU::load_eew(f_readMem, VectorRegField, _z_emul, _n_emul, eew_bytes, pVL, pVLEN/8, pVd + std::max(i, i * (_z_emul/_n_emul)), _moffset, _vstart, pVm, pSTRIDE);
     // _vstart = 0;
   }
   return (0);
@@ -205,8 +207,8 @@ uint8_t etiss_vload_segment_index(
                                  .masked = !pVm };
 
   uint64_t _moffset = pMSTART;
-  for(int i = 0; i < pNF; ++i){
-    VLSU::load_indices(f_readMem, VectorRegField, v_instr_info, pVd, pVs2, pMSTART, pEEW);
+  for(size_t i = 0; i < pNF; ++i){
+    VLSU::load_indices(f_readMem, VectorRegField, v_instr_info, pVd + std::max(i, i * (_z_emul/_n_emul)), pVs2, pMSTART, pEEW);
     _moffset += pEEW >> 3;
   }
   return (0);
@@ -316,8 +318,8 @@ uint8_t etiss_vstore_segment_unitstride(
 
   uint16_t _vstart = pVSTART;
   uint64_t _moffset = pMSTART;
-  for(int i = 0; i< pNF; ++i){
-    VLSU::store_eew(f_writeMem, VectorRegField, _z_emul, _n_emul, eew_bytes, pVL, pVLEN/8, pVs3 + (i * _z_emul / _n_emul), _moffset, _vstart, pVm, pNF * eew_bytes);
+  for(size_t i = 0; i < pNF; ++i){
+    VLSU::store_eew(f_writeMem, VectorRegField, _z_emul, _n_emul, eew_bytes, pVL, pVLEN/8, pVs3 + std::max(i, (i * _z_emul / _n_emul)), _moffset, _vstart, pVm, pNF * eew_bytes);
     _moffset += eew_bytes;
     // TODO: Why reset _vstart?
     // _vstart = 0;
@@ -355,15 +357,15 @@ uint8_t etiss_vstore_segment_stride(
   // including the case where the byte stride is such that segments overlap in memory."
   // For now, we change order depending on positive/negative stride.
   if (pStride < 0){
-    for(int i = 0; i < pNF; ++i) {
-      VLSU::store_eew(f_writeMem, VectorRegField, _z_emul, _n_emul, eew_bytes, pVL, pVLEN / 8, pVs3 + (i * _z_emul / _n_emul), _moffset, _vstart, pVm, pStride);
+    for(size_t i = 0; i < pNF; ++i) {
+      VLSU::store_eew(f_writeMem, VectorRegField, _z_emul, _n_emul, eew_bytes, pVL, pVLEN / 8, pVs3 + std::max(i, (i * _z_emul / _n_emul)), _moffset, _vstart, pVm, pStride);
       _moffset += eew_bytes;
     }
   }
   else{
-    for(int i = pNF - 1; i >= 0; --i) {
-      _moffset = pMSTART + (i * eew_bytes);
-      VLSU::store_eew(f_writeMem, VectorRegField, _z_emul, _n_emul, eew_bytes, pVL, pVLEN / 8, pVs3 + (i * _z_emul / _n_emul), _moffset, _vstart, pVm, pStride);
+    for(size_t i = pNF; i > 0; --i) {
+      _moffset = pMSTART + ((i - 1) * eew_bytes);
+      VLSU::store_eew(f_writeMem, VectorRegField, _z_emul, _n_emul, eew_bytes, pVL, pVLEN / 8, pVs3 + std::max((i - 1), ((i - 1) * _z_emul / _n_emul)), _moffset, _vstart, pVm, pStride);
     }
   }
   return (0);
@@ -397,8 +399,11 @@ uint8_t etiss_vstore_segment_index(
                                  .start_element = pVSTART,
                                  .masked = !pVm };
 
-
-  VLSU::store_indices(f_writeMem, VectorRegField, v_instr_info, pVs3, pVs2, pMSTART, pEEW);
+  for (size_t i = 0; i < pNF; i++)
+  {
+    VLSU::store_indices(f_writeMem, VectorRegField, v_instr_info, pVs3 + + std::max(i, (i * _z_emul / _n_emul)), pVs2, pMSTART, pEEW);
+  }
+  
 
   return (0);
 }
