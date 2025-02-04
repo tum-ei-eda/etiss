@@ -139,7 +139,7 @@ uint8_t etiss_vload_segment_unitstride(
   auto const eew_bytes = pEEW >> 3U;
 
   for(size_t i = 0; i < pNF; ++i){
-    VLSU::load_eew(f_readMem, VectorRegField, _z_emul, _n_emul, eew_bytes, pVL, pVLEN/8, pVd + std::max(i, i * (_z_emul/_n_emul)), _moffset, _vstart, pVm, pNF * eew_bytes);
+    VLSU::load_eew(f_readMem, VectorRegField, _z_emul, _n_emul, eew_bytes, pVL, pVLEN/8, pVd + std::max(i, i * (_vt._z_lmul / _vt._n_lmul)), _moffset, _vstart, pVm, pNF * eew_bytes);
     _moffset += eew_bytes;
     // _vstart = 0;
   }
@@ -172,7 +172,7 @@ uint8_t etiss_vload_segment_stride(
 
   for(size_t i = 0; i < pNF; ++i){
     _moffset = pMSTART + i * (eew_bytes);
-    VLSU::load_eew(f_readMem, VectorRegField, _z_emul, _n_emul, eew_bytes, pVL, pVLEN/8, pVd + std::max(i, i * (_z_emul/_n_emul)), _moffset, _vstart, pVm, pSTRIDE);
+    VLSU::load_eew(f_readMem, VectorRegField, _z_emul, _n_emul, eew_bytes, pVL, pVLEN/8, pVd + std::max(i, i * (_vt._z_lmul / _vt._n_lmul)), _moffset, _vstart, pVm, pSTRIDE);
     // _vstart = 0;
   }
   return (0);
@@ -208,8 +208,8 @@ uint8_t etiss_vload_segment_index(
 
   uint64_t _moffset = pMSTART;
   for(size_t i = 0; i < pNF; ++i){
-    VLSU::load_indices(f_readMem, VectorRegField, v_instr_info, pVd + std::max(i, i * (_z_emul/_n_emul)), pVs2, pMSTART, pEEW);
-    _moffset += pEEW >> 3;
+    VLSU::load_indices(f_readMem, VectorRegField, v_instr_info, pVd + std::max(i, i * (_vt._z_lmul / _vt._n_lmul)), pVs2, _moffset, pEEW);
+    _moffset += _vt._sew >> 3;
   }
   return (0);
 }
@@ -399,9 +399,12 @@ uint8_t etiss_vstore_segment_index(
                                  .start_element = pVSTART,
                                  .masked = !pVm };
 
+  uint64_t _moffset = pMSTART;
+
   for (size_t i = 0; i < pNF; i++)
   {
-    VLSU::store_indices(f_writeMem, VectorRegField, v_instr_info, pVs3 + + std::max(i, (i * _z_emul / _n_emul)), pVs2, pMSTART, pEEW);
+    VLSU::store_indices(f_writeMem, VectorRegField, v_instr_info, pVs3 + std::max(i, (i * _z_emul / _n_emul)), pVs2, _moffset, pEEW);
+    _moffset += _vt._sew >> 3;
   }
   
 
