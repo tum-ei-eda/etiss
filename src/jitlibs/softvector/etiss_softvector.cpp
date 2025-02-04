@@ -214,6 +214,35 @@ uint8_t etiss_vload_segment_index(
   return (0);
 }
 
+uint8_t etiss_vload_registers(
+  ETISS_CPU* const pCpu,
+  ETISS_System* const pSystem,
+  void * const * const plugin_pointers,
+  uint8_t* pV,
+  uint16_t pVTYPE, uint8_t  pVm, uint16_t pEEW, uint8_t pNF, uint8_t pVd, uint16_t pVSTART, uint16_t pVLEN, uint64_t pMSTART)
+{
+  VTYPE::VTYPE _vt(pVTYPE);
+  uint64_t _z_emul = pNF;
+  uint64_t _n_emul = 1;
+
+  if ((_n_emul > _z_emul*8) || (_z_emul > _n_emul*8)) return 1;
+
+  auto evl = pNF * (pVLEN / pEEW);
+
+  if (evl <= pVSTART) {
+    return 0;
+  }
+
+  uint8_t* VectorRegField = pV;
+  std::function<void(size_t, uint8_t*, size_t)> f_readMem = [pSystem, pCpu](size_t addr, uint8_t* buff, size_t len) {
+    (*(pSystem->dread))(pSystem->handle, pCpu, addr, buff, len);
+  };
+
+  auto const eew_bytes = pEEW >> 3U;
+  VLSU::load_eew(f_readMem, VectorRegField, _z_emul, _n_emul, eew_bytes, evl, pVLEN/8, pVd, pMSTART, pVSTART, pVm, eew_bytes);
+  return (0);
+}
+
 uint8_t etiss_vstore_encoded_unitstride(
   ETISS_CPU* const pCpu,
   ETISS_System* const pSystem,
@@ -290,7 +319,7 @@ uint8_t etiss_vstore_encoded_index(
                                  .start_element = pVSTART,
                                  .masked = !pVm };
 
-  VLSU::store_indices(f_writeMem, VectorRegField, v_instr_info, pVs3, pVs2, pMSTART, pEEW);
+  VLSU::store_indices(f_writeMem, VectorRegField, v_instr_info, pVs3, pVs2, pMSTART, pEEW, 1);
 
   return (0);
 }
@@ -399,14 +428,36 @@ uint8_t etiss_vstore_segment_index(
                                  .start_element = pVSTART,
                                  .masked = !pVm };
 
-  uint64_t _moffset = pMSTART;
+  VLSU::store_indices(f_writeMem, VectorRegField, v_instr_info, pVs3, pVs2, pMSTART, pEEW, pNF);
 
-  for (size_t i = 0; i < pNF; i++)
-  {
-    VLSU::store_indices(f_writeMem, VectorRegField, v_instr_info, pVs3 + std::max(i, (i * _z_emul / _n_emul)), pVs2, _moffset, pEEW);
-    _moffset += _vt._sew >> 3;
+  return (0);
+}
+
+uint8_t etiss_vstore_registers(
+  ETISS_CPU* const pCpu,
+  ETISS_System* const pSystem,
+  void * const * const plugin_pointers,
+  uint8_t* pV,
+  uint16_t pVTYPE, uint8_t pVm, uint8_t pNF, uint8_t pVs3, uint16_t pVSTART, uint16_t pVLEN, uint64_t pMSTART)
+{
+  VTYPE::VTYPE _vt(pVTYPE);
+  uint64_t _z_emul = pNF;
+  uint64_t _n_emul = 1;
+
+  if ((_n_emul > _z_emul * 8) || (_z_emul > _n_emul * 8)) return 1;
+
+  auto evl = pNF * (pVLEN >> 3);
+
+  if (evl <= pVSTART) {
+    return 0;
   }
-  
+
+  uint8_t* VectorRegField = pV;
+  std::function<void(size_t, uint8_t*, size_t)> f_writeMem = [pSystem, pCpu](size_t addr, uint8_t* buff, size_t len) {
+    (*(pSystem->dwrite))(pSystem->handle, pCpu, addr, buff, len);
+  };
+
+  VLSU::store_eew(f_writeMem, VectorRegField, pNF, 1, 1, evl, pVLEN/8, pVs3, pMSTART, pVSTART, pVm, 1);
 
   return (0);
 }

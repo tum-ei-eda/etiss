@@ -93,6 +93,16 @@ uint8_t etiss_vload_segment_index(
   uint16_t pVTYPE, uint8_t pVm, uint16_t pEEW, uint8_t pNF, uint8_t pVd, uint16_t pVSTART, uint16_t pVLEN, uint16_t pVL, uint64_t pMSTART, uint8_t pVs2);
 
 //////////////////////////////////////////////////////////////////////////////////////
+/// \brief Load whole registers
+/// \return 0 if no exception triggered, else 1
+uint8_t etiss_vload_registers(
+	ETISS_CPU* const pCpu,				//!<[inout] Pointer to ETISS_CPU structure. Supports Vector register field
+	ETISS_System* const pSystem,		//!<[inout] Pointer to ETISS_System structure. Supports databus/memory acesses
+  void * const * const plugin_pointers,  //!>[inout] Pointers to ETISS plugins. Unused
+	uint8_t* pV,						//!<[inout] Vector register field as local memory
+	uint16_t pVTYPE, uint8_t  pVm, uint16_t pEEW, uint8_t pNF, uint8_t pVd, uint16_t pVSTART, uint16_t pVLEN, uint64_t pMSTART);
+
+//////////////////////////////////////////////////////////////////////////////////////
 /// \brief Store encoded (unitstride) source vector (-group) to memory
 /// \return 0 if no exception triggered, else 1
 uint8_t etiss_vstore_encoded_unitstride(
@@ -151,6 +161,16 @@ uint8_t etiss_vstore_segment_index(
   void * const * const plugin_pointers,
   uint8_t* pV,
   uint16_t pVTYPE, uint8_t pVm, uint16_t pEEW, uint8_t pNF, uint8_t pVs3, uint16_t pVSTART, uint16_t pVLEN, uint16_t pVL, uint64_t pMSTART, uint8_t pVs2);
+
+//////////////////////////////////////////////////////////////////////////////////////
+/// \brief Store whole registers to memory
+/// \return 0 if no exception triggered, else 1
+uint8_t etiss_vstore_registers(
+	ETISS_CPU* const pCpu,					//!<[inout] Pointer to ETISS_CPU structure. Supports Vector register field
+	ETISS_System* const pSystem,			//!<[inout] Pointer to ETISS_System structure. Supports databus/memory acesses
+  	void * const * const plugin_pointers,  	//!>[inout] Pointers to ETISS plugins. Unused
+	uint8_t* pV,							//!<[inout] Vector register field as local memory
+	uint16_t pVTYPE, uint8_t pVm, uint8_t pNF, uint8_t pVs3, uint16_t pVSTART, uint16_t pVLEN, uint64_t pMSTART);
 
 #ifdef __cplusplus
 } // extern "C"
