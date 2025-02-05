@@ -37,13 +37,13 @@ uint8_t etiss_vload_encoded_unitstride(
   ETISS_System* const pSystem,
   void * const * const plugin_pointers,
   uint8_t* pV,
-  uint16_t pVTYPE, uint8_t  pVm, uint16_t pEEW, uint8_t  pVd, uint16_t pVSTART, uint16_t pVLEN, uint16_t pVL, uint64_t pMSTART)
+  uint16_t pVTYPE, uint8_t  pVm, uint16_t pEEW, uint8_t pVd, uint16_t pVSTART, uint16_t pVLEN, uint16_t pVL, uint64_t pMSTART)
 {
   VTYPE::VTYPE _vt(pVTYPE);
-  uint64_t _z_emul = pEEW*_vt._z_lmul;
-  uint64_t _n_emul = _vt._sew*_vt._n_lmul;
+  uint64_t _z_emul = pEEW * _vt._z_lmul;
+  uint64_t _n_emul = _vt._sew * _vt._n_lmul;
 
-  if ((_n_emul > _z_emul*8) || (_z_emul > _n_emul*8)) return 1;
+  if ((_n_emul > _z_emul * 8) || (_z_emul > _n_emul * 8)) return 1;
 
   uint8_t* VectorRegField = pV;
   std::function<void(size_t, uint8_t*, size_t)> f_readMem = [pSystem, pCpu](size_t addr, uint8_t* buff, size_t len) {
@@ -52,6 +52,27 @@ uint8_t etiss_vload_encoded_unitstride(
 
   auto const eew_bytes = pEEW >> 3U;
   VLSU::load_eew(f_readMem, VectorRegField, _z_emul, _n_emul, eew_bytes, pVL, pVLEN/8, pVd, pMSTART, pVSTART, pVm, eew_bytes);
+  return (0);
+}
+
+uint8_t etiss_vload_mask(
+  ETISS_CPU* const pCpu,
+  ETISS_System* const pSystem,
+  void * const * const plugin_pointers,
+  uint8_t* pV, uint8_t  pVm, uint8_t pVd, uint16_t pVSTART, uint16_t pVLEN, uint16_t pVL, uint64_t pMSTART)
+{
+  uint8_t* VectorRegField = pV;
+
+  std::function<void(size_t, uint8_t*, size_t)> f_readMem = [pSystem, pCpu](size_t addr, uint8_t* buff, size_t len) {
+    (*(pSystem->dread))(pSystem->handle, pCpu, addr, buff, len);
+  };
+
+  static constexpr auto eew_bytes = 1;
+  static constexpr auto emul_num = 1;
+  static constexpr auto emul_denom = 1;
+  // evl = ceil(vl / 8)
+  auto const evl = (pVL + 7) / 8;
+  VLSU::load_eew(f_readMem, VectorRegField, emul_num, emul_denom, eew_bytes, evl, pVLEN >> 3, pVd, pMSTART, pVSTART, pVm, eew_bytes);
   return (0);
 }
 
@@ -263,6 +284,28 @@ uint8_t etiss_vstore_encoded_unitstride(
   };
 
   VLSU::store_eew(f_writeMem, VectorRegField, _z_emul, _n_emul, eew_bytes, pVL, pVLEN/8, pVs3, pMSTART, pVSTART, pVm, eew_bytes);
+
+  return (0);
+}
+
+uint8_t etiss_vstore_mask(
+  ETISS_CPU* const pCpu,
+  ETISS_System* const pSystem,
+  void * const * const plugin_pointers,
+  uint8_t* pV, uint8_t pVm, uint8_t pVs3, uint16_t pVSTART, uint16_t pVLEN, uint16_t pVL, uint64_t pMSTART)
+{
+  uint8_t* VectorRegField = pV;
+  std::function<void(size_t, uint8_t*, size_t)> f_writeMem = [pSystem, pCpu](size_t addr, uint8_t* buff, size_t len) {
+    (*(pSystem->dwrite))(pSystem->handle, pCpu, addr, buff, len);
+  };
+
+  static constexpr auto eew_bytes = 1;
+  static constexpr auto emul_num = 1;
+  static constexpr auto emul_denom = 1;
+  // evl = ceil(vl / 8)
+  auto const evl = (pVL + 7) / 8;
+
+  VLSU::store_eew(f_writeMem, VectorRegField, emul_num, emul_denom, eew_bytes, evl, pVLEN >> 3, pVs3, pMSTART, pVSTART, pVm, eew_bytes);
 
   return (0);
 }
