@@ -1,5 +1,5 @@
 /**
- * Generated on Tue, 21 Jan 2025 11:58:28 +0000.
+ * Generated on Wed, 05 Feb 2025 11:38:08 +0000.
  *
  * This file contains the instruction behavior models of the RVZve32f
  * instruction set for the RV32IMACFDV core architecture.
@@ -5230,7 +5230,7 @@ ss << "vfsqrt_v" << " # " << ba << (" [vd=" + std::to_string(vd) + " | vs2=" + s
 static InstructionDefinition vfrsqrt7_v_vd_vs2_vm (
 	ISA32_RV32IMACFDV,
 	"vfrsqrt7_v",
-	(uint32_t) 0xfc021057,
+	(uint32_t) 0x4c021057,
 	(uint32_t) 0xfc0ff07f,
 	[] (BitArray & ba,etiss::CodeSet & cs,InstructionContext & ic)
 	{
@@ -5340,7 +5340,7 @@ ss << "vfrsqrt7_v" << " # " << ba << (" [vd=" + std::to_string(vd) + " | vs2=" +
 static InstructionDefinition vfrec7_v_vd_vs2_vm (
 	ISA32_RV32IMACFDV,
 	"vfrec7_v",
-	(uint32_t) 0xfc029057,
+	(uint32_t) 0x4c029057,
 	(uint32_t) 0xfc0ff07f,
 	[] (BitArray & ba,etiss::CodeSet & cs,InstructionContext & ic)
 	{
@@ -11089,6 +11089,434 @@ vm += R_vm_0.read(ba) << 0;
 		std::stringstream ss;
 // -----------------------------------------------------------------------------
 ss << "vfwredusum_vs" << " # " << ba << (" [vd=" + std::to_string(vd) + " | vs1=" + std::to_string(vs1) + " | vs2=" + std::to_string(vs2) + " | vm=" + std::to_string(vm) + "]");
+// -----------------------------------------------------------------------------
+		return ss.str();
+	}
+);
+
+// VFMV_F_S --------------------------------------------------------------------
+static InstructionDefinition vfmv_f_s_rd_vs2 (
+	ISA32_RV32IMACFDV,
+	"vfmv_f_s",
+	(uint32_t) 0x42001057,
+	(uint32_t) 0xfe0ff07f,
+	[] (BitArray & ba,etiss::CodeSet & cs,InstructionContext & ic)
+	{
+
+// -----------------------------------------------------------------------------
+
+// -----------------------------------------------------------------------------
+
+// -----------------------------------------------------------------------------
+etiss_uint8 rd = 0;
+static BitArrayRange R_rd_0(11, 7);
+rd += R_rd_0.read(ba) << 0;
+etiss_uint8 vs2 = 0;
+static BitArrayRange R_vs2_0(24, 20);
+vs2 += R_vs2_0.read(ba) << 0;
+
+// -----------------------------------------------------------------------------
+
+	{
+		CodePart & cp = cs.append(CodePart::INITIALREQUIRED);
+
+		cp.code() = std::string("//VFMV_F_S\n");
+
+// -----------------------------------------------------------------------------
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4) + "ULL;\n";
+cp.code() += "} // block\n";
+} // block
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "etiss_uint32 _vtype = *((RV32IMACFDV*)cpu)->CSR[3105ULL];\n";
+cp.code() += "etiss_uint32 _vstart = *((RV32IMACFDV*)cpu)->CSR[8ULL];\n";
+cp.code() += "etiss_uint32 _vl = *((RV32IMACFDV*)cpu)->CSR[3104ULL];\n";
+cp.code() += "etiss_uint32 _vlen = *((RV32IMACFDV*)cpu)->CSR[3106ULL] * 8ULL;\n";
+cp.code() += "etiss_uint32 ret = vfmv_f_s(((RV32IMACFDV*)cpu)->V, *((RV32IMACFDV*)cpu)->F, _vtype, " + std::to_string(rd) + "ULL, " + std::to_string(vs2) + "ULL, _vstart, _vlen, _vl, 64ULL);\n";
+cp.code() += "if (ret != 0LL) { // conditional\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->CSR[8ULL] = ret >> 8ULL;\n";
+{ // procedure
+cp.code() += "{ // procedure\n";
+cp.code() += "RV32IMACFDV_raise(cpu, system, plugin_pointers, 0LL, 2ULL);\n";
+cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
+cp.code() += "} // procedure\n";
+} // procedure
+cp.code() += "} // block\n";
+} // block
+cp.code() += "} // conditional\n";
+cp.code() += "else { // conditional\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->CSR[8ULL] = 0LL;\n";
+cp.code() += "} // block\n";
+} // block
+cp.code() += "} // conditional\n";
+cp.code() += "} // block\n";
+} // block
+cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
+cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
+// -----------------------------------------------------------------------------
+		cp.getAffectedRegisters().add("instructionPointer", 32);
+	}
+	{
+		CodePart & cp = cs.append(CodePart::APPENDEDRETURNINGREQUIRED);
+
+		cp.code() = std::string("//VFMV_F_S\n");
+
+// -----------------------------------------------------------------------------
+cp.code() += "if (cpu->return_pending || cpu->exception) return cpu->exception;\n";
+// -----------------------------------------------------------------------------
+	}
+
+		return true;
+	},
+	0,
+	[] (BitArray & ba, Instruction & instr)
+	{
+// -----------------------------------------------------------------------------
+etiss_uint8 rd = 0;
+static BitArrayRange R_rd_0(11, 7);
+rd += R_rd_0.read(ba) << 0;
+etiss_uint8 vs2 = 0;
+static BitArrayRange R_vs2_0(24, 20);
+vs2 += R_vs2_0.read(ba) << 0;
+
+// -----------------------------------------------------------------------------
+
+		std::stringstream ss;
+// -----------------------------------------------------------------------------
+ss << "vfmv_f_s" << " # " << ba << (" [rd=" + std::to_string(rd) + " | vs2=" + std::to_string(vs2) + "]");
+// -----------------------------------------------------------------------------
+		return ss.str();
+	}
+);
+
+// VFMV_S_F --------------------------------------------------------------------
+static InstructionDefinition vfmv_s_f_vd_rs1 (
+	ISA32_RV32IMACFDV,
+	"vfmv_s_f",
+	(uint32_t) 0x42005057,
+	(uint32_t) 0xfff0707f,
+	[] (BitArray & ba,etiss::CodeSet & cs,InstructionContext & ic)
+	{
+
+// -----------------------------------------------------------------------------
+
+// -----------------------------------------------------------------------------
+
+// -----------------------------------------------------------------------------
+etiss_uint8 vd = 0;
+static BitArrayRange R_vd_0(11, 7);
+vd += R_vd_0.read(ba) << 0;
+etiss_uint8 rs1 = 0;
+static BitArrayRange R_rs1_0(19, 15);
+rs1 += R_rs1_0.read(ba) << 0;
+
+// -----------------------------------------------------------------------------
+
+	{
+		CodePart & cp = cs.append(CodePart::INITIALREQUIRED);
+
+		cp.code() = std::string("//VFMV_S_F\n");
+
+// -----------------------------------------------------------------------------
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4) + "ULL;\n";
+cp.code() += "} // block\n";
+} // block
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "etiss_uint32 _vtype = *((RV32IMACFDV*)cpu)->CSR[3105ULL];\n";
+cp.code() += "etiss_uint32 _vstart = *((RV32IMACFDV*)cpu)->CSR[8ULL];\n";
+cp.code() += "etiss_uint32 _vl = *((RV32IMACFDV*)cpu)->CSR[3104ULL];\n";
+cp.code() += "etiss_uint32 _vlen = *((RV32IMACFDV*)cpu)->CSR[3106ULL] * 8ULL;\n";
+cp.code() += "etiss_uint32 ret = vfmv_s_f(((RV32IMACFDV*)cpu)->V, *((RV32IMACFDV*)cpu)->F, _vtype, " + std::to_string(vd) + "ULL, " + std::to_string(rs1) + "ULL, _vstart, _vlen, _vl, 64ULL);\n";
+cp.code() += "if (ret != 0LL) { // conditional\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->CSR[8ULL] = ret >> 8ULL;\n";
+{ // procedure
+cp.code() += "{ // procedure\n";
+cp.code() += "RV32IMACFDV_raise(cpu, system, plugin_pointers, 0LL, 2ULL);\n";
+cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
+cp.code() += "} // procedure\n";
+} // procedure
+cp.code() += "} // block\n";
+} // block
+cp.code() += "} // conditional\n";
+cp.code() += "else { // conditional\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->CSR[8ULL] = 0LL;\n";
+cp.code() += "} // block\n";
+} // block
+cp.code() += "} // conditional\n";
+cp.code() += "} // block\n";
+} // block
+cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
+cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
+// -----------------------------------------------------------------------------
+		cp.getAffectedRegisters().add("instructionPointer", 32);
+	}
+	{
+		CodePart & cp = cs.append(CodePart::APPENDEDRETURNINGREQUIRED);
+
+		cp.code() = std::string("//VFMV_S_F\n");
+
+// -----------------------------------------------------------------------------
+cp.code() += "if (cpu->return_pending || cpu->exception) return cpu->exception;\n";
+// -----------------------------------------------------------------------------
+	}
+
+		return true;
+	},
+	0,
+	[] (BitArray & ba, Instruction & instr)
+	{
+// -----------------------------------------------------------------------------
+etiss_uint8 vd = 0;
+static BitArrayRange R_vd_0(11, 7);
+vd += R_vd_0.read(ba) << 0;
+etiss_uint8 rs1 = 0;
+static BitArrayRange R_rs1_0(19, 15);
+rs1 += R_rs1_0.read(ba) << 0;
+
+// -----------------------------------------------------------------------------
+
+		std::stringstream ss;
+// -----------------------------------------------------------------------------
+ss << "vfmv_s_f" << " # " << ba << (" [vd=" + std::to_string(vd) + " | rs1=" + std::to_string(rs1) + "]");
+// -----------------------------------------------------------------------------
+		return ss.str();
+	}
+);
+
+// VFSLIDE1UP_VX ---------------------------------------------------------------
+static InstructionDefinition vfslide1up_vx_vd_rs1_vs2_vm (
+	ISA32_RV32IMACFDV,
+	"vfslide1up_vx",
+	(uint32_t) 0x38005057,
+	(uint32_t) 0xfc00707f,
+	[] (BitArray & ba,etiss::CodeSet & cs,InstructionContext & ic)
+	{
+
+// -----------------------------------------------------------------------------
+
+// -----------------------------------------------------------------------------
+
+// -----------------------------------------------------------------------------
+etiss_uint8 vd = 0;
+static BitArrayRange R_vd_0(11, 7);
+vd += R_vd_0.read(ba) << 0;
+etiss_uint8 rs1 = 0;
+static BitArrayRange R_rs1_0(19, 15);
+rs1 += R_rs1_0.read(ba) << 0;
+etiss_uint8 vs2 = 0;
+static BitArrayRange R_vs2_0(24, 20);
+vs2 += R_vs2_0.read(ba) << 0;
+etiss_uint8 vm = 0;
+static BitArrayRange R_vm_0(25, 25);
+vm += R_vm_0.read(ba) << 0;
+
+// -----------------------------------------------------------------------------
+
+	{
+		CodePart & cp = cs.append(CodePart::INITIALREQUIRED);
+
+		cp.code() = std::string("//VFSLIDE1UP_VX\n");
+
+// -----------------------------------------------------------------------------
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4) + "ULL;\n";
+cp.code() += "} // block\n";
+} // block
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "etiss_uint32 _vtype = *((RV32IMACFDV*)cpu)->CSR[3105ULL];\n";
+cp.code() += "etiss_uint32 _vstart = *((RV32IMACFDV*)cpu)->CSR[8ULL];\n";
+cp.code() += "etiss_uint32 _vl = *((RV32IMACFDV*)cpu)->CSR[3104ULL];\n";
+cp.code() += "etiss_uint32 _vlen = *((RV32IMACFDV*)cpu)->CSR[3106ULL] * 8ULL;\n";
+cp.code() += "etiss_uint32 ret = vfslide1up_vf(((RV32IMACFDV*)cpu)->V, *((RV32IMACFDV*)cpu)->F, _vtype, " + std::to_string(vm) + "ULL, " + std::to_string(vd) + "ULL, " + std::to_string(vs2) + "ULL, " + std::to_string(rs1) + "ULL, _vstart, _vlen, _vl, 64ULL);\n";
+cp.code() += "if (ret != 0LL) { // conditional\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->CSR[8ULL] = ret >> 8ULL;\n";
+{ // procedure
+cp.code() += "{ // procedure\n";
+cp.code() += "RV32IMACFDV_raise(cpu, system, plugin_pointers, 0LL, 2ULL);\n";
+cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
+cp.code() += "} // procedure\n";
+} // procedure
+cp.code() += "} // block\n";
+} // block
+cp.code() += "} // conditional\n";
+cp.code() += "else { // conditional\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->CSR[8ULL] = 0LL;\n";
+cp.code() += "} // block\n";
+} // block
+cp.code() += "} // conditional\n";
+cp.code() += "} // block\n";
+} // block
+cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
+cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
+// -----------------------------------------------------------------------------
+		cp.getAffectedRegisters().add("instructionPointer", 32);
+	}
+	{
+		CodePart & cp = cs.append(CodePart::APPENDEDRETURNINGREQUIRED);
+
+		cp.code() = std::string("//VFSLIDE1UP_VX\n");
+
+// -----------------------------------------------------------------------------
+cp.code() += "if (cpu->return_pending || cpu->exception) return cpu->exception;\n";
+// -----------------------------------------------------------------------------
+	}
+
+		return true;
+	},
+	0,
+	[] (BitArray & ba, Instruction & instr)
+	{
+// -----------------------------------------------------------------------------
+etiss_uint8 vd = 0;
+static BitArrayRange R_vd_0(11, 7);
+vd += R_vd_0.read(ba) << 0;
+etiss_uint8 rs1 = 0;
+static BitArrayRange R_rs1_0(19, 15);
+rs1 += R_rs1_0.read(ba) << 0;
+etiss_uint8 vs2 = 0;
+static BitArrayRange R_vs2_0(24, 20);
+vs2 += R_vs2_0.read(ba) << 0;
+etiss_uint8 vm = 0;
+static BitArrayRange R_vm_0(25, 25);
+vm += R_vm_0.read(ba) << 0;
+
+// -----------------------------------------------------------------------------
+
+		std::stringstream ss;
+// -----------------------------------------------------------------------------
+ss << "vfslide1up_vx" << " # " << ba << (" [vd=" + std::to_string(vd) + " | rs1=" + std::to_string(rs1) + " | vs2=" + std::to_string(vs2) + " | vm=" + std::to_string(vm) + "]");
+// -----------------------------------------------------------------------------
+		return ss.str();
+	}
+);
+
+// VFSLIDE1DOWN_VF -------------------------------------------------------------
+static InstructionDefinition vfslide1down_vf_vd_rs1_vs2_vm (
+	ISA32_RV32IMACFDV,
+	"vfslide1down_vf",
+	(uint32_t) 0x3c005057,
+	(uint32_t) 0xfc00707f,
+	[] (BitArray & ba,etiss::CodeSet & cs,InstructionContext & ic)
+	{
+
+// -----------------------------------------------------------------------------
+
+// -----------------------------------------------------------------------------
+
+// -----------------------------------------------------------------------------
+etiss_uint8 vd = 0;
+static BitArrayRange R_vd_0(11, 7);
+vd += R_vd_0.read(ba) << 0;
+etiss_uint8 rs1 = 0;
+static BitArrayRange R_rs1_0(19, 15);
+rs1 += R_rs1_0.read(ba) << 0;
+etiss_uint8 vs2 = 0;
+static BitArrayRange R_vs2_0(24, 20);
+vs2 += R_vs2_0.read(ba) << 0;
+etiss_uint8 vm = 0;
+static BitArrayRange R_vm_0(25, 25);
+vm += R_vm_0.read(ba) << 0;
+
+// -----------------------------------------------------------------------------
+
+	{
+		CodePart & cp = cs.append(CodePart::INITIALREQUIRED);
+
+		cp.code() = std::string("//VFSLIDE1DOWN_VF\n");
+
+// -----------------------------------------------------------------------------
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4) + "ULL;\n";
+cp.code() += "} // block\n";
+} // block
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "etiss_uint32 _vtype = *((RV32IMACFDV*)cpu)->CSR[3105ULL];\n";
+cp.code() += "etiss_uint32 _vstart = *((RV32IMACFDV*)cpu)->CSR[8ULL];\n";
+cp.code() += "etiss_uint32 _vl = *((RV32IMACFDV*)cpu)->CSR[3104ULL];\n";
+cp.code() += "etiss_uint32 _vlen = *((RV32IMACFDV*)cpu)->CSR[3106ULL] * 8ULL;\n";
+cp.code() += "etiss_uint32 ret = vfslide1down_vf(((RV32IMACFDV*)cpu)->V, *((RV32IMACFDV*)cpu)->F, _vtype, " + std::to_string(vm) + "ULL, " + std::to_string(vd) + "ULL, " + std::to_string(vs2) + "ULL, " + std::to_string(rs1) + "ULL, _vstart, _vlen, _vl, 64ULL);\n";
+cp.code() += "if (ret != 0LL) { // conditional\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->CSR[8ULL] = ret >> 8ULL;\n";
+{ // procedure
+cp.code() += "{ // procedure\n";
+cp.code() += "RV32IMACFDV_raise(cpu, system, plugin_pointers, 0LL, 2ULL);\n";
+cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
+cp.code() += "} // procedure\n";
+} // procedure
+cp.code() += "} // block\n";
+} // block
+cp.code() += "} // conditional\n";
+cp.code() += "else { // conditional\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->CSR[8ULL] = 0LL;\n";
+cp.code() += "} // block\n";
+} // block
+cp.code() += "} // conditional\n";
+cp.code() += "} // block\n";
+} // block
+cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
+cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
+// -----------------------------------------------------------------------------
+		cp.getAffectedRegisters().add("instructionPointer", 32);
+	}
+	{
+		CodePart & cp = cs.append(CodePart::APPENDEDRETURNINGREQUIRED);
+
+		cp.code() = std::string("//VFSLIDE1DOWN_VF\n");
+
+// -----------------------------------------------------------------------------
+cp.code() += "if (cpu->return_pending || cpu->exception) return cpu->exception;\n";
+// -----------------------------------------------------------------------------
+	}
+
+		return true;
+	},
+	0,
+	[] (BitArray & ba, Instruction & instr)
+	{
+// -----------------------------------------------------------------------------
+etiss_uint8 vd = 0;
+static BitArrayRange R_vd_0(11, 7);
+vd += R_vd_0.read(ba) << 0;
+etiss_uint8 rs1 = 0;
+static BitArrayRange R_rs1_0(19, 15);
+rs1 += R_rs1_0.read(ba) << 0;
+etiss_uint8 vs2 = 0;
+static BitArrayRange R_vs2_0(24, 20);
+vs2 += R_vs2_0.read(ba) << 0;
+etiss_uint8 vm = 0;
+static BitArrayRange R_vm_0(25, 25);
+vm += R_vm_0.read(ba) << 0;
+
+// -----------------------------------------------------------------------------
+
+		std::stringstream ss;
+// -----------------------------------------------------------------------------
+ss << "vfslide1down_vf" << " # " << ba << (" [vd=" + std::to_string(vd) + " | rs1=" + std::to_string(rs1) + " | vs2=" + std::to_string(vs2) + " | vm=" + std::to_string(vm) + "]");
 // -----------------------------------------------------------------------------
 		return ss.str();
 	}

@@ -1,4 +1,4 @@
-# Generated on Tue, 21 Jan 2025 11:58:28 +0000.
+# Generated on Wed, 05 Feb 2025 11:38:08 +0000.
 #
 # This file contains the CMake build info for the RV32IMACFDV core architecture.
 
@@ -18,8 +18,8 @@ ADD_LIBRARY(${PROJECT_NAME} SHARED
 	RV32IMACFDV_RV32MInstr.cpp
 	RV32IMACFDV_RVZve32xInstr.cpp
 	RV32IMACFDV_RVZve64xInstr.cpp
-	RV32IMACFDV_RVZve32fInstr.cpp
 	RV32IMACFDV_RV32FInstr.cpp
+	RV32IMACFDV_RVZve32fInstr.cpp
 	RV32IMACFDV_RV32FCInstr.cpp
 	RV32IMACFDV_RV32DInstr.cpp
 	RV32IMACFDV_RV32DCInstr.cpp
