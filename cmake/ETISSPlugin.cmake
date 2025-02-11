@@ -1,7 +1,9 @@
 MACRO(ETISSPlugin ProjName)
     TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC ETISS)
     TARGET_COMPILE_DEFINITIONS(${PROJECT_NAME} PRIVATE ETISS_EXPORTS ETISS_PLUGIN_IMPORTS)
-    set_target_properties(${ProjName} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${ETISS_BINARY_DIR}/lib/plugins/)
+    IF(ETISS_BINARY_DIR)
+        set_target_properties(${ProjName} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${ETISS_BINARY_DIR}/lib/plugins/)
+    ENDIF()
 
     INSTALL(TARGETS ${ProjName}
         RUNTIME DESTINATION lib/plugins
@@ -16,8 +18,10 @@ MACRO(ETISSPlugin ProjName)
     )
 
     # mimicing installation in build tree as well
-    file(APPEND ${ETISS_BINARY_DIR}/lib/plugins/list.txt
-    "${ProjName},${ETISS_BINARY_DIR}/lib/plugins,${ProjName}\n")
+    IF(ETISS_BINARY_DIR)
+        file(APPEND ${ETISS_BINARY_DIR}/lib/plugins/list.txt
+        "${ProjName},${ETISS_BINARY_DIR}/lib/plugins,${ProjName}\n")
+    ENDIF()
 ENDMACRO()
 
 MACRO(ETISSPluginArchName ProjName ArchName)
