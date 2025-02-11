@@ -33,6 +33,31 @@ If you use ETISS in your academic work you can cite it from this:
 </p>
 </details>
 
+## Publication
+
+If you use ETISS in your academic work you can cite it from this:
+
+<details>
+<summary>ETISS Publication</summary>
+<p>
+
+```
+@inproceedings{Mueller-Gritschneder_ETISS_2017,
+  author = {Mueller-Gritschneder, Daniel and Dittrich, Martin and Greim, Marc and Devarajegowda, Keerthikumara and Ecker, Wolfgang and Schlichtmann, Ulf},
+  booktitle = {RSP '17: Proceedings of the 28th International Symposium on Rapid System Prototyping: Shortening the Path from Specification to Prototype},
+  doi = {10.1145/3130265.3138858},
+  pages = {79--84},
+  publisher = {Association for Computing Machinery},
+  series = {28th International Symposium on Rapid System Prototyping: Shortening the Path from Specification to Prototype},
+  title = {{The Extendable Translating Instruction Set Simulator (ETISS) Interlinked with an MDA Framework for Fast RISC Prototyping}},
+  url = {https://doi.org/10.1145/3130265.3138858},
+  year = {2017}
+}
+```
+
+</p>
+</details>
+
 ## Getting Started
 
 The ETISS core and included plugins are built as libraries. To make use of the simulator, a program using the library is needed. A very simple bare-metal processor is included in this repository in [src/bare_etiss_processor](src/bare_etiss_processor). This program is built during the normal build process; its compiled binary will be placed under `<build_-_dir>/bin` and `<etiss_install_dir>/bin`. See its [README](src/bare_etiss_processor/README.md) for more details.
