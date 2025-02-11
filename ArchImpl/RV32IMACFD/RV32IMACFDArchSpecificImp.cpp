@@ -342,13 +342,8 @@ etiss::InterruptVector * RV32IMACFDArch::createInterruptVector(ETISS_CPU * cpu)
 	if (cpu == 0)
 		return 0;
 
-        RV32IMACFD* rvcpu = (RV32IMACFD *)cpu;
-
 	std::vector<etiss::uint32 *> vec;
 	std::vector<etiss::uint32 *> mask;
-
-        vec.push_back(rvcpu->CSR[CSR_MIP]);
-        mask.push_back(rvcpu->CSR[CSR_MIE]);
 
 	vec.push_back(&((RV32IMACFD*)cpu)->MIP);
 	mask.push_back(&((RV32IMACFD*)cpu)->MIE);
