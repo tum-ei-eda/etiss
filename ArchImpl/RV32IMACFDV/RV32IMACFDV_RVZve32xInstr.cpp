@@ -1,5 +1,5 @@
 /**
- * Generated on Wed, 05 Feb 2025 11:38:08 +0000.
+ * Generated on Wed, 05 Feb 2025 12:27:46 +0000.
  *
  * This file contains the instruction behavior models of the RVZve32x
  * instruction set for the RV32IMACFDV core architecture.
@@ -55,13 +55,19 @@ cp.code() += "etiss_uint8 sew = (vtype_extractSEW(" + std::to_string(zimm) + "UL
 cp.code() += "etiss_uint8 lmul = (vtype_extractLMUL(" + std::to_string(zimm) + "ULL)) & 0x7;\n";
 cp.code() += "etiss_uint8 vta = (vtype_extractTA(" + std::to_string(zimm) + "ULL)) & 0x1;\n";
 cp.code() += "etiss_uint8 vma = (vtype_extractMA(" + std::to_string(zimm) + "ULL)) & 0x1;\n";
+cp.code() += "etiss_uint32 vtype_result = " + std::to_string(zimm) + "ULL;\n";
 cp.code() += "etiss_uint32 _vlmax = 0LL;\n";
-cp.code() += "etiss_uint32 _illmask = 0LL;\n";
 cp.code() += "etiss_uint32 vlen = *((RV32IMACFDV*)cpu)->CSR[3106ULL] * 8ULL;\n";
+cp.code() += "if (sew == 3ULL) { // conditional\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "vtype_result = 2147483648ULL;\n";
+cp.code() += "} // block\n";
+} // block
+cp.code() += "} // conditional\n";
 cp.code() += "if (lmul & 4ULL) { // conditional\n";
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "_illmask = 2147483648ULL;\n";
 cp.code() += "if (lmul == 6ULL) { // conditional\n";
 { // block
 cp.code() += "{ // block\n";
@@ -79,7 +85,11 @@ cp.code() += "} // conditional\n";
 cp.code() += "else { // conditional\n";
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "_vlmax = vlen / (8ULL << sew) / 8ULL;\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "vtype_result = 2147483648ULL;\n";
+cp.code() += "} // block\n";
+} // block
 cp.code() += "} // block\n";
 } // block
 cp.code() += "} // conditional\n";
@@ -89,7 +99,6 @@ cp.code() += "} // conditional\n";
 cp.code() += "else { // conditional\n";
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "_illmask = 0LL;\n";
 cp.code() += "if (lmul == 0LL) { // conditional\n";
 { // block
 cp.code() += "{ // block\n";
@@ -166,7 +175,7 @@ cp.code() += "} // block\n";
 } // block
 cp.code() += "} // conditional\n";
 cp.code() += "*((RV32IMACFDV*)cpu)->CSR[3104ULL] = _vl;\n";
-cp.code() += "*((RV32IMACFDV*)cpu)->CSR[3105ULL] = _illmask | " + std::to_string(zimm) + "ULL;\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->CSR[3105ULL] = vtype_result;\n";
 if (rd != 0LL) { // conditional
 cp.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string(rd) + "ULL] = _vl;\n";
 } // conditional
@@ -249,12 +258,12 @@ cp.code() += "etiss_uint8 lmul = (vtype_extractLMUL(" + std::to_string(vtypei) +
 cp.code() += "etiss_uint8 vta = (vtype_extractTA(" + std::to_string(vtypei) + "ULL)) & 0x1;\n";
 cp.code() += "etiss_uint8 vma = (vtype_extractMA(" + std::to_string(vtypei) + "ULL)) & 0x1;\n";
 cp.code() += "etiss_uint32 _vlmax = 0LL;\n";
-cp.code() += "etiss_uint32 _vtype_result = " + std::to_string(vtypei) + "ULL;\n";
+cp.code() += "etiss_uint32 vtype_result = " + std::to_string(vtypei) + "ULL;\n";
 cp.code() += "etiss_uint32 vlen = *((RV32IMACFDV*)cpu)->CSR[3106ULL] * 8ULL;\n";
 cp.code() += "if (sew == 3ULL) { // conditional\n";
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "_vtype_result = 2147483648ULL;\n";
+cp.code() += "vtype_result = 2147483648ULL;\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "} // conditional\n";
@@ -280,7 +289,7 @@ cp.code() += "else { // conditional\n";
 cp.code() += "{ // block\n";
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "_vtype_result = 2147483648ULL;\n";
+cp.code() += "vtype_result = 2147483648ULL;\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "} // block\n";
@@ -347,7 +356,7 @@ cp.code() += "} // block\n";
 } // block
 cp.code() += "} // conditional\n";
 cp.code() += "*((RV32IMACFDV*)cpu)->CSR[3104ULL] = _vl;\n";
-cp.code() += "*((RV32IMACFDV*)cpu)->CSR[3105ULL] = _vtype_result;\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->CSR[3105ULL] = vtype_result;\n";
 if (rd != 0LL) { // conditional
 cp.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string(rd) + "ULL] = _vl;\n";
 } // conditional
@@ -431,12 +440,18 @@ cp.code() += "etiss_uint8 lmul = (vtype_extractLMUL(zimm)) & 0x7;\n";
 cp.code() += "etiss_uint8 vta = (vtype_extractTA(zimm)) & 0x1;\n";
 cp.code() += "etiss_uint8 vma = (vtype_extractMA(zimm)) & 0x1;\n";
 cp.code() += "etiss_uint32 _vlmax = 0LL;\n";
-cp.code() += "etiss_uint32 _illmask = 0LL;\n";
+cp.code() += "etiss_uint32 vtype_result = zimm;\n";
 cp.code() += "etiss_uint32 _vlen = *((RV32IMACFDV*)cpu)->CSR[3106ULL] * 8ULL;\n";
+cp.code() += "if (sew == 3ULL) { // conditional\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "vtype_result = 2147483648ULL;\n";
+cp.code() += "} // block\n";
+} // block
+cp.code() += "} // conditional\n";
 cp.code() += "if (lmul & 4ULL) { // conditional\n";
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "_illmask = 2147483648ULL;\n";
 cp.code() += "if (lmul == 6ULL) { // conditional\n";
 { // block
 cp.code() += "{ // block\n";
@@ -454,7 +469,11 @@ cp.code() += "} // conditional\n";
 cp.code() += "else { // conditional\n";
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "_vlmax = _vlen / (8ULL << sew) / 8ULL;\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "vtype_result = 2147483648ULL;\n";
+cp.code() += "} // block\n";
+} // block
 cp.code() += "} // block\n";
 } // block
 cp.code() += "} // conditional\n";
@@ -464,7 +483,6 @@ cp.code() += "} // conditional\n";
 cp.code() += "else { // conditional\n";
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "_illmask = 0LL;\n";
 cp.code() += "if (lmul == 0LL) { // conditional\n";
 { // block
 cp.code() += "{ // block\n";
@@ -541,7 +559,7 @@ cp.code() += "} // block\n";
 } // block
 cp.code() += "} // conditional\n";
 cp.code() += "*((RV32IMACFDV*)cpu)->CSR[3104ULL] = _vl;\n";
-cp.code() += "*((RV32IMACFDV*)cpu)->CSR[3105ULL] = _illmask | zimm;\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->CSR[3105ULL] = vtype_result;\n";
 if (rd != 0LL) { // conditional
 cp.code() += "*((RV32IMACFDV*)cpu)->X[" + std::to_string(rd) + "ULL] = _vl;\n";
 } // conditional
