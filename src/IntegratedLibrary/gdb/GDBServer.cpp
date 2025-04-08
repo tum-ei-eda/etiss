@@ -199,8 +199,8 @@ etiss::int32 Server::preInstructionCallback()
     {
         if (!gdb_status_paused_)
         { // answer pending 'c'/'s' command
-            // std::cout << "GDB: answer: " << "T"<<hex::fromByte(5) << std::endl;
-            con_.snd("T" + hex::fromByte(5), false);
+            std::cout << "GDB: answer: T05thread:p01.01" << std::endl;
+            con_.snd("T05thread:p01.01", false);
             gdb_status_paused_ = true;
         }
 
@@ -283,19 +283,39 @@ void Server::finalizeCodeBlock(etiss::CodeBlock &cb) const
 
 void Server::handlePacket(bool block)
 {
+    /** Tiny helper class for progressively matching and removing text morsels from
+     * the start of a string.
+     */
+    class NibbleString : public std::string
+    {
+    public:
+        NibbleString(std::string command) : std::string(command)
+            {}
+        /** If the current string starts with the given 'morsel' (unfolded) then trim that start
+         * and return true, else do not modify and return false. */
+        bool peck(std::string morsel)
+        {
+            if(substr(0, morsel.length()) == morsel)
+            {
+                erase(0, morsel.length());
+                return true;
+            }
+            return false;
+        }
+    };
 
     if (con_.available(block))
     {
         bool isnotification;
-        std::string command = con_.rcv(isnotification);
+        NibbleString command = con_.rcv(isnotification);
         if (command.length() > 0)
         {
             if (!status_paused_)
             {
                 if (!gdb_status_paused_)
                 { // answer pending 'c'/'s' command
-                    // std::cout << "GDB: answer: " << "T"<<hex::fromByte(5) << std::endl;
-                    con_.snd("T" + hex::fromByte(5), false);
+                    std::cout << "GDB: answer: T05thread:p01.01" << std::endl;
+                    con_.snd("T05thread:p01.01", false);
                     gdb_status_paused_ = true;
                 }
                 status_paused_ = true;
@@ -524,6 +544,7 @@ void Server::handlePacket(bool block)
             }
             break;
             case 'c': // continue
+            exec_continue:
             {
                 if (command.length() > 1)
                 {
@@ -538,7 +559,7 @@ void Server::handlePacket(bool block)
                 status_paused_ = false;
                 gdb_status_paused_ = false;
                 status_step_ = 0;
-                // std::cout << "GDB: command: " << command << std::endl;
+                std::cout << "GDB: command: " << command << std::endl;
                 return;
             }
             break;
@@ -557,16 +578,29 @@ void Server::handlePacket(bool block)
                 status_paused_ = false;
                 gdb_status_paused_ = false;
                 status_step_ = 1;
-                // std::cout << "GDB: command: " << command << std::endl;
+                std::cout << "GDB: command: " << command << std::endl;
                 return;
             }
             case '?':
             {
-                answer = "T";
-                hex::fromByte(answer, 5);
+                answer = "T05thread:p01.01";
+//                hex::fromByte(answer, 5);
+//                answer += ":p01.01";
             }
             break;
             case 'v':
+                if (command.substr(1, 4) == "Cont")
+                {
+                    if (command.substr(5, 1) == "?")
+                    {
+                        answer = "vCont;c;C,s;S";
+                    }
+                    else if (command.substr(5, 2) == ";c")
+                    {
+                        goto exec_continue;
+                    }
+
+                }
                 break;
             case 'W': // custom break message; might be changed in future if W is used (apply changes also to
                       // Connection::BREAKMESSAGE)
@@ -683,33 +717,126 @@ void Server::handlePacket(bool block)
             break;
             case 'q':
             {
-                if (command.substr(1, 9) == "Supported")
+                command.erase(0, 1);
+                if (command.peck("Supported"))
                 {
-                    answer = "";
+                    answer = "PacketSize=1000;qXfer:features:read+;vContSupported+;multiprocess+";
                 }
-                else if (command.substr(1, 8) == "Attached")
+                else if (command.peck("Attached"))
                 {
                     answer = "0";
                 }
-                else if (command.substr(1, 8) == "Symbol::")
+                else if (command.peck("Symbol::"))
                 {
                     answer = "OK";
                 }
-                else if (command.substr(1, 1) == "C")
+                else if (command.peck("C"))
                 {
-                    answer = "0";
+                    answer = "QCp01.01";
                 }
-                else if (command.substr(1, 7) == "TStatus")
+                else if (command.peck("TStatus"))
                 {
                     answer = "T0;tnotrun:0";
                 }
-                else if (command.substr(1, 11) == "fThreadInfo")
+                else if (command.peck("fThreadInfo"))
                 {
-                    answer = "m1";
+                    answer = "mp01.01";
                 }
-                else if (command.substr(1, 11) == "sThreadInfo")
+                else if (command.peck("sThreadInfo"))
                 {
                     answer = "l";
+                }
+                else if (command.peck("Xfer:"))
+                {
+                    if (command.peck("features:read:"))
+                    {
+                        if (command.peck("target.xml:0"))
+                        {
+  //                       answer = "l<?xml version=\"1.0\"?><!DOCTYPE target SYSTEM \"gdb-target.dtd\"><target><architecture>riscv:rv64</architecture><xi:include href=\"riscv-64bit-cpu.xml\"/><xi:include href=\"riscv-64bit-fpu.xml\"/><xi:include href=\"riscv-64bit-virtual.xml\"/><xi:include href=\"riscv-csr.xml\"/></target>";
+                            answer = "l<?xml version=\"1.0\"?>\n"
+                                "<!DOCTYPE target SYSTEM \"gdb-target.dtd\">\n"
+                                "<target>\n"
+                                "	<architecture>riscv:rv32</architecture>\n"
+                                "	<xi:include href=\"riscv-32bit-cpu.xml\"/>\n"
+//                                "	<xi:include href=\"riscv-64bit-fpu.xml\"/>\n"
+//                                "	<xi:include href=\"riscv-64bit-virtual.xml\"/>\n"
+//                                "	<xi:include href=\"riscv-csr.xml\"/>\n"
+                                "</target>\n";
+                        }
+                        else if (command.peck("riscv-32bit-cpu.xml:0"))
+                        {
+                            answer = "l<?xml version=\"1.0\"?>\n"
+                                "<!-- Copyright (C) 2018-2019 Free Software Foundation, Inc.\n"
+                                "     Copying and distribution of this file, with or without modification,\n"
+                                "     are permitted in any medium without royalty provided the copyright\n"
+                                "     notice and this notice are preserved.  -->\n"
+                                "<!DOCTYPE feature SYSTEM \"gdb-target.dtd\">\n"
+                                "<feature name=\"org.gnu.gdb.riscv.cpu\">\n";
+#if 0
+                            // Add entries for each register
+                            int reg_num = 0;
+                            plugin_core_->getStruct()->foreachField([&answer](auto f) {
+                                auto reg_name = f->prettyname_;
+                                auto reg_type = "int";
+                                if(reg_name == "instructionPointer") {
+                                    reg_name = "pc";
+//                                    reg_type = "code_ptr";
+                                }
+                                else if(reg_name == "X1") {
+                                    reg_name = "ra";
+//                                    reg_type = "code_ptr";
+                                }
+                                else if(reg_name == "X2") {
+                                    reg_name = "sp";
+//                                    reg_type = "code_ptr";
+                                }
+                                else if(reg_name == "X8") {
+                                    reg_name = "fp";
+//                                    reg_type = "code_ptr";
+                                }
+                                answer += "  <reg name=\"" + reg_name
+                                    + "\" bitsize=\"" + std::to_string(f->bitwidth_)
+                                    + "\" type=\"" + reg_type + "\"/>\n";
+                            });
+#else
+                            answer +=
+                                "  <reg name=\"zero\" bitsize=\"32\" type=\"int\"/>\n"
+                                "  <reg name=\"ra\" bitsize=\"32\" type=\"code_ptr\"/>\n"
+                                "  <reg name=\"sp\" bitsize=\"32\" type=\"data_ptr\"/>\n"
+                                "  <reg name=\"gp\" bitsize=\"32\" type=\"data_ptr\"/>\n"
+                                "  <reg name=\"tp\" bitsize=\"32\" type=\"data_ptr\"/>\n"
+                                "  <reg name=\"t0\" bitsize=\"32\" type=\"int\"/>\n"
+                                "  <reg name=\"t1\" bitsize=\"32\" type=\"int\"/>\n"
+                                "  <reg name=\"t2\" bitsize=\"32\" type=\"int\"/>\n"
+                                "  <reg name=\"fp\" bitsize=\"32\" type=\"data_ptr\"/>\n"
+                                "  <reg name=\"s1\" bitsize=\"32\" type=\"int\"/>\n"
+                                "  <reg name=\"a0\" bitsize=\"32\" type=\"int\"/>\n"
+                                "  <reg name=\"a1\" bitsize=\"32\" type=\"int\"/>\n"
+                                "  <reg name=\"a2\" bitsize=\"32\" type=\"int\"/>\n"
+                                "  <reg name=\"a3\" bitsize=\"32\" type=\"int\"/>\n"
+                                "  <reg name=\"a4\" bitsize=\"32\" type=\"int\"/>\n"
+                                "  <reg name=\"a5\" bitsize=\"32\" type=\"int\"/>\n"
+                                "  <reg name=\"a6\" bitsize=\"32\" type=\"int\"/>\n"
+                                "  <reg name=\"a7\" bitsize=\"32\" type=\"int\"/>\n"
+                                "  <reg name=\"s2\" bitsize=\"32\" type=\"int\"/>\n"
+                                "  <reg name=\"s3\" bitsize=\"32\" type=\"int\"/>\n"
+                                "  <reg name=\"s4\" bitsize=\"32\" type=\"int\"/>\n"
+                                "  <reg name=\"s5\" bitsize=\"32\" type=\"int\"/>\n"
+                                "  <reg name=\"s6\" bitsize=\"32\" type=\"int\"/>\n"
+                                "  <reg name=\"s7\" bitsize=\"32\" type=\"int\"/>\n"
+                                "  <reg name=\"s8\" bitsize=\"32\" type=\"int\"/>\n"
+                                "  <reg name=\"s9\" bitsize=\"32\" type=\"int\"/>\n"
+                                "  <reg name=\"s10\" bitsize=\"32\" type=\"int\"/>\n"
+                                "  <reg name=\"s11\" bitsize=\"32\" type=\"int\"/>\n"
+                                "  <reg name=\"t3\" bitsize=\"32\" type=\"int\"/>\n"
+                                "  <reg name=\"t4\" bitsize=\"32\" type=\"int\"/>\n"
+                                "  <reg name=\"t5\" bitsize=\"32\" type=\"int\"/>\n"
+                                "  <reg name=\"t6\" bitsize=\"32\" type=\"int\"/>\n"
+                                "  <reg name=\"pc\" bitsize=\"32\" type=\"code_ptr\"/>\n";
+#endif
+                            answer += "</feature>\n";
+                        }
+                    }
                 }
             }
             break;
@@ -734,7 +861,7 @@ void Server::handlePacket(bool block)
                 }
                 else
                 {
-                    // std::cout << "GDB: unknown command: " << command << std::endl;
+                    std::cout << "GDB: unknown command: " << command << std::endl;
                 }
                 break;
             default:
@@ -743,8 +870,8 @@ void Server::handlePacket(bool block)
             }
             if (!nodbgaction)
             {
-                // std::cout << "GDB: command: " << command << std::endl;
-                // std::cout << "GDB: answer: "<<answer << std::endl;
+                std::cout << "GDB: command: " << command << std::endl;
+                std::cout << "GDB: answer: "<<answer << std::endl;
             }
             con_.snd(answer, answerisnotification);
         }
@@ -783,7 +910,7 @@ etiss::int32 Server::postMemAccessCallback(etiss::int32 exception)
     {
         if (!gdb_status_paused_)
         {
-            con_.snd("T" + hex::fromByte(5), false);
+            con_.snd("T05thread:p01.01", false);
             gdb_status_paused_ = true;
         }
 
