@@ -1,0 +1,36 @@
+##
+## Copyright (c) 2024 TUM Department of Electrical and Computer Engineering.
+##
+## This file is part of Seal5.
+## See https://github.com/tum-ei-eda/seal5.git for further info.
+##
+## Licensed under the Apache License, Version 2.0 (the "License");
+## you may not use this file except in compliance with the License.
+## You may obtain a copy of the License at
+##
+##     http://www.apache.org/licenses/LICENSE-2.0
+##
+## Unless required by applicable law or agreed to in writing, software
+## distributed under the License is distributed on an "AS IS" BASIS,
+## WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+## See the License for the specific language governing permissions and
+## limitations under the License.
+##
+
+name: Trigger Seal5 ETISS Test Flow
+
+on:
+  push:
+    branches: [ "coredsl2" ]
+
+jobs:
+  trigger_repo:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Trigger Seal5 ETISS Test Flow
+      uses: peter-evans/repository-dispatch@v3
+      with:
+         token: ${{ secrets.SEAL5_ACCESS_TOKEN }}
+         repository: tum-ei-eda/seal5_etiss_test_env
+         event-type: etiss-event
+         client-payload: '{"triggered_run_id": "${{ github.run_id }}", "ref": "${{ github.sha }}", "from": "etiss"}'
