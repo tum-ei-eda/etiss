@@ -10,9 +10,11 @@ MACRO(RegisterJITFiles Files)
 
         # mimicing installation in build tree as well
         # NOTE: pluginexport hasn't been generated yet so will be copied later
-        if (NOT "${ExistingFile}" STREQUAL "${ETISS_BINARY_DIR}/include/etiss/pluginexport.h")
-          file(COPY "${ExistingFile}" DESTINATION "${ETISS_BINARY_DIR}/include/jit/${TargetPath}")
-        endif()
+        IF(ETISS_BINARY_DIR)
+          if (NOT "${ExistingFile}" STREQUAL "${ETISS_BINARY_DIR}/include/etiss/pluginexport.h")
+            file(COPY "${ExistingFile}" DESTINATION "${ETISS_BINARY_DIR}/include/jit/${TargetPath}")
+          endif()
+        ENDIF()
     ENDFOREACH()
 ENDMACRO()
 
@@ -20,5 +22,7 @@ MACRO(RegisterJITFileArch Arch)
     INSTALL(FILES "${CMAKE_CURRENT_LIST_DIR}/${Arch}.h" DESTINATION "include/jit/Arch/${Arch}")
 
     # mimicing installation in build tree as well
-    file(COPY "${CMAKE_CURRENT_LIST_DIR}/${Arch}.h" DESTINATION "${ETISS_BINARY_DIR}/include/jit/Arch/${Arch}")
+    IF(ETISS_BINARY_DIR)
+      file(COPY "${CMAKE_CURRENT_LIST_DIR}/${Arch}.h" DESTINATION "${ETISS_BINARY_DIR}/include/jit/Arch/${Arch}")
+    ENDIF()
 ENDMACRO()
