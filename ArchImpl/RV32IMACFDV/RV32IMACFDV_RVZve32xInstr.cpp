@@ -1,5 +1,5 @@
 /**
- * Generated on Tue, 04 Mar 2025 12:00:03 +0000.
+ * Generated on Wed, 30 Apr 2025 13:39:25 +0000.
  *
  * This file contains the instruction behavior models of the RVZve32x
  * instruction set for the RV32IMACFDV core architecture.
@@ -6248,12 +6248,12 @@ ss << "vsoxsegei32_v" << " # " << ba << (" [vs3=" + std::to_string(vs3) + " | rs
 	}
 );
 
-// VLR_V -----------------------------------------------------------------------
-static InstructionDefinition vlr_v_vd_width_rs1_vm_nf (
+// VL8R_V ----------------------------------------------------------------------
+static InstructionDefinition vl8r_v_vd_rs1_vm_nf (
 	ISA32_RV32IMACFDV,
-	"vlr_v",
+	"vl8r_v",
 	(uint32_t) 0x800007,
-	(uint32_t) 0x1df0007f,
+	(uint32_t) 0x1df0707f,
 	[] (BitArray & ba,etiss::CodeSet & cs,InstructionContext & ic)
 	{
 
@@ -6265,9 +6265,6 @@ static InstructionDefinition vlr_v_vd_width_rs1_vm_nf (
 etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint8 width = 0;
-static BitArrayRange R_width_0(14, 12);
-width += R_width_0.read(ba) << 0;
 etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
@@ -6283,7 +6280,7 @@ nf += R_nf_0.read(ba) << 0;
 	{
 		CodePart & cp = cs.append(CodePart::INITIALREQUIRED);
 
-		cp.code() = std::string("//VLR_V\n");
+		cp.code() = std::string("//VL8R_V\n");
 
 // -----------------------------------------------------------------------------
 { // block
@@ -6294,10 +6291,9 @@ cp.code() += "} // block\n";
 { // block
 cp.code() += "{ // block\n";
 cp.code() += "etiss_uint32 _vtype = *((RV32IMACFDV*)cpu)->CSR[3105ULL];\n";
-cp.code() += "etiss_uint32 _eew = vcfg_concatEEW(0LL, " + std::to_string(width) + "ULL);\n";
 cp.code() += "etiss_uint32 _vstart = *((RV32IMACFDV*)cpu)->CSR[8ULL];\n";
 cp.code() += "etiss_uint32 _vlen = *((RV32IMACFDV*)cpu)->CSR[3106ULL] * 8ULL;\n";
-cp.code() += "etiss_uint32 ret = etiss_vload_registers(cpu, system, plugin_pointers, ((RV32IMACFDV*)cpu)->V, _vtype, " + std::to_string(vm) + "ULL, _eew, " + std::to_string(nf + 1ULL) + "ULL, " + std::to_string(vd) + "ULL, _vstart, _vlen, (etiss_uint64)(*((RV32IMACFDV*)cpu)->X[" + std::to_string(rs1) + "ULL]));\n";
+cp.code() += "etiss_uint32 ret = etiss_vload_registers(cpu, system, plugin_pointers, ((RV32IMACFDV*)cpu)->V, _vtype, " + std::to_string(vm) + "ULL, 8ULL, " + std::to_string(nf + 1ULL) + "ULL, " + std::to_string(vd) + "ULL, _vstart, _vlen, (etiss_uint64)(*((RV32IMACFDV*)cpu)->X[" + std::to_string(rs1) + "ULL]));\n";
 cp.code() += "if (ret != 0LL) { // conditional\n";
 { // block
 cp.code() += "{ // block\n";
@@ -6328,7 +6324,7 @@ cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 	{
 		CodePart & cp = cs.append(CodePart::APPENDEDRETURNINGREQUIRED);
 
-		cp.code() = std::string("//VLR_V\n");
+		cp.code() = std::string("//VL8R_V\n");
 
 // -----------------------------------------------------------------------------
 cp.code() += "if (cpu->return_pending || cpu->exception) return cpu->exception;\n";
@@ -6344,9 +6340,6 @@ cp.code() += "if (cpu->return_pending || cpu->exception) return cpu->exception;\
 etiss_uint8 vd = 0;
 static BitArrayRange R_vd_0(11, 7);
 vd += R_vd_0.read(ba) << 0;
-etiss_uint8 width = 0;
-static BitArrayRange R_width_0(14, 12);
-width += R_width_0.read(ba) << 0;
 etiss_uint8 rs1 = 0;
 static BitArrayRange R_rs1_0(19, 15);
 rs1 += R_rs1_0.read(ba) << 0;
@@ -6361,7 +6354,231 @@ nf += R_nf_0.read(ba) << 0;
 
 		std::stringstream ss;
 // -----------------------------------------------------------------------------
-ss << "vlr_v" << " # " << ba << (" [vd=" + std::to_string(vd) + " | width=" + std::to_string(width) + " | rs1=" + std::to_string(rs1) + " | vm=" + std::to_string(vm) + " | nf=" + std::to_string(nf) + "]");
+ss << "vl8r_v" << " # " << ba << (" [vd=" + std::to_string(vd) + " | rs1=" + std::to_string(rs1) + " | vm=" + std::to_string(vm) + " | nf=" + std::to_string(nf) + "]");
+// -----------------------------------------------------------------------------
+		return ss.str();
+	}
+);
+
+// VL16R_V ---------------------------------------------------------------------
+static InstructionDefinition vl16r_v_vd_rs1_vm_nf (
+	ISA32_RV32IMACFDV,
+	"vl16r_v",
+	(uint32_t) 0x805007,
+	(uint32_t) 0x1df0707f,
+	[] (BitArray & ba,etiss::CodeSet & cs,InstructionContext & ic)
+	{
+
+// -----------------------------------------------------------------------------
+
+// -----------------------------------------------------------------------------
+
+// -----------------------------------------------------------------------------
+etiss_uint8 vd = 0;
+static BitArrayRange R_vd_0(11, 7);
+vd += R_vd_0.read(ba) << 0;
+etiss_uint8 rs1 = 0;
+static BitArrayRange R_rs1_0(19, 15);
+rs1 += R_rs1_0.read(ba) << 0;
+etiss_uint8 vm = 0;
+static BitArrayRange R_vm_0(25, 25);
+vm += R_vm_0.read(ba) << 0;
+etiss_uint8 nf = 0;
+static BitArrayRange R_nf_0(31, 29);
+nf += R_nf_0.read(ba) << 0;
+
+// -----------------------------------------------------------------------------
+
+	{
+		CodePart & cp = cs.append(CodePart::INITIALREQUIRED);
+
+		cp.code() = std::string("//VL16R_V\n");
+
+// -----------------------------------------------------------------------------
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4) + "ULL;\n";
+cp.code() += "} // block\n";
+} // block
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "etiss_uint32 _vtype = *((RV32IMACFDV*)cpu)->CSR[3105ULL];\n";
+cp.code() += "etiss_uint32 _vstart = *((RV32IMACFDV*)cpu)->CSR[8ULL];\n";
+cp.code() += "etiss_uint32 _vlen = *((RV32IMACFDV*)cpu)->CSR[3106ULL] * 8ULL;\n";
+cp.code() += "etiss_uint32 ret = etiss_vload_registers(cpu, system, plugin_pointers, ((RV32IMACFDV*)cpu)->V, _vtype, " + std::to_string(vm) + "ULL, 16ULL, " + std::to_string(nf + 1ULL) + "ULL, " + std::to_string(vd) + "ULL, _vstart, _vlen, (etiss_uint64)(*((RV32IMACFDV*)cpu)->X[" + std::to_string(rs1) + "ULL]));\n";
+cp.code() += "if (ret != 0LL) { // conditional\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->CSR[8ULL] = ret >> 8ULL;\n";
+{ // procedure
+cp.code() += "{ // procedure\n";
+cp.code() += "RV32IMACFDV_raise(cpu, system, plugin_pointers, 0LL, 2ULL);\n";
+cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
+cp.code() += "} // procedure\n";
+} // procedure
+cp.code() += "} // block\n";
+} // block
+cp.code() += "} // conditional\n";
+cp.code() += "else { // conditional\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->CSR[8ULL] = 0LL;\n";
+cp.code() += "} // block\n";
+} // block
+cp.code() += "} // conditional\n";
+cp.code() += "} // block\n";
+} // block
+cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
+cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
+// -----------------------------------------------------------------------------
+		cp.getAffectedRegisters().add("instructionPointer", 32);
+	}
+	{
+		CodePart & cp = cs.append(CodePart::APPENDEDRETURNINGREQUIRED);
+
+		cp.code() = std::string("//VL16R_V\n");
+
+// -----------------------------------------------------------------------------
+cp.code() += "if (cpu->return_pending || cpu->exception) return cpu->exception;\n";
+// -----------------------------------------------------------------------------
+	}
+
+		return true;
+	},
+	0,
+	[] (BitArray & ba, Instruction & instr)
+	{
+// -----------------------------------------------------------------------------
+etiss_uint8 vd = 0;
+static BitArrayRange R_vd_0(11, 7);
+vd += R_vd_0.read(ba) << 0;
+etiss_uint8 rs1 = 0;
+static BitArrayRange R_rs1_0(19, 15);
+rs1 += R_rs1_0.read(ba) << 0;
+etiss_uint8 vm = 0;
+static BitArrayRange R_vm_0(25, 25);
+vm += R_vm_0.read(ba) << 0;
+etiss_uint8 nf = 0;
+static BitArrayRange R_nf_0(31, 29);
+nf += R_nf_0.read(ba) << 0;
+
+// -----------------------------------------------------------------------------
+
+		std::stringstream ss;
+// -----------------------------------------------------------------------------
+ss << "vl16r_v" << " # " << ba << (" [vd=" + std::to_string(vd) + " | rs1=" + std::to_string(rs1) + " | vm=" + std::to_string(vm) + " | nf=" + std::to_string(nf) + "]");
+// -----------------------------------------------------------------------------
+		return ss.str();
+	}
+);
+
+// VL32R_V ---------------------------------------------------------------------
+static InstructionDefinition vl32r_v_vd_rs1_vm_nf (
+	ISA32_RV32IMACFDV,
+	"vl32r_v",
+	(uint32_t) 0x806007,
+	(uint32_t) 0x1df0707f,
+	[] (BitArray & ba,etiss::CodeSet & cs,InstructionContext & ic)
+	{
+
+// -----------------------------------------------------------------------------
+
+// -----------------------------------------------------------------------------
+
+// -----------------------------------------------------------------------------
+etiss_uint8 vd = 0;
+static BitArrayRange R_vd_0(11, 7);
+vd += R_vd_0.read(ba) << 0;
+etiss_uint8 rs1 = 0;
+static BitArrayRange R_rs1_0(19, 15);
+rs1 += R_rs1_0.read(ba) << 0;
+etiss_uint8 vm = 0;
+static BitArrayRange R_vm_0(25, 25);
+vm += R_vm_0.read(ba) << 0;
+etiss_uint8 nf = 0;
+static BitArrayRange R_nf_0(31, 29);
+nf += R_nf_0.read(ba) << 0;
+
+// -----------------------------------------------------------------------------
+
+	{
+		CodePart & cp = cs.append(CodePart::INITIALREQUIRED);
+
+		cp.code() = std::string("//VL32R_V\n");
+
+// -----------------------------------------------------------------------------
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4) + "ULL;\n";
+cp.code() += "} // block\n";
+} // block
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "etiss_uint32 _vtype = *((RV32IMACFDV*)cpu)->CSR[3105ULL];\n";
+cp.code() += "etiss_uint32 _vstart = *((RV32IMACFDV*)cpu)->CSR[8ULL];\n";
+cp.code() += "etiss_uint32 _vlen = *((RV32IMACFDV*)cpu)->CSR[3106ULL] * 8ULL;\n";
+cp.code() += "etiss_uint32 ret = etiss_vload_registers(cpu, system, plugin_pointers, ((RV32IMACFDV*)cpu)->V, _vtype, " + std::to_string(vm) + "ULL, 32ULL, " + std::to_string(nf + 1ULL) + "ULL, " + std::to_string(vd) + "ULL, _vstart, _vlen, (etiss_uint64)(*((RV32IMACFDV*)cpu)->X[" + std::to_string(rs1) + "ULL]));\n";
+cp.code() += "if (ret != 0LL) { // conditional\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->CSR[8ULL] = ret >> 8ULL;\n";
+{ // procedure
+cp.code() += "{ // procedure\n";
+cp.code() += "RV32IMACFDV_raise(cpu, system, plugin_pointers, 0LL, 2ULL);\n";
+cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
+cp.code() += "} // procedure\n";
+} // procedure
+cp.code() += "} // block\n";
+} // block
+cp.code() += "} // conditional\n";
+cp.code() += "else { // conditional\n";
+{ // block
+cp.code() += "{ // block\n";
+cp.code() += "*((RV32IMACFDV*)cpu)->CSR[8ULL] = 0LL;\n";
+cp.code() += "} // block\n";
+} // block
+cp.code() += "} // conditional\n";
+cp.code() += "} // block\n";
+} // block
+cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
+cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
+// -----------------------------------------------------------------------------
+		cp.getAffectedRegisters().add("instructionPointer", 32);
+	}
+	{
+		CodePart & cp = cs.append(CodePart::APPENDEDRETURNINGREQUIRED);
+
+		cp.code() = std::string("//VL32R_V\n");
+
+// -----------------------------------------------------------------------------
+cp.code() += "if (cpu->return_pending || cpu->exception) return cpu->exception;\n";
+// -----------------------------------------------------------------------------
+	}
+
+		return true;
+	},
+	0,
+	[] (BitArray & ba, Instruction & instr)
+	{
+// -----------------------------------------------------------------------------
+etiss_uint8 vd = 0;
+static BitArrayRange R_vd_0(11, 7);
+vd += R_vd_0.read(ba) << 0;
+etiss_uint8 rs1 = 0;
+static BitArrayRange R_rs1_0(19, 15);
+rs1 += R_rs1_0.read(ba) << 0;
+etiss_uint8 vm = 0;
+static BitArrayRange R_vm_0(25, 25);
+vm += R_vm_0.read(ba) << 0;
+etiss_uint8 nf = 0;
+static BitArrayRange R_nf_0(31, 29);
+nf += R_nf_0.read(ba) << 0;
+
+// -----------------------------------------------------------------------------
+
+		std::stringstream ss;
+// -----------------------------------------------------------------------------
+ss << "vl32r_v" << " # " << ba << (" [vd=" + std::to_string(vd) + " | rs1=" + std::to_string(rs1) + " | vm=" + std::to_string(vm) + " | nf=" + std::to_string(nf) + "]");
 // -----------------------------------------------------------------------------
 		return ss.str();
 	}
