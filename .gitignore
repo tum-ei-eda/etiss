@@ -37,6 +37,8 @@
 
 # IDE files
 .vscode
+.idea
+cmake-build-debug
 
 # Temporaries
 *~
