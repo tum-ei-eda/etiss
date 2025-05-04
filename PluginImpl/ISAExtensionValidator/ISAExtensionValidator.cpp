@@ -4,6 +4,7 @@
 
 #include "ISAExtensionValidator.h"
 
+using namespace etiss::plugin;
 
 void ISAExtensionValidator::initInstrSet(etiss::instr::ModedInstructionSet & ) const
 {

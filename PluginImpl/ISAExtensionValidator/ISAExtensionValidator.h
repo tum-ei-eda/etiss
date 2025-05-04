@@ -7,6 +7,11 @@
 
 #include "etiss/Plugin.h"
 
+namespace etiss
+{
+namespace plugin
+{
+
 class ISAExtensionValidator : public etiss::TranslationPlugin {
 public:
     ISAExtensionValidator();
@@ -20,3 +25,9 @@ public:
 
 
 #endif //ISAEXTENSIONVALIDATOR_H
+
+
+}// namespace plugin
+}// namespace etiss
+
+
