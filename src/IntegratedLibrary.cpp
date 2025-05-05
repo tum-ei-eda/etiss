@@ -75,7 +75,7 @@ extern "C"
 
     unsigned ETISSINCLUDED_countCPUArch() { return 0; }
 
-    unsigned ETISSINCLUDED_countPlugin() { return 4; }
+    unsigned ETISSINCLUDED_countPlugin() { return 5; }
 
     const char *ETISSINCLUDED_nameJIT(unsigned index) { return 0; }
 
