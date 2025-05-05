@@ -7,6 +7,8 @@
 
 #include "etiss/Plugin.h"
 
+extern "C"
+
 namespace etiss
 {
 namespace plugin
