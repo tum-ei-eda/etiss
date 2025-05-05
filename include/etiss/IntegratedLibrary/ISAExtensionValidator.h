@@ -14,7 +14,6 @@ namespace plugin
 
 class ISAExtensionValidator : public etiss::TranslationPlugin {
 public:
-    ISAExtensionValidator();
     virtual void initInstrSet(etiss::instr::ModedInstructionSet & ) const;
     virtual void finalizeInstrSet(etiss::instr::ModedInstructionSet & ) const;
     virtual void initCodeBlock(etiss::CodeBlock & ) const;

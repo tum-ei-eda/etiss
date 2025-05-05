@@ -61,6 +61,7 @@
 
 #include "etiss/IntegratedLibrary/Logger.h"
 #include "etiss/IntegratedLibrary/PrintInstruction.h"
+#include "etiss/IntegratedLibrary/ISAExtensionValidator.h"
 #include "etiss/IntegratedLibrary/errorInjection/Plugin.h"
 #include "etiss/IntegratedLibrary/gdb/GDBServer.h"
 
@@ -92,6 +93,8 @@ extern "C"
             return "PrintInstruction";
         case 3:
             return "Logger";
+        case 4:
+            return "ISAExtensionValidator";
         }
         return 0;
     }
@@ -133,10 +136,14 @@ extern "C"
         case 2:
             return new etiss::plugin::PrintInstruction();
         case 3:
+        {
             etiss::Configuration cfg;
             cfg.config() = options;
             return new etiss::plugin::Logger(cfg.get<uint64_t>("plugin.logger.logaddr", 0x80000000),
                                              cfg.get<uint64_t>("plugin.logger.logmask", 0xF0000000));
+        }
+        case 4:
+            return new etiss::plugin::ISAExtensionValidator();
         }
         return 0;
     }
