@@ -54,16 +54,21 @@
 #define ETISS_STRESSOR_H_
 
 #ifndef NO_ETISS
-#include "etiss/fault/Fault.h"
-#else
-#include "fault/Fault.h"
+#include "etiss/jit/ReturnCode.h"
 #endif
+
+#include <iostream>
 
 namespace etiss
 {
 
 namespace fault
 {
+
+class Fault;
+class Trigger;
+class Action;
+class Injector;
 
 class Stressor
 {
