@@ -34,6 +34,10 @@ void ISAExtensionValidator::finalizeInstrSet(etiss::instr::ModedInstructionSet &
                     [&instr](etiss::instr::BitArray &ba, etiss::CodeSet &cs, etiss::instr::InstructionContext &ic) {
                         std::stringstream ss;
                         ss << "// ISAExtensionValidation: call function to collect state information;\n";
+                        /*
+                         * TODO: The cast is now hardcoded. Would be nice if
+                         * it could be passed from configuration or as an argument
+                         */
                         ss << "ISAExtensionValidation_collect_state((RV32IMACFD*) cpu);\n";
                         cs.append(CodePart::PREINITIALDEBUGRETURNING).code() = ss.str();
 
@@ -98,18 +102,18 @@ extern "C"
 
         etiss_uint32 x[32];
         for (int i = 0; i < 32; ++i)
-            x[i] = (etiss_uint32)(*((RV32IMACFD*)cpu)->X[i]);
+            x[i] = *cpu->X[i];
 
         etiss_uint64 f[32];
         for (int i = 0; i < 32; ++i)
-            f[i] = (etiss_uint64)(((RV32IMACFD*)cpu)->F[i]);
+            f[i] = cpu->F[i];
 
         // PC
         printf("X[%s]: %d\n", "PC", pc);
 
+        // X registers
         for (int i = 0; i < 32; ++i)
         {
-            // X registers
             printf("%c[%d]: %u", 'X', i, x[i]);
             if (i != 31)
             {
@@ -120,9 +124,9 @@ extern "C"
             }
         }
 
+        // F registers:
         for (int i = 0; i < 32; ++i)
         {
-            // F registers:
             printf("%c[%d]: %lu", 'F', i, f[i]);
             if (i != 31)
             {
