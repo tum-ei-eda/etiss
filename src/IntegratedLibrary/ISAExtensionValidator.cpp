@@ -97,6 +97,22 @@ extern "C"
 
     void ISAExtensionValidation_collect_state(RV32IMACFD* cpu)
     {
+        /*
+         * TODO:
+         * Replace all printf calls with an in-memory logging mechanism.
+         * Specifically:
+         * - Store the collected state information (PC, X and F registers) in memory,
+         *   e.g., using a stringstream or a structured data container.
+         * - Accumulate logs during execution without printing immediately.
+         * - At the end of processing (or at a suitable point), write the entire
+         *   collected log data to a file in one batch.
+         *
+         * This will improve performance by minimizing expensive I/O operations
+         * and allow easier post-processing of the collected data.
+         *
+         * Ask @Johannes about how to best approach this. How to initialize the in-memory
+         * solution, and how to store data to file at the end.
+         */
 
         const etiss_uint32 pc = static_cast<etiss_uint32>(reinterpret_cast<ETISS_CPU *>(cpu)->instructionPointer);
 
