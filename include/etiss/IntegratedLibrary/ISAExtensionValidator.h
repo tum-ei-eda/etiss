@@ -25,10 +25,9 @@ public:
 };
 
 
-#endif //ISAEXTENSIONVALIDATOR_H
-
 
 }// namespace plugin
 }// namespace etiss
 
+#endif //ISAEXTENSIONVALIDATOR_H
 
