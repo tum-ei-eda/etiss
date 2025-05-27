@@ -64,6 +64,8 @@
 #include "etiss/IntegratedLibrary/ISAExtensionValidator.h"
 #include "etiss/IntegratedLibrary/errorInjection/Plugin.h"
 #include "etiss/IntegratedLibrary/gdb/GDBServer.h"
+#include "etiss/IntegratedLibrary/InstructionSpecificAddressCallback.h"
+#include "etiss/IntegratedLibrary/CJRTracer.h"
 
 extern "C"
 {
@@ -75,7 +77,7 @@ extern "C"
 
     unsigned ETISSINCLUDED_countCPUArch() { return 0; }
 
-    unsigned ETISSINCLUDED_countPlugin() { return 5; }
+    unsigned ETISSINCLUDED_countPlugin() { return 6; }
 
     const char *ETISSINCLUDED_nameJIT(unsigned index) { return 0; }
 
@@ -95,6 +97,8 @@ extern "C"
             return "Logger";
         case 4:
             return "ISAExtensionValidator";
+        case 5:
+            return "CJRTracer";
         }
         return 0;
     }
@@ -144,6 +148,8 @@ extern "C"
         }
         case 4:
             return new etiss::plugin::ISAExtensionValidator();
+        case 5:
+            return new CJRTracer();
         }
         return 0;
     }
