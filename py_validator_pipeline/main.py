@@ -12,7 +12,7 @@ import logging
 from typing import Tuple
 import argparse
 
-from extract_subprogram_vars_and_params import process_file
+from src.extract_subprogram_vars_and_params import process_file
 
 # Global logger
 logger = logging.getLogger(__name__)
