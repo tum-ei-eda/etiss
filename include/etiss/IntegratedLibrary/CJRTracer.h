@@ -6,15 +6,51 @@
 #define CJRINSTRUCTIONCALLBACK_H
 
 #include "etiss/IntegratedLibrary/InstructionSpecificAddressCallback.h"
+#include "../../ArchImpl/RV32IMACFD/RV32IMACFD.h"
+
+#include <string>
+#include <mutex>
 
 class CJRTracer : public etiss::plugin::InstructionSpecificAddressCallback
 {
 public:
-    CJRTracer();
+    // CJRTracer();
+    /**
+      * @param snapshot_content  optional initial content to put into the in-memory log
+      * @param output_path       file that will receive the log when the plugin is destroyed
+      */
+    CJRTracer(const std::string &snapshot_content = "",
+              const std::string &output_path      = "snapshot-activity.log");
 
-    virtual bool callback() override;
+    ~CJRTracer() override;          ///< automatically flushes to disk
 
-    virtual bool callbackOnInstruction(etiss::instr::Instruction &instr) const override;
+    void writeToDisk();            ///< can be called manually, too
+
+    void setCPU(RV32IMACFD* cpu) { cpu_ = cpu; }
+
+protected:
+    RV32IMACFD* cpu_ = nullptr;
+
+private:
+    /* immutable after construction */
+    std::string output_path_;
+
+    /* grows at run time inside callback() */
+    std::string snapshot_content_;
+
+    int         counter_ = 0;
+
+    /* lightweight synchronisation in case ETISS runs callbacks from several cores */
+    std::mutex  mutex_;
+
+    /* InstructionSpecificAddressCallback overrides */
+    bool callback() override;                                                       // run-time hook
+    bool callbackOnInstruction(etiss::instr::Instruction &instr) const override;    // decode-time hook
+
+
+    void initCodeBlock(etiss::CodeBlock & ) const override;
+    void finalizeInstrSet(etiss::instr::ModedInstructionSet &) const override;
+
 };
 
 #endif // CJRINSTRUCTIONCALLBACK_H
