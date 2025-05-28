@@ -149,7 +149,10 @@ extern "C"
         case 4:
             return new etiss::plugin::ISAExtensionValidator();
         case 5:
-            return new CJRTracer();
+            std::string snapshot_content = "";
+            std::string output_path = "snapshot-activity.log";
+
+            return new CJRTracer(snapshot_content, output_path);
         }
         return 0;
     }
@@ -158,7 +161,14 @@ extern "C"
 
     void ETISSINCLUDED_deleteCPUArch(etiss::CPUArch *o) { delete o; }
 
-    void ETISSINCLUDED_deletePlugin(etiss::Plugin *o) { delete o; }
+    void ETISSINCLUDED_deletePlugin(etiss::Plugin *o)
+    {
+        // check if it's a CJRTracer
+        if (auto tracer = dynamic_cast<CJRTracer*>(o)) {
+            tracer->writeToDisk();
+        }
+        delete o;
+    }
 }
 
 // not part of the example implementation
