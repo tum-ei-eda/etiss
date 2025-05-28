@@ -8,8 +8,14 @@
 #include "../../ArchImpl/RV32IMACFD/RV32IMACFD.h"
 #include "etiss/CPUArch.h"
 
+#include <unordered_set>
+#include <string>
+
 using namespace etiss::plugin;
 using namespace etiss::instr;
+
+// Initialize and populate the set of instructions
+std::unordered_set<std::string> instruction_with_callback = {"cjr"};
 
 void ISAExtensionValidator::initInstrSet(etiss::instr::ModedInstructionSet & ) const
 {
@@ -30,7 +36,9 @@ void ISAExtensionValidator::finalizeInstrSet(etiss::instr::ModedInstructionSet &
     mis.foreach ([](etiss::instr::VariableInstructionSet &vis) {
         vis.foreach ([](etiss::instr::InstructionSet &set) {
             set.foreach ([](etiss::instr::Instruction &instr) {
-                instr.addCallback(
+                if (instruction_with_callback.find(instr.name_) != instruction_with_callback.end())
+                {
+                    instr.addCallback(
                     [&instr](etiss::instr::BitArray &ba, etiss::CodeSet &cs, etiss::instr::InstructionContext &ic) {
                         std::stringstream ss;
                         ss << "// ISAExtensionValidation: call function to collect state information;\n";
@@ -44,6 +52,8 @@ void ISAExtensionValidator::finalizeInstrSet(etiss::instr::ModedInstructionSet &
                         return true;
                     },
                     0);
+                }
+
             });
         });
     });
