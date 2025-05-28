@@ -30,10 +30,11 @@ args = parser.parse_args()
 
 def init_logger() -> None:
     # Clear existing handlers (if running multiple times, like in Jupyter or REPL)
-    logger.handlers.clear()
+    root_logger = logging.getLogger()  # root logger
 
-    # Set logging level for the logger
-    logger.setLevel(logging.INFO)
+    # Set logging level for all loggers
+    root_logger.setLevel(logging.INFO)
+    root_logger.handlers.clear()
 
     # File handler
     file_handler = logging.FileHandler('pyelftools_test.log')
@@ -49,16 +50,20 @@ def init_logger() -> None:
     console_handler.setFormatter(formatter)
 
     # Add handlers to the logger
-    logger.addHandler(file_handler)
-    logger.addHandler(console_handler)
+    root_logger.addHandler(file_handler)
+    root_logger.addHandler(console_handler)
 
 
 def run_pipeline():
     """
         Runs the execution pipeline
     """
+
+    indent = '     '
+
     # Extract DWARF-information from given binary
     logger.info("Starting pipeline execution")
+    logger.info("Extracting DWARF debug information:")
     dwarf_info = process_file(binary=args.bin, source_file=args.src, function=args.fun)
 
 
@@ -73,8 +78,9 @@ def run_pipeline():
         "--jit.gcc.cleanup", "true"
     ]
 
+    logger.info("Running ETISS simulation. This may take a while")
     try:
-        result = subprocess.run(cmd, capture_output=True, text=True, check=True)
+        result = subprocess.run(cmd, text=True, check=True)
     except subprocess.CalledProcessError as e:
         print("Command failed with non-zero exit code.")
         print("Return code:", e.returncode)
@@ -88,8 +94,11 @@ def run_pipeline():
         print(f"An unexpected error occurred: {e}")
         raise Exception("Command failed with non-zero exit code.")
 
+
+    logger.info("Extracting snapshots from activity log")
     snapshots = []
-    with open(f"{etiss_path}/snapshot-activity.log", "r") as f:
+    current_path = os.getcwd()
+    with open(f"{current_path}/snapshot-activity.log", "r") as f:
         for line_number, line in enumerate(f, start=1):
             line = line.strip()
             if not line:
@@ -102,9 +111,15 @@ def run_pipeline():
 
 
     lowpc, highpc = dwarf_info['DW_AT_low_pc'], dwarf_info['DW_AT_high_pc']
+
+    snapshot_matches = ""
     for snapshot in snapshots:
         if lowpc <= snapshot['pc'] < highpc:
-            print(f"{snapshot['pc']}: a0: {snapshot['x'][10]}, a1: {snapshot['x'][11]}, fa0: {snapshot['f'][10]}, fa1: {snapshot['f'][11]}")
+            snapshot_matches += f"{indent} | <{snapshot['pc']}>: a0: {snapshot['x'][10]}, a1: {snapshot['x'][11]}, fa0: {snapshot['f'][10]}, fa1: {snapshot['f'][11]}\n"
+    if snapshot_matches:
+        logger.info(f"Snapshots within the subprogram PC range:\n{snapshot_matches}")
+    else:
+        logger.info("No matches found from snapshot information within function PC range")
 
 
 def main():

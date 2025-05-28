@@ -15,6 +15,7 @@
 #-------------------------------------------------------------------------------
 import os
 from pathlib import Path
+import logging
 
 
 from elftools.elf.elffile import ELFFile
@@ -24,16 +25,22 @@ from elftools.dwarf.locationlists import (
     LocationEntry, LocationExpr, LocationParser)
 from elftools.dwarf.descriptions import describe_form_class
 
-DWARF_INFO = {}
 
-def process_file(binary: str, source_file: str, function: str):
-    print('Processing file:', binary)
+logger = logging.getLogger(__name__)
+DWARF_INFO = {}
+DWARF_OUTPUT = ""
+
+def process_file(binary: str, source_file: str, function: str) -> dict:
+    global DWARF_OUTPUT
+    global DWARF_INFO
+    print(logger.getEffectiveLevel())  # Should be 20 (INFO)
+    logger.info(f'Processing file: {binary}')
     with open(binary, 'rb') as f:
         elffile = ELFFile(f)
 
         if not elffile.has_dwarf_info():
-            print('  file has no DWARF info')
-            return
+            logger.error('  file has no DWARF info')
+            raise Exception('File has no DWARF info')
 
         # get_dwarf_info returns a DWARFInfo context object, which is the
         # starting point for all DWARF-based processing in pyelftools.
@@ -73,13 +80,14 @@ def process_file(binary: str, source_file: str, function: str):
             if not file == source_file:
                 continue
 
-            print(f"{file}, offset: {CU.cu_offset}, length: {CU['unit_length']} ")
+            DWARF_OUTPUT += f"{file}, offset: {CU.cu_offset}, length: {CU['unit_length']}\n"
 
             # We iterate through all direct descendants of the CU
             for child in top_DIE.iter_children():
                 die_info_direct_child_of_cu(child, location_lists, loc_parser, CU, dwarf_info, function, indent_level)
 
-            return DWARF_INFO
+    logger.info(f"Following information was extracted from DWARF debug information:\n{DWARF_OUTPUT}")
+    return DWARF_INFO
 
 
 def die_info_direct_child_of_cu(die, loc_list: list, loc_parser, CU, dwarfinfo, function, indent_level='    '):
@@ -87,39 +95,42 @@ def die_info_direct_child_of_cu(die, loc_list: list, loc_parser, CU, dwarfinfo, 
         For now we only want global variables and one specific function that are
         direct descendants of the compilation unit.
     """
-
+    global DWARF_OUTPUT
+    global DWARF_INFO
     match die.tag:
+
         case 'DW_TAG_subprogram':
 
             if 'DW_AT_name' in die.attributes and  die.attributes['DW_AT_name'].value.decode('utf-8') == function:
-                print(indent_level + 'DIE tag=%s' % die.tag, end="\n")
+                DWARF_OUTPUT += f"{indent_level}DIE tag={die.tag}\n"
                 for attr, value in die.attributes.items():
                     match attr:
                         case 'DW_AT_name':
-                            print(f"{indent_level}  | {attr}: {value.value.decode('utf-8')}", end="\n")
+                            DWARF_OUTPUT += f"{indent_level}  | {attr}: {value.value.decode('utf-8')}\n"
                         case 'DW_AT_type':
-                            print(f"{indent_level}  | {attr}={get_base_type(die.get_DIE_from_attribute('DW_AT_type'))}")
-                            print(
-                                f"{indent_level}  | DW_AT_byte_size={get_base_type_size(die.get_DIE_from_attribute('DW_AT_type'))}")
+                            DWARF_OUTPUT += f"{indent_level}  | {attr}={get_base_type(die.get_DIE_from_attribute('DW_AT_type'))}\n"
+                            DWARF_OUTPUT += f"{indent_level}  | DW_AT_byte_size={get_base_type_size(die.get_DIE_from_attribute('DW_AT_type'))}\n"
                         case _:
                             pass
                 lowpc, highpc = get_low_and_high_pc(die)
+                DWARF_INFO['DW_AT_low_pc'] = lowpc
+                DWARF_INFO['DW_AT_high_pc'] = highpc
                 if lowpc and highpc:
-                    print(f"{indent_level}  | {'DW_AT_low_pc'}={lowpc}")
-                    print(f"{indent_level}  | {'DW_AT_high_pc'}={highpc}")
+                    DWARF_OUTPUT += f"{indent_level}  | {'DW_AT_low_pc'}={lowpc}\n"
+                    DWARF_OUTPUT += f"{indent_level}  | {'DW_AT_high_pc'}={highpc}\n"
                 child_indent = indent_level + '  '
                 for child in die.iter_children():
                     die_info_rec(child, loc_list, loc_parser, CU, dwarfinfo, child_indent)
 
         case 'DW_TAG_variable':
-            print(f"{indent_level} DIE tag={die.tag}")
+            DWARF_OUTPUT +=  f"{indent_level} DIE tag={die.tag}\n"
             for attr, value in die.attributes.items():
 
                 if attr in ['DW_AT_name']:
-                    print(f"{indent_level}  | {attr}={value.value.decode('utf-8')}")
+                    DWARF_OUTPUT += f"{indent_level}  | {attr}={value.value.decode('utf-8')}\n"
                 if attr in ['DW_AT_type']:
-                    print(f"{indent_level}  | {attr}={get_base_type(die.get_DIE_from_attribute('DW_AT_type'))}")
-                    print(f"{indent_level}  | DW_AT_byte_size={get_base_type_size(die.get_DIE_from_attribute('DW_AT_type'))}")
+                    DWARF_OUTPUT += f"{indent_level}  | {attr}={get_base_type(die.get_DIE_from_attribute('DW_AT_type'))}\n"
+                    DWARF_OUTPUT += f"{indent_level}  | DW_AT_byte_size={get_base_type_size(die.get_DIE_from_attribute('DW_AT_type'))}\n"
 
                 if loc_parser.attribute_has_location(value, CU['version']):
                     line = f"{indent_level}  | "
@@ -137,13 +148,15 @@ def die_info_direct_child_of_cu(die, loc_list: list, loc_parser, CU, dwarfinfo, 
                         line += show_loclist(loc,
                                              dwarfinfo,
                                              'DW_AT_location=', CU.cu_offset)
-                    print(line)
+                    DWARF_OUTPUT += f"{line}\n"
         case _:
             pass
 
 
 
 def get_low_and_high_pc(DIE):
+    global DWARF_OUTPUT
+    global DWARF_INFO
     lowpc = DIE.attributes['DW_AT_low_pc'].value
 
     # DWARF v4 in section 2.17 describes how to interpret the
@@ -158,8 +171,7 @@ def get_low_and_high_pc(DIE):
     elif highpc_attr_class == 'constant':
         highpc = lowpc + highpc_attr.value
     else:
-        print('Error: invalid DW_AT_high_pc class:',
-              highpc_attr_class)
+        logger.error('Error: invalid DW_AT_high_pc class:',highpc_attr_class)
         lowpc, highpce = None, None
 
     return lowpc, highpc
@@ -170,17 +182,19 @@ def die_info_rec(die, loc_list: list, loc_parser, CU, dwarfinfo, indent_level=' 
     """ A recursive function for showing information about a DIE and its
         children.
     """
+    global DWARF_OUTPUT
+    global DWARF_INFO
     
     match die.tag:
         case 'DW_TAG_formal_parameter' | 'DW_TAG_variable':
-            print(f"{indent_level} DIE tag={die.tag}")
+            DWARF_OUTPUT += f"{indent_level} DIE tag={die.tag}\n"
             for attr, value in die.attributes.items():
 
                 if attr in ['DW_AT_name']:
-                    print(f"{indent_level}  | {attr}={value.value.decode('utf-8')}")
+                    DWARF_OUTPUT += f"{indent_level}  | {attr}={value.value.decode('utf-8')}\n"
                 if attr in ['DW_AT_type']:
-                    print(f"{indent_level}  | {attr}={get_base_type(die.get_DIE_from_attribute('DW_AT_type'))}")
-                    print(f"{indent_level}  | DW_AT_byte_size={get_base_type_size(die.get_DIE_from_attribute('DW_AT_type'))}")
+                    DWARF_OUTPUT += f"{indent_level}  | {attr}={get_base_type(die.get_DIE_from_attribute('DW_AT_type'))}\n"
+                    DWARF_OUTPUT += f"{indent_level}  | DW_AT_byte_size={get_base_type_size(die.get_DIE_from_attribute('DW_AT_type'))}\n"
 
 
                 if loc_parser.attribute_has_location(value, CU['version']):
@@ -199,7 +213,7 @@ def die_info_rec(die, loc_list: list, loc_parser, CU, dwarfinfo, indent_level=' 
                             line += show_loclist(loc,
                                                 dwarfinfo,
                                                 ';DW_AT_location=', CU.cu_offset)
-                        print(line)
+                        DWARF_OUTPUT += f"{line}\n"
         case _:
             pass
 
@@ -233,28 +247,28 @@ def get_base_type_size(t) -> str:
                 at = t.get_DIE_from_attribute('DW_AT_type')
                 return get_base_type_size(at)
             except KeyError as e:
-                print(f"KeyError: {e}, caused by {t}")
+                logger.error(f"KeyError: {e}, caused by {t}")
                 return "NA"
         case 'DW_TAG_pointer_type':
             try:
                 pt = t.get_DIE_from_attribute('DW_AT_type')
                 return get_base_type_size(pt)
             except KeyError as e:
-                print(f"KeyError: {e}, caused by {t}")
+                logger.error(f"KeyError: {e}, caused by {t}")
                 return "pointer no <NO_TYPE>"
         case 'DW_TAG_const_type':
             try:
                 ct = t.get_DIE_from_attribute('DW_AT_type')
                 return get_base_type_size(ct)
             except KeyError as e:
-                print(f"KeyError: {e}, caused by {t}")
+                logger.error(f"KeyError: {e}, caused by {t}")
                 return "NA"
         case 'DW_TAG_typedef':
             try:
                 td = t.get_DIE_from_attribute('DW_AT_type')
                 return f"{get_base_type_size(td)}"
             except KeyError as e:
-                print(f"KeyError: {e}, caused by {t}")
+                logger.error(f"KeyError: {e}, caused by {t}")
                 return "NA"
         case 'DW_TAG_structure_type':
             return f"{t.attributes['DW_AT_byte_size'].value}"
@@ -277,40 +291,40 @@ def get_base_type(t) -> str:
                 at = t.get_DIE_from_attribute('DW_AT_type')
                 return f"array of {get_base_type(at)}"
             except KeyError as e:
-                print(f"KeyError: {e}, caused by {t}")
+                logger.error(f"KeyError: {e}, caused by {t}")
                 return "array of <NO_TYPE>"
         case 'DW_TAG_pointer_type':
             try:
                 pt = t.get_DIE_from_attribute('DW_AT_type')
                 return f"pointer to {get_base_type(pt)}"
             except KeyError as e:
-                print(f"KeyError: {e}, caused by {t}")
+                logger.error(f"KeyError: {e}, caused by {t}")
                 return "pointer to <NO_TYPE>"
         case 'DW_TAG_const_type':
             try:
                 pt = t.get_DIE_from_attribute('DW_AT_type')
                 return f"const {get_base_type(pt)}"
             except KeyError as e:
-                print(f"KeyError: {e}, caused by {t}")
+                logger.error(f"KeyError: {e}, caused by {t}")
                 return "const of <NO_TYPE>"
         case 'DW_TAG_typedef':
             try:
                 pt = t.get_DIE_from_attribute('DW_AT_type')
                 return f"typedef {t.attributes['DW_AT_name'].value.decode('utf-8')} of type {get_base_type(pt)}"
             except KeyError as e:
-                print(f"KeyError: {e}, caused by {t}")
+                logger.error(f"KeyError: {e}, caused by {t}")
                 return "typedef of <NO_TYPE>"
         case 'DW_TAG_structure_type':
             try:
                 return f"struct {t.attributes['DW_AT_name'].value.decode('utf-8')}"
             except KeyError as e:
-                print(f"KeyError: {e}, caused by {t}")
+                logger.error(f"KeyError: {e}, caused by {t}")
                 return "struct <NO_NAME>"
         case 'DW_TAG_class_type':
             try:
                 return f"class {t.attributes['DW_AT_name'].value.decode('utf-8')}"
             except KeyError as e:
-                print(f"KeyError: {e}, caused by {t}")
+                logger.error(f"KeyError: {e}, caused by {t}")
                 return "class <NO_DEFINITION>"
         case _:
             return ""
