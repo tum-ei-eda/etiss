@@ -1,1 +1,18 @@
+# Virtual env
 **/venv
+
+
+# Caches
+**/__pycache__/
+
+
+# JetBrains Pycharm
+**/.idea
+
+
+# Logs
+**/*.log
+
+
+# Temporary files
+**/tmp
