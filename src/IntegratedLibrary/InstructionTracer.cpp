@@ -26,37 +26,39 @@ std::unordered_set<std::string> instructions_to_snapshot = {"cjr"};
 InstructionTracer::InstructionTracer(const std::string &snapshot_content,
                      const std::string &output_path)
     : output_path_(output_path),
-      snapshot_content_(snapshot_content),
-      counter_(0)
+      snapshot_content_(snapshot_content)
+
 {
-    // nothing else to do
+
 }
 
+/*
+ * In destructor, we call the writeToDisk function to
+ * write buffer information to disk
+ *
+ */
 InstructionTracer::~InstructionTracer()
 {
     /* make sure we never throw from a destructor */
     try { writeToDisk(); }
     catch (const std::exception &e)
     {
-        std::cerr << "CJRTracer: Write to disk failed - " << e.what() << std::endl;
+        std::cerr << "InstructionTracer: Write to disk failed - " << e.what() << std::endl;
     }
     catch (...)
     {
-        std::cerr << "CJRTracer: Write to disk failed - unknown exception" << std::endl;
+        std::cerr << "InstructionTracer: Write to disk failed - unknown exception" << std::endl;
     }
 }
 
 
-/* This is the method that runs at runtime when your instruction executes */
+/*
+ * This is the method that runs at runtime when your instruction executes
+ * TODO: this might not be needed any more
+ */
 bool InstructionTracer::callback()
 {
     std::lock_guard<std::mutex> guard(mutex_);
-
-    // ++counter_;
-
-    /* append the new value to the in-memory “file” */
-    // snapshot_content_ += std::to_string(counter_) + '\n';
-
 
     /* keep simulation running */
     return false;
