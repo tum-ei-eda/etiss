@@ -74,7 +74,7 @@ def run_pipeline():
     cmd = [
         f"{etiss_path}/{bare_metal_etiss}",
         f"-i{ini_file}",
-        "-p", "CJRTracer",
+        "-p", "InstructionTracer",
         "--jit.gcc.cleanup", "true"
     ]
 
