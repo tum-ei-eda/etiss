@@ -65,7 +65,7 @@
 #include "etiss/IntegratedLibrary/errorInjection/Plugin.h"
 #include "etiss/IntegratedLibrary/gdb/GDBServer.h"
 #include "etiss/IntegratedLibrary/InstructionSpecificAddressCallback.h"
-#include "etiss/IntegratedLibrary/CJRTracer.h"
+#include "etiss/IntegratedLibrary/InstructionTracer.h"
 
 extern "C"
 {
@@ -98,7 +98,7 @@ extern "C"
         case 4:
             return "ISAExtensionValidator";
         case 5:
-            return "CJRTracer";
+            return "InstructionTracer";
         }
         return 0;
     }
@@ -149,10 +149,8 @@ extern "C"
         case 4:
             return new etiss::plugin::ISAExtensionValidator();
         case 5:
-            std::string snapshot_content = "";
-            std::string output_path = "snapshot-activity.log";
-
-            return new CJRTracer(snapshot_content, output_path);
+            // TODO: snapshot_content is not needed, providing output path should be considered more in detail
+            return new InstructionTracer("", "snapshot-activity.log");
         }
         return 0;
     }
@@ -164,7 +162,7 @@ extern "C"
     void ETISSINCLUDED_deletePlugin(etiss::Plugin *o)
     {
         // check if it's a CJRTracer
-        if (auto tracer = dynamic_cast<CJRTracer*>(o)) {
+        if (auto tracer = dynamic_cast<InstructionTracer*>(o)) {
             tracer->writeToDisk();
         }
         delete o;
