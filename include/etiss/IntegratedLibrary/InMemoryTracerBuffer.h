@@ -9,9 +9,9 @@
 #include <string>
 #include <mutex>
 
-class CJRTracerBuffer {
+class InMemoryTracerBuffer {
 public:
-    static CJRTracerBuffer& instance();
+    static InMemoryTracerBuffer& instance();
 
     void append(const std::string& s);
     std::string str() const;
@@ -21,6 +21,6 @@ private:
     std::ostringstream buffer_;
 };
 
-extern "C" void CJRTracer_append_entry(const char* s);
+extern "C" void InMemoryTracerBuffer_append_entry(const char* s);
 
 #endif //CJRTRACERBUFFER_H

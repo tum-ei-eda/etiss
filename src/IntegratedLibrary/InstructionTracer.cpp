@@ -4,9 +4,9 @@
 
 
 
-#include "etiss/IntegratedLibrary/CJRTracer.h"
+#include "etiss/IntegratedLibrary/InstructionTracer.h"
 #include "etiss/ETISS.h"
-#include "etiss/IntegratedLibrary/CJRTracerBuffer.h"
+#include "etiss/IntegratedLibrary/InMemoryTracerBuffer.h"
 
 #include "../../ArchImpl/RV32IMACFD/RV32IMACFD.h"
 #include "etiss/CPUArch.h"
@@ -23,7 +23,7 @@ using namespace etiss::instr;
 std::unordered_set<std::string> instructions_to_snapshot = {"cjr"};
 
 
-CJRTracer::CJRTracer(const std::string &snapshot_content,
+InstructionTracer::InstructionTracer(const std::string &snapshot_content,
                      const std::string &output_path)
     : output_path_(output_path),
       snapshot_content_(snapshot_content),
@@ -32,7 +32,7 @@ CJRTracer::CJRTracer(const std::string &snapshot_content,
     // nothing else to do
 }
 
-CJRTracer::~CJRTracer()
+InstructionTracer::~InstructionTracer()
 {
     /* make sure we never throw from a destructor */
     try { writeToDisk(); }
@@ -48,7 +48,7 @@ CJRTracer::~CJRTracer()
 
 
 /* This is the method that runs at runtime when your instruction executes */
-bool CJRTracer::callback()
+bool InstructionTracer::callback()
 {
     std::lock_guard<std::mutex> guard(mutex_);
 
@@ -63,7 +63,7 @@ bool CJRTracer::callback()
 }
 
 /* This is the method that runs during instruction decoding/translation */
-bool CJRTracer::callbackOnInstruction(etiss::instr::Instruction &instr) const
+bool InstructionTracer::callbackOnInstruction(etiss::instr::Instruction &instr) const
 {
     /* attach this tracer only to the ‘cjr’ instruction */
     return instr.name_ == "cjr";
@@ -77,7 +77,7 @@ bool CJRTracer::callbackOnInstruction(etiss::instr::Instruction &instr) const
  * see initCodeBlock in which the functions are included to the code block as extern functions.
  *
  */
-void CJRTracer::finalizeInstrSet(etiss::instr::ModedInstructionSet &mis ) const
+void InstructionTracer::finalizeInstrSet(etiss::instr::ModedInstructionSet &mis ) const
 {
     std::cout << "ISAExtensionValidator::finalizeInstrSet" << std::endl;
     mis.foreach ([](etiss::instr::VariableInstructionSet &vis) {
@@ -88,12 +88,12 @@ void CJRTracer::finalizeInstrSet(etiss::instr::ModedInstructionSet &mis ) const
                     instr.addCallback(
                     [&instr](etiss::instr::BitArray &ba, etiss::CodeSet &cs, etiss::instr::InstructionContext &ic) {
                         std::stringstream ss;
-                        ss << "// ISAExtensionValidation: call function to collect state information;\n";
+                        ss << "// InstructionTracer: call function to collect state information;\n";
                         /*
                          * TODO: The cast is now hardcoded. Would be nice if
                          * it could be passed from configuration or as an argument
                          */
-                        ss << "CJRTracer_collect_state((RV32IMACFD*) cpu);\n";
+                        ss << "InMemoryTracerBuffer_collect_state((RV32IMACFD*) cpu);\n";
                         cs.append(etiss::CodePart::PREINITIALDEBUGRETURNING).code() = ss.str();
 
                         return true;
@@ -110,13 +110,13 @@ void CJRTracer::finalizeInstrSet(etiss::instr::ModedInstructionSet &mis ) const
 /*
  * Add defined functions as extern functions to each code block
  */
-void CJRTracer::initCodeBlock(etiss::CodeBlock &block ) const
+void InstructionTracer::initCodeBlock(etiss::CodeBlock &block ) const
 {
-    block.fileglobalCode().insert("extern void CJRTracer_collect_state(RV32IMACFD*);");
+    block.fileglobalCode().insert("extern void InMemoryTracerBuffer_collect_state(RV32IMACFD*);");
 };
 
 
-void CJRTracer::writeToDisk()
+void InstructionTracer::writeToDisk()
 {
     std::lock_guard<std::mutex> guard(mutex_);
 
@@ -131,7 +131,7 @@ void CJRTracer::writeToDisk()
         return;
     }
 
-    out << CJRTracerBuffer::instance().str();
+    out << InMemoryTracerBuffer::instance().str();
     out.flush();
 }
 
@@ -149,8 +149,8 @@ extern "C"
      * @brief Collects and handles the current CPU state for ISA extension validation.
      *
      * This function extracts the instruction pointer (PC), general-purpose registers (X),
-     * and floating-point registers (F) from the given RV32IMACFD CPU state. Currently
-     * it prints their values to standard output in a readable format.
+     * and floating-point registers (F) from the given RV32IMACFD CPU state and stores it
+     * in a JSON-format to an in-memory buffer.
      *
      * The state information is intended to be used for verification purposes.
      *
@@ -159,22 +159,6 @@ extern "C"
 
     void CJRTracer_collect_state(RV32IMACFD* cpu)
     {
-        /*
-         * TODO:
-         * Replace all printf calls with an in-memory logging mechanism.
-         * Specifically:
-         * - Store the collected state information (PC, X and F registers) in memory,
-         *   e.g., using a stringstream or a structured data container.
-         * - Accumulate logs during execution without printing immediately.
-         * - At the end of processing (or at a suitable point), write the entire
-         *   collected log data to a file in one batch.
-         *
-         * This will improve performance by minimizing expensive I/O operations
-         * and allow easier post-processing of the collected data.
-         *
-         * Ask @Johannes about how to best approach this. How to initialize the in-memory
-         * solution, and how to store data to file at the end.
-         */
 
         const etiss_uint32 pc = static_cast<etiss_uint32>(reinterpret_cast<ETISS_CPU *>(cpu)->instructionPointer);
 
@@ -209,7 +193,7 @@ extern "C"
 
         // Append to global static buffer
         {
-            CJRTracer_append_entry(entry.str().c_str());
+            InMemoryTracerBuffer_append_entry(entry.str().c_str());
         }
     }
 
