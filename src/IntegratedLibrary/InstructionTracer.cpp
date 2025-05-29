@@ -92,7 +92,7 @@ void InstructionTracer::finalizeInstrSet(etiss::instr::ModedInstructionSet &mis 
                          * TODO: The cast is now hardcoded. Would be nice if
                          * it could be passed from configuration or as an argument
                          */
-                        ss << "InMemoryTracerBuffer_collect_state((RV32IMACFD*) cpu);\n";
+                        ss << "InstructionTracer_collect_state((RV32IMACFD*) cpu);\n";
                         cs.append(etiss::CodePart::PREINITIALDEBUGRETURNING).code() = ss.str();
 
                         return true;
@@ -111,7 +111,7 @@ void InstructionTracer::finalizeInstrSet(etiss::instr::ModedInstructionSet &mis 
  */
 void InstructionTracer::initCodeBlock(etiss::CodeBlock &block ) const
 {
-    block.fileglobalCode().insert("extern void InMemoryTracerBuffer_collect_state(RV32IMACFD*);");
+    block.fileglobalCode().insert("extern void InstructionTracer_collect_state(RV32IMACFD*);");
 };
 
 
@@ -156,7 +156,7 @@ extern "C"
      * @param cpu Pointer to the RV32IMACFD CPU instance whose state should be collected.
      */
 
-    void InMemoryTracerBuffer_collect_state(RV32IMACFD* cpu)
+    void InstructionTracer_collect_state(RV32IMACFD* cpu)
     {
 
         const etiss_uint32 pc = static_cast<etiss_uint32>(reinterpret_cast<ETISS_CPU *>(cpu)->instructionPointer);
