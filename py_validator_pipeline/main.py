@@ -115,7 +115,7 @@ def run_pipeline():
     snapshot_matches = ""
     for snapshot in snapshots:
         if lowpc <= snapshot['pc'] < highpc:
-            snapshot_matches += f"{indent} | <{snapshot['pc']}>: a0: {snapshot['x'][10]}, a1: {snapshot['x'][11]}, fa0: {snapshot['f'][10]}, fa1: {snapshot['f'][11]}\n"
+            snapshot_matches += f"{indent} | {snapshot['instruction']}@<{snapshot['pc']}>: a0: {snapshot['x'][10]}, a1: {snapshot['x'][11]}, fa0: {snapshot['f'][10]}, fa1: {snapshot['f'][11]}\n"
     if snapshot_matches:
         logger.info(f"Snapshots within the subprogram PC range:\n{snapshot_matches}")
     else:
