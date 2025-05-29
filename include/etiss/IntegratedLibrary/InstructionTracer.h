@@ -14,7 +14,7 @@
 class InstructionTracer : public etiss::plugin::InstructionSpecificAddressCallback
 {
 public:
-    // CJRTracer();
+    // TODO: think of whether these params are needed
     /**
       * @param snapshot_content  optional initial content to put into the in-memory log
       * @param output_path       file that will receive the log when the plugin is destroyed

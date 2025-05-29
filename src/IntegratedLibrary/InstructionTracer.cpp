@@ -79,7 +79,6 @@ bool InstructionTracer::callbackOnInstruction(etiss::instr::Instruction &instr) 
  */
 void InstructionTracer::finalizeInstrSet(etiss::instr::ModedInstructionSet &mis ) const
 {
-    std::cout << "ISAExtensionValidator::finalizeInstrSet" << std::endl;
     mis.foreach ([](etiss::instr::VariableInstructionSet &vis) {
         vis.foreach ([](etiss::instr::InstructionSet &set) {
             set.foreach ([](etiss::instr::Instruction &instr) {
@@ -127,7 +126,7 @@ void InstructionTracer::writeToDisk()
     if (!out)
     {
         etiss::log(etiss::ERROR,
-                   "CJRTracer: cannot open output file '" + output_path_ + '\'');
+                   "InstructionTracer: cannot open output file '" + output_path_ + '\'');
         return;
     }
 
@@ -157,7 +156,7 @@ extern "C"
      * @param cpu Pointer to the RV32IMACFD CPU instance whose state should be collected.
      */
 
-    void CJRTracer_collect_state(RV32IMACFD* cpu)
+    void InMemoryTracerBuffer_collect_state(RV32IMACFD* cpu)
     {
 
         const etiss_uint32 pc = static_cast<etiss_uint32>(reinterpret_cast<ETISS_CPU *>(cpu)->instructionPointer);
