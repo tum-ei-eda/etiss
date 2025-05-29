@@ -20,13 +20,13 @@ using namespace etiss::instr;
 
 
 // Initialize and populate the set of instructions
-std::unordered_set<std::string> instructions_to_snapshot = {"cjr"};
+std::unordered_set<std::string> instructions_to_snapshot = {"cjr", "cswsp"};
 
 
 InstructionTracer::InstructionTracer(const std::string &snapshot_content,
                      const std::string &output_path)
-    : output_path_(output_path),
-      snapshot_content_(snapshot_content)
+    :   output_path_(output_path),
+        snapshot_content_(snapshot_content)
 
 {
 
@@ -68,6 +68,7 @@ bool InstructionTracer::callback()
 bool InstructionTracer::callbackOnInstruction(etiss::instr::Instruction &instr) const
 {
     /* attach this tracer only to the ‘cjr’ instruction */
+    // TODO: Is this still needed?
     return instr.name_ == "cjr";
 }
 
@@ -94,7 +95,7 @@ void InstructionTracer::finalizeInstrSet(etiss::instr::ModedInstructionSet &mis 
                          * TODO: The cast is now hardcoded. Would be nice if
                          * it could be passed from configuration or as an argument
                          */
-                        ss << "InstructionTracer_collect_state((RV32IMACFD*) cpu);\n";
+                        ss << "InstructionTracer_collect_state((RV32IMACFD*) cpu, \"" << instr.name_ << "\");\n";
                         cs.append(etiss::CodePart::PREINITIALDEBUGRETURNING).code() = ss.str();
 
                         return true;
@@ -113,7 +114,7 @@ void InstructionTracer::finalizeInstrSet(etiss::instr::ModedInstructionSet &mis 
  */
 void InstructionTracer::initCodeBlock(etiss::CodeBlock &block ) const
 {
-    block.fileglobalCode().insert("extern void InstructionTracer_collect_state(RV32IMACFD*);");
+    block.fileglobalCode().insert("extern void InstructionTracer_collect_state(RV32IMACFD*, const char*);");
 };
 
 
@@ -158,7 +159,7 @@ extern "C"
      * @param cpu Pointer to the RV32IMACFD CPU instance whose state should be collected.
      */
 
-    void InstructionTracer_collect_state(RV32IMACFD* cpu)
+    void InstructionTracer_collect_state(RV32IMACFD* cpu, const char *instruction)
     {
 
         const etiss_uint32 pc = static_cast<etiss_uint32>(reinterpret_cast<ETISS_CPU *>(cpu)->instructionPointer);
@@ -172,7 +173,9 @@ extern "C"
             f[i] = cpu->F[i];
 
         std::ostringstream entry;
-        entry << "{\"pc\": " << pc << ", \"x\": [";
+        entry << "{\"pc\": " << pc << ", "
+            << "\"instruction\": " << std::quoted(instruction) << ", "
+            << "\"x\": [";
 
         // X registers
         for (int i = 0; i < 32; ++i)

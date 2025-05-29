@@ -26,11 +26,6 @@ public:
 
     void writeToDisk();            ///< can be called manually, too
 
-    void setCPU(RV32IMACFD* cpu) { cpu_ = cpu; }
-
-protected:
-    RV32IMACFD* cpu_ = nullptr;
-
 private:
     /* immutable after construction */
     std::string output_path_;
