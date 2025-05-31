@@ -163,6 +163,7 @@ extern "C"
     {
 
         const etiss_uint32 pc = static_cast<etiss_uint32>(reinterpret_cast<ETISS_CPU *>(cpu)->instructionPointer);
+        const etiss_uint32 sp = static_cast<RV32IMACFD *>(cpu)->SP;
 
         etiss_uint32 x[32];
         for (int i = 0; i < 32; ++i)
@@ -173,7 +174,9 @@ extern "C"
             f[i] = cpu->F[i];
 
         std::ostringstream entry;
-        entry << "{\"pc\": " << pc << ", "
+        entry << "{\"type\": \"state_snapshot\", "
+            << "\"pc\": " << pc << ", "
+            << "\"sp\": " << sp << ", "
             << "\"instruction\": " << std::quoted(instruction) << ", "
             << "\"x\": [";
 
