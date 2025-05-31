@@ -25,12 +25,14 @@ from elftools.dwarf.locationlists import (
     LocationEntry, LocationExpr, LocationParser)
 from elftools.dwarf.descriptions import describe_form_class
 
+from src.entity.dwarf_info import  DwarfInfo
+
 
 logger = logging.getLogger(__name__)
-DWARF_INFO = {}
+DWARF_INFO = DwarfInfo()
 DWARF_OUTPUT = ""
 
-def process_file(binary: str, source_file: str, function: str) -> dict:
+def process_file(binary: str, source_file: str, function: str) -> None:
     global DWARF_OUTPUT
     global DWARF_INFO
     print(logger.getEffectiveLevel())  # Should be 20 (INFO)
@@ -87,7 +89,6 @@ def process_file(binary: str, source_file: str, function: str) -> dict:
                 die_info_direct_child_of_cu(child, location_lists, loc_parser, CU, dwarf_info, function, indent_level)
 
     logger.info(f"Following information was extracted from DWARF debug information:\n{DWARF_OUTPUT}")
-    return DWARF_INFO
 
 
 def die_info_direct_child_of_cu(die, loc_list: list, loc_parser, CU, dwarfinfo, function, indent_level='    '):
@@ -113,8 +114,8 @@ def die_info_direct_child_of_cu(die, loc_list: list, loc_parser, CU, dwarfinfo, 
                         case _:
                             pass
                 lowpc, highpc = get_low_and_high_pc(die)
-                DWARF_INFO['DW_AT_low_pc'] = lowpc
-                DWARF_INFO['DW_AT_high_pc'] = highpc
+                DWARF_INFO.add_subprogram_low_pc(lowpc)
+                DWARF_INFO.add_subprogram_high_pc(highpc)
                 if lowpc and highpc:
                     DWARF_OUTPUT += f"{indent_level}  | {'DW_AT_low_pc'}={lowpc}\n"
                     DWARF_OUTPUT += f"{indent_level}  | {'DW_AT_high_pc'}={highpc}\n"
@@ -133,26 +134,30 @@ def die_info_direct_child_of_cu(die, loc_list: list, loc_parser, CU, dwarfinfo, 
                     DWARF_OUTPUT += f"{indent_level}  | DW_AT_byte_size={get_base_type_size(die.get_DIE_from_attribute('DW_AT_type'))}\n"
 
                 if loc_parser.attribute_has_location(value, CU['version']):
-                    line = f"{indent_level}  | "
+                    line_prefix = f"{indent_level}  | DW_AT_location="
                     loc = loc_parser.parse_from_attribute(value,
                                                           CU['version'], die)
-                    # We either get a list (in case the attribute is a
-                    # reference to the .debug_loc section) or a LocationExpr
-                    # object (in case the attribute itself contains location
-                    # information).
-                    if isinstance(loc, LocationExpr):
-                        line += 'DW_AT_location=%s' % (
-                            describe_DWARF_expr(loc.loc_expr,
-                                                dwarfinfo.structs, CU.cu_offset))
-                    elif isinstance(loc, list):
-                        line += show_loclist(loc,
-                                             dwarfinfo,
-                                             'DW_AT_location=', CU.cu_offset)
-                    DWARF_OUTPUT += f"{line}\n"
+
+                    loc_output = get_location_output(loc, dwarfinfo, CU)
+
+                    if loc_output != "":
+                        DWARF_OUTPUT += f"{line_prefix}{loc_output}\n"
+                        DWARF_INFO.append_global_var_location(die.attributes['DW_AT_name'].value.decode('utf-8'), loc_output)
         case _:
             pass
 
+def get_location_output(loc, dwarfinfo, CU):
+    # We either get a list (in case the attribute is a
+    # reference to the .debug_loc section) or a LocationExpr
+    # object (in case the attribute itself contains location
+    # information).
+    loc_output = ""
+    if isinstance(loc, LocationExpr):
 
+        loc_output += describe_DWARF_expr(loc.loc_expr, dwarfinfo.structs, CU.cu_offset)
+    elif isinstance(loc, list):
+        loc_output += show_loclist(loc, dwarfinfo, '', CU.cu_offset)
+    return loc_output
 
 def get_low_and_high_pc(DIE):
     global DWARF_OUTPUT
@@ -198,22 +203,15 @@ def die_info_rec(die, loc_list: list, loc_parser, CU, dwarfinfo, indent_level=' 
 
 
                 if loc_parser.attribute_has_location(value, CU['version']):
-                        line = f"{indent_level}  | "
+                        line_prefix = f"{indent_level}  | "
                         loc = loc_parser.parse_from_attribute(value,
                                                                 CU['version'], die)
-                        # We either get a list (in case the attribute is a
-                        # reference to the .debug_loc section) or a LocationExpr
-                        # object (in case the attribute itself contains location
-                        # information).
-                        if isinstance(loc, LocationExpr):
-                            line += ';DW_AT_location=%s' % (
-                                describe_DWARF_expr(loc.loc_expr,
-                                                    dwarfinfo.structs, CU.cu_offset))
-                        elif isinstance(loc, list):
-                            line += show_loclist(loc,
-                                                dwarfinfo,
-                                                ';DW_AT_location=', CU.cu_offset)
-                        DWARF_OUTPUT += f"{line}\n"
+                        loc_output = get_location_output(loc, dwarfinfo, CU)
+
+                        if loc_output != "":
+                            DWARF_OUTPUT += f"{line_prefix}{loc_output}\n"
+                            if die.tag == 'DW_TAG_formal_parameter':
+                                DWARF_INFO.append_formal_param_location(die.attributes['DW_AT_name'].value.decode('utf-8'), loc_output)
         case _:
             pass
 

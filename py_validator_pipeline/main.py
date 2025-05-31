@@ -4,6 +4,7 @@
 
 import os
 import subprocess
+import re
 import json
 from argparse import Namespace
 from pathlib import Path
@@ -13,6 +14,7 @@ from typing import Tuple
 import argparse
 
 from src.extract_subprogram_vars_and_params import process_file
+from src.entity.dwarf_info import DwarfInfo
 
 # Global logger
 logger = logging.getLogger(__name__)
@@ -64,8 +66,10 @@ def run_pipeline():
     # Extract DWARF-information from given binary
     logger.info("Starting pipeline execution")
     logger.info("Extracting DWARF debug information:")
-    dwarf_info = process_file(binary=args.bin, source_file=args.src, function=args.fun)
+    process_file(binary=args.bin, source_file=args.src, function=args.fun)
 
+    # Get the singleton instance of DWARF information entity
+    dwarf_info = DwarfInfo()
 
     # Run ETISS to produce activity log
     etiss_path = args.etiss_path
@@ -95,6 +99,7 @@ def run_pipeline():
         raise Exception("Command failed with non-zero exit code.")
 
 
+    # extract snapshots from the activity log
     logger.info("Extracting snapshots from activity log")
     snapshots = []
     current_path = os.getcwd()
@@ -110,16 +115,80 @@ def run_pipeline():
                 print(f"Error parsing JSON on line {line_number}: {e}")
 
 
-    lowpc, highpc = dwarf_info['DW_AT_low_pc'], dwarf_info['DW_AT_high_pc']
+    # The low and high PCs for the subprogram of interest are stored in the
+    # dwarf_info dictionary
+    lowpc = dwarf_info.get_low_pc()
+    highpc = dwarf_info.get_high_pc()
 
-    snapshot_matches = ""
+
+
+    state_snapshots = ""
+    idx_counter = 0
+    dwrites = {}
+    idx_ranges = []
     for snapshot in snapshots:
-        if lowpc <= snapshot['pc'] < highpc:
-            snapshot_matches += f"{indent} | {snapshot['instruction']}@<{snapshot['pc']}>: a0: {snapshot['x'][10]}, a1: {snapshot['x'][11]}, fa0: {snapshot['f'][10]}, fa1: {snapshot['f'][11]}\n"
-    if snapshot_matches:
-        logger.info(f"Snapshots within the subprogram PC range:\n{snapshot_matches}")
+        match snapshot['type']:
+            case 'state_snapshot':
+                if lowpc <= snapshot['pc'] < highpc:
+                    idx_ranges.append(idx_counter)
+                    state_snapshots += f"{indent} | idx:{idx_counter} {snapshot['instruction']}@<{snapshot['pc']}>: a0: {snapshot['x'][10]}, a1: {snapshot['x'][11]}, fa0: {snapshot['f'][10]}, fa1: {snapshot['f'][11]}\n"
+            case 'dwrite':
+                if snapshot['location'] not in dwrites:
+                    dwrites[snapshot['location']] = []
+                entry = (idx_counter, snapshot['data'])
+                dwrites[snapshot['location']].append(entry)
+                pass
+            case _:
+                pass
+        idx_counter += 1
+
+
+    # output state snapshots from within given subprogram range if they exist
+    if state_snapshots:
+        logger.info(f"Snapshots within the subprogram PC range:\n{state_snapshots}")
     else:
-        logger.info("No matches found from snapshot information within function PC range")
+        logger.warning("No matches found from snapshot information within function PC range")
+
+    logger.info(f"Global variable locations: {dwarf_info.get_global_var_locations()}")
+    logger.info(f"Formal parameter locations: {dwarf_info.get_formal_param_locations()}")
+
+    # log data writes to global variables from dict dwrites
+    if dwrites:
+        global_var_locations = dwarf_info.get_global_var_locations()
+        global_var_entry = ""
+        if global_var_locations:
+            for glob_name in global_var_locations:
+                for loc in global_var_locations[glob_name]:
+                    parsed_loc = re.search(r'DW_OP_addr:\s*([0-9a-fA-F]+)', loc).group(1)
+                    if parsed_loc in dwrites:
+                        matching_entries = []
+                        for entry in dwrites[parsed_loc]:
+                            if is_within_idx_range(idx_ranges, entry[0]):
+                                matching_entries.append(entry)
+                        global_var_entry += f"{indent} | {glob_name}: {matching_entries}\n"
+        if global_var_entry:
+            logger.info(f"Data writes to global variable addresses within index range:\n{global_var_entry}")
+        else:
+            mem_writes_to_global_vars = ""
+            for glob_name in global_var_locations:
+                for loc in global_var_locations[glob_name]:
+                    parsed_loc = re.search(r'DW_OP_addr:\s*([0-9a-fA-F]+)', loc).group(1)
+                    if parsed_loc in dwrites:
+                        for entry in dwrites[parsed_loc]:
+                            matching_entries.append(entry)
+                        mem_writes_to_global_vars += f"{indent} | {glob_name}: {matching_entries}\n"
+            logger.info(f"No data writes to global variable addresses within index ranges:{idx_ranges}\n{indent}| Memory writes to global variables: {mem_writes_to_global_vars}")
+    else:
+        logger.warning("No data writes found")
+
+
+def is_within_idx_range(idx_ranges, idx):
+    for i in range(0, len(idx_ranges), 2):
+        start = idx_ranges[i]
+        end = idx_ranges[i + 1]
+        if start <= idx <= end:
+            return True
+    return False
 
 
 def main():
