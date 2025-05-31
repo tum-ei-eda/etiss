@@ -54,6 +54,7 @@
 #include <stdlib.h>
 
 #include "etiss/System.h"
+#include "etiss/IntegratedLibrary/InMemoryTracerBuffer.h"
 
 // TODO: remove these when testing memwrites is done.
 #include <fstream>
@@ -89,39 +90,31 @@ static etiss_int32 system_call_dread(void *handle, ETISS_CPU *cpu, etiss_uint64 
 static etiss_int32 system_call_dwrite(void *handle, ETISS_CPU *cpu, etiss_uint64 addr, etiss_uint8 *buffer,
                                       etiss_uint32 length)
 {
-    std::stringstream ss;
-    ss << std::hex << addr << ";";
 
+    /*
+     * Writes an entry to the in-memory tracer buffer each time a
+     * data write occurs.
+     */
+    std::stringstream ss;
+
+    ss << "{"
+       << "\"type\":\"dwrite\","
+       << "\"pc\": " << cpu->instructionPointer << ", "
+       << "\"location\": \"" << std::hex << addr << "\", ";
+
+    ss << "\"data\": \"";
     for (etiss_uint32 i = 0; i < length; ++i) {
         ss << std::hex << std::uppercase
            << std::setw(2) << std::setfill('0')
            << static_cast<int>(buffer[i]);
     }
+    ss << "\", ";
 
-    ss << ";" << std::dec << length;
-    // etiss::log(etiss::WARNING, ss.str());
-    /*
-     * TODO: Replace this with an in-memory solution.
-     * Consider a HybridVerifier-like approach using an array of linked lists,
-     * where each array index corresponds to a "bucket" of memory addresses.
-     *
-     * Since memory addresses can be large and sparse,
-     * implement an address mapping function (e.g., hashing or range-based bucketing)
-     * to convert raw addresses into compact array indices.
-     *
-     * This allows maintaining a fixed-size array for efficient storage and lookup.
-     * Ask about this from Johannes. What would be a good approach. Also ask about
-     * how to best implement an in memory solution.
-     *
-     */
-    std::ofstream outfile("dwrite.log", std::ios::app);
-    if (outfile.is_open()) {
-        outfile << ss.str() << std::endl;  // Write log entry and add newline
-        outfile.close();                   // Close the file
-    } else {
-        etiss::log(etiss::ERROR,"Failed to write dwrite information to file to file");
+    ss << "\"byte_size\": " << std::dec << length;
+    ss << "}\n";
 
-    }
+    InMemoryTracerBuffer::instance().append(ss.str());
+
     return ((etiss::System *)handle)->dwrite(cpu, addr, buffer, length);
 }
 
