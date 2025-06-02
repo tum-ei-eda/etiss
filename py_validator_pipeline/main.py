@@ -71,6 +71,14 @@ def run_pipeline():
     # Get the singleton instance of DWARF information entity
     dwarf_info = DwarfInfo()
 
+    # The low and high PCs for the subprogram of interest are stored in the
+    # dwarf_info dictionary
+    lowpc = dwarf_info.get_low_pc()
+    highpc = dwarf_info.get_high_pc()
+
+    with open("pcs.tmp", "w", encoding="utf-8") as f:
+        f.write(f"{lowpc};{highpc}")
+
     # Run ETISS to produce activity log
     etiss_path = args.etiss_path
     bare_metal_etiss = args.etiss_executable
@@ -98,6 +106,11 @@ def run_pipeline():
         print(f"An unexpected error occurred: {e}")
         raise Exception("Command failed with non-zero exit code.")
 
+    # Remove the temporary file with low and high PC, if it exists
+    if os.path.exists("pcs.tmp"):
+        os.remove("pcs.tmp")
+
+
 
     # extract snapshots from the activity log
     logger.info("Extracting snapshots from activity log")
@@ -113,12 +126,6 @@ def run_pipeline():
                 snapshots.append(obj)
             except json.JSONDecodeError as e:
                 print(f"Error parsing JSON on line {line_number}: {e}")
-
-
-    # The low and high PCs for the subprogram of interest are stored in the
-    # dwarf_info dictionary
-    lowpc = dwarf_info.get_low_pc()
-    highpc = dwarf_info.get_high_pc()
 
 
 
