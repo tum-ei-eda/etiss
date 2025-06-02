@@ -15,10 +15,23 @@ void InMemoryTracerBuffer::append(const std::string& s) {
     buffer_ << s;
 }
 
+void InMemoryTracerBuffer::setTrace(bool is_active)
+{
+    traceActivated_ = is_active;
+}
+
+
+
+bool InMemoryTracerBuffer::isTracing() const
+{
+    return traceActivated_;
+}
+
 std::string InMemoryTracerBuffer::str() const {
     std::lock_guard<std::mutex> lock(mutex_);
     return buffer_.str();
 }
+
 
 extern "C" void InMemoryTracerBuffer_append_entry(const char* s) {
     InMemoryTracerBuffer::instance().append(s);
