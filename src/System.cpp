@@ -94,26 +94,33 @@ static etiss_int32 system_call_dwrite(void *handle, ETISS_CPU *cpu, etiss_uint64
     /*
      * Writes an entry to the in-memory tracer buffer each time a
      * data write occurs.
+     * TODO: create a Plugin to log dwrites
      */
-    std::stringstream ss;
+    if (InMemoryTracerBuffer::instance().isTracing())
+    {
+        std::stringstream ss;
 
-    ss << "{"
-       << "\"type\":\"dwrite\","
-       << "\"pc\": " << cpu->instructionPointer << ", "
-       << "\"location\": \"" << std::hex << addr << "\", ";
+        ss << "{"
+           << "\"type\":\"dwrite\","
+           << "\"pc\": " << cpu->instructionPointer << ", "
+           << "\"location\": \"" << std::hex << addr << "\", ";
 
-    ss << "\"data\": \"";
-    for (etiss_uint32 i = 0; i < length; ++i) {
-        ss << std::hex << std::uppercase
-           << std::setw(2) << std::setfill('0')
-           << static_cast<int>(buffer[i]);
+        ss << "\"data\": \"";
+        for (etiss_uint32 i = 0; i < length; ++i) {
+            ss << std::hex << std::uppercase
+               << std::setw(2) << std::setfill('0')
+               << static_cast<int>(buffer[i]);
+        }
+        ss << "\", ";
+
+        ss << "\"byte_size\": " << std::dec << length;
+        ss << "}\n";
+
+        InMemoryTracerBuffer::instance().append(ss.str());
     }
-    ss << "\", ";
 
-    ss << "\"byte_size\": " << std::dec << length;
-    ss << "}\n";
 
-    InMemoryTracerBuffer::instance().append(ss.str());
+
 
     return ((etiss::System *)handle)->dwrite(cpu, addr, buffer, length);
 }
