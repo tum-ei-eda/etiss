@@ -15,6 +15,11 @@
 #include <mutex>
 #include <unordered_set>
 
+#include <sstream>
+#include <string>
+#include <iostream>
+#include <iomanip>
+
 using namespace etiss::plugin;
 using namespace etiss::instr;
 
@@ -23,12 +28,45 @@ using namespace etiss::instr;
 std::unordered_set<std::string> instructions_to_snapshot = {"cjr", "cswsp"};
 
 
+etiss_uint32 low_pc = 0;
+etiss_uint32 high_pc = 0;
+
 InstructionTracer::InstructionTracer(const std::string &snapshot_content,
                      const std::string &output_path)
     :   output_path_(output_path),
         snapshot_content_(snapshot_content)
 
 {
+
+    // low_pc and high_pc are written in a file pcs.tmp with ; as delimiter
+    std::ifstream pcs_file("pcs.tmp");
+    if (!pcs_file.is_open()) {
+        etiss::log(etiss::ERROR, "Failed to open pcs.tmp");
+        return;
+    }
+
+    // TODO: replace this with a more mature implementation
+    std::string line;
+    if (std::getline(pcs_file, line)) {
+        std::stringstream ss(line);
+        std::string token;
+
+        if (std::getline(ss, token, ';')) {
+            low_pc = static_cast<etiss_uint32>(std::stoul(token, nullptr, 10));
+        }
+
+        if (std::getline(ss, token, ';')) {
+            high_pc = static_cast<etiss_uint32>(std::stoul(token, nullptr, 10));
+        }
+
+        etiss::log(etiss::INFO, "Loaded PC range: low=" + std::to_string(low_pc) +
+                                 ", high=" + std::to_string(high_pc));
+    }
+    else {
+        etiss::log(etiss::WARNING, "pcs.tmp is empty or unreadable");
+    }
+
+    pcs_file.close();
 
 }
 
@@ -162,46 +200,65 @@ extern "C"
     void InstructionTracer_collect_state(RV32IMACFD* cpu, const char *instruction)
     {
 
+
+        std::string inst = instruction;
+
+
+
         const etiss_uint32 pc = static_cast<etiss_uint32>(reinterpret_cast<ETISS_CPU *>(cpu)->instructionPointer);
-        const etiss_uint32 sp = static_cast<RV32IMACFD *>(cpu)->SP;
 
-        etiss_uint32 x[32];
-        for (int i = 0; i < 32; ++i)
-            x[i] = *cpu->X[i];
 
-        etiss_uint64 f[32];
-        for (int i = 0; i < 32; ++i)
-            f[i] = cpu->F[i];
-
-        std::ostringstream entry;
-        entry << "{\"type\": \"state_snapshot\", "
-            << "\"pc\": " << pc << ", "
-            << "\"sp\": " << sp << ", "
-            << "\"instruction\": " << std::quoted(instruction) << ", "
-            << "\"x\": [";
-
-        // X registers
-        for (int i = 0; i < 32; ++i)
+        if ((inst == "cswsp" || inst == "cjr") && (low_pc <= pc && pc <= high_pc))
         {
-            if (i != 0) entry << ", ";
-            entry << x[i];
+            const etiss_uint32 sp = static_cast<RV32IMACFD *>(cpu)->SP;
+
+            etiss_uint32 x[32];
+            for (int i = 0; i < 32; ++i)
+                x[i] = *cpu->X[i];
+
+            etiss_uint64 f[32];
+            for (int i = 0; i < 32; ++i)
+                f[i] = cpu->F[i];
+
+            std::ostringstream entry;
+            entry << "{\"type\": \"state_snapshot\", "
+                << "\"pc\": " << pc << ", "
+                << "\"sp\": " << sp << ", "
+                << "\"instruction\": " << std::quoted(instruction) << ", "
+                << "\"x\": [";
+
+            // X registers
+            for (int i = 0; i < 32; ++i)
+            {
+                if (i != 0) entry << ", ";
+                entry << x[i];
+            }
+
+            entry << "], \"f\": [";
+
+            // F registers
+            for (int i = 0; i < 32; ++i)
+            {
+                if (i != 0) entry << ", ";
+                entry << f[i];
+            }
+
+            entry << "]}\n";
+
+            // Append to global static buffer
+            {
+                InMemoryTracerBuffer_append_entry(entry.str().c_str());
+            }
+
+            /* cswsp activates trace, cjr deactivates trace */
+            InMemoryTracerBuffer::instance().setTrace(inst == "cswsp");
+
+
         }
 
-        entry << "], \"f\": [";
 
-        // F registers
-        for (int i = 0; i < 32; ++i)
-        {
-            if (i != 0) entry << ", ";
-            entry << f[i];
-        }
 
-        entry << "]}\n";
 
-        // Append to global static buffer
-        {
-            InMemoryTracerBuffer_append_entry(entry.str().c_str());
-        }
     }
 
 }
