@@ -1,3 +1,4 @@
+import re
 import logging
 from typing import List, Any
 
@@ -7,64 +8,61 @@ from src.util.singleton_meta import SingletonMeta
 
 class DwarfInfo(metaclass=SingletonMeta):
 
-    _dwarf_info = {}
     logger = logging.getLogger(__name__)
 
     # keys
-    subprogram_low_pc = 'DW_AT_low_pc'
-    subprogram_high_pc = 'DW_AT_high_pc'
-    global_var_locations = 'global_var_locations'
-    formal_param_locations = 'formal_param_locations'
+    _subprogram_low_pc = None
+    _subprogram_high_pc = None
+    _global_var_locations = {}
+    _formal_param_locations = {}
 
     def __init__(self):
         pass
 
-    def add_subprogram_low_pc(self, value) -> None:
-        if self.subprogram_low_pc in self._dwarf_info:
+    def set_subprogram_low_pc(self, value) -> None:
+        if self._subprogram_low_pc:
             self.logger.warning(f"Overwriting value for subprogram low PC")
-        self._dwarf_info[self.subprogram_low_pc] = value
+        self._subprogram_low_pc = value
 
-    def add_subprogram_high_pc(self, value) -> None:
-        if self.subprogram_high_pc in self._dwarf_info:
+    def set_subprogram_high_pc(self, value) -> None:
+        if self._subprogram_high_pc:
             self.logger.warning(f"Overwriting value for subprogram high PC")
-        self._dwarf_info[self.subprogram_high_pc] = value
+        self._subprogram_high_pc = value
+
+    def set_subprogram_low_and_high_pc(self, lowpc, highpc) -> None:
+        self._subprogram_low_pc = lowpc
+        if highpc < lowpc:
+            self._subprogram_high_pc = lowpc + highpc
+        else:
+            self._subprogram_high_pc = highpc
 
 
     def append_global_var_location(self, name, value) -> None:
-        if not self.global_var_locations in self._dwarf_info:
-            self._dwarf_info[self.global_var_locations] = {}
-        if not name in self._dwarf_info[self.global_var_locations]:
-            self._dwarf_info[self.global_var_locations][name] = []
-        self._dwarf_info[self.global_var_locations][name].append(value)
+        parsed_loc = re.search(r'DW_OP_addr:\s*([0-9a-fA-F]+)', value).group(1)
+        if not name in self._global_var_locations:
+            self._global_var_locations[name] = parsed_loc
 
-    def append_formal_param_location(self, name, value) -> None:
-        if not self.formal_param_locations in self._dwarf_info:
-            self._dwarf_info[self.formal_param_locations] = {}
-        if not name in self._dwarf_info[self.formal_param_locations]:
-            self._dwarf_info[self.formal_param_locations][name] = []
-        self._dwarf_info[self.formal_param_locations][name].append(value)
+    def append_formal_param_location(self, name, location) -> None:
+        parsed_loc = re.search(r"\(DW_OP_fbreg:\s*([-+]?\d+)\)", location).group(1)
+        if not name in self._formal_param_locations:
+            self._formal_param_locations[name] = int(parsed_loc)
 
 
     def get_low_pc(self) -> Any:
-        low_pc = None
-        if self.subprogram_low_pc in self._dwarf_info:
-            low_pc =  self._dwarf_info[self.subprogram_low_pc]
-        return low_pc
+        return self._subprogram_low_pc
 
     def get_high_pc(self) -> Any:
-        high_pc = None
-        if self.subprogram_high_pc in self._dwarf_info:
-            high_pc =  self._dwarf_info[self.subprogram_high_pc]
-        return high_pc
+        return self._subprogram_high_pc
 
-    def get_global_var_locations(self) -> None | List[Any]:
-        global_var_locations = None
-        if self.global_var_locations in self._dwarf_info:
-            global_var_locations = self._dwarf_info[self.global_var_locations]
-        return global_var_locations
+    def get_global_var_locations(self) -> Any:
+        return self._global_var_locations
 
-    def get_formal_param_locations(self) -> None | List[Any]:
-        formal_param_locations = None
-        if self.formal_param_locations in self._dwarf_info:
-            formal_param_locations = self._dwarf_info[self.formal_param_locations]
-        return formal_param_locations
+    def get_formal_param_locations(self) -> Any:
+        return self._formal_param_locations
+
+
+    def flush(self):
+        self._subprogram_low_pc = None
+        self._subprogram_high_pc = None
+        self._global_var_locations = {}
+        self._formal_param_locations = {}

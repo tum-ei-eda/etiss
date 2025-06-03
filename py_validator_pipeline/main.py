@@ -1,206 +1,101 @@
 """
-    The purpose of this main file is to handle the exeuction of the pipeline
+    The purpose of the main file is to handle the pipeline execution.
+    All other code should be placed in other modules.
 """
 
 import os
-import subprocess
-import re
-import json
-from argparse import Namespace
-from pathlib import Path
-import sys
 import logging
-from typing import Tuple
-import argparse
 
 from src.extract_subprogram_vars_and_params import process_file
+from src.etiss_simulation import run_etiss_simulation
+from src.snapshot_handler import parse_and_extract_snapshots
+from src.snapshot_handler import log_snapshot_information
 from src.entity.dwarf_info import DwarfInfo
+from src.util.logger import init_logger
+from src.util.arg_parser import parse_args
 
 # Global logger
 logger = logging.getLogger(__name__)
+# parse arguments
+args = parse_args()
 
-# Argument parser guides user in providing the required arguments
-parser = argparse.ArgumentParser()
-parser.add_argument("-b", "--bin", help="absolute path of the binary file", required=True)
-parser.add_argument("-i", "--ini", help="absolute path of the ini file", required=True)
-parser.add_argument("-s", "--src", help="name of source code file, e.g. hello.c", required=True)
-parser.add_argument("-f", "--fun", help="name of the function, e.g. foo", required=True)
-parser.add_argument("-e", "--etiss_path", help="absolute path of bare metal ETISS", required=True)
-parser.add_argument("-x", "--etiss_executable", help="name of bare metal ETISS", required=True)
+INDENT = '    '
 
-args = parser.parse_args()
-
-def init_logger() -> None:
-    # Clear existing handlers (if running multiple times, like in Jupyter or REPL)
-    root_logger = logging.getLogger()  # root logger
-
-    # Set logging level for all loggers
-    root_logger.setLevel(logging.INFO)
-    root_logger.handlers.clear()
-
-    # File handler
-    file_handler = logging.FileHandler('pyelftools_test.log')
-    file_handler.setLevel(logging.DEBUG)
-
-    # Console handler
-    console_handler = logging.StreamHandler()
-    console_handler.setLevel(logging.INFO)
-
-    # Formatter
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    file_handler.setFormatter(formatter)
-    console_handler.setFormatter(formatter)
-
-    # Add handlers to the logger
-    root_logger.addHandler(file_handler)
-    root_logger.addHandler(console_handler)
-
-
-def run_pipeline():
+def run_pipeline(bin_file, ini_file):
     """
         Runs the execution pipeline
     """
+    # Get the singleton instance of DWARF information entity
+    # TODO: having this as singleton makes no sense. Refactor.
+    dwarf_info = DwarfInfo()
+    dwarf_info.flush()
 
-    indent = '     '
+    logger.info("=== STARTING PIPELINE ===")
+    binary_information = f"{INDENT}| binary: {bin_file}\n{INDENT}| source: {args.src}\n{INDENT}| fuction: {args.fun}"
+    logger.info(f"Extracting DWARF debug information:\n{binary_information}")
 
     # Extract DWARF-information from given binary
-    logger.info("Starting pipeline execution")
-    logger.info("Extracting DWARF debug information:")
-    process_file(binary=args.bin, source_file=args.src, function=args.fun)
+    process_file(binary=bin_file, source_file=args.src, function=args.fun)
 
-    # Get the singleton instance of DWARF information entity
-    dwarf_info = DwarfInfo()
-
-    # The low and high PCs for the subprogram of interest are stored in the
-    # dwarf_info dictionary
+    # Get the low and high PCs for the subprogram of interest
     lowpc = dwarf_info.get_low_pc()
     highpc = dwarf_info.get_high_pc()
 
+    # TODO: find a more sensible approach for this
+    # Currently low and high pc are stored in a file
     with open("pcs.tmp", "w", encoding="utf-8") as f:
         f.write(f"{lowpc};{highpc}")
 
-    # Run ETISS to produce activity log
     etiss_path = args.etiss_path
     bare_metal_etiss = args.etiss_executable
-    ini_file = args.ini
-    cmd = [
-        f"{etiss_path}/{bare_metal_etiss}",
-        f"-i{ini_file}",
-        "-p", "InstructionTracer",
-        "--jit.gcc.cleanup", "true"
-    ]
 
-    logger.info("Running ETISS simulation. This may take a while")
-    try:
-        result = subprocess.run(cmd, text=True, check=True)
-    except subprocess.CalledProcessError as e:
-        print("Command failed with non-zero exit code.")
-        print("Return code:", e.returncode)
-        print("STDOUT:\n", e.stdout)
-        print("STDERR:\n", e.stderr)
-        raise Exception("Command failed with non-zero exit code.")
-    except FileNotFoundError:
-        print("Executable not found. Please check the path.")
-        raise Exception("Command failed with non-zero exit code.")
-    except Exception as e:
-        print(f"An unexpected error occurred: {e}")
-        raise Exception("Command failed with non-zero exit code.")
+    # Run ETISS with Golden Reference binary to produce activity log
+    run_etiss_simulation(etiss_path, bare_metal_etiss, ini_file)
 
     # Remove the temporary file with low and high PC, if it exists
     if os.path.exists("pcs.tmp"):
         os.remove("pcs.tmp")
 
-
-
     # extract snapshots from the activity log
-    logger.info("Extracting snapshots from activity log")
-    snapshots = []
-    current_path = os.getcwd()
-    with open(f"{current_path}/snapshot-activity.log", "r") as f:
-        for line_number, line in enumerate(f, start=1):
-            line = line.strip()
-            if not line:
-                continue  # skip empty lines
-            try:
-                obj = json.loads(line)
-                snapshots.append(obj)
-            except json.JSONDecodeError as e:
-                print(f"Error parsing JSON on line {line_number}: {e}")
+    entries = parse_and_extract_snapshots()
+
+    # Log snapshot information
+    log_snapshot_information(entries, args.fun)
+    return entries
 
 
+def verify_entries(golden_ref, custom_is):
+    pass
+    golden_ref_entries = golden_ref.get_entries()
+    custom_is_entries = custom_is.get_entries()
 
-    state_snapshots = ""
-    idx_counter = 0
-    dwrites = {}
-    idx_ranges = []
-    for snapshot in snapshots:
-        match snapshot['type']:
-            case 'state_snapshot':
-                if lowpc <= snapshot['pc'] < highpc:
-                    idx_ranges.append(idx_counter)
-                    state_snapshots += f"{indent} | idx:{idx_counter} {snapshot['instruction']}@<{snapshot['pc']}>: a0: {snapshot['x'][10]}, a1: {snapshot['x'][11]}, fa0: {snapshot['f'][10]}, fa1: {snapshot['f'][11]}\n"
-            case 'dwrite':
-                if snapshot['location'] not in dwrites:
-                    dwrites[snapshot['location']] = []
-                entry = (idx_counter, snapshot['data'])
-                dwrites[snapshot['location']].append(entry)
-                pass
-            case _:
-                pass
-        idx_counter += 1
+    output = ""
 
+    if len(golden_ref_entries) == len(custom_is_entries):
+        for idx, golden_ref_entry in enumerate(golden_ref_entries):
+            output += golden_ref_entry.compare_entries(custom_is_entries[idx], strict=True)
 
-    # output state snapshots from within given subprogram range if they exist
-    if state_snapshots:
-        logger.info(f"Snapshots within the subprogram PC range:\n{state_snapshots}")
     else:
-        logger.warning("No matches found from snapshot information within function PC range")
+        output += "Number of function call entries in golden reference and custom is do not match. Aborting"
 
-    logger.info(f"Global variable locations: {dwarf_info.get_global_var_locations()}")
-    logger.info(f"Formal parameter locations: {dwarf_info.get_formal_param_locations()}")
-
-    # log data writes to global variables from dict dwrites
-    if dwrites:
-        global_var_locations = dwarf_info.get_global_var_locations()
-        global_var_entry = ""
-        if global_var_locations:
-            for glob_name in global_var_locations:
-                for loc in global_var_locations[glob_name]:
-                    parsed_loc = re.search(r'DW_OP_addr:\s*([0-9a-fA-F]+)', loc).group(1)
-                    if parsed_loc in dwrites:
-                        matching_entries = []
-                        for entry in dwrites[parsed_loc]:
-                            if is_within_idx_range(idx_ranges, entry[0]):
-                                matching_entries.append(entry)
-                        global_var_entry += f"{indent} | {glob_name}: {matching_entries}\n"
-        if global_var_entry:
-            logger.info(f"Data writes to global variable addresses within index range:\n{global_var_entry}")
-        else:
-            mem_writes_to_global_vars = ""
-            for glob_name in global_var_locations:
-                for loc in global_var_locations[glob_name]:
-                    parsed_loc = re.search(r'DW_OP_addr:\s*([0-9a-fA-F]+)', loc).group(1)
-                    if parsed_loc in dwrites:
-                        for entry in dwrites[parsed_loc]:
-                            matching_entries.append(entry)
-                        mem_writes_to_global_vars += f"{indent} | {glob_name}: {matching_entries}\n"
-            logger.info(f"No data writes to global variable addresses within index ranges:{idx_ranges}\n{indent}| Memory writes to global variables: {mem_writes_to_global_vars}")
-    else:
-        logger.warning("No data writes found")
-
-
-def is_within_idx_range(idx_ranges, idx):
-    for i in range(0, len(idx_ranges), 2):
-        start = idx_ranges[i]
-        end = idx_ranges[i + 1]
-        if start <= idx <= end:
-            return True
-    return False
+    logging.info(f"Verification results:\n{output}")
 
 
 def main():
     init_logger()
-    run_pipeline()
+    # Run pipeline with golden reference
+    logger.info("=== GOLDEN REFERENCE BEGIN ===")
+    golden_ref_entries = run_pipeline(args.bin_golden_ref, args.ini_golden_ref)
+    logger.info("=== GOLDEN REFERENCE END ===")
+
+    logger.info("=== BINARY UNDER VERIFICATION BEGIN ===")
+    verifiable_entries = run_pipeline(args.bin_isuv, args.ini_isuv)
+    logger.info("=== BINARY UNDER VERIFICATION END ===")
+
+    logger.info("=== VERIFICATION BEGIN ===")
+    verify_entries(golden_ref_entries, verifiable_entries)
+
+    logger.info("=== VERIFICATION END ===")
 
 
 

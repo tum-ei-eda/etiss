@@ -35,6 +35,10 @@ DWARF_OUTPUT = ""
 def process_file(binary: str, source_file: str, function: str) -> None:
     global DWARF_OUTPUT
     global DWARF_INFO
+
+    # TODO: remove this when not needed any more:
+    DWARF_OUTPUT = ""
+
     print(logger.getEffectiveLevel())  # Should be 20 (INFO)
     logger.info(f'Processing file: {binary}')
     with open(binary, 'rb') as f:
@@ -114,11 +118,11 @@ def die_info_direct_child_of_cu(die, loc_list: list, loc_parser, CU, dwarfinfo, 
                         case _:
                             pass
                 lowpc, highpc = get_low_and_high_pc(die)
-                DWARF_INFO.add_subprogram_low_pc(lowpc)
-                DWARF_INFO.add_subprogram_high_pc(highpc)
+
+                DWARF_INFO.set_subprogram_low_and_high_pc(lowpc, highpc)
                 if lowpc and highpc:
-                    DWARF_OUTPUT += f"{indent_level}  | {'DW_AT_low_pc'}={lowpc}\n"
-                    DWARF_OUTPUT += f"{indent_level}  | {'DW_AT_high_pc'}={highpc}\n"
+                    DWARF_OUTPUT += f"{indent_level}  | {'DW_AT_low_pc'}={DWARF_INFO.get_low_pc()}\n"
+                    DWARF_OUTPUT += f"{indent_level}  | {'DW_AT_high_pc'}={DWARF_INFO.get_high_pc()}\n"
                 child_indent = indent_level + '  '
                 for child in die.iter_children():
                     die_info_rec(child, loc_list, loc_parser, CU, dwarfinfo, child_indent)
