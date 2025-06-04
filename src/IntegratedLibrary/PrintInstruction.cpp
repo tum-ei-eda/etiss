@@ -50,6 +50,10 @@
 
 */
 
+// TODO: remove when no longer needed
+#include <iostream>
+#include <iomanip>
+
 extern "C"
 {
     int pi_6cac = 0;
@@ -109,8 +113,16 @@ extern "C"
 {
     void PrintInstruction_print(const char *c, uint64_t addr)
     {
+
+        // TODO: remove when no longer needed
         std::cout << c;
+
+        // Append address in desired format
+        std::cout << " | pc: 0x" << std::hex << std::setw(8) << std::setfill('0') << addr;
+
+        std::cout << std::endl; // Ensure newline and flush
         std::cout.flush();
+
         if (addr == 0x6cac)
         {
             // std::cout << "TCOUNT: " << std::dec << ++pi_6cac << "\n";
