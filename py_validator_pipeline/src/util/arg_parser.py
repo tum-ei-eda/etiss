@@ -12,5 +12,7 @@ def parse_args():
     parser.add_argument("-f", "--fun", help="name of the function, e.g. foo", required=True)
     parser.add_argument("-e", "--etiss_path", help="absolute path of bare metal ETISS", required=True)
     parser.add_argument("-x", "--etiss_executable", help="name of bare metal ETISS", required=True)
+    parser.add_argument("-d", "--debug", help="Debug additionally includes comparison for Function Prologue and Epilogue", action="store_true")
+
 
     return parser.parse_args()

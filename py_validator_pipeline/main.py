@@ -6,7 +6,7 @@
 import os
 import logging
 
-from src.extract_subprogram_vars_and_params import process_file
+from src.dwarf_info_extractor import DwarfInfoExtractor
 from src.etiss_simulation import run_etiss_simulation
 from src.snapshot_handler import parse_and_extract_snapshots
 from src.snapshot_handler import log_snapshot_information
@@ -26,16 +26,19 @@ def run_pipeline(bin_file, ini_file):
         Runs the execution pipeline
     """
     # Get the singleton instance of DWARF information entity
-    # TODO: having this as singleton makes no sense. Refactor.
-    dwarf_info = DwarfInfo()
-    dwarf_info.flush()
+
+
 
     logger.info("=== STARTING PIPELINE ===")
     binary_information = f"{INDENT}| binary: {bin_file}\n{INDENT}| source: {args.src}\n{INDENT}| fuction: {args.fun}"
     logger.info(f"Extracting DWARF debug information:\n{binary_information}")
 
     # Extract DWARF-information from given binary
-    process_file(binary=bin_file, source_file=args.src, function=args.fun)
+    dwarf_info_extractor = DwarfInfoExtractor(binary=bin_file, source_file=args.src, function=args.fun, debug=True)
+    dwarf_info_extractor.extract()
+
+    dwarf_info = dwarf_info_extractor.get_dwarf_info()
+    logger.info(f"Extracted DWARF debug information:\n{str(dwarf_info)}")
 
     # Get the low and high PCs for the subprogram of interest
     lowpc = dwarf_info.get_low_pc()
@@ -57,7 +60,7 @@ def run_pipeline(bin_file, ini_file):
         os.remove("pcs.tmp")
 
     # extract snapshots from the activity log
-    entries = parse_and_extract_snapshots()
+    entries = parse_and_extract_snapshots(dwarf_info)
 
     # Log snapshot information
     log_snapshot_information(entries, args.fun)
@@ -73,7 +76,7 @@ def verify_entries(golden_ref, custom_is):
 
     if len(golden_ref_entries) == len(custom_is_entries):
         for idx, golden_ref_entry in enumerate(golden_ref_entries):
-            output += golden_ref_entry.compare_entries(custom_is_entries[idx], strict=True)
+            output += golden_ref_entry.compare_entries(custom_is_entries[idx], debug=True)
 
     else:
         output += "Number of function call entries in golden reference and custom is do not match. Aborting"

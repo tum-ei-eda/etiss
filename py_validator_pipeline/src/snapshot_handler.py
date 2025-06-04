@@ -9,7 +9,7 @@ from src.entity.simulation_data_entry import SimulationDataEntry
 logger = logging.getLogger(__name__)
 INDENT = '    '
 
-def parse_and_extract_snapshots():
+def parse_and_extract_snapshots(dwarf_info: DwarfInfo):
     """
         Accesses activity log and parses snapshot information.
         Filter out only meaningful data.
@@ -21,7 +21,7 @@ def parse_and_extract_snapshots():
         data_collection = SimulationDataCollection()
 
         while True:
-            entry = extract_entry(f)
+            entry = extract_entry(f, dwarf_info)
             if entry is None:  # Reached EOF
                 break
             data_collection.add_entry(entry)
@@ -29,9 +29,8 @@ def parse_and_extract_snapshots():
     return data_collection
 
 
-def extract_entry(f):
+def extract_entry(f, dwarf_info):
     entry = SimulationDataEntry()
-    dwarf_info = DwarfInfo()
 
     epilogue_reached = False
 
@@ -76,12 +75,12 @@ def extract_entry(f):
     if not epilogue_reached:
         return None
 
-    global_vars = dwarf_info.get_global_var_locations()
-    for var_name, location in global_vars.items():
-        entry.add_global_variable_and_location(var_name, location)
-    formal_params = dwarf_info.get_formal_param_locations()
-    for param_name, location in formal_params.items():
-        entry.add_formal_param_locations(param_name, location)
+    global_vars = dwarf_info.get_global_variables()
+    for glob_var in global_vars:
+        entry.add_global_variable_and_location(glob_var.get_name(), glob_var.get_location_value())
+    formal_params = dwarf_info.get_formal_parameters()
+    for param in formal_params:
+        entry.add_formal_param_locations(param.get_name(), param.get_location_value())
 
     return entry
 
@@ -98,15 +97,3 @@ def log_snapshot_information(entries: SimulationDataCollection, fun_name: str):
         logger.warning("No snapshot information extracted")
 
 
-"""
-├─main - call #i
-└┐
- ├─ cswsp <PC>: <a0: 0, a1: 0, fa0: 0, fa1: 0> 
- ├─ cswsp <PC>: <a0: 0, a1: 0, fa0: 0, fa1: 0>
- └┐
-  ├─ dwrite <PC>: <data: 00, address: 00>
-  ├─ dwrite <PC>: <data: 00, address: 00>
- ┌┘
- ├─ cjr <PC>: <a0: 0, a1: 0, fa0: 0, fa1: 0>
-┌┘
-"""
