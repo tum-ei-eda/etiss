@@ -57,9 +57,18 @@ class Variable(ABC):
     def set_base_type_byte_size(self, byte_size) -> None:
         self._base_type_byte_size = byte_size
 
-    def set_range(self, range: int) -> None:
+    def set_range(self, var_range: int) -> None:
         # For now we support continuous ranges
-        self._range = range
+        self._range = var_range
+
+    def has_more_than_one_element(self) -> bool:
+        return self._range / self._base_type_byte_size != 1
+
+    def get_number_of_elements(self) -> int:
+        return int(self._range / self._base_type_byte_size)
+
+    def get_base_type_byte_size(self) -> int:
+        return self._base_type_byte_size
 
     def get_name(self) -> str:
         return self._name

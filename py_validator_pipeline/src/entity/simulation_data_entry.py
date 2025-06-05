@@ -1,5 +1,10 @@
-import re
 import logging
+
+from typing import List, Dict, Any
+
+from src.entity.formal_parameter import FormalParameter
+from src.entity.global_variable import GlobalVariable
+from src.entity.local_variable import LocalVariable
 
 class SimulationDataEntry:
     """
@@ -10,13 +15,15 @@ class SimulationDataEntry:
           - CPU state snapshots from epilogue instructions
     """
 
-
     def __init__(self):
         self.prologue = []
         self.epilogue = []
         self.dwrites = {}
         self.formal_param_locations = {}
         self.global_variable_locations = {}
+        self.global_variables  = []
+        self.formal_parameters = []
+        self.local_variables = []
         self.frame_pointer = 0
         self.index = 0
         self.logger = logging.getLogger(__name__)
@@ -90,6 +97,36 @@ class SimulationDataEntry:
         self.global_variable_locations[var_name] = location
 
 
+    def add_global_variables(self, glob_vars: List[GlobalVariable]) -> None:
+        self.global_variables = glob_vars.copy()
+
+    def add_formal_parameters(self, formal_params: List[FormalParameter]) -> None:
+        self.formal_parameters = formal_params.copy()
+
+    def add_local_variables(self, local_vars: List[LocalVariable]) -> None:
+        self.local_variables = local_vars.copy()
+
+
+    def get_last_writes_to_global_var_locations(self) -> Dict[str, Dict[str, Any]]:
+        last_writes = {}
+        for var in self.global_variables:
+            if var.has_more_than_one_element():
+                # Handle array dwrite addresses
+                n_of_elements = var.get_number_of_elements()
+                byte_size = var.get_base_type_byte_size()
+                var_name = var.get_name()
+                loc = var.get_location_value()
+                for idx in range(n_of_elements):
+                    if loc in self.dwrites:
+                        last_writes[f"{var_name}[{idx}]"] = self.dwrites[loc][-1]
+                    loc = hex(int(loc, 16) +  byte_size)[2:]
+            else:
+                loc = var.get_location_value()
+                # Handle variable with single memory location
+                if loc in self.dwrites:
+                    last_writes[var.get_name()] = self.dwrites[loc][-1]
+
+        return last_writes
 
     def get_last_write_to_global_variables(self):
         last_writes = {}
@@ -111,6 +148,7 @@ class SimulationDataEntry:
         """
             A string representation of simulation data entry
         """
+        print("YAAAH-1")
         output = ""
         if self.prologue:
             output += "  > Prologue instructions CPU state snapshots:\n"
@@ -123,7 +161,7 @@ class SimulationDataEntry:
                 output += f"    | {var_name}:\t<pc: {first_dwrite['pc']}\tdata: {first_dwrite['data']}\taddress: {first_dwrite['location']}>\n"
         else:
             output += f"  > No formal parameters written to stack\n"
-        global_var_dwrites = self.get_last_write_to_global_variables()
+        global_var_dwrites = self.get_last_writes_to_global_var_locations()
         if global_var_dwrites:
             output += "  > Final data writes to global variable(s) before epilogue:\n"
             for var_name, last_dwrite in global_var_dwrites.items():
@@ -150,7 +188,7 @@ class SimulationDataEntry:
 
         result += self.compare_formal_param_values(other_entry.get_first_writes_to_formal_params())
 
-        result += self.compare_global_variable_values(other_entry.get_last_write_to_global_variables())
+        result += self.compare_global_variable_values(other_entry.get_last_writes_to_global_var_locations())
 
         if debug:
             result += self.compare_epilogues(other_entry.epilogue)
@@ -205,7 +243,7 @@ class SimulationDataEntry:
         section = "  | Global variables"
         section += (self.comparison_line_lenght - len(section)) * '.'
         result = ""
-        global_var_values = self.get_last_write_to_global_variables()
+        global_var_values = self.get_last_writes_to_global_var_locations()
         if len(global_var_values) == 0 and len(other_entry_global_variable_values) == 0:
             result += section + 'NA\n'
             result += "      no variables\n"

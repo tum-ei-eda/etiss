@@ -47,7 +47,7 @@ def extract_entry(f, dwarf_info):
             match obj['type']:
                 case 'state_snapshot':
                     match obj['instruction']:
-                        case 'cswsp':
+                        case 'cswsp' | 'sw':
                             entry.append_prologue_instruction(
                                 obj['instruction'],
                                 obj['pc'],
@@ -82,8 +82,10 @@ def extract_entry(f, dwarf_info):
         return None
 
     global_vars = dwarf_info.get_global_variables()
-    for glob_var in global_vars:
-        entry.add_global_variable_and_location(glob_var.get_name(), glob_var.get_location_value())
+    # for glob_var in global_vars:
+        # entry.add_global_variable_and_location(glob_var.get_name(), glob_var.get_location_value())
+
+    entry.add_global_variables(global_vars)
     formal_params = dwarf_info.get_formal_parameters()
     for param in formal_params:
         entry.add_formal_param_locations(param.get_name(), param.get_location_value())
