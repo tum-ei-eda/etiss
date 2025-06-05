@@ -62,10 +62,16 @@ class Variable(ABC):
         self._range = var_range
 
     def has_more_than_one_element(self) -> bool:
-        return self._range / self._base_type_byte_size != 1
+        result = False
+        if self._range and self._base_type_byte_size:
+            result = self._range / self._base_type_byte_size != 1
+        return result
 
     def get_number_of_elements(self) -> int:
-        return int(self._range / self._base_type_byte_size)
+        result = 0
+        if self._range and self._base_type_byte_size:
+            result = int(self._range / self._base_type_byte_size)
+        return result
 
     def get_base_type_byte_size(self) -> int:
         return self._base_type_byte_size

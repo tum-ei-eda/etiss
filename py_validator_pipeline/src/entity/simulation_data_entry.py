@@ -148,7 +148,6 @@ class SimulationDataEntry:
         """
             A string representation of simulation data entry
         """
-        print("YAAAH-1")
         output = ""
         if self.prologue:
             output += "  > Prologue instructions CPU state snapshots:\n"

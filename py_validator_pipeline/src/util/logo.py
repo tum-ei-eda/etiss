@@ -61,6 +61,51 @@ logo_chars = {
         "|  __|  ",
         "| |     ",
         "|_|     "],
+    "s": [
+        "  _____ ",
+        " / ____|",
+        "| (___  ",
+        " \___ \\ ",
+        " ____) |",
+        "|_____/ "],
+    "-": [
+        "      ",
+        "      ",
+        "  __  ",
+        " |__| ",
+        "      ",
+        "      "],
+    "b": [
+        " ____  ",
+        "|  _ \ ",
+        "| |_) |",
+        "|  _ < ",
+        "| |_) |",
+        "|____/ "],
+
+    "g": [
+        "  ____  ",
+        " / ___| ",
+        "| |  __ ",
+        "| | |_ |",
+        "| |__| |",
+        " \\____/ "],
+
+    "n": [
+        " _   _ ",
+        "| \ | |",
+        "|  \| |",
+        "| . ` |",
+        "| |\  |",
+        "|_| \_|"],
+    "d": [
+        " _____  ",
+        "|  __ \ ",
+        "| |  | |",
+        "| |  | |",
+        "| |__| |",
+        "|_____/ "],
+
     "copyright": [
         "(not-a-trademark)",
         "                 ",
@@ -71,20 +116,31 @@ logo_chars = {
     ]
 }
 
+WIDTH = 100
 
-def print_logo() -> str:
+def print_word(title) -> str:
+
+    total_length = 0
+    for c in title:
+        total_length += len(logo_chars[c][0])
     output = ""
     logo_height = len(logo_chars['v'])
-    title = "verificator"
     for i in range(logo_height):
+        output += " " * int((WIDTH - total_length) / 2)
         for c in title:
             if c in logo_chars:
                 output += f"{logo_chars[c][i]}"
-        output += logo_chars['copyright'][i]
         output += '\n'
     return output
 
+def print_logo():
+    return print_word(title = "ver-ise")
 
+def print_begin():
+    return print_word("begin")
+
+def print_end():
+    return print_word("end")
 
 if __name__ == "__main__":
-    print(print_logo())
+    print(print_word("begin"))

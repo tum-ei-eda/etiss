@@ -4,6 +4,7 @@
 """
 
 import os
+import time
 import logging
 
 from src.dwarf_info_extractor import DwarfInfoExtractor
@@ -12,11 +13,13 @@ from src.snapshot_handler import (
     parse_and_extract_snapshots,
     log_snapshot_information
 )
-from src.snapshot_handler import log_snapshot_information
 
 from src.util.logger import init_logger
 from src.util.arg_parser import parse_args
-from src.util.logo import print_logo
+from src.util.logo import (
+    print_logo,
+    print_begin,
+    print_end)
 
 from src.exception.pipeline_exceptions import (
     DWARFExtractionException,
@@ -126,8 +129,9 @@ def verify_entries(golden_ref, custom_is):
 
 
 def main():
+    time_begin = time.perf_counter()
     init_logger(debug=args.debug)
-    logger.info(f"=== VERIFICATION PIPELINE START ===\n{print_logo()}")
+    logger.info(f"=== VERIFICATION PIPELINE START ===\n{print_logo()}{print_begin()}")
     try:
         # Run pipeline with golden reference
         logger.info("=== GOLDEN REFERENCE BEGIN ===")
@@ -146,7 +150,10 @@ def main():
         logger.error("An unexpected error occurred: {}".format(ex))
         logger.info("=== PROCESS TERMINATED ===")
 
-    logger.info("=== END ===")
+    total_time = time.perf_counter() - time_begin
+    logger.info(f"Process finished successfully in {total_time:.4f} seconds.")
+
+    logger.info(f"Finished.\n{print_logo()}\n{print_end()}=== END ===")
 
 
 
