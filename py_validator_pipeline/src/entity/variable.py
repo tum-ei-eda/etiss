@@ -1,6 +1,19 @@
 from abc import ABC, abstractmethod
+from math import prod
+
+from src.entity.type_construct import TypeConstruct
+
 
 class Variable(ABC):
+    """
+        Parent class for all variables:
+          - global variables
+          - formal parameters
+          - local variables
+        Classes that inherit this parent class MUST implement
+        method get_location_value, as that is specific to
+        different variables.
+    """
 
     def __init__(self) -> None:
         self._name = None
@@ -9,6 +22,8 @@ class Variable(ABC):
         self._base_type = None
         self._base_type_byte_size = None
         self._range = 1
+        self._type_desrciption_as_list = []
+        self._range_elements = []
         self.indent = 2
 
 
@@ -20,6 +35,21 @@ class Variable(ABC):
 
     def set_type_description(self, description):
         self._type_description = description
+
+    def add_element_to_type_definition_list(self, element: str) -> None:
+        self._type_desrciption_as_list.append(element)
+
+    def add_element_to_range_list(self, element: int) -> None:
+        self._range_elements.append(element)
+
+    def create_type_information(self, type_construct: TypeConstruct) -> None:
+        self._base_type = type_construct.base_type
+        self._base_type_byte_size = type_construct.base_type_byte_size
+        self._range = type_construct.range
+        if type_construct.base_type and type_construct.base_type != 'None':
+            self._type_description = type_construct.description
+        else:
+            self._type_description = '<UNDEFINED>'
 
     def set_base_type(self, base_type):
         self._base_type = base_type
@@ -51,7 +81,9 @@ class Variable(ABC):
         output += f"{self.indent*' '}  ├ Type composition: {self._type_description}\n"
         output += f"{self.indent*' '}  ├ Base Type: {self._base_type}\n"
         output += f"{self.indent*' '}  ├ Base Type/Byte Size: {self._base_type_byte_size}\n"
-        output += f"{self.indent*' '}  └ Range: {self._range}\n"
+        if self._range != self._base_type_byte_size:
+            output += f"{self.indent*' '}  ├ Range: {self._range}\n"
+        output += f"{self.indent*' '}  └ Location: {self._location}\n"
         return output
 
 """

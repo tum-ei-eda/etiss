@@ -34,11 +34,11 @@ def run_pipeline(bin_file, ini_file):
     logger.info(f"Extracting DWARF debug information:\n{binary_information}")
 
     # Extract DWARF-information from given binary
-    dwarf_info_extractor = DwarfInfoExtractor(binary=bin_file, source_file=args.src, function=args.fun, debug=True)
-    dwarf_info_extractor.extract()
+    dwarf_info_extractor = DwarfInfoExtractor(binary=bin_file, source_file=args.src, function=args.fun, debug=args.debug)
+    dwarf_info_extractor.extract_dwarf_info()
 
     dwarf_info = dwarf_info_extractor.get_dwarf_info()
-    logger.info(f"Extracted DWARF debug information:\n{str(dwarf_info)}")
+    logger.info(f"{str(dwarf_info)}")
 
     # Get the low and high PCs for the subprogram of interest
     lowpc = dwarf_info.get_low_pc()
@@ -76,7 +76,8 @@ def verify_entries(golden_ref, custom_is):
 
     if len(golden_ref_entries) == len(custom_is_entries):
         for idx, golden_ref_entry in enumerate(golden_ref_entries):
-            output += golden_ref_entry.compare_entries(custom_is_entries[idx], debug=True)
+            output += f"> Function call {idx + 1}\n"
+            output += golden_ref_entry.compare_entries(custom_is_entries[idx], debug=args.debug)
 
     else:
         output += "Number of function call entries in golden reference and custom is do not match. Aborting"
@@ -85,20 +86,24 @@ def verify_entries(golden_ref, custom_is):
 
 
 def main():
-    init_logger()
-    # Run pipeline with golden reference
-    logger.info("=== GOLDEN REFERENCE BEGIN ===")
-    golden_ref_entries = run_pipeline(args.bin_golden_ref, args.ini_golden_ref)
-    logger.info("=== GOLDEN REFERENCE END ===")
+    try:
+        init_logger(debug=True)
+        # Run pipeline with golden reference
+        logger.info("=== GOLDEN REFERENCE BEGIN ===")
+        golden_ref_entries = run_pipeline(args.bin_golden_ref, args.ini_golden_ref)
+        logger.info("=== GOLDEN REFERENCE END ===")
 
-    logger.info("=== BINARY UNDER VERIFICATION BEGIN ===")
-    verifiable_entries = run_pipeline(args.bin_isuv, args.ini_isuv)
-    logger.info("=== BINARY UNDER VERIFICATION END ===")
+        logger.info("=== BINARY UNDER VERIFICATION BEGIN ===")
+        verifiable_entries = run_pipeline(args.bin_isuv, args.ini_isuv)
+        logger.info("=== BINARY UNDER VERIFICATION END ===")
 
-    logger.info("=== VERIFICATION BEGIN ===")
-    verify_entries(golden_ref_entries, verifiable_entries)
+        logger.info("=== VERIFICATION BEGIN ===")
+        verify_entries(golden_ref_entries, verifiable_entries)
 
-    logger.info("=== VERIFICATION END ===")
+        logger.info("=== VERIFICATION END ===")
+    except Exception as ex:
+        logger.error("An unexpected error occurred: {}".format(ex))
+        logger.info("=== PROCESS TERMINATED ===")
 
 
 

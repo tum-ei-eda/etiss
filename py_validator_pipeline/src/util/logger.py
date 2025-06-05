@@ -1,7 +1,7 @@
 import logging
 
 
-def init_logger() -> None:
+def init_logger(debug: bool = False) -> None:
     # Clear existing handlers (if running multiple times, like in Jupyter or REPL)
     root_logger = logging.getLogger()  # root logger
 
@@ -15,7 +15,11 @@ def init_logger() -> None:
 
     # Console handler
     console_handler = logging.StreamHandler()
-    console_handler.setLevel(logging.INFO)
+
+    if debug:
+        console_handler.setLevel(logging.DEBUG)
+    else:
+        console_handler.setLevel(logging.INFO)
 
     # Formatter
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')

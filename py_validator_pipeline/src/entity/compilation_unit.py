@@ -1,6 +1,9 @@
 import re
 
-class CompilationUnit:
+class CompileUnit:
+    """
+        An instance of the data extracted from top DIE
+    """
 
     def __init__(self):
         self.march = None
@@ -9,6 +12,10 @@ class CompilationUnit:
         self.indent = 2
 
     def extract_core_information(self, producer: str) -> None:
+        """
+            In the initial test setting we can assume producer to have
+            parameters mabi, march and misa-spec.
+        """
         pattern = r'-mabi=([^\s]+)|-march=([^\s]+)|-misa-spec=([^\s]+)'
 
         core_info = re.findall(pattern, producer)
@@ -23,7 +30,10 @@ class CompilationUnit:
 
 
     def __str__(self) -> str:
-        output = "Extracted DWARF debug infromation:\n"
+        """
+            String representation of CompileUnit
+        """
+        output = ""
         output += f"{self.indent*' '}┌ Architecture: {self.march}\n"
         output += f"{self.indent*' '}├ ABI: {self.mabi}\n"
         output += f"{self.indent*' '}└ ISA specification: {self.misa_spec}\n"

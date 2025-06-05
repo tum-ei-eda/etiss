@@ -107,36 +107,43 @@ class SimulationDataEntry:
         return first_writes
 
 
-    def __str__(self):
+    def __str__(self) -> str:
+        """
+            A string representation of simulation data entry
+        """
         output = ""
         if self.prologue:
-            output += "Prologue instructions CPU state snapshots:\n"
+            output += "  > Prologue instructions CPU state snapshots:\n"
             for inst in self.prologue:
-                output += f"  | cswsp <{inst['pc']}>: <a0: {inst['a0']}, a1: {inst['a1']}, fa0: {inst['fa0']}, fa1: {inst['fa1']}>\n"
+                output += f"    | cswsp <{inst['pc']}>: <a0: {inst['a0']}, a1: {inst['a1']}, fa0: {inst['fa0']}, fa1: {inst['fa1']}>\n"
         formal_param_writes = self.get_first_writes_to_formal_params()
         if formal_param_writes:
-            output += "First data writes to formal params stack addresses after prologue:\n"
+            output += "  > First data writes to formal params stack addresses after prologue:\n"
             for var_name, first_dwrite in formal_param_writes.items():
-                output += f"  | {var_name}:\t<pc: {first_dwrite['pc']}\tdata: {first_dwrite['data']}\taddress: {first_dwrite['location']}>\n"
+                output += f"    | {var_name}:\t<pc: {first_dwrite['pc']}\tdata: {first_dwrite['data']}\taddress: {first_dwrite['location']}>\n"
         else:
-            output += f"No formal parameters written to stack\n"
+            output += f"  > No formal parameters written to stack\n"
         global_var_dwrites = self.get_last_write_to_global_variables()
         if global_var_dwrites:
-            output += "Final data writes to global variable(s) before epilogue:\n"
+            output += "  > Final data writes to global variable(s) before epilogue:\n"
             for var_name, last_dwrite in global_var_dwrites.items():
-                output += f"  | {var_name}:\t<pc: {last_dwrite['pc']}\tdata: {last_dwrite['data']}\taddress: {last_dwrite['location']}>\n"
+                output += f"    | {var_name}:\t<pc: {last_dwrite['pc']}\tdata: {last_dwrite['data']}\taddress: {last_dwrite['location']}>\n"
         else:
-            output += f"No data writes to global variables\n"
+            output += f"  > No data writes to global variables\n"
         if self.epilogue:
-            output += "Epilogue instructions CPU state snapshots:\n"
+            output += "  > Epilogue instructions CPU state snapshots:\n"
             for inst in self.epilogue:
-                output += f"  | cjr <{inst['pc']}>: <a0: {inst['a0']}, a1: {inst['a1']}, fa0: {inst['fa0']}, fa1: {inst['fa1']}>\n"
+                output += f"    | cjr <{inst['pc']}>: <a0: {inst['a0']}, a1: {inst['a1']}, fa0: {inst['fa0']}, fa1: {inst['fa1']}>\n"
 
         return output
 
 
     def compare_entries(self, other_entry, debug: bool) -> str:
-        result = "\n"
+        """
+            A collection of methods that co-verify entries from the golden reference and from
+            the instruction set under verification.
+        """
+        result = ""
         if debug:
             self.logger.info("Debug mode on, comparing function prologue and epilogue")
             result += self.compare_prologues(other_entry.prologue)
@@ -151,88 +158,89 @@ class SimulationDataEntry:
 
 
     def compare_prologues(self, other_entry_prologue) -> str:
-        section = "Function prologue"
+        section = "  | Function prologue"
         section += (self.comparison_line_lenght - len(section)) * '.'
         result = ""
         if len(self.prologue) == 0 and len(other_entry_prologue) == 0:
             result += section + 'FAIL\n'
-            result += f"    | Function prologue: no snapshots written to prologue\n"
+            result += f"      no snapshots written to prologue\n"
         elif len(self.prologue) == len(other_entry_prologue):
             mismatch = ""
             for idx, entry in enumerate(self.prologue):
                 for key in ['pc', 'a0', 'a1', 'fa0', 'fa1']:
                     if entry[key] != other_entry_prologue[idx][key]:
-                        mismatch += f"      | Mismatch at index {idx}: {entry[key]} vs {other_entry_prologue[idx][key]}\n"
+                        mismatch += f"        mismatch at index {idx}: {entry[key]} vs {other_entry_prologue[idx][key]}\n"
             if mismatch:
                 result += section + 'FAIL\n'
-                result += f'    | Value mismatch:\n{mismatch}\n'
+                result += f'      value mismatch:\n{mismatch}\n'
         else:
             result += section + 'FAIL\n'
-            result += "    | Different number of instructions\n"
+            result += "      different number of instructions\n"
 
         if not result:
             result += "Function prologue ... OK\n"
         return result
 
     def compare_formal_param_values(self, other_entry_formal_params) -> str:
-        section = "Formal parameters"
+        section = "  | Formal parameters"
         section += (self.comparison_line_lenght - len(section)) * '.'
         result = ""
         formal_param_values = self.get_first_writes_to_formal_params()
         if len(formal_param_values) == 0 and len(other_entry_formal_params) == 0:
-            result += section + 'FAIL\n'
-            result += "    | Formal parameters: No parameters\n"
+            result += section + 'NA\n'
+            result += "      formal parameters: No parameters\n"
         elif len(formal_param_values) == len(other_entry_formal_params):
             for var_name, entry in formal_param_values.items():
                 if entry['data'] != other_entry_formal_params[var_name]['data']:
-                    result += f"Formal parameters: data mismatch in variable {var_name}: {entry['data']} != {other_entry_formal_params[var_name]['data']}\n"
+                    result += section + 'FAIL\n'
+                    result += f"      data mismatch in variable {var_name}: {entry['data']} != {other_entry_formal_params[var_name]['data']}\n"
         else:
             result += section + 'FAIL\n'
-            result += "    | Formal parameters: number of parameters written to stack do not match\n"
+            result += "      number of parameters written to stack do not match\n"
         if not result:
             result += section + 'OK\n'
         return result
 
     def compare_global_variable_values(self, other_entry_global_variable_values) -> str:
-        section = "Global variables"
+        section = "  | Global variables"
         section += (self.comparison_line_lenght - len(section)) * '.'
         result = ""
         global_var_values = self.get_last_write_to_global_variables()
         if len(global_var_values) == 0 and len(other_entry_global_variable_values) == 0:
-            result += section + 'FAIL\n'
-            result += "    | Global variables: No variables\n"
+            result += section + 'NA\n'
+            result += "      no variables\n"
         elif len(global_var_values) == len(other_entry_global_variable_values):
             for var_name, entry in global_var_values.items():
                 if entry['data'] != other_entry_global_variable_values[var_name]['data']:
                     result += section + 'FAIL\n'
-                    result += f"    | Global variables: data mismatch in variable {var_name}: {entry['data']} != {other_entry_global_variable_values[var_name]['data']}\n"
+                    result += f"      data mismatch in variable {var_name}: {entry['data']} != {other_entry_global_variable_values[var_name]['data']}\n"
         else:
             result += section + 'FAIL\n'
-            result += "    | Global variables: number of variables do not match\n"
+            result += "      number of variables do not match\n"
 
         if not result:
             result += section + 'OK\n'
         return result
 
     def compare_epilogues(self, other_entry_epilogue) -> str:
-        section = "Function epilogue"
+        section = "  | Function epilogue"
         section += (self.comparison_line_lenght - len(section)) * '.'
         result = ""
         if len(self.epilogue) == 0 and len(other_entry_epilogue) == 0:
             result += section + 'FAIL\n'
-            result += "    | Function epilogue: no snapshots written to epilogue\n"
+            result += "      no snapshots written to epilogue\n"
         elif len(self.epilogue) == len(other_entry_epilogue):
             mismatch = ""
             for idx, entry in enumerate(self.epilogue):
                 for key in ['pc', 'a0', 'a1', 'fa0', 'fa1']:
                     if entry[key] != other_entry_epilogue[idx][key]:
-                        mismatch += f"      | Mismatch at index {idx}: {entry[key]} vs. {other_entry_epilogue[idx][key]}\n"
+                        mismatch += f"        mismatch at index {idx}: {entry[key]} vs. {other_entry_epilogue[idx][key]}\n"
             if mismatch:
                 result += section + 'FAIL\n'
-                result += f'    | Value mismatch:\n{mismatch}\n'
+                result += f'      value mismatch:\n{mismatch}\n'
         else:
             result += section + 'FAIL\n'
-            result += "    | Different number of instructions\n"
+            result += "      different number of instructions\n"
 
         if not result:
             result += section + 'OK\n'

@@ -1,3 +1,7 @@
+"""
+    A simple class that collects the simulation data entries
+"""
+
 class SimulationDataCollection:
 
     def __init__(self):

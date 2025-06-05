@@ -1,3 +1,7 @@
+"""
+    A service module to parse and extract snapshot data
+"""
+
 import os
 import json
 import logging
@@ -12,7 +16,9 @@ INDENT = '    '
 def parse_and_extract_snapshots(dwarf_info: DwarfInfo):
     """
         Accesses activity log and parses snapshot information.
-        Filter out only meaningful data.
+        Entries begin with function prologue and end in function
+        epilogue. This method calls helper method to extract an
+        entry.
     """
     logger.info("Extracting snapshots from activity log")
 

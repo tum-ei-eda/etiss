@@ -1,11 +1,12 @@
-
-
 import logging
 import subprocess
 
 logger = logging.getLogger(__name__)
 
 def run_etiss_simulation(etiss_path, bare_metal_etiss, ini_file):
+    """
+        This module handles ETISS simulation runs by invoking a subprocess
+    """
     cmd = [
         f"{etiss_path}/{bare_metal_etiss}",
         f"-i{ini_file}",
