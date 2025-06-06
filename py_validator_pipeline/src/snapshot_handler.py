@@ -37,6 +37,7 @@ def parse_and_extract_snapshots(dwarf_info: DwarfInfo):
 
 def extract_entry(f, dwarf_info):
     entry = SimulationDataEntry()
+    entry.add_dwarf_info(dwarf_info)
 
     epilogue_reached = False
 

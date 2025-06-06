@@ -2,6 +2,7 @@ import logging
 
 from typing import List, Dict, Any
 
+from src.entity.dwarf_info import DwarfInfo
 from src.entity.formal_parameter import FormalParameter
 from src.entity.global_variable import GlobalVariable
 from src.entity.local_variable import LocalVariable
@@ -27,6 +28,7 @@ class SimulationDataEntry:
         self.frame_pointer = 0
         self.index = 0
         self.logger = logging.getLogger(__name__)
+        self.dwarf_info = None
 
         self.comparison_line_lenght = 90
 
@@ -105,6 +107,9 @@ class SimulationDataEntry:
 
     def add_local_variables(self, local_vars: List[LocalVariable]) -> None:
         self.local_variables = local_vars.copy()
+
+    def add_dwarf_info(self, dwarf_info: DwarfInfo):
+        self.dwarf_info = dwarf_info
 
 
     def get_last_writes_to_global_var_locations(self) -> Dict[str, Dict[str, Any]]:
@@ -191,6 +196,8 @@ class SimulationDataEntry:
 
         if debug:
             result += self.compare_epilogues(other_entry.epilogue)
+
+        result += self.compare_return_values(other_entry)
         return result
 
 
@@ -245,7 +252,7 @@ class SimulationDataEntry:
         global_var_values = self.get_last_writes_to_global_var_locations()
         if len(global_var_values) == 0 and len(other_entry_global_variable_values) == 0:
             result += section + 'NA\n'
-            result += "      no variables\n"
+            result += "      no global variables\n"
         elif len(global_var_values) == len(other_entry_global_variable_values):
             for var_name, entry in global_var_values.items():
                 if entry['data'] != other_entry_global_variable_values[var_name]['data']:
@@ -282,6 +289,132 @@ class SimulationDataEntry:
         if not result:
             result += section + 'OK\n'
         return result
+
+
+    def compare_return_values(self, custom_ise) -> str:
+        section = "  | Return value"
+        section += (self.comparison_line_lenght - len(section)) * '.'
+        result = ""
+
+        if not self.dwarf_info or not custom_ise.dwarf_info:
+            self.logger.error("Dwarf debug information extraction missing. Aborting return value comparison.")
+            result += section + 'FAIL\n'
+            result += "      Missing extracted DWARF debug information\n"
+        fun_return_type = self.dwarf_info.subprogram.get_base_type()
+
+        if not result and fun_return_type == 'None':
+            self.logger.info("Void function has no return value")
+            result = section + 'NA\n'
+            result += "      Void function has no return value\n"
+        elif not result:
+            is_int = 'int' in fun_return_type
+            is_float = 'float' in fun_return_type
+
+            if is_int:
+                self.logger.info("Subprogram has return type int. Verifying return values based on machine architecture.")
+                gr_rv = self.fetch_int_return_value(self)
+                ci_rv = self.fetch_int_return_value(custom_ise)
+                if not gr_rv or not ci_rv:
+                    result = section + 'NA\n'
+                    result += f"      Return value is inconclusive in golden reference: {not gr_rv}, custom ISE: {not ci_rv}.\n"
+                else:
+                    if gr_rv != ci_rv:
+                        result += section + 'FAIL\n'
+                        result += f"      mismatch in return value: golden reference: {gr_rv}, custom ISE: {ci_rv}\n"
+                    else:
+                        result += section + 'OK\n'
+            elif is_float:
+                self.logger.info("Subprogram has return type float. Verifying return values based on machine architecture.")
+                gr_rv = self.fetch_float_return_value(self)
+                ci_rv = self.fetch_float_return_value(custom_ise)
+                if not gr_rv or not ci_rv:
+                    result = section + 'NA\n'
+                    result += f"      Return value is inconclusive in golden reference: {not gr_rv}, custom ISE: {not ci_rv}.\n"
+                else:
+                    if gr_rv != ci_rv:
+                        result += section + 'FAIL\n'
+                        result += f"      mismatch in return value: golden reference: {gr_rv}, custom ISE: {ci_rv}\n"
+                    else:
+                        result += section + 'OK\n'
+
+
+        return result
+
+    def fetch_int_return_value(self, entry) -> Any:
+        march = entry.dwarf_info.compilation_unit.march
+        rv = None
+        match march:
+            case 'rv32imac_zicsr' | 'rv32imafdc_zicsr_zifencei':
+                self.logger.info(f'Architecture {march} recognized. Extracting integer return value from a0')
+                cswsp = self.fetch_cswsp_instruction(entry.prologue)
+                cjr = self.fetch_cjr_instruction(entry.epilogue)
+                if not cswsp:
+                    self.logger.error("Missing cswsp instruction. Aborting.")
+                elif not cjr:
+                    self.logger.error("Missing cjr instruction. Aborting.")
+                else:
+                    if cswsp['a0'] == cjr['a0']:
+                        self.logger.info(f'{march}: a0 has equal value in prologue and epilogue. Value is inconclusive. Aborting.')
+                    else:
+                        rv = cjr['a0']
+        return rv
+
+    def fetch_float_return_value(self, entry) -> Any:
+        march = entry.dwarf_info.compilation_unit.march
+        rv = None
+        match march:
+            case 'rv32imac_zicsr':
+                self.logger.info(f'Architecture {march} recognized. Extracting float return value from a0')
+                cswsp = self.fetch_cswsp_instruction(entry.prologue)
+                cjr = self.fetch_cjr_instruction(entry.epilogue)
+
+                if not cswsp:
+                    self.logger.error("Missing cswsp instruction. Aborting.")
+                elif not cjr:
+                    self.logger.error("Missing cjr instruction. Aborting.")
+                else:
+                    if cswsp['a0'] == cjr['a0']:
+                        self.logger.info(
+                            f'{march}: a0 has equal value in prologue and epilogue. Value is inconclusive. Aborting.')
+                    else:
+                        rv = cjr['a0']
+            case 'rv32imafdc_zicsr_zifencei':
+                self.logger.info(f'Architecture {march} recognized. Extracting and unmasking 32-bit float return value from 64-bit reg fa0')
+                cswsp = self.fetch_cswsp_instruction(entry.prologue)
+                cjr = self.fetch_cjr_instruction(entry.epilogue)
+
+                if not cswsp:
+                    self.logger.error("Missing cswsp instruction. Aborting.")
+                elif not cjr:
+                    self.logger.error("Missing cjr instruction. Aborting.")
+                else:
+                    if cswsp['fa0'] == cjr['fa0']:
+                        self.logger.info(
+                            f'{march}: fa0 has equal value in prologue and epilogue. Value is inconclusive. Aborting.')
+                    else:
+                        masked_rv = cjr['fa0']
+                        mask = 0xFFFFFFFF
+                        rv = masked_rv & mask
+        return rv
+
+
+    def fetch_cswsp_instruction(self, prologue: List[Dict[str, Any]]) -> None | Dict[str, Any]:
+        cswsp_instr = None
+        for i in prologue:
+            if i['instruction'] == 'cswsp':
+                cswsp_instr = i
+                break
+
+        return cswsp_instr
+
+    def fetch_cjr_instruction(self, epilogue: List[Dict[str, Any]]) -> None | Dict[str, Any]:
+        cjr_inst = None
+        for i in epilogue:
+            if i['instruction'] == 'cjr':
+                cjr_inst = i
+                break
+
+        return cjr_inst
 
 
 

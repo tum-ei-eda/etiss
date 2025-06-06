@@ -43,6 +43,9 @@ class Subprogram:
             self.type_description = 'void'
 
 
+    def get_base_type(self) -> str:
+        return str(self.base_type)
+
 
     def __str__(self) -> str:
         output = ""
