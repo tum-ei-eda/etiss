@@ -88,7 +88,7 @@ class DwarfInfoExtractor:
 
                 # Start with the top DIE, the root for this CU's DIE tree
                 top_DIE = CU.get_top_DIE()
-                self.extract_architecture_information(top_DIE)
+                self.extract_architecture_information(top_DIE, elffile.little_endian)
 
                 indent_level = '    '
                 # print(f"{indent_level}Top DIE with tag={top_DIE.tag}")
@@ -248,7 +248,7 @@ class DwarfInfoExtractor:
         return lowpc, highpc
 
 
-    def extract_architecture_information(self, top_die):
+    def extract_architecture_information(self, top_die, little_endian):
         """
             Extracts architecture information from the top DIE compile unit
         """
@@ -256,7 +256,7 @@ class DwarfInfoExtractor:
             self.logger.warning("Core information (DW_AT_producer) not found from DWARF top DIE")
         else:
             producer_string = top_die.attributes['DW_AT_producer'].value.decode('utf-8')
-            self.extracted_dwarf_info.extract_core_information(producer_string)
+            self.extracted_dwarf_info.extract_core_information(producer_string, little_endian)
 
 
     def extract_type_information(self, t, type_construct: TypeConstruct) -> None:

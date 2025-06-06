@@ -61,8 +61,8 @@ class DwarfInfo:
 
 
 
-    def extract_core_information(self, producer: str) -> None:
-        self.compilation_unit.extract_core_information(producer)
+    def extract_core_information(self, producer: str, little_endian: bool) -> None:
+        self.compilation_unit.extract_core_information(producer, little_endian)
 
     def get_low_pc(self) -> Any:
         return self.subprogram.low_pc
