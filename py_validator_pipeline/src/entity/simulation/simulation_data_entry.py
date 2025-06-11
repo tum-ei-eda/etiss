@@ -2,10 +2,12 @@ import logging
 
 from typing import List, Dict, Any
 
-from src.entity.dwarf_info import DwarfInfo
-from src.entity.formal_parameter import FormalParameter
-from src.entity.global_variable import GlobalVariable
-from src.entity.local_variable import LocalVariable
+from src.entity.dwarf.dwarf_info import DwarfInfo
+from src.entity.dwarf.formal_parameter import FormalParameter
+from src.entity.dwarf.global_variable import GlobalVariable
+from src.entity.dwarf.local_variable import LocalVariable
+from src.march_manager import MArchManager
+
 
 class SimulationDataEntry:
     """
@@ -29,6 +31,7 @@ class SimulationDataEntry:
         self.index = 0
         self.logger = logging.getLogger(__name__)
         self.dwarf_info = None
+        self.march_manager = MArchManager()
 
         self.comparison_line_lenght = 90
 
@@ -92,6 +95,7 @@ class SimulationDataEntry:
 
     def add_formal_param_locations(self, param_name, param_loc) -> None:
         # For now we assume all formal params are in fbregs
+        # TODO: should frame pointer or stack pointer be used here?!
         self.formal_param_locations[param_name] = hex(self.frame_pointer +  param_loc)[2:]
 
     def add_global_variable_and_location(self, var_name, location):
@@ -232,12 +236,14 @@ class SimulationDataEntry:
         formal_param_values = self.get_first_writes_to_formal_params()
         if len(formal_param_values) == 0 and len(other_entry_formal_params) == 0:
             result += section + 'NA\n'
-            result += "      formal parameters: No parameters\n"
+            result += "      No formal parameters\n"
         elif len(formal_param_values) == len(other_entry_formal_params):
             for var_name, entry in formal_param_values.items():
                 if entry['data'] != other_entry_formal_params[var_name]['data']:
                     result += section + 'FAIL\n'
                     result += f"      data mismatch in variable {var_name}: {entry['data']} != {other_entry_formal_params[var_name]['data']}\n"
+            else:
+                print(f"Golden:\n{formal_param_values}\n, isuv:\n {other_entry_formal_params}")
         else:
             result += section + 'FAIL\n'
             result += "      number of parameters written to stack do not match\n"
@@ -307,114 +313,55 @@ class SimulationDataEntry:
             result = section + 'NA\n'
             result += "      Void function has no return value\n"
         elif not result:
-            is_int = 'int' in fun_return_type
-            is_float = 'float' in fun_return_type
-
-            if is_int:
-                self.logger.info("Subprogram has return type int. Verifying return values based on machine architecture.")
-                gr_rv = self.fetch_int_return_value(self)
-                ci_rv = self.fetch_int_return_value(custom_ise)
-                if not gr_rv or not ci_rv:
-                    result = section + 'NA\n'
-                    result += f"      Return value is inconclusive in golden reference: {not gr_rv}, custom ISE: {not ci_rv}.\n"
+            gr_rv = self.fetch_return_value(self, fun_return_type)
+            ci_rv = self.fetch_return_value(custom_ise, fun_return_type)
+            if not gr_rv or not ci_rv:
+                result = section + 'NA\n'
+                result += f"      Return value is inconclusive. See log entries for more information.\n"
+            else:
+                if gr_rv != ci_rv:
+                    result += section + 'FAIL\n'
+                    result += f"      mismatch in return value: golden reference: {gr_rv}, custom ISE: {ci_rv}\n"
                 else:
-                    if gr_rv != ci_rv:
-                        result += section + 'FAIL\n'
-                        result += f"      mismatch in return value: golden reference: {gr_rv}, custom ISE: {ci_rv}\n"
-                    else:
-                        result += section + 'OK\n'
-            elif is_float:
-                self.logger.info("Subprogram has return type float. Verifying return values based on machine architecture.")
-                gr_rv = self.fetch_float_return_value(self)
-                ci_rv = self.fetch_float_return_value(custom_ise)
-                if not gr_rv or not ci_rv:
-                    result = section + 'NA\n'
-                    result += f"      Return value is inconclusive in golden reference: {not gr_rv}, custom ISE: {not ci_rv}.\n"
-                else:
-                    if gr_rv != ci_rv:
-                        result += section + 'FAIL\n'
-                        result += f"      mismatch in return value: golden reference: {gr_rv}, custom ISE: {ci_rv}\n"
-                    else:
-                        result += section + 'OK\n'
-
-
+                    result += section + 'OK\n'
         return result
 
-    def fetch_int_return_value(self, entry) -> Any:
-        march = entry.dwarf_info.compilation_unit.march
+    def fetch_return_value(self, entry, func_return_base_type):
+        m = entry.dwarf_info.compilation_unit.march
+        march = self.march_manager.get_march_with_name(m)
         rv = None
-        match march:
-            case 'rv32imac_zicsr' | 'rv32imafdc_zicsr_zifencei':
-                self.logger.info(f'Architecture {march} recognized. Extracting integer return value from a0')
-                cswsp = self.fetch_cswsp_instruction(entry.prologue)
-                cjr = self.fetch_cjr_instruction(entry.epilogue)
-                if not cswsp:
-                    self.logger.error("Missing cswsp instruction. Aborting.")
-                elif not cjr:
-                    self.logger.error("Missing cjr instruction. Aborting.")
-                else:
-                    if cswsp['a0'] == cjr['a0']:
-                        self.logger.info(f'{march}: a0 has equal value in prologue and epilogue. Value is inconclusive. Aborting.')
-                    else:
-                        rv = cjr['a0']
+        match func_return_base_type:
+            case 'int':
+                self.logger.info(
+                    "Subprogram has return type int. Verifying return values based on machine architecture.")
+                rv = march.fetch_int_return_value(entry)
+            case 'unsigned int':
+                self.logger.info(
+                    "Subprogram has return type unsigned int. Verifying return values based on machine architecture.")
+                rv = march.fetch_unsigned_int_return_value(entry)
+            case 'char':
+                self.logger.info(
+                    "Subprogram has return type char. Verifying return values based on machine architecture.")
+                rv = march.fetch_char_return_value(entry)
+            case 'float':
+                self.logger.info(
+                    "Subprogram has return type float. Verifying return values based on machine architecture.")
+                rv = march.fetch_float_return_value(entry)
+        return rv
+
+
+    def fetch_int_return_value(self, entry) -> Any:
+        m = entry.dwarf_info.compilation_unit.march
+        march = self.march_manager.get_march_with_name(m)
+        rv = march.fetch_int_return_value(entry)
         return rv
 
     def fetch_float_return_value(self, entry) -> Any:
-        march = entry.dwarf_info.compilation_unit.march
-        rv = None
-        match march:
-            case 'rv32imac_zicsr':
-                self.logger.info(f'Architecture {march} recognized. Extracting float return value from a0')
-                cswsp = self.fetch_cswsp_instruction(entry.prologue)
-                cjr = self.fetch_cjr_instruction(entry.epilogue)
-
-                if not cswsp:
-                    self.logger.error("Missing cswsp instruction. Aborting.")
-                elif not cjr:
-                    self.logger.error("Missing cjr instruction. Aborting.")
-                else:
-                    if cswsp['a0'] == cjr['a0']:
-                        self.logger.info(
-                            f'{march}: a0 has equal value in prologue and epilogue. Value is inconclusive. Aborting.')
-                    else:
-                        rv = cjr['a0']
-            case 'rv32imafdc_zicsr_zifencei':
-                self.logger.info(f'Architecture {march} recognized. Extracting and unmasking 32-bit float return value from 64-bit reg fa0')
-                cswsp = self.fetch_cswsp_instruction(entry.prologue)
-                cjr = self.fetch_cjr_instruction(entry.epilogue)
-
-                if not cswsp:
-                    self.logger.error("Missing cswsp instruction. Aborting.")
-                elif not cjr:
-                    self.logger.error("Missing cjr instruction. Aborting.")
-                else:
-                    if cswsp['fa0'] == cjr['fa0']:
-                        self.logger.info(
-                            f'{march}: fa0 has equal value in prologue and epilogue. Value is inconclusive. Aborting.')
-                    else:
-                        masked_rv = cjr['fa0']
-                        mask = 0xFFFFFFFF
-                        rv = masked_rv & mask
+        m = entry.dwarf_info.compilation_unit.march
+        march = self.march_manager.get_march_with_name(m)
+        rv = march.fetch_float_return_value(entry)
         return rv
 
-
-    def fetch_cswsp_instruction(self, prologue: List[Dict[str, Any]]) -> None | Dict[str, Any]:
-        cswsp_instr = None
-        for i in prologue:
-            if i['instruction'] == 'cswsp':
-                cswsp_instr = i
-                break
-
-        return cswsp_instr
-
-    def fetch_cjr_instruction(self, epilogue: List[Dict[str, Any]]) -> None | Dict[str, Any]:
-        cjr_inst = None
-        for i in epilogue:
-            if i['instruction'] == 'cjr':
-                cjr_inst = i
-                break
-
-        return cjr_inst
 
 
 

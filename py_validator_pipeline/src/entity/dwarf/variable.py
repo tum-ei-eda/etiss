@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
-from math import prod
 
-from src.entity.type_construct import TypeConstruct
+from src.entity.dwarf.type_construct import TypeConstruct
 
 
 class Variable(ABC):
@@ -100,17 +99,3 @@ class Variable(ABC):
             output += f"{self.indent*' '}  ├ Range: {self._range}\n"
         output += f"{self.indent*' '}  └ Location: {self._location}\n"
         return output
-
-"""
-A hand-written example from which ASCII-symbols can be copied
-    ├─main - call #i
-    └┐
-     ├─ cswsp <PC>: <a0: 0, a1: 0, fa0: 0, fa1: 0> 
-     ├─ cswsp <PC>: <a0: 0, a1: 0, fa0: 0, fa1: 0>
-     └┐
-      ├─ dwrite <PC>: <data: 00, address: 00>
-      ├─ dwrite <PC>: <data: 00, address: 00>
-     ┌┘
-     ├─ cjr <PC>: <a0: 0, a1: 0, fa0: 0, fa1: 0>
-    ┌┘
-"""

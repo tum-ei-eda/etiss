@@ -1,4 +1,4 @@
-from src.entity.type_construct import TypeConstruct
+from src.entity.dwarf.type_construct import TypeConstruct
 
 """
     A class instance of representing data extracted from subprogram DIE

@@ -6,7 +6,10 @@ def init_logger(debug: bool = False) -> None:
     root_logger = logging.getLogger()  # root logger
 
     # Set logging level for all loggers
-    root_logger.setLevel(logging.INFO)
+    if not debug:
+        root_logger.setLevel(logging.INFO)
+    else:
+        root_logger.setLevel(logging.DEBUG)
     root_logger.handlers.clear()
 
     # File handler

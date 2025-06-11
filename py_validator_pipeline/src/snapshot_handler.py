@@ -6,9 +6,9 @@ import os
 import json
 import logging
 
-from src.entity.dwarf_info import DwarfInfo
-from src.entity.simulation_data_collection import SimulationDataCollection
-from src.entity.simulation_data_entry import SimulationDataEntry
+from src.entity.dwarf.dwarf_info import DwarfInfo
+from src.entity.simulation.simulation_data_collection import SimulationDataCollection
+from src.entity.simulation.simulation_data_entry import SimulationDataEntry
 
 logger = logging.getLogger(__name__)
 INDENT = '    '
@@ -20,7 +20,7 @@ def parse_and_extract_snapshots(dwarf_info: DwarfInfo):
         epilogue. This method calls helper method to extract an
         entry.
     """
-    logger.info("Extracting snapshots from activity log")
+    logger.debug("Extracting snapshots from activity log")
 
     current_path = os.getcwd()
     with open(f"{current_path}/snapshot-activity.log", "r") as f:
@@ -101,7 +101,7 @@ def log_snapshot_information(entries: SimulationDataCollection, fun_name: str):
         fun_call += 1
         output += str(entry)
     if output:
-        logger.info(f"Following snapshot information extracted:\n\n{output}")
+        logger.debug(f"Following snapshot information extracted:\n\n{output}")
     else:
         logger.warning("No snapshot information extracted")
 

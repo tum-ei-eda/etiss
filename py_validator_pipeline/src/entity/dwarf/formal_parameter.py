@@ -1,5 +1,5 @@
 import re
-from src.entity.variable import  Variable
+from src.entity.dwarf.variable import  Variable
 
 class FormalParameter(Variable):
 
