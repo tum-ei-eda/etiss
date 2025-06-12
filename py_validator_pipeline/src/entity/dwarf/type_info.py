@@ -2,7 +2,7 @@ from math import prod
 
 
 
-class TypeConstruct:
+class TypeInfo:
     """
         A convenience class to construct and instance of type information.
         The variables all have type information and additionally the
@@ -25,8 +25,7 @@ class TypeConstruct:
         self._range_list.append(element)
 
 
-    def create_type_information(self, base_type, base_type_byte_size):
-
+    def create_type_information(self, base_type, base_type_byte_size) -> None:
         # Add base type and byte size for base type
         self.base_type = base_type
         self.base_type_byte_size = base_type_byte_size
@@ -39,12 +38,14 @@ class TypeConstruct:
         else:
             self.description = "void"
 
-
     def __str__(self) -> str:
-        output = "TypeConstruct:\n"
-        output += f"  | Description: {self.description}\n"
-        output += f"  | Range: {self.range}\n"
-        output += f"  | Base Type: {self.base_type}\n"
-        output += f"  | Base Type Byte Size: {self.base_type_byte_size}\n"
+        output = "TypeInfo:\n"
+        if self.description:
+            output += f"  | Description: {self.description}\n"
+            output += f"  | Range: {self.range}\n"
+            output += f"  | Base Type: {self.base_type}\n"
+            output += f"  | Base Type Byte Size: {self.base_type_byte_size}\n"
+        else:
+            output += f"  | Description: void\n"
 
         return output

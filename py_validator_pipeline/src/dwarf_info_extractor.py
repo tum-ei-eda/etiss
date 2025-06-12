@@ -29,11 +29,12 @@ from elftools.dwarf.callframe import FDE
 from src.entity.dwarf.dwarf_info import  DwarfInfo
 from src.entity.dwarf.frame_base_info import FrameBaseInfo
 
+from src.entity.dwarf.subprogram import Subprogram
 from src.entity.dwarf.global_variable import GlobalVariable
 from src.entity.dwarf.formal_parameter import FormalParameter
 from src.entity.dwarf.local_variable import LocalVariable
 
-from src.entity.dwarf.type_construct import TypeConstruct
+from src.entity.dwarf.type_info import TypeInfo
 
 class DwarfInfoExtractor:
     """
@@ -49,45 +50,21 @@ class DwarfInfoExtractor:
         and debug mode flag.
 
     Parameters:
-        binary (str): The path or name of the binary file to analyze.
         source_file (str): The source file associated with the debugging information.
-        function (str): The name of the function whose debugging info is to be extracted.
-        debug (bool, optional): Enables debug output if True. Defaults to False.
+        function_of_interest (str): The name of the function whose debugging info is to be extracted.
 
     TODO:
-        - Consider redesigning `DwarfInfoExtractor` as a singleton to avoid
-          repeated instantiation.
-        - Avoid populating instance state with class attributes in the initializer.
-        - Instead of storing extracted info internally, refactor to create and
-          return a new `DwarfInfo` instance after extraction completes.
+        - Consider redesigning `DwarfInfoExtractor` as a singleton to shield
+          from repeated instantiation.
     """
 
-
-    def __init__(self, binary: str,source_file: str, function: str, debug: bool=False ):
+    def __init__(self, source_file: str, function_of_interest: str):
         self.logger = logging.getLogger(__name__)
-        self.extracted_dwarf_info = DwarfInfo()
-        self.extracted_dwarf_info.set_source_file(source_file)
-        self.extracted_dwarf_info.set_binary_name(binary)
-        self.extracted_dwarf_info.set_function_of_interest(function)
-
-        self.debug_output = ""
-
-        self.binary = binary
         self.source_file = source_file
-        self.function = function
-        self.debug = debug
+        self.function_of_interest = function_of_interest
 
 
-    def get_dwarf_info(self) -> DwarfInfo:
-        """
-        Returns the extracted DWARF debugging information.
-
-        Returns:
-            DwarfInfo: The populated DWARF information object.
-        """
-        return self.extracted_dwarf_info
-
-    def extract_dwarf_info(self) -> None:
+    def extract_dwarf_info(self, binary: str) -> DwarfInfo:
         """
         Extracts DWARF debugging information from the target binary and populates
         an internal DwarfInfo object with data relevant to the specified source file
@@ -112,9 +89,14 @@ class DwarfInfoExtractor:
               class-private to indicate they are not intended to be called externally.
             - Decouple parsing logic to allow finer-grained access to intermediate DWARF structures.
         """
-        self.logger.debug(f'Processing file: {self.binary}')
+        self.logger.debug(f'Processing file: {binary}')
+        extracted_dwarf_info = DwarfInfo()
 
-        with open(self.binary, 'rb') as f:
+        extracted_dwarf_info.set_source_file(self.source_file)
+        extracted_dwarf_info.set_binary_name(binary)
+        extracted_dwarf_info.set_function_of_interest(self.function_of_interest)
+
+        with open(binary, 'rb') as f:
             elffile = ELFFile(f)
 
             if not elffile.has_dwarf_info():
@@ -150,7 +132,7 @@ class DwarfInfoExtractor:
 
                 # Start with the top DIE, the root for this CU's DIE tree
                 top_DIE = CU.get_top_DIE()
-                self.extract_architecture_information(top_DIE, elffile.little_endian)
+                self.extract_architecture_information(top_DIE, elffile.little_endian, extracted_dwarf_info)
 
                 indent_level = '    '
                 # print(f"{indent_level}Top DIE with tag={top_DIE.tag}")
@@ -168,52 +150,22 @@ class DwarfInfoExtractor:
 
                 # We iterate through all direct descendants of the CU
                 for child in top_DIE.iter_children():
-                    self.die_extract_recurser(child, location_lists, loc_parser, CU, dwarf_info_context_object, self.function, indent_level)
+                    self.die_extract_recurser(die=child,
+                                              loc_list=location_lists,
+                                              loc_parser=loc_parser,
+                                              CU=CU,
+                                              dwarfinfo=dwarf_info_context_object,
+                                              extracted_di=extracted_dwarf_info,
+                                              indent_level=indent_level)
 
             # Extract CFA register values and offsets for subprogram of interest
-            self.extract_cfa_register_values_and_offsets(dwarf_info_context_object)
+            self.extract_cfa_register_values_and_offsets(dwarf_info_context_object, extracted_dwarf_info)
+
+            return extracted_dwarf_info
 
 
-
-    def extract_cfa_register_values_and_offsets(self, di_context_object):
-        """
-        Extracts Canonical Frame Address (CFA) register and offset information
-        from the debug frame section of DWARF data.
-
-        This method looks for a Frame Description Entry (FDE) with an initial
-        location matching the low PC of the subprogram of interest, decodes its
-        instructions, and collects frame base info for each instruction row.
-        The DwarfInfo instance handles the logic of storing relevant frame base
-        information
-
-        Parameters:
-            di_context_object: pyelftools DWARFInfo object instance providing access to
-            CFI entries with .CFI_entries() method.
-
-        Side Effects:
-            - Populates frame base information into `self.extracted_dwarf_info`.
-            - Logs debug messages for the matching FDE range.
-
-        Warning:
-            This method assumes the structure of the decoded data is valid.
-            It may raise KeyError if expected keys like 'cfa', 'pc', or
-            'initial_location' are missing.
-
-        TODO:
-            Add validation or error handling for robustness.
-        """
-        cf_section = di_context_object.CFI_entries()
-        low_pc = self.extracted_dwarf_info.get_low_pc()
-        for entry in cf_section:
-            if isinstance(entry, FDE) and entry['initial_location'] == low_pc:
-                self.logger.debug(
-                    f"Extracting frame base information for entry: PC {entry['initial_location']:x}..{entry['initial_location'] + entry['address_range']:x}")
-                instructions = entry.get_decoded().table
-                for row in instructions:
-                    self.extracted_dwarf_info.add_frame_base_info(
-                        FrameBaseInfo(row['pc'], row['cfa'].reg, row['cfa'].offset))
-
-    def die_extract_recurser(self, die, loc_list: list, loc_parser, CU, dwarfinfo, function, indent_level='    ', global_level=True):
+    def die_extract_recurser(self, die, loc_list: list, loc_parser, CU, dwarfinfo,
+                             extracted_di, indent_level='    ', subprogram: None | Subprogram=None,  global_level: bool=True):
         """
         Recursively traverses a DWARF Debugging Information Entry (DIE) tree to extract
         relevant program data including global variables, the specified subprogram,
@@ -232,8 +184,10 @@ class DwarfInfoExtractor:
             loc_parser: An object used to interpret location attributes in DIEs.
             CU: The Compilation Unit to which the DIE belongs, providing version context.
             dwarfinfo: The overarching DWARF information context object from pyelftools.
-            function (str): The name of the target subprogram to extract.
+            extracted_di: DwarfInfo instance to which extracted debug information is stored.
             indent_level (str): Used to format debug output based on recursion depth.
+            subprogram (Subprogram | None): The subprogram for which formal params and
+                                            local variables are extracted.
             global_level (bool): Indicates whether the current DIE is at global scope,
                                  influencing how variables are classified.
 
@@ -251,25 +205,32 @@ class DwarfInfoExtractor:
         match die.tag:
             case 'DW_TAG_subprogram':
                 # Case of subprogram. We are only interested in the subroutine specified by the user.
-                if 'DW_AT_name' in die.attributes and  die.attributes['DW_AT_name'].value.decode('utf-8') == function:
+                fun_name_attr = die.attributes.get('DW_AT_name')
+                fun_type_attr = die.attributes.get('DW_AT_type')
+
+                # We only want to extract subprograms declared in the source file,
+                is_declared_in_source_file = die.attributes.get('DW_AT_decl_file').value == 1
+
+                if is_declared_in_source_file:
+                    # Initialize new subprogram
+                    subprogram = Subprogram()
+
                     # A subprogram may not have type, so we create type_info before iterating attributes
-                    type_info = TypeConstruct()
+                    type_info = TypeInfo()
 
-                    for attr, value in die.attributes.items():
-                        match attr:
-                            case 'DW_AT_name':
-                                fun_name = value.value.decode('utf-8')
-                                self.extracted_dwarf_info.set_subprogram_name(fun_name)
-                            case 'DW_AT_type':
-                                die_from_attr = die.get_DIE_from_attribute('DW_AT_type')
-                                self.extract_type_information(die_from_attr, type_info)
-                            case _:
-                                pass
+                    fun_name = fun_name_attr.value.decode('utf-8')
+                    subprogram.name = fun_name
 
-                    self.extracted_dwarf_info.set_subprogram_type_information(type_info)
+                    if fun_type_attr:
+                        die_from_attr = die.get_DIE_from_attribute('DW_AT_type')
+                        self.extract_type_information(die_from_attr, type_info)
+                    subprogram.type_info = type_info
+
                     lowpc, highpc = self.get_low_and_high_pc(die)
-                    self.extracted_dwarf_info.set_subprogram_low_and_high_pc(lowpc, highpc)
+                    subprogram.low_pc = lowpc
+                    subprogram.high_pc = highpc
 
+                    extracted_di.add_subprogram(subprogram)
 
                     """
                         We also want to extract formal parameters and local variables
@@ -278,7 +239,18 @@ class DwarfInfoExtractor:
                     """
                     child_indent = indent_level + '  '
                     for child in die.iter_children():
-                        self.die_extract_recurser(child, loc_list, loc_parser, CU, dwarfinfo, child_indent, global_level=False)
+                        self.die_extract_recurser(
+                            die=child,
+                            loc_list=loc_list,
+                            loc_parser=loc_parser,
+                            CU=CU,
+                            dwarfinfo=dwarfinfo,
+                            extracted_di=extracted_di,
+                            indent_level=child_indent,
+                            subprogram=subprogram,
+                            global_level=False)
+
+
             case 'DW_TAG_variable':
                 # Case of global variable
                 if global_level:
@@ -294,7 +266,7 @@ class DwarfInfoExtractor:
                     if attr in ['DW_AT_type']:
 
                         die_from_attr = die.get_DIE_from_attribute('DW_AT_type')
-                        type_info = TypeConstruct()
+                        type_info = TypeInfo()
                         self.extract_type_information(die_from_attr, type_info)
                         var.create_type_information(type_info)
 
@@ -304,30 +276,27 @@ class DwarfInfoExtractor:
                         if loc_output != "":
                             var.set_location(loc_output)
                 if global_level:
-                    self.extracted_dwarf_info.add_global_variable(var)
+                    extracted_di.add_global_variable(var)
                 else:
-                    self.extracted_dwarf_info.add_local_variable(var)
+                    subprogram.add_local_variable(var)
             case 'DW_TAG_formal_parameter':
                 # Formal parameter for the subprogram of interest
                 formal_param = FormalParameter()
-                if self.debug:
-                    self.debug_output += f"{indent_level} DIE tag={die.tag}\n"
                 for attr, value in die.attributes.items():
                     if attr in ['DW_AT_name']:
                         param_name = die.attributes['DW_AT_name'].value.decode('utf-8')
                         formal_param.set_name(param_name)
                     if attr in ['DW_AT_type']:
                         die_from_attr = die.get_DIE_from_attribute('DW_AT_type')
-                        type_info = TypeConstruct()
+                        type_info = TypeInfo()
                         self.extract_type_information(die_from_attr, type_info)
                         formal_param.create_type_information(type_info)
                     if loc_parser.attribute_has_location(value, CU['version']):
-                        line_prefix = f"{indent_level}  | "
                         loc = loc_parser.parse_from_attribute(value, CU['version'], die)
                         loc_output = self.get_location_output(loc, dwarfinfo, CU)
                         if loc_output != "":
                             formal_param.set_location(loc_output)
-                self.extracted_dwarf_info.add_formal_parameter(formal_param)
+                subprogram.add_formal_parameter(formal_param)
             case _:
                 pass
 
@@ -367,7 +336,8 @@ class DwarfInfoExtractor:
 
         return loc_output
 
-    def show_loclist(self, loclist, dwarfinfo, indent, cu_offset) -> str:
+    @staticmethod
+    def show_loclist(loclist, dwarfinfo, indent, cu_offset) -> str:
         """
         Formats and returns a string representation of a DWARF location list, decoding
         each location expression for readability.
@@ -442,12 +412,12 @@ class DwarfInfoExtractor:
             highpc = lowpc + highpc_attr.value
         else:
             self.logger.error('Error: invalid DW_AT_high_pc class:',highpc_attr_class)
-            lowpc, highpce = None, None
+            lowpc, highpc = None, None
 
         return lowpc, highpc
 
 
-    def extract_architecture_information(self, top_die, little_endian):
+    def extract_architecture_information(self, top_die, little_endian, extracted_di: DwarfInfo):
         """
         Extracts architecture-related information from the top-level DIE of a Compilation Unit.
 
@@ -460,6 +430,8 @@ class DwarfInfoExtractor:
             top_die: The top-level DIE of a Compilation Unit, usually with tag
                      `DW_TAG_compile_unit`.
             little_endian (bool): Indicates whether the target architecture is little-endian.
+            extracted_di (DwarfInfo): An instance of DwarfInfo to which extracted DWARF
+                                      debug information is stored
 
         Side Effects:
             - Calls `self.extracted_dwarf_info.extract_core_information(...)` with the
@@ -476,10 +448,10 @@ class DwarfInfoExtractor:
             self.logger.warning("Core information (DW_AT_producer) not found from provided DIE")
         else:
             producer_string = top_die.attributes['DW_AT_producer'].value.decode('utf-8')
-            self.extracted_dwarf_info.extract_core_information(producer_string, little_endian)
+            extracted_di.extract_core_information(producer_string, little_endian)
 
 
-    def extract_type_information(self, t, type_construct: TypeConstruct) -> None:
+    def extract_type_information(self, t, type_construct: TypeInfo) -> None:
         """
         Recursively extracts type information from a DWARF Debugging Information Entry (DIE)
         and populates a `TypeConstruct` object with a structured, human-readable representation
@@ -501,7 +473,7 @@ class DwarfInfoExtractor:
 
         Parameters:
             t: A DWARF DIE representing the type to analyze.
-            type_construct (TypeConstruct): An object used to incrementally build a
+            type_construct (TypeInfo): An object used to incrementally build a
                                     structured description of the type composition.
 
         Notes:
@@ -603,9 +575,48 @@ class DwarfInfoExtractor:
             if die.tag == 'DW_TAG_subrange_type':
                 upper_bound = int(die.attributes['DW_AT_upper_bound'].value)
                 lower_bound = 0
-                range = 0
                 if die.attributes.get('DW_AT_lower_bound'):
                     lower_bound = int(die.attributes['DW_AT_lower_bound'].value)
                 arr_size *= (upper_bound - lower_bound + 1)
         return arr_size
 
+
+    def extract_cfa_register_values_and_offsets(self, di_context_object, extracted_di: DwarfInfo) -> None:
+        """
+        Extracts Canonical Frame Address (CFA) register and offset information
+        from the debug frame section of DWARF data.
+
+        This method looks for a Frame Description Entry (FDE) with an initial
+        location matching the low PC of the subprogram of interest, decodes its
+        instructions, and collects frame base info for each instruction row.
+        The DwarfInfo instance handles the logic of storing relevant frame base
+        information
+
+        Parameters:
+            di_context_object: pyelftools DWARFInfo object instance providing access to
+            CFI entries with .CFI_entries() method.
+            extracted_di: DWARFInfo object instance to which DWARF debug information
+                          is collected
+
+        Side Effects:
+            - Populates frame base information into `self.extracted_dwarf_info`.
+            - Logs debug messages for the matching FDE range.
+
+        Warning:
+            This method assumes the structure of the decoded data is valid.
+            It may raise KeyError if expected keys like 'cfa', 'pc', or
+            'initial_location' are missing.
+
+        TODO:
+            Add validation or error handling for robustness.
+        """
+        cf_section = di_context_object.CFI_entries()
+        for entry in cf_section:
+            if isinstance(entry, FDE) and extracted_di.has_subprogram_with_pc_as_low_pc(entry['initial_location']):
+                self.logger.debug(
+                    f"Extracting frame base information for entry: PC {entry['initial_location']:x}..{entry['initial_location'] + entry['address_range']:x}")
+                instructions = entry.get_decoded().table
+
+                for row in instructions:
+                    extracted_di.add_frame_base_info(
+                        FrameBaseInfo(row['pc'], row['cfa'].reg, row['cfa'].offset), entry['initial_location'])

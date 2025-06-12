@@ -1,9 +1,9 @@
 from abc import ABC, abstractmethod
 
-from src.entity.dwarf.type_construct import TypeConstruct
+from src.entity.dwarf.type_info import TypeInfo
 
 
-class Variable(ABC):
+class VarAndParamBase(ABC):
     """
         Parent class for all variables:
           - global variables
@@ -17,13 +17,13 @@ class Variable(ABC):
     def __init__(self) -> None:
         self._name = None
         self._location = None
+        self._indent = 2
         self._type_description = None
         self._base_type = None
         self._base_type_byte_size = None
         self._range = 1
         self._type_desrciption_as_list = []
         self._range_elements = []
-        self.indent = 2
 
 
     def set_name(self, name):
@@ -41,7 +41,7 @@ class Variable(ABC):
     def add_element_to_range_list(self, element: int) -> None:
         self._range_elements.append(element)
 
-    def create_type_information(self, type_construct: TypeConstruct) -> None:
+    def create_type_information(self, type_construct: TypeInfo) -> None:
         self._base_type = type_construct.base_type
         self._base_type_byte_size = type_construct.base_type_byte_size
         self._range = type_construct.range
@@ -91,11 +91,11 @@ class Variable(ABC):
 
     def __str__(self) -> str:
         output = ""
-        output += f"{self.indent*' '}  ┌ Name: {self._name}\n"
-        output += f"{self.indent*' '}  ├ Type composition: {self._type_description}\n"
-        output += f"{self.indent*' '}  ├ Base Type: {self._base_type}\n"
-        output += f"{self.indent*' '}  ├ Base Type/Byte Size: {self._base_type_byte_size}\n"
+        output += f"{self._indent * ' '}  ┌ Name: {self._name}\n"
+        output += f"{self._indent * ' '}  ├ Type composition: {self._type_description}\n"
+        output += f"{self._indent * ' '}  ├ Base Type: {self._base_type}\n"
+        output += f"{self._indent * ' '}  ├ Base Type/Byte Size: {self._base_type_byte_size}\n"
         if self._range != self._base_type_byte_size:
-            output += f"{self.indent*' '}  ├ Range: {self._range}\n"
-        output += f"{self.indent*' '}  └ Location: {self._location}\n"
+            output += f"{self._indent * ' '}  ├ Range: {self._range}\n"
+        output += f"{self._indent * ' '}  └ Location: {self._location}\n"
         return output

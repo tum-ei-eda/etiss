@@ -13,13 +13,26 @@ from src.entity.simulation.simulation_data_entry import SimulationDataEntry
 logger = logging.getLogger(__name__)
 INDENT = '    '
 
-def parse_and_extract_snapshots(dwarf_info: DwarfInfo):
+def build_simulation_entries(dwarf_info: DwarfInfo):
     """
-        Accesses activity log and parses snapshot information.
-        Entries begin with function prologue and end in function
-        epilogue. This method calls helper method to extract an
-        entry.
+    Builds a collection of verifiable simulation data entries by parsing
+    the ISS activity log and integrating DWARF debugging information.
+
+    Each entry corresponds to a function-level execution segment, beginning
+    at the function prologue and ending at the epilogue. This function
+    sequentially processes the log file and uses a helper method to
+    construct individual SimulationDataEntry objects by fusing relevant
+    simulation and DWARF data.
+
+    Args:
+        dwarf_info (DwarfInfo): Parsed DWARF debugging information used
+        to enrich simulation entries with symbolic context.
+
+    Returns:
+        SimulationDataCollection: A collection of SimulationDataEntry
+        objects containing combined simulation and DWARF data.
     """
+
     logger.debug("Extracting snapshots from activity log")
 
     current_path = os.getcwd()
@@ -27,7 +40,7 @@ def parse_and_extract_snapshots(dwarf_info: DwarfInfo):
         data_collection = SimulationDataCollection()
 
         while True:
-            entry = extract_entry(f, dwarf_info)
+            entry = construct_entry(f, dwarf_info)
             if entry is None:  # Reached EOF
                 break
             data_collection.add_entry(entry)
@@ -35,7 +48,7 @@ def parse_and_extract_snapshots(dwarf_info: DwarfInfo):
     return data_collection
 
 
-def extract_entry(f, dwarf_info):
+def construct_entry(f, dwarf_info):
     entry = SimulationDataEntry()
     entry.add_dwarf_info(dwarf_info)
 
@@ -87,7 +100,7 @@ def extract_entry(f, dwarf_info):
         # entry.add_global_variable_and_location(glob_var.get_name(), glob_var.get_location_value())
 
     entry.add_global_variables(global_vars)
-    formal_params = dwarf_info.get_formal_parameters()
+    formal_params = dwarf_info.get_subprogram_of_interest().get_formal_parameters()
     for param in formal_params:
         entry.add_formal_param_locations(param.get_name(), param.get_location_value())
 

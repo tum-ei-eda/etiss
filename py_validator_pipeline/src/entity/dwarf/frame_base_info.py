@@ -16,6 +16,6 @@ class FrameBaseInfo:
         return self._offset
 
     def __str__(self) -> str:
-        result = f"    - pc: {self._pc}, reg value: {self._reg}, offset: {self._offset}\n"
+        result = f"    ├── pc: {self._pc}, reg value: {self._reg}, offset: {self._offset}\n"
         return result
 

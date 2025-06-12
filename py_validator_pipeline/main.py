@@ -11,8 +11,8 @@ from typing import Dict, Any
 from src.march_manager import MArchManager
 from src.dwarf_info_extractor import DwarfInfoExtractor
 from src.etiss_simulation import run_etiss_simulation
-from src.snapshot_handler import (
-    parse_and_extract_snapshots,
+from src.dwarf_simdata_merger import (
+    build_simulation_entries,
     log_snapshot_information
 )
 
@@ -94,9 +94,8 @@ def extract_dwarf_information(bin_file: str, case: str) -> DwarfInfo:
         # Extract DWARF-information from given binary
         binary_information = f"{INDENT}| binary: {bin_file}\n{INDENT}| source: {args.src}\n{INDENT}| fuction: {args.fun}"
         logger.info(f"Extracting DWARF debug information for case {case} from binary:\n{binary_information}")
-        dwarf_info_extractor = DwarfInfoExtractor(binary=bin_file, source_file=args.src, function=args.fun)
-        dwarf_info_extractor.extract_dwarf_info()
-        dwarf_info = dwarf_info_extractor.get_dwarf_info()
+        dwarf_info_extractor = DwarfInfoExtractor(source_file=args.src, function_of_interest=args.fun)
+        dwarf_info = dwarf_info_extractor.extract_dwarf_info(binary=bin_file)
         if not march_manager.march_is_supported(dwarf_info.compilation_unit.march):
             logger.error(f"Machine architecture is not supported. Aborting. Machine architecture: {dwarf_info.compilation_unit.march}")
             raise Exception("Unsupported machine architecture! Aborting.")
@@ -114,8 +113,8 @@ def run_etiss_simulation_and_collect_activity_log(dwarf_info: DwarfInfo, ini_fil
         # ETISS SIMULATION
         logger.info(f"Running ETISS simulation as subprocess for {case}")
         # Get the low and high PCs for the subprogram of interest
-        lowpc = dwarf_info.get_low_pc()
-        highpc = dwarf_info.get_high_pc()
+        lowpc = dwarf_info.get_subprogram_of_interest().low_pc
+        highpc = dwarf_info.get_subprogram_of_interest().high_pc
 
         # TODO: find a more sensible approach for this
         # Currently low and high pc are stored in a file
@@ -138,7 +137,7 @@ def run_etiss_simulation_and_collect_activity_log(dwarf_info: DwarfInfo, ini_fil
     try:
         # ACTIVITY LOG EXTRACTION
         logger.info("Extracting entries from Activity log")
-        entries = parse_and_extract_snapshots(dwarf_info)
+        entries = build_simulation_entries(dwarf_info)
     except Exception as e:
         logger.error(f"An exception occured while parsing infromation from ActivityLog: {e}")
         raise ActivityLogParserException(e)

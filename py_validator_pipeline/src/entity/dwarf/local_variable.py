@@ -1,11 +1,11 @@
 import re
-from src.entity.dwarf.variable import Variable
+from src.entity.dwarf.var_and_param_base import VarAndParamBase
 
-class LocalVariable(Variable):
+class LocalVariable(VarAndParamBase):
 
     def __init__(self) -> None:
         super().__init__()
-        self.indent = 6  # override
+        self._indent = 6  # override
 
     def get_location_value(self):
         # For now we assume all formal params are in fbregs

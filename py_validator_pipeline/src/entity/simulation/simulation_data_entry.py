@@ -19,18 +19,18 @@ class SimulationDataEntry:
     """
 
     def __init__(self):
-        self.prologue = []
-        self.epilogue = []
-        self.dwrites = {}
-        self.formal_param_locations = {}
-        self.global_variable_locations = {}
+        self.prologue: List[Dict[str, Any]] = []
+        self.epilogue: List[Dict[str, Any]] = []
+        self.dwrites: Dict[str, List[Dict[str, Any]]] = {}
+        self.formal_param_locations: Dict[str, Any] = {}
+        self.global_variable_locations: Dict[str, Any] = {}
         self.global_variables  = []
         self.formal_parameters = []
         self.local_variables = []
         self.frame_pointer = 0
         self.index = 0
         self.logger = logging.getLogger(__name__)
-        self.dwarf_info = None
+        self.dwarf_info: None | DwarfInfo = None
         self.march_manager = MArchManager()
 
         self.comparison_line_lenght = 90
@@ -103,7 +103,7 @@ class SimulationDataEntry:
         self.global_variable_locations[var_name] = location
 
 
-    def add_global_variables(self, glob_vars: List[GlobalVariable]) -> None:
+    def     add_global_variables(self, glob_vars: List[GlobalVariable]) -> None:
         self.global_variables = glob_vars.copy()
 
     def add_formal_parameters(self, formal_params: List[FormalParameter]) -> None:
@@ -306,7 +306,7 @@ class SimulationDataEntry:
             self.logger.error("Dwarf debug information extraction missing. Aborting return value comparison.")
             result += section + 'FAIL\n'
             result += "      Missing extracted DWARF debug information\n"
-        fun_return_type = self.dwarf_info.subprogram.get_base_type()
+        fun_return_type = self.dwarf_info.get_subprogram_of_interest().type_info.base_type
 
         if not result and fun_return_type == 'None':
             self.logger.info("Void function has no return value")
