@@ -8,19 +8,12 @@ class RV32IMAC_zicsr(MArchBase):
             In rv32imac_zicsr int return value is stored in register a0
         """
         rv = None
-        self.logger.info(f'Architecture {self.get_march_name()} recognized. Extracting return value from register a0')
-        cswsp = self.fetch_cswsp_instruction(entry.prologue)
+        self.logger.debug(f'Architecture {self.get_march_name()} recognized. Extracting integer return value from a0')
         cjr = self.fetch_cjr_instruction(entry.epilogue)
-        if not cswsp:
-            self.logger.error("Missing cswsp instruction. Aborting.")
-        elif not cjr:
+        if not cjr:
             self.logger.error("Missing cjr instruction. Aborting.")
         else:
-            if cswsp['a0'] == cjr['a0']:
-                self.logger.info(
-                    f'{self.get_march_name()}: a0 has equal value in prologue and epilogue. Value is inconclusive. Aborting.')
-            else:
-                rv = cjr['a0']
+            rv = cjr['a0']
         return rv
 
     def fetch_unsigned_int_return_value(self, entry) -> Any:
@@ -37,7 +30,7 @@ class RV32IMAC_zicsr(MArchBase):
         """
         rv = None
 
-        self.logger.info(f'Architecture {self.get_march_name()} recognized. Extracting return value from register a0')
+        self.logger.debug(f'Architecture {self.get_march_name()} recognized. Extracting return value from register a0')
         cswsp = self.fetch_cswsp_instruction(entry.prologue)
         cjr = self.fetch_cjr_instruction(entry.epilogue)
 

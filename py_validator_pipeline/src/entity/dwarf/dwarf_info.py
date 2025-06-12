@@ -43,6 +43,15 @@ class DwarfInfo:
                 break
         return subprogram_found
 
+
+    def get_enclosing_subprogram(self, pc: int) -> None | Subprogram:
+        subprogram: None | Subprogram = None
+        for s in self.subprograms.values():
+            if s.low_pc <= pc <= s.high_pc:
+                subprogram = s
+                break
+        return subprogram
+
     def get_subprogram_with_pc_as_low_pc(self, pc: int) -> None | Subprogram:
         subprogram: None | Subprogram = None
         for s in self.subprograms.values():

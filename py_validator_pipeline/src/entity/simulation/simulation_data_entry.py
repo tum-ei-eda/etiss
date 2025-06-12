@@ -19,6 +19,7 @@ class SimulationDataEntry:
     """
 
     def __init__(self):
+        self.function_name: str = ""
         self.prologue: List[Dict[str, Any]] = []
         self.epilogue: List[Dict[str, Any]] = []
         self.dwrites: Dict[str, List[Dict[str, Any]]] = {}
@@ -98,12 +99,7 @@ class SimulationDataEntry:
         # TODO: should frame pointer or stack pointer be used here?!
         self.formal_param_locations[param_name] = hex(self.frame_pointer +  param_loc)[2:]
 
-    def add_global_variable_and_location(self, var_name, location):
-        # For now we assume all global variables are in memory
-        self.global_variable_locations[var_name] = location
-
-
-    def     add_global_variables(self, glob_vars: List[GlobalVariable]) -> None:
+    def add_global_variables(self, glob_vars: List[GlobalVariable]) -> None:
         self.global_variables = glob_vars.copy()
 
     def add_formal_parameters(self, formal_params: List[FormalParameter]) -> None:
@@ -122,7 +118,7 @@ class SimulationDataEntry:
             if var.has_more_than_one_element():
                 # Handle array dwrite addresses
                 n_of_elements = var.get_number_of_elements()
-                byte_size = var.get_base_type_byte_size()
+                byte_size = var.type_info.base_type_byte_size
                 var_name = var.get_name()
                 loc = var.get_location_value()
                 for idx in range(n_of_elements):
@@ -226,7 +222,7 @@ class SimulationDataEntry:
             result += "      different number of instructions\n"
 
         if not result:
-            result += "Function prologue ... OK\n"
+            result += section + "OK\n"
         return result
 
     def compare_formal_param_values(self, other_entry_formal_params) -> str:
@@ -236,14 +232,12 @@ class SimulationDataEntry:
         formal_param_values = self.get_first_writes_to_formal_params()
         if len(formal_param_values) == 0 and len(other_entry_formal_params) == 0:
             result += section + 'NA\n'
-            result += "      No formal parameters\n"
+            result += "      No data writes to formal parameter locations\n"
         elif len(formal_param_values) == len(other_entry_formal_params):
             for var_name, entry in formal_param_values.items():
                 if entry['data'] != other_entry_formal_params[var_name]['data']:
                     result += section + 'FAIL\n'
                     result += f"      data mismatch in variable {var_name}: {entry['data']} != {other_entry_formal_params[var_name]['data']}\n"
-            else:
-                print(f"Golden:\n{formal_param_values}\n, isuv:\n {other_entry_formal_params}")
         else:
             result += section + 'FAIL\n'
             result += "      number of parameters written to stack do not match\n"
@@ -258,7 +252,7 @@ class SimulationDataEntry:
         global_var_values = self.get_last_writes_to_global_var_locations()
         if len(global_var_values) == 0 and len(other_entry_global_variable_values) == 0:
             result += section + 'NA\n'
-            result += "      no global variables\n"
+            result += "      no data writes to global variable locations\n"
         elif len(global_var_values) == len(other_entry_global_variable_values):
             for var_name, entry in global_var_values.items():
                 if entry['data'] != other_entry_global_variable_values[var_name]['data']:
@@ -308,16 +302,16 @@ class SimulationDataEntry:
             result += "      Missing extracted DWARF debug information\n"
         fun_return_type = self.dwarf_info.get_subprogram_of_interest().type_info.base_type
 
-        if not result and fun_return_type == 'None':
+        if not result and fun_return_type is None:
             self.logger.info("Void function has no return value")
             result = section + 'NA\n'
             result += "      Void function has no return value\n"
         elif not result:
             gr_rv = self.fetch_return_value(self, fun_return_type)
             ci_rv = self.fetch_return_value(custom_ise, fun_return_type)
-            if not gr_rv or not ci_rv:
+            if gr_rv is None or ci_rv is None:
                 result = section + 'NA\n'
-                result += f"      Return value is inconclusive. See log entries for more information.\n"
+                result += f"      Return value is inconclusive. Return values: {gr_rv} (golden ref), {ci_rv} (other), function return type: {fun_return_type}. See log entries for more information.\n"
             else:
                 if gr_rv != ci_rv:
                     result += section + 'FAIL\n'
@@ -332,21 +326,26 @@ class SimulationDataEntry:
         rv = None
         match func_return_base_type:
             case 'int':
-                self.logger.info(
+                self.logger.debug(
                     "Subprogram has return type int. Verifying return values based on machine architecture.")
                 rv = march.fetch_int_return_value(entry)
             case 'unsigned int':
-                self.logger.info(
+                self.logger.debug(
                     "Subprogram has return type unsigned int. Verifying return values based on machine architecture.")
                 rv = march.fetch_unsigned_int_return_value(entry)
             case 'char':
-                self.logger.info(
+                self.logger.debug(
                     "Subprogram has return type char. Verifying return values based on machine architecture.")
                 rv = march.fetch_char_return_value(entry)
             case 'float':
-                self.logger.info(
+                self.logger.debug(
                     "Subprogram has return type float. Verifying return values based on machine architecture.")
                 rv = march.fetch_float_return_value(entry)
+            case 'double':
+                self.logger.debug(
+                    "Subprogram has return type double. Verifying return values based on machine architecture.")
+                rv = march.fetch_double_return_value(entry)
+
         return rv
 
 

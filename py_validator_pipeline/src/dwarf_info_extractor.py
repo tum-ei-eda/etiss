@@ -214,13 +214,10 @@ class DwarfInfoExtractor:
                 if is_declared_in_source_file:
                     # Initialize new subprogram
                     subprogram = Subprogram()
+                    subprogram.name = fun_name_attr.value.decode('utf-8')
 
-                    # A subprogram may not have type, so we create type_info before iterating attributes
                     type_info = TypeInfo()
-
-                    fun_name = fun_name_attr.value.decode('utf-8')
-                    subprogram.name = fun_name
-
+                    # A subprogram may not have type attribute
                     if fun_type_attr:
                         die_from_attr = die.get_DIE_from_attribute('DW_AT_type')
                         self.extract_type_information(die_from_attr, type_info)
@@ -264,12 +261,10 @@ class DwarfInfoExtractor:
                         var_name = value.value.decode('utf-8')
                         var.set_name(var_name)
                     if attr in ['DW_AT_type']:
-
                         die_from_attr = die.get_DIE_from_attribute('DW_AT_type')
                         type_info = TypeInfo()
                         self.extract_type_information(die_from_attr, type_info)
-                        var.create_type_information(type_info)
-
+                        var.set_type_info(type_info)
                     if loc_parser.attribute_has_location(value, CU['version']):
                         loc = loc_parser.parse_from_attribute(value, CU['version'], die)
                         loc_output = self.get_location_output(loc, dwarfinfo, CU)
@@ -290,7 +285,7 @@ class DwarfInfoExtractor:
                         die_from_attr = die.get_DIE_from_attribute('DW_AT_type')
                         type_info = TypeInfo()
                         self.extract_type_information(die_from_attr, type_info)
-                        formal_param.create_type_information(type_info)
+                        formal_param.set_type_info(type_info)
                     if loc_parser.attribute_has_location(value, CU['version']):
                         loc = loc_parser.parse_from_attribute(value, CU['version'], die)
                         loc_output = self.get_location_output(loc, dwarfinfo, CU)

@@ -6,7 +6,7 @@
 import os
 import time
 import logging
-from typing import Dict, Any
+from typing import Dict, List, Any
 
 from src.march_manager import MArchManager
 from src.dwarf_info_extractor import DwarfInfoExtractor
@@ -17,6 +17,7 @@ from src.dwarf_simdata_merger import (
 )
 
 from src.entity.dwarf.dwarf_info import DwarfInfo
+from src.entity.simulation.simulation_data_collection import SimulationDataCollection
 
 
 from src.util.logger import init_logger
@@ -108,7 +109,7 @@ def extract_dwarf_information(bin_file: str, case: str) -> DwarfInfo:
 
 
 
-def run_etiss_simulation_and_collect_activity_log(dwarf_info: DwarfInfo, ini_file: str, case: str) -> Dict[str, Any]:
+def run_etiss_simulation_and_collect_activity_log(dwarf_info: DwarfInfo, ini_file: str, case: str) -> SimulationDataCollection:
     try:
         # ETISS SIMULATION
         logger.info(f"Running ETISS simulation as subprocess for {case}")
@@ -144,7 +145,7 @@ def run_etiss_simulation_and_collect_activity_log(dwarf_info: DwarfInfo, ini_fil
 
     return entries
 
-def log_snapshot_entries(entries: Dict[str, Any], case: str) -> None:
+def log_snapshot_entries(entries: SimulationDataCollection, case: str) -> None:
     try:
         # LOG SNAPSHOT INFORMATION
         logger.info(f"Writing snapshot information to log for {case}")
@@ -155,18 +156,27 @@ def log_snapshot_entries(entries: Dict[str, Any], case: str) -> None:
 
 def verify_entries(golden_ref, custom_is):
     try:
-        golden_ref_entries = golden_ref.get_entries()
-        custom_is_entries = custom_is.get_entries()
+        golden_ref_entry_collection = golden_ref.get_entries()
+        custom_is_entry_collection = custom_is.get_entries()
 
         output = ""
 
-        if len(golden_ref_entries) == len(custom_is_entries):
-            for idx, golden_ref_entry in enumerate(golden_ref_entries):
-                output += f"> Function call {idx + 1}\n"
-                output += golden_ref_entry.compare_entries(custom_is_entries[idx], debug=args.debug)
+        if len(golden_ref_entry_collection) == len(custom_is_entry_collection):
+            for idx_0, golden_ref_fun_call_entries in enumerate(golden_ref_entry_collection):
+                if len(custom_is_entry_collection[idx_0]) == len(golden_ref_fun_call_entries):
+                    output += f"Subprogram of interest: {args.fun}, invoke #{idx_0 + 1}\n"
+                    for idx_1, golden_ref_entry in enumerate(golden_ref_fun_call_entries):
+                        output += f"> Function: {golden_ref_entry.function_name}\n"
+                        output += golden_ref_entry.compare_entries(custom_is_entry_collection[idx_0][idx_1], debug=args.debug)
+                else:
+                    err = "Number of function call entries in golden reference and custom IS data do not match. Aborting"
+                    output += err
+                    raise VerificationProcessException(err)
 
         else:
-            output += "Number of function call entries in golden reference and custom is do not match. Aborting"
+            err = "Number of function call entries in golden reference and custom IS data do not match. Aborting"
+            output += err
+            raise VerificationProcessException(err)
 
         logging.info(f"Verification results:\n{output}")
     except VerificationProcessException as e:

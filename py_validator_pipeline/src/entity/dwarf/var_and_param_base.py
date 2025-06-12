@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import Any
 
 from src.entity.dwarf.type_info import TypeInfo
 
@@ -15,71 +16,38 @@ class VarAndParamBase(ABC):
     """
 
     def __init__(self) -> None:
-        self._name = None
-        self._location = None
-        self._indent = 2
-        self._type_description = None
-        self._base_type = None
-        self._base_type_byte_size = None
-        self._range = 1
-        self._type_desrciption_as_list = []
-        self._range_elements = []
+        self._name: None | str = None
+        self._location: Any = None
 
+        self.type_info: None | TypeInfo = None
+        self._indent: int = 2
 
-    def set_name(self, name):
+    def set_name(self, name) -> None:
         self._name = name
-
-    def set_location(self, location):
-        self._location = location
-
-    def set_type_description(self, description):
-        self._type_description = description
-
-    def add_element_to_type_definition_list(self, element: str) -> None:
-        self._type_desrciption_as_list.append(element)
-
-    def add_element_to_range_list(self, element: int) -> None:
-        self._range_elements.append(element)
-
-    def create_type_information(self, type_construct: TypeInfo) -> None:
-        self._base_type = type_construct.base_type
-        self._base_type_byte_size = type_construct.base_type_byte_size
-        self._range = type_construct.range
-        if type_construct.base_type and type_construct.base_type != 'None':
-            self._type_description = type_construct.description
-        else:
-            self._type_description = '<UNDEFINED>'
-
-    def set_base_type(self, base_type):
-        self._base_type = base_type
-
-    def set_base_type_byte_size(self, byte_size) -> None:
-        self._base_type_byte_size = byte_size
-
-    def set_range(self, var_range: int) -> None:
-        # For now we support continuous ranges
-        self._range = var_range
-
-    def has_more_than_one_element(self) -> bool:
-        result = False
-        if self._range and self._base_type_byte_size:
-            result = self._range / self._base_type_byte_size != 1
-        return result
-
-    def get_number_of_elements(self) -> int:
-        result = 0
-        if self._range and self._base_type_byte_size:
-            result = int(self._range / self._base_type_byte_size)
-        return result
-
-    def get_base_type_byte_size(self) -> int:
-        return self._base_type_byte_size
 
     def get_name(self) -> str:
         return self._name
 
+    def set_location(self, location) -> None:
+        self._location = location
+
     def get_location(self):
         return self._location
+
+    def set_type_info(self, type_info) -> None:
+        self.type_info = type_info
+
+    def has_more_than_one_element(self) -> bool:
+        result = False
+        if self.type_info.range and self.type_info.base_type_byte_size:
+            result = self.type_info.range / self.type_info.base_type_byte_size != 1
+        return result
+
+    def get_number_of_elements(self) -> int:
+        result = 0
+        if self.type_info.range and self.type_info.base_type_byte_size:
+            result = int(self.type_info.range / self.type_info.base_type_byte_size)
+        return result
 
     @abstractmethod
     def get_location_value(self):
@@ -92,10 +60,10 @@ class VarAndParamBase(ABC):
     def __str__(self) -> str:
         output = ""
         output += f"{self._indent * ' '}  ┌ Name: {self._name}\n"
-        output += f"{self._indent * ' '}  ├ Type composition: {self._type_description}\n"
-        output += f"{self._indent * ' '}  ├ Base Type: {self._base_type}\n"
-        output += f"{self._indent * ' '}  ├ Base Type/Byte Size: {self._base_type_byte_size}\n"
-        if self._range != self._base_type_byte_size:
-            output += f"{self._indent * ' '}  ├ Range: {self._range}\n"
+        output += f"{self._indent * ' '}  ├ Type composition: {self.type_info.description}\n"
+        output += f"{self._indent * ' '}  ├ Base Type: {self.type_info.base_type}\n"
+        output += f"{self._indent * ' '}  ├ Base Type/Byte Size: {self.type_info.base_type_byte_size}\n"
+        if self.type_info.range != self.type_info.base_type_byte_size:
+            output += f"{self._indent * ' '}  ├ Range: {self.type_info.range}\n"
         output += f"{self._indent * ' '}  └ Location: {self._location}\n"
         return output
