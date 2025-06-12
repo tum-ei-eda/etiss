@@ -207,8 +207,14 @@ extern "C"
 
         const etiss_uint32 pc = static_cast<etiss_uint32>(reinterpret_cast<ETISS_CPU *>(cpu)->instructionPointer);
 
+        if (inst == "cswsp" && (low_pc <= pc && pc <= high_pc))
+        {
+            /* cswsp activates trace, cjr deactivates trace */
+            InMemoryTracerBuffer::instance().setTrace(true);
+        }
 
-        if ((inst == "cswsp" || inst == "cjr") && (low_pc <= pc && pc <= high_pc))
+
+        if (InMemoryTracerBuffer::instance().isTracing())
         {
             const etiss_uint32 sp = static_cast<RV32IMACFD *>(cpu)->SP;
 
@@ -250,14 +256,13 @@ extern "C"
                 InMemoryTracerBuffer_append_entry(entry.str().c_str());
             }
 
-            /* cswsp activates trace, cjr deactivates trace */
-            InMemoryTracerBuffer::instance().setTrace(inst == "cswsp");
-
-
         }
 
-
-
+        if (inst == "cjr" && (low_pc <= pc && pc <= high_pc))
+        {
+            /* cswsp activates trace, cjr deactivates trace */
+            InMemoryTracerBuffer::instance().setTrace(false);
+        }
 
     }
 
