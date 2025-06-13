@@ -12,6 +12,19 @@ extern "C"
 
     uint64 etiss_get_cycles(ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers)
     {
+        TranslationPlugin *perfEst = 0;
+        TranslationPlugin** iter = (TranslationPlugin**)plugin_pointers;
+        while(true) {
+            if (!*iter)
+                break;
+            if ((*iter)->getPluginName() == "PerformanceEstimatorPlugin{COROUTINE,TRANSLATION}")
+            {
+                perfEst = *iter;
+            }
+            iter++;
+        }
+        if (perfEst)
+            return perfEst->getEstimatedCycleCount();
         return cpu->cpuTime_ps / cpu->cpuCycleTime_ps;
     }
 

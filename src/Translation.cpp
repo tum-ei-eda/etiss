@@ -183,7 +183,7 @@ void **Translation::init()
     // Build up the plugin lists
     plugins_array_ = new etiss::TranslationPlugin *[tmpl.size() + 1];
     plugins_array_[tmpl.size()] = nullptr;
-    plugins_handle_array_ = new void *[tmpl.size()];
+    plugins_handle_array_ = new void *[tmpl.size() + 1];
     plugins_array_size_ = tmpl.size();
 
     for (size_t i = 0; i < tmpl.size(); i++)
@@ -198,6 +198,7 @@ void **Translation::init()
         */
         plugins_array_[i]->pointerCode = std::string("(plugin_pointers[") + toString(i) + "])";
     }
+    plugins_handle_array_[tmpl.size()] = 0;
 
     // Call the function initInstrSet for all translation plugins
     for (size_t i = 0; i < tmpl.size(); i++)

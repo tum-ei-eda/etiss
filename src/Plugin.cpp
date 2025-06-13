@@ -103,6 +103,11 @@ std::string TranslationPlugin::getPointerCode() const
     return pointerCode;
 }
 
+etiss::int64 TranslationPlugin::getEstimatedCycleCount()
+{
+    return 0;
+}
+
 CoroutinePlugin::CoroutinePlugin()
 {
     this->type_ |= Plugin::COROUTINE;

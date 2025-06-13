@@ -275,6 +275,9 @@ class TranslationPlugin : virtual public Plugin
     virtual void finalizeCodeBlock(etiss::CodeBlock &) const;
     /// called to get the handle that is available in translated code via getPoinerCode(). [default: this]
     virtual void *getPluginHandle();
+    // TODO
+    // virtual etiss::int64 getEstimatedCycleCount() = 0;
+    virtual etiss::int64 getEstimatedCycleCount();
 
   protected:
     /**
