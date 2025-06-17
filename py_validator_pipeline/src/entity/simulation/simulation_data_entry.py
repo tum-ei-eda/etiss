@@ -7,7 +7,8 @@ from src.entity.dwarf.formal_parameter import FormalParameter
 from src.entity.dwarf.global_variable import GlobalVariable
 from src.entity.dwarf.local_variable import LocalVariable
 from src.march_manager import MArchManager
-
+from src.util.gcc_dwarf_rv_mapper import GccDwarfMapper
+from src.exception.pipeline_exceptions import VerificationProcessException
 
 class SimulationDataEntry:
     """
@@ -33,6 +34,9 @@ class SimulationDataEntry:
         self.logger = logging.getLogger(__name__)
         self.dwarf_info: None | DwarfInfo = None
         self.march_manager = MArchManager()
+
+        # TODO: in future support other compilers
+        self.mapper = GccDwarfMapper()
 
         self.comparison_line_lenght = 90
 
@@ -186,15 +190,16 @@ class SimulationDataEntry:
             the instruction set under verification.
         """
         result = ""
-        if debug:
+        expanded_pipeline = False
+        if expanded_pipeline:
             self.logger.info("Debug mode on, comparing function prologue and epilogue")
             result += self.compare_prologues(other_entry.prologue)
 
-        result += self.compare_formal_param_values(other_entry.get_first_writes_to_formal_params())
+            result += self.compare_formal_param_values(other_entry.get_first_writes_to_formal_params())
 
         result += self.compare_global_variable_values(other_entry.get_last_writes_to_global_var_locations())
 
-        if debug:
+        if expanded_pipeline:
             result += self.compare_epilogues(other_entry.epilogue)
 
         result += self.compare_return_values(other_entry)
@@ -300,10 +305,10 @@ class SimulationDataEntry:
             self.logger.error("Dwarf debug information extraction missing. Aborting return value comparison.")
             result += section + 'FAIL\n'
             result += "      Missing extracted DWARF debug information\n"
-        fun_return_type = self.dwarf_info.get_subprogram_of_interest().type_info.base_type
+        fun_return_type = self.dwarf_info.get_subprogram_by_name(self.function_name).type_info.base_type
 
         if not result and fun_return_type is None:
-            self.logger.info("Void function has no return value")
+            self.logger.debug("Void function has no return value")
             result = section + 'NA\n'
             result += "      Void function has no return value\n"
         elif not result:
@@ -320,32 +325,35 @@ class SimulationDataEntry:
                     result += section + 'OK\n'
         return result
 
-    def fetch_return_value(self, entry, func_return_base_type):
+    def fetch_return_value(self, entry, func_return_base_type: str):
         m = entry.dwarf_info.compilation_unit.march
         march = self.march_manager.get_march_with_name(m)
         rv = None
-        match func_return_base_type:
+
+        self.logger.debug(
+            f"{march.get_march_name()}: subprogram {entry.function_name} has return type {func_return_base_type}. Verifying return values based on machine architecture.")
+
+        base_type = self.mapper.get_mapping_for_dwarf_base_type(func_return_base_type)
+
+        match base_type:
             case 'int':
-                self.logger.debug(
-                    "Subprogram has return type int. Verifying return values based on machine architecture.")
                 rv = march.fetch_int_return_value(entry)
-            case 'unsigned int':
-                self.logger.debug(
-                    "Subprogram has return type unsigned int. Verifying return values based on machine architecture.")
-                rv = march.fetch_unsigned_int_return_value(entry)
-            case 'char':
-                self.logger.debug(
-                    "Subprogram has return type char. Verifying return values based on machine architecture.")
-                rv = march.fetch_char_return_value(entry)
+            case 'long long':
+                rv = march.fetch_long_long_return_value(entry)
             case 'float':
-                self.logger.debug(
-                    "Subprogram has return type float. Verifying return values based on machine architecture.")
                 rv = march.fetch_float_return_value(entry)
             case 'double':
-                self.logger.debug(
-                    "Subprogram has return type double. Verifying return values based on machine architecture.")
                 rv = march.fetch_double_return_value(entry)
-
+            case 'long double':
+                rv = march.fetch_long_double_return_value(entry)
+            case 'struct':
+                self.logger.warning(f"Verification for structs not yet implemented.")
+                rv = march.fetch_struct_return_value(entry)
+            case _:
+                err = f"No conversion for DWARF base type {func_return_base_type}"
+                self.logger.error(err)
+                raise VerificationProcessException(err)
+        self.logger.debug(f"{march.get_march_name()}: extracted return value {rv}")
         return rv
 
 

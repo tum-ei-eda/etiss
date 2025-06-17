@@ -1,6 +1,7 @@
 import logging
 from abc import ABCMeta, abstractmethod
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Literal
+
 
 class SingletonABCMeta(ABCMeta):
     _instances = {}
@@ -36,28 +37,9 @@ class MArchBase(metaclass=SingletonABCMeta):
         pass
 
     @abstractmethod
-    def fetch_unsigned_int_return_value(self, entry) -> Any:
+    def fetch_long_long_return_value(self, entry) -> Any:
         """
-            Returns the unsigned int return value from the given simulation
-            data entries, if possible. In case the return value register has
-            the same value as it had during function prologue, the
-            return value should be considered to be inconclusive.
-        """
-        pass
-
-    @abstractmethod
-    def fetch_char_return_value(self, entry) -> Any:
-        """
-            Returns the char return value from the given simulation
-            data entries, if possible. In case the return value register has
-            the same value as it had during function prologue, the
-            return value should be considered to be inconclusive.
-        """
-
-    @abstractmethod
-    def fetch_float_return_value(self, entry) -> Any:
-        """
-            Returns the float return value from the given simulation data
+            Returns the long long return value from the given simulation data
             entries, if possible. In case the return value register has
             the same value as it had during function prologue, the
             return value should be considered to be inconclusive.
@@ -65,9 +47,9 @@ class MArchBase(metaclass=SingletonABCMeta):
         pass
 
     @abstractmethod
-    def fetch_long_return_value(self, entry) -> Any:
+    def fetch_float_return_value(self, entry) -> Any:
         """
-            Returns the long return value from the given simulation data
+            Returns the float return value from the given simulation data
             entries, if possible. In case the return value register has
             the same value as it had during function prologue, the
             return value should be considered to be inconclusive.
@@ -85,6 +67,23 @@ class MArchBase(metaclass=SingletonABCMeta):
         pass
 
     @abstractmethod
+    def fetch_long_double_return_value(self, entry) -> Any:
+        """
+            Returns the long double return value from the given simulation
+            data entries, if possible. In case the return value register has
+            the same value as it had during function prologue, the
+            return value should be considered to be inconclusive.
+        """
+        pass
+
+    @abstractmethod
+    def fetch_struct_return_value(self, entry) -> Any:
+        """
+            Returns the return value for a struct.
+        """
+        pass
+
+    @abstractmethod
     def get_march_name(self) -> str:
         """
             This method should return a str representation of the machine architecture.
@@ -93,26 +92,10 @@ class MArchBase(metaclass=SingletonABCMeta):
         """
         pass
 
-    """
-        These static methods fetch specific instructions from CPU state prologue and
-        epilogue information
-    """
-    @staticmethod
-    def fetch_cswsp_instruction(prologue: List[Dict[str, Any]]) -> None | Dict[str, Any]:
-        cswsp_instr = None
-        for i in prologue:
-            if i['instruction'] == 'cswsp':
-                cswsp_instr = i
-                break
+    @abstractmethod
+    def get_endianness(self) ->  Literal['little', 'big']:
+        """
+            This method should return a str representation of the endianness.
+        """
+        pass
 
-        return cswsp_instr
-
-    @staticmethod
-    def fetch_cjr_instruction(epilogue: List[Dict[str, Any]]) -> None | Dict[str, Any]:
-        cjr_inst = None
-        for i in epilogue:
-            if i['instruction'] == 'cjr':
-                cjr_inst = i
-                break
-
-        return cjr_inst

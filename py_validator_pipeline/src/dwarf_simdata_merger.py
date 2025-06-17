@@ -192,7 +192,7 @@ def log_snapshot_information(entries: SimulationDataCollection, fun_of_interest:
     times_invoked = 0
     for sim_data_entry in entries.get_entries():
         times_invoked += 1
-        output += f"Function of interest: {fun_of_interest}, invoke #{times_invoked}:"
+        output += f"Function of interest: {fun_of_interest}, invoke #{times_invoked}:\n"
         for idx, entry in enumerate(sim_data_entry):
             output += f"> Subprogram name: {entry.function_name}\n"
             output += str(entry)

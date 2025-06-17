@@ -63,7 +63,19 @@ class VarAndParamBase(ABC):
         output += f"{self._indent * ' '}  ├ Type composition: {self.type_info.description}\n"
         output += f"{self._indent * ' '}  ├ Base Type: {self.type_info.base_type}\n"
         output += f"{self._indent * ' '}  ├ Base Type/Byte Size: {self.type_info.base_type_byte_size}\n"
+        output += f"{self._indent * ' '}  └ Location: {self._location}\n"
         if self.type_info.range != self.type_info.base_type_byte_size:
             output += f"{self._indent * ' '}  ├ Range: {self.type_info.range}\n"
-        output += f"{self._indent * ' '}  └ Location: {self._location}\n"
+        if self.type_info.struct_name:
+            output += f"{self._indent * ' '}  ├ Struct name: {self.type_info.struct_name}\n"
+            if self.type_info.members:
+                output += f"{self._indent * ' '}  > Members:\n"
+            for member in self.type_info.members:
+                output += f"{self._indent * ' '}    ┌ Member name: {member.member_name}\n"
+                output += f"{self._indent * ' '}    ├ Type composition: {member.description}\n"
+                output += f"{self._indent * ' '}    ├ Base Type: {member.base_type}\n"
+                output += f"{self._indent * ' '}    ├ Base Type/Byte Size: {member.base_type_byte_size}\n"
+                if member.member_bit_size:
+                    output += f"{self._indent * ' '}    ├ Bit size: {member.member_bit_size}\n"
+                    output += f"{self._indent * ' '}    └ Bit offset: {member.member_bit_offset}\n"
         return output

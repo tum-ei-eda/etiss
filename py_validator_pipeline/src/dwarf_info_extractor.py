@@ -526,11 +526,29 @@ class DwarfInfoExtractor:
                     type_construct.add_element_to_description_list("typedef of <NO_TYPE>")
             case 'DW_TAG_structure_type':
                 try:
-                    type_construct.add_element_to_description_list("struct")
-                    type_construct.add_element_to_description_list(f"{t.attributes['DW_AT_name'].value.decode('utf-8')}")
+                    self.logger.debug(f"case DW_TAG_structure_type. Name: {t.attributes['DW_AT_name'].value.decode('utf-8')}")
+                    base_type = 'struct'
+                    type_construct.struct_name = t.attributes['DW_AT_name'].value.decode('utf-8')
+                    base_type_byte_size = int(t.attributes['DW_AT_byte_size'].value)
+                    type_construct.create_type_information(base_type, base_type_byte_size)
+                    for child in t.iter_children():
+                        if child.tag == "DW_TAG_member":
+                            try:
+                                member = TypeInfo()
+                                member.member_name = child.attributes.get("DW_AT_name").value.decode()
+                                if child.attributes.get("DW_AT_bit_size"):
+                                    member.member_bit_size = int(child.attributes.get("DW_AT_bit_size").value)
+                                    member.member_bit_offset = int(child.attributes.get("DW_AT_data_bit_offset").value)
+                                m_type = child.get_DIE_from_attribute('DW_AT_type')
+                                self.extract_type_information(m_type, member)
+                                type_construct.members.append(member)
+                            except Exception as e:
+                                self.logger.error(f"Exception: {e}, caused by {child}")
                 except KeyError as e:
                     self.logger.error(f"KeyError: {e}, caused by {t}")
                     type_construct.add_element_to_description_list("struct <NO_NAME>")
+                except Exception as e:
+                    self.logger.error(f"Exception: {e}, caused by {t}")
             case 'DW_TAG_class_type':
                 try:
                     type_construct.add_element_to_description_list("class")

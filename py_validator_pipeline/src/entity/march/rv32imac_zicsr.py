@@ -1,59 +1,40 @@
-from src.entity.march.march_base import MArchBase
-from typing import Any
+import struct
+from typing import Any, Literal
 
-class RV32IMAC_zicsr(MArchBase):
+from src.entity.march.rv32ic import RV32IC
 
-    def fetch_int_return_value(self, entry) -> Any:
-        """
-            In rv32imac_zicsr int return value is stored in register a0
-        """
-        rv = None
-        self.logger.debug(f'Architecture {self.get_march_name()} recognized. Extracting integer return value from a0')
-        cjr = self.fetch_cjr_instruction(entry.epilogue)
-        if not cjr:
-            self.logger.error("Missing cjr instruction. Aborting.")
-        else:
-            rv = cjr['a0']
-        return rv
 
-    def fetch_unsigned_int_return_value(self, entry) -> Any:
-        self.logger.error(f"Fetching unsigned int return value has not been implemented for {self.get_march_name()}.")
-        return None
-
-    def fetch_char_return_value(self, entry) -> Any:
-        self.logger.error(f"Fetching char return value has not been implemented for {self.get_march_name()}.")
-        return None
+class RV32IMAC_zicsr(RV32IC):
 
     def fetch_float_return_value(self, entry) -> Any:
         """
-            In rv32imac_zicsr float return value is stored in register a0
+            In rv32imac_zicsr, float return value is stored in register a0
+            as a 32-bit raw bit pattern. Convert it to Python float.
         """
         rv = None
 
-        self.logger.debug(f'Architecture {self.get_march_name()} recognized. Extracting return value from register a0')
-        cswsp = self.fetch_cswsp_instruction(entry.prologue)
+        self.logger.debug(f'Architecture {self.get_march_name()} recognized. Extracting return value from argument register a0')
         cjr = self.fetch_cjr_instruction(entry.epilogue)
 
-        if not cswsp:
-            self.logger.error("Missing cswsp instruction. Aborting.")
-        elif not cjr:
+        if not cjr:
             self.logger.error("Missing cjr instruction. Aborting.")
         else:
-            if cswsp['a0'] == cjr['a0']:
-                self.logger.info(
-                    f'{self.get_march_name()}: a0 has equal value in prologue and epilogue. Value is inconclusive. Aborting.')
-            else:
-                rv = cjr['a0']
+            raw_val = cjr['a0']
+            float_bytes = raw_val.to_bytes(4, self.get_endianness())  # Little-endian for RV32
+            rv = struct.unpack('<f', float_bytes)[0]
+            self.logger.debug(f"Return value for {self.get_march_name()}: {rv}")
         return rv
 
-
-    def fetch_long_return_value(self, entry) -> Any:
-        self.logger.error(f"Fetching long return value has not been implemented for {self.get_march_name()}.")
-        return None
-
     def fetch_double_return_value(self, entry) -> Any:
-        self.logger.error(f"Fetching double return value has not been implemented for {self.get_march_name()}.")
-        return None
+        """
+            In RV32IMAC double return value is stored in registers a0 (lower 32 bits)
+            and a1 (upper 32 bits)
+        """
+        return self._form_64_bit_value_from_regs_a0_and_a1(entry)
+
 
     def get_march_name(self):
         return "rv32imac_zicsr"
+
+    def get_endianness(self) -> Literal['little', 'big']:
+        return 'little'
