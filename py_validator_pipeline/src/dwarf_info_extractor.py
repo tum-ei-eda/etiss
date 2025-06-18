@@ -15,7 +15,8 @@
 #-------------------------------------------------------------------------------
 import os
 from pathlib import Path
-from typing import Any
+from math import prod
+from typing import Any, List, Optional
 import logging
 
 from elftools.elf.elffile import ELFFile
@@ -34,7 +35,14 @@ from src.entity.dwarf.global_variable import GlobalVariable
 from src.entity.dwarf.formal_parameter import FormalParameter
 from src.entity.dwarf.local_variable import LocalVariable
 
-from src.entity.dwarf.type_info import TypeInfo
+from src.entity.dwarf.types import (
+    AbstractType, ArrayType, BaseType, PointerType,
+    StructMember, StructType, ConstType, TypeDef
+)
+from src.entity.dwarf.var_and_param_base import VarAndParamBase
+
+from src.exception.pipeline_exceptions import DWARFExtractionException
+
 
 class DwarfInfoExtractor:
     """
@@ -195,12 +203,6 @@ class DwarfInfoExtractor:
             - Populates extracted_dwarf_info with data about the target subprogram,
               global variables, local variables, and formal parameters.
             - May append formatted debug output if debugging is enabled.
-
-        TODO:
-            - This method has significant redundancy. Consider refactoring it
-              to reduce complexity. For instance consider creating attribute
-              specific helper methods and
-
         """
         match die.tag:
             case 'DW_TAG_subprogram':
@@ -216,12 +218,12 @@ class DwarfInfoExtractor:
                     subprogram = Subprogram()
                     subprogram.name = fun_name_attr.value.decode('utf-8')
 
-                    type_info = TypeInfo()
                     # A subprogram may not have type attribute
                     if fun_type_attr:
                         die_from_attr = die.get_DIE_from_attribute('DW_AT_type')
-                        self.extract_type_information(die_from_attr, type_info)
-                    subprogram.type_info = type_info
+                        # self.extract_type_information(die_from_attr, type_info)
+                        type_info = self._extract_type_rec(die.get_DIE_from_attribute('DW_AT_type'))
+                        subprogram.type_info = type_info
 
                     lowpc, highpc = self.get_low_and_high_pc(die)
                     subprogram.low_pc = lowpc
@@ -246,56 +248,53 @@ class DwarfInfoExtractor:
                             indent_level=child_indent,
                             subprogram=subprogram,
                             global_level=False)
-
-
-            case 'DW_TAG_variable':
-                # Case of global variable
-                if global_level:
-                    var = GlobalVariable()
+            case 'DW_TAG_variable' | 'DW_TAG_formal_parameter':
+                if die.tag == 'DW_TAG_formal_parameter':
+                    var_or_param = FormalParameter()
+                elif global_level:
+                    var_or_param = GlobalVariable()
                 else:
-                    var = LocalVariable()
+                    var_or_param = LocalVariable()
 
+                if die.attributes['DW_AT_name']:
+                    var_name = die.attributes['DW_AT_name'].value.decode('utf-8')
+                    var_or_param.set_name(var_name)
+
+                if die.attributes['DW_AT_type']:
+                    self._extract_type(var_or_param, die)
+
+                # TODO: see if this can be simplified
                 for attr, value in die.attributes.items():
-
-                    if attr in ['DW_AT_name']:
-                        var_name = value.value.decode('utf-8')
-                        var.set_name(var_name)
-                    if attr in ['DW_AT_type']:
-                        die_from_attr = die.get_DIE_from_attribute('DW_AT_type')
-                        type_info = TypeInfo()
-                        self.extract_type_information(die_from_attr, type_info)
-                        var.set_type_info(type_info)
                     if loc_parser.attribute_has_location(value, CU['version']):
-                        loc = loc_parser.parse_from_attribute(value, CU['version'], die)
-                        loc_output = self.get_location_output(loc, dwarfinfo, CU)
-                        if loc_output != "":
-                            var.set_location(loc_output)
-                if global_level:
-                    extracted_di.add_global_variable(var)
+                        self._extract_location(var_or_param, loc_parser, value, CU, die, dwarfinfo)
+
+                if isinstance(var_or_param, GlobalVariable):
+                    extracted_di.add_global_variable(var_or_param)
+                elif isinstance(var_or_param, LocalVariable):
+                    subprogram.add_local_variable(var_or_param)
+                elif isinstance(var_or_param, FormalParameter):
+                    subprogram.add_formal_parameter(var_or_param)
                 else:
-                    subprogram.add_local_variable(var)
-            case 'DW_TAG_formal_parameter':
-                # Formal parameter for the subprogram of interest
-                formal_param = FormalParameter()
-                for attr, value in die.attributes.items():
-                    if attr in ['DW_AT_name']:
-                        param_name = die.attributes['DW_AT_name'].value.decode('utf-8')
-                        formal_param.set_name(param_name)
-                    if attr in ['DW_AT_type']:
-                        die_from_attr = die.get_DIE_from_attribute('DW_AT_type')
-                        type_info = TypeInfo()
-                        self.extract_type_information(die_from_attr, type_info)
-                        formal_param.set_type_info(type_info)
-                    if loc_parser.attribute_has_location(value, CU['version']):
-                        loc = loc_parser.parse_from_attribute(value, CU['version'], die)
-                        loc_output = self.get_location_output(loc, dwarfinfo, CU)
-                        if loc_output != "":
-                            formal_param.set_location(loc_output)
-                subprogram.add_formal_parameter(formal_param)
+                    err = f"Unable to resolve parameter or variable DIE: {die}"
+                    self.logger.error(err)
+                    raise DWARFExtractionException(err)
             case _:
                 pass
 
-    def get_location_output(self, loc, dwarfinfo, CU):
+    def _extract_type(self, var_or_param: VarAndParamBase, die) -> None:
+        die_from_attr = die.get_DIE_from_attribute('DW_AT_type')
+        # type_info = TypeInfo()
+        # self.extract_type_information(die_from_attr, type_info)
+        var_or_param.set_type_info(self._extract_type_rec(die_from_attr))
+
+    def _extract_location(self, var_or_param: VarAndParamBase, loc_parser, value, CU, die, dwarfinfo) -> None:
+        if loc_parser.attribute_has_location(value, CU['version']):
+            loc = loc_parser.parse_from_attribute(value, CU['version'], die)
+            loc_output = self._get_location_output(loc, dwarfinfo, CU)
+            if loc_output != "":
+                var_or_param.set_location(loc_output)
+
+    def _get_location_output(self, loc, dwarfinfo, CU):
         """
         Converts a DWARF location object into a human-readable string representation.
 
@@ -392,11 +391,6 @@ class DwarfInfoExtractor:
 
         Logs:
             Emits an error if `DW_AT_high_pc` has an unsupported form class.
-
-        TODO:
-            This method is intended only for DIEs representing subprograms.
-            Rename the method to reflect this constraint, and raise an explicit error
-            if the DIE tag is not 'DW_TAG_subprogram'.
         """
         lowpc = DIE.attributes['DW_AT_low_pc'].value
         highpc_attr = DIE.attributes['DW_AT_high_pc']
@@ -412,7 +406,7 @@ class DwarfInfoExtractor:
         return lowpc, highpc
 
 
-    def extract_architecture_information(self, top_die, little_endian, extracted_di: DwarfInfo):
+    def extract_architecture_information(self, top_die, little_endian: bool, extracted_di: DwarfInfo) -> None:
         """
         Extracts architecture-related information from the top-level DIE of a Compilation Unit.
 
@@ -445,17 +439,15 @@ class DwarfInfoExtractor:
             producer_string = top_die.attributes['DW_AT_producer'].value.decode('utf-8')
             extracted_di.extract_core_information(producer_string, little_endian)
 
-
-    def extract_type_information(self, t, type_construct: TypeInfo) -> None:
+    def _extract_type_rec(self, t) -> Optional[AbstractType]:
         """
         Recursively extracts type information from a DWARF Debugging Information Entry (DIE)
-        and populates a `TypeConstruct` object with a structured, human-readable representation
-        of the type.
+        and creates nested dataclass instances representing the type information.
 
         This method handles a variety of DWARF type tags, including base types, arrays, pointers,
         constants, typedefs, structures, and classes. It traverses the type tree recursively,
         adding descriptive elements and dimensional information (in the case of arrays) to the
-        `TypeConstruct`.
+        type dataclasses.
 
         Supported DIE tags:
             - DW_TAG_base_type: Extracts base type name and size.
@@ -464,12 +456,12 @@ class DwarfInfoExtractor:
             - DW_TAG_const_type: Resolves the underlying const-qualified type.
             - DW_TAG_typedef: Tracks typedef name and underlying type.
             - DW_TAG_structure_type: Adds struct name to the description.
-            - DW_TAG_class_type: Adds class name to the description.
 
         Parameters:
             t: A DWARF DIE representing the type to analyze.
-            type_construct (TypeInfo): An object used to incrementally build a
-                                    structured description of the type composition.
+
+        Returns:
+            AbstractType: resolved type information
 
         Notes:
             - Errors encountered when expected attributes (like DW_AT_type or DW_AT_name)
@@ -477,98 +469,86 @@ class DwarfInfoExtractor:
             - The method does not yet handle all DWARF type tags (e.g., union, enumeration).
 
         TODO:
-            - Improve support for more complex types, such as structures
             - Extend support to additional DWARF types like unions and enumerations.
-            - Consider extracting a base `resolve_child_type()` helper to reduce repetition.
         """
-
         match t.tag:
             case 'DW_TAG_base_type':
                 base_type = t.attributes['DW_AT_name'].value.decode('utf-8')
-                base_type_byte_size = int(t.attributes['DW_AT_byte_size'].value)
+                byte_size = int(t.attributes['DW_AT_byte_size'].value)
 
-                type_construct.create_type_information(base_type, base_type_byte_size)
+                return BaseType(base_type=base_type, byte_size=byte_size)
             case 'DW_TAG_array_type':
                 try:
-                    at = t.get_DIE_from_attribute('DW_AT_type')
-                    type_construct.add_element_to_description_list("array of")
-                    arr_range = self.compute_array_size_from_subranges(t)
-                    type_construct.add_element_to_range_list(arr_range)
-                    self.extract_type_information(at, type_construct)
-                except KeyError as e:
-                    self.logger.error(f"KeyError: {e}, caused by {t}")
-                    type_construct.add_element_to_description_list("array of <NO_TYPE>")
+                    dimensions = self.compute_array_size_from_subranges(t)
+                    arr_type = self._extract_type_rec(t.get_DIE_from_attribute('DW_AT_type'))
+                    length = prod(dimensions)
+                    return ArrayType(arr_type=arr_type, dimensions=dimensions, length=length)
+                except Exception as e:
+                    self.logger.error(f"Exception: {e}, caused by {t}")
+                    return ArrayType()
             case 'DW_TAG_pointer_type':
                 try:
                     pt = t.get_DIE_from_attribute('DW_AT_type')
-                    type_construct.add_element_to_description_list("pointer to")
-                    self.extract_type_information(pt, type_construct)
-                except KeyError as e:
-                    self.logger.error(f"KeyError: {e}, caused by {t}")
-                    type_construct.add_element_to_description_list("pointer to <NO_TYPE>")
+                    points_to = self._extract_type_rec(pt)
+                    return PointerType(to_type=points_to)
+                except Exception as e:
+                    self.logger.error(f"Exception: {e}, caused by {t}")
+                    return PointerType()
             case 'DW_TAG_const_type':
                 try:
                     pt = t.get_DIE_from_attribute('DW_AT_type')
-                    type_construct.add_element_to_description_list("const")
-                    self.extract_type_information(pt, type_construct)
-                except KeyError as e:
-                    self.logger.error(f"KeyError: {e}, caused by {t}")
-                    type_construct.add_element_to_description_list("const of <NO_TYPE>")
+                    const_type = self._extract_type_rec(pt)
+                    return ConstType(const_type=const_type)
+                except Exception as e:
+                    self.logger.error(f"Exception: {e}, caused by {t}")
+                    return ConstType()
             case 'DW_TAG_typedef':
                 try:
                     pt = t.get_DIE_from_attribute('DW_AT_type')
-                    type_construct.add_element_to_description_list("typedef")
-                    type_construct.add_element_to_description_list(f"{t.attributes['DW_AT_name'].value.decode('utf-8')}")
-                    type_construct.add_element_to_description_list("of type")
-                    self.extract_type_information(pt, type_construct)
-                except KeyError as e:
-                    self.logger.error(f"KeyError: {e}, caused by {t}")
-                    type_construct.add_element_to_description_list("typedef of <NO_TYPE>")
+                    name = f"{t.attributes['DW_AT_name'].value.decode('utf-8')}"
+                    base_type = self._extract_type_rec(pt)
+                    return TypeDef(name=name, base_type=base_type)
+                except Exception as e:
+                    self.logger.error(f"Exception: {e}, caused by {t}")
+                    return TypeDef()
             case 'DW_TAG_structure_type':
                 try:
                     self.logger.debug(f"case DW_TAG_structure_type. Name: {t.attributes['DW_AT_name'].value.decode('utf-8')}")
-                    base_type = 'struct'
-                    type_construct.struct_name = t.attributes['DW_AT_name'].value.decode('utf-8')
-                    base_type_byte_size = int(t.attributes['DW_AT_byte_size'].value)
-                    type_construct.create_type_information(base_type, base_type_byte_size)
+                    struct_name = t.attributes['DW_AT_name'].value.decode('utf-8')
+
+                    struct_byte_size = int(t.attributes['DW_AT_byte_size'].value)
+                    struct = StructType(name=struct_name, byte_size=struct_byte_size, members=[])
                     for child in t.iter_children():
                         if child.tag == "DW_TAG_member":
                             try:
-                                member = TypeInfo()
-                                member.member_name = child.attributes.get("DW_AT_name").value.decode()
-                                if child.attributes.get("DW_AT_bit_size"):
-                                    member.member_bit_size = int(child.attributes.get("DW_AT_bit_size").value)
-                                    member.member_bit_offset = int(child.attributes.get("DW_AT_data_bit_offset").value)
+                                member_name = child.attributes.get("DW_AT_name").value.decode()
                                 m_type = child.get_DIE_from_attribute('DW_AT_type')
-                                self.extract_type_information(m_type, member)
-                                type_construct.members.append(member)
+                                member_type = self._extract_type_rec(m_type)
+                                member = StructMember(name=member_name, member_type=member_type)
+                                if child.attributes.get("DW_AT_bit_size"):
+                                    member.bit_size = int(child.attributes.get("DW_AT_bit_size").value)
+                                    member.bit_offset = int(child.attributes.get("DW_AT_data_bit_offset").value)
+                                struct.members.append(member)
                             except Exception as e:
                                 self.logger.error(f"Exception: {e}, caused by {child}")
-                except KeyError as e:
-                    self.logger.error(f"KeyError: {e}, caused by {t}")
-                    type_construct.add_element_to_description_list("struct <NO_NAME>")
+                    return struct
                 except Exception as e:
                     self.logger.error(f"Exception: {e}, caused by {t}")
-            case 'DW_TAG_class_type':
-                try:
-                    type_construct.add_element_to_description_list("class")
-                    type_construct.add_element_to_description_list(f"{t.attributes['DW_AT_name'].value.decode('utf-8')}")
-                except KeyError as e:
-                    self.logger.error(f"KeyError: {e}, caused by {t}")
-                    type_construct.add_element_to_description_list("class <NO DEFINITION>")
+                    return StructType()
             case _:
-                pass
+                self.logger.warning(f"Trying to extract type for unsupported DIE: {t}")
+                return None
 
 
     @staticmethod
-    def compute_array_size_from_subranges(arr_die) -> int:
+    def compute_array_size_from_subranges(arr_die) -> List[int]:
         """
         Computes the total number of elements in an array described by a DWARF array DIE.
 
         This static helper method iterates over the children of the given array DIE,
         which represent the array's dimension subranges, and calculates the product
         of their sizes to determine the total number of elements. It supports
-        multidimensional arrays by multiplying the size of each dimension.
+        multidimensional arrays.
 
         Limitations:
             - Only subrange type children (`DW_TAG_subrange_type`) are supported.
@@ -579,10 +559,9 @@ class DwarfInfoExtractor:
                      defining its dimensions.
 
         Returns:
-            int: The total number of elements in the array, computed as the product
-                 of the sizes of all subranges.
+            List[int]: A list of elements in each array dimension
         """
-        arr_size = 1
+        dimensions: List[int] = []
         for die in arr_die.iter_children():
 
             if die.tag == 'DW_TAG_subrange_type':
@@ -590,8 +569,8 @@ class DwarfInfoExtractor:
                 lower_bound = 0
                 if die.attributes.get('DW_AT_lower_bound'):
                     lower_bound = int(die.attributes['DW_AT_lower_bound'].value)
-                arr_size *= (upper_bound - lower_bound + 1)
-        return arr_size
+                dimensions.append(upper_bound - lower_bound + 1)
+        return dimensions
 
 
     def extract_cfa_register_values_and_offsets(self, di_context_object, extracted_di: DwarfInfo) -> None:

@@ -1,14 +1,15 @@
 import logging
 
 from typing import List, Dict, Any
+from math import ceil
 
 from src.entity.dwarf.dwarf_info import DwarfInfo
 from src.entity.dwarf.formal_parameter import FormalParameter
 from src.entity.dwarf.global_variable import GlobalVariable
 from src.entity.dwarf.local_variable import LocalVariable
-from src.march_manager import MArchManager
+from src.entity.dwarf.march_manager import MArchManager
 from src.util.gcc_dwarf_rv_mapper import GccDwarfMapper
-from src.exception.pipeline_exceptions import VerificationProcessException
+
 
 class SimulationDataEntry:
     """
@@ -17,6 +18,9 @@ class SimulationDataEntry:
           - CPU state snapshots from prologue instructions
           - dwrites done during function execution
           - CPU state snapshots from epilogue instructions
+        TODO:
+            This entry class is already RV32 specific. In future
+            entries should be created based on machine architecture.
     """
 
     def __init__(self):
@@ -30,6 +34,7 @@ class SimulationDataEntry:
         self.formal_parameters = []
         self.local_variables = []
         self.frame_pointer = 0
+        self.stack_pointer = 0
         self.index = 0
         self.logger = logging.getLogger(__name__)
         self.dwarf_info: None | DwarfInfo = None
@@ -42,14 +47,17 @@ class SimulationDataEntry:
 
 
 
-    def append_prologue_instruction(self, inst: str, pc, fp, arg_regs: list, farg_regs: list) -> None:
+    def append_prologue_instruction(self, inst: str, pc, sp, fp, arg_regs: list, farg_regs: list) -> None:
         if self.frame_pointer == 0:
             self.frame_pointer = fp
+        if self.stack_pointer == 0:
+            self.stack_pointer = sp
         self.prologue.append({
             'idx': self.index,
             'instruction': inst,
             'pc': pc,
             'fp': fp,
+            'sp': sp,
             'a0': arg_regs[0],
             'a1': arg_regs[1],
             'a2': arg_regs[2],
@@ -71,11 +79,12 @@ class SimulationDataEntry:
         self.index += 1
 
 
-    def append_epilogue_instruction(self, inst: str, pc, fp, rv_regs: list, frv_regs) -> None:
+    def append_epilogue_instruction(self, inst: str, pc, sp, fp, rv_regs: list, frv_regs) -> None:
         self.epilogue.append({
             'idx': self.index,
             'instruction': inst,
             'pc': pc,
+            'sp': sp,
             'fp': fp,
             'a0': rv_regs[0],
             'a1': rv_regs[1],
@@ -122,7 +131,8 @@ class SimulationDataEntry:
             if var.has_more_than_one_element():
                 # Handle array dwrite addresses
                 n_of_elements = var.get_number_of_elements()
-                byte_size = var.type_info.base_type_byte_size
+                byte_size = var.type_info.get_base().byte_size
+                print(f"n of elements: {n_of_elements}, byte_size {byte_size}")
                 var_name = var.get_name()
                 loc = var.get_location_value()
                 for idx in range(n_of_elements):
@@ -137,12 +147,24 @@ class SimulationDataEntry:
 
         return last_writes
 
-    def get_last_write_to_global_variables(self):
-        last_writes = {}
-        for var_name, location in self.global_variable_locations.items():
-            if location in self.dwrites:
-                last_writes[var_name] = self.dwrites[location][-1]
+    def get_last_writes_to_mem_range(self, mem_start, bytes) -> List[Any]:
+
+        last_writes = []
+        addr = hex(mem_start)[2:]
+        print(f"addr at start: {addr}")
+        # Data writes seem to happen in 4 byte chunks
+        xlen_bytes = 4
+        n_of_addrs = ceil(bytes // xlen_bytes)
+        for idx in range(n_of_addrs):
+            try:
+                if addr in self.dwrites:
+                    last_writes.append(self.dwrites[addr][-1])
+                addr = hex(int(addr, 16) + xlen_bytes)[2:]
+            except Exception as e:
+                print(f"Exception: {e}, addr: {addr}")
         return last_writes
+
+
 
 
     def get_first_writes_to_formal_params(self):
@@ -180,199 +202,4 @@ class SimulationDataEntry:
             output += "  > Epilogue instructions CPU state snapshots:\n"
             for inst in self.epilogue:
                 output += f"    | cjr <{inst['pc']}>: <a0: {inst['a0']}, a1: {inst['a1']}, fa0: {inst['fa0']}, fa1: {inst['fa1']}>\n"
-
         return output
-
-
-    def compare_entries(self, other_entry, debug: bool) -> str:
-        """
-            A collection of methods that co-verify entries from the golden reference and from
-            the instruction set under verification.
-        """
-        result = ""
-        expanded_pipeline = False
-        if expanded_pipeline:
-            self.logger.info("Debug mode on, comparing function prologue and epilogue")
-            result += self.compare_prologues(other_entry.prologue)
-
-            result += self.compare_formal_param_values(other_entry.get_first_writes_to_formal_params())
-
-        result += self.compare_global_variable_values(other_entry.get_last_writes_to_global_var_locations())
-
-        if expanded_pipeline:
-            result += self.compare_epilogues(other_entry.epilogue)
-
-        result += self.compare_return_values(other_entry)
-        return result
-
-
-    def compare_prologues(self, other_entry_prologue) -> str:
-        section = "  | Function prologue"
-        section += (self.comparison_line_lenght - len(section)) * '.'
-        result = ""
-        if len(self.prologue) == 0 and len(other_entry_prologue) == 0:
-            result += section + 'FAIL\n'
-            result += f"      no snapshots written to prologue\n"
-        elif len(self.prologue) == len(other_entry_prologue):
-            mismatch = ""
-            for idx, entry in enumerate(self.prologue):
-                for key in ['pc', 'a0', 'a1', 'fa0', 'fa1']:
-                    if entry[key] != other_entry_prologue[idx][key]:
-                        mismatch += f"        mismatch at index {idx}: {entry[key]} vs {other_entry_prologue[idx][key]}\n"
-            if mismatch:
-                result += section + 'FAIL\n'
-                result += f'      value mismatch:\n{mismatch}\n'
-        else:
-            result += section + 'FAIL\n'
-            result += "      different number of instructions\n"
-
-        if not result:
-            result += section + "OK\n"
-        return result
-
-    def compare_formal_param_values(self, other_entry_formal_params) -> str:
-        section = "  | Formal parameters"
-        section += (self.comparison_line_lenght - len(section)) * '.'
-        result = ""
-        formal_param_values = self.get_first_writes_to_formal_params()
-        if len(formal_param_values) == 0 and len(other_entry_formal_params) == 0:
-            result += section + 'NA\n'
-            result += "      No data writes to formal parameter locations\n"
-        elif len(formal_param_values) == len(other_entry_formal_params):
-            for var_name, entry in formal_param_values.items():
-                if entry['data'] != other_entry_formal_params[var_name]['data']:
-                    result += section + 'FAIL\n'
-                    result += f"      data mismatch in variable {var_name}: {entry['data']} != {other_entry_formal_params[var_name]['data']}\n"
-        else:
-            result += section + 'FAIL\n'
-            result += "      number of parameters written to stack do not match\n"
-        if not result:
-            result += section + 'OK\n'
-        return result
-
-    def compare_global_variable_values(self, other_entry_global_variable_values) -> str:
-        section = "  | Global variables"
-        section += (self.comparison_line_lenght - len(section)) * '.'
-        result = ""
-        global_var_values = self.get_last_writes_to_global_var_locations()
-        if len(global_var_values) == 0 and len(other_entry_global_variable_values) == 0:
-            result += section + 'NA\n'
-            result += "      no data writes to global variable locations\n"
-        elif len(global_var_values) == len(other_entry_global_variable_values):
-            for var_name, entry in global_var_values.items():
-                if entry['data'] != other_entry_global_variable_values[var_name]['data']:
-                    result += section + 'FAIL\n'
-                    result += f"      data mismatch in variable {var_name}: {entry['data']} != {other_entry_global_variable_values[var_name]['data']}\n"
-        else:
-            result += section + 'FAIL\n'
-            result += "      number of variables do not match\n"
-
-        if not result:
-            result += section + 'OK\n'
-        return result
-
-    def compare_epilogues(self, other_entry_epilogue) -> str:
-        section = "  | Function epilogue"
-        section += (self.comparison_line_lenght - len(section)) * '.'
-        result = ""
-        if len(self.epilogue) == 0 and len(other_entry_epilogue) == 0:
-            result += section + 'FAIL\n'
-            result += "      no snapshots written to epilogue\n"
-        elif len(self.epilogue) == len(other_entry_epilogue):
-            mismatch = ""
-            for idx, entry in enumerate(self.epilogue):
-                for key in ['pc', 'a0', 'a1', 'fa0', 'fa1']:
-                    if entry[key] != other_entry_epilogue[idx][key]:
-                        mismatch += f"        mismatch at index {idx}: {entry[key]} vs. {other_entry_epilogue[idx][key]}\n"
-            if mismatch:
-                result += section + 'FAIL\n'
-                result += f'      value mismatch:\n{mismatch}\n'
-        else:
-            result += section + 'FAIL\n'
-            result += "      different number of instructions\n"
-
-        if not result:
-            result += section + 'OK\n'
-        return result
-
-
-    def compare_return_values(self, custom_ise) -> str:
-        section = "  | Return value"
-        section += (self.comparison_line_lenght - len(section)) * '.'
-        result = ""
-
-        if not self.dwarf_info or not custom_ise.dwarf_info:
-            self.logger.error("Dwarf debug information extraction missing. Aborting return value comparison.")
-            result += section + 'FAIL\n'
-            result += "      Missing extracted DWARF debug information\n"
-        fun_return_type = self.dwarf_info.get_subprogram_by_name(self.function_name).type_info.base_type
-
-        if not result and fun_return_type is None:
-            self.logger.debug("Void function has no return value")
-            result = section + 'NA\n'
-            result += "      Void function has no return value\n"
-        elif not result:
-            gr_rv = self.fetch_return_value(self, fun_return_type)
-            ci_rv = self.fetch_return_value(custom_ise, fun_return_type)
-            if gr_rv is None or ci_rv is None:
-                result = section + 'NA\n'
-                result += f"      Return value is inconclusive. Return values: {gr_rv} (golden ref), {ci_rv} (other), function return type: {fun_return_type}. See log entries for more information.\n"
-            else:
-                if gr_rv != ci_rv:
-                    result += section + 'FAIL\n'
-                    result += f"      mismatch in return value: golden reference: {gr_rv}, custom ISE: {ci_rv}\n"
-                else:
-                    result += section + 'OK\n'
-        return result
-
-    def fetch_return_value(self, entry, func_return_base_type: str):
-        m = entry.dwarf_info.compilation_unit.march
-        march = self.march_manager.get_march_with_name(m)
-        rv = None
-
-        self.logger.debug(
-            f"{march.get_march_name()}: subprogram {entry.function_name} has return type {func_return_base_type}. Verifying return values based on machine architecture.")
-
-        base_type = self.mapper.get_mapping_for_dwarf_base_type(func_return_base_type)
-
-        match base_type:
-            case 'int':
-                rv = march.fetch_int_return_value(entry)
-            case 'long long':
-                rv = march.fetch_long_long_return_value(entry)
-            case 'float':
-                rv = march.fetch_float_return_value(entry)
-            case 'double':
-                rv = march.fetch_double_return_value(entry)
-            case 'long double':
-                rv = march.fetch_long_double_return_value(entry)
-            case 'struct':
-                self.logger.warning(f"Verification for structs not yet implemented.")
-                rv = march.fetch_struct_return_value(entry)
-            case _:
-                err = f"No conversion for DWARF base type {func_return_base_type}"
-                self.logger.error(err)
-                raise VerificationProcessException(err)
-        self.logger.debug(f"{march.get_march_name()}: extracted return value {rv}")
-        return rv
-
-
-    def fetch_int_return_value(self, entry) -> Any:
-        m = entry.dwarf_info.compilation_unit.march
-        march = self.march_manager.get_march_with_name(m)
-        rv = march.fetch_int_return_value(entry)
-        return rv
-
-    def fetch_float_return_value(self, entry) -> Any:
-        m = entry.dwarf_info.compilation_unit.march
-        march = self.march_manager.get_march_with_name(m)
-        rv = march.fetch_float_return_value(entry)
-        return rv
-
-
-
-
-
-
-
-

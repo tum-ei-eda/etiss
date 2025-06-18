@@ -1,5 +1,5 @@
 import logging
-from typing import List, Dict, Any
+from typing import List, Dict
 
 from src.entity.dwarf.compilation_unit import CompileUnit
 from src.entity.dwarf.frame_base_info import FrameBaseInfo

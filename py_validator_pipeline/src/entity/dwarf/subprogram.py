@@ -3,9 +3,7 @@ from typing import List
 from src.entity.dwarf.formal_parameter import FormalParameter
 from src.entity.dwarf.frame_base_info import FrameBaseInfo
 from src.entity.dwarf.local_variable import LocalVariable
-from src.entity.dwarf.type_info import TypeInfo
-
-
+from src.entity.dwarf.types import AbstractType
 
 """
     A class instance of representing data extracted from subprogram DIE
@@ -16,7 +14,7 @@ class Subprogram:
         self.name:  str = ""
         self.low_pc: int = 0
         self.high_pc: int = 0
-        self.type_info: None | TypeInfo = None
+        self.type_info: None | AbstractType = None
         self.frame_base_infos: List[FrameBaseInfo] = []
         self._formal_parameters = []
         self._local_variables = []
@@ -54,14 +52,16 @@ class Subprogram:
             output += f"{self._indent * ' '}  ├ CFA register values and offsets:\n"
             for info in self.frame_base_infos:
                 output += str(info)
-        if self.type_info.description:
-            output += f"{self._indent * ' '}  ├ Type composition: {self.type_info.description}\n"
-            output += f"{self._indent * ' '}  ├ Base type: {self.type_info.base_type}\n"
-            output += f"{self._indent * ' '}  ├ Base type byte size: {self.type_info.base_type_byte_size}\n"
+        if self.type_info:
+            base = self.type_info.get_base()
+            range = self.type_info.get_range()
+            output += f"{self._indent * ' '}  ├ Type composition: {str(self.type_info)}\n"
+            output += f"{self._indent * ' '}  ├ Base type: {base.type}\n"
+            output += f"{self._indent * ' '}  ├ Base type byte size: {base.byte_size}\n"
+            if range != base.byte_size:
+                output += f"{self._indent * ' '}  ├ Range: {range}\n"
         else:
             output += f"{self._indent * ' '}  ├ Type composition: void\n"
-        if self.type_info.range and (self.type_info.range != self.type_info.base_type_byte_size):
-            output += f"{self._indent * ' '}  ├ Range: {self.type_info.range}\n"
         output += f"{self._indent * ' '}  ├ Low-PC: {self.low_pc}\n"
         output += f"{self._indent * ' '}  └ High-PC: {self.high_pc}\n"
         return output

@@ -1,7 +1,9 @@
+import logging
 from abc import ABC, abstractmethod
-from typing import Any
+from collections import namedtuple
+from typing import Any, Tuple
 
-from src.entity.dwarf.type_info import TypeInfo
+from src.entity.dwarf.types import AbstractType, BaseType, StructType, ConstType, ArrayType
 
 
 class VarAndParamBase(ABC):
@@ -16,10 +18,11 @@ class VarAndParamBase(ABC):
     """
 
     def __init__(self) -> None:
+        self.logger = logging.getLogger(__name__)
         self._name: None | str = None
         self._location: Any = None
 
-        self.type_info: None | TypeInfo = None
+        self.type_info: None | AbstractType = None
         self._indent: int = 2
 
     def set_name(self, name) -> None:
@@ -38,16 +41,18 @@ class VarAndParamBase(ABC):
         self.type_info = type_info
 
     def has_more_than_one_element(self) -> bool:
-        result = False
-        if self.type_info.range and self.type_info.base_type_byte_size:
-            result = self.type_info.range / self.type_info.base_type_byte_size != 1
-        return result
+        base = self.type_info.get_base()
+        total_range = self.type_info.get_range()
+        return base.byte_size < total_range
 
     def get_number_of_elements(self) -> int:
-        result = 0
-        if self.type_info.range and self.type_info.base_type_byte_size:
-            result = int(self.type_info.range / self.type_info.base_type_byte_size)
-        return result
+        try:
+            base = self.type_info.get_base()
+            total_range = self.type_info.get_range()
+            return int(total_range / base.byte_size)
+        except ZeroDivisionError:
+            return 0
+
 
     @abstractmethod
     def get_location_value(self):
@@ -57,25 +62,32 @@ class VarAndParamBase(ABC):
         pass
 
 
+
     def __str__(self) -> str:
+
+        base = self.type_info.get_base()
+        total_range = self.type_info.get_range()
+
         output = ""
         output += f"{self._indent * ' '}  ┌ Name: {self._name}\n"
-        output += f"{self._indent * ' '}  ├ Type composition: {self.type_info.description}\n"
-        output += f"{self._indent * ' '}  ├ Base Type: {self.type_info.base_type}\n"
-        output += f"{self._indent * ' '}  ├ Base Type/Byte Size: {self.type_info.base_type_byte_size}\n"
+        output += f"{self._indent * ' '}  ├ Type composition: {str(self.type_info)}\n"
+        if not isinstance(self.type_info, StructType):
+            output += f"{self._indent * ' '}  ├ Base Type: {base.type}\n"
+            output += f"{self._indent * ' '}  ├ Base Type/Byte Size: {base.byte_size}\n"
+        else:
+            output += f"{self._indent * ' '}  ├ Struct name: {self.type_info.name}\n"
+            output += f"{self._indent * ' '}  ├ Struct byte size: {self.type_info.byte_size}\n"
+        if total_range != base.byte_size:
+            output += f"{self._indent * ' '}  ├ Range: {total_range}\n"
         output += f"{self._indent * ' '}  └ Location: {self._location}\n"
-        if self.type_info.range != self.type_info.base_type_byte_size:
-            output += f"{self._indent * ' '}  ├ Range: {self.type_info.range}\n"
-        if self.type_info.struct_name:
-            output += f"{self._indent * ' '}  ├ Struct name: {self.type_info.struct_name}\n"
+        if isinstance(self.type_info, StructType):
             if self.type_info.members:
                 output += f"{self._indent * ' '}  > Members:\n"
             for member in self.type_info.members:
-                output += f"{self._indent * ' '}    ┌ Member name: {member.member_name}\n"
-                output += f"{self._indent * ' '}    ├ Type composition: {member.description}\n"
-                output += f"{self._indent * ' '}    ├ Base Type: {member.base_type}\n"
-                output += f"{self._indent * ' '}    ├ Base Type/Byte Size: {member.base_type_byte_size}\n"
-                if member.member_bit_size:
-                    output += f"{self._indent * ' '}    ├ Bit size: {member.member_bit_size}\n"
-                    output += f"{self._indent * ' '}    └ Bit offset: {member.member_bit_offset}\n"
+                output += f"{self._indent * ' '}    ┌ Member name: {member.name}\n"
+                output += f"{self._indent * ' '}    ├ Type composition: {str(member)}\n"
+                output += f"{self._indent * ' '}    ├ Range (bytes): {member.member_type.get_range()}\n"
+                if member.bit_size:
+                    output += f"{self._indent * ' '}    ├ Bit size: {member.bit_size}\n"
+                    output += f"{self._indent * ' '}    └ Bit offset: {member.bit_offset}\n"
         return output

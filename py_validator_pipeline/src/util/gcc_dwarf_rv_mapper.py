@@ -23,6 +23,24 @@ class GccDwarfMapper:
         "struct": "struct",
     }
 
+    _gcc_dwarf_size_mapper: Dict[str, int] = {
+        "char": 1,
+        "signed char": 1,
+        "unsigned char": 1,
+        "short int": 2,
+        "short unsigned int": 2,
+        "int": 4,
+        "unsigned int": 4,
+        "long int": 4,
+        "long unsigned int": 4,
+        "long long int": 8,
+        "long long unsigned int": 8,
+        "float": 4,
+        "double": 8,
+        "long double": 16,
+        "_Bool": 1,
+    }
+
     def __init__(self) -> None:
         pass
 
@@ -30,6 +48,12 @@ class GccDwarfMapper:
         value = ""
         if self._gcc_dwarf_rv_mapper.get(key):
             value += self._gcc_dwarf_rv_mapper.get(key)
+        return value
+
+    def get_byte_size_for_base_type(self, key: str) -> int:
+        value = 0
+        if self._gcc_dwarf_size_mapper.get(key):
+            value += self._gcc_dwarf_size_mapper.get(key)
         return value
 
 

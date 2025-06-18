@@ -6,9 +6,8 @@
 import os
 import time
 import logging
-from typing import Dict, List, Any
 
-from src.march_manager import MArchManager
+from src.entity.dwarf.march_manager import MArchManager
 from src.dwarf_info_extractor import DwarfInfoExtractor
 from src.etiss_simulation import run_etiss_simulation
 from src.dwarf_simdata_merger import (
@@ -34,6 +33,7 @@ from src.exception.pipeline_exceptions import (
     ETISSSimulationException,
     SnapshotLoggerException,
     VerificationProcessException)
+from src.verification_stage import VerificationStage
 
 # Global logger
 logger = logging.getLogger(__name__)
@@ -156,6 +156,7 @@ def log_snapshot_entries(entries: SimulationDataCollection, case: str) -> None:
 
 def verify_entries(golden_ref, custom_is):
     try:
+        verifier =  VerificationStage()
         golden_ref_entry_collection = golden_ref.get_entries()
         custom_is_entry_collection = custom_is.get_entries()
 
@@ -167,7 +168,8 @@ def verify_entries(golden_ref, custom_is):
                     output += f"Subprogram of interest: {args.fun}, invoke #{idx_0 + 1}\n"
                     for idx_1, golden_ref_entry in enumerate(golden_ref_fun_call_entries):
                         output += f"> Function: {golden_ref_entry.function_name}\n"
-                        output += golden_ref_entry.compare_entries(custom_is_entry_collection[idx_0][idx_1], debug=args.debug)
+                        # output += golden_ref_entry.compare_entries(custom_is_entry_collection[idx_0][idx_1], debug=args.debug)
+                        output += verifier.compare_entries(golden_ref_entry, custom_is_entry_collection[idx_0][idx_1])
                 else:
                     err = "Number of function call entries in golden reference and custom IS data do not match. Aborting"
                     output += err

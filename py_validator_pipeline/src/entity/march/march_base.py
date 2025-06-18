@@ -27,7 +27,7 @@ class MArchBase(metaclass=SingletonABCMeta):
         self.logger = logging.getLogger(__name__)
 
     @abstractmethod
-    def fetch_int_return_value(self, entry) -> Any:
+    def fetch_int_return_value(self, entry, reg: str = '') -> Any:
         """
             Returns the int return value from the given simulation data
             entries, if possible. In case the return value register has
@@ -47,7 +47,7 @@ class MArchBase(metaclass=SingletonABCMeta):
         pass
 
     @abstractmethod
-    def fetch_float_return_value(self, entry) -> Any:
+    def fetch_float_return_value(self, entry, reg: str = '') -> Any:
         """
             Returns the float return value from the given simulation data
             entries, if possible. In case the return value register has
@@ -57,7 +57,7 @@ class MArchBase(metaclass=SingletonABCMeta):
         pass
 
     @abstractmethod
-    def fetch_double_return_value(self, entry) -> Any:
+    def fetch_double_return_value(self, entry, reg: str = '') -> Any:
         """
             Returns the double return value from the given simulation data
             entries, if possible. In case the return value register has

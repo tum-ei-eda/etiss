@@ -118,37 +118,40 @@ def construct_entries_recursively(f, dwarf_info: DwarfInfo, entries: List[Simula
                             has been extracted, a new SimulationDataEntry is created and recursively 
                             constructed from that point onward.
                             """
-                            sp = dwarf_info.get_enclosing_subprogram(obj['pc'])
-                            if sp and (not entry.function_name or sp and entry.function_name == sp.name):
+                            sub_prog = dwarf_info.get_enclosing_subprogram(obj['pc'])
+                            if sub_prog and (not entry.function_name or sub_prog and entry.function_name == sub_prog.name):
                                 if not entry.function_name:
-                                    entry.function_name = sp.name
+                                    entry.function_name = sub_prog.name
                                 entry.append_prologue_instruction(
-                                    obj['instruction'],
-                                    obj['pc'],
-                                    obj['x'][8],
-                                    obj['x'][10:18],
-                                    obj['f'][10:18]
+                                    inst=obj['instruction'],
+                                    pc=obj['pc'],
+                                    sp=obj['x'][2],
+                                    fp=obj['x'][8],
+                                    arg_regs=obj['x'][10:18],
+                                    farg_regs=obj['f'][10:18]
                                 )
-                            elif sp:
+                            elif sub_prog:
                                 new_entry = SimulationDataEntry()
                                 new_entry.add_dwarf_info(dwarf_info)
-                                new_entry.function_name = sp.name
+                                new_entry.function_name = sub_prog.name
                                 new_entry.append_prologue_instruction(
-                                    obj['instruction'],
-                                    obj['pc'],
-                                    obj['x'][8],
-                                    obj['x'][10:18],
-                                    obj['f'][10:18]
+                                    inst=obj['instruction'],
+                                    pc=obj['pc'],
+                                    sp=obj['x'][2],
+                                    fp=obj['x'][8],
+                                    arg_regs=obj['x'][10:18],
+                                    farg_regs=obj['f'][10:18]
                                 )
                                 construct_entries_recursively(f, dwarf_info, entries, new_entry)
                         case 'cjr':
                             if dwarf_info.get_enclosing_subprogram(obj['pc']):
                                 entry.append_epilogue_instruction(
-                                    obj['instruction'],
-                                    obj['pc'],
-                                    obj['x'][8],
-                                    obj['x'][10:12],
-                                    obj['f'][10:12]
+                                    inst=obj['instruction'],
+                                    pc=obj['pc'],
+                                    sp=obj['x'][2],
+                                    fp=obj['x'][8],
+                                    rv_regs=obj['x'][10:12],
+                                    frv_regs=obj['f'][10:12]
                                 )
 
                                 epilogue_reached = True
