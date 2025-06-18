@@ -158,7 +158,7 @@ class SimulationDataEntry:
         for idx in range(n_of_addrs):
             try:
                 if addr in self.dwrites:
-                    last_writes.append(self.dwrites[addr][-1])
+                    last_writes.append(self.dwrites[addr][-1]['data'])
                 addr = hex(int(addr, 16) + xlen_bytes)[2:]
             except Exception as e:
                 print(f"Exception: {e}, addr: {addr}")

@@ -1,5 +1,6 @@
 from collections import namedtuple
 from abc import ABC, abstractmethod
+from time import clock_gettime_ns
 from typing import Any, List, Dict, Tuple, Optional
 import logging
 import struct
@@ -8,11 +9,13 @@ from math import ceil
 
 from src.entity.dwarf.types import StructType, BaseType
 from src.entity.march.march_base import MArchBase
+from src.entity.verification.rv32register import RV32Register
 from src.entity.verification.struct_reg_data_types import (
     Bitfield, Float, Integer, StructRegDataTypes
 )
 from src.util.gcc_dwarf_rv_mapper import GccDwarfMapper
 from src.exception.pipeline_exceptions import VerificationProcessException
+from src.entity.verification import rv32register
 
 class RV32IC(MArchBase, ABC):
     """
@@ -128,124 +131,92 @@ class RV32IC(MArchBase, ABC):
         struct_type_info = entry.dwarf_info.get_subprogram_by_name(entry.function_name).type_info
 
         elements = self.analyze_struct(struct_type_info)
-        reservations = self.compute_struct_values(elements)
+        regs = self.compute_struct_values(elements)
 
-        def get_register(idx: int) -> str:
-            register = 'a0'
-            nonlocal reservations
-            if idx > 0:
-                for i in range(1, idx + 1):
-                    if reservations[i][0] == 0:
-                        register = 'a1'
-            return register
+        float_reg_idx = 0
+        int_reg_idx = 0
+
+        def get_register(is_float: bool = False) -> str:
+            """
+            Allocates the next available register for the return value.
+
+            Priority:
+            - If float and floating-point registers are available, use them.
+            - Otherwise, use the next available integer register.
+
+            Returns:
+                A string representing the chosen register name (e.g., 'a0', 'a1', 'fa0', 'fa1').
+            """
+            nonlocal float_reg_idx, int_reg_idx
+
+            int_regs = ['a0', 'a1']
+            float_regs = ['fa0', 'fa1']
+            reg_value = ''
+
+            if is_float:
+                if self.flen and float_reg_idx < len(float_regs):
+                    reg_value = float_regs[float_reg_idx]
+                    float_reg_idx += 1
+                elif not self.flen and int_reg_idx < len(int_regs):
+                    reg_value = int_regs[int_reg_idx]
+                    int_reg_idx += 1
+            elif int_reg_idx < len(int_regs):
+                reg_value = int_regs[int_reg_idx]
+                int_reg_idx += 1
+
+            return reg_value
+
 
         cjr = self.fetch_cjr_instruction(entry.epilogue)
 
         if not cjr:
             self.logger.error("Missing cjr instruction. Aborting.")
-        elif not reservations:
+        elif not regs:
             # Case: return value in memory
             addr = cjr['a0']
             entry.get_last_writes_to_mem_range(addr, struct_type_info.byte_size)
         else:
-            for idx, elem in enumerate(elements):
-                reg = get_register(idx)
-                match elem:
-                    case Bitfield():
-                        rv.append(self.fetch_aligned_int_value(reg_val=cjr[reg], loc=reservations[idx]))
-                    case Float():
-                        if elem.byte_size == 4:
-                            rv.append(self.fetch_float_return_value(entry=entry, reg=reg))
-                        if elem.byte_size == 8:
-                            rv.append(self.fetch_double_return_value(entry=entry, reg=reg))
-                    case Integer():
-                        if reservations[idx][0] == 0 and reservations[idx][1] == 31:
-                            rv.append(self.fetch_int_return_value(entry=entry, reg=reg))
-                        else:
-                            rv.append(self.fetch_aligned_int_value(reg_val=cjr[reg], loc=reservations[idx]))
+
+            for idx, reg in enumerate(regs):
+                if reg.float:
+                    reg_val = get_register(is_float=True)
+                    if reg.get_float_size() == 4:
+                        rv.append(self.fetch_float_return_value(entry=entry, reg=reg_val))
+                    elif reg.get_float_size() == 8:
+                        rv.append(self.fetch_double_return_value(entry=entry, reg=reg_val))
         return rv
 
-    def compute_struct_values(self, elements: List[StructRegDataTypes]) -> Optional[List[Tuple[int, int]]]:
-        # Holds the bits storing return values
-        reg_reservations: Optional[List[Tuple[int, int] | List[Tuple[int, int]]]] = []
-        # Registers a0 and a1 can be used for return values according to
-        # integer calling convention
-        available_registers = 2
-        reg_counter = 0
+    def compute_struct_values(self, elements: List[StructRegDataTypes]) -> Optional[List[RV32Register]]:
 
-        def crosses_alignment_boundary(bits: int, alignment_bytes: int) -> bool:
-            """
-                Verifies whether a bitfield or an int value can fit in the current
-                integer register
-            """
-            crosses_boundary = False
-            alignment_bits = alignment_bytes * 8
-            bits_available = alignment_bytes * 8
-            if reg_reservations:
-                bits_available = alignment_bits - reg_reservations[-1][1] % alignment_bits
-            if bits > alignment_bits:
-                # With padding the bits can exceed the alignment boundary. The assumption
-                # here is that the alignment_bytes still cannot cross the boundary.
-                crosses_boundary = bool(bits_available - alignment_bits >= 0)
-            else:
-                # Without padding the bits cannot cross the alignment boundary
-                crosses_boundary = bool(bits_available - bits >= 0)
-            return crosses_boundary
-
-        def get_aligned_start_bit(alignment_bytes: int, bits_to_reserve: int) -> int:
-            """
-                The assumption here is that the value crosses alignment boundary.
-                Because of this, we want the next possible alignment. It is either
-                in the same register, or in the next register, if the register is filled.
-            """
-            nonlocal reg_counter
-            alignment_bits: int = alignment_bytes * 8
-            aligned_start_bit: int = 0
-            if reg_reservations:
-                aligned_start_bit = ceil(reg_reservations[-1][1] / alignment_bits) * alignment_bits
-                if aligned_start_bit >= self.xlen or aligned_start_bit + bits_to_reserve >= self.xlen:
-                    reg_counter += 1
-                    aligned_start_bit = 0
-            return aligned_start_bit
-
+        regs: List[RV32Register] = []
+        active_reg: Optional[RV32Register] = RV32Register(xlen=self.xlen)
 
         for e in elements:
-            if reg_counter >= available_registers:
-                break
+            if not active_reg:
+                active_reg = RV32Register(xlen=self.xlen)
             match e:
                 case Bitfield():
-                    start_bit = 0
-                    if crosses_alignment_boundary(bits=e.bit_size, alignment_bytes=e.alignment):
-                        res_bits = e.bit_size if e.bit_size <= e.alignment * 8 else e.alignment * 8
-                        start_bit = get_aligned_start_bit(alignment_bytes=e.alignment, bits_to_reserve=res_bits)
-                    else:
-                        if reg_reservations:
-                            start_bit = reg_reservations[-1][1] + 1
-                    reg_reservations.append((start_bit, start_bit + e.bit_size - 1))
+                    if not active_reg.has_room_for_bitfield(bits_to_reserve=e.bit_size, alignment_bytes=e.alignment):
+                        regs.append(active_reg)
+                        active_reg = RV32Register(xlen=self.xlen)
+                    active_reg.add_bitfield(e)
                 case Float():
-                    # Supported types are float (4 bytes) and double (8 bytes)
-                    reg_len_bits = self.xlen
-                    reg_len_bytes = self.xlen // 8
-                    if self.flen:
-                        reg_len_bits = self.flen
-                        reg_len_bytes = self.flen // 8
-                    regs = e.byte_size // reg_len_bytes
-                    for i in range(regs):
-                        reg_counter += 1
-                        reg_reservations.append((0, reg_len_bits - 1))
+                    if not active_reg.is_empty():
+                        regs.append(active_reg)
+                    float_reg = RV32Register(xlen=self.xlen, float=True)
+                    float_reg.add_float(e)
+                    regs.append(float_reg)
+                    active_reg = None
                 case Integer():
-                    start_bit = 0
-                    if crosses_alignment_boundary(bits=e.byte_size, alignment_bytes=e.byte_size):
-                        start_bit = get_aligned_start_bit(e.byte_size, e.byte_size)
-                    else:
-                        if reg_reservations:
-                            start_bit = reg_reservations[-1][1] + 1
-                    int_bits = e.byte_size * 8
-                    reg_reservations.append((start_bit, start_bit + int_bits - 1))
-        if reg_counter >= available_registers:
-            reg_reservations = None
+                    if not active_reg.has_room_for_int(e.byte_size):
+                        regs.append(active_reg)
+                        active_reg = RV32Register(xlen=self.xlen)
+                    active_reg.add_int(e)
 
-        return reg_reservations
+        if active_reg and not active_reg.is_empty():
+            regs.append(active_reg)
+        self.logger.debug(f"Final extracted register entries: {regs}")
+        return regs
 
     def analyze_struct(self, struct: StructType):
         elements = []
@@ -278,8 +249,51 @@ class RV32IC(MArchBase, ABC):
 
         return elements
 
+    def extract_from_memory_addr(self, entry, addr, byte_size):
+        self.logger.debug(
+            f"Return values do not fit in argument registers. Extracting {byte_size} bytes starting from address {addr}")
+        return entry.get_last_writes_to_mem_range(addr, byte_size)
+
+    def resolve_struct_memory_values(self, regs: List[RV32Register], mem_vals: List[str]) -> List[Any]:
+        resolved_values = []
+        rv_bytes = ''.join(mem_vals)  # Flat hex string, 2 chars per byte
+        idx = 0
+
+        for r in regs:
+            # Get size in bytes, then convert to number of hex characters (2 chars per byte)
+            byte_len = self.xlen // 8
+            if r.float:
+                byte_len = r.get_float_size()
+
+            hex_len = byte_len * 2
+            val_bytes = rv_bytes[idx: idx + hex_len]
+
+            # Reverse bytes for little endian
+            reversed_bytes = ''.join(
+                [val_bytes[i: i + 2] for i in range(0, hex_len, 2)]
+            )
+
+            if r.float:
+                if byte_len == 4:
+                    value = struct.unpack('<f', bytes.fromhex(reversed_bytes))[0]
+                elif byte_len == 8:
+                    value = struct.unpack('<d', bytes.fromhex(reversed_bytes))[0]
+                else:
+                    raise ValueError("Unsupported float size")
+            else:
+                value = int.from_bytes(bytes.fromhex(reversed_bytes), byteorder='little')
+
+            resolved_values.append(value)
+            print(f"bytes: {reversed_bytes}, value: {value}")
+            idx += hex_len
+
+        return resolved_values
+
+
+
+
     @staticmethod
-    def fetch_aligned_int_value(reg_val, loc: Tuple[int, int]) -> int:
+    def fetch_aligned_int_value(reg_val: int, loc: Tuple[int, int]) -> int:
         """Extracts an integer value from a register based on a bit range (inclusive)."""
         low, high = loc
         width = high - low + 1

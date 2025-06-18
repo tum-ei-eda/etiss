@@ -13,3 +13,5 @@ class SnapshotLoggerException(Exception):
 class VerificationProcessException(Exception):
     pass
 
+class OutOfRegistersException(Exception):
+    pass

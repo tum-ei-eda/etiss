@@ -185,16 +185,13 @@ class VerificationStage:
                         rv = march.fetch_double_return_value(entry)
                     case 'long double':
                         rv = march.fetch_long_double_return_value(entry)
-                    case 'struct':
-                        self.logger.warning(f"Verification for structs not yet implemented.")
-                        rv = march.fetch_struct_return_value(entry)
                     case _:
                         err = f"No conversion for DWARF base type {sp_return_type}"
                         self.logger.error(err)
                         raise VerificationProcessException(err)
-                self.logger.debug(f"{march.get_march_name()}: extracted return value {rv}")
             case StructType():
                 rv = march.fetch_struct_return_value(entry)
+        self.logger.debug(f"{march.get_march_name()}: extracted return value {rv}")
         return rv
 
 
