@@ -84,6 +84,13 @@ class MArchBase(metaclass=SingletonABCMeta):
         pass
 
     @abstractmethod
+    def fetch_union_return_value(self, entry) -> Any:
+        """
+            Attempts to extract return value for union
+        """
+        pass
+
+    @abstractmethod
     def get_march_name(self) -> str:
         """
             This method should return a str representation of the machine architecture.

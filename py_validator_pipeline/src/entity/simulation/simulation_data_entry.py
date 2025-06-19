@@ -8,6 +8,7 @@ from src.entity.dwarf.formal_parameter import FormalParameter
 from src.entity.dwarf.global_variable import GlobalVariable
 from src.entity.dwarf.local_variable import LocalVariable
 from src.entity.dwarf.march_manager import MArchManager
+from src.exception.pipeline_exceptions import VerificationProcessException
 from src.util.gcc_dwarf_rv_mapper import GccDwarfMapper
 
 
@@ -44,6 +45,7 @@ class SimulationDataEntry:
         self.mapper = GccDwarfMapper()
 
         self.comparison_line_lenght = 90
+        self.xlen_bytes = 4
 
 
 
@@ -128,11 +130,10 @@ class SimulationDataEntry:
     def get_last_writes_to_global_var_locations(self) -> Dict[str, Dict[str, Any]]:
         last_writes = {}
         for var in self.global_variables:
-            if var.has_more_than_one_element():
+            if var.has_more_than_one_element() or var.is_struct():
                 # Handle array dwrite addresses
                 n_of_elements = var.get_number_of_elements()
                 byte_size = var.type_info.get_base().byte_size
-                print(f"n of elements: {n_of_elements}, byte_size {byte_size}")
                 var_name = var.get_name()
                 loc = var.get_location_value()
                 for idx in range(n_of_elements):
@@ -151,7 +152,6 @@ class SimulationDataEntry:
 
         last_writes = []
         addr = hex(mem_start)[2:]
-        print(f"addr at start: {addr}")
         # Data writes seem to happen in 4 byte chunks
         xlen_bytes = 4
         n_of_addrs = ceil(bytes // xlen_bytes)
@@ -161,7 +161,7 @@ class SimulationDataEntry:
                     last_writes.append(self.dwrites[addr][-1]['data'])
                 addr = hex(int(addr, 16) + xlen_bytes)[2:]
             except Exception as e:
-                print(f"Exception: {e}, addr: {addr}")
+                raise VerificationProcessException(f"Exception: {e}, addr: {addr}")
         return last_writes
 
 

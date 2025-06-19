@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from collections import namedtuple
 from typing import Any, Tuple
 
-from src.entity.dwarf.types import AbstractType, BaseType, StructType, ConstType, ArrayType
+from src.entity.dwarf.types import AbstractType, BaseType, StructType, ConstType, ArrayType, UnionType, StructMember
 
 
 class VarAndParamBase(ABC):
@@ -45,6 +45,9 @@ class VarAndParamBase(ABC):
         total_range = self.type_info.get_range()
         return base.byte_size < total_range
 
+    def is_struct(self) -> bool:
+        return isinstance(self.type_info, StructType)
+
     def get_number_of_elements(self) -> int:
         try:
             base = self.type_info.get_base()
@@ -71,23 +74,26 @@ class VarAndParamBase(ABC):
         output = ""
         output += f"{self._indent * ' '}  ┌ Name: {self._name}\n"
         output += f"{self._indent * ' '}  ├ Type composition: {str(self.type_info)}\n"
-        if not isinstance(self.type_info, StructType):
-            output += f"{self._indent * ' '}  ├ Base Type: {base.type}\n"
-            output += f"{self._indent * ' '}  ├ Base Type/Byte Size: {base.byte_size}\n"
-        else:
-            output += f"{self._indent * ' '}  ├ Struct name: {self.type_info.name}\n"
-            output += f"{self._indent * ' '}  ├ Struct byte size: {self.type_info.byte_size}\n"
+        match self.type_info:
+            case StructType():
+                output += f"{self._indent * ' '}  ├ Struct name: {self.type_info.name}\n"
+                output += f"{self._indent * ' '}  ├ Struct byte size: {self.type_info.byte_size}\n"
+            case UnionType():
+                output += f"{self._indent * ' '}  ├ Union byte size: {self.type_info.byte_size}\n"
+            case _:
+                output += f"{self._indent * ' '}  ├ Base Type: {base.type}\n"
+                output += f"{self._indent * ' '}  ├ Base Type/Byte Size: {base.byte_size}\n"
         if total_range != base.byte_size:
             output += f"{self._indent * ' '}  ├ Range: {total_range}\n"
         output += f"{self._indent * ' '}  └ Location: {self._location}\n"
-        if isinstance(self.type_info, StructType):
+        if isinstance(self.type_info, StructType) or isinstance(self.type_info, UnionType):
             if self.type_info.members:
                 output += f"{self._indent * ' '}  > Members:\n"
             for member in self.type_info.members:
                 output += f"{self._indent * ' '}    ┌ Member name: {member.name}\n"
                 output += f"{self._indent * ' '}    ├ Type composition: {str(member)}\n"
                 output += f"{self._indent * ' '}    ├ Range (bytes): {member.member_type.get_range()}\n"
-                if member.bit_size:
+                if isinstance(member, StructMember) and member.bit_size:
                     output += f"{self._indent * ' '}    ├ Bit size: {member.bit_size}\n"
                     output += f"{self._indent * ' '}    └ Bit offset: {member.bit_offset}\n"
         return output

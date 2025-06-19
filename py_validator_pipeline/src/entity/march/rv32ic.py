@@ -1,13 +1,12 @@
 from collections import namedtuple
 from abc import ABC, abstractmethod
-from time import clock_gettime_ns
-from typing import Any, List, Dict, Tuple, Optional
+from typing import Any, List, Dict, Tuple, Optional, Union
 import logging
 import struct
 from math import ceil
 
 
-from src.entity.dwarf.types import StructType, BaseType
+from src.entity.dwarf.types import StructType, BaseType, UnionType
 from src.entity.march.march_base import MArchBase
 from src.entity.verification.rv32register import RV32Register
 from src.entity.verification.struct_reg_data_types import (
@@ -23,6 +22,7 @@ class RV32IC(MArchBase, ABC):
     """
 
     def __init__(self):
+        super().__init__()
         self.logger = logging.getLogger(__name__)
         self.mapper = GccDwarfMapper()
         # For RV32 this is 8 bytes
@@ -101,9 +101,6 @@ class RV32IC(MArchBase, ABC):
         return rv
 
     def fetch_struct_return_value(self, entry) -> List[Any]:
-        return self.form_struct_return_values(entry)
-
-    def form_struct_return_values(self, entry) -> List[Any]:
         """
         Extracts and decodes the return value of a function that returns a struct,
         according to the RISC-V ABI rules for struct returns.
@@ -215,10 +212,27 @@ class RV32IC(MArchBase, ABC):
 
         if active_reg and not active_reg.is_empty():
             regs.append(active_reg)
-        self.logger.debug(f"Final extracted register entries: {regs}")
+        self.logger.debug(f"Registers required for return values: {', '.join([str(r) for r in regs])}")
         return regs
 
-    def analyze_struct(self, struct: StructType):
+    def analyze_struct(self, struct: StructType) -> List[Union[Integer, Float, Bitfield]]:
+        """
+            Analyzes the given struct and returns a flat list of its relevant elements.
+
+            The method processes each member of the struct and collects values of interest:
+            - Integer values
+            - Floating-point values (float and double)
+            - Bitfields
+
+            Nested structs are handled recursively and flattened into the result list.
+            Unsupported member types raise a VerificationProcessException.
+
+            Args:
+                struct (StructType): The structure to analyze.
+
+            Returns:
+                List[Union[Integer, Float, Bitfield]]: A flat list of analyzed struct elements.
+        """
         elements = []
         for m in struct.members:
             match m.member_type:
@@ -251,7 +265,7 @@ class RV32IC(MArchBase, ABC):
 
     def extract_from_memory_addr(self, entry, addr, byte_size):
         self.logger.debug(
-            f"Return values do not fit in argument registers. Extracting {byte_size} bytes starting from address {addr}")
+            f"Return values do not fit in the argument registers of this architecture. Extracting {byte_size} bytes starting from address {hex(addr)}")
         return entry.get_last_writes_to_mem_range(addr, byte_size)
 
     def resolve_struct_memory_values(self, regs: List[RV32Register], mem_vals: List[str]) -> List[Any]:
@@ -284,12 +298,25 @@ class RV32IC(MArchBase, ABC):
                 value = int.from_bytes(bytes.fromhex(reversed_bytes), byteorder='little')
 
             resolved_values.append(value)
-            print(f"bytes: {reversed_bytes}, value: {value}")
             idx += hex_len
 
         return resolved_values
 
 
+    def fetch_union_return_value(self, entry) -> Any:
+        union: UnionType = entry.dwarf_info.get_subprogram_by_name(entry.function_name).type_info
+        byte_size = union.byte_size
+        rv = None
+        cjr = self.fetch_cjr_instruction(entry.epilogue)
+        if not cjr:
+            self.logger.error("Missing cjr instruction. Aborting.")
+        elif byte_size <= 4:
+            rv = self.fetch_int_return_value(entry)
+        elif byte_size <= 8:
+            rv = self._form_64_bit_value_from_regs_a0_and_a1(entry)
+        else:
+            rv = self.extract_from_memory_addr(entry=entry, addr=cjr['a0'], byte_size=byte_size)
+        return rv
 
 
     @staticmethod

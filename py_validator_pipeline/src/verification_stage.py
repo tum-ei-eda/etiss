@@ -1,7 +1,7 @@
 import logging
 
 from src.entity.dwarf.march_manager import MArchManager
-from src.entity.dwarf.types import AbstractType, BaseType, StructType
+from src.entity.dwarf.types import AbstractType, BaseType, StructType, UnionType
 from src.entity.simulation.simulation_data_entry import SimulationDataEntry
 from src.exception.pipeline_exceptions import VerificationProcessException
 from src.util.gcc_dwarf_rv_mapper import GccDwarfMapper
@@ -191,6 +191,9 @@ class VerificationStage:
                         raise VerificationProcessException(err)
             case StructType():
                 rv = march.fetch_struct_return_value(entry)
+            case UnionType():
+                rv = march.fetch_union_return_value(entry)
+
         self.logger.debug(f"{march.get_march_name()}: extracted return value {rv}")
         return rv
 

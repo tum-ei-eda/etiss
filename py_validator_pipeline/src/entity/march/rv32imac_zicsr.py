@@ -9,6 +9,9 @@ from src.exception.pipeline_exceptions import OutOfRegistersException
 
 class RV32IMAC_zicsr(RV32IC):
 
+    def __init__(self):
+        super().__init__()
+
     def fetch_float_return_value(self, entry, reg='a0') -> Any:
         """
             In rv32imac_zicsr, float return value is stored in register a0
@@ -35,9 +38,6 @@ class RV32IMAC_zicsr(RV32IC):
         return self._form_64_bit_value_from_regs_a0_and_a1(entry)
 
     def fetch_struct_return_value(self, entry) -> List[Any]:
-        return self.form_struct_return_values(entry)
-
-    def form_struct_return_values(self, entry) -> List[Any]:
         """
         Extracts and decodes the return value of a function that returns a struct,
         according to the RISC-V ABI rules for struct returns.

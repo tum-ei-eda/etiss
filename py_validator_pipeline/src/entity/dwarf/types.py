@@ -139,4 +139,35 @@ class StructType(AbstractType):
         return f"struct {name_str} {{ {members_str}; }}"
 
 
-# TODO: union
+@dataclass
+class UnionMember:
+    name: str
+    member_type: AbstractType
+
+    def get_base(self) -> namedtuple:
+        return self.member_type.get_base()
+
+    def get_range(self) -> int:
+        return self.member_type.get_range()
+
+    def __str__(self) -> str:
+        member_name = self.name
+        member_type = str(self.member_type)
+        return f"{member_type} {member_name}"
+
+
+@dataclass
+class UnionType(AbstractType):
+    byte_size: int
+    members: List[UnionMember] = field(default_factory=list)
+
+    def get_base(self) -> namedtuple:
+        Base = namedtuple('Base', ['type', 'byte_size'])
+        return Base(type='<NA>', byte_size=self.byte_size)
+
+    def get_range(self) -> int:
+        return self.byte_size
+
+    def __str__(self) -> str:
+        members_str = "; ".join(str(member) for member in self.members)
+        return f"union {{ {members_str}; }}"

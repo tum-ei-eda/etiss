@@ -87,7 +87,6 @@ class RV32Register:
         else:
             if self.data:
                 start_bit = self.data[-1][1] + 1
-        print(f"Adding bitfield value for bit {start_bit} to bit {start_bit + e.bit_size - 1}")
         self.data.append((start_bit, start_bit + e.bit_size - 1))
 
     def add_int(self, e: Integer) -> None:
@@ -128,3 +127,12 @@ class RV32Register:
 
     def is_empty(self) -> bool:
         return bool(len(self.data) == 0)
+
+    def __str__(self) -> str:
+        output = 'Reg(type='
+        if self.float:
+            output += 'float'
+        else:
+            output += 'int'
+        output += f", defined bits: {','.join([str(e) for e in self.data])})"
+        return output

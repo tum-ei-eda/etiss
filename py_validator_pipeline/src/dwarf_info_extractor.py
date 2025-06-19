@@ -37,7 +37,7 @@ from src.entity.dwarf.local_variable import LocalVariable
 
 from src.entity.dwarf.types import (
     AbstractType, ArrayType, BaseType, PointerType,
-    StructMember, StructType, ConstType, TypeDef
+    StructMember, StructType, ConstType, TypeDef, UnionType, UnionMember
 )
 from src.entity.dwarf.var_and_param_base import VarAndParamBase
 
@@ -522,19 +522,38 @@ class DwarfInfoExtractor:
                         if child.tag == "DW_TAG_member":
                             try:
                                 member_name = child.attributes.get("DW_AT_name").value.decode()
-                                m_type = child.get_DIE_from_attribute('DW_AT_type')
-                                member_type = self._extract_type_rec(m_type)
+                                type_instance = child.get_DIE_from_attribute('DW_AT_type')
+                                member_type = self._extract_type_rec(type_instance)
                                 member = StructMember(name=member_name, member_type=member_type)
                                 if child.attributes.get("DW_AT_bit_size"):
                                     member.bit_size = int(child.attributes.get("DW_AT_bit_size").value)
                                     member.bit_offset = int(child.attributes.get("DW_AT_data_bit_offset").value)
                                 struct.members.append(member)
                             except Exception as e:
-                                self.logger.error(f"Exception: {e}, caused by {child}")
+                                self.logger.error(f"Exception while parsing struct: {e}, caused by {child}")
                     return struct
                 except Exception as e:
                     self.logger.error(f"Exception: {e}, caused by {t}")
                     return StructType()
+            case 'DW_TAG_union_type':
+                try:
+                    union_byte_size = int(t.attributes['DW_AT_byte_size'].value)
+                    union = UnionType(byte_size=union_byte_size, members=[])
+                    for child in t.iter_children():
+                        if child.tag == "DW_TAG_member":
+                            try:
+                                member_name = child.attributes.get("DW_AT_name").value.decode()
+                                type_instance = child.get_DIE_from_attribute('DW_AT_type')
+                                member_type = self._extract_type_rec(type_instance)
+                                member = UnionMember(name=member_name, member_type=member_type)
+                                union.members.append(member)
+                            except Exception as e:
+                                self.logger.error(f"Exception while parsing union: {e}, caused by {child}")
+                    return union
+                except Exception as e:
+                    self.logger.error(f"Exception: {e}, caused by {t}")
+                    return StructType()
+                pass
             case _:
                 self.logger.warning(f"Trying to extract type for unsupported DIE: {t}")
                 return None

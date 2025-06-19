@@ -49,9 +49,6 @@ class RV32IMAFDC_zicsr_zifencei(RV32IC):
         return rv
 
     def fetch_struct_return_value(self, entry) -> List[Any]:
-        return self.form_struct_return_values(entry)
-
-    def form_struct_return_values(self, entry) -> List[Any]:
         """
         Extracts and decodes the return value of a function that returns a struct,
         according to the RISC-V ABI rules for struct returns.
