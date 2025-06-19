@@ -8,6 +8,7 @@ from src.entity.dwarf.formal_parameter import FormalParameter
 from src.entity.dwarf.global_variable import GlobalVariable
 from src.entity.dwarf.local_variable import LocalVariable
 from src.entity.dwarf.march_manager import MArchManager
+from src.entity.dwarf.types import StructType, ArrayType
 from src.exception.pipeline_exceptions import VerificationProcessException
 from src.util.gcc_dwarf_rv_mapper import GccDwarfMapper
 
@@ -126,26 +127,29 @@ class SimulationDataEntry:
     def add_dwarf_info(self, dwarf_info: DwarfInfo):
         self.dwarf_info = dwarf_info
 
-
     def get_last_writes_to_global_var_locations(self) -> Dict[str, Dict[str, Any]]:
         last_writes = {}
         for var in self.global_variables:
-            if var.has_more_than_one_element() or var.is_struct():
-                # Handle array dwrite addresses
-                n_of_elements = var.get_number_of_elements()
-                byte_size = var.type_info.get_base().byte_size
-                var_name = var.get_name()
-                loc = var.get_location_value()
-                for idx in range(n_of_elements):
-                    if loc in self.dwrites:
-                        last_writes[f"{var_name}[{idx}]"] = self.dwrites[loc][-1]
-                    loc = hex(int(loc, 16) +  byte_size)[2:]
-            else:
-                loc = var.get_location_value()
-                # Handle variable with single memory location
-                if loc in self.dwrites:
-                    last_writes[var.get_name()] = self.dwrites[loc][-1]
-
+            var_type = var.type_info
+            loc = var.get_location_value()
+            match var_type:
+                case ArrayType():
+                    n_of_elements = var.get_number_of_elements()
+                    byte_size = var.type_info.get_base().byte_size
+                    var_name = var.get_name()
+                    loc = var.get_location_value()
+                    for idx in range(n_of_elements):
+                        if loc in self.dwrites:
+                            last_writes[f"{var_name}:{idx}"] = self.dwrites[loc][-1]
+                        loc = hex(int(loc, 16) + byte_size)[2:]
+                case _:
+                    var_name = var.get_name()
+                    byte_size = var_type.get_range()
+                    mem_blocks = ceil(byte_size / self.xlen_bytes)
+                    for idx in range(mem_blocks):
+                        if loc in self.dwrites:
+                            last_writes[f"{var_name}:{idx}"] = self.dwrites[loc][-1]
+                        loc = hex(int(loc, 16) + self.xlen_bytes)[2:]
         return last_writes
 
     def get_last_writes_to_mem_range(self, mem_start, bytes) -> List[Any]:
@@ -195,7 +199,7 @@ class SimulationDataEntry:
         if global_var_dwrites:
             output += "  > Final data writes to global variable(s) before epilogue:\n"
             for var_name, last_dwrite in global_var_dwrites.items():
-                output += f"    | {var_name}:\t<pc: {last_dwrite['pc']}\tdata: {last_dwrite['data']}\taddress: {last_dwrite['location']}>\n"
+                output += f"    | <{var_name}>:\t<pc: {last_dwrite['pc']}\tdata: {last_dwrite['data']}\taddress: {last_dwrite['location']}>\n"
         else:
             output += f"  > No data writes to global variables\n"
         if self.epilogue:

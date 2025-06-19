@@ -39,7 +39,7 @@ class BaseType(AbstractType):
 
 @dataclass
 class ConstType(AbstractType):
-    const_type: AbstractType
+    const_type: Optional[AbstractType]
 
     def get_base(self) -> namedtuple:
         return self.const_type.get_base()
@@ -51,10 +51,24 @@ class ConstType(AbstractType):
         base_str = str(self.const_type) if self.const_type is not None else '<type unknown>'
         return f"const {base_str}"
 
+@dataclass
+class VolatileType(AbstractType):
+    vol_type: Optional[AbstractType]
+
+    def get_base(self) -> namedtuple:
+        return self.vol_type.get_base()
+
+    def get_range(self) -> int:
+        return self.vol_type.get_range()
+
+    def __str__(self):
+        base_str = str(self.vol_type) if self.vol_type is not None else '<type unknown>'
+        return f"volatile {base_str}"
+
 
 @dataclass
 class TypeDef(AbstractType):
-    base_type: AbstractType
+    base_type: Optional[AbstractType]
     name: Optional[str] = None
 
     def get_base(self) -> namedtuple:

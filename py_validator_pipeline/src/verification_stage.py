@@ -1,4 +1,6 @@
 import logging
+from collections import defaultdict
+from typing import Dict, Any
 
 from src.entity.dwarf.march_manager import MArchManager
 from src.entity.dwarf.types import AbstractType, BaseType, StructType, UnionType
@@ -99,13 +101,34 @@ class VerificationStage:
                     result += section + 'FAIL\n'
                     result += f"      data mismatch in variable {var_name}: {entry['data']} != {entry_uv_global_variable_values[var_name]['data']}\n"
         else:
-            result += section + 'FAIL\n'
-            result += "      number of variables do not match\n"
-
+            # Try to match values when different number of writes
+            golden_ref_data = self.normalize_variable_data(entry_gr_global_var_values)
+            isuv_data = self.normalize_variable_data(entry_uv_global_variable_values)
+            for name, value in golden_ref_data.items():
+                if name not in isuv_data:
+                    result += f"      variable {name} was written to in golden reference trace, but no data write found in other trace.\n"
+                if value != isuv_data[name]:
+                    result += f"      data mismatch in variable {name}: golden_ref={value} != isuv={isuv_data[name]}\n"
         if not result:
             result += section + 'OK\n'
         return result
 
+    @staticmethod
+    def normalize_variable_data(var_entries):
+        normalized = defaultdict(list)
+        result: Dict[str, bytes] = {}
+
+        for key, value in var_entries.items():
+            name, idx = key.split(':')
+            address = int(value['location'], 16)
+            data = bytes.fromhex(value['data'].zfill(len(value['data']) + len(value['data']) % 2))
+            normalized[name].append((address, data))
+
+        for name in normalized:
+            normalized[name].sort(key=lambda x: x[0])
+            result[name] = b''.join(chunk for _, chunk in normalized[name])
+
+        return result
 
     def compare_epilogues(self, entry_gr_epilogue, entry_uv_epilogue) -> str:
         section = "  | Function epilogue"

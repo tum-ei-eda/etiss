@@ -37,7 +37,7 @@ from src.entity.dwarf.local_variable import LocalVariable
 
 from src.entity.dwarf.types import (
     AbstractType, ArrayType, BaseType, PointerType,
-    StructMember, StructType, ConstType, TypeDef, UnionType, UnionMember
+    StructMember, StructType, ConstType, TypeDef, UnionType, UnionMember, VolatileType
 )
 from src.entity.dwarf.var_and_param_base import VarAndParamBase
 
@@ -501,7 +501,15 @@ class DwarfInfoExtractor:
                     return ConstType(const_type=const_type)
                 except Exception as e:
                     self.logger.error(f"Exception: {e}, caused by {t}")
-                    return ConstType()
+                    return ConstType(const_type=None)
+            case 'DW_TAG_volatile_type':
+                try:
+                    pt = t.get_DIE_from_attribute('DW_AT_type')
+                    vol_type = self._extract_type_rec(pt)
+                    return VolatileType(vol_type=vol_type)
+                except Exception as e:
+                    self.logger.error(f"Exception: {e}, caused by {t}")
+                    return VolatileType(vol_type=None)
             case 'DW_TAG_typedef':
                 try:
                     pt = t.get_DIE_from_attribute('DW_AT_type')
@@ -510,7 +518,7 @@ class DwarfInfoExtractor:
                     return TypeDef(name=name, base_type=base_type)
                 except Exception as e:
                     self.logger.error(f"Exception: {e}, caused by {t}")
-                    return TypeDef()
+                    return TypeDef(base_type=None)
             case 'DW_TAG_structure_type':
                 try:
                     self.logger.debug(f"case DW_TAG_structure_type. Name: {t.attributes['DW_AT_name'].value.decode('utf-8')}")
