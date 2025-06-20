@@ -10,7 +10,7 @@ from src.entity.dwarf.local_variable import LocalVariable
 from src.entity.dwarf.march_manager import MArchManager
 from src.entity.dwarf.types import StructType, ArrayType
 from src.exception.pipeline_exceptions import VerificationProcessException
-from src.util.gcc_dwarf_rv_mapper import GccDwarfMapper
+from src.util.gcc_dwarf_rv_mapper import GccDwarfMapperForRV32
 
 
 class SimulationDataEntry:
@@ -43,7 +43,7 @@ class SimulationDataEntry:
         self.march_manager = MArchManager()
 
         # TODO: in future support other compilers
-        self.mapper = GccDwarfMapper()
+        self.mapper = GccDwarfMapperForRV32()
 
         self.comparison_line_lenght = 90
         self.xlen_bytes = 4

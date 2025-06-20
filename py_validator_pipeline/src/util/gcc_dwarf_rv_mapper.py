@@ -1,8 +1,16 @@
 from typing import Dict
 
 
-class GccDwarfMapper:
+class GccDwarfMapperForRV32:
+    """
+    Maps GCC-generated DWARF base types to RV32-specific type classifications and sizes.
 
+    This mapping provides sufficient information to determine how function return values
+    are passed (e.g., via registers or memory) based on the RV32 architecture's calling conventions.
+
+    The class offers methods to translate DWARF base type names into normalized type categories
+    and their corresponding byte sizes, facilitating consistent handling during verification.
+    """
 
     _gcc_dwarf_rv_mapper: Dict[str, str] = {
         "char": "int",

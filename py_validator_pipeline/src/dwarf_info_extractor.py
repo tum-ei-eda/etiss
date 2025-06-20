@@ -149,9 +149,10 @@ class DwarfInfoExtractor:
                 # print(f"| {indent_level}name={Path(top_DIE.get_full_path()).as_posix()}")
 
                 file = os.path.basename(Path(top_DIE.get_full_path()).as_posix())
+                source_for_comparison = os.path.basename(Path(self.source_file).as_posix())
 
                 # We are only interested in the CU for a specific source file
-                if not file == self.source_file:
+                if not file == source_for_comparison:
                     continue
 
                 self.logger.debug(f"{file}, offset: {CU.cu_offset}, length: {CU['unit_length']}\n")
@@ -629,13 +630,14 @@ class DwarfInfoExtractor:
         TODO:
             Add validation or error handling for robustness.
         """
-        cf_section = di_context_object.CFI_entries()
-        for entry in cf_section:
-            if isinstance(entry, FDE) and extracted_di.has_subprogram_with_pc_as_low_pc(entry['initial_location']):
-                self.logger.debug(
-                    f"Extracting frame base information for entry: PC {entry['initial_location']:x}..{entry['initial_location'] + entry['address_range']:x}")
-                instructions = entry.get_decoded().table
+        if di_context_object.debug_frame_sec:
+            cf_section = di_context_object.CFI_entries()
+            for entry in cf_section:
+                if isinstance(entry, FDE) and extracted_di.has_subprogram_with_pc_as_low_pc(entry['initial_location']):
+                    self.logger.debug(
+                        f"Extracting frame base information for entry: PC {entry['initial_location']:x}..{entry['initial_location'] + entry['address_range']:x}")
+                    instructions = entry.get_decoded().table
 
-                for row in instructions:
-                    extracted_di.add_frame_base_info(
-                        FrameBaseInfo(row['pc'], row['cfa'].reg, row['cfa'].offset), entry['initial_location'])
+                    for row in instructions:
+                        extracted_di.add_frame_base_info(
+                            FrameBaseInfo(row['pc'], row['cfa'].reg, row['cfa'].offset), entry['initial_location'])

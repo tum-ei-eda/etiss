@@ -8,13 +8,13 @@ from math import ceil
 
 from src.entity.dwarf.types import StructType, BaseType, UnionType
 from src.entity.march.march_base import MArchBase
-from src.entity.verification.rv32register import RV32Register
+from src.entity.verification.rv32returnregisterlayout import RV32ReturnRegisterLayout
 from src.entity.verification.struct_reg_data_types import (
     Bitfield, Float, Integer, StructRegDataTypes
 )
-from src.util.gcc_dwarf_rv_mapper import GccDwarfMapper
+from src.util.gcc_dwarf_rv_mapper import GccDwarfMapperForRV32
 from src.exception.pipeline_exceptions import VerificationProcessException
-from src.entity.verification import rv32register
+from src.entity.verification import rv32returnregisterlayout
 
 class RV32IC(MArchBase, ABC):
     """
@@ -24,7 +24,7 @@ class RV32IC(MArchBase, ABC):
     def __init__(self):
         super().__init__()
         self.logger = logging.getLogger(__name__)
-        self.mapper = GccDwarfMapper()
+        self.mapper = GccDwarfMapperForRV32()
         # For RV32 this is 8 bytes
         self.max_register_struct_size = 8
         self.xlen = 32
@@ -183,31 +183,31 @@ class RV32IC(MArchBase, ABC):
                         rv.append(self.fetch_double_return_value(entry=entry, reg=reg_val))
         return rv
 
-    def compute_struct_values(self, elements: List[StructRegDataTypes]) -> Optional[List[RV32Register]]:
+    def compute_struct_values(self, elements: List[StructRegDataTypes]) -> Optional[List[RV32ReturnRegisterLayout]]:
 
-        regs: List[RV32Register] = []
-        active_reg: Optional[RV32Register] = RV32Register(xlen=self.xlen)
+        regs: List[RV32ReturnRegisterLayout] = []
+        active_reg: Optional[RV32ReturnRegisterLayout] = RV32ReturnRegisterLayout(xlen=self.xlen)
 
         for e in elements:
             if not active_reg:
-                active_reg = RV32Register(xlen=self.xlen)
+                active_reg = RV32ReturnRegisterLayout(xlen=self.xlen)
             match e:
                 case Bitfield():
                     if not active_reg.has_room_for_bitfield(bits_to_reserve=e.bit_size, alignment_bytes=e.alignment):
                         regs.append(active_reg)
-                        active_reg = RV32Register(xlen=self.xlen)
+                        active_reg = RV32ReturnRegisterLayout(xlen=self.xlen)
                     active_reg.add_bitfield(e)
                 case Float():
                     if not active_reg.is_empty():
                         regs.append(active_reg)
-                    float_reg = RV32Register(xlen=self.xlen, float=True)
+                    float_reg = RV32ReturnRegisterLayout(xlen=self.xlen, float=True)
                     float_reg.add_float(e)
                     regs.append(float_reg)
                     active_reg = None
                 case Integer():
                     if not active_reg.has_room_for_int(e.byte_size):
                         regs.append(active_reg)
-                        active_reg = RV32Register(xlen=self.xlen)
+                        active_reg = RV32ReturnRegisterLayout(xlen=self.xlen)
                     active_reg.add_int(e)
 
         if active_reg and not active_reg.is_empty():
@@ -268,7 +268,7 @@ class RV32IC(MArchBase, ABC):
             f"Return values do not fit in the argument registers of this architecture. Extracting {byte_size} bytes starting from address {hex(addr)}")
         return entry.get_last_writes_to_mem_range(addr, byte_size)
 
-    def resolve_struct_memory_values(self, regs: List[RV32Register], mem_vals: List[str]) -> List[Any]:
+    def resolve_struct_memory_values(self, regs: List[RV32ReturnRegisterLayout], mem_vals: List[str]) -> List[Any]:
         resolved_values = []
         rv_bytes = ''.join(mem_vals)  # Flat hex string, 2 chars per byte
         idx = 0

@@ -3,9 +3,23 @@ import subprocess
 
 logger = logging.getLogger(__name__)
 
-def run_etiss_simulation(etiss_path, bare_metal_etiss, ini_file, debug_enabled):
+def run_etiss_simulation(etiss_path: str, bare_metal_etiss: str, ini_file: str, debug_enabled: bool):
     """
-        This module handles ETISS simulation runs by invoking a subprocess
+    Run a bare-metal ETISS simulation using a specified binary and configuration.
+
+    This function constructs and executes a command-line call to an ETISS-based simulator,
+    using the provided binary and `.ini` configuration file. It captures the subprocess
+    output and optionally prints it if debugging is enabled.
+
+    Args:
+        etiss_path: Path to the ETISS build or installation directory.
+        bare_metal_etiss: The name of the bare-metal simulator executable to run.
+        ini_file: Path to the `.ini` configuration file used by the simulator.
+        debug_enabled: If True, prints the full output of the simulation to stdout.
+
+    Raises:
+        Exception: If the subprocess fails to execute successfully, or if the binary
+                   is not found. Provides basic diagnostics on failure.
     """
     cmd = [
         f"{etiss_path}/{bare_metal_etiss}",

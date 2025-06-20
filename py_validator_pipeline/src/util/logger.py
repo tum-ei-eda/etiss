@@ -2,6 +2,18 @@ import logging
 
 
 def init_logger(debug: bool = False) -> None:
+    """
+    Initialize the root logger with console and file handlers.
+
+    Args:
+        debug (bool): If True, set logging level to DEBUG; otherwise INFO.
+
+    Behavior:
+        - Clears existing handlers to avoid duplicate logs.
+        - Logs to both console and 'verification_report.log' file.
+        - Formats logs with timestamp, level, filename, line number, and message.
+    """
+
     # Clear existing handlers (if running multiple times, like in Jupyter or REPL)
     logging.basicConfig(datefmt='%Y-%m-%dT%H:%M:%S')
     root_logger = logging.getLogger()  # root logger
@@ -14,7 +26,7 @@ def init_logger(debug: bool = False) -> None:
     root_logger.handlers.clear()
 
     # File handler
-    file_handler = logging.FileHandler('pyelftools_test.log')
+    file_handler = logging.FileHandler('verification_report.log')
 
     # Console handler
     console_handler = logging.StreamHandler()
