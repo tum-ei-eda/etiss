@@ -8,7 +8,7 @@ from src.entity.dwarf.formal_parameter import FormalParameter
 from src.entity.dwarf.global_variable import GlobalVariable
 from src.entity.dwarf.local_variable import LocalVariable
 from src.entity.dwarf.march_manager import MArchManager
-from src.entity.dwarf.types import StructType, ArrayType
+from src.entity.dwarf.types import ArrayType
 from src.exception.pipeline_exceptions import VerificationProcessException
 from src.util.gcc_dwarf_rv_mapper import GccDwarfMapperForRV32
 

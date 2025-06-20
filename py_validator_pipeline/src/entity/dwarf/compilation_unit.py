@@ -14,8 +14,8 @@ class CompileUnit:
 
     def extract_core_information(self, producer: str, little_endian: bool) -> None:
         """
-            In the initial test setting we can assume producer to have
-            parameters mabi, march and misa-spec.
+        In the initial test setting we can assume producer to have
+        parameters mabi, march and misa-spec.
         """
         pattern = r'-mabi=([^\s]+)|-march=([^\s]+)|-misa-spec=([^\s]+)'
 
@@ -34,7 +34,7 @@ class CompileUnit:
 
     def __str__(self) -> str:
         """
-            String representation of CompileUnit
+        String representation of CompileUnit
         """
         output = ""
         output += f"{self.indent*' '}┌ Architecture: {self.march}\n"

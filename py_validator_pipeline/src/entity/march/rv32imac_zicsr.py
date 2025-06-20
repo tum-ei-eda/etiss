@@ -1,10 +1,7 @@
 import struct
-from math import ceil
-from typing import Any, Literal, List, Tuple, Optional
-from unittest import case
+from typing import Any, Literal, List
 
 from src.entity.march.rv32ic import RV32IC
-from src.entity.verification.struct_reg_data_types import StructRegDataTypes, Bitfield, Float, Integer
 from src.exception.pipeline_exceptions import OutOfRegistersException
 
 class RV32IMAC_zicsr(RV32IC):
@@ -14,8 +11,8 @@ class RV32IMAC_zicsr(RV32IC):
 
     def fetch_float_return_value(self, entry, reg='a0') -> Any:
         """
-            In rv32imac_zicsr, float return value is stored in register a0
-            as a 32-bit raw bit pattern. Convert it to Python float.
+        In rv32imac_zicsr, float return value is stored in register a0
+        as a 32-bit raw bit pattern. Convert it to Python float.
         """
         rv = None
 
@@ -32,8 +29,8 @@ class RV32IMAC_zicsr(RV32IC):
 
     def fetch_double_return_value(self, entry, reg='') -> Any:
         """
-            In RV32IMAC double return value is stored in registers a0 (lower 32 bits)
-            and a1 (upper 32 bits)
+        In RV32IMAC double return value is stored in registers a0 (lower 32 bits)
+        and a1 (upper 32 bits)
         """
         return self._form_64_bit_value_from_regs_a0_and_a1(entry)
 

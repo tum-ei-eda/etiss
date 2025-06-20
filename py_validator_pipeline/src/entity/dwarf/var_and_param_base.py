@@ -1,9 +1,8 @@
 import logging
 from abc import ABC, abstractmethod
-from collections import namedtuple
-from typing import Any, Tuple
+from typing import Any
 
-from src.entity.dwarf.types import AbstractType, BaseType, StructType, ConstType, ArrayType, UnionType, StructMember
+from src.entity.dwarf.types import AbstractType, StructType, UnionType, StructMember
 
 
 class VarAndParamBase(ABC):

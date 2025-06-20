@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import List, Tuple, Optional
+from typing import List, Tuple
 from math import ceil
 
 from src.entity.verification.struct_reg_data_types import Bitfield, Integer, Float

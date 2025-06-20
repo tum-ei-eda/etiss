@@ -1,10 +1,8 @@
 from collections import namedtuple
-from abc import ABC, abstractmethod
+from abc import ABC
 from typing import Any, List, Dict, Tuple, Optional, Union
 import logging
 import struct
-from math import ceil
-
 
 from src.entity.dwarf.types import StructType, BaseType, UnionType
 from src.entity.march.march_base import MArchBase
@@ -14,11 +12,11 @@ from src.entity.verification.struct_reg_data_types import (
 )
 from src.util.gcc_dwarf_rv_mapper import GccDwarfMapperForRV32
 from src.exception.pipeline_exceptions import VerificationProcessException
-from src.entity.verification import rv32returnregisterlayout
 
 class RV32IC(MArchBase, ABC):
     """
-        A base class for
+    A base class for supported RV32IC architecture with
+    possible extensions
     """
 
     def __init__(self):
@@ -32,7 +30,7 @@ class RV32IC(MArchBase, ABC):
 
     def fetch_int_return_value(self, entry, reg='a0') -> Any:
         """
-            In RV32 int (32-bit) return value is stored in register a0
+        In RV32 int (32-bit) return value is stored in register a0
         """
         rv = None
         cjr = self.fetch_cjr_instruction(entry.epilogue)
@@ -44,8 +42,8 @@ class RV32IC(MArchBase, ABC):
 
     def fetch_long_long_return_value(self, entry) -> Any:
         """
-            In RV32IMAC long long return value is stored in registers
-            a0 (lower 32 bits) and a1 (upper 32 bits)
+        In RV32IMAC long long return value is stored in registers
+        a0 (lower 32 bits) and a1 (upper 32 bits)
         """
         return self._form_64_bit_value_from_regs_a0_and_a1(entry)
 

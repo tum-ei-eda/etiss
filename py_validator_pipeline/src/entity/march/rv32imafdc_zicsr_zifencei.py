@@ -1,8 +1,7 @@
 import struct
-from typing import Any, Literal, Optional, Tuple, List
+from typing import Any, Literal, List
 
 from src.entity.march.rv32ic import RV32IC
-from src.entity.verification.struct_reg_data_types import Bitfield, Float, Integer, StructRegDataTypes
 from src.exception.pipeline_exceptions import OutOfRegistersException
 
 class RV32IMAFDC_zicsr_zifencei(RV32IC):

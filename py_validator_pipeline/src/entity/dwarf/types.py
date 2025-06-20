@@ -1,6 +1,6 @@
 from collections import namedtuple
 from dataclasses import dataclass, field
-from typing import Optional, List, Union
+from typing import Optional, List
 from abc import ABC, abstractmethod
 
 

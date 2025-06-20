@@ -11,7 +11,7 @@ from src.exception.pipeline_exceptions import DWARFExtractionException
 
 class DwarfInfo:
     """
-        A collection of data extracted from the DWARF debugging information
+    A collection of data extracted from the DWARF debugging information
     """
     def __init__(self) -> None:
         self.logger = logging.getLogger(__name__)
@@ -88,7 +88,7 @@ class DwarfInfo:
 
     def __str__(self) -> str:
         """
-            A string representation of the extracted DWARF info
+        A string representation of the extracted DWARF info
         """
         output = "DWARF debug information overview\n"
         output += f"  | Binary: {self._binary_name}\n"
