@@ -1,13 +1,62 @@
-# Description
+# ETISS-GTS PIPELINE
 
-The purpose of this script is to extract selected information regarding a selected subprogram from DWARF debugging information.  
+  
 
+## Installation 
 
-The goal is to extract the following:  
-- subprogram: name, type
-  - local variables: name, type
-  - global variables (static, eternal): name, type
-  - parameters: name, type
+The recommended approach is to first create a virtual environment with 
+```bash
+python3 -m venv venv
+```
+Activate the virtual environment:
+
+```bash
+source /venv/bin/activate
+```
+
+Install dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+## Getting started
+
+This bash script template provides a useful starting point for running the verification pipeline:
+
+```bash 
+#!/bin/bash
+DEBUG_ARG=""
+PROGRAM_NAME="prog.o"
+SOURCE_FILE="main.c"
+FUNCTION_OF_INTEREST="main"
+
+# Check if first argument is --debug
+if [[ "$1" == "--debug" ]]; then
+    DEBUG_ARG="--debug"
+fi
+
+python3 /home/holaphei/repos/etiss-fork/etiss/py_validator_pipeline/main.py \
+    --bin_golden_ref /<path_to_golden_ref_binary>/$PROGRAM_NAME \
+    --ini_golden_ref /<path_to_golden_ref_ini>/$PROGRAM_NAME.ini \
+    --bin_isuv /<path_to_binary_to_verify>/$PROGRAM_NAME \
+    --ini_isuv /<path_to_ini_file_of_the_binary_to_verify>/$PROGRAM_NAME.ini \
+    --src $SOURCE_FILE.c \
+    --fun $FUNCTION_OF_INTEREST \
+    --etiss_path /home/holaphei/repos/etiss-fork/etiss/build/bin \
+    --etiss_executable bare_etiss_processor \
+    $DEBUG_ARG
+```
+
+Explanations:
+- `bin_golden_ref`: the golden reference binary to simulate on ETISS
+- `ini_golden_ref`: the .ini - file for ETISS simulation for the golden reference
+- `bin_isuv`: the binary under verification to simulate on ETISS
+- `ini_isuv`: the .ini - file for ETISS simulation for the binary under verification
+- `src`: Source code file from the binary in which the function of interest resides
+- `fun`: function of interest
+- `etiss_path`: absolute path to etiss executable
+- `etiss_executable`: name of the etiss executable binary
+
 
 
 The script is based on `dwarf_die_tree.py` example in the pyelftools remote repository: https://github.com/eliben/pyelftools
