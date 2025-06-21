@@ -1,6 +1,6 @@
 # ETISS-GTS PIPELINE
 
-  
+: add introduction and links to relevant documentation. Is there a need to add a lisence here?   
 
 ## Installation 
 
@@ -57,6 +57,16 @@ Explanations:
 - `etiss_path`: absolute path to etiss executable
 - `etiss_executable`: name of the etiss executable binary
 
+Bash-script variables:
+- `DEBUG_ARG`: as a convenience pipeline can be run in debug mode by adding the argument `--debug`. In debug mode more detailed output is printed to console and to log file.
+- `PROGRAM_NAME`: if the binary name and the ini-file name (excluding extension .ini) are identical, the program name can be used to quickly set the binary to execute
+- `SOURCE_FILE`: defines which source file in the compiled binary is of interest
+- `FUNCTION_OF_INTEREST`: defines the function to be verified. 
+
+Example usage: 
+```bash
+./<script-name> --debug
+```
 
 
-The script is based on `dwarf_die_tree.py` example in the pyelftools remote repository: https://github.com/eliben/pyelftools
+
