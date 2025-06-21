@@ -630,7 +630,7 @@ class DwarfInfoExtractor:
         TODO:
             Add validation or error handling for robustness.
         """
-        if di_context_object.debug_frame_sec:
+        if di_context_object.has_CFI():
             cf_section = di_context_object.CFI_entries()
             for entry in cf_section:
                 if isinstance(entry, FDE) and extracted_di.has_subprogram_with_pc_as_low_pc(entry['initial_location']):

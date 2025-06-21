@@ -3,6 +3,7 @@ from typing import List, Tuple
 from math import ceil
 
 from src.entity.verification.struct_reg_data_types import Bitfield, Integer, Float
+from src.exception.pipeline_exceptions import VerificationProcessException
 
 
 @dataclass
@@ -37,28 +38,37 @@ class RV32ReturnRegisterLayout:
         Returns:
             True if the bitfield can be packed in the current word; False otherwise.
         """
+        # Convert bytes to bits
         alignment_bits = alignment_bytes * 8
+
+        # Initialize current offset
         current_bit_offset = 0
 
         if self.data:
+            # If previous data exists, offset is now the
+            # first available bit after last reserved bit
             last_end_bit = self.data[-1][1]
             current_bit_offset = last_end_bit + 1
 
-        # Check if the bit value crosses the alignment boundary
-        aligned_base = (current_bit_offset // alignment_bits) * alignment_bits
         # Padding can cross alignment boundary
         bits_to_consider = bits_to_reserve
-        if bits_to_reserve > alignment_bits:
+        if bits_to_reserve > alignment_bits and current_bit_offset + bits_to_reserve < self.xlen:
             bits_to_consider = alignment_bits
 
         end_of_field = current_bit_offset + bits_to_consider - 1
 
         crosses_boundary = (end_of_field // alignment_bits) != (current_bit_offset // alignment_bits)
 
+        if crosses_boundary:
+            # Adjust to start at next alignment
+            current_bit_offset = (current_bit_offset // alignment_bits) * alignment_bits + alignment_bits
+            end_of_field = current_bit_offset + bits_to_consider - 1
+
+
         # Make sure bits fit in to the register
         fits_in_register = end_of_field < self.xlen
 
-        return not crosses_boundary and fits_in_register
+        return fits_in_register
 
 
     def crosses_alignment_boundary(self, bits_to_reserve: int, alignment_bytes: int) -> bool:
@@ -85,7 +95,7 @@ class RV32ReturnRegisterLayout:
 
         # Padding can cross alignment boundary
         bits_to_consider = bits_to_reserve
-        if bits_to_reserve > alignment_bits:
+        if bits_to_reserve > alignment_bits and current_bit_offset + bits_to_reserve < self.xlen:
             bits_to_consider = alignment_bits
 
         end_of_field = current_bit_offset + bits_to_consider - 1
@@ -124,21 +134,18 @@ class RV32ReturnRegisterLayout:
 
         Side Effects:
             Updates the internal data structure with the bitfield's start and end bit positions.
-
-
-        TODO:
-            Use `has_room_for_bitfield()` or an appropriate capacity check to verify that the bitfield fits
-            before appending it. If it does not fit, raise an exception instead of silently overflowing.
-            This method is called externally and must enforce register bounds safety.
         """
         start_bit = 0
-        if self.crosses_alignment_boundary(bits_to_reserve=e.bit_size, alignment_bytes=e.alignment):
-            res_bits = e.bit_size if e.bit_size <= e.alignment * 8 else e.alignment * 8
-            start_bit = self._get_aligned_start_bit(alignment_bytes=e.alignment, bits_to_reserve=res_bits)
+        if self.has_room_for_bitfield(bits_to_reserve=e.bit_size, alignment_bytes=e.alignment):
+            if self.crosses_alignment_boundary(bits_to_reserve=e.bit_size, alignment_bytes=e.alignment):
+                res_bits = e.bit_size if e.bit_size <= e.alignment * 8 else e.alignment * 8
+                start_bit = self._get_aligned_start_bit(alignment_bytes=e.alignment)
+            else:
+                if self.data:
+                    start_bit = self.data[-1][1] + 1
+            self.data.append((start_bit, start_bit + e.bit_size - 1))
         else:
-            if self.data:
-                start_bit = self.data[-1][1] + 1
-        self.data.append((start_bit, start_bit + e.bit_size - 1))
+            raise VerificationProcessException("Trying to add bitfield, but there is not enough room in register layout.")
 
     def add_int(self, e: Integer) -> None:
         """
@@ -152,20 +159,20 @@ class RV32ReturnRegisterLayout:
 
         Side Effects:
             Updates the internal data structure with the integer's start and end bit positions.
-
-        TODO:
-            Use `has_room_for_int()` or an appropriate capacity check to verify that the bitfield fits
-            before appending it. If it does not fit, raise an exception instead of silently overflowing.
-            This method is called externally and must enforce register bounds safety.
         """
         start_bit = 0
-        if self.crosses_alignment_boundary(bits_to_reserve=e.byte_size, alignment_bytes=e.byte_size):
-            start_bit = self._get_aligned_start_bit(e.byte_size, e.byte_size)
+
+        if self.has_room_for_int(byte_size=e.byte_size):
+            if self.crosses_alignment_boundary(bits_to_reserve=e.byte_size, alignment_bytes=e.byte_size):
+                start_bit = self._get_aligned_start_bit(e.byte_size)
+            else:
+                if self.data:
+                    start_bit = self.data[-1][1] + 1
+            int_bits = e.byte_size * 8
+            self.data.append((start_bit, start_bit + int_bits - 1))
         else:
-            if self.data:
-                start_bit = self.data[-1][1] + 1
-        int_bits = e.byte_size * 8
-        self.data.append((start_bit, start_bit + int_bits - 1))
+            raise VerificationProcessException(
+                "Trying to add an int, but there is not enough room in register layout.")
 
 
     def add_float(self, e: Float) -> None:
@@ -197,7 +204,7 @@ class RV32ReturnRegisterLayout:
         return (self.data[-1][1] + 1) // 8
 
 
-    def _get_aligned_start_bit(self, alignment_bytes: int, bits_to_reserve: int) -> int:
+    def _get_aligned_start_bit(self, alignment_bytes: int) -> int:
         """
         Calculates the next aligned bit position for placing a new value that
         crosses an alignment boundary.
@@ -210,7 +217,6 @@ class RV32ReturnRegisterLayout:
 
         Args:
             alignment_bytes (int): Alignment requirement in bytes.
-            bits_to_reserve (int): Number of bits that need to be reserved for the value.
 
         Returns:
             int: Bit offset at which the value should be placed, aligned as required.
@@ -218,9 +224,7 @@ class RV32ReturnRegisterLayout:
         alignment_bits: int = alignment_bytes * 8
         aligned_start_bit: int = 0
         if self.data:
-            aligned_start_bit = ceil(self.data[-1][1] / alignment_bits) * alignment_bits
-            if aligned_start_bit >= self.xlen or aligned_start_bit + bits_to_reserve >= self.xlen:
-                aligned_start_bit = 0
+            aligned_start_bit = ceil((self.data[-1][1] + 1 )/ alignment_bits) * alignment_bits
         return aligned_start_bit
 
     def is_empty(self) -> bool:

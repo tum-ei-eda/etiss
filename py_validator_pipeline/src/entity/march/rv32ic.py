@@ -6,7 +6,7 @@ import struct
 
 from src.entity.dwarf.types import StructType, BaseType, UnionType
 from src.entity.march.march_base import MArchBase
-from src.entity.verification.rv32returnregisterlayout import RV32ReturnRegisterLayout
+from src.entity.verification.rv32_return_register_layout import RV32ReturnRegisterLayout
 from src.entity.verification.struct_reg_data_types import (
     Bitfield, Float, Integer, StructRegDataTypes
 )
