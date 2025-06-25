@@ -150,7 +150,7 @@ extern "C"
             return new etiss::plugin::ISAExtensionValidator();
         case 5:
             // TODO: snapshot_content is not needed, providing output path should be considered more in detail
-            return new InstructionTracer("", "snapshot-activity.log");
+            return new InstructionTracer();
         }
         return 0;
     }
@@ -161,10 +161,6 @@ extern "C"
 
     void ETISSINCLUDED_deletePlugin(etiss::Plugin *o)
     {
-        // check if it's a CJRTracer
-        if (auto tracer = dynamic_cast<InstructionTracer*>(o)) {
-            tracer->writeToDisk();
-        }
         delete o;
     }
 }

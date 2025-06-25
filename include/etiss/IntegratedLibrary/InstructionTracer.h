@@ -14,17 +14,8 @@
 class InstructionTracer : public etiss::plugin::InstructionSpecificAddressCallback
 {
 public:
-    // TODO: think of whether these params are needed
-    /**
-      * @param snapshot_content  optional initial content to put into the in-memory log
-      * @param output_path       file that will receive the log when the plugin is destroyed
-      */
-    InstructionTracer(const std::string &snapshot_content = "",
-              const std::string &output_path      = "snapshot-activity.log");
+    InstructionTracer();
 
-    ~InstructionTracer() override;          ///< automatically flushes to disk
-
-    void writeToDisk();            ///< can be called manually, too
 
 private:
     /* immutable after construction */

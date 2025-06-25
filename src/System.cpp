@@ -116,7 +116,8 @@ static etiss_int32 system_call_dwrite(void *handle, ETISS_CPU *cpu, etiss_uint64
         ss << "\"byte_size\": " << std::dec << length;
         ss << "}\n";
 
-        InMemoryTracerBuffer::instance().append(ss.str());
+        InMemoryTracerBuffer::instance().writeToDisk(ss.str());
+
     }
 
 

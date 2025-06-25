@@ -31,10 +31,7 @@ std::unordered_set<std::string> instructions_to_snapshot = {"cjr", "cswsp"};
 etiss_uint32 low_pc = 0;
 etiss_uint32 high_pc = 0;
 
-InstructionTracer::InstructionTracer(const std::string &snapshot_content,
-                     const std::string &output_path)
-    :   output_path_(output_path),
-        snapshot_content_(snapshot_content)
+InstructionTracer::InstructionTracer()
 
 {
 
@@ -74,24 +71,6 @@ InstructionTracer::InstructionTracer(const std::string &snapshot_content,
 
 }
 
-/*
- * In destructor, we call the writeToDisk function to
- * write buffer information to disk
- *
- */
-InstructionTracer::~InstructionTracer()
-{
-    /* make sure we never throw from a destructor */
-    try { writeToDisk(); }
-    catch (const std::exception &e)
-    {
-        std::cerr << "InstructionTracer: Write to disk failed - " << e.what() << std::endl;
-    }
-    catch (...)
-    {
-        std::cerr << "InstructionTracer: Write to disk failed - unknown exception" << std::endl;
-    }
-}
 
 
 /*
@@ -160,26 +139,6 @@ void InstructionTracer::initCodeBlock(etiss::CodeBlock &block ) const
 };
 
 
-void InstructionTracer::writeToDisk()
-{
-    std::lock_guard<std::mutex> guard(mutex_);
-
-    if (output_path_.empty())
-        return;   // silently ignore if no file requested
-
-    std::ofstream out(output_path_, std::ios::out | std::ios::trunc);
-    if (!out)
-    {
-        etiss::log(etiss::ERROR,
-                   "InstructionTracer: cannot open output file '" + output_path_ + '\'');
-        return;
-    }
-
-    out << InMemoryTracerBuffer::instance().str();
-    out.flush();
-}
-
-
 
 /*
  * functions that are brought in to C code blocks as extern functions. At their current state
@@ -204,10 +163,7 @@ extern "C"
     void InstructionTracer_collect_state(RV32IMACFD* cpu, const char *instruction)
     {
 
-
         std::string inst = instruction;
-
-
 
         const etiss_uint32 pc = static_cast<etiss_uint32>(reinterpret_cast<ETISS_CPU *>(cpu)->instructionPointer);
 
