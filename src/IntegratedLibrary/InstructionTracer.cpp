@@ -38,14 +38,18 @@ InstructionTracer::InstructionTracer(const std::string &snapshot_content,
 
 {
 
-    // low_pc and high_pc are written in a file pcs.tmp with ; as delimiter
+    /*
+     * The python pipeline will write low_pc and high_pc in a file pcs.tmp with ; as delimiter
+     *
+     * TODO:
+     *      in future this should be replaced with a more mature implementation
+     */
     std::ifstream pcs_file("pcs.tmp");
     if (!pcs_file.is_open()) {
-        etiss::log(etiss::ERROR, "Failed to open pcs.tmp");
+        etiss::log(etiss::ERROR, "Failed to read PC-range from pcs.tmp. Tracing will not be activated");
         return;
     }
 
-    // TODO: replace this with a more mature implementation
     std::string line;
     if (std::getline(pcs_file, line)) {
         std::stringstream ss(line);
