@@ -291,7 +291,7 @@ class VerificationStage:
         fun_return_type = entry_gr.dwarf_info.get_subprogram_by_name(entry_gr.function_name).type_info
 
         if not result and fun_return_type is None:
-            self.logger.debug("Void function has no return value")
+            # self.logger.debug("Void function has no return value")
             result = section + 'NA\n'
             result += "      Void function has no return value\n"
         elif not result:

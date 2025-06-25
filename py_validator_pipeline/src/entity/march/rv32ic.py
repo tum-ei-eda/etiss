@@ -250,7 +250,7 @@ class RV32IC(MArchBase, ABC):
                         elements.append(Integer(byte_size=base.byte_size))
                 case StructType():
                     # Handle nested structs recursively
-                    nested = self.analyze_struct(m)
+                    nested = self.analyze_struct(m.member_type)
                     for e in nested:
                         elements.append(e)
                 case _:
