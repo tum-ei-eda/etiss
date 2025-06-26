@@ -197,15 +197,22 @@ def main():
 
         run_pipeline()
 
+        total_time = time.perf_counter() - time_begin
+        logger.info(f"Process finished successfully in {total_time:.4f} seconds.")
+
+        logger.info(f"Finished.\n{print_logo()}\n{print_end()}")
+
 
     except Exception as ex:
         logger.error("An unexpected error occurred: {}".format(ex))
         logger.info("=== PROCESS TERMINATED ===")
 
-    total_time = time.perf_counter() - time_begin
-    logger.info(f"Process finished successfully in {total_time:.4f} seconds.")
+        total_time = time.perf_counter() - time_begin
+        logger.info(f"Process terminated after {total_time:.4f} seconds.")
 
-    logger.info(f"Finished.\n{print_logo()}\n{print_end()}")
+        logger.info(f"Aborted due to exception. See logs for more information.\n{print_logo()}\n{print_end()}")
+
+
 
 
 
