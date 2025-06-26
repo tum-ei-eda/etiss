@@ -10,6 +10,7 @@ from typing import List
 from src.entity.dwarf.dwarf_info import DwarfInfo
 from src.entity.simulation.simulation_data_collection import SimulationDataCollection
 from src.entity.simulation.simulation_data_entry import SimulationDataEntry
+from src.util.trace_parser import parse_trace_file
 
 logger = logging.getLogger(__name__)
 INDENT = '    '
@@ -37,39 +38,42 @@ def build_simulation_entries(dwarf_info: DwarfInfo):
 
     logger.debug("Extracting snapshots from activity log")
 
-    current_path = os.getcwd()
-    with open(f"{current_path}/snapshot-activity.log", "r") as f:
-        data_collection = SimulationDataCollection()
+    realpath = f"{os.getcwd()}/trace.bin"
+    print(realpath)
+    data = parse_trace_file(realpath)
+    data_iter = iter(data)
 
-        while True:
-            entry_collection = compile_entries(f, dwarf_info)
-            if not entry_collection:  # Reached EOF
-                break
-            data_collection.add_entry(entry_collection)
+    data_collection = SimulationDataCollection()
+
+    while True:
+        entry_collection = compile_entries(data_iter, dwarf_info)
+        if not entry_collection:  # Reached EOF
+            break
+        data_collection.add_entry(entry_collection)
 
     return data_collection
 
 
-def compile_entries(f, dwarf_info: DwarfInfo) -> List[SimulationDataEntry]:
+def compile_entries(data_iter, dwarf_info: DwarfInfo) -> List[SimulationDataEntry]:
     """
     Initializes and returns a list of SimulationDataEntry objects populated by
     invoked recursive entry-construction function. Applies Python's passing
     of lists as references simplifying data collecting during recursion.
 
     Args:
-        f (file object): Open file handle for the ETISS activity log.
+        data_iter (iterator): iterator for data entries
         dwarf_info (DwarfInfo): Extracted DWARF debugging information.
 
     Returns:
         List[SimulationDataEntry]: The list of constructed simulation entries.
     """
     entries: List[SimulationDataEntry] = []
-    construct_entries_recursively(f, dwarf_info, entries)
+    construct_entries_recursively(data_iter, dwarf_info, entries)
     return entries
 
 
 
-def construct_entries_recursively(f, dwarf_info: DwarfInfo, entries: List[SimulationDataEntry], entry: SimulationDataEntry= None) -> None:
+def construct_entries_recursively(data_iter, dwarf_info: DwarfInfo, entries: List[SimulationDataEntry], entry: SimulationDataEntry= None) -> None:
     """
     Recursively constructs SimulationDataEntry objects from the ETISS activity log,
     segmenting execution data by function boundaries and enriching entries with
@@ -81,7 +85,7 @@ def construct_entries_recursively(f, dwarf_info: DwarfInfo, entries: List[Simula
     to handle nested or sequential function calls that are detected mid-trace.
 
     Args:
-        f (file object): Open file handle for the ETISS activity log.
+        data_iter (iterator): iterator for data entries
         dwarf_info (DwarfInfo): Extracted DWARF debugging information used to identify
                                 subprograms and enrich entries.
         entries (List[SimulationDataEntry]): A shared list reference that accumulates
@@ -100,72 +104,71 @@ def construct_entries_recursively(f, dwarf_info: DwarfInfo, entries: List[Simula
 
     epilogue_reached = False
 
-    for line in f:
-        try:
-            obj = json.loads(line.strip())
+    for e in data_iter:
 
-            match obj['type']:
-                case 'state_snapshot':
-                    match obj['instruction']:
-                        case 'cswsp' | 'sw':
-                            """
-                            Handles detection of function prologues using 'cswsp' or 'sw' instructions.
 
-                            If the instruction's PC falls within the range of the current entry’s 
-                            function, it is appended to the existing prologue.
 
-                            If the PC maps to a different subprogram, for which DWARF debug information
-                            has been extracted, a new SimulationDataEntry is created and recursively 
-                            constructed from that point onward.
-                            """
-                            sub_prog = dwarf_info.get_enclosing_subprogram(obj['pc'])
-                            if sub_prog and (not entry.function_name or sub_prog and entry.function_name == sub_prog.name):
-                                if not entry.function_name:
-                                    entry.function_name = sub_prog.name
-                                entry.append_prologue_instruction(
-                                    inst=obj['instruction'],
-                                    pc=obj['pc'],
-                                    sp=obj['x'][2],
-                                    fp=obj['x'][8],
-                                    arg_regs=obj['x'][10:18],
-                                    farg_regs=obj['f'][10:18]
-                                )
-                            elif sub_prog:
-                                new_entry = SimulationDataEntry()
-                                new_entry.add_dwarf_info(dwarf_info)
-                                new_entry.function_name = sub_prog.name
-                                new_entry.append_prologue_instruction(
-                                    inst=obj['instruction'],
-                                    pc=obj['pc'],
-                                    sp=obj['x'][2],
-                                    fp=obj['x'][8],
-                                    arg_regs=obj['x'][10:18],
-                                    farg_regs=obj['f'][10:18]
-                                )
-                                construct_entries_recursively(f, dwarf_info, entries, new_entry)
-                        case 'cjr':
-                            if dwarf_info.get_enclosing_subprogram(obj['pc']):
-                                entry.append_epilogue_instruction(
-                                    inst=obj['instruction'],
-                                    pc=obj['pc'],
-                                    sp=obj['x'][2],
-                                    fp=obj['x'][8],
-                                    rv_regs=obj['x'][10:12],
-                                    frv_regs=obj['f'][10:12]
-                                )
 
-                                epilogue_reached = True
-                case 'dwrite':
-                    entry.append_dwrite_instruction(
-                        obj['pc'],
-                        obj['location'],
-                        obj['data'],
-                        obj['byte_size']
-                    )
-            if epilogue_reached:
-                break
-        except json.JSONDecodeError as e:
-            raise Exception(f"Error parsing JSON: {e}")
+        match e['type']:
+            case 'state_snapshot':
+                match e['instruction']:
+                    case 'cswsp' | 'sw':
+                        """
+                        Handles detection of function prologues using 'cswsp' or 'sw' instructions.
+
+                        If the instruction's PC falls within the range of the current entry’s 
+                        function, it is appended to the existing prologue.
+
+                        If the PC maps to a different subprogram, for which DWARF debug information
+                        has been extracted, a new SimulationDataEntry is created and recursively 
+                        constructed from that point onward.
+                        """
+                        sub_prog = dwarf_info.get_enclosing_subprogram(e['pc'])
+                        if sub_prog and (not entry.function_name or sub_prog and entry.function_name == sub_prog.name):
+                            if not entry.function_name:
+                                entry.function_name = sub_prog.name
+                            entry.append_prologue_instruction(
+                                inst=e['instruction'],
+                                pc=e['pc'],
+                                sp=e['x'][2],
+                                fp=e['x'][8],
+                                arg_regs=e['x'][10:18],
+                                farg_regs=e['f'][10:18]
+                            )
+                        elif sub_prog:
+                            new_entry = SimulationDataEntry()
+                            new_entry.add_dwarf_info(dwarf_info)
+                            new_entry.function_name = sub_prog.name
+                            new_entry.append_prologue_instruction(
+                                inst=e['instruction'],
+                                pc=e['pc'],
+                                sp=e['x'][2],
+                                fp=e['x'][8],
+                                arg_regs=e['x'][10:18],
+                                farg_regs=e['f'][10:18]
+                            )
+                            construct_entries_recursively(data_iter=data_iter, dwarf_info=dwarf_info, entries=entries, entry=new_entry)
+                    case 'cjr':
+                        if dwarf_info.get_enclosing_subprogram(e['pc']):
+                            entry.append_epilogue_instruction(
+                                inst=e['instruction'],
+                                pc=e['pc'],
+                                sp=e['x'][2],
+                                fp=e['x'][8],
+                                rv_regs=e['x'][10:12],
+                                frv_regs=e['f'][10:12]
+                            )
+
+                            epilogue_reached = True
+            case 'dwrite':
+                entry.append_dwrite_instruction(
+                    e['pc'],
+                    e['location'],
+                    e['data'],
+                    e['byte_size']
+                )
+        if epilogue_reached:
+            break
 
     # If no data was added, we likely reached EOF
     if epilogue_reached:
