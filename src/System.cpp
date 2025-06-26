@@ -54,7 +54,7 @@
 #include <stdlib.h>
 
 #include "etiss/System.h"
-#include "etiss/IntegratedLibrary/InMemoryTracerBuffer.h"
+#include "etiss/IntegratedLibrary/TraceFileWriter.h"
 
 // TODO: remove these when testing memwrites is done.
 #include <fstream>
@@ -90,38 +90,21 @@ static etiss_int32 system_call_dread(void *handle, ETISS_CPU *cpu, etiss_uint64 
 static etiss_int32 system_call_dwrite(void *handle, ETISS_CPU *cpu, etiss_uint64 addr, etiss_uint8 *buffer,
                                       etiss_uint32 length)
 {
-
-    /*
-     * Writes an entry to the in-memory tracer buffer each time a
-     * data write occurs.
-     * TODO: create a Plugin to log dwrites
-     */
-    if (InMemoryTracerBuffer::instance().isTracing())
+    if (TraceFileWriter::instance().isTracing())
     {
-        std::stringstream ss;
+        static std::ofstream trace_file("trace.bin", std::ios::binary | std::ios::app);
+        auto& writer = TraceFileWriter::instance();
 
-        ss << "{"
-           << "\"type\":\"dwrite\","
-           << "\"pc\": " << cpu->instructionPointer << ", "
-           << "\"location\": \"" << std::hex << addr << "\", ";
+        DWriteEntry entry{};
+        entry.type = 2;
+        entry.pc = cpu->instructionPointer;
+        entry.addr = addr;
+        entry.length = length > 64 ? 64 : length; // Truncate if needed
 
-        ss << "\"data\": \"";
-        for (etiss_uint32 i = 0; i < length; ++i) {
-            ss << std::hex << std::uppercase
-               << std::setw(2) << std::setfill('0')
-               << static_cast<int>(buffer[i]);
-        }
-        ss << "\", ";
+        memcpy(entry.data, buffer, entry.length);
 
-        ss << "\"byte_size\": " << std::dec << length;
-        ss << "}\n";
-
-        InMemoryTracerBuffer::instance().writeToDisk(ss.str());
-
+        writer.writeDWrite(entry);
     }
-
-
-
 
     return ((etiss::System *)handle)->dwrite(cpu, addr, buffer, length);
 }

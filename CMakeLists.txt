@@ -231,8 +231,8 @@ file(GLOB TMP_CONFIG_HEADER_REL RELATIVE ${ETISS_ROOT} ${PROJECT_BINARY_DIR}/inc
 set(ETISS_HEADER ${ETISS_HEADER} ${TMP_CONFIG_HEADER_REL}
         src/IntegratedLibrary/InstructionTracer.cpp
         include/etiss/IntegratedLibrary/InstructionTracer.h
-        include/etiss/IntegratedLibrary/InMemoryTracerBuffer.h
-        src/IntegratedLibrary/InMemoryTracerBuffer.cpp
+        include/etiss/IntegratedLibrary/TraceFileWriter.h
+        src/IntegratedLibrary/TraceFileWriter.cpp
 )
 
 

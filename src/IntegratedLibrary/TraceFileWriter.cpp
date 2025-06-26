@@ -1,72 +1,65 @@
-//
-// Created by holaphei on 28/05/25.
-//
-
+#include "etiss/IntegratedLibrary/TraceFileWriter.h"
 #include "etiss/ETISS.h"
-#include "etiss/IntegratedLibrary/InMemoryTracerBuffer.h"
 
-InMemoryTracerBuffer & InMemoryTracerBuffer::instance(const std::string &output_path) {
-    static InMemoryTracerBuffer inst;
+TraceFileWriter& TraceFileWriter::instance(const std::string& output_path) {
+    static TraceFileWriter inst;
     static bool initialized = false;
 
     if (!initialized) {
-        // Remove old file if it exists
-        if (std::ifstream(output_path)) {
-            if (std::remove(output_path.c_str()) == 0) {
-                etiss::log(etiss::INFO, "InMemoryTracerBuffer: Old output file '" + output_path + "' deleted at startup.");
-            } else {
-                etiss::log(etiss::WARNING, "InMemoryTracerBuffer: Failed to delete old output file '" + output_path + "'.");
-            }
-        }
-
-        inst.outfile.open(output_path, std::ios::out | std::ios::trunc);
-        if (!inst.outfile) {
-            etiss::log(etiss::ERROR, "InstructionTracer: cannot open output file '" + output_path + '\'');
-        }
-        inst.output_path_ = output_path;
+        inst.openFile(output_path);
         initialized = true;
     }
+
 
     return inst;
 }
 
-InMemoryTracerBuffer::~InMemoryTracerBuffer()
-{
-    if (outfile.is_open()) {
-        outfile.close();
+void TraceFileWriter::openFile(const std::string& output_path) {
+    // Delete old file if it exists
+    if (std::ifstream(output_path)) {
+        if (std::remove(output_path.c_str()) == 0) {
+            etiss::log(etiss::INFO, "TraceFileWriter: Old output file '" + output_path + "' deleted at startup.");
+        } else {
+            etiss::log(etiss::WARNING, "TraceFileWriter: Failed to delete old output file '" + output_path + "'.");
+        }
+    }
+
+    outfile_.open(output_path, std::ios::binary | std::ios::out | std::ios::trunc);
+    if (!outfile_) {
+        etiss::log(etiss::ERROR, "TraceFileWriter: Cannot open output file '" + output_path + '\'');
     }
 }
 
-void InMemoryTracerBuffer::append(const std::string& s) {
+TraceFileWriter::~TraceFileWriter() {
+    if (outfile_.is_open()) {
+        outfile_.close();
+    }
+}
+
+void TraceFileWriter::writeStateSnapshot(const StateSnapshotEntry& entry) {
+    if (!trace_active_) return;
+
     std::lock_guard<std::mutex> lock(mutex_);
-    outfile << s;
+    outfile_.write(reinterpret_cast<const char*>(&entry), sizeof(entry));
 }
 
-void InMemoryTracerBuffer::setTrace(bool is_active)
-{
-    traceActivated_ = is_active;
-}
+void TraceFileWriter::writeDWrite(const DWriteEntry& entry) {
+    if (!trace_active_) return;
 
-
-
-bool InMemoryTracerBuffer::isTracing() const
-{
-    return traceActivated_;
-}
-
-std::string InMemoryTracerBuffer::str() const {
     std::lock_guard<std::mutex> lock(mutex_);
-    return buffer_.str();
+    outfile_.write(reinterpret_cast<const char*>(&entry), sizeof(entry));
 }
 
-void InMemoryTracerBuffer::writeToDisk(const std::string& s)
-{
-    std::lock_guard<std::mutex> guard(mutex_);
-    std::cout << s.c_str();
-    outfile << s;
+void TraceFileWriter::activateTrace() {
+    etiss::log(etiss::INFO, "TraceFileWriter: Trace activated.");
+    trace_active_ = true;
 }
 
+void TraceFileWriter::deactivateTrace() {
+    etiss::log(etiss::INFO, "TraceFileWriter: Trace deactivated.");
+    trace_active_ = false;
+}
 
-extern "C" void InMemoryTracerBuffer_append_entry(const char* s) {
-    InMemoryTracerBuffer::instance().writeToDisk(s);
+bool TraceFileWriter::isTracing() const {
+    return trace_active_;
 }

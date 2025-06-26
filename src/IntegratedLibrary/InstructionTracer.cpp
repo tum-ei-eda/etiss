@@ -6,7 +6,7 @@
 
 #include "etiss/IntegratedLibrary/InstructionTracer.h"
 #include "etiss/ETISS.h"
-#include "etiss/IntegratedLibrary/InMemoryTracerBuffer.h"
+#include "etiss/IntegratedLibrary/TraceFileWriter.h"
 
 #include "../../ArchImpl/RV32IMACFD/RV32IMACFD.h"
 #include "etiss/CPUArch.h"
@@ -162,68 +162,34 @@ extern "C"
 
     void InstructionTracer_collect_state(RV32IMACFD* cpu, const char *instruction)
     {
-
-        std::string inst = instruction;
-
         const etiss_uint32 pc = static_cast<etiss_uint32>(reinterpret_cast<ETISS_CPU *>(cpu)->instructionPointer);
+        auto& writer = TraceFileWriter::instance();
 
-        if (inst == "cswsp" && (low_pc <= pc && pc <= high_pc))
-        {
-            /* cswsp activates trace, cjr deactivates trace */
-            InMemoryTracerBuffer::instance().setTrace(true);
+        if (std::string(instruction) == "cswsp" && (low_pc <= pc && pc <= high_pc)) {
+            writer.activateTrace();
         }
 
+        if (writer.isTracing()) {
+            StateSnapshotEntry entry{};
+            entry.type = 1;
+            entry.pc = pc;
+            entry.sp = cpu->SP;
+            strncpy(entry.instruction, instruction, sizeof(entry.instruction) - 1);
 
-        if (InMemoryTracerBuffer::instance().isTracing())
-        {
-            const etiss_uint32 sp = static_cast<RV32IMACFD *>(cpu)->SP;
-
-            etiss_uint32 x[32];
             for (int i = 0; i < 32; ++i)
-                x[i] = *cpu->X[i];
+                entry.x[i] = *cpu->X[i];
 
-            etiss_uint64 f[32];
             for (int i = 0; i < 32; ++i)
-                f[i] = cpu->F[i];
+                entry.f[i] = cpu->F[i];
 
-            std::ostringstream entry;
-            entry << "{\"type\": \"state_snapshot\", "
-                << "\"pc\": " << pc << ", "
-                << "\"sp\": " << sp << ", "
-                << "\"instruction\": " << std::quoted(instruction) << ", "
-                << "\"x\": [";
-
-            // X registers
-            for (int i = 0; i < 32; ++i)
-            {
-                if (i != 0) entry << ", ";
-                entry << x[i];
-            }
-
-            entry << "], \"f\": [";
-
-            // F registers
-            for (int i = 0; i < 32; ++i)
-            {
-                if (i != 0) entry << ", ";
-                entry << f[i];
-            }
-
-            entry << "]}\n";
-
-            // Append to global static buffer
-            {
-                InMemoryTracerBuffer_append_entry(entry.str().c_str());
-            }
-
+            writer.writeStateSnapshot(entry);
         }
 
-        if (inst == "cjr" && (low_pc <= pc && pc <= high_pc))
-        {
-            /* cswsp activates trace, cjr deactivates trace */
-            InMemoryTracerBuffer::instance().setTrace(false);
+        if (std::string(instruction) == "cjr" && (low_pc <= pc && pc <= high_pc)) {
+            writer.deactivateTrace();
         }
-
     }
+
+
 
 }

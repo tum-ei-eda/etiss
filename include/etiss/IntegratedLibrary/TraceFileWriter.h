@@ -4,7 +4,10 @@
 #include <fstream>
 #include <mutex>
 #include <string>
-#include <cstdio>  // For std::remove
+#include <cstdint>
+#include <type_traits>
+
+#pragma pack(push, 1)
 
 struct StateSnapshotEntry {
     uint32_t type;        // 1 for state snapshot
@@ -15,13 +18,26 @@ struct StateSnapshotEntry {
     char instruction[16];  // Fixed size
 };
 
+#pragma pack(pop)
+
+// Static size check
+static_assert(sizeof(StateSnapshotEntry) == 412, "StateSnapshotEntry size must be 413 bytes");
+
+#pragma pack(push, 1)
+
 struct DWriteEntry {
     uint32_t type;        // 2 for dwrite
     uint32_t pc;
     uint64_t addr;
     uint32_t length;
-    uint8_t data[64];      // Max length
+    uint8_t data[64];     // Max length
 };
+
+#pragma pack(pop)
+
+// Static size check
+static_assert(sizeof(DWriteEntry) == 84, "DWriteEntry size must be 84 bytes");
+
 
 class TraceFileWriter {
 public:
@@ -29,7 +45,10 @@ public:
 
     void writeStateSnapshot(const StateSnapshotEntry& entry);
     void writeDWrite(const DWriteEntry& entry);
-    void setTracing(bool active);
+
+    // Trace control
+    void activateTrace();
+    void deactivateTrace();
     bool isTracing() const;
 
 private:
