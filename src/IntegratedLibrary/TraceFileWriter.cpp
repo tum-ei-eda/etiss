@@ -10,6 +10,15 @@ InMemoryTracerBuffer & InMemoryTracerBuffer::instance(const std::string &output_
     static bool initialized = false;
 
     if (!initialized) {
+        // Remove old file if it exists
+        if (std::ifstream(output_path)) {
+            if (std::remove(output_path.c_str()) == 0) {
+                etiss::log(etiss::INFO, "InMemoryTracerBuffer: Old output file '" + output_path + "' deleted at startup.");
+            } else {
+                etiss::log(etiss::WARNING, "InMemoryTracerBuffer: Failed to delete old output file '" + output_path + "'.");
+            }
+        }
+
         inst.outfile.open(output_path, std::ios::out | std::ios::trunc);
         if (!inst.outfile) {
             etiss::log(etiss::ERROR, "InstructionTracer: cannot open output file '" + output_path + '\'');
@@ -17,6 +26,7 @@ InMemoryTracerBuffer & InMemoryTracerBuffer::instance(const std::string &output_
         inst.output_path_ = output_path;
         initialized = true;
     }
+
     return inst;
 }
 
