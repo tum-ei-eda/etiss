@@ -682,8 +682,15 @@ void etiss::Initializer::loadIniJIT(std::shared_ptr<etiss::CPUCore> cpu)
         etiss::log(etiss::WARNING,
                     "etiss::Initializer::loadIniJIT:" + std::string(" JIT already present. Overwriting it."));
     }
-    etiss::log(etiss::INFO, " Adding JIT \"" + cfg().get<std::string>("jit.type", "") + '\"');
+    etiss::log(etiss::INFO, " Adding main JIT \"" + cfg().get<std::string>("jit.type", "") + '\"');
     cpu->set(getJIT(cfg().get<std::string>("jit.type", "")));
+
+    // Get the fast JIT if configured
+    if (etiss::cfg().isSet("jit.fast_type"))
+    {
+        etiss::log(etiss::INFO, " Adding fast JIT \"" + cfg().get<std::string>("jit.fast_type", "") + '\"');
+        cpu->setFastJIT(getJIT(cfg().get<std::string>("jit.fast_type", "")));
+    }
 }
 
 std::pair<std::string, std::string> inifileload(const std::string& s)

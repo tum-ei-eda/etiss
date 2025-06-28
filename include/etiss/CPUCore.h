@@ -312,17 +312,9 @@ class CPUCore : public VirtualStructSupport, public etiss::ToString
      *
      * @return Name string of the JIT plug-in;
      */
-    inline std::string getJITName()
+    inline std::string getJITName() const
     {
-        std::shared_ptr<etiss::JIT> jit = jit_;
-        if (jit.get())
-        {
-            return jit->getName();
-        }
-        else
-        {
-            return "";
-        }
+        return jit_ ? jit_->getName() : std::string();
     }
 
     /**
@@ -352,6 +344,19 @@ class CPUCore : public VirtualStructSupport, public etiss::ToString
      * @brief returns the list of all plugins.
      */
     inline std::list<std::shared_ptr<Plugin>> const *getPlugins() { return &plugins; };
+
+    /**
+            @brief set the jit compiler to use
+            @param jit
+    */
+    inline void setFastJIT(std::shared_ptr<etiss::JIT> jit) { fastJit_ = jit; }
+
+    /**
+            @brief get the fast JIT compiler instance
+            @return The fast JIT compiler instance
+    */
+    inline std::shared_ptr<etiss::JIT> getFastJIT() const { return fastJit_; }
+
   public:
     /**
      * @brief Create a CPUCore instance.
@@ -393,6 +398,8 @@ class CPUCore : public VirtualStructSupport, public etiss::ToString
     bool timer_enabled_; /// if true the a timer plugin allocated by arch_ will be added in CPUCore::execute
     std::shared_ptr<etiss::JIT>
         jit_;       /// JIT instance to use. may be 0 (etiss::getDefaultJIT() will be used in that case)
+    std::shared_ptr<etiss::JIT> fastJit_;
+
     std::mutex mu_; /// mutex to lock the configuration of this cpu core. etiss::CPUCore::execution holds this lock
                     /// during execution
     std::list<std::shared_ptr<Plugin>> plugins; /// list of all plugins
