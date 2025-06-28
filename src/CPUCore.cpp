@@ -555,6 +555,11 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
         etiss::log(etiss::INFO, std::string("JIT compiler ") + jiti->getName() +
                                     " has passed the verification tests (tested by CPUCore " + name_ + ")");
     }
+
+    std::shared_ptr<JIT> fastJiti = fastJit_; // copy fast JIT
+
+    // TODO(MM): add fast JIT verification
+
     // add default timer plugin from arch
     if (timer_enabled_)
     {
@@ -639,7 +644,7 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
     }
 
     // create translation object
-    Translation translation(arch_, jiti, plugins, *system, *cpu_);
+    Translation translation(arch_, jiti, fastJiti, plugins, *system, *cpu_);
 
     // Translation init returns a list of pluigins, at position 0 this is the arch plugin followed by all translation
     // plugins

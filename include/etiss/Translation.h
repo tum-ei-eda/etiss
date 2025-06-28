@@ -51,6 +51,13 @@
 #include <memory>
 #include <unordered_map>
 
+#include <thread>           // For std::thread
+#include <mutex>           // For std::mutex
+#include <condition_variable> // For std::condition_variable
+#include <queue>           // For std::queue
+#include <atomic>          // For std::atomic
+#include <chrono>      
+
 namespace etiss
 {
 
@@ -67,9 +74,19 @@ class BlockLink
     BlockLink *next;                    ///< next block; ONLY MODIFY WITH updateRef
     BlockLink *branch;                  ///< last branch block; ONLY MODIFY WITH updateRef
     unsigned refcount;                  ///< number of references to this instance; DO NOT MODIFY
-    const ExecBlockCall execBlock;      ///< function pointer
+    ExecBlockCall execBlock;            ///< current function pointer
     bool valid;                         ///< true if the associated function implements current code
-    const std::shared_ptr<void> jitlib; ///< library of the associated function
+    std::shared_ptr<void> jitlib;       ///< library of the current function
+
+    // Fast compilation version
+    ExecBlockCall fastExecBlock;        ///< Fast version (e.g. TCC)
+    std::shared_ptr<void> fastJitLib;   ///< Library of fast version
+    bool hasOptimized;  // Whether optimized version is available
+
+    // New fields for optimized version
+    ExecBlockCall optimizedExecBlock;   ///< Optimized version
+    std::shared_ptr<void> optimizedJitLib; ///< Optimized library
+
     BlockLink(etiss::uint64 start, etiss::uint64 end, ExecBlockCall execBlock, std::shared_ptr<void> lib);
     ~BlockLink();
     /**
@@ -118,19 +135,61 @@ class BlockLink
     }
 };
 
+class OptimizationManager {
+private:
+    struct OptimizationTask {
+        std::string code;                    // Generated C code
+        std::string blockFunctionName;       // Function name in the compiled code
+        std::set<std::string> headers;       // Required header paths
+        std::set<std::string> libloc;        // Library paths
+        std::set<std::string> libs;          // Required libraries
+        BlockLink* targetBlock;              // Block to optimize
+        bool debug;                          // Debug flag
+    };
+
+    std::shared_ptr<etiss::JIT> optimizingJit_;  // GCC/Clang JIT instance
+    std::thread workerThread_;                    // Background optimization thread
+    std::mutex taskMutex_;                        // Protects task queue
+    std::condition_variable taskCV_;              // Signals new tasks
+    std::queue<OptimizationTask> taskQueue_;      // Queue of blocks to optimize
+    std::atomic<bool> shutdown_;                  // Thread shutdown flag
+    
+    void optimizationWorker();
+
+public:
+    OptimizationManager(std::shared_ptr<etiss::JIT> optimizingJit);
+    ~OptimizationManager();
+    
+    void queueForOptimization(const std::string& code,
+                             const std::string& blockFunctionName,
+                             const std::set<std::string>& headers,
+                             const std::set<std::string>& libloc,
+                             const std::set<std::string>& libs,
+                             BlockLink* block,
+                             bool debug);
+
+    void updateBlockWithOptimizedVersion(BlockLink* block,
+                                       ExecBlockCall optimizedExec,
+                                       std::shared_ptr<void> optimizedLib);
+};
+
 class Translation
 {
   private:
     std::shared_ptr<etiss::CPUArch> &archptr_;
-    std::shared_ptr<etiss::JIT> &jitptr_;
+    std::shared_ptr<etiss::JIT> &jitptr_;      ///< Main JIT (optimizing)
+    std::shared_ptr<etiss::JIT> &fastJitptr_;  ///< Fast JIT (e.g. TCC)
     etiss::CPUArch *const arch_;
-    etiss::JIT *const jit_;
+    etiss::JIT *const jit_;                    ///< Main JIT instance
+    etiss::JIT *const fastJit_;                ///< Fast JIT instance
     std::list<std::shared_ptr<etiss::Plugin>> &plugins_;
     ETISS_System &system_;
     ETISS_CPU &cpu_;
     etiss::TranslationPlugin **plugins_array_;
     void **plugins_handle_array_;
     size_t plugins_array_size_;
+
+    std::unique_ptr<OptimizationManager> optManager_;
 
     /**
                Function pointer,
@@ -154,8 +213,12 @@ class Translation
     etiss::uint64 miss_count_;
 #endif
   public:
-    Translation(std::shared_ptr<etiss::CPUArch> &arch, std::shared_ptr<etiss::JIT> &jit,
-                std::list<std::shared_ptr<etiss::Plugin>> &plugins, ETISS_System &system, ETISS_CPU &cpu);
+    Translation(std::shared_ptr<etiss::CPUArch> &arch, 
+               std::shared_ptr<etiss::JIT> &jit,
+               std::shared_ptr<etiss::JIT> &fastJit,
+               std::list<std::shared_ptr<etiss::Plugin>> &plugins, 
+               ETISS_System &system, 
+               ETISS_CPU &cpu);
     ~Translation();
     void **init();
     /**
