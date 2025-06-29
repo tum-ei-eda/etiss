@@ -299,21 +299,12 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
                     if (iterbl->hasOptimized && iterbl->execBlock != iterbl->optimizedExecBlock) {
                         iterbl->execBlock = iterbl->optimizedExecBlock;
                         iterbl->jitlib = iterbl->optimizedJitLib;
-                        std::string msg = "Block exists with an optimized version from " + jit_->getName();
+
+                        std::string msg = "Block exists with an version from " + jit_->getName();
                         if (fastJit_ != nullptr) {
                             msg += ". Switching from " + fastJit_->getName();
                         }
                         etiss::log(etiss::INFO, msg);
-                    }
-                    else
-                    {
-                        std::string currentJit;
-                        if (fastJit_ != nullptr) {
-                            currentJit = iterbl->execBlock == iterbl->fastExecBlock ? fastJit_->getName() : jit_->getName();
-                        } else {
-                            currentJit = jit_->getName();
-                        }
-                        etiss::log(etiss::INFO, "Block exists but no optimized version. Using the " + currentJit + " version.");
                     }
 
                     if (prev != 0)
@@ -327,6 +318,9 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
                             BlockLink::updateRef(prev->branch, iterbl);
                         }
                     }
+
+                        // etiss::log(etiss::INFO, "$$$ Cache HIT!!");
+
                     return *iter;
                 }
                 iter++;
@@ -445,11 +439,9 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
                 nbl->fastExecBlock = fastExec;
                 nbl->fastJitLib = fastLib;
                 nbl->hasOptimized = false;
-                etiss::log(etiss::INFO, "Block created with fast version using " + fastJit_->getName());
 
                 // Queue optimization in background
                 if (jit_ != nullptr && optManager_ != nullptr) {
-                    etiss::log(etiss::INFO, "Queueing block for optimization with " + jit_->getName());
                     optManager_->queueForOptimization(code, blockfunctionname, headers, libloc, libs, nbl, ETISS_DEBUG);
                 }
             }
