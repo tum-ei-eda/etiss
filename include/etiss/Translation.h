@@ -147,14 +147,16 @@ private:
         bool debug;                          // Debug flag
     };
 
-    std::shared_ptr<etiss::JIT> optimizingJit_;  // GCC/Clang JIT instance
-    std::thread workerThread_;                    // Background optimization thread
+    static const size_t NUM_THREADS = 3;          // Number of worker threads
+    std::shared_ptr<etiss::JIT> optimizingJit_;   // GCC/Clang JIT instance
+    std::vector<std::thread> workerThreads_;      // Pool of worker threads
     std::mutex taskMutex_;                        // Protects task queue
     std::condition_variable taskCV_;              // Signals new tasks
     std::queue<OptimizationTask> taskQueue_;      // Queue of blocks to optimize
     std::atomic<bool> shutdown_;                  // Thread shutdown flag
+    std::atomic<size_t> activeThreads_;           // Number of threads currently processing tasks
     
-    void optimizationWorker();
+    void optimizationWorker(size_t threadId);
 
 public:
     OptimizationManager(std::shared_ptr<etiss::JIT> optimizingJit);
