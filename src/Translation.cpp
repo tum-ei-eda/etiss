@@ -731,70 +731,98 @@ std::string Translation::disasm(uint8_t *buf, unsigned len, int &append)
 // In Translation.cpp
 OptimizationManager::OptimizationManager(std::shared_ptr<etiss::JIT> optimizingJit)
     : optimizingJit_(optimizingJit)
-    , shutdown_(false) {
-    workerThread_ = std::thread(&OptimizationManager::optimizationWorker, this);
-}
-
-OptimizationManager::~OptimizationManager() {
-    // Signal thread to stop and wait
-    shutdown_ = true;
-    taskCV_.notify_one();
-    if (workerThread_.joinable()) {
-        workerThread_.join();
+    , shutdown_(false)
+    , activeThreads_(0) {
+    // Create worker threads
+    for (size_t i = 0; i < NUM_THREADS; i++) {
+        workerThreads_.emplace_back(&OptimizationManager::optimizationWorker, this, i);
+        activeThreads_++;
     }
 }
 
-void OptimizationManager::optimizationWorker() {
+OptimizationManager::~OptimizationManager() {
+    // Signal all threads to stop and wait
+    shutdown_ = true;
+    taskCV_.notify_all();
+    
+    // Wait for all threads to finish
+    for (auto& thread : workerThreads_) {
+        if (thread.joinable()) {
+            thread.join();
+        }
+    }
+}
+
+void OptimizationManager::optimizationWorker(size_t threadId) {
+    etiss::log(etiss::INFO, "Starting optimization worker thread " + std::to_string(threadId));
+    
     while (!shutdown_) {
         OptimizationTask task;
+        bool hasTask = false;
+        
+        // Scope block for mutex lock
         {
             std::unique_lock<std::mutex> lock(taskMutex_);
             taskCV_.wait(lock, [this] { 
                 return !taskQueue_.empty() || shutdown_; 
             });
             
-            if (shutdown_) break;
+            if (shutdown_) {
+                // Release lock and exit
+                lock.unlock();
+                break;
+            }
             
-            task = std::move(taskQueue_.front());
-            taskQueue_.pop();
+            if (!taskQueue_.empty()) {
+                task = std::move(taskQueue_.front());
+                taskQueue_.pop();
+                hasTask = true;
+            }
+            // Lock is automatically released here when lock goes out of scope
         }
 
-        // Compile with optimizing compiler
-        std::string error;
-        void* funcs = optimizingJit_->translate(
-            task.code,
-            task.headers,
-            task.libloc,
-            task.libs,
-            error,
-            task.debug
-        );
-
-        if (funcs) {
-            // Create library handle with cleanup
-            auto optimizedLib = std::shared_ptr<void>(
-                funcs,
-                [jit = optimizingJit_](void* p) { jit->free(p); }
+        if (hasTask) {
+            std::string error;
+            void* funcs = optimizingJit_->translate(
+                task.code,
+                task.headers,
+                task.libloc,
+                task.libs,
+                error,
+                task.debug
             );
 
-            // Get function pointer
-            ExecBlockCall optimizedExecBlock = 
-                (ExecBlockCall)optimizingJit_->getFunction(
-                    optimizedLib.get(),
-                    task.blockFunctionName.c_str(),
-                    error
+            if (funcs) {
+                // Create library handle with cleanup
+                auto optimizedLib = std::shared_ptr<void>(
+                    funcs,
+                    [jit = optimizingJit_](void* p) { jit->free(p); }
                 );
 
-            if (optimizedExecBlock) {
-                // Update block with optimized version
-                updateBlockWithOptimizedVersion(task.targetBlock, optimizedExecBlock, optimizedLib);
+                // Get function pointer
+                ExecBlockCall optimizedExecBlock = 
+                    (ExecBlockCall)optimizingJit_->getFunction(
+                        optimizedLib.get(),
+                        task.blockFunctionName.c_str(),
+                        error
+                    );
+
+                if (optimizedExecBlock) {
+                    // Update block with optimized version
+                    updateBlockWithOptimizedVersion(task.targetBlock, optimizedExecBlock, optimizedLib);
+                } else {
+                    etiss::log(etiss::WARNING, "Thread " + std::to_string(threadId) + 
+                              ": Failed to get optimized function pointer: " + error);
+                }
             } else {
-                etiss::log(etiss::WARNING, "Failed to get optimized function pointer: " + error);
+                etiss::log(etiss::WARNING, "Thread " + std::to_string(threadId) + 
+                          ": Failed to compile optimized version: " + error);
             }
-        } else {
-            etiss::log(etiss::WARNING, "Failed to compile optimized version: " + error);
         }
     }
+    
+    activeThreads_--;
+    etiss::log(etiss::INFO, "Optimization worker thread " + std::to_string(threadId) + " shutting down");
 }
 
 void OptimizationManager::queueForOptimization(
@@ -808,7 +836,7 @@ void OptimizationManager::queueForOptimization(
     
     std::lock_guard<std::mutex> lock(taskMutex_);
     taskQueue_.push({code, blockFunctionName, headers, libloc, libs, block, debug});
-    taskCV_.notify_one();
+    taskCV_.notify_one(); // Wake up one waiting thread
 }
 
 void OptimizationManager::updateBlockWithOptimizedVersion(BlockLink* block, 
