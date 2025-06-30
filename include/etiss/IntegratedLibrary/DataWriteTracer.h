@@ -10,6 +10,19 @@ namespace etiss
 namespace plugin
 {
 
+/*
+ * This is a plugin implementation of the data write tracing. Currently,
+ * data writes are directly traced in System.cpp, which is effective, but
+ * intrusive. This implementation works as well, but demands significantly
+ * more resources (main memory, execution time).
+ *
+ * To activate this implementation, add DataWriteTracer plugin to
+ * IntegratedLibrary as any other plugin and remove the current
+ * implementation from System.cpp. Note that in this case two
+ * plugins must be activated at runtime for ETISS-GTS to work.
+ *
+ */
+
 class DataWriteTracer : public etiss::plugin::SelectiveSysWrapper
 {
 public:

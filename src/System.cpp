@@ -90,6 +90,23 @@ static etiss_int32 system_call_dread(void *handle, ETISS_CPU *cpu, etiss_uint64 
 static etiss_int32 system_call_dwrite(void *handle, ETISS_CPU *cpu, etiss_uint64 addr, etiss_uint8 *buffer,
                                       etiss_uint32 length)
 {
+    if (TraceFileWriter::instance().isTracing())
+    {
+        static std::ofstream trace_file("trace.bin", std::ios::binary | std::ios::app);
+        auto& writer = TraceFileWriter::instance();
+
+        DWriteEntry entry{};
+        entry.type = 2;
+        entry.pc = cpu->instructionPointer;
+        entry.addr = addr;
+        entry.length = length > 64 ? 64 : length; // Truncate if needed
+
+        memcpy(entry.data, buffer, entry.length);
+
+        writer.writeDWrite(entry);
+    }
+
+
     return ((etiss::System *)handle)->dwrite(cpu, addr, buffer, length);
 }
 
