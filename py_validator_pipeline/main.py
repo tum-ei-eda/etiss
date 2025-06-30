@@ -70,6 +70,8 @@ def run_pipeline():
         logger.info(print_section_title("=== RUNNING ETISS SIMULATION AND EXTRACTING ACTIVITY LOG ENTRIES ==="))
         etiss_time = time.perf_counter()
         golden_ref_entries = run_etiss_simulation_and_collect_activity_log(golden_ref_dwarf_info, args.ini_golden_ref, case_gr)
+        # print("####                PAUSING FOR FAULT INJECTION - PRESS ENTER TO CONTINUE          ####")
+        # input('')
         isuv_entries = run_etiss_simulation_and_collect_activity_log(isuv_dwarf_info, args.ini_isuv, case_isuv)
 
         logger.info(f"ETISS simulations run and activity log entries extracted. Total time: {time.perf_counter() - etiss_time:.4f} seconds.")
@@ -156,6 +158,7 @@ def log_snapshot_entries(entries: SimulationDataCollection, case: str) -> None:
 
 def verify_entries(golden_ref, custom_is):
     try:
+        functions_verified = 0
         verifier =  VerificationStage()
         golden_ref_entry_collection = golden_ref.get_entries()
         custom_is_entry_collection = custom_is.get_entries()
@@ -170,6 +173,7 @@ def verify_entries(golden_ref, custom_is):
                         output += f"> Function: {golden_ref_entry.function_name}\n"
                         # output += golden_ref_entry.compare_entries(custom_is_entry_collection[idx_0][idx_1], debug=args.debug)
                         output += verifier.compare_entries(golden_ref_entry, custom_is_entry_collection[idx_0][idx_1])
+                        functions_verified += 1
                 else:
                     err = "Number of function call entries in golden reference and custom IS data do not match. Aborting"
                     output += err
@@ -180,7 +184,8 @@ def verify_entries(golden_ref, custom_is):
             output += err
             raise VerificationProcessException(err)
 
-        logging.info(f"Verification results:\n{output}")
+        logger.info(f"Verification results:\n{output}")
+        logger.info(f"Total number of functions verified: {functions_verified}")
     except VerificationProcessException as e:
         logger.error(f"An exception occured while verifying entries: {e}")
         raise Exception(e)
