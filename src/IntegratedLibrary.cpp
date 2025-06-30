@@ -96,8 +96,6 @@ extern "C"
         case 3:
             return "Logger";
         case 4:
-            return "ISAExtensionValidator";
-        case 5:
             return "InstructionTracer";
         }
         return 0;
@@ -147,9 +145,6 @@ extern "C"
                                              cfg.get<uint64_t>("plugin.logger.logmask", 0xF0000000));
         }
         case 4:
-            return new etiss::plugin::ISAExtensionValidator();
-        case 5:
-            // TODO: snapshot_content is not needed, providing output path should be considered more in detail
             return new InstructionTracer();
         }
         return 0;
