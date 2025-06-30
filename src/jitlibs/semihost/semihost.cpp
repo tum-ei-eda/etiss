@@ -421,11 +421,35 @@ etiss_int64 semihostingCall(ETISS_CPU *const cpu, ETISS_System *const etissSyste
     case SYS_SYSTEM:
     case SYS_GET_CMDLINE:
     case SYS_HEAPINFO:
-    case SYS_EXIT_EXTENDED:
     {
         std::stringstream ss;
         ss << "Semihosting: operation not implemented: " << operationNumber;
         etiss::log(etiss::WARNING, ss.str());
+        return 0;
+    }
+    
+    case SYS_EXIT_EXTENDED:
+    {
+        
+        // See https://developer.arm.com/documentation/dui0053/d/  - ARM pub ADP (Angel Debug Protocol) codes
+        // and https://developer.arm.com/documentation/100863/latest - ARM pub Semihosting for AArch32 and AArch64
+        etiss_uint64 exception_type = FIELD(0);
+        etiss_uint64 subcode = FIELD(1);
+        std::stringstream ss;
+        ss << "Semihosting: SYS_EXIT_EXTENDED -> exit simulator exception " 
+            << std::hex << exception_type 
+            << std::dec << " exit status subcode " << static_cast<uint32_t>(subcode);
+        etiss::log(etiss::VERBOSE, ss.str());
+        cpu->exception = ETISS_RETURNCODE_CPUFINISHED;
+        cpu->return_pending = 1;
+        constexpr etiss_uint64 ADP_Stopped_ApplicationExit = 0x20026; // ADP code for programmed application exit
+        if (exception_type == ADP_Stopped_ApplicationExit) {
+            // subcode gives exit status
+            cpu->exit_status = static_cast<uint32_t>(subcode);  
+        } else {
+            // The other possibilities are events that are mostly exceptions/error conditions
+            cpu->exit_status = 1; 
+        }
         return 0;
     }
     default:

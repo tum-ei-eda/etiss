@@ -178,6 +178,7 @@ int main(int argc, const char *argv[])
 
     switch(exception){
         case etiss::RETURNCODE::CPUFINISHED:
+            return cpu->getState()->exit_status;
         case etiss::RETURNCODE::NOERROR:
         case etiss::RETURNCODE::CPUTERMINATED:
         return 0;
