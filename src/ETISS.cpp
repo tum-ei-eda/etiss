@@ -754,6 +754,7 @@ void etiss_initialize(const std::vector<std::string>& args, bool forced = false)
             ("jit.verify", po::value<bool>(), "Run some basic checks to verify the functionality of the JIT engine.")
             ("jit.debug", po::value<bool>(), "Causes the JIT Engines to compile in debug mode.")
             ("jit.type", po::value<std::string>(), "The JIT compiler to use.")
+            ("jit.fast_type", po::value<std::string>(), "The fast JIT compiler to use.")
             ("jit.external_headers", po::value<std::string>(), "List of semicolon-separated paths to headers for the JIT to include.")
             ("jit.external_libs", po::value<std::string>(), "List of semicolon-separated library names for the JIT to link.")
             ("jit.external_header_paths", po::value<std::string>(), "List of semicolon-separated headers paths for the JIT.")
@@ -1024,4 +1025,3 @@ std::string etiss::errorMessage(etiss::int32 code, CPUArch *arch)
         }
     }
 }
-
