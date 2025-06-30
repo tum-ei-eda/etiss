@@ -113,7 +113,7 @@ void *GCCJIT::translate(std::string code, std::set<std::string> headerpaths, std
         codeFile.close();
     }
     std::stringstream ss;
-    ss << "gcc -c -std=c99 -fPIC -march=native -mtune=native -pipe ";
+    ss << "gcc -c -std=c99 -fPIC -march=native -mtune=native -pipe -w ";
     if (debug)
         ss << "-g -O0 -Wall -Wno-unused-label ";
     else
