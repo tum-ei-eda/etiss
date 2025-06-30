@@ -24,7 +24,11 @@ def run_etiss_simulation(etiss_path: str, bare_metal_etiss: str, ini_file: str, 
     cmd = [
         f"{etiss_path}/{bare_metal_etiss}",
         f"-i{ini_file}",
-        "-p", "InstructionTracer",
+        # "-p", "InstructionTracer",
+        # InstructionTracer
+        "-p", "GTS-1",
+        # DataWriteTracer
+        "-p", "GTS-2",
         "--jit.gcc.cleanup", "true"
     ]
 
