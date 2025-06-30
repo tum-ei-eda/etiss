@@ -72,6 +72,7 @@ extern "C"
 
         etiss_uint32 exception;      // currently active exception of the processor
         etiss_uint32 return_pending; // flags whether a return from the JIT code is needed
+        etiss_uint32 exit_status;    // Applicaton exit code if return from semi-hosted SYS_EXIT_EXTENDED
     };
 #pragma pack(pop)
 

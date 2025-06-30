@@ -44,6 +44,7 @@ LOG_LEVEL=4
 DO_TRACE=0
 NOLOOP=0
 JIT="TCCJIT"
+SEMIHOST="true"
 shift
 while [ "$#" -gt 0 ];
 do
@@ -74,6 +75,8 @@ do
     elif [ "$arg" = "vp" ]; then
         VP_EXE="$2"
         shift
+    elif [ "$arg" = "nosemihost" ]; then
+        SEMIHOST=false
     else
         CMD_OPTIONS="${CMD_OPTIONS} ${arg}"
     fi
@@ -87,6 +90,7 @@ echo -e "jit.type=${JIT}" >> $DYN_INI
 echo -e "\n[BoolConfigurations]\n" >> $DYN_INI
 echo -e "etiss.enable_dmi=${ENABLE_DMI}" >> $DYN_INI
 echo -e "etiss.log_pc=${LOG_PC}" >> $DYN_INI
+echo -e "arch.enable_semihosting=${SEMIHOST}" >> $DYN_INI
 
 if [ "${DO_TRACE}" -eq 1 ]; then
     echo -e "simple_mem_system.print_dbus_access=true" >> $DYN_INI
