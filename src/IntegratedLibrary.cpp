@@ -61,11 +61,11 @@
 
 #include "etiss/IntegratedLibrary/Logger.h"
 #include "etiss/IntegratedLibrary/PrintInstruction.h"
-#include "etiss/IntegratedLibrary/ISAExtensionValidator.h"
 #include "etiss/IntegratedLibrary/errorInjection/Plugin.h"
 #include "etiss/IntegratedLibrary/gdb/GDBServer.h"
 #include "etiss/IntegratedLibrary/InstructionSpecificAddressCallback.h"
 #include "etiss/IntegratedLibrary/InstructionTracer.h"
+#include "etiss/IntegratedLibrary/DataWriteTracer.h"
 
 extern "C"
 {
@@ -96,7 +96,9 @@ extern "C"
         case 3:
             return "Logger";
         case 4:
-            return "InstructionTracer";
+            return "GTS-1";
+        case 5:
+            return "GTS-2";
         }
         return 0;
     }
@@ -146,6 +148,8 @@ extern "C"
         }
         case 4:
             return new InstructionTracer();
+        case 5:
+            return new etiss::plugin::DataWriteTracer(0, 0);
         }
         return 0;
     }
