@@ -31,7 +31,7 @@ SOURCE_FILE="main.c"
 FUNCTION_OF_INTEREST="main"
 
 # Check if first argument is --debug
-if [[ "$1" == "--debug" ]]; then
+if [[ "$1" == "--verbose" ]]; then
     DEBUG_ARG="--debug"
 fi
 
