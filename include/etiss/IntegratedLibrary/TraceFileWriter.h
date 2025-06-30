@@ -21,7 +21,7 @@ struct StateSnapshotEntry {
 #pragma pack(pop)
 
 // Static size check
-static_assert(sizeof(StateSnapshotEntry) == 412, "StateSnapshotEntry size must be 413 bytes");
+static_assert(sizeof(StateSnapshotEntry) == 412, "StateSnapshotEntry size must be 412 bytes");
 
 #pragma pack(push, 1)
 
