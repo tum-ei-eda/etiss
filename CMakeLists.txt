@@ -233,6 +233,7 @@ set(ETISS_HEADER ${ETISS_HEADER} ${TMP_CONFIG_HEADER_REL}
         include/etiss/IntegratedLibrary/InstructionTracer.h
         include/etiss/IntegratedLibrary/TraceFileWriter.h
         src/IntegratedLibrary/TraceFileWriter.cpp
+        src/IntegratedLibrary/DataWriteTracer.cpp
 )
 
 
