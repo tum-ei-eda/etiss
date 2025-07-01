@@ -72,7 +72,7 @@ def run_pipeline():
         golden_ref_entries = run_etiss_simulation_and_collect_activity_log(golden_ref_dwarf_info, args.ini_golden_ref, case_gr)
         # print("####                PAUSING FOR FAULT INJECTION - PRESS ENTER TO CONTINUE          ####")
         # input('')
-        isuv_entries = run_etiss_simulation_and_collect_activity_log(isuv_dwarf_info, args.ini_isuv, case_isuv)
+        isuv_entries = run_etiss_simulation_and_collect_activity_log(isuv_dwarf_info, args.ini_isuv, case_isuv, fault=True)
 
         logger.info(f"ETISS simulations run and activity log entries extracted. Total time: {time.perf_counter() - etiss_time:.4f} seconds.")
 
@@ -111,7 +111,7 @@ def extract_dwarf_information(bin_file: str, case: str) -> DwarfInfo:
 
 
 
-def run_etiss_simulation_and_collect_activity_log(dwarf_info: DwarfInfo, ini_file: str, case: str) -> SimulationDataCollection:
+def run_etiss_simulation_and_collect_activity_log(dwarf_info: DwarfInfo, ini_file: str, case: str, fault: bool =False) -> SimulationDataCollection:
     try:
         # ETISS SIMULATION
         logger.info(f"Running ETISS simulation as subprocess for {case}")
@@ -128,7 +128,8 @@ def run_etiss_simulation_and_collect_activity_log(dwarf_info: DwarfInfo, ini_fil
         bare_metal_etiss = args.etiss_executable
 
         # Run ETISS with Golden Reference binary to produce activity log
-        run_etiss_simulation(etiss_path, bare_metal_etiss, ini_file, args.debug)
+        run_etiss_simulation(etiss_path=etiss_path, bare_metal_etiss=bare_metal_etiss,
+                             ini_file=ini_file, debug_enabled=args.verbose, fault=fault)
 
         # Remove the temporary file with low and high PC, if it exists
         if os.path.exists("pcs.tmp"):
@@ -158,8 +159,7 @@ def log_snapshot_entries(entries: SimulationDataCollection, case: str) -> None:
 
 def verify_entries(golden_ref, custom_is):
     try:
-        functions_verified = 0
-        verifier =  VerificationStage()
+        verifier: VerificationStage =  VerificationStage(verbose=args.verbose)
         golden_ref_entry_collection = golden_ref.get_entries()
         custom_is_entry_collection = custom_is.get_entries()
 
@@ -167,38 +167,55 @@ def verify_entries(golden_ref, custom_is):
 
         if len(golden_ref_entry_collection) == len(custom_is_entry_collection):
             for idx_0, golden_ref_fun_call_entries in enumerate(golden_ref_entry_collection):
+
                 if len(custom_is_entry_collection[idx_0]) == len(golden_ref_fun_call_entries):
-                    output += f"Subprogram of interest: {args.fun}, invoke #{idx_0 + 1}\n"
                     for idx_1, golden_ref_entry in enumerate(golden_ref_fun_call_entries):
-                        output += f"> Function: {golden_ref_entry.function_name}\n"
-                        # output += golden_ref_entry.compare_entries(custom_is_entry_collection[idx_0][idx_1], debug=args.debug)
-                        output += verifier.compare_entries(golden_ref_entry, custom_is_entry_collection[idx_0][idx_1])
-                        functions_verified += 1
+                        verifier.compare_entries(golden_ref_entry, custom_is_entry_collection[idx_0][idx_1])
                 else:
                     err = "Number of function call entries in golden reference and custom IS data do not match. Aborting"
                     output += err
                     raise VerificationProcessException(err)
-
+            output += verifier.output_verification_entries()
         else:
             err = "Number of function call entries in golden reference and custom IS data do not match. Aborting"
             output += err
             raise VerificationProcessException(err)
 
-        logger.info(f"Verification results:\n{output}")
-        logger.info(f"Total number of functions verified: {functions_verified}")
+        if args.verbose or verifier.entries_with_failures_counter:
+            logger.info(f"Verification results:\n{output}")
+
+        summary = ''
+        line_length = 100
+        passed_verification = verifier.entries_compared_counter - verifier.entries_with_failures_counter
+        failed_verification = verifier.entries_with_failures_counter
+        if passed_verification:
+            passed = f"    PASSED "
+            summary += '\033[1m\033[34m' + passed + '\x1b[0m' + (line_length - len(passed)) * '.' + str(passed_verification) + '\n'
+        if failed_verification:
+            line3 = f"    FAILED "
+            summary += '\033[1m\033[91m' + line3 + '\x1b[0m' + (line_length - len(line3)) * '.' + str(failed_verification) + '\n'
+        line1 = f"    TOTAL (FUNCTIONS VERIFIED) "
+        summary += '\033[1m' + line1 + '\x1b[0m' + (line_length - len(line1)) * '.' + str(verifier.entries_compared_counter) + '\n'
+        logger.info(f"Summary of verification:\n{summary}")
+
     except VerificationProcessException as e:
         logger.error(f"An exception occured while verifying entries: {e}")
+        raise Exception(e)
+    except Exception as e:
+        logger.error(f"Unhandled exception occured during verification: {e}")
         raise Exception(e)
 
 
 def main():
     time_begin = time.perf_counter()
-    init_logger(debug=args.debug)
+    init_logger(debug=args.verbose)
     try:
         # Run pipeline with golden reference
         description = print_centered_line("the instruction set extension verification pipeline for ETISS simulation.")
         description += print_centered_line("Please see README.md for more information.")
         logger.info(f"Welcome to the\n{print_logo()}\n{description}")
+        if not args.verbose:
+            logger.info(f"Tip: use argument '--verbose' for more detailed output")
 
         run_pipeline()
 

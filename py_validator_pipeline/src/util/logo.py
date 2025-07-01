@@ -182,7 +182,8 @@ def print_section_title(text, symbol: str = "=", prefix: str = "\n") -> str:
     Notes:
         - prefix newline is useful if method is invoked in logger argument.
     """
-    output = prefix
+    output = 'Printing title for next section'
+    output += prefix
     output += print_section_break(symbol)
     output += print_centered_line(text)
     output += print_section_break(symbol)

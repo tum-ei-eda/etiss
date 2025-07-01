@@ -27,6 +27,7 @@ class SimulationDataEntry:
 
     def __init__(self):
         self.function_name: str = ""
+        self.invoke_chain: list = []
         self.prologue: List[Dict[str, Any]] = []
         self.epilogue: List[Dict[str, Any]] = []
         self.dwrites: Dict[str, List[Dict[str, Any]]] = {}
@@ -167,6 +168,13 @@ class SimulationDataEntry:
             except Exception as e:
                 raise VerificationProcessException(f"Exception: {e}, addr: {addr}")
         return last_writes
+
+    def get_invoke_chain(self) -> str:
+        if len(self.invoke_chain) < 4:
+            invoke_chain = ' -> '.join(self.invoke_chain)
+        else:
+            invoke_chain = '… -> ' + ' -> '.join(self.invoke_chain[-3:])
+        return invoke_chain
 
 
 

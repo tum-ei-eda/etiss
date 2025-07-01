@@ -40,7 +40,6 @@ def build_simulation_entries(dwarf_info: DwarfInfo):
     logger.debug("Extracting snapshots from activity log")
 
     realpath = f"{os.getcwd()}/trace.bin"
-    print(realpath)
     data = parse_trace_file(realpath)
     data_iter = Peekable(data)
 
@@ -124,6 +123,7 @@ def construct_entries_recursively(data_iter: Peekable, dwarf_info: DwarfInfo, en
                         if sub_prog and (not entry.function_name or sub_prog and entry.function_name == sub_prog.name):
                             if not entry.function_name:
                                 entry.function_name = sub_prog.name
+                                entry.invoke_chain.append(sub_prog.name)
                             entry.append_prologue_instruction(
                                 inst=e['instruction'],
                                 pc=e['pc'],
@@ -136,6 +136,7 @@ def construct_entries_recursively(data_iter: Peekable, dwarf_info: DwarfInfo, en
                             new_entry = SimulationDataEntry()
                             new_entry.add_dwarf_info(dwarf_info)
                             new_entry.function_name = sub_prog.name
+                            new_entry.invoke_chain = entry.invoke_chain + [sub_prog.name]
                             new_entry.append_prologue_instruction(
                                 inst=e['instruction'],
                                 pc=e['pc'],
@@ -144,7 +145,6 @@ def construct_entries_recursively(data_iter: Peekable, dwarf_info: DwarfInfo, en
                                 arg_regs=e['x'][10:18],
                                 farg_regs=e['f'][10:18]
                             )
-                            fun_name = new_entry.function_name if new_entry.function_name else 'NA'
                             construct_entries_recursively(data_iter=data_iter, dwarf_info=dwarf_info, entries=entries, entry=new_entry)
 
                     case 'cjr':
@@ -235,7 +235,7 @@ def log_snapshot_information(entries: SimulationDataCollection, fun_of_interest:
         times_invoked += 1
         output += f"Function of interest: {fun_of_interest}, invoke #{times_invoked}:\n"
         for idx, entry in enumerate(sim_data_entry):
-            output += f"> Subprogram name: {entry.function_name}\n"
+            output += f"> Subprogram name: {entry.function_name} ({entry.get_invoke_chain()})\n"
             output += str(entry)
         if output:
             logger.debug(f"Following snapshot information extracted:\n\n{output}")

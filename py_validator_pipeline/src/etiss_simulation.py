@@ -3,7 +3,7 @@ import subprocess
 
 logger = logging.getLogger(__name__)
 
-def run_etiss_simulation(etiss_path: str, bare_metal_etiss: str, ini_file: str, debug_enabled: bool):
+def run_etiss_simulation(etiss_path: str, bare_metal_etiss: str, ini_file: str, debug_enabled: bool, fault: bool = False):
     """
     Run a bare-metal ETISS simulation using a specified binary and configuration.
 
@@ -21,16 +21,32 @@ def run_etiss_simulation(etiss_path: str, bare_metal_etiss: str, ini_file: str, 
         Exception: If the subprocess fails to execute successfully, or if the binary
                    is not found. Provides basic diagnostics on failure.
     """
-    cmd = [
-        f"{etiss_path}/{bare_metal_etiss}",
-        f"-i{ini_file}",
-        # "-p", "InstructionTracer",
-        # InstructionTracer
-        "-p", "GTS-1",
-        # DataWriteTracer
-        "-p", "GTS-2",
-        "--jit.gcc.cleanup", "true"
-    ]
+
+
+    if fault:
+        cmd = [
+            f"{etiss_path}/{bare_metal_etiss}",
+            f"-i{ini_file}",
+            # "-p", "InstructionTracer",
+            # InstructionTracer
+            "-p", "GTS",
+            # DataWriteTracer
+            # "-p", "GTS-DataWriteTracer",
+            "--jit.gcc.cleanup", "true"
+        ]
+    # Golden reference
+    # TODO: remove this temporary implementation
+    else:
+        cmd = [
+            f"/home/holaphei/repos/golden-ref-etiss/etiss/build/bin/bare_etiss_processor",
+            f"-i{ini_file}",
+            # "-p", "InstructionTracer",
+            # InstructionTracer
+            "-p", "GTS",
+            # DataWriteTracer
+            # "-p", "GTS-DataWriteTracer",
+            "--jit.gcc.cleanup", "true"
+        ]
 
 
     logger.debug(f"Running ETISS simulation. This may take a while. Showing ETISS output: {debug_enabled}")
