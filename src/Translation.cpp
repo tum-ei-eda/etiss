@@ -43,6 +43,8 @@
 #include "etiss/Translation.h"
 #include <mutex>
 
+#define BLOCK_CACHE_SHIFT 9
+
 namespace etiss
 {
 
@@ -60,6 +62,8 @@ BlockLink::BlockLink(etiss::uint64 start, etiss::uint64 end, ExecBlockCall execB
         , hasOptimized(false)
         , optimizedExecBlock(nullptr)
         , optimizedJitLib(nullptr) {}
+
+
 
 BlockLink::~BlockLink()
 {
@@ -120,11 +124,11 @@ static uint64_t genTranslationId()
     return id++;
 }
 
-Translation::Translation(std::shared_ptr<etiss::CPUArch> &arch, 
+Translation::Translation(std::shared_ptr<etiss::CPUArch> &arch,
                          std::shared_ptr<etiss::JIT> &jit,
                          std::shared_ptr<etiss::JIT> &fastJit,
-                         std::list<std::shared_ptr<etiss::Plugin>> &plugins, 
-                         ETISS_System &system, 
+                         std::list<std::shared_ptr<etiss::Plugin>> &plugins,
+                         ETISS_System &system,
                          ETISS_CPU &cpu)
     : archptr_(arch)
     , jitptr_(jit)
@@ -285,7 +289,7 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
 
     // search block in cache
     // TODO(MM) Dig deeper into why the shift by 9 bits
-    std::list<BlockLink *> &list = blockmap_[instructionindex >> 9];
+    std::list<BlockLink *> &list = blockmap_[instructionindex >> BLOCK_CACHE_SHIFT];
     for (std::list<BlockLink *>::iterator iter = list.begin(); iter != list.end();) // iter++ moved into block
     {
         BlockLink *iterbl = (*iter);
@@ -471,13 +475,13 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
     }
 
     // Add block to cache
-    uint64 ii9 = instructionindex >> 9;
+    uint64 ii9 = instructionindex >> BLOCK_CACHE_SHIFT;
     do
     {
         blockmap_[ii9].push_back(nbl);
         BlockLink::incrRef(nbl); // map holds a reference
         ii9++;
-    } while ((ii9 << 9) < block.endaddress_);
+    } while ((ii9 << BLOCK_CACHE_SHIFT) < block.endaddress_);
 
     if (prev != 0)
     {
@@ -669,8 +673,8 @@ void Translation::unloadBlocks(etiss::uint64 startindex, etiss::uint64 endindex)
         return;
     }
 
-    const etiss::uint64 startindexblock = startindex >> 9;
-    const etiss::uint64 endindexblock = (endindex >> 9) + ((((endindex >> 9) << 9) == endindex) ? 0 : 1);
+    const etiss::uint64 startindexblock = startindex >> BLOCK_CACHE_SHIFT;
+    const etiss::uint64 endindexblock = (endindex >> BLOCK_CACHE_SHIFT) + ((((endindex >> BLOCK_CACHE_SHIFT) << BLOCK_CACHE_SHIFT) == endindex) ? 0 : 1);
     for (etiss::uint64 block = startindexblock; block < endindexblock; block++)
     {
         if (blockmap_.empty())
