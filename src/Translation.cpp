@@ -424,12 +424,15 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
     }
     */
 #ifndef ETISS_DEBUG
-#define ETISS_DEBUG 1
+#define ETISS_DEBUG 0
+#endif
+#ifndef ETISS_DEBUG_FAST
+#define ETISS_DEBUG_FAST 1
 #endif
     // Try fast compilation first if available
     BlockLink* nbl = nullptr;
     if (fastJit_ != nullptr) {
-        void* funcs = fastJit_->translate(code, headers, libloc, libs, error, ETISS_DEBUG);
+        void* funcs = fastJit_->translate(code, headers, libloc, libs, error, ETISS_DEBUG_FAST);
         if (funcs != nullptr) {
             // Create library handle with cleanup
             auto local_jit = fastJit_;
