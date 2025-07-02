@@ -51,7 +51,7 @@
 #include <stdlib.h> //mkdtemp
 #include <unistd.h>
 
-GCCJIT::GCCJIT(bool cleanup) : etiss::JIT("gcc"), cleanup_(cleanup)
+GCCJIT::GCCJIT(bool cleanup, std::string opt_level) : etiss::JIT("gcc"), cleanup_(cleanup), opt_level_(opt_level)
 {
 
     id = 0;
@@ -117,7 +117,7 @@ void *GCCJIT::translate(std::string code, std::set<std::string> headerpaths, std
     if (debug)
         ss << "-g -O0 -Wall -Wno-unused-label ";
     else
-        ss << "-Ofast ";
+        ss << "-O" + opt_level_ + " ";
     for (std::set<std::string>::const_iterator iter = headerpaths.begin(); iter != headerpaths.end(); iter++)
     {
         ss << "-I\"" << *iter << "\" ";
