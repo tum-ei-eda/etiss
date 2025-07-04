@@ -51,7 +51,7 @@
 #include <stdlib.h> //mkdtemp
 #include <unistd.h>
 
-GCCJIT::GCCJIT(bool cleanup, std::string opt_level) : etiss::JIT("gcc"), cleanup_(cleanup), opt_level_(opt_level)
+GCCJIT::GCCJIT(bool cleanup, std::string opt_level, bool quiet) : etiss::JIT("gcc"), cleanup_(cleanup), opt_level_(opt_level), quiet_(quiet)
 {
 
     id = 0;
@@ -113,7 +113,9 @@ void *GCCJIT::translate(std::string code, std::set<std::string> headerpaths, std
         codeFile.close();
     }
     std::stringstream ss;
-    ss << "gcc -c -std=c99 -fPIC -march=native -mtune=native -pipe -w ";
+    ss << "gcc -c -std=c99 -fPIC -march=native -mtune=native -pipe ";
+    if (quiet_)
+        ss << "-w ";
     if (debug)
         ss << "-g -O0 -Wall -Wno-unused-label ";
     else
