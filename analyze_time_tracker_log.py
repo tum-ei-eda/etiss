@@ -2,10 +2,12 @@
 
 import argparse
 import pandas as pd
+from pathlib import Path
 
 parser = argparse.ArgumentParser()
 
 parser.add_argument("log_file")
+parser.add_argument("--out-dir", default=".")
 
 args = parser.parse_args()
 
@@ -58,7 +60,7 @@ plt.legend()
 plt.grid(True)
 plt.tight_layout()
 # plt.show()
-plt.savefig('/home/ga87puy/simulation_mips_plot.png', dpi=300)
+plt.savefig(Path(args.out_dir) / 'simulation_mips_plot.png', dpi=300)
 plt.close()
 
 bin_size = 100000  # or 10_000 or whatever you prefer
@@ -104,5 +106,5 @@ plt.title(f'Simulation Time per {bin_size} Instructions')
 # plt.yscale('log')
 # plt.grid(True)
 plt.tight_layout()
-plt.savefig('/home/ga87puy/simulation_time_per_bin.png', dpi=300)
+plt.savefig(Path(args.out_dir) / 'simulation_time_per_bin.png', dpi=300)
 plt.close()
