@@ -155,6 +155,7 @@ bool PacketProtocol::available(bool block)
         {
             snd("OK", false);
             cfg_noack_ = true;
+            command = "";
         }
         else
         {
@@ -228,13 +229,13 @@ void PacketProtocol::tryReadPacket()
         // verify packet
         if (chksm != ochksm)
         {
-            if (!command_isnotification)
+            if (!command_isnotification && !cfg_noack_)
                 con.snd("-");
             return;
         }
         else
         {
-            if (!command_isnotification)
+            if (!command_isnotification && !cfg_noack_)
                 con.snd("+");
         }
         if (tmp.find('}') == std::string::npos && tmp.find('*') == std::string::npos)
