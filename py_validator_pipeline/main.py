@@ -189,13 +189,13 @@ def verify_entries(golden_ref, custom_is):
         passed_verification = verifier.entries_compared_counter - verifier.entries_with_failures_counter
         failed_verification = verifier.entries_with_failures_counter
         if passed_verification:
-            passed = f"    PASSED "
-            summary += '\033[1m\033[34m' + passed + '\x1b[0m' + (line_length - len(passed)) * '.' + str(passed_verification) + '\n'
+            passed = f"    [PASSED] "
+            summary += passed + (line_length - len(passed)) * '.' + str(passed_verification) + '\n'
         if failed_verification:
-            line3 = f"    FAILED "
-            summary += '\033[1m\033[91m' + line3 + '\x1b[0m' + (line_length - len(line3)) * '.' + str(failed_verification) + '\n'
-        line1 = f"    TOTAL (FUNCTIONS VERIFIED) "
-        summary += '\033[1m' + line1 + '\x1b[0m' + (line_length - len(line1)) * '.' + str(verifier.entries_compared_counter) + '\n'
+            line3 = f"    [FAILED] "
+            summary += line3 + (line_length - len(line3)) * '.' + str(failed_verification) + '\n'
+        line1 = f"    [TOTAL] (functions verified) "
+        summary += line1 + (line_length - len(line1)) * '.' + str(verifier.entries_compared_counter) + '\n'
         logger.info(f"Summary of verification:\n{summary}")
 
     except VerificationProcessException as e:
