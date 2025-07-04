@@ -50,6 +50,7 @@ jobs:
       with:
         repository: tum-ei-eda/etiss_riscv_examples
         path: examples_source
+        submodules: true
 
     - name: Install cross compiler
       run: |
