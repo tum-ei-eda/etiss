@@ -199,7 +199,7 @@ etiss::int32 Server::preInstructionCallback()
     {
         if (!gdb_status_paused_)
         { // answer pending 'c'/'s' command
-            std::cout << "GDB: answer: T05thread:p01.01" << std::endl;
+            // std::cout << "GDB: answer: T05thread:p01.01" << std::endl;
             con_.snd("T05thread:p01.01", false);
             gdb_status_paused_ = true;
         }
@@ -314,7 +314,7 @@ void Server::handlePacket(bool block)
             {
                 if (!gdb_status_paused_)
                 { // answer pending 'c'/'s' command
-                    std::cout << "GDB: answer: T05thread:p01.01" << std::endl;
+                    // std::cout << "GDB: answer: T05thread:p01.01" << std::endl;
                     con_.snd("T05thread:p01.01", false);
                     gdb_status_paused_ = true;
                 }
@@ -559,7 +559,7 @@ void Server::handlePacket(bool block)
                 status_paused_ = false;
                 gdb_status_paused_ = false;
                 status_step_ = 0;
-                std::cout << "GDB: command: " << command << std::endl;
+                // std::cout << "GDB: command: " << command << std::endl;
                 return;
             }
             break;
@@ -578,14 +578,12 @@ void Server::handlePacket(bool block)
                 status_paused_ = false;
                 gdb_status_paused_ = false;
                 status_step_ = 1;
-                std::cout << "GDB: command: " << command << std::endl;
+                // std::cout << "GDB: command: " << command << std::endl;
                 return;
             }
             case '?':
             {
                 answer = "T05thread:p01.01";
-//                hex::fromByte(answer, 5);
-//                answer += ":p01.01";
             }
             break;
             case 'v':
@@ -772,7 +770,6 @@ void Server::handlePacket(bool block)
                                 "     notice and this notice are preserved.  -->\n"
                                 "<!DOCTYPE feature SYSTEM \"gdb-target.dtd\">\n"
                                 "<feature name=\"org.gnu.gdb.riscv.cpu\">\n";
-#if 0
                             // Add entries for each register
                             int reg_num = 0;
                             plugin_core_->getStruct()->foreachField([&answer](auto f) {
@@ -780,60 +777,24 @@ void Server::handlePacket(bool block)
                                 auto reg_type = "int";
                                 if(reg_name == "instructionPointer") {
                                     reg_name = "pc";
-//                                    reg_type = "code_ptr";
+                                    reg_type = "code_ptr";
                                 }
                                 else if(reg_name == "X1") {
                                     reg_name = "ra";
-//                                    reg_type = "code_ptr";
+                                    reg_type = "code_ptr";
                                 }
                                 else if(reg_name == "X2") {
                                     reg_name = "sp";
-//                                    reg_type = "code_ptr";
+                                    reg_type = "code_ptr";
                                 }
                                 else if(reg_name == "X8") {
                                     reg_name = "fp";
-//                                    reg_type = "code_ptr";
+                                    reg_type = "code_ptr";
                                 }
                                 answer += "  <reg name=\"" + reg_name
                                     + "\" bitsize=\"" + std::to_string(f->bitwidth_)
                                     + "\" type=\"" + reg_type + "\"/>\n";
                             });
-#else
-                            answer +=
-                                "  <reg name=\"zero\" bitsize=\"32\" type=\"int\"/>\n"
-                                "  <reg name=\"ra\" bitsize=\"32\" type=\"code_ptr\"/>\n"
-                                "  <reg name=\"sp\" bitsize=\"32\" type=\"data_ptr\"/>\n"
-                                "  <reg name=\"gp\" bitsize=\"32\" type=\"data_ptr\"/>\n"
-                                "  <reg name=\"tp\" bitsize=\"32\" type=\"data_ptr\"/>\n"
-                                "  <reg name=\"t0\" bitsize=\"32\" type=\"int\"/>\n"
-                                "  <reg name=\"t1\" bitsize=\"32\" type=\"int\"/>\n"
-                                "  <reg name=\"t2\" bitsize=\"32\" type=\"int\"/>\n"
-                                "  <reg name=\"fp\" bitsize=\"32\" type=\"data_ptr\"/>\n"
-                                "  <reg name=\"s1\" bitsize=\"32\" type=\"int\"/>\n"
-                                "  <reg name=\"a0\" bitsize=\"32\" type=\"int\"/>\n"
-                                "  <reg name=\"a1\" bitsize=\"32\" type=\"int\"/>\n"
-                                "  <reg name=\"a2\" bitsize=\"32\" type=\"int\"/>\n"
-                                "  <reg name=\"a3\" bitsize=\"32\" type=\"int\"/>\n"
-                                "  <reg name=\"a4\" bitsize=\"32\" type=\"int\"/>\n"
-                                "  <reg name=\"a5\" bitsize=\"32\" type=\"int\"/>\n"
-                                "  <reg name=\"a6\" bitsize=\"32\" type=\"int\"/>\n"
-                                "  <reg name=\"a7\" bitsize=\"32\" type=\"int\"/>\n"
-                                "  <reg name=\"s2\" bitsize=\"32\" type=\"int\"/>\n"
-                                "  <reg name=\"s3\" bitsize=\"32\" type=\"int\"/>\n"
-                                "  <reg name=\"s4\" bitsize=\"32\" type=\"int\"/>\n"
-                                "  <reg name=\"s5\" bitsize=\"32\" type=\"int\"/>\n"
-                                "  <reg name=\"s6\" bitsize=\"32\" type=\"int\"/>\n"
-                                "  <reg name=\"s7\" bitsize=\"32\" type=\"int\"/>\n"
-                                "  <reg name=\"s8\" bitsize=\"32\" type=\"int\"/>\n"
-                                "  <reg name=\"s9\" bitsize=\"32\" type=\"int\"/>\n"
-                                "  <reg name=\"s10\" bitsize=\"32\" type=\"int\"/>\n"
-                                "  <reg name=\"s11\" bitsize=\"32\" type=\"int\"/>\n"
-                                "  <reg name=\"t3\" bitsize=\"32\" type=\"int\"/>\n"
-                                "  <reg name=\"t4\" bitsize=\"32\" type=\"int\"/>\n"
-                                "  <reg name=\"t5\" bitsize=\"32\" type=\"int\"/>\n"
-                                "  <reg name=\"t6\" bitsize=\"32\" type=\"int\"/>\n"
-                                "  <reg name=\"pc\" bitsize=\"32\" type=\"code_ptr\"/>\n";
-#endif
                             answer += "</feature>\n";
                         }
                     }
@@ -870,8 +831,8 @@ void Server::handlePacket(bool block)
             }
             if (!nodbgaction)
             {
-                std::cout << "GDB: command: " << command << std::endl;
-                std::cout << "GDB: answer: "<<answer << std::endl;
+                // std::cout << "GDB: command: " << command << std::endl;
+                // std::cout << "GDB: answer: "<<answer << std::endl;
             }
             con_.snd(answer, answerisnotification);
         }
