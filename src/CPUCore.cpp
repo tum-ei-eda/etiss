@@ -694,7 +694,11 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
 
     bool exit_on_loop = etiss::cfg().get<bool>("etiss.exit_on_loop", false);
 
+    struct timespec start, finish;
+
+    clock_gettime(CLOCK_MONOTONIC, &start);
     float startTime = (float)clock() / CLOCKS_PER_SEC; // TESTING
+
 
     BlockLink *blptr = 0; // pointer to the current block
 
@@ -831,7 +835,7 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
     }
 
 loopexit:
-
+    clock_gettime(CLOCK_MONOTONIC, &finish);
     float endTime = (float)clock() / CLOCKS_PER_SEC;
 
 
@@ -844,12 +848,14 @@ loopexit:
     // Defining the statistics of measurement and printing them
     double cpu_time = cpu_->cpuTime_ps / 1.0E12;
     double simulation_time = endTime - startTime;
+    double wall_time = (finish.tv_sec - start.tv_sec) + (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
     double cpu_cycle = cpu_->cpuTime_ps / (float)cpu_->cpuCycleTime_ps;
     double mips = cpu_->cpuTime_ps / (float)cpu_->cpuCycleTime_ps / simulation_time / 1.0E6;
+    double mips_ = cpu_->cpuTime_ps / (float)cpu_->cpuCycleTime_ps / wall_time / 1.0E6;
     std::cout << "CPU Time: " << (cpu_time) << "s    Simulation Time: " << (simulation_time) << "s"
-              << std::endl;
+              << "    Wallclock Time: " << (wall_time) << "s" << std::endl;
     std::cout << "CPU Cycles (estimated): " << (cpu_cycle) << std::endl;
-    std::cout << "MIPS (estimated): " << (mips) << std::endl;
+    std::cout << "MIPS (estimated): " << (mips) << "    MIPS (corrected): " << (mips_) << std::endl;
 
 
     // declaring path of writing the json file contaiing performance metrics and the boolean which approves of writing the json output
