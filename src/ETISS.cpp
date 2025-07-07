@@ -743,6 +743,7 @@ void etiss_initialize(const std::vector<std::string>& args, bool forced = false)
             ("etiss.max_block_size", po::value<int>(), "Sets maximum amount of instructions in a block.")
             ("etiss.output_path_prefix", po::value<std::string>(), "Path prefix to use when writing output files.")
             ("etiss.loglevel", po::value<int>(), "Verbosity of logging output.")
+            ("etiss.log_to_stderr", po::value<bool>(), "Log to stderr instead of stdout.")
             ("jit.gcc.cleanup", po::value<bool>(), "Cleans up temporary files in GCCJIT. ")
             ("jit.verify", po::value<bool>(), "Run some basic checks to verify the functionality of the JIT engine.")
             ("jit.debug", po::value<bool>(), "Causes the JIT Engines to compile in debug mode.")
@@ -837,6 +838,12 @@ void etiss_initialize(const std::vector<std::string>& args, bool forced = false)
             etiss::log(etiss::ERROR, "Specified log level is not valid. must range between 0 (= "
                                      "silent) and 5 (= verbose)");
         }
+    }
+    // log to strerr
+    {
+        bool log_to_stderr = cfg().get<bool>("etiss.log_to_stderr", false);
+        etiss::log_to_stderr() = log_to_stderr;
+        etiss::log(etiss::VERBOSE, "Logging to stderr");
     }
 
     etiss::py::init(); // init python
