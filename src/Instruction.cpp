@@ -348,11 +348,17 @@ void Instruction::setASMPrinter(std::function<std::string(BitArray &, Instructio
         printer_ = printASMSimple;
 }
 
+#if ETISS_NEW_DECODER
+InstructionSet::InstructionSet(VariableInstructionSet &parent, unsigned width, const std::string &name)
+    : parent_(parent), name_(name), width_(width), invalid(width, -1, -1, "INVALID")
+{
+}
+#else
 InstructionSet::InstructionSet(VariableInstructionSet &parent, unsigned width, const std::string &name, unsigned c_size)
     : parent_(parent), name_(name), width_(width), chunk_size(c_size), root_(nullptr), invalid(width, -1, -1, "INVALID")
 {
-
 }
+#endif
 
 InstructionSet::~InstructionSet()
 {
@@ -365,9 +371,11 @@ InstructionSet::~InstructionSet()
         iter = instrmap_.begin();
         delete i;
     }
-    for(unsigned int i = 0; i < width_ / chunk_size; i++)
+#if !ETISS_NEW_DECODER
+    for (unsigned int i = 0; i < width_ / chunk_size; i++)
         delete[] root_[i];
     delete root_;
+#endif
 }
 
 Instruction *InstructionSet::get(const OPCode &key)
@@ -410,36 +418,59 @@ Instruction *InstructionSet::create(const OPCode &key, const std::string &name)
     return ret;
 }
 
+#if ETISS_NEW_DECODER
+bool InstructionSet::compile()
+{
+    lut.clear();
+    for (const auto &op2instr : instrmap_)
+    {
+        Instruction *inst = op2instr.second;
+        const OPCode *opcode = op2instr.first;
+        lut[width_][opcode->mask_][opcode->code_] = inst;
+    }
+    compiled_ = true;
+    return true;
+}
+#else
 bool InstructionSet::compile()
 {
     delete root_; // cleanup
 
-    root_ = new Node*[width_ / chunk_size](); // number of groups = width_ / chunk_size
+    root_ = new Node *[width_ / chunk_size](); // number of groups = width_ / chunk_size
 
     bool ok = true;
 
     std::vector<size_type> indexes;
-    for (const auto& op2instr : instrmap_){ // iterate through all instructions
-        Instruction* inst = op2instr.second; // current instruction to be assigned
+    for (const auto &op2instr : instrmap_)
+    { // iterate through all instructions
+        Instruction *inst = op2instr.second; // current instruction to be assigned
         BitArray code = op2instr.first->code_; // opcode of the current instruction
         BitArray mask = op2instr.first->mask_; // mask of the opcode
 
+        etiss_log(WARNING, std::string("instruction name: ") + inst->name_ + std::string(" | bit pattern: ") +
+                               code.to_string() + std::string(" | mask: ") + mask.to_string() +
+                               std::string(" | width: ") + std::to_string(width_) +
+                               std::string(" | chunk size: ") + std::to_string(chunk_size));
+
         // iterate through chunks and permutate chunks. then put them into nodes
-        for (size_type i = 0; i < mask.size() / chunk_size; ++i){
-            auto chunk_bits_code = code.get_range((i+1)*chunk_size-1, i*chunk_size); // ith chunk of the opcode
-            auto chunk_bits_mask = mask.get_range((i+1)*chunk_size-1, i*chunk_size); // ith chunk of the mask
+        for (size_type i = 0; i < mask.size() / chunk_size; ++i)
+        {
+            auto chunk_bits_code = code.get_range((i + 1) * chunk_size - 1, i * chunk_size); // ith chunk of the opcode
+            auto chunk_bits_mask = mask.get_range((i + 1) * chunk_size - 1, i * chunk_size); // ith chunk of the mask
 
             indexes.clear();
             for (size_type j = 0; j < chunk_bits_mask.size(); ++j)
-                if (!chunk_bits_mask[j]) indexes.push_back(j); // these indexed should be permutated since
-                                                               // they dont have associated mask bit
+                if (!chunk_bits_mask[j])
+                    indexes.push_back(j); // these indexed should be permutated since
+                                          // they dont have associated mask bit
 
-            if(!(root_[i])) // not initialized
+            if (!(root_[i])) // not initialized
                 root_[i] = new Node[(int)std::pow(2, chunk_size)]; // each group has 2^(chunksize) nodes
 
             auto permutated_chunk_codes = BitArray::permutate(chunk_bits_code, indexes); // put permutated codes
 
-            for(const auto& permutated_chunk : permutated_chunk_codes){
+            for (const auto &permutated_chunk : permutated_chunk_codes)
+            {
                 auto val = permutated_chunk.to_ulong(); // index of the node based on the value of the chunk
                 root_[i][val].insert(inst); // assign the current instruction to the associated node
             }
@@ -447,43 +478,115 @@ bool InstructionSet::compile()
     }
     return ok;
 }
+#endif
 
+#if ETISS_NEW_DECODER
 Instruction *InstructionSet::resolve(BitArray &instr)
 {
-    std::set<Instruction*> results;
-    for (size_type i = 0; i < instr.size() / chunk_size; ++i){ // divide the incoming bitarray into chunks
-        auto chunk_bits_code = instr.get_range((i+1)*chunk_size-1, i*chunk_size); // get ith chunk
+    if (!compiled_)
+    {
+        etiss::log(etiss::ERROR, "resolve() called on uncompiled InstructionSet");
+        return nullptr;
+    }
+
+    std::vector<Instruction *> candidateMatches;
+    auto &mask_map = lut[instr.size()];
+
+    for (auto const &[mask, pattern_map] : mask_map)
+    {
+        BitArray key = instr & mask;
+        if (pattern_map.count(key))
+        {
+            candidateMatches.push_back(pattern_map.at(key));
+        }
+    }
+
+    if (candidateMatches.empty())
+    {
+        return nullptr;
+    }
+    else if (candidateMatches.size() == 1)
+    {
+        return candidateMatches[0];
+    }
+    else
+    {
+        Instruction *bestMatch = nullptr;
+        size_t max_popcount = 0;
+
+        // TODO(MM) use std lib to find the best match instead of this loop
+        for (Instruction *candidate : candidateMatches)
+        {
+            size_t popcount = candidate->opc_.mask_.count();
+            if (popcount > max_popcount)
+            {
+                max_popcount = popcount;
+                bestMatch = candidate;
+            }
+        }
+        return bestMatch;
+    }
+}
+#else
+Instruction *InstructionSet::resolve(BitArray &instr)
+{
+    etiss_log(INFO, std::string("resolving bit pattern: ") + instr.to_string());
+    std::set<Instruction *> results;
+    for (size_type i = 0; i < instr.size() / chunk_size; ++i)
+    { // divide the incoming bitarray into chunks
+        auto chunk_bits_code = instr.get_range((i + 1) * chunk_size - 1, i * chunk_size); // get ith chunk
 
         auto val = chunk_bits_code.to_ulong(); // the value chunk is evaluated to,
                                                // which is also the index of the associated node
-        auto instrs_in_node = root_[i][val]; // val'th node
+        auto instrs_in_node = root_[i][val];   // val'th node
 
-        if(i==0) results = instrs_in_node;
-        else{ // intersect all the associated nodes, the result will be the decoded instruction
-            std::set<Instruction*> results_o;
+        if (i == 0)
+            results = instrs_in_node;
+        else
+        { // intersect all the associated nodes, the result will be the decoded instruction
+            std::set<Instruction *> results_o;
             std::set_intersection(results.begin(), results.end(), // intersect the ith node with the
-                instrs_in_node.begin(), instrs_in_node.end(),     // current results
-                std::inserter(results_o, results_o.begin()));     // put overlapped instructions to results_o
+                                  instrs_in_node.begin(), instrs_in_node.end(), // current results
+                                  std::inserter(results_o, results_o.begin())); // put overlapped instructions to
+                                                                                // results_o
             results = results_o; // write the overlapped instructions to results
         }
     }
 
-    if(results.empty()) return nullptr; // there is no overlapped instruction after the decoding
-    else if(results.size() == 1) return *(results.begin()); // instruction is found succesfully
-    else{
+    if (results.empty())
+    {
+        etiss_log(INFO, "failed to resolve instruction");
+        return nullptr; // there is no overlapped instruction after the decoding
+    }
+    else if (results.size() == 1)
+    {
+        Instruction *result = *(results.begin());
+        etiss_log(INFO, std::string("resolved instruction: ") + result->name_);
+        return result; // instruction is found succesfully
+    }
+    else
+    {
         // sometimes an instruction can be a subset of another instruction and hence the
         // algorithm can find multiple instruction. In such cases, it is returning the parent
         // instruction by simply returning the instrucion whose opcode is the longest,
         // i.e mask has the most 1-bits.
-        auto longest = std::max_element(results.begin(), results.end(),
-            [](const Instruction* lhs, const Instruction* rhs) { return lhs->opc_.mask_.count() < rhs->opc_.mask_.count();});
-        return *longest;
+        auto longest = std::max_element(
+            results.begin(), results.end(),
+            [](const Instruction *lhs, const Instruction *rhs) { return lhs->opc_.mask_.count() < rhs->opc_.mask_.count(); });
+        Instruction *result = *longest;
+        etiss_log(INFO, std::string("resolved instruction (from multiple): ") + result->name_);
+        return result;
     }
 }
+#endif
 
 std::string InstructionSet::print(std::string prefix, bool printunused)
 {
+#if !ETISS_NEW_DECODER
     if (root_ != nullptr)
+#else
+    if (!instrmap_.empty())
+#endif
     {
         std::stringstream ss;
         ss << prefix << name_ << "[" << width_ << "]:\n";
