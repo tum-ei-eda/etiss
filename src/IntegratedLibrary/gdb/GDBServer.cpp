@@ -771,7 +771,6 @@ void Server::handlePacket(bool block)
                                 "<!DOCTYPE feature SYSTEM \"gdb-target.dtd\">\n"
                                 "<feature name=\"org.gnu.gdb.riscv.cpu\">\n";
                             // Add entries for each register
-                            int reg_num = 0;
                             plugin_core_->getStruct()->foreachField([&answer](auto f) {
                                 auto reg_name = f->prettyname_;
                                 auto reg_type = "int";
