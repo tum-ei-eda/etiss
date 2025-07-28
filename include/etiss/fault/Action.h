@@ -56,15 +56,12 @@
 #include <stdint.h>
 
 #ifndef NO_ETISS
+#include "etiss/Misc.h"
 #include "etiss/fault/Defs.h"
-#include "etiss/fault/Fault.h"
 #include "etiss/fault/InjectorAddress.h"
-#include "etiss/fault/XML.h"
 #else
 #include "fault/Defs.h"
-#include "fault/Fault.h"
 #include "fault/InjectorAddress.h"
-#include "fault/XML.h"
 #endif
 
 namespace etiss
@@ -73,6 +70,7 @@ namespace fault
 {
 
 class Fault;
+class InjectorAddress;
 
 class Action : public etiss::ToString
 {
@@ -147,11 +145,6 @@ class Action : public etiss::ToString
 
 namespace xml
 {
-
-template <>
-bool parse<etiss::fault::Action>(pugi::xml_node node, etiss::fault::Action &f, Diagnostics &diag);
-template <>
-bool write<etiss::fault::Action>(pugi::xml_node node, const etiss::fault::Action &f, Diagnostics &diag);
 
 } // namespace xml
 

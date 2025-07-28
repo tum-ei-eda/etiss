@@ -1,4 +1,4 @@
-/*
+/**
 
         @copyright
 
@@ -36,67 +36,37 @@
 
         @author Chair of Electronic Design Automation, TUM
 
+        @date November 18, 2021
+
         @version 0.1
 
 */
+/**
+        @file
 
-#include "etiss/IntegratedLibrary/InstructionAccurateCallback.h"
-#include "etiss/fault/Stressor.h"
+        @brief general helpers for fault
 
-#include "etiss/CPUCore.h"
-#include "etiss/Instruction.h"
+        @detail
 
-extern "C"
-{
-    void etiss_plugin_InstructionAccurateCallback(void *ptr)
-    {
-        etiss::plugin::InstructionAccurateCallback &vvl = *(etiss::plugin::InstructionAccurateCallback *)ptr;
-        vvl.call();
-    }
-}
+
+
+
+*/
+
+#ifndef ETISS_INCLUDE_FAULT_MISC_H_
+#define ETISS_INCLUDE_FAULT_MISC_H_
+
+#include <map>
+#include <string>
+#include <vector>
 
 namespace etiss
 {
-
-namespace plugin
+namespace fault
 {
 
-InstructionAccurateCallback::InstructionAccurateCallback() {}
-InstructionAccurateCallback::~InstructionAccurateCallback() {}
+} // end of namespace fault
 
-void InstructionAccurateCallback::initCodeBlock(etiss::CodeBlock &block) const
-{
-    block.fileglobalCode().insert("extern void etiss_plugin_InstructionAccurateCallback(void *); ");
-}
+} // end of namespace etiss
 
-void InstructionAccurateCallback::finalizeInstrSet(etiss::instr::ModedInstructionSet &mis) const
-{
-    mis.foreach ([this](etiss::instr::VariableInstructionSet &vis) {
-        vis.foreach ([this](etiss::instr::InstructionSet &is) {
-            is.foreach ([this](etiss::instr::Instruction &i) {
-                i.addCallback(
-                    [this](etiss::instr::BitArray &, etiss::CodeSet &cs, etiss::instr::InstructionContext &) {
-                        etiss::CodePart &p = cs.append(etiss::CodePart::INITIALREQUIRED);
-                        p.getRegisterDependencies().add("cpuTime_ps", 8);
-                        p.code() = std::string("etiss_plugin_InstructionAccurateCallback(") + getPointerCode() + ");";
-                        return true;
-                    },
-                    0);
-            });
-        });
-    });
-}
-
-std::string InstructionAccurateCallback::_getPluginName() const
-{
-    return std::string("InstructionAccurateCallback");
-}
-
-void InstructionAccurateCallback::call()
-{
-    plugin_core_->getStruct()->instructionAccurateCallback(plugin_cpu_->cpuTime_ps);
-}
-
-} // namespace plugin
-
-} // namespace etiss
+#endif /* ETISS_INCLUDE_FAULT_MISC_H_ */
