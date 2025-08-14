@@ -56,7 +56,7 @@ etiss_int32 i = 0ULL;
 while (i < 32ULL) {
 { // block
 cp.code() += "{ // block\n";
-cp.code() += "etiss_int16 prod = (etiss_int64)((((*((RV64IMACFD*)cpu)->X[" + std::to_string(rs1) + "ULL]) >> (" + std::to_string(i) + "LL)) & ((1 << ((" + std::to_string(i + 7ULL) + "LL) - (" + std::to_string(i) + "LL) + 1)) - 1))) * (etiss_int64)((((*((RV64IMACFD*)cpu)->X[" + std::to_string(rs2) + "ULL]) >> (" + std::to_string(i) + "LL)) & ((1 << ((" + std::to_string(i + 7ULL) + "LL) - (" + std::to_string(i) + "LL) + 1)) - 1)));\n";
+cp.code() += "etiss_int16 prod = (etiss_int64)(etiss_int8)((((*((RV64IMACFD*)cpu)->X[" + std::to_string(rs1) + "ULL]) >> (" + std::to_string(i) + "LL)) & ((1 << ((" + std::to_string(i + 7ULL) + "LL) - (" + std::to_string(i) + "LL) + 1)) - 1))) * (etiss_int64)(etiss_int8)((((*((RV64IMACFD*)cpu)->X[" + std::to_string(rs2) + "ULL]) >> (" + std::to_string(i) + "LL)) & ((1 << ((" + std::to_string(i + 7ULL) + "LL) - (" + std::to_string(i) + "LL) + 1)) - 1)));\n";
 cp.code() += "res = res + prod;\n";
 cp.code() += "} // block\n";
 } // block
