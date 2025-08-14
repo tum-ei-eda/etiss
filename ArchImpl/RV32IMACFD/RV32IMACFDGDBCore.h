@@ -1,5 +1,5 @@
 /**
- * Generated on Fri, 03 Nov 2023 13:22:23 +0100.
+ * Generated on Thu, 14 Aug 2025 12:04:42 +0200.
  *
  * This file contains the GDBCore adapter for the RV32IMACFD core architecture.
  *
