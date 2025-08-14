@@ -1,4 +1,4 @@
-# Generated on Fri, 03 Nov 2023 13:22:23 +0100.
+# Generated on Thu, 14 Aug 2025 12:32:39 +0200.
 #
 # This file contains the CMake build info for the RV64IMACFD core architecture.
 
@@ -33,6 +33,7 @@ ADD_LIBRARY(${PROJECT_NAME} SHARED
 	RV64IMACFD_tum_rva64Instr.cpp
 	RV64IMACFD_tum_rvmInstr.cpp
 	RV64IMACFD_tum_semihostingInstr.cpp
+	RV64IMACFD_dotprodInstr.cpp
 )
 
 add_custom_command(

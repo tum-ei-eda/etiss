@@ -1,5 +1,5 @@
 /**
- * Generated on Fri, 03 Nov 2023 13:22:23 +0100.
+ * Generated on Thu, 14 Aug 2025 12:32:39 +0200.
  *
  * This file contains the function implementations for the RV64IMACFD core architecture.
  */
@@ -123,6 +123,9 @@ if (csr == 1LL) { // conditional
 etiss_uint64 RV64IMACFD_get_field(etiss_uint64 reg, etiss_uint64 mask)
 {
 { // block
+if (!(mask)) { // conditional
+return 0ULL;
+} // conditional
 return (reg & mask) / (mask & ~((mask << 1ULL)));
 } // block
 }
