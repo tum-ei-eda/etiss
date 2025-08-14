@@ -158,6 +158,7 @@ class SimpleMemSystem : public System
 
     void init_memory();
     void load_elf();
+    void load_boot();
     void load_segments(void);
     etiss::uint64 get_startaddr(void) { return (start_addr_); }
     void add_memsegment(std::unique_ptr<MemSegment>& mseg, const void *raw_data, size_t file_size_bytes);
