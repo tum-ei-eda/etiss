@@ -59,7 +59,7 @@ jobs:
 
     - name: Configure examples
       run: |
-        cmake -B examples_build_rv${{matrix.bits}}_${{matrix.build_type}} -S examples_source -DCMAKE_TOOLCHAIN_FILE=rv${{matrix.bits}}gc-toolchain.cmake -DRISCV_TOOLCHAIN_BASENAME=riscv-none-elf -DRISCV_TOOLCHAIN_PREFIX=$GITHUB_WORKSPACE/riscv_tc -DCMAKE_INSTALL_PREFIX=examples_prebuilt_rv${{matrix.bits}}_${{matrix.build_type}} -DCMAKE_BUILD_TYPE=${{matrix.build_type}}
+        cmake -B examples_build_rv${{matrix.bits}}_${{matrix.build_type}} -S examples_source -DCMAKE_TOOLCHAIN_FILE=rv${{matrix.bits}}gc-toolchain.cmake -DRISCV_TOOLCHAIN_BASENAME=riscv-none-elf -DRISCV_TOOLCHAIN_PREFIX=$GITHUB_WORKSPACE/riscv_tc -DCMAKE_INSTALL_PREFIX=examples_prebuilt_rv${{matrix.bits}}_${{matrix.build_type}} -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DTVM=OFF -DTFLM=OFF
 
     - name: Build examples
       run: |
