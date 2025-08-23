@@ -16,12 +16,21 @@ MACRO(ETISSPlugin ProjName)
         LIBRARY DESTINATION lib/plugins
         ARCHIVE DESTINATION lib/plugins
     )
-    INSTALL(CODE
-        "FILE(APPEND
-            \"${CMAKE_INSTALL_PREFIX}/lib/plugins/list.txt\"
-            \"${ProjName},\${CMAKE_INSTALL_PREFIX}/lib/plugins,${ProjName}\\n\"
-        )"
-    )
+    IF(PORTABLE_INSTALL)
+        INSTALL(CODE
+            "FILE(APPEND
+                \"${CMAKE_INSTALL_PREFIX}/lib/plugins/list.txt\"
+                \"${ProjName}\\n\"
+            )"
+        )
+    ELSE()
+        INSTALL(CODE
+            "FILE(APPEND
+                \"${CMAKE_INSTALL_PREFIX}/lib/plugins/list.txt\"
+                \"${ProjName},\${CMAKE_INSTALL_PREFIX}/lib/plugins,${ProjName}\\n\"
+            )"
+        )
+    ENDIF()
 
     # mimicing installation in build tree as well
     IF(ETISS_BINARY_DIR)
