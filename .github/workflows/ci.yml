@@ -100,6 +100,10 @@ jobs:
         chmod +x etiss_prebuilt/bin/bare_etiss_processor
         etiss_prebuilt/bin/bare_etiss_processor -iexamples_prebuilt_rv${{matrix.bits}}_${{matrix.build_type}}/ini/${{matrix.test_program}}.ini --jit.type=${{matrix.jit_engine}}JIT
 
+    - name: Test GDBServer
+      run: |
+        ETISS=$(pwd)/etiss_prebuilt/bin/bare_etiss_processor RISCV_GDB=$(pwd)/riscv_tc/bin/riscv-none-elf-gdb ./script/test_gdbserver.sh examples_prebuilt_rv${{matrix.bits}}_${{matrix.build_type}}/ini/${{matrix.test_program}}.ini examples_prebuilt_rv${{matrix.bits}}_${{matrix.build_type}}/bin/${{matrix.test_program}} 2001 ${{matrix.jit_engine}}
+
   run_benchmarks:
     runs-on: ubuntu-22.04
     needs: [build_etiss, build_examples]
