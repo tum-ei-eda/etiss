@@ -43,7 +43,8 @@ jobs:
     strategy:
       matrix:
         bits: ["32", "64"]
-        build_type: ["Release", "Debug"]    
+        build_type: ["Release", "Debug"]
+        
     steps:
     - uses: actions/checkout@v4
       with:
@@ -87,6 +88,8 @@ jobs:
         build_type: ["Release", "Debug"]
 
     steps:
+    - uses: actions/checkout@v4
+    
     - name: Fetch precompiled artifacts
       uses: actions/download-artifact@v4
 
