@@ -12,13 +12,8 @@ export ELF=${2:-./examples_prebuilt_rv32/bin/hello_world}
 export PORT=${3:-2001}
 export JIT=${4:-TCC}
 TIMEOUT_SEC=${5:-180}
-echo qqq
+
 $ETISS -i$INI --jit.type=${JIT}JIT -pgdbserver --plugin.gdbserver.port=$PORT 2>&1 > etiss_output.log &
-# tee_pid=$!
-# echo www
-# sleep 0.1  # give the processes a moment to start
-# ETISS_PID=$(pgrep -P $tee_pid)
-# echo "PID of tee: $tee_pid"
 ETISS_PID=$!
 echo ETISS_PID=$ETISS_PID
 
@@ -61,9 +56,9 @@ fi
 
 grep -q "Remote communication error" gdb_output.log && GDB_CRASH=1 || GDB_CRASH=0
 
-elif [[ $TIMEOUT_EXIT -ne 0 ]]
+if [[ $GDB_CRASH -ne 0 ]]
 then
-    echo "GDB Session crashed!"
+    echo "GDB connection lost!"
     exit 1
 fi
 
