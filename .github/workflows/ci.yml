@@ -50,9 +50,7 @@ jobs:
       uses: actions/cache@v4
       with:
         path: riscv_tc/
-        key: gcc-binaries-${{ runner.os }}-${{ matrix.gcc_version }}-${{ github.sha }}
-        restore-keys: |
-          gcc-binaries-${{ runner.os }}-${{ matrix.gcc_version }}
+        key: gcc-binaries-${{ runner.os }}-${{ matrix.gcc_version }}
        
     - name: Install cross compiler
       if: steps.cache-gcc.outputs.cache-hit != 'true'
@@ -79,7 +77,6 @@ jobs:
         submodules: true
 
     - name: Download Cached GCC Binaries
-      if: success()
       id: cache-gcc
       uses: actions/cache/restore@v4
       with:
