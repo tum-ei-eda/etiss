@@ -33,10 +33,10 @@ trap cleanup EXIT
 # Wait until gdbserver socket is ready
 for i in {1..10}; do
     if nc -z localhost $PORT; then break; fi
-    sleep 0.2
+    sleep 1
 done
 
-sleep 1
+sleep 3
 
 # echo "Ready"
 
@@ -49,7 +49,6 @@ export -f run_gdb_session
 timeout $TIMEOUT_SEC bash -c run_gdb_session 2>&1 | tee gdb_output.log
 TIMEOUT_EXIT=$?
 
-
 if [[ $TIMEOUT_EXIT -eq 124 ]]
 then
     echo "GDB Session timed out!"
@@ -60,7 +59,13 @@ then
     exit 1
 fi
 
-echo C
+grep -q "Remote communication error" gdb_output.log && GDB_CRASH=1 || GDB_CRASH=0
+
+elif [[ $TIMEOUT_EXIT -ne 0 ]]
+then
+    echo "GDB Session crashed!"
+    exit 1
+fi
 
 # read -n 1
 
@@ -92,6 +97,7 @@ for re in "${checks[@]}"; do
 done
 
 echo "Cleaning up..."  # TODO: use temp workdir?
+rm etiss_output.log
 rm gdb_output.log
 
 echo "✅ test passed"
