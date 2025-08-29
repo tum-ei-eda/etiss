@@ -2,15 +2,16 @@
 
 set -euo pipefail
 
-SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+export SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
-RISCV_GDB=${RISCV_GDB:-riscv-none-elf-gdb}
-ETISS=${ETISS:-bare_etiss_processor}
+export RISCV_GDB=${RISCV_GDB:-riscv-none-elf-gdb}
+export ETISS=${ETISS:-bare_etiss_processor}
 
-INI=${1:-./examples_prebuilt_rv32/ini/hello_world.ini}
-ELF=${2:-./examples_prebuilt_rv32/bin/hello_world}
-PORT=${3:-2001}
-JIT=${4:-TCC}
+export INI=${1:-./examples_prebuilt_rv32/ini/hello_world.ini}
+export ELF=${2:-./examples_prebuilt_rv32/bin/hello_world}
+export PORT=${3:-2001}
+export JIT=${4:-TCC}
+TIMEOUT_SEC=${5:-180}
 
 $ETISS -i$INI --jit.type=${JIT}JIT -pgdbserver --plugin.gdbserver.port=$PORT &
 ETISS_PID=$!
@@ -29,10 +30,39 @@ for i in {1..10}; do
     sleep 0.2
 done
 
+sleep 1
+
 # echo "Ready"
 
-# Avoid non-xero exit code of GDB if etiss disconnects after simulation
-($RISCV_GDB -q -nx -batch -x $SCRIPT_DIR/gdbserver_test.cmd "$ELF" -ex "continue" || true) 2>&1 | tee gdb_output.log
+# Avoid non-zero exit code of GDB if etiss disconnects after simulation
+
+run_gdb_session() {
+    $RISCV_GDB -q -nx -batch -x $SCRIPT_DIR/gdbserver_test.cmd "$ELF" -ex "continue" && OK=1 || OK=0
+    echo "OK=$OK"
+    if [[ $OK -eq 0 ]]
+    then
+        echo "GDB reported non-zero exit!"
+        exit 1
+    else
+        echo "GDB finished successfully!"
+    fi
+}
+export -f run_gdb_session
+
+#set -o pipefail
+timeout $TIMEOUT_SEC bash -c run_gdb_session 2>&1 | tee gdb_output.log
+TIMEOUT_EXIT=$?
+#set +o pipefail
+
+if [[ $TIMEOUT_EXIT -eq 124 ]]
+then
+    echo "GDB Session timed out!"
+    exit 1
+elif [[ $TIMEOUT_EXIT -ne 0 ]]
+then
+    echo "GDB Session crashed!"
+    exit 1
+fi
 
 # read -n 1
 
