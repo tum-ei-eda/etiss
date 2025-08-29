@@ -12,3 +12,4 @@ info registers
 i r x0
 i r zero
 i r pc
+delete
