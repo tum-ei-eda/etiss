@@ -29,7 +29,7 @@ PrintInstruction::PrintInstruction(bool print_to_file) : print_to_file_(print_to
 {
     if (print_to_file_) {
         std::string prefix = etiss::cfg().get<std::string>("etiss.output_path_prefix", "");
-        std::string path = prefix + "instr_trace.csv";
+        std::string path = prefix + "/instr_trace.csv";
         outfile.open(path);
     } else {
     }
@@ -76,7 +76,7 @@ void PrintInstruction::finalizeInstrSet(etiss::instr::ModedInstructionSet &mis) 
                                     ss << "0x" << std::hex << std::setfill('0') << std::setw(16) << ic.current_address_
                                        << ": ";
 
-                                    ss << instr.printASM(ba);
+                                    ss << instr.printASM(ba); // TODO: make optional
 
                                     ss << "\\n";
 
@@ -89,6 +89,7 @@ void PrintInstruction::finalizeInstrSet(etiss::instr::ModedInstructionSet &mis) 
                                 0);
                         });
                 });
+
         });
 }
 
