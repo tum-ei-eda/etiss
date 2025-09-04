@@ -762,6 +762,7 @@ void etiss_initialize(const std::vector<std::string>& args, bool forced = false)
             ("plugin.logger.logaddr", po::value<std::string>(), "Provides the compare address that is used to check for memory accesses that are redirected to the logger.")
             ("plugin.logger.logmask", po::value<std::string>(), "Provides the mask that is used to check for memory accesses that are redirected to the logger.")
             ("plugin.gdbserver.port", po::value<std::string>(), "Option for gdbserver")
+            ("plugin.printinstruction.print_to_file", po::value<bool>(), "Traces PrintInstruction output to CSV file.")
             ("pluginToLoad,p", po::value<std::vector<std::string>>()->multitoken(), "List of plugins to be loaded.")
             ;
 
