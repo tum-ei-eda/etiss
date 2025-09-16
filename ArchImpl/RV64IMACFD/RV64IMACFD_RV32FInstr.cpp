@@ -1,5 +1,5 @@
 /**
- * Generated on Thu, 24 Oct 2024 10:16:12 +0200.
+ * Generated on Tue, 16 Sep 2025 12:56:33 +0200.
  *
  * This file contains the instruction behavior models of the RV32F
  * instruction set for the RV64IMACFD core architecture.
@@ -1185,7 +1185,7 @@ cp.code() += "etiss_uint32 frs1 = unbox_s(((RV64IMACFD*)cpu)->F[" + std::to_stri
 cp.code() += "etiss_coverage_count(4, 4130, 4129, 4128, 4127);\n";
 cp.code() += "etiss_uint32 frs2 = unbox_s(((RV64IMACFD*)cpu)->F[" + std::to_string(rs2) + "ULL]);\n";
 cp.code() += "etiss_coverage_count(4, 4136, 4135, 4134, 4133);\n";
-cp.code() += "etiss_uint32 res = ((((((frs2) >> (31ULL)) & 1ULL)) << 31) | ((((frs1) >> (0LL)) & 2147483647ULL)));\n";
+cp.code() += "etiss_uint32 res = ((((((frs2) >> (31ULL)) & 0x1ULL)) << 31) | (((frs1) & 0x7fffffffULL)));\n";
 cp.code() += "etiss_coverage_count(10, 4147, 4146, 4141, 4138, 4139, 4140, 4145, 4142, 4143, 4144);\n";
 cp.code() += "((RV64IMACFD*)cpu)->F[" + std::to_string(rd) + "ULL] = -4294967296LL | (etiss_uint64)(res);\n";
 cp.code() += "etiss_coverage_count(6, 4160, 4150, 4149, 4159, 4158, 4156);\n";
@@ -1275,7 +1275,7 @@ cp.code() += "etiss_uint32 frs1 = unbox_s(((RV64IMACFD*)cpu)->F[" + std::to_stri
 cp.code() += "etiss_coverage_count(4, 4190, 4189, 4188, 4187);\n";
 cp.code() += "etiss_uint32 frs2 = unbox_s(((RV64IMACFD*)cpu)->F[" + std::to_string(rs2) + "ULL]);\n";
 cp.code() += "etiss_coverage_count(4, 4196, 4195, 4194, 4193);\n";
-cp.code() += "etiss_uint32 res = (((~((((frs2) >> (31ULL)) & 1ULL))) << 31) | ((((frs1) >> (0LL)) & 2147483647ULL)));\n";
+cp.code() += "etiss_uint32 res = (((~((((frs2) >> (31ULL)) & 0x1ULL))) << 31) | (((frs1) & 0x7fffffffULL)));\n";
 cp.code() += "etiss_coverage_count(11, 4208, 4207, 4202, 4201, 4198, 4199, 4200, 4206, 4203, 4204, 4205);\n";
 cp.code() += "((RV64IMACFD*)cpu)->F[" + std::to_string(rd) + "ULL] = -4294967296LL | (etiss_uint64)(res);\n";
 cp.code() += "etiss_coverage_count(6, 4221, 4211, 4210, 4220, 4219, 4217);\n";
