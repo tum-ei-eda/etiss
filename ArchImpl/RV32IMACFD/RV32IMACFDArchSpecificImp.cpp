@@ -327,6 +327,14 @@ std::shared_ptr<etiss::VirtualStruct> RV32IMACFDArch::getVirtualStruct(ETISS_CPU
 	}
 
 	ret->addField(new pcField_RV32IMACFD(*ret));
+
+	for (uint32_t i = 0; i < 32; ++i){
+		ret->addField(new FloatRegField_RV32IMACFD(*ret,i));
+	}
+	// FCSR
+	// ret->addField(new CSRField_RV32IMACFD(*ret,1));
+	// ret->addField(new CSRField_RV32IMACFD(*ret,2));
+	// ret->addField(new CSRField_RV32IMACFD(*ret,3));
 	return ret;
 }
 
