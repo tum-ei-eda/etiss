@@ -55,7 +55,7 @@ cp.code() += "} // block\n";
 { // block
 cp.code() += "etiss_coverage_count(1, 8103);\n";
 cp.code() += "{ // block\n";
-cp.code() += "etiss_int64 res = fcvt_32_64(unbox_s(((RV64IMACFD*)cpu)->F[" + std::to_string(rs1) + "ULL]), 0LL, " + std::to_string(rm) + "ULL);\n";
+cp.code() += "etiss_int64 res = fcvt_32_64(unbox_s(*((RV64IMACFD*)cpu)->F[" + std::to_string(rs1) + "ULL]), 0LL, " + std::to_string(rm) + "ULL);\n";
 cp.code() += "etiss_coverage_count(7, 8073, 8072, 8069, 8068, 8067, 8070, 8071);\n";
 cp.code() += "etiss_coverage_count(1, 8074);\n";
 if ((rd % 32ULL) != 0LL) { // conditional
@@ -144,7 +144,7 @@ cp.code() += "} // block\n";
 { // block
 cp.code() += "etiss_coverage_count(1, 8142);\n";
 cp.code() += "{ // block\n";
-cp.code() += "etiss_uint64 res = fcvt_32_64(unbox_s(((RV64IMACFD*)cpu)->F[" + std::to_string(rs1) + "ULL]), 1ULL, " + std::to_string(rm) + "ULL);\n";
+cp.code() += "etiss_uint64 res = fcvt_32_64(unbox_s(*((RV64IMACFD*)cpu)->F[" + std::to_string(rs1) + "ULL]), 1ULL, " + std::to_string(rm) + "ULL);\n";
 cp.code() += "etiss_coverage_count(7, 8112, 8111, 8108, 8107, 8106, 8109, 8110);\n";
 cp.code() += "etiss_coverage_count(1, 8113);\n";
 if ((rd % 32ULL) != 0LL) { // conditional
@@ -238,7 +238,7 @@ cp.code() += "etiss_coverage_count(7, 8152, 8151, 8148, 8147, 8145, 8149, 8150);
 { // block
 cp.code() += "etiss_coverage_count(1, 8177);\n";
 cp.code() += "{ // block\n";
-cp.code() += "((RV64IMACFD*)cpu)->F[" + std::to_string(rd) + "ULL] = -4294967296LL | (etiss_uint64)(res);\n";
+cp.code() += "*((RV64IMACFD*)cpu)->F[" + std::to_string(rd) + "ULL] = -4294967296LL | (etiss_uint64)(res);\n";
 cp.code() += "etiss_coverage_count(6, 8176, 8164, 8163, 8175, 8174, 8172);\n";
 cp.code() += "} // block\n";
 } // block
@@ -324,7 +324,7 @@ cp.code() += "etiss_coverage_count(7, 8188, 8187, 8184, 8183, 8181, 8185, 8186);
 { // block
 cp.code() += "etiss_coverage_count(1, 8213);\n";
 cp.code() += "{ // block\n";
-cp.code() += "((RV64IMACFD*)cpu)->F[" + std::to_string(rd) + "ULL] = -4294967296LL | (etiss_uint64)(res);\n";
+cp.code() += "*((RV64IMACFD*)cpu)->F[" + std::to_string(rd) + "ULL] = -4294967296LL | (etiss_uint64)(res);\n";
 cp.code() += "etiss_coverage_count(6, 8212, 8200, 8199, 8211, 8210, 8208);\n";
 cp.code() += "} // block\n";
 } // block

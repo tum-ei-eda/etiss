@@ -38,6 +38,16 @@ public:
 			ss << "X" << index;
 			return ss.str();
 		}
+		if ((32 < index) && (index < 65)){
+			std::stringstream ss;
+			ss << "F" << (index - 33);
+			return ss.str();
+		}
+		if ((64 < index) && (index < 69)){  // FCSR
+			std::stringstream ss;
+			ss << "CSR" << (index - 65);
+			return ss.str();
+		}
 		switch (index){
 		case 32:
 			return "instructionPointer";
