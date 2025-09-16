@@ -1,5 +1,5 @@
 /**
- * Generated on Thu, 24 Oct 2024 10:16:12 +0200.
+ * Generated on Tue, 16 Sep 2025 12:56:33 +0200.
  *
  * This file contains the instruction behavior models of the tum_ret
  * instruction set for the RV32IMACFD core architecture.
@@ -152,7 +152,7 @@ cp.code() += "s = RV32IMACFD_set_field(s, 6144LL, (RV32IMACFD_extension_enabled(
 cp.code() += "etiss_coverage_count(7, 2318, 2309, 2317, 2310, 2316, 2313, 2312);\n";
 cp.code() += "RV32IMACFD_csr_write(cpu, system, plugin_pointers, 768LL, s);\n";
 cp.code() += "etiss_coverage_count(2, 2321, 2320);\n";
-cp.code() += "((RV32IMACFD*)cpu)->PRIV = (prev_prv) & 0x7;\n";
+cp.code() += "((RV32IMACFD*)cpu)->PRIV = (prev_prv) & 0x7ULL;\n";
 cp.code() += "etiss_coverage_count(3, 2324, 2322, 2323);\n";
 cp.code() += "} // block\n";
 } // block
@@ -315,7 +315,7 @@ cp.code() += "s = RV32IMACFD_set_field(s, 256LL, 0LL);\n";
 cp.code() += "etiss_coverage_count(4, 6408, 6403, 6407, 6404);\n";
 cp.code() += "RV32IMACFD_csr_write(cpu, system, plugin_pointers, 768LL, s);\n";
 cp.code() += "etiss_coverage_count(2, 6411, 6410);\n";
-cp.code() += "((RV32IMACFD*)cpu)->PRIV = (prev_prv) & 0x7;\n";
+cp.code() += "((RV32IMACFD*)cpu)->PRIV = (prev_prv) & 0x7ULL;\n";
 cp.code() += "etiss_coverage_count(3, 6414, 6412, 6413);\n";
 cp.code() += "} // block\n";
 } // block

@@ -1,5 +1,5 @@
 /**
- * Generated on Thu, 24 Oct 2024 10:16:12 +0200.
+ * Generated on Tue, 16 Sep 2025 12:56:33 +0200.
  *
  * This file contains the function implementations for the RV32IMACFD core architecture.
  */
@@ -25,7 +25,7 @@ etiss_coverage_count(1, 277);
 etiss_coverage_count(1, 258);
 if (rm == 7ULL) { // conditional
 etiss_coverage_count(3, 261, 259, 260);
-rm = ((((((RV32IMACFD*)cpu)->FCSR) >> (5ULL)) & 7ULL)) & 0x7;
+rm = ((((((RV32IMACFD*)cpu)->FCSR) >> (5ULL)) & 0x7ULL)) & 0x7ULL;
 etiss_coverage_count(6, 267, 262, 266, 263, 264, 265);
 } // conditional
 etiss_coverage_count(1, 268);
@@ -171,7 +171,7 @@ etiss_coverage_count(1, 459);
 if (csr == 769LL) { // conditional
 etiss_coverage_count(2, 462, 460);
 etiss_coverage_count(1, 478);
-return (((1ULL) << 30) | ((((*((RV32IMACFD*)cpu)->CSR[769LL]) >> (0LL)) & 1073741823ULL)));
+return (((1ULL) << 30) | (((*((RV32IMACFD*)cpu)->CSR[769LL]) & 0x3fffffffULL)));
 etiss_coverage_count(4, 477, 476, 471, 475);
 } // conditional
 etiss_coverage_count(1, 482);
@@ -392,7 +392,7 @@ s = RV32IMACFD_set_field(s, 2LL, 0LL);
 etiss_coverage_count(5, 839, 834, 838, 835, 837);
 RV32IMACFD_csr_write(cpu, system, plugin_pointers, 256LL, s);
 etiss_coverage_count(2, 842, 841);
-((RV32IMACFD*)cpu)->PRIV = (1LL) & 0x7;
+((RV32IMACFD*)cpu)->PRIV = (1LL) & 0x7ULL;
 etiss_coverage_count(2, 845, 843);
 } // block
 } // conditional
@@ -417,7 +417,7 @@ s = RV32IMACFD_set_field(s, 8LL, 0LL);
 etiss_coverage_count(5, 908, 903, 907, 904, 906);
 RV32IMACFD_csr_write(cpu, system, plugin_pointers, 768LL, s);
 etiss_coverage_count(2, 911, 910);
-((RV32IMACFD*)cpu)->PRIV = (3LL) & 0x7;
+((RV32IMACFD*)cpu)->PRIV = (3LL) & 0x7ULL;
 etiss_coverage_count(2, 914, 912);
 } // block
 } // conditional
