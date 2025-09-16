@@ -50,7 +50,15 @@
 
 */
 
+#include <iostream>
+#include <vector>
+#include <string>
+#include <fstream>
+#include <streambuf>
+#include <boost/filesystem.hpp>
+
 #include "etiss/IntegratedLibrary/gdb/GDBCore.h"
+#include "etiss/Misc.h"
 
 using namespace etiss::plugin::gdb;
 
@@ -74,4 +82,25 @@ bool GDBCore::isLittleEndian()
 etiss::uint64 GDBCore::getInstructionPointer(ETISS_CPU *cpu)
 {
     return cpu->instructionPointer;
+}
+
+
+std::string getXMLDirectory(std::string archName) {
+    std::string xmlDir = etiss::installDir() + "/xml/" + archName;
+    return xmlDir;
+}
+
+std::string GDBCore::getXMLContents(ETISS_CPU *cpu, std::string archName, std::string fname)
+{
+    // std::vector<std::string> xmlFiles = getXMLFilePaths(archName);
+    // TODO: use boost fs paths?
+    std::string xmlFile = getXMLDirectory(archName) + "/" + fname;
+    if (!boost::filesystem::exists(xmlFile)) {
+        // TODO: log warning
+        return "";
+    }
+    std::ifstream t(xmlFile);
+    std::string xmlContent((std::istreambuf_iterator<char>(t)),
+                    std::istreambuf_iterator<char>());
+    return xmlContent;
 }
