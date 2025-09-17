@@ -33,56 +33,40 @@
 class RV32IMACFDGDBCore : public etiss::plugin::gdb::GDBCore {
 public:
 	std::string mapRegister(unsigned index){
-		if (index < 32){
-			std::stringstream ss;
-			ss << "X" << index;
-			return ss.str();
-		}
-		if ((32 < index) && (index < 65)){
-			std::stringstream ss;
-			ss << "F" << (index - 33);
-			return ss.str();
-		}
-		if ((64 < index) && (index < 69)){  // FCSR
-			std::stringstream ss;
-			ss << "CSR" << (index - 65);
-			return ss.str();
-		}
 		switch (index){
-		case 32:
-			return "instructionPointer";
-		case 1: return "X0";
-		case 2: return "X1";
-		case 3: return "X2";
-		case 4: return "X3";
-		case 5: return "X4";
-		case 6: return "X5";
-		case 7: return "X6";
-		case 8: return "X7";
-		case 9: return "X8";
-		case 10: return "X9";
-		case 11: return "X10";
-		case 12: return "X11";
-		case 13: return "X12";
-		case 14: return "X13";
-		case 15: return "X14";
-		case 16: return "X15";
-		case 17: return "X16";
-		case 18: return "X17";
-		case 19: return "X18";
-		case 20: return "X19";
-		case 21: return "X20";
-		case 22: return "X21";
-		case 23: return "X22";
-		case 24: return "X23";
-		case 25: return "X24";
-		case 26: return "X25";
-		case 27: return "X26";
-		case 28: return "X27";
-		case 29: return "X28";
-		case 30: return "X29";
-		case 31: return "X30";
-		case 32: return "X31";
+		case 0: return "X0";
+		case 1: return "X1";
+		case 2: return "X2";
+		case 3: return "X3";
+		case 4: return "X4";
+		case 5: return "X5";
+		case 6: return "X6";
+		case 7: return "X7";
+		case 8: return "X8";
+		case 9: return "X9";
+		case 10: return "X10";
+		case 11: return "X11";
+		case 12: return "X12";
+		case 13: return "X13";
+		case 14: return "X14";
+		case 15: return "X15";
+		case 16: return "X16";
+		case 17: return "X17";
+		case 18: return "X18";
+		case 19: return "X19";
+		case 20: return "X20";
+		case 21: return "X21";
+		case 22: return "X22";
+		case 23: return "X23";
+		case 24: return "X24";
+		case 25: return "X25";
+		case 26: return "X26";
+		case 27: return "X27";
+		case 28: return "X28";
+		case 29: return "X29";
+		case 30: return "X30";
+		case 31: return "X31";
+		case 32: return "instructionPointer";
 		case 33: return "F0";
 		case 34: return "F1";
 		case 35: return "F2";
