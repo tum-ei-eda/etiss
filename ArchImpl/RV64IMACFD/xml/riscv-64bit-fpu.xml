@@ -40,5 +40,5 @@
   <reg name="ft10" bitsize="64" type="riscv_double"/>
   <reg name="ft11" bitsize="64" type="riscv_double"/>
 
-  // <reg name="fcsr" bitsize="32" type="int" regnum="68"/>
+  <reg name="fcsr" bitsize="32" type="int" regnum="68"/>
 </feature>
