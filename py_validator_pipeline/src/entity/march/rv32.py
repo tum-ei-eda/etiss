@@ -33,11 +33,11 @@ class RV32IC(MArchBase, ABC):
         In RV32 int (32-bit) return value is stored in register a0
         """
         rv = None
-        cjr = self.fetch_cjr_instruction(entry.epilogue)
-        if not cjr:
-            self.logger.error("Missing cjr instruction. Aborting.")
+        epilogue_inst = self.fetch_epilogue_state(entry.epilogue)
+        if not epilogue_inst:
+            self.logger.error("Missing epilogue instruction. Aborting.")
         else:
-            rv = cjr[reg]
+            rv = epilogue_inst[reg]
         return rv
 
     def fetch_long_long_return_value(self, entry) -> Any:
@@ -62,7 +62,7 @@ class RV32IC(MArchBase, ABC):
             in memory.
         """
         rv = None
-        cjr = self.fetch_cjr_instruction(entry.epilogue)
+        cjr = self.fetch_epilogue_state(entry.epilogue)
 
         if not cjr:
             self.logger.error("Missing cjr instruction. Aborting.")
@@ -162,13 +162,13 @@ class RV32IC(MArchBase, ABC):
             return reg_value
 
 
-        cjr = self.fetch_cjr_instruction(entry.epilogue)
+        epilogue_inst = self.fetch_epilogue_state(entry.epilogue)
 
-        if not cjr:
-            self.logger.error("Missing cjr instruction. Aborting.")
+        if not epilogue_inst:
+            self.logger.error("Missing epilogue instruction. Aborting.")
         elif not regs:
             # Case: return value in memory
-            addr = cjr['a0']
+            addr = epilogue_inst['a0']
             entry.get_last_writes_to_mem_range(addr, struct_type_info.byte_size)
         else:
 
@@ -305,15 +305,15 @@ class RV32IC(MArchBase, ABC):
         union: UnionType = entry.dwarf_info.get_subprogram_by_name(entry.function_name).type_info
         byte_size = union.byte_size
         rv = None
-        cjr = self.fetch_cjr_instruction(entry.epilogue)
-        if not cjr:
-            self.logger.error("Missing cjr instruction. Aborting.")
+        epilogue_inst = self.fetch_epilogue_state(entry.epilogue)
+        if not epilogue_inst:
+            self.logger.error("Missing epilogue instruction. Aborting.")
         elif byte_size <= 4:
             rv = self.fetch_int_return_value(entry)
         elif byte_size <= 8:
             rv = self._form_64_bit_value_from_regs_a0_and_a1(entry)
         else:
-            rv = self.extract_from_memory_addr(entry=entry, addr=cjr['a0'], byte_size=byte_size)
+            rv = self.extract_from_memory_addr(entry=entry, addr=epilogue_inst['a0'], byte_size=byte_size)
         return rv
 
 
@@ -327,13 +327,13 @@ class RV32IC(MArchBase, ABC):
 
     def _form_64_bit_value_from_regs_a0_and_a1(self, entry) -> Any:
         rv = None
-        cjr = self.fetch_cjr_instruction(entry.epilogue)
+        epilogue_inst = self.fetch_epilogue_state(entry.epilogue)
 
-        if not cjr:
-            self.logger.error("Missing cjr instruction. Aborting.")
+        if not epilogue_inst:
+            self.logger.error("Missing epilogue instruction instruction. Aborting.")
         else:
-            a0 = cjr['a0']
-            a1 = cjr['a1']
+            a0 = epilogue_inst['a0']
+            a1 = epilogue_inst['a1']
             combined_val = (a1 << 32) | a0
             combined_bytes = combined_val.to_bytes(8, 'little')
             rv = struct.unpack('<d', combined_bytes)[0]

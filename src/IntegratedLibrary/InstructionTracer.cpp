@@ -165,7 +165,11 @@ extern "C"
         const etiss_uint32 pc = static_cast<etiss_uint32>(reinterpret_cast<ETISS_CPU *>(cpu)->instructionPointer);
         auto& writer = TraceFileWriter::instance();
 
-        if (std::string(instruction) == "cswsp" && (low_pc <= pc && pc <= high_pc)) {
+        /*if (std::string(instruction) == "cswsp" && (low_pc <= pc && pc <= high_pc)) {
+            writer.activateTrace();
+        }*/
+
+        if (!writer.isTracing() && (low_pc <= pc && pc <= high_pc)) {
             writer.activateTrace();
         }
 
