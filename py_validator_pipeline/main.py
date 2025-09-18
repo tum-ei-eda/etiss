@@ -172,7 +172,7 @@ def verify_entries(golden_ref, custom_is):
                     for idx_1, golden_ref_entry in enumerate(golden_ref_fun_call_entries):
                         verifier.compare_entries(golden_ref_entry, custom_is_entry_collection[idx_0][idx_1])
                 else:
-                    err = "Number of function call entries in golden reference and custom IS data do not match. Aborting"
+                    err = f"Number of function call entries in golden reference and custom IS data do not match. Golden ref {len(golden_ref_fun_call_entries)}, isuv: {len(custom_is_entry_collection[idx_0])}. Aborting"
                     output += err
                     raise VerificationProcessException(err)
             output += verifier.output_verification_entries()
