@@ -841,10 +841,11 @@ loopexit:
     double simulation_time = endTime - startTime;
     double cpu_cycle = cpu_->cpuTime_ps / (float)cpu_->cpuCycleTime_ps;
     double mips = cpu_->cpuTime_ps / (float)cpu_->cpuCycleTime_ps / simulation_time / 1.0E6;
-    std::cout << "CPU Time: " << (cpu_time) << "s    Simulation Time: " << (simulation_time) << "s"
-              << std::endl;
-    std::cout << "CPU Cycles (estimated): " << (cpu_cycle) << std::endl;
-    std::cout << "MIPS (estimated): " << (mips) << std::endl;
+    bool quiet = etiss::cfg().get<bool>("vp.quiet", false);
+    if (!quiet) std::cout << "CPU Time: " << (cpu_time) << "s    Simulation Time: " << (simulation_time) << "s"
+                          << std::endl;
+    if (!quiet) std::cout << "CPU Cycles (estimated): " << (cpu_cycle) << std::endl;
+    if (!quiet) std::cout << "MIPS (estimated): " << (mips) << std::endl;
 
 
     // declaring path of writing the json file contaiing performance metrics and the boolean which approves of writing the json output
