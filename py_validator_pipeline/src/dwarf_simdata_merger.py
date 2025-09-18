@@ -147,7 +147,7 @@ def construct_entries_recursively(data_iter: Peekable, dwarf_info: DwarfInfo, en
                             )
                             construct_entries_recursively(data_iter=data_iter, dwarf_info=dwarf_info, entries=entries, entry=new_entry)
 
-                    case 'cjr':
+                    case 'cjr'  | 'jalr':
                         """
                             As the entry creation is recursive, each entry should end with one or several
                             cjr instructions for subprogram of the entry. In case we fail to parse an entry,
@@ -206,13 +206,13 @@ def construct_entries_recursively(data_iter: Peekable, dwarf_info: DwarfInfo, en
         entry.add_global_variables(global_vars)
         if dwarf_info.get_subprogram_by_name(entry.function_name):
             formal_params = dwarf_info.get_subprogram_by_name(entry.function_name).get_formal_parameters()
+            for param in formal_params:
+                entry.add_formal_param_locations(param.get_name(), param.get_location_value())
         else:
             subprograms = ''
             for k, v in dwarf_info.subprograms.items():
                 subprograms += f"{k}: {v}\n"
             logger.error(f"<with Phil Dunphy voice>: WHAAAAT?! fun name: {entry.function_name}\n {entry} \n Subprograms:\n {subprograms}")
-        for param in formal_params:
-            entry.add_formal_param_locations(param.get_name(), param.get_location_value())
 
         entries.append(entry)
     elif epilogue_reached:
