@@ -49,7 +49,7 @@
 class GCCJIT : public etiss::JIT
 {
   public:
-    GCCJIT(bool cleanup = true);
+    GCCJIT(bool cleanup = true, std::string opt_level = "fast", bool quiet = false);
     virtual ~GCCJIT();
     virtual void *translate(std::string code, std::set<std::string> headerpaths, std::set<std::string> librarypaths,
                             std::set<std::string> libraries, std::string &error, bool debug = false);
@@ -61,4 +61,6 @@ class GCCJIT : public etiss::JIT
     unsigned id;
     std::string path_;
     bool cleanup_;
+    std::string opt_level_;
+    bool quiet_;
 };

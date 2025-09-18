@@ -63,7 +63,7 @@ extern "C"
     {
         etiss::Configuration cfg;
         cfg.config() = options;
-        return new GCCJIT(cfg.get<bool>("jit.gcc.cleanup", true));
+        return new GCCJIT(cfg.get<bool>("jit.gcc.cleanup", true), cfg.get<std::string>("jit.gcc.opt_level", "fast"), cfg.get<bool>("jit.gcc.quiet", false));
     }
 
     void GCCJIT_deleteJIT(etiss::JIT *jit) { delete (GCCJIT *)jit; }
