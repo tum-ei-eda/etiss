@@ -1,4 +1,5 @@
 from src.entity.march.march_base import MArchBase
+from src.entity.march.rv32im_zicsr_zifencei import RV32IM_zicsr_zifencei
 from src.entity.march.rv32imac_zicsr import RV32IMAC_zicsr
 from src.entity.march.rv32imafdc_zicsr_zifencei import RV32IMAFDC_zicsr_zifencei
 
@@ -8,7 +9,8 @@ class MArchManager:
     def __init__(self):
         self.supported_marchs = [
             RV32IMAC_zicsr(),
-            RV32IMAFDC_zicsr_zifencei()
+            RV32IMAFDC_zicsr_zifencei(),
+            RV32IM_zicsr_zifencei()
         ]
 
     def march_is_supported(self, march: str) -> bool:
