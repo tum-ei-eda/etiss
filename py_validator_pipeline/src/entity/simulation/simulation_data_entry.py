@@ -133,6 +133,8 @@ class SimulationDataEntry:
         for var in self.global_variables:
             var_type = var.type_info
             loc = var.get_location_value()
+            if not loc:
+                continue
             match var_type:
                 case ArrayType():
                     n_of_elements = var.get_number_of_elements()
@@ -195,7 +197,7 @@ class SimulationDataEntry:
         if self.prologue:
             output += "  > Prologue instructions CPU state snapshots:\n"
             for inst in self.prologue:
-                output += f"    | cswsp <{inst['pc']}>: <a0: {inst['a0']}, a1: {inst['a1']}, fa0: {inst['fa0']}, fa1: {inst['fa1']}>\n"
+                output += f"    | {inst['instruction']} <{inst['pc']}>: <a0: {inst['a0']}, a1: {inst['a1']}, fa0: {inst['fa0']}, fa1: {inst['fa1']}>\n"
         formal_param_writes = self.get_first_writes_to_formal_params()
         if formal_param_writes:
             output += "  > First data writes to formal params stack addresses after prologue:\n"
@@ -213,5 +215,5 @@ class SimulationDataEntry:
         if self.epilogue:
             output += "  > Epilogue instructions CPU state snapshots:\n"
             for inst in self.epilogue:
-                output += f"    | cjr <{inst['pc']}>: <a0: {inst['a0']}, a1: {inst['a1']}, fa0: {inst['fa0']}, fa1: {inst['fa1']}>\n"
+                output += f"    | {inst['instruction']} <{inst['pc']}>: <a0: {inst['a0']}, a1: {inst['a1']}, fa0: {inst['fa0']}, fa1: {inst['fa1']}>\n"
         return output
