@@ -257,7 +257,7 @@ class DwarfInfoExtractor:
                 else:
                     var_or_param = LocalVariable()
 
-                if die.attributes['DW_AT_name']:
+                if die.attributes.get('DW_AT_name'):
                     var_name = die.attributes['DW_AT_name'].value.decode('utf-8')
                     var_or_param.set_name(var_name)
 
@@ -393,18 +393,22 @@ class DwarfInfoExtractor:
         Logs:
             Emits an error if `DW_AT_high_pc` has an unsupported form class.
         """
-        lowpc = DIE.attributes['DW_AT_low_pc'].value
-        highpc_attr = DIE.attributes['DW_AT_high_pc']
-        highpc_attr_class = describe_form_class(highpc_attr.form)
-        if highpc_attr_class == 'address':
-            highpc = highpc_attr.value
-        elif highpc_attr_class == 'constant':
-            highpc = lowpc + highpc_attr.value
-        else:
-            self.logger.error('Error: invalid DW_AT_high_pc class:',highpc_attr_class)
-            lowpc, highpc = None, None
+        try:
+            lowpc = DIE.attributes['DW_AT_low_pc'].value
+            highpc_attr = DIE.attributes['DW_AT_high_pc']
+            highpc_attr_class = describe_form_class(highpc_attr.form)
+            if highpc_attr_class == 'address':
+                highpc = highpc_attr.value
+            elif highpc_attr_class == 'constant':
+                highpc = lowpc + highpc_attr.value
+            else:
+                self.logger.error('Error: invalid DW_AT_high_pc class:',highpc_attr_class)
+                lowpc, highpc = None, None
 
-        return lowpc, highpc
+            return lowpc, highpc
+        except Exception as e:
+            self.logger.error(f"An exception occured while extracting subprogram information from DIE: {DIE}. Exception: {e}")
+            raise e
 
 
     def extract_architecture_information(self, top_die, little_endian: bool, extracted_di: DwarfInfo) -> None:
@@ -522,7 +526,6 @@ class DwarfInfoExtractor:
                     return TypeDef(base_type=None)
             case 'DW_TAG_structure_type':
                 try:
-                    self.logger.debug(f"case DW_TAG_structure_type. Name: {t.attributes['DW_AT_name'].value.decode('utf-8')}")
                     struct_name = t.attributes['DW_AT_name'].value.decode('utf-8')
 
                     struct_byte_size = int(t.attributes['DW_AT_byte_size'].value)
@@ -593,11 +596,14 @@ class DwarfInfoExtractor:
         for die in arr_die.iter_children():
 
             if die.tag == 'DW_TAG_subrange_type':
-                upper_bound = int(die.attributes['DW_AT_upper_bound'].value)
-                lower_bound = 0
-                if die.attributes.get('DW_AT_lower_bound'):
-                    lower_bound = int(die.attributes['DW_AT_lower_bound'].value)
-                dimensions.append(upper_bound - lower_bound + 1)
+                if die.attributes.get('DW_AT_count'):
+                    dimensions = [die.attributes.get('DW_AT_count').value]
+                else:
+                    upper_bound = int(die.attributes['DW_AT_upper_bound'].value)
+                    lower_bound = 0
+                    if die.attributes.get('DW_AT_lower_bound'):
+                        lower_bound = int(die.attributes['DW_AT_lower_bound'].value)
+                    dimensions.append(upper_bound - lower_bound + 1)
         return dimensions
 
 
