@@ -13,7 +13,7 @@ from src.entity.verification.struct_reg_data_types import (
 from src.util.gcc_dwarf_rv_mapper import GccDwarfMapperForRV32
 from src.exception.pipeline_exceptions import VerificationProcessException
 
-class RV32IC(MArchBase, ABC):
+class RV32(MArchBase, ABC):
     """
     A base class for supported RV32IC architecture with
     possible extensions

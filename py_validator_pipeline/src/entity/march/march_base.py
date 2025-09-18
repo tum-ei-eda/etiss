@@ -1,6 +1,6 @@
 import logging
 from abc import ABCMeta, abstractmethod
-from typing import Any, Literal
+from typing import Any, Literal, List, Dict
 
 
 class SingletonABCMeta(ABCMeta):
@@ -87,6 +87,22 @@ class MArchBase(metaclass=SingletonABCMeta):
     def fetch_union_return_value(self, entry) -> Any:
         """
         Attempts to extract return value for union
+        """
+        pass
+
+    @abstractmethod
+    def fetch_prologue_state(self, prologue: List[Dict[str, Any]]) -> Any:
+        """
+        Fetch an architecture specific instruction containing
+        prologue state
+        """
+        pass
+
+
+    def fetch_epilogue_state(self, epilogue: List[Dict[str, Any]]) -> Any:
+        """
+        Fetch an architecture specific instruction containing
+        epilogue state
         """
         pass
 

@@ -1,10 +1,10 @@
 import struct
-from typing import Any, Literal, List
+from typing import Any, Literal, List, Dict
 
-from src.entity.march.rv32ic import RV32IC
+from src.entity.march.rv32 import RV32
 from src.exception.pipeline_exceptions import OutOfRegistersException
 
-class RV32IMAC_zicsr(RV32IC):
+class RV32IMAC_zicsr(RV32):
 
     def __init__(self):
         super().__init__()
@@ -17,7 +17,7 @@ class RV32IMAC_zicsr(RV32IC):
         rv = None
 
         self.logger.debug(f'Architecture {self.get_march_name()} recognized. Extracting return value from argument register a0')
-        cjr = self.fetch_cjr_instruction(entry.epilogue)
+        cjr = self.fetch_epilogue_state(entry.epilogue)
 
         if not cjr:
             self.logger.error("Missing cjr instruction. Aborting.")
@@ -76,7 +76,7 @@ class RV32IMAC_zicsr(RV32IC):
                 arg_regs.remove(ret)
             return ret
 
-        cjr = self.fetch_cjr_instruction(entry.epilogue)
+        cjr = self.fetch_epilogue_state(entry.epilogue)
 
         if not cjr:
             self.logger.error("Missing cjr instruction. Aborting.")
@@ -111,6 +111,24 @@ class RV32IMAC_zicsr(RV32IC):
 
 
         return rv
+
+    def fetch_prologue_state(self, prologue: List[Dict[str, Any]]) -> None | Dict[str, Any]:
+        cswsp_instr = None
+        for i in prologue:
+            if i['instruction'] == 'cswsp':
+                cswsp_instr = i
+                break
+
+        return cswsp_instr
+
+    def fetch_epilogue_state(self, epilogue: List[Dict[str, Any]]) -> None | Dict[str, Any]:
+        cjr_inst = None
+        for i in epilogue:
+            if i['instruction'] == 'cjr':
+                cjr_inst = i
+                break
+
+        return cjr_inst
 
     def get_march_name(self):
         return "rv32imac_zicsr"
