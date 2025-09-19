@@ -147,11 +147,13 @@ class SimpleMemSystem : public System
     etiss::uint64 get_startaddr(void) { return (start_addr_); }
     void add_memsegment(std::unique_ptr<MemSegment>& mseg, const void *raw_data, size_t file_size_bytes);
 
+  protected:
+    template <bool write>
+    etiss::int32 dbus_access(ETISS_CPU *cpu, etiss::uint64 addr, etiss::uint8 *buf, etiss::uint32 len);
+
   private:
     std::vector<std::unique_ptr<MemSegment>> msegs_{};
 
-    template <bool write>
-    etiss::int32 dbus_access(ETISS_CPU *cpu, etiss::uint64 addr, etiss::uint8 *buf, etiss::uint32 len);
 
     etiss::uint64 start_addr_{ 0 };
 
@@ -178,4 +180,5 @@ class SimpleMemSystem : public System
 
 } // namespace etiss
 
+void access_error(ETISS_CPU *cpu, etiss::uint64 addr, etiss::uint32 len, std::string error, etiss::Verbosity verbosity);
 #endif

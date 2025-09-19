@@ -178,9 +178,9 @@ bool VirtualStruct::Field::applyBitflip(unsigned position, uint64_t fault_id)
 bool VirtualStruct::Field::applyAction(const etiss::fault::Fault &f, const etiss::fault::Action &a,
                                        std::string &errormsg)
 {
-    if (!(flags_ & A))
+    if (!(flags_ & (A | F)))
     {
-        errormsg = "field doesn't support advanced action handling";
+        errormsg = "field doesn't support action handling";
         return false;
     }
     return _applyAction(f, a, errormsg);
@@ -214,6 +214,42 @@ bool VirtualStruct::Field::_applyBitflip(unsigned position, uint64_t fault_id)
 bool VirtualStruct::Field::_applyAction(const etiss::fault::Fault &f, const etiss::fault::Action &a,
                                         std::string &errormsg)
 {
+    if (a.getType() == +etiss::fault::Action::type_t::MASK)
+    {
+        uint64_t mask_value = a.getMaskValue();
+        uint64_t val = read(), errval;
+        switch (a.getMaskOp())
+        {
+        case etiss::fault::Action::mask_op_t::AND:
+            errval = (val & mask_value);
+            break;
+        case etiss::fault::Action::mask_op_t::OR:
+            errval = (val | mask_value);
+            break;
+        case etiss::fault::Action::mask_op_t::XOR:
+            errval = (val ^ mask_value);
+            break;
+        case etiss::fault::Action::mask_op_t::NAND:
+            errval = ~(val & mask_value);
+            break;
+        case etiss::fault::Action::mask_op_t::NOR:
+            errval = ~(val | mask_value);
+            break;
+        case etiss::fault::Action::mask_op_t::NOP:
+            errval = val;
+            break;
+        }
+        write(errval);
+        std::stringstream ss;
+        ss << "Injected mask fault in " << name_ << " 0x" << std::hex << val << " " << a.getMaskOp()
+           << " 0x" << mask_value << "->0x" << errval << std::dec;
+        etiss::log(etiss::INFO, ss.str());
+        return true;
+    }
+    else if (a.getType() == +etiss::fault::Action::type_t::BITFLIP)
+    {
+        return applyBitflip(a.getTargetBit(), f.id_);
+    }
     return false;
 }
 
@@ -408,10 +444,12 @@ bool VirtualStruct::isClosed()
 std::list<std::string> VirtualStruct::listFields()
 {
     std::list<std::string> ret;
-    foreachField([&ret](std::shared_ptr<Field> f) {
-        if (f)
-            ret.push_back(f->name_);
-    });
+    foreachField(
+        [&ret](std::shared_ptr<Field> f)
+        {
+            if (f)
+                ret.push_back(f->name_);
+        });
     return ret;
 }
 std::list<std::string> VirtualStruct::listSubInjectors()
@@ -466,7 +504,7 @@ bool VirtualStruct::applyAction(const etiss::fault::Fault &fault, const etiss::f
 {
     switch (action.getType())
     {
-    case etiss::fault::Action::COMMAND: // handle command
+    case +etiss::fault::Action::type_t::COMMAND: // handle command
     {
         if (!applyCustomAction)
         {
@@ -476,7 +514,9 @@ bool VirtualStruct::applyAction(const etiss::fault::Fault &fault, const etiss::f
         }
         return applyCustomAction(fault, action, errormsg);
     }
-    case etiss::fault::Action::BITFLIP: // handle bitflip
+    case +etiss::fault::Action::type_t::MASK:
+        [[fallthrough]];
+    case +etiss::fault::Action::type_t::BITFLIP: // handle bitflip
     {
         Field *f;
         auto find = fieldNames_.find(action.getTargetField());
@@ -502,19 +542,54 @@ bool VirtualStruct::applyAction(const etiss::fault::Fault &fault, const etiss::f
             errormsg = std::string("No such field: ") + getInjectorPath() + "." + action.getTargetField();
             return false;
         }
-        if (f->flags_ & Field::A)
+        if (f->flags_ & (Field::A | Field::F))
         {
             return f->applyAction(fault, action, errormsg);
-        }
-        else if (f->flags_ & Field::F)
-        {
-            return f->applyBitflip(action.getTargetBit(), fault.id_);
         }
     }
         return false;
     default:
         return false;
     }
+}
+
+bool VirtualStruct::update_field_access_rights(const etiss::fault::Action &action, std::string &errormsg)
+{
+    Field *f = nullptr;
+    auto find = fieldNames_.find(action.getTargetField());
+    if (find == fieldNames_.end())
+    {
+        find = fieldPrettyNames_.find(action.getTargetField());
+        if (find != fieldPrettyNames_.end())
+        {
+            f = find->second;
+        }
+    }
+    else
+    {
+        f = find->second;
+    }
+
+    if (f)
+    {
+        switch (action.getType())
+        {
+        case +etiss::fault::Action::type_t::MASK:
+            [[fallthrough]];
+        case +etiss::fault::Action::type_t::BITFLIP:
+            f->flags_ |= Field::F;
+            break;
+        default:
+            break;
+        }
+    }
+    else
+    {
+        errormsg =
+            std::string("VirtualStruct:update_field_access_rights(): Required field not a field in VirtualStruct!");
+        return false;
+    }
+    return true;
 }
 
 VSSync::VSSync()
@@ -542,55 +617,59 @@ void copy(VirtualStruct &dst, VirtualStruct &src, std::list<std::shared_ptr<Virt
 
     std::set<std::shared_ptr<VirtualStruct::Field>> dst_known;
 
-    src.foreachField([&](std::shared_ptr<VirtualStruct::Field> srcf) {
-        if (srcf->flags_ & VirtualStruct::Field::P)
+    src.foreachField(
+        [&](std::shared_ptr<VirtualStruct::Field> srcf)
         {
-            if (src_private)
-                src_private->push_back(srcf);
-            return;
-        }
+            if (srcf->flags_ & VirtualStruct::Field::P)
+            {
+                if (src_private)
+                    src_private->push_back(srcf);
+                return;
+            }
 
-        auto dstf = dst.findName(srcf->name_);
-        if (dstf == 0)
-        {
-            notPresent.push_back(srcf);
-            return;
-        }
+            auto dstf = dst.findName(srcf->name_);
+            if (dstf == 0)
+            {
+                notPresent.push_back(srcf);
+                return;
+            }
 
-        if (dstf->flags_ & VirtualStruct::Field::P)
-        {
-            notPresent.push_back(srcf);
-            return;
-        }
-
-        dst_known.insert(dstf);
-
-        if (!(dstf->flags_ & VirtualStruct::Field::W))
-        {
-            notWriteable.push_back(dstf);
-            return;
-        }
-
-        if (!pretend)
-            dstf->write(srcf->read()); // copy value
-    });
-
-    dst.foreachField([&](std::shared_ptr<VirtualStruct::Field> dstf) {
-        if (dst_known.find(dstf) == dst_known.end())
-        {
             if (dstf->flags_ & VirtualStruct::Field::P)
             {
-                if (dst_private)
+                notPresent.push_back(srcf);
+                return;
+            }
+
+            dst_known.insert(dstf);
+
+            if (!(dstf->flags_ & VirtualStruct::Field::W))
+            {
+                notWriteable.push_back(dstf);
+                return;
+            }
+
+            if (!pretend)
+                dstf->write(srcf->read()); // copy value
+        });
+
+    dst.foreachField(
+        [&](std::shared_ptr<VirtualStruct::Field> dstf)
+        {
+            if (dst_known.find(dstf) == dst_known.end())
+            {
+                if (dstf->flags_ & VirtualStruct::Field::P)
                 {
-                    dst_private->push_back(dstf);
+                    if (dst_private)
+                    {
+                        dst_private->push_back(dstf);
+                    }
+                }
+                else
+                {
+                    unknown.push_back(dstf);
                 }
             }
-            else
-            {
-                unknown.push_back(dstf);
-            }
-        }
-    });
+        });
 }
 
 std::shared_ptr<VirtualStruct> VirtualStruct::allocate(void *structure, std::function<void(Field *)> delete_)

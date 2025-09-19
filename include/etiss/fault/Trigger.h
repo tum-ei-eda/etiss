@@ -61,12 +61,12 @@
 
 #ifndef NO_ETISS
 #include "etiss/Misc.h"
-#include "etiss/fault/InjectorAddress.h"
-#include "etiss/fault/XML.h"
+#include "etiss/fault/Misc.h"
 #else
-#include "fault/InjectorAddress.h"
-#include "fault/XML.h"
+#include "fault/Misc.h"
 #endif
+
+#include "enum.h"
 
 namespace etiss
 {
@@ -74,6 +74,7 @@ namespace fault
 {
 
 class Injector;
+class InjectorAddress;
 
 #if CXX0X_UP_SUPPORTED
 typedef std::shared_ptr<Injector> Injector_ptr;
@@ -81,25 +82,22 @@ typedef std::shared_ptr<Injector> Injector_ptr;
 typedef Injector *Injector_ptr;
 #endif
 
+BETTER_ENUM(Trigger_Type, char, NOP = 0, META_COUNTER, VARIABLEVALUE, TIME, TIMERELATIVE, ASAP)
+
 class Trigger : public etiss::ToString
 {
   public:
-    enum Type
-    {
-        META_COUNTER,
-        VARIABLEVALUE,
-        TIME,
-        /// needs to be resolved. this can only be used in connection with an
-        /// injection action
-        TIMERELATIVE,
-        NOP
-    };
-
+    typedef Trigger_Type type_t;
     // constructors
     /**
         Type: NOP (no operation)
     */
     Trigger();
+    // constructors
+    /**
+        Type: typed but empty constructor (used for ASAP)
+    */
+    Trigger(const InjectorAddress &target_injector);
     /**
      *	@note Type: META_COUNTER
      *
@@ -133,7 +131,6 @@ class Trigger : public etiss::ToString
 
     // Getter
     uint64_t getTriggerCount() const;
-    Trigger &getSubTrigger();
     const Trigger &getSubTrigger() const;
     uint64_t getTriggerTime() const;
     const InjectorAddress &getInjectorAddress() const;
@@ -141,12 +138,12 @@ class Trigger : public etiss::ToString
     bool isNOP() const;
     const std::string &getTriggerField() const;
     const uint64_t &getTriggerFieldValue() const;
-    Type getType() const;
+    const type_t &getType() const;
 
     // Members
     /** @brief this function checks if the Trigger has just fired.
      */
-    bool fired(uint64_t time_ps, etiss::fault::Injector *target_injector);
+    bool check(uint64_t time_ps, etiss::fault::Injector *target_injector);
 
     /** @brief this function calculates in case of a TIMERELATIVE Trigger a
      *         constant TIME trigger
@@ -160,32 +157,23 @@ class Trigger : public etiss::ToString
     std::string toString() const; ///< operator<< can be used.
 
   private: // Attributes
-    Type type_;
+    type_t type_;
     std::string field_;
-    Trigger *sub_;
-    InjectorAddress inj_;
+    std::unique_ptr<Trigger> sub_;
+    std::unique_ptr<InjectorAddress> inj_;
     void *fieldptr_;
-    uint64_t param1_;
-    uint64_t param2_;
+    uint64_t param1_{ 0 };
+    uint64_t param2_{ 0 };
 
     // Private Members
-    void ensure(Type type) const;
+    void ensure(type_t type) const;
 };
 
 #if ETISS_FAULT_XML
 namespace xml
 {
 
-template <>
-bool parse<etiss::fault::Trigger *>(pugi::xml_node node, etiss::fault::Trigger *&f, Diagnostics &diag);
-template <>
-bool write<const etiss::fault::Trigger *>(pugi::xml_node node, const etiss::fault::Trigger *const &f,
-                                          Diagnostics &diag);
 
-template <>
-bool parse<etiss::fault::Trigger>(pugi::xml_node node, etiss::fault::Trigger &f, Diagnostics &diag);
-template <>
-bool write<etiss::fault::Trigger>(pugi::xml_node node, const etiss::fault::Trigger &f, Diagnostics &diag);
 
 } // namespace xml
 #endif

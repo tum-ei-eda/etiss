@@ -136,9 +136,9 @@ int CPUCore::getNextID()
 {
     return currID;
 }
-CPUCore::CPUCore(std::shared_ptr<etiss::CPUArch> arch)
+CPUCore::CPUCore(std::shared_ptr<etiss::CPUArch> arch, std::string const& name)
     : arch_(arch)
-    , name_("core" + std::to_string(currID))
+    , name_(name)
     , id_(currID++)
     , cpu_(arch->newCPU())
     , vcpu_(arch->getVirtualStruct(cpu_))
@@ -186,6 +186,10 @@ CPUCore::CPUCore(std::shared_ptr<etiss::CPUArch> arch)
 #endif
         }
     }
+}
+CPUCore::CPUCore(std::shared_ptr<etiss::CPUArch> arch)
+    : CPUCore(arch, std::string("core" + std::to_string(currID)))
+{
 }
 
 void CPUCore::addPlugin(std::shared_ptr<etiss::Plugin> plugin)
@@ -263,7 +267,11 @@ std::shared_ptr<CPUCore> CPUCore::create(std::string archname, std::string insta
     }
 
     // creat core
-    std::shared_ptr<CPUCore> ret(new CPUCore(arch));
+    std::shared_ptr<CPUCore> ret{nullptr};
+    if(instancename != "")
+        ret.reset(new CPUCore(arch, instancename));//std::make_shared<CPUCore>(arch, instancename);
+    else
+        ret.reset(new CPUCore(arch)); //std::make_shared<CPUCore>(arch);
 
     {
         std::lock_guard<std::mutex> lock(instances_mu_);

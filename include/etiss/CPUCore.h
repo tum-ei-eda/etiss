@@ -114,7 +114,7 @@ class CPUCore : public VirtualStructSupport, public etiss::ToString
     friend class CPUArchRegListenerInterface;
     friend class InterruptVectorWrapper;
 
-  private:
+  protected:
     /**
      * @brief Private constructor of CPUCore.
      *
@@ -124,6 +124,7 @@ class CPUCore : public VirtualStructSupport, public etiss::ToString
      *
      * @param arch Pointer to the CPU architecture used by the CPU core simulator.
      */
+    CPUCore(std::shared_ptr<etiss::CPUArch> arch, std::string const& name);
     CPUCore(std::shared_ptr<etiss::CPUArch> arch);
 
     class InterruptVectorWrapper : public InterruptVector

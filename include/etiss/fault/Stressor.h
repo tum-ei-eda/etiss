@@ -54,10 +54,10 @@
 #define ETISS_STRESSOR_H_
 
 #ifndef NO_ETISS
-#include "etiss/fault/Fault.h"
-#else
-#include "fault/Fault.h"
+#include "etiss/jit/ReturnCode.h"
 #endif
+
+#include <iostream>
 
 namespace etiss
 {
@@ -65,9 +65,42 @@ namespace etiss
 namespace fault
 {
 
+class Fault;
+class Trigger;
+class Action;
+class Injector;
+
 class Stressor
 {
   public:
+    enum Event
+    {
+        TERMINATE = (1 << 0)
+#ifndef NO_ETISS
+            ,
+        ETISS_FLUSH_TRANSLATION_CACHE = (1 << 1),
+        ETISS_RELOAD_TRANSLATION_BLOCK = (1 << 2)
+#else
+#endif
+    };
+
+#ifndef NO_ETISS
+  private:
+    static etiss::int32 event_code_;
+
+  public:
+    static etiss::int32 get_event(void) { return event_code_; }
+    static void set_event(etiss::int32 code) { event_code_ = code; }
+#else
+  private:
+    static int event_code_;
+
+  public:
+    static int get_event(void) { return event_code_; }
+    static void set_event(int code) { event_code_ = code; }
+    static void set_event_flag(Event flag) { event_code_ |= flag; }
+#endif
+    static void reset_event(void) { event_code_ = 0; }
     /** @brief extracts faults out of the given xml file.
      * @param file the xmlfile with fault triggers.
      * @return true if XML file could be loaded.
@@ -77,9 +110,22 @@ class Stressor
     /** @brief adds a fault to a static map that can be accessed
      *        by static std::map<int32_t,Fault> & faults().
      * @param f the fault for adding to the map.
-     * @return false if fault already exists in map.
+     * @return false if fault already exists in map faults().
      */
-    static bool addFault(const Fault &f);
+    static bool addFaultDefinition(const Fault &f);
+
+    /** @brief activates a fault's triggers in their injectors
+     * @param f the fault to activate
+     * @return false if refernced fault is not the static fault list faults().
+     */
+    static bool addFault(const Fault &f, bool injected_fault = false);
+
+    /** @brief removes a fault's active triggers from their injectors, thus,
+     *         deactivating the fault.
+     * @param f the fault for adding to the map.
+     * @return false if referenced fault is not the static fault list faults().
+     */
+    static bool removeFault(const Fault &f, bool injected_fault = false);
 
     /** @brief Checks if the given trigger is valid and calls applyAction.
      *
@@ -97,6 +143,9 @@ class Stressor
     /** @brief clears the fault map.
      */
     static void clear();
+    /** @brief static map with all referencable faults.
+     */
+    static std::map<int32_t, Fault> &faults();
 };
 
 } // namespace fault

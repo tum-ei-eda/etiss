@@ -53,9 +53,12 @@
 #define ETISS_INJECTOR_H_
 
 #ifndef NO_ETISS
-#include "etiss/fault/Fault.h"
+#include "etiss/Misc.h"
+#include "etiss/fault/Defs.h"
+#include "etiss/fault/Misc.h"
 #else
-#include "fault/Fault.h"
+#include "fault/Defs.h"
+#include "fault/Misc.h"
 #endif
 
 #if CXX0X_UP_SUPPORTED
@@ -73,6 +76,9 @@ namespace fault
 {
 
 class Stressor;
+class Fault;
+class Trigger;
+class Action;
 
 class Injector
 {
@@ -155,6 +161,12 @@ class Injector
 
     virtual bool acceleratedTrigger(const etiss::fault::Trigger &, int32_t fault_id);
 
+    /**
+        @brief Update the \p field of injector with access rights to allow \p action (used to get type of action).
+        @detail For example, if \p action is of etiss::fault::Action::BITFLIP, \p field requires F flag set
+    */
+    virtual bool update_field_access_rights(const etiss::fault::Action &action, std::string &errormsg) = 0;
+
   public: // static
     /**
     @param injectorPath the full path/name to/off an injector. in case of using ETISS/VirtualStruct please have a look
@@ -175,13 +187,17 @@ class Injector
 #if CXX0X_UP_SUPPORTED
     std::mutex sync;
 #endif
-    volatile bool has_pending_triggers;
-    std::list<std::pair<Trigger, int32_t>> pending_triggers; ///> Triggers which were just added
-    std::list<std::pair<Trigger, int32_t>> unknown_triggers; ///> Triggers to look at in callbacks
+    bool has_pending_triggers{ false };
+    bool has_remove_triggers{ false };
+    std::list<std::pair<Trigger, int32_t>> pending_triggers; ///< Triggers which were just added
+    std::list<std::pair<Trigger, int32_t>> unknown_triggers; ///< Triggers to look at in callbacks
+    std::list<std::pair<Trigger, int32_t>>
+        remove_triggers; ///< Triggers to synchronously remove on next callback (prio over pending)
     /// TODO specialized lists. e.g. time triggers should be sorted and only the earliest time should be checked
 
-  public: // interface fot stressor
+  public: // interface for Stressor
     void addTrigger(const Trigger &t, int32_t fault_id);
+    void removeTrigger(const Trigger &t, int32_t fault_id);
 };
 
 } // namespace fault

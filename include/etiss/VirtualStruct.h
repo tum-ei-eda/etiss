@@ -55,6 +55,10 @@
 #include "etiss/Misc.h"
 #include "etiss/fault/Injector.h"
 
+#include "etiss/fault/Trigger.h"
+#include "etiss/fault/Action.h"
+#include "etiss/fault/Fault.h"
+
 #include <cstddef>
 
 #include <memory>
@@ -66,7 +70,7 @@ class VSSync;
 
 /**
     abstract representation of an module of a simulation which could be a embedded device of the cpu of an embedded
-device. it is recommended to model and address the full hardware hirachy. e.g. <pre> device1
+device. it is recommended to model and address the full hardware hierachy. e.g. <pre> device1
             -> cpu
                 -> cache
             -> bus
@@ -217,7 +221,7 @@ class VirtualStruct : public std::enable_shared_from_this<VirtualStruct>, public
                                  ///< "SR" OR1K CPU register: SPR[0][17]
         const std::string prettyname_; ///< alternative/human readable name of the field. e.g. representing the "SR"
                                        ///< OR1K CPU register: "SR" or "SupervisorRegister"
-        const int flags_;       ///< read write flags as specified by the static const int parameters of Field: R,W,L
+        int flags_;             ///< read write flags as specified by the static const int parameters of Field: R,W,L
         const size_t width_;    ///< width in bytes (rounded up if neccessary)
         const size_t bitwidth_; ///< width in bits
         const AccessMode accessMode_;
@@ -300,8 +304,9 @@ class VirtualStruct : public std::enable_shared_from_this<VirtualStruct>, public
         virtual void _write(uint64_t val) { ((structT *)parent_.structure_)->*field = (retT)val; }
     };
 
-  private:
-    VirtualStruct(void *structure, std::function<void(Field *)> dtor = [](Field *f) { delete f; });
+  protected:
+    VirtualStruct(
+        void *structure, std::function<void(Field *)> dtor = [](Field *f) { delete f; });
 
   public:
     virtual ~VirtualStruct();
@@ -335,8 +340,9 @@ class VirtualStruct : public std::enable_shared_from_this<VirtualStruct>, public
             flags |= Field::W;
         if (supportsListener)
             flags |= Field::L;
-        Field *f = new Field(*this, name, prettyname, flags, sizeof(T), false, [read]() { return (uint64_t)read(); },
-                             [write](uint64_t v) { write((T)v); });
+        Field *f = new Field(
+            *this, name, prettyname, flags, sizeof(T), false, [read]() { return (uint64_t)read(); },
+            [write](uint64_t v) { write((T)v); });
         if (addField(f, noerrorprint))
             return true;
         delete f;
@@ -368,6 +374,7 @@ class VirtualStruct : public std::enable_shared_from_this<VirtualStruct>, public
     virtual bool readField(void *fastfieldaccessptr, uint64_t &val, std::string &errormsg);
     virtual bool applyAction(const etiss::fault::Fault &fault, const etiss::fault::Action &action,
                              std::string &errormsg);
+    virtual bool update_field_access_rights(const etiss::fault::Action &action, std::string &errormsg);
 
   public:
     /// set this function to handle custom commands passed by etiss::fault::Action of the type
@@ -449,6 +456,7 @@ class VirtualStructSupport
         @return may never be NULL
     */
     virtual std::shared_ptr<VirtualStruct> getStruct() = 0;
+    virtual const std::string &getName() = 0;
 };
 
 #define ETISS_VIRTUALSTRUCT_ADDFIELD(VIRTUALSTRUCT, STRUCT, FIELD, NAME, PRETTYNAME) \
