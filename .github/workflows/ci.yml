@@ -166,7 +166,7 @@ jobs:
     - name: Test GDBServer
       run: |
         chmod +x etiss_prebuilt/bin/bare_etiss_processor
-        ETISS=$(pwd)/etiss_prebuilt/bin/bare_etiss_processor RISCV_GDB=$(pwd)/riscv_tc/bin/riscv-none-elf-gdb ./script/test_gdbserver.sh examples_prebuilt_rv${{matrix.bits}}_${{matrix.build_type}}/ini/${{matrix.test_program}}.ini examples_prebuilt_rv${{matrix.bits}}_${{matrix.build_type}}/bin/${{matrix.test_program}} 2001 ${{matrix.jit_engine}}
+        ETISS=$(pwd)/etiss_prebuilt/bin/bare_etiss_processor RISCV_GDB=$(pwd)/riscv_tc/bin/riscv-none-elf-gdb timeout 360s ./script/test_gdbserver.sh examples_prebuilt_rv${{matrix.bits}}_${{matrix.build_type}}/ini/${{matrix.test_program}}.ini examples_prebuilt_rv${{matrix.bits}}_${{matrix.build_type}}/bin/${{matrix.test_program}} 2001 ${{matrix.jit_engine}}
 
 
   run_benchmarks:
