@@ -5,3 +5,6 @@
 [submodule "third_party/betterenums"]
 	path = third_party/betterenums
 	url = https://github.com/aantron/better-enums.git
+[submodule "third_party/tcc"]
+	path = third_party/tcc
+	url = https://github.com/TinyCC/tinycc.git
