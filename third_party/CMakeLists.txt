@@ -35,8 +35,7 @@ add_subdirectory(softfloat)
 ####################################################################################################
 # pugixml (used in fault injection plugins)
 # Makes CMake target pugixml available
-add_subdirectory(pugixml)
-
+add_subdirectory(pugixml EXCLUDE_FROM_ALL)
 ####################################################################################################
 # tcc (used in JITImpl)
 # Makes CMake target TinyCC and tcc available (only UNIX)

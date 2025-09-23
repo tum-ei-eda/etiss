@@ -8,3 +8,6 @@
 [submodule "third_party/tcc"]
 	path = third_party/tcc
 	url = https://github.com/TinyCC/tinycc.git
+[submodule "third_party/pugixml"]
+	path = third_party/pugixml
+	url = https://github.com/zeux/pugixml.git
