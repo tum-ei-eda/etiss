@@ -232,26 +232,6 @@ unset(TMP_CONFIG_HEADER_REL)
 file(GLOB TMP_CONFIG_HEADER_REL RELATIVE ${ETISS_ROOT} ${PROJECT_BINARY_DIR}/include/etiss/config.h)
 set(ETISS_HEADER ${ETISS_HEADER} ${TMP_CONFIG_HEADER_REL})
 
-FetchContent_Declare(betterenums_srcs
-    GIT_REPOSITORY https://github.com/aantron/better-enums.git
-    GIT_TAG 0.11.3
-)
-if(NOT betterenums_srcs_POPULATED)
-    FetchContent_Populate(betterenums_srcs)
-    FetchContent_GetProperties(betterenums_srcs)
-endif()
-add_library(betterenums INTERFACE)
-set_target_properties(betterenums PROPERTIES
-    PUBLIC_HEADER "${betterenums_srcs_SOURCE_DIR}/enum.h"
-)
-target_include_directories(betterenums INTERFACE
-    $<BUILD_INTERFACE:${betterenums_srcs_SOURCE_DIR}>
-    $<INSTALL_INTERFACE:include>
-)
-install(TARGETS betterenums
-    PUBLIC_HEADER DESTINATION include
-)
-
 ### Doxyfile
 set(ETISS_DOX_LOCATIONS ${ETISS_DOX_LOCATIONS} ${PROJECT_BINARY_DIR}/include)
 set(ETISS_DOX_LOCATIONS ${ETISS_DOX_LOCATIONS} ${PROJECT_BINARY_DIR}/include_c)

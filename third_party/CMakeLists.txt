@@ -41,3 +41,8 @@ add_subdirectory(pugixml)
 # tcc (used in JITImpl)
 # Makes CMake target TinyCC and tcc available (only UNIX)
 add_subdirectory(tcc)
+
+####################################################################################################
+# betternums (used in fault injection plugins)
+# Makes CMake target betterenums available
+add_subdirectory(betterenums)
