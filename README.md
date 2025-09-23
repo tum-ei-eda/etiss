@@ -62,7 +62,15 @@ Packages required for Ubuntu / Debian:
 
 ### Build and Installation
 
-Follow these instructions to quickly build ETISS. Start in the root directory of ETISS by creating a build directory:
+Follow these instructions to quickly build ETISS. Start by *--recursive* cloning the repository:
+
+  $ git clone --recursive https://github.com/tum-ei-eda/etiss.git
+
+Change into the ETISS root directory:
+
+	$ cd etiss
+
+Create a build directoriy in the root directory of ETISS:
 
 	$ mkdir build_dir
 
