@@ -17,3 +17,6 @@
 [submodule "third_party/simpleini"]
 	path = third_party/simpleini
 	url = https://github.com/brofield/simpleini.git
+[submodule "third_party/elfio"]
+	path = third_party/elfio
+	url = https://github.com/serge1/ELFIO.git

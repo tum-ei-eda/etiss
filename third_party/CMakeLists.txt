@@ -20,7 +20,7 @@ include(FetchContent)
 ####################################################################################################
 # ELFIO (used for loading cross compiled ELFs to ETISS Memory Systems)
 # Makes CMake target "elfio::elfio" aka "elfio" available
-add_subdirectory(elfio)
+add_subdirectory(elfio EXCLUDE_FROM_ALL)
 
 ####################################################################################################
 # SimpleIni (used for loading cross compiled ELFs to ETISS Memory Systems)
