@@ -232,17 +232,6 @@ unset(TMP_CONFIG_HEADER_REL)
 file(GLOB TMP_CONFIG_HEADER_REL RELATIVE ${ETISS_ROOT} ${PROJECT_BINARY_DIR}/include/etiss/config.h)
 set(ETISS_HEADER ${ETISS_HEADER} ${TMP_CONFIG_HEADER_REL})
 
-
-FetchContent_Declare(pugixml_srcs
-    GIT_REPOSITORY https://github.com/zeux/pugixml.git
-    GIT_TAG v1.11.4
-)
-if(NOT pugixml_srcs_POPULATED)
-    FetchContent_Populate(pugixml_srcs)
-    FetchContent_GetProperties(pugixml_srcs)
-endif()
-add_subdirectory(${pugixml_srcs_SOURCE_DIR} ${pugixml_srcs_BINARY_DIR} EXCLUDE_FROM_ALL)
-
 FetchContent_Declare(betterenums_srcs
     GIT_REPOSITORY https://github.com/aantron/better-enums.git
     GIT_TAG 0.11.3
