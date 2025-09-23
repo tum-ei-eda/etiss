@@ -2,3 +2,6 @@
 	path = PluginImpl/verilator
 	url = git@gitlab.lrz.de:de-tum-ei-eda-esl/etiss-plugin-verilator.git
     branch = master
+[submodule "third_party/betterenums"]
+	path = third_party/betterenums
+	url = https://github.com/aantron/better-enums.git

@@ -45,4 +45,15 @@ add_subdirectory(tcc)
 ####################################################################################################
 # betternums (used in fault injection plugins)
 # Makes CMake target betterenums available
-add_subdirectory(betterenums)
+set(betterenums_srcs_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/betterenums)
+add_library(betterenums INTERFACE)
+set_target_properties(betterenums PROPERTIES
+    PUBLIC_HEADER "${betterenums_srcs_SOURCE_DIR}/enum.h"
+)
+target_include_directories(betterenums INTERFACE
+    $<BUILD_INTERFACE:${betterenums_srcs_SOURCE_DIR}>
+    $<INSTALL_INTERFACE:include/third_party/betterenums>
+)
+install(TARGETS betterenums
+    PUBLIC_HEADER DESTINATION include/third_party/betterenums
+)
