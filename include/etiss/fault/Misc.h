@@ -1,4 +1,4 @@
-/*
+/**
 
         @copyright
 
@@ -36,44 +36,37 @@
 
         @author Chair of Electronic Design Automation, TUM
 
+        @date November 18, 2021
+
         @version 0.1
 
 */
+/**
+        @file
 
-#ifndef ETISS_PLUGIN_InstructionAccurateCallback_H_
-#define ETISS_PLUGIN_InstructionAccurateCallback_H_
+        @brief general helpers for fault
 
-#include "etiss/Plugin.h"
+        @detail
 
-#include <fstream>
+
+
+
+*/
+
+#ifndef ETISS_INCLUDE_FAULT_MISC_H_
+#define ETISS_INCLUDE_FAULT_MISC_H_
+
+#include <map>
+#include <string>
+#include <vector>
 
 namespace etiss
 {
-
-namespace plugin
+namespace fault
 {
 
-/**
-        writes the value of a field before each instruction
+} // end of namespace fault
 
-*/
-class InstructionAccurateCallback : public etiss::TranslationPlugin
-{
-  public:
-    InstructionAccurateCallback();
-    virtual ~InstructionAccurateCallback();
-    virtual void initCodeBlock(etiss::CodeBlock &block) const;
-    virtual void finalizeInstrSet(etiss::instr::ModedInstructionSet &) const;
+} // end of namespace etiss
 
-  protected:
-    virtual std::string _getPluginName() const;
-
-  public:
-    etiss_int32 call_on_entry();
-};
-
-} // namespace plugin
-
-} // namespace etiss
-
-#endif
+#endif /* ETISS_INCLUDE_FAULT_MISC_H_ */

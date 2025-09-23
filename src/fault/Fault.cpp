@@ -41,15 +41,23 @@
 */
 
 #ifndef NO_ETISS
+#include "etiss/fault/XML.h"
 #include "etiss/fault/Fault.h"
 #include "etiss/fault/Trigger.h"
+#include "etiss/fault/Action.h"
 #include "etiss/fault/Injector.h"
-#include "etiss/fault/xml/pugixml.hpp"
+#include "etiss/fault/InjectorAddress.h"
+#include "etiss/fault/Stressor.h"
+#include "pugixml.hpp"
 #else
+#include "fault/XML.h"
 #include "fault/Fault.h"
 #include "fault/Trigger.h"
+#include "fault/Action.h"
 #include "fault/Injector.h"
-#include "fault/xml/pugixml.hpp"
+#include "fault/InjectorAddress.h"
+#include "fault/Stressor.h"
+#include "pugixml.hpp"
 #endif
 
 #if MUTEX_SUPPORTED
@@ -193,6 +201,51 @@ bool write<std::vector<etiss::fault::Fault>>(pugi::xml_node node, const std::vec
     return ret;
 }
 
+template <>
+bool parse<std::vector<etiss::fault::FaultRef>>(pugi::xml_node node, std::vector<etiss::fault::FaultRef> &dst,
+                                                Diagnostics &diag)
+{
+    etiss::log(etiss::VERBOSE, std::string("etiss::fault::xml::parse<std::vector<etiss::fault::FaultRef") +
+                                   std::string("> >(node, vector<FaultRef>, Diagnostics) called. "));
+
+    bool ret = true;
+    for (pugi::xml_node cnode = node.first_child(); cnode; cnode = cnode.next_sibling())
+    {
+        if (hasName(cnode, "fault_ref"))
+        { // handle fault node
+            FaultRef f;
+            if (parse<etiss::fault::FaultRef>(cnode, f, diag))
+            {
+                dst.push_back(f);
+            }
+            else
+            {
+                ret = false;
+            }
+        }
+        else
+        {
+            diag.ignoredNode(cnode, "non \"fault_ref\" node in list.");
+        }
+    }
+    return ret;
+}
+
+template <>
+bool write<std::vector<etiss::fault::FaultRef>>(pugi::xml_node node, const std::vector<etiss::fault::FaultRef> &src,
+                                                Diagnostics &diag)
+{
+    etiss::log(etiss::VERBOSE, std::string("etiss::fault::xml::write<std::vector<etiss::fault::FaultRef") +
+                                   std::string("> >(node, vector<FaultRef>, Diagnostics) called. "));
+
+    bool ret = true;
+    for (size_t i = 0; i < src.size(); ++i)
+    {
+        ret = ret && write(node.append_child("fault_ref"), src[i], diag);
+    }
+    return ret;
+}
+
 } // namespace xml
 
 // generates a unique ID for a new Fault
@@ -205,16 +258,19 @@ static int32_t uniqueFaultId()
     static int32_t cid = -1;
     return cid--;
 }
-Fault::Fault()
+
+Fault::Fault() : id_(uniqueFaultId())
 {
     etiss::log(etiss::VERBOSE, std::string("etiss::fault::Fault::Fault() called. "));
-    id_ = uniqueFaultId();
 }
+
+Fault::Fault(int nullid) : id_(nullid) {}
+
 std::string Fault::toString() const
 {
 
     pugi::xml_document doc;
-    doc.load("<?xml version=\"1.0\"?>");
+    doc.load_string("<?xml version=\"1.0\"?>");
 
     etiss::fault::xml::Diagnostics diag;
 
@@ -246,26 +302,56 @@ bool Fault::isResoved() const
     return true;
 }
 
-#if ETISS_FAULT_XML
-
-bool parseXML(std::vector<Fault> &vec, std::istream &input, std::ostream &diagnostics_out)
+std::string FaultRef::toString() const
 {
 
-    pugi::xml_document doc; // xml document
-
-    pugi::xml_parse_result pr = doc.load(input); // load from stream
-
-    if (!pr)
-    { // load failure
-        diagnostics_out << "failed to load xml from stream: " << pr.description() << std::endl;
-        return false;
-    }
+    pugi::xml_document doc;
+    doc.load_string("<?xml version=\"1.0\"?>");
 
     etiss::fault::xml::Diagnostics diag;
 
-    bool ret = parse(doc.document_element(), vec, diag); // parse document
+    etiss::fault::xml::write<etiss::fault::FaultRef>(doc.append_child("fault_ref"), *this, diag);
 
-    diag.print(diagnostics_out);
+    std::stringstream ss;
+
+    doc.save(ss);
+
+    return ss.str();
+}
+
+bool FaultRef::set_fault_reference(const std::string &identifier)
+{
+    name_ = identifier;
+
+    return (resolve_reference());
+}
+
+bool FaultRef::resolve_reference() const
+{
+    for (auto const &it : Stressor::faults())
+    {
+        if (it.second.name_ == name_)
+        {
+            fault_ = it.second;
+            return true;
+        }
+    }
+
+    return false;
+}
+
+#if ETISS_FAULT_XML
+
+bool parseXML(std::vector<Fault> &vec, const pugi::xml_document &doc, xml::Diagnostics &diag)
+{
+    bool ret = parse(findSingleNode(doc.document_element(), "definitions", diag), vec, diag); // parse document
+
+    return ret;
+}
+
+bool parseXML(std::vector<FaultRef> &vec, const pugi::xml_document &doc, xml::Diagnostics &diag)
+{
+    bool ret = parse(findSingleNode(doc.document_element(), "initial", diag), vec, diag); // parse document
 
     return ret;
 }
@@ -274,7 +360,7 @@ bool writeXML(const std::vector<Fault> &vec, std::ostream &out, std::ostream &di
 {
     pugi::xml_document doc;
 
-    doc.load("<?xml version=\"1.0\"?>");
+    doc.load_string("<?xml version=\"1.0\"?>");
 
     etiss::fault::xml::Diagnostics diag;
 
@@ -296,8 +382,8 @@ bool parse<etiss::fault::Fault>(pugi::xml_node node, etiss::fault::Fault &f, Dia
     etiss::log(etiss::VERBOSE, std::string("etiss::fault::xml::parse<etiss::fault::Fault>") +
                                    std::string("(node, Fault, Diagnostics) called. "));
     bool ret = true;
-    /*ret = ret &*/ getAttribute(node, "name", f.name_, diag); // optional
-    /*ret = ret &*/ getAttribute(node, "id_", f.id_, diag);    // optional
+    ret = ret && getAttribute(node, "name", f.name_, diag); // non-optional
+    /*ret = ret &*/ getAttribute(node, "id_", f.id_, diag); // optional
     for (pugi::xml_node cnode = node.first_child(); cnode; cnode = cnode.next_sibling())
     {
         if (hasName(cnode, "triggers"))
@@ -370,6 +456,29 @@ bool write<etiss::fault::Fault>(pugi::xml_node node, const etiss::fault::Fault &
     {
         ok = ok && write<etiss::fault::Action>(actions.append_child("action"), *iter, diag);
     }
+    return ok;
+}
+
+template <>
+bool parse<etiss::fault::FaultRef>(pugi::xml_node node, etiss::fault::FaultRef &fref, Diagnostics &diag)
+{
+    etiss::log(etiss::VERBOSE, std::string("etiss::fault::xml::parse<etiss::fault::Fault>") +
+                                   std::string("(node, Fault, Diagnostics) called. "));
+    bool ret = true;
+    std::string name;
+    ret = ret && getAttribute(node, "name", name, diag); // non-optional
+    // try to resolve reference, could (and is allowed to) fail in case of injected/ejected fault_ref
+    fref.set_fault_reference(name);
+    return ret;
+}
+
+template <>
+bool write<etiss::fault::FaultRef>(pugi::xml_node node, const etiss::fault::FaultRef &fref, Diagnostics &diag)
+{
+    etiss::log(etiss::VERBOSE, std::string("etiss::fault::xml::write<etiss::fault::Fault>") +
+                                   std::string("(node, Fault, Diagnostics) called. "));
+    bool ok = true;
+    ok = ok && setAttribute(node, "name", fref.get_name(), diag);
     return ok;
 }
 
