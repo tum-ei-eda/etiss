@@ -25,7 +25,20 @@ add_subdirectory(elfio)
 ####################################################################################################
 # SimpleIni (used for loading cross compiled ELFs to ETISS Memory Systems)
 # Makes CMake target "simpleini" aka "elfio" available
-add_subdirectory(simpleini)
+set(simpleini_srcs_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/simpleini)
+add_library(simpleini OBJECT
+    "${simpleini_srcs_SOURCE_DIR}/ConvertUTF.c"
+)
+set_target_properties(simpleini PROPERTIES
+    PUBLIC_HEADER "${simpleini_srcs_SOURCE_DIR}/SimpleIni.h;${simpleini_srcs_SOURCE_DIR}/ConvertUTF.h"
+)
+target_include_directories(simpleini PUBLIC
+    $<BUILD_INTERFACE:${simpleini_srcs_SOURCE_DIR}>
+    $<INSTALL_INTERFACE:include/third_party/simpleini>
+)
+install(TARGETS simpleini
+    PUBLIC_HEADER DESTINATION include/third_party/simpleini
+)
 
 ####################################################################################################
 # (berkeley) softfloat (used for floating point support in JIT code)
@@ -36,6 +49,7 @@ add_subdirectory(softfloat)
 # pugixml (used in fault injection plugins)
 # Makes CMake target pugixml available
 add_subdirectory(pugixml EXCLUDE_FROM_ALL)
+
 ####################################################################################################
 # tcc (used in JITImpl)
 # Makes CMake target TinyCC and tcc available (only UNIX)
