@@ -692,7 +692,6 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
     struct timespec start, finish;
 
     clock_gettime(CLOCK_MONOTONIC, &start);
-    // float startTime = (float)clock() / CLOCKS_PER_SEC; // TESTING
 
 
     BlockLink *blptr = 0; // pointer to the current block
@@ -831,7 +830,6 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
 
 loopexit:
     clock_gettime(CLOCK_MONOTONIC, &finish);
-    // float endTime = (float)clock() / CLOCKS_PER_SEC;
 
 
     // execute coroutines end
@@ -842,8 +840,6 @@ loopexit:
 
     // Defining the statistics of measurement and printing them
     double cpu_time = cpu_->cpuTime_ps / 1.0E12;
-    // old estimation based on process time
-    // double simulation_time = endTime - startTime;
     double simulation_time = (finish.tv_sec - start.tv_sec) + (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
     double cpu_cycle = cpu_->cpuTime_ps / (float)cpu_->cpuCycleTime_ps;
     double mips = cpu_->cpuTime_ps / (float)cpu_->cpuCycleTime_ps / simulation_time / 1.0E6;
