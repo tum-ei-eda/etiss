@@ -55,13 +55,12 @@ int main(int argc, const char *argv[])
     // ./main [-o<option> <value>] [-f[no]<flag>] [-i<additionalinifile>]
     // All arguments with this format will be evaluated by the Initializer.
     std::cout << "=== Setting up configurations ===" << std::endl;
-    //std::list<std::string> iniFiles;
+    // std::list<std::string> iniFiles;
     // iniFiles.push_back("../ETISS.ini"); // will be loaded within the run.sh
     // iniFiles.push_back("additional.ini");
     etiss::Initializer initializer(
         argc, argv); // add &iniFiles as the first argument if .ini files are loaded explicitly here
     bool quiet = etiss::cfg().get<bool>("vp.quiet", false);
-    // std::cout << "quiet=" << quiet << std::endl;
     if (!quiet) std::cout << "=== Finished setting up configurations ===" << std::endl << std::endl;
 
 
@@ -132,13 +131,13 @@ int main(int argc, const char *argv[])
     if (is_fault_injection)
     {
         dynamic_cast<etiss::MemoryManipulationSystem &>(*dsys).init_manipulation(cpu);
-        
+
         etiss::initialize_virtualstruct(
             cpu,
             [](const etiss::fault::Fault &fault, const etiss::fault::Action &action, std::string &errormsg)
             {
                 auto cmd = action.getCommand();
-                f (!quiet) std::cout << "custom command: " << cmd << std::endl;
+                std::cout << "custom command: " << cmd << std::endl;
                 return true;
             });
     }
@@ -146,7 +145,7 @@ int main(int argc, const char *argv[])
     {
         etiss::initialize_virtualstruct(cpu);
     }
-    f (!quiet) std::cout << "=== Finished Setting up test system ===" << std::endl << std::endl;
+    if (!quiet) std::cout << "=== Finished Setting up test system ===" << std::endl << std::endl;
 
     if (!quiet) std::cout << "=== Setting up plug-ins ===" << std::endl;
 
