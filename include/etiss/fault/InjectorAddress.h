@@ -60,10 +60,8 @@
 #ifndef NO_ETISS
 #include "etiss/Misc.h"
 #include "etiss/fault/Defs.h"
-#include "etiss/fault/XML.h"
 #else
 #include "fault/Defs.h"
-#include "fault/XML.h"
 #endif
 
 namespace etiss
@@ -100,18 +98,7 @@ class InjectorAddress : public etiss::ToString
 namespace xml
 {
 
-template <>
-bool parse<etiss::fault::InjectorAddress>(pugi::xml_node node, etiss::fault::InjectorAddress &dst, Diagnostics &diag);
-template <>
-bool write<etiss::fault::InjectorAddress>(pugi::xml_node node, const etiss::fault::InjectorAddress &src,
-                                          Diagnostics &diag);
 
-template <>
-bool parse<etiss::fault::InjectorAddress *>(pugi::xml_node node, etiss::fault::InjectorAddress *&dst,
-                                            Diagnostics &diag);
-template <>
-bool write<const etiss::fault::InjectorAddress *>(pugi::xml_node node, const etiss::fault::InjectorAddress *const &src,
-                                                  Diagnostics &diag);
 
 } // namespace xml
 

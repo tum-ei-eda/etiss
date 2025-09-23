@@ -42,6 +42,7 @@
 
 #include "TracePrinter.h"
 #include "etiss/SimpleMemSystem.h"
+#include "etiss/IntegratedLibrary/fault/MemoryManipulationSystem.h"
 #include "etiss/ETISS.h"
 
 int main(int argc, const char *argv[])
@@ -57,19 +58,33 @@ int main(int argc, const char *argv[])
     //std::list<std::string> iniFiles;
     // iniFiles.push_back("../ETISS.ini"); // will be loaded within the run.sh
     // iniFiles.push_back("additional.ini");
-    etiss::Initializer initializer(argc, argv); //add &iniFiles as the first argument if .ini files are loaded explicitly here
+    etiss::Initializer initializer(
+        argc, argv); // add &iniFiles as the first argument if .ini files are loaded explicitly here
     bool quiet = etiss::cfg().get<bool>("vp.quiet", false);
     // std::cout << "quiet=" << quiet << std::endl;
     if (!quiet) std::cout << "=== Finished setting up configurations ===" << std::endl << std::endl;
 
+
     if (!quiet) std::cout << "=== Setting up test system ===" << std::endl;
     if (!quiet) std::cout << "  Setting up Memory" << std::endl;
 
-    etiss::SimpleMemSystem dsys;
-    dsys.init_memory();
+    bool is_fault_injection = !(etiss::cfg().get<std::string>("faults.xml", "")).empty();
 
-    if (!etiss::cfg().isSet("arch.cpu")) {
-        std::cout << "  CPU architecture was not set anywhere! Please set it manually using the arch.cpu configuration option!";
+    std::shared_ptr<etiss::SimpleMemSystem> dsys;
+    if (is_fault_injection)
+    {
+        dsys = std::make_shared<etiss::MemoryManipulationSystem>();
+    }
+    else
+    {
+        dsys = std::make_shared<etiss::SimpleMemSystem>();
+    }
+    dsys->init_memory();
+
+    if (!etiss::cfg().isSet("arch.cpu"))
+    {
+        std::cout << "  CPU architecture was not set anywhere! Please set it manually using the arch.cpu configuration "
+                     "option!";
         return 3;
     }
 
@@ -88,7 +103,7 @@ int main(int argc, const char *argv[])
             buf[1] = it_instr >> 16;
             buf[2] = it_instr >> 8;
             buf[3] = it_instr;
-            dsys.dbg_write(pos, buf, 4);
+            dsys->dbg_write(pos, buf, 4);
             pos += 4;
         }
     }
@@ -97,8 +112,9 @@ int main(int argc, const char *argv[])
     if (!quiet) std::cout << "  Setting up CPUCore" << std::endl;
     // create a cpu core named core0 with the or1k architecture
     std::string CPUArchName = etiss::cfg().get<std::string>("arch.cpu", "");
-    etiss::uint64 sa = etiss::cfg().get<uint64_t>("vp.entry_point", dsys.get_startaddr());
+    etiss::uint64 sa = etiss::cfg().get<uint64_t>("vp.entry_point", dsys->get_startaddr());
 	  if (!quiet) std::cout << "  CPU start address: 0x" << std::hex << sa << std::dec << std::endl;
+
     std::shared_ptr<etiss::CPUCore> cpu = etiss::CPUCore::create(CPUArchName, "core0");
     if (!cpu)
     {
@@ -111,15 +127,26 @@ int main(int argc, const char *argv[])
     // reset CPU with a manual start address
     cpu->reset(&sa);
 
-    // add the virtual structure of the cpu to the VirtualStruct root. This allows
-    // to access the field of the cpu from a global context. See
-    // etiss::VirtualStruct::getVirtualStruct() and
-    // etiss::VirtualStruct::getResolvedField(). In this case e.g. the
-    // instructionPointer can be read from a global context by calling
-    // etiss::VirtualStruct::root()->getResolvedField("core0.instructionPointer")
-    // ->read().
-    etiss::VirtualStruct::root()->mountStruct("core0", cpu->getStruct());
-    if (!quiet) std::cout << "=== Finished Setting up test system ===" << std::endl << std::endl;
+    // bind the cpu's VirtualStruct to etiss' root VirtualStruct and initialize faults
+    // if those where specified in config/cmdline
+    if (is_fault_injection)
+    {
+        dynamic_cast<etiss::MemoryManipulationSystem &>(*dsys).init_manipulation(cpu);
+        
+        etiss::initialize_virtualstruct(
+            cpu,
+            [](const etiss::fault::Fault &fault, const etiss::fault::Action &action, std::string &errormsg)
+            {
+                auto cmd = action.getCommand();
+                f (!quiet) std::cout << "custom command: " << cmd << std::endl;
+                return true;
+            });
+    }
+    else
+    {
+        etiss::initialize_virtualstruct(cpu);
+    }
+    f (!quiet) std::cout << "=== Finished Setting up test system ===" << std::endl << std::endl;
 
     if (!quiet) std::cout << "=== Setting up plug-ins ===" << std::endl;
 
@@ -129,22 +156,22 @@ int main(int argc, const char *argv[])
     initializer.loadIniPlugins(cpu);
     initializer.loadIniJIT(cpu);
     // here own developped plug-ins can be added with:
-    if (etiss::cfg().get<bool>("etiss.log_pc", false)) {
-      etiss::cfg().set<int>("etiss.max_block_size", 1);
-      cpu->addPlugin(std::shared_ptr<etiss::Plugin>(new TracePrinter(0x88888)));
+    if (etiss::cfg().get<bool>("etiss.log_pc", false))
+    {
+        etiss::cfg().set<int>("etiss.max_block_size", 1);
+        cpu->addPlugin(std::make_shared<TracePrinter>(0x88888));
     }
 
     if (!quiet) std::cout << "=== Setting up plug-ins ===" << std::endl << std::endl;
 
     // Simulation start
     if (!quiet) std::cout << std::endl << "=== Simulation start ===" << std::endl;
-    //float startTime = (float)clock() / CLOCKS_PER_SEC; // TESTING
-    // run cpu with the SimpleMemSystem (in other cases that "system" is most likely a
-    // bus that connects the cpu to memory,periphery,etc)
-    etiss_int32 exception = cpu->execute(dsys);
-    //float endTime = (float)clock() / CLOCKS_PER_SEC;
+    // float startTime = (float)clock() / CLOCKS_PER_SEC; // TESTING
+    //  run cpu with the SimpleMemSystem (in other cases that "system" is most likely a
+    //  bus that connects the cpu to memory,periphery,etc)
+    etiss_int32 exception = cpu->execute(*dsys);
+    // float endTime = (float)clock() / CLOCKS_PER_SEC;
     if (!quiet) std::cout << "=== Simulation end ===" << std::endl << std::endl;
-
 
     // print the exception code returned by the cpu core
     if (!quiet) std::cout << "CPU0 exited with exception: 0x" << std::hex << exception << std::dec << ": "
@@ -156,36 +183,36 @@ int main(int argc, const char *argv[])
         case etiss::RETURNCODE::CPUTERMINATED:
         return 0;
         break;
-        case etiss::RETURNCODE::DBUS_READ_ERROR:
-        case etiss::RETURNCODE::DBUS_WRITE_ERROR:
-        case etiss::RETURNCODE::IBUS_READ_ERROR:
-        case etiss::RETURNCODE::IBUS_WRITE_ERROR:
-        case etiss::RETURNCODE::INTERRUPT:
-        case etiss::RETURNCODE::RESET:
-        case etiss::RETURNCODE::ILLEGALINSTRUCTION:
-        case etiss::RETURNCODE::ILLEGALJUMP:
-        case etiss::RETURNCODE::INSTR_PAGEFAULT:
-        case etiss::RETURNCODE::LOAD_PAGEFAULT:
-        case etiss::RETURNCODE::STORE_PAGEFAULT:
-        case etiss::RETURNCODE::GDBNOERROR:
-        case etiss::RETURNCODE::SYSCALL:
-        case etiss::RETURNCODE::PAGEFAULT:
+    case etiss::RETURNCODE::DBUS_READ_ERROR:
+    case etiss::RETURNCODE::DBUS_WRITE_ERROR:
+    case etiss::RETURNCODE::IBUS_READ_ERROR:
+    case etiss::RETURNCODE::IBUS_WRITE_ERROR:
+    case etiss::RETURNCODE::INTERRUPT:
+    case etiss::RETURNCODE::RESET:
+    case etiss::RETURNCODE::ILLEGALINSTRUCTION:
+    case etiss::RETURNCODE::ILLEGALJUMP:
+    case etiss::RETURNCODE::INSTR_PAGEFAULT:
+    case etiss::RETURNCODE::LOAD_PAGEFAULT:
+    case etiss::RETURNCODE::STORE_PAGEFAULT:
+    case etiss::RETURNCODE::GDBNOERROR:
+    case etiss::RETURNCODE::SYSCALL:
+    case etiss::RETURNCODE::PAGEFAULT:
         return 1;
         break;
-        case etiss::RETURNCODE::JITERROR:
-        case etiss::RETURNCODE::JITCOMPILATIONERROR:
+    case etiss::RETURNCODE::JITERROR:
+    case etiss::RETURNCODE::JITCOMPILATIONERROR:
         return 2;
         break;
-        case etiss::RETURNCODE::GENERALERROR:
-        case etiss::RETURNCODE::RELOADBLOCKS:
-        case etiss::RETURNCODE::RELOADCURRENTBLOCK:
-        case etiss::RETURNCODE::BREAKPOINT:
-        case etiss::RETURNCODE::ARCHERROR:
-        case etiss::RETURNCODE::EMULATIONNOTSUPPORTED:
-        case etiss::RETURNCODE::INVALIDSYSTEM:
+    case etiss::RETURNCODE::GENERALERROR:
+    case etiss::RETURNCODE::RELOADBLOCKS:
+    case etiss::RETURNCODE::RELOADCURRENTBLOCK:
+    case etiss::RETURNCODE::BREAKPOINT:
+    case etiss::RETURNCODE::ARCHERROR:
+    case etiss::RETURNCODE::EMULATIONNOTSUPPORTED:
+    case etiss::RETURNCODE::INVALIDSYSTEM:
         return 3;
         break;
-        default:
+    default:
         return -1;
         break;
     }

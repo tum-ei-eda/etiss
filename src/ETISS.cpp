@@ -35,6 +35,7 @@
 
 #include "etiss/ETISS.h"
 #include "etiss/fault/Stressor.h"
+#include "etiss/IntegratedLibrary/InstructionAccurateCallback.h"
 
 #include <csignal>
 #include <cstring>
@@ -757,6 +758,7 @@ void etiss_initialize(const std::vector<std::string>& args, bool forced = false)
             ("vp.elf_file", po::value<std::string>(), "Load ELF file.")
             ("vp.stats_file_path", po::value<std::string>(), "Path where the output json file gets stored after bare processor is run.")
             ("vp.quiet", po::value<std::string>(), "Disable logging of bare_etiss_processor.")
+            ("faults.xml", po::value<std::string>(), "Path to faults XML file.")
             ("simple_mem_system.print_dbus_access", po::value<bool>(), "Traces accesses to the data bus.")
             ("simple_mem_system.print_ibus_access", po::value<bool>(), "Traces accesses to the instruction bus.")
             ("simple_mem_system.print_dbgbus_access", po::value<bool>(), "Traces accesses to the debug bus.")
@@ -877,19 +879,6 @@ void etiss_initialize(const std::vector<std::string>& args, bool forced = false)
             }
         }
     }
-
-    // load fault files
-    {
-        std::string faults = cfg().get<std::string>("faults.xml", "");
-        if (!faults.empty())
-        {
-            std::list<std::string> ffs = etiss::split(faults, ';');
-            for (auto ff : ffs)
-            {
-                etiss::fault::Stressor::loadXML(ff);
-            }
-        }
-    }
 }
 
 void etiss::initialize(std::vector<std::string>& args)
@@ -924,6 +913,53 @@ static class helper_class_etiss_1
 } helper_class_etiss_1;
 
 bool etiss_shutdownOk = false;
+
+void etiss::initialize_virtualstruct(std::shared_ptr<etiss::CPUCore> cpu_core)
+{
+    auto mount_successful = etiss::VirtualStruct::root()->mountStruct(cpu_core->getName(), cpu_core->getStruct());
+    // check if it the core is already mounted.
+    if( etiss::VirtualStruct::root()->findStruct(cpu_core->getName()) )
+    {
+        mount_successful = true; // already mounted as a substruct to the root()
+    }
+
+    if(!mount_successful)
+    {
+        etiss::log(etiss::FATALERROR, std::string("Tried to mount ") + cpu_core->getName() + std::string("'s VirtualStruct, but failed: etiss::CPUCore not created!"));
+    }
+    else
+    {
+        etiss::log(etiss::VERBOSE, std::string("Mounted ") + cpu_core->getName() + std::string("'s VirtualStruct to root VirtualStruct"));
+
+        // load fault files
+        std::string faults = cfg().get<std::string>("faults.xml", "");
+        if (!faults.empty())
+        {
+            std::list<std::string> ffs = etiss::split(faults, ';');
+            for (const auto& ff : ffs)
+            {
+                auto stressor_successful = etiss::fault::Stressor::loadXML(ff, cpu_core->getID());
+                if (!stressor_successful)
+                {
+                    etiss::log(etiss::FATALERROR, std::string("Failed to load requested faults.xml \'") + ff + std::string("\' for ") + cpu_core->getName() + std::string("."));
+                }
+                else
+                {
+                    etiss::log(etiss::VERBOSE, std::string("Faults from \'") + ff + std::string("\' loaded for ") + cpu_core->getName() + std::string("."));
+                }
+            }
+
+            etiss::log(etiss::VERBOSE, std::string("Add InstructionAccurateCallback Plugin to ") + cpu_core->getName() + std::string(". Required for etiss::fault::Injector."));
+            cpu_core->addPlugin(std::make_shared<etiss::plugin::InstructionAccurateCallback>());
+        }
+    }
+}
+
+void etiss::initialize_virtualstruct(std::shared_ptr<etiss::CPUCore> cpu_core, std::function<bool(const etiss::fault::Fault&, const etiss::fault::Action&, std::string& /*errormsg*/)> const & fcustom_action)
+{
+    etiss::initialize_virtualstruct(cpu_core);
+    cpu_core->getStruct()->applyCustomAction = fcustom_action;
+}
 
 void etiss::shutdown()
 {
@@ -1025,4 +1061,3 @@ std::string etiss::errorMessage(etiss::int32 code, CPUArch *arch)
         }
     }
 }
-

@@ -217,6 +217,27 @@ void initialize(std::vector<std::string>& args);
 std::shared_ptr<etiss::JIT> getDefaultJIT();
 
 /**
+ * @brief Initialize and configure etiss::VirtualStruct root with etiss::CPUCore
+ * \p cpu_core.
+ *
+ * @detail This function also initializes configured faults which require a
+ * mounted \p core etiss::VirtualStruct. Add the virtual structure of the cpu to
+ * the VirtualStruct root. This allows to access the field of the cpu from a
+ * global context. See etiss::VirtualStruct::getVirtualStruct() and
+ * etiss::VirtualStruct::getResolvedField(). In this case e.g. the
+ * instructionPointer can be read from a global context by calling
+ * etiss::VirtualStruct::root()->getResolvedField("core0.instructionPointer")
+ * ->read().
+ */
+void initialize_virtualstruct(std::shared_ptr<etiss::CPUCore> cpu_core);
+/**
+ * @brief Extension of etiss::initialize_virtualstruct(
+ * std::shared_ptr<etiss::CPUCore>) to allow direct setting of custom action for
+ * \p cpu_core etiss::VirtualStruct with \p fcustom_action.
+ */
+void initialize_virtualstruct(std::shared_ptr<etiss::CPUCore> cpu_core, std::function<bool(const etiss::fault::Fault&, const etiss::fault::Action&, std::string& /*errormsg*/)> const & fcustom_action);
+
+/**
  * @brief Shutdown ETISS
  *
  * @detail This function shutsdown the ETISS environment. All used libraries
