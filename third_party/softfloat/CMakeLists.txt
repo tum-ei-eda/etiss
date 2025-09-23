@@ -15,20 +15,8 @@
 ####################################################################################################
 
 cmake_minimum_required(VERSION 3.15 FATAL_ERROR)
-include(FetchContent)
 
-FetchContent_Declare(softfloat_srcs
-    GIT_REPOSITORY https://github.com/ucb-bar/berkeley-softfloat-3.git
-    GIT_TAG 5c06db33fc1e2130f67c045327b0ec949032df1d
-)
-if(NOT softfloat_srcs_POPULATED)
-    FetchContent_Populate(softfloat_srcs)
-    file(COPY ${softfloat_srcs_SOURCE_DIR}/source/include/softfloat.h DESTINATION ${softfloat_srcs_SOURCE_DIR})
-    file(RENAME ${softfloat_srcs_SOURCE_DIR}/softfloat.h ${softfloat_srcs_SOURCE_DIR}/softfloat_orig.h )
-    FetchContent_GetProperties(softfloat_srcs)
-endif()
-
-set(EXTERNAL_INSTALL_LOCATION ${softfloat_srcs_SOURCE_DIR})
+set(EXTERNAL_INSTALL_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/berkeley-softfloat)
 
 CMAKE_HOST_SYSTEM_INFORMATION(RESULT HOSTINFO QUERY
     OS_PLATFORM    #0
