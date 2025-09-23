@@ -15,7 +15,6 @@
 ####################################################################################################
 
 cmake_minimum_required(VERSION 3.15 FATAL_ERROR)
-include(FetchContent)
 
 ####################################################################################################
 # ELFIO (used for loading cross compiled ELFs to ETISS Memory Systems)
