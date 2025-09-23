@@ -58,11 +58,10 @@
 #ifndef NO_ETISS
 #include "etiss/Misc.h"
 #include "etiss/fault/Defs.h"
-#include "enum.h"
 #else
 #include "fault/Defs.h"
-#include "enum.h"
 #endif
+#include "enum.h"
 
 namespace etiss
 {
