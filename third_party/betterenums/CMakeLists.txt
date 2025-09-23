@@ -31,8 +31,8 @@ set_target_properties(betterenums PROPERTIES
 )
 target_include_directories(betterenums INTERFACE
     $<BUILD_INTERFACE:${betterenums_srcs_SOURCE_DIR}>
-    $<INSTALL_INTERFACE:include>
+    $<INSTALL_INTERFACE:include/third_party/betterenums>
 )
 install(TARGETS betterenums
-    PUBLIC_HEADER DESTINATION include
+    PUBLIC_HEADER DESTINATION include/third_party/betterenums
 )

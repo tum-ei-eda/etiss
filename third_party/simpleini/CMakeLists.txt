@@ -34,8 +34,8 @@ set_target_properties(simpleini PROPERTIES
 )
 target_include_directories(simpleini PUBLIC
     $<BUILD_INTERFACE:${simpleini_srcs_SOURCE_DIR}>
-    $<INSTALL_INTERFACE:include/simpleini>
+    $<INSTALL_INTERFACE:include/third_party/simpleini>
 )
 install(TARGETS simpleini
-    PUBLIC_HEADER DESTINATION include/simpleini
+    PUBLIC_HEADER DESTINATION include/third_party/simpleini
 )
