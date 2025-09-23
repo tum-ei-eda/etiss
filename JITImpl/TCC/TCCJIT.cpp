@@ -166,7 +166,7 @@ void *TCCJIT::translate(std::string code, std::set<std::string> headerpaths, std
     }
 
     /* relocate the code */
-    if (tcc_relocate(s, TCC_RELOCATE_AUTO) < 0)
+    if (tcc_relocate(s) < 0)
     { // link
         error = "Failed to link";
         return 0;
