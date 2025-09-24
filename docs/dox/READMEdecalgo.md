@@ -1,4 +1,4 @@
-Decoding Algorithm
+Decoding Algorithm {#decodealgo}
 ==================
 
 The most basic concept of the decoding algorithm can be summarized as follows:
@@ -13,7 +13,7 @@ where the fetched bit array needs to match the opcode of one of the instruction 
 
 As an example, a 16-bit instruction ``A`` has the following encoding pattern:
 
-$$A_{encoding} = 010001 :: imm[3:0] :: 1101 :: d[1:0]$$
+A_{encoding} = 010001 :: imm[3:0] :: 1101 :: d[1:0]$$</p>
 
 where ``imm`` is the immediate value and ``d`` is the index of the destination register both of which can take any value. The other bits are fixed and identify the instruction and they are called opcode. The mask **1111110000111100** can be used to filter out the bits other than the opcode. From the opcode point of view, instruction ``A`` can be represented as:
 
