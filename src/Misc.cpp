@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: BSD-3-Clause
 //
 // This file is part of ETISS. It is licensed under the BSD 3-Clause License; you may not use this file except in
-// compliance with the License. You should have received a copy of the license along with this project. If not, see the 
+// compliance with the License. You should have received a copy of the license along with this project. If not, see the
 // LICENSE file.
 /**
  * @file
@@ -348,7 +348,7 @@ bool etiss::Configuration::isSet(std::string key)
     return cfg_.find(key) != cfg_.end();
 }
 
-std::pair<std::string, std::string> etiss::Configuration::set_cmd_line_boost(const std::string& s)
+std::pair<std::string, std::string> etiss::Configuration::set_cmd_line_boost(const std::string &s)
 {
     namespace po = boost::program_options;
     etiss::Configuration sobj;
@@ -402,7 +402,6 @@ std::pair<std::string, std::string> etiss::Configuration::set_cmd_line_boost(con
     }
     return make_pair(std::string(), std::string());
 }
-
 
 std::list<std::string> etiss::Configuration::set(const std::list<std::string> &args)
 {
@@ -557,28 +556,32 @@ std::string etiss::jitFiles()
     return installDir() + "/include/jit";
 }
 
-std::vector<std::string> etiss::jitExtHeaders(){
+std::vector<std::string> etiss::jitExtHeaders()
+{
     std::vector<std::string> x;
     std::string range = cfg().get<std::string>("jit.external_headers", "");
     boost::split(x, range, boost::is_any_of(";, "));
     return (x);
 }
 
-std::vector<std::string> etiss::jitExtLibraries(){
+std::vector<std::string> etiss::jitExtLibraries()
+{
     std::vector<std::string> x;
     std::string range = cfg().get<std::string>("jit.external_libs", "");
     boost::split(x, range, boost::is_any_of(";, "));
     return (x);
 }
 
-std::vector<std::string> etiss::jitExtHeaderPaths(){
+std::vector<std::string> etiss::jitExtHeaderPaths()
+{
     std::vector<std::string> x;
     std::string range = cfg().get<std::string>("jit.external_header_paths", "");
     boost::split(x, range, boost::is_any_of(";, "));
     return (x);
 }
 
-std::vector<std::string> etiss::jitExtLibPaths(){
+std::vector<std::string> etiss::jitExtLibPaths()
+{
     std::vector<std::string> x;
     std::string range = cfg().get<std::string>("jit.external_lib_paths", "");
     boost::split(x, range, boost::is_any_of(";, "));
