@@ -84,9 +84,12 @@ int32_t MMU::Translate(const uint64_t vma, uint64_t *const pma_buf, MM_ACCESS ac
     int32_t fault = tlb_->Lookup(vpn, &pte_buf);
     if (fault)
     {
-        if ((fault = HANDLE_PAGE_FAULT(fault, this, vma, access)))
+        fault = HANDLE_PAGE_FAULT(fault, this, vma, access);
+        if (fault != 0)
             return fault;
-        if ((fault = tlb_->Lookup(vpn, &pte_buf)))
+
+        fault = tlb_->Lookup(vpn, &pte_buf);
+        if (fault != 0)
         {
             Dump();
             etiss::log(etiss::FATALERROR, "TLB MISS is not correctly handled");
