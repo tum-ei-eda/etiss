@@ -839,7 +839,7 @@ void Dot::AttrList::print(std::ostream &out, const std::string &appendedattr)
         if (!appendedattr.empty())
         {
             out << (first ? "" : " ") << appendedattr;
-            first = false;
+            // first = false; <-- unused
         }
         out << "]";
     }
