@@ -121,6 +121,7 @@ typename std::enable_if<std::is_base_of<etiss::ToString, T>::value, std::ostream
  * the log level.
  */
 Verbosity &verbosity();
+bool &log_to_stderr();
 
 /**
  * @brief conversion of type T to std::string.

@@ -79,17 +79,26 @@ std::list<std::string> etiss::split(
 }
 
 Verbosity etiss_verbosity = etiss::INFO; /// verbosity level variable
+bool etiss_log_to_stderr = false; /// log to stderr instead of stdout
 
 Verbosity &etiss::verbosity()
 {
     return etiss_verbosity;
 }
 
+bool &etiss::log_to_stderr()
+{
+    return etiss_log_to_stderr;
+}
+
 void etiss::log(Verbosity level, std::string msg)
 {
     if (level <= etiss_verbosity)
     {
-        std::cout << "ETISS: " << etiss::toString(level) << ": " << msg << std::endl;
+        if (etiss_log_to_stderr)
+            std::cerr << "ETISS: " << etiss::toString(level) << ": " << msg << std::endl;
+        else
+            std::cout << "ETISS: " << etiss::toString(level) << ": " << msg << std::endl;
     }
     if (level == FATALERROR)
     {
