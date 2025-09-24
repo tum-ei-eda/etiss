@@ -20,6 +20,7 @@
 
 #include <map>
 
+#include "etiss/mm/PageFaultVector.h"
 #include "etiss/mm/PTE.h"
 
 namespace etiss
