@@ -8,6 +8,7 @@
 #define JITLIB_RESOURCES_H
 
 #include <stdint.h>
+#include "etiss/jit/CPU.h"
 
 struct ETISS_CPU;
 
