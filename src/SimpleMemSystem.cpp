@@ -73,31 +73,32 @@ void MemSegment::memInit(std::string initString, uint64_t randomRoot) {
 
         // actual conversion from hex string to corresponding hex val
         initString.erase(initString.begin(),initString.begin()+2);
-        const char* dataPtr;
         size_t j{0};
 
         for (etiss::uint64 i = 0; i < size_; ++i)
         {
+            std::string hexStr = "";
             if (j != (initString.length() - 1))
             {
-                dataPtr = initString.substr(j, 2).c_str();
+                hexStr = initString.substr(j, 2);
             }
             else
             {
-                dataPtr = initString.substr(j, 1).c_str();
+                hexStr = initString.substr(j, 1);
             }
 
             j = (j + 2 <= initString.length() - 1) ? j + 2 : 0;
 
             try
             {
-                uint8_t hexVal = static_cast<uint8_t>(std::stoi(dataPtr, 0 ,16));
+                uint8_t hexVal = static_cast<uint8_t>(std::stoi(hexStr.c_str(), 0 ,16));
                 mem_[i] = hexVal;
             }
             catch (std::invalid_argument const& exp)
             {
                 memMsg << "\n Hex Value MemSegment input is erronous (typo?) at " << exp.what();
                 etiss::log(etiss::FATALERROR, memMsg.str());
+                break;
             }
         }
     }
