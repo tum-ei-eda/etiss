@@ -119,7 +119,6 @@ class Plugin : public etiss::ToString
             if (type_ & TRANSLATION)
             {
                 ss << (fe ? "" : ",") << "TRANSLATION";
-                fe = false;
             }
             ss << "}";
             name_ = ss.str();
