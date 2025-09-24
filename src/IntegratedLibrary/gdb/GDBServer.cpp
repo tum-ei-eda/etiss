@@ -360,7 +360,7 @@ void Server::handlePacket(bool block)
             break;
             case 'P': // write a register
             {
-                size_t off = 1;
+                const size_t off = 1;
                 unsigned regIndex = 0;
                 std::string valToWrite;
                 if (command.length() > 1)
@@ -402,7 +402,7 @@ void Server::handlePacket(bool block)
                     answer = "EFF";
                     etiss::log(etiss::ERROR, "GDB P: Invalid write length");
                 }
-                off += f->width_ * 2;
+                // off += f->width_ * 2;
             }
             break;
             case 'p': // read a register
