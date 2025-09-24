@@ -481,10 +481,10 @@ void etiss_loadIniConfigs()
                     {
                         std::string itemval = iter_value.pItem;
                         boost::algorithm::to_lower(itemval); // converts itemval to lower case string
-                        bool val;
+                        bool val = false;
 
-                        if ((itemval == "true") | (itemval == "yes") | (itemval == "1") | (itemval == "t")) val = true;
-                        else if ((itemval == "false") | (itemval == "no") | (itemval == "0") | (itemval == "f")) val = false;
+                        if ((itemval == "true") || (itemval == "yes") || (itemval == "1") || (itemval == "t")) val = true;
+                        else if ((itemval == "false") || (itemval == "no") || (itemval == "0") || (itemval == "f")) val = false;
                         else etiss::log(etiss::FATALERROR, std::string("Configuration value ") + iter_key.pItem + " could not be parsed as boolean");
 
                         etiss::cfg().set<bool>(iter_key.pItem, val);
