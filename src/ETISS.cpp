@@ -59,6 +59,7 @@
 
 using namespace etiss;
 
+
 std::string etiss_defaultjit_;
 
 std::list<std::shared_ptr<etiss::LibraryInterface>> etiss_libraries_;
@@ -746,6 +747,7 @@ void etiss_initialize(const std::vector<std::string>& args, bool forced = false)
             ("etiss.loglevel", po::value<int>(), "Verbosity of logging output.")
             ("etiss.log_to_stderr", po::value<bool>(), "Log to stderr instead of stdout.")
             ("jit.gcc.cleanup", po::value<bool>(), "Cleans up temporary files in GCCJIT. ")
+            ("jit.gcc.opt_level", po::value<std::string>(), "GCCJIT optimization level (0/1/2/3/s/fast=default). ")
             ("jit.verify", po::value<bool>(), "Run some basic checks to verify the functionality of the JIT engine.")
             ("jit.debug", po::value<bool>(), "Causes the JIT Engines to compile in debug mode.")
             ("jit.type", po::value<std::string>(), "The JIT compiler to use.")

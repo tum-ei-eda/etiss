@@ -1,0 +1,32 @@
+name: Style Checks
+
+on: [push, pull_request, workflow_dispatch]
+
+jobs:
+  clang-format:
+    name: Formatting Check (C/C++)
+    runs-on: ubuntu-22.04
+    steps:
+    - name: Install build dependencies
+      run: |
+        sudo apt update
+        sudo apt install -y libboost-filesystem-dev libboost-program-options-dev \
+          llvm-11-dev libclang-11-dev clang-11
+    - name: Check out Git repository
+      uses: actions/checkout@v3
+      with:
+        submodules: true
+    - name: Run CMake to generate compilation database
+      run: |
+        cmake -B build -S . -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+    - uses: cpp-linter/cpp-linter-action@v2
+      id: linter
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        style: 'file'  # Use .clang-format config file
+        tidy-checks: '' # Use .clang-tidy config file
+        # only 'update' a single comment in a pull request's thread.
+        thread-comments: ${{ github.event_name == 'pull_request' && 'update' }}
+        database: 'build'
+        step-summary: true
