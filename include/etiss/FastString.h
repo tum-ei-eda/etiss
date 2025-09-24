@@ -10,6 +10,11 @@
 #include <inttypes.h>
 #include <cstdlib>
 #include <type_traits>
+#include <vector>
+#include <string.h>
+#include <ostream>
+
+#include "etiss/jit/types.h"
 #if ETISS
 #include "etiss/Misc.h"
 #endif

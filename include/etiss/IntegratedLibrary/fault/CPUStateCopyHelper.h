@@ -6,6 +6,7 @@
 
 #include <vector>
 
+#include "etiss/jit/CPU.h"
 #include "etiss/Misc.h"
 
 namespace etiss
@@ -22,7 +23,6 @@ class CPUStateCopyHelper
   public:
     void registerAllocator(std::string type,
                            std::function<std::pair<uint8_t *, size_t>(std::string, ETISS_CPU *)> allocator);
-    void
 };
 
 } // namespace fault
