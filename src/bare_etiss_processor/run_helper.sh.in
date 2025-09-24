@@ -8,6 +8,11 @@ ETISS_DIR=@ETISS_DIR@
 DYN_INI=$(mktemp /tmp/etiss_dynamic_XXXXXXXXXX.ini)
 echo "" > $DYN_INI
 
+cleanup () {
+    echo "Cleaning up temp files..."
+    rm $DYN_INI
+}
+trap cleanup EXIT
 
 # Args
 if [ "$#" -lt 1 ]; then
@@ -119,5 +124,3 @@ if [ "${USE_GDB}" -eq 1 ]; then
 else
     ${VP_EXE} ${ARGS}
 fi
-
-rm $DYN_INI
