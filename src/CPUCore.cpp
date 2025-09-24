@@ -113,7 +113,7 @@ int CPUCore::getNextID()
 {
     return currID;
 }
-CPUCore::CPUCore(std::shared_ptr<etiss::CPUArch> arch, std::string const& name)
+CPUCore::CPUCore(std::shared_ptr<etiss::CPUArch> arch, std::string const &name)
     : arch_(arch)
     , name_(name)
     , id_(currID++)
@@ -164,10 +164,7 @@ CPUCore::CPUCore(std::shared_ptr<etiss::CPUArch> arch, std::string const& name)
         }
     }
 }
-CPUCore::CPUCore(std::shared_ptr<etiss::CPUArch> arch)
-    : CPUCore(arch, std::string("core" + std::to_string(currID)))
-{
-}
+CPUCore::CPUCore(std::shared_ptr<etiss::CPUArch> arch) : CPUCore(arch, std::string("core" + std::to_string(currID))) {}
 
 void CPUCore::addPlugin(std::shared_ptr<etiss::Plugin> plugin)
 {
@@ -244,11 +241,11 @@ std::shared_ptr<CPUCore> CPUCore::create(std::string archname, std::string insta
     }
 
     // creat core
-    std::shared_ptr<CPUCore> ret{nullptr};
-    if(instancename != "")
-        ret.reset(new CPUCore(arch, instancename));//std::make_shared<CPUCore>(arch, instancename);
+    std::shared_ptr<CPUCore> ret{ nullptr };
+    if (instancename != "")
+        ret.reset(new CPUCore(arch, instancename)); // std::make_shared<CPUCore>(arch, instancename);
     else
-        ret.reset(new CPUCore(arch)); //std::make_shared<CPUCore>(arch);
+        ret.reset(new CPUCore(arch)); // std::make_shared<CPUCore>(arch);
 
     {
         std::lock_guard<std::mutex> lock(instances_mu_);
@@ -521,7 +518,6 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
         return RETURNCODE::JITERROR;
     }
 
-
     // verify jit
     if (etiss::cfg().get<bool>("jit.verify", true))
     {
@@ -553,10 +549,12 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
         {
             etiss::log(etiss::INFO, "Add Timer Plugin: " + timerInstance->getPluginName());
             auto local_arch = arch_;
-            plugins.push_back(std::shared_ptr<etiss::Plugin>(timerInstance, [local_arch](etiss::Plugin *p) {
-                etiss::log(etiss::INFO, "Delete Timer Plugin.");
-                local_arch->deleteTimer(p);
-            }));
+            plugins.push_back(std::shared_ptr<etiss::Plugin>(timerInstance,
+                                                             [local_arch](etiss::Plugin *p)
+                                                             {
+                                                                 etiss::log(etiss::INFO, "Delete Timer Plugin.");
+                                                                 local_arch->deleteTimer(p);
+                                                             }));
         }
     }
 
@@ -655,9 +653,8 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
             {
                 listener = new LegacyRegisterDevicePluginListener(regdevices);
 
-                vcpu_->foreachField([listener](std::shared_ptr<etiss::VirtualStruct::Field> f) {
-                    f->addListener(listener);
-                }); // add listener to all current field of struct
+                vcpu_->foreachField([listener](std::shared_ptr<etiss::VirtualStruct::Field> f)
+                                    { f->addListener(listener); }); // add listener to all current field of struct
 
                 // TODO: maybe later VirtualStruct will support a listener for added/removed fields. in that case the
                 // lisener of this function should also be added to new fields
@@ -677,7 +674,6 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
     struct timespec start, finish;
 
     clock_gettime(CLOCK_MONOTONIC, &start);
-
 
     BlockLink *blptr = 0; // pointer to the current block
 
@@ -782,9 +778,8 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
                     exception = (*(blptr->execBlock))(cpu_, system, plugins_handle_);
 
                     // exit simulator when a loop to self instruction is encountered
-                    if (exit_on_loop && !exception &&
-                            old_time + cpu_->cpuCycleTime_ps == cpu_->cpuTime_ps &&
-                            old_pc == cpu_->instructionPointer)
+                    if (exit_on_loop && !exception && old_time + cpu_->cpuCycleTime_ps == cpu_->cpuTime_ps &&
+                        old_pc == cpu_->instructionPointer)
                     {
                         exception = RETURNCODE::CPUFINISHED;
                     }
@@ -816,7 +811,6 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
 loopexit:
     clock_gettime(CLOCK_MONOTONIC, &finish);
 
-
     // execute coroutines end
     for (auto &cor_plugin : cor_array)
     {
@@ -829,37 +823,44 @@ loopexit:
     double cpu_cycle = cpu_->cpuTime_ps / (float)cpu_->cpuCycleTime_ps;
     double mips = cpu_->cpuTime_ps / (float)cpu_->cpuCycleTime_ps / simulation_time / 1.0E6;
     bool quiet = etiss::cfg().get<bool>("vp.quiet", false);
-    if (!quiet) std::cout << "CPU Time: " << (cpu_time) << "s    Simulation Time: " << (simulation_time) << "s"
-                          << std::endl;
-    if (!quiet) std::cout << "CPU Cycles (estimated): " << (cpu_cycle) << std::endl;
-    if (!quiet) std::cout << "MIPS (estimated): " << (mips) << std::endl;
+    if (!quiet)
+        std::cout << "CPU Time: " << (cpu_time) << "s    Simulation Time: " << (simulation_time) << "s" << std::endl;
+    if (!quiet)
+        std::cout << "CPU Cycles (estimated): " << (cpu_cycle) << std::endl;
+    if (!quiet)
+        std::cout << "MIPS (estimated): " << (mips) << std::endl;
 
-    // declaring path of writing the json file contaiing performance metrics and the boolean which approves of writing the json output
+    // declaring path of writing the json file contaiing performance metrics and the boolean which approves of writing
+    // the json output
     std::string valid_json_output_path = etiss::cfg().get<std::string>("vp.stats_file_path", "");
     bool output_json = etiss::cfg().isSet("vp.stats_file_path");
 
-    if(output_json==true)
+    if (output_json == true)
     {
         std::ofstream json_output(valid_json_output_path);
-        json_output << "{\"mips\": " << mips << ", \"Simulation_Time\": " << simulation_time << ", \"CPU_Time\": " << cpu_time << ", \"CPU_cycle\": " << cpu_cycle << "}" << std::endl;
+        json_output << "{\"mips\": " << mips << ", \"Simulation_Time\": " << simulation_time
+                    << ", \"CPU_Time\": " << cpu_time << ", \"CPU_cycle\": " << cpu_cycle << "}" << std::endl;
     }
 
-    #ifndef ETISS_USE_COREDSL_COVERAGE
-    if (etiss::cfg().isSet("vp.coredsl_coverage_path")) {
-        etiss::log(etiss::WARNING, "Coverage Analysis is disabled but vp.coredsl_coverage_path is set. To enable coverage analysis, build ETISS with -DETISS_USE_COREDSL_COVERAGE");
+#ifndef ETISS_USE_COREDSL_COVERAGE
+    if (etiss::cfg().isSet("vp.coredsl_coverage_path"))
+    {
+        etiss::log(etiss::WARNING, "Coverage Analysis is disabled but vp.coredsl_coverage_path is set. To enable "
+                                   "coverage analysis, build ETISS with -DETISS_USE_COREDSL_COVERAGE");
     }
-    #endif
+#endif
 
     std::string coverage_output_path = etiss::cfg().get<std::string>("vp.coredsl_coverage_path", "coverage.csv");
-    if (!coverage_map.empty()) {
+    if (!coverage_map.empty())
+    {
         std::ofstream coverage_output(coverage_output_path);
         coverage_output << arch_->getArchName() << std::endl;
         coverage_output << "ID;Count" << std::endl;
-        for (auto it : coverage_map) {
+        for (auto it : coverage_map)
+        {
             coverage_output << it.first << ";" << it.second << std::endl;
         }
     }
-
 
     etiss_uint64 max = 0;
     for (int i = 0; i < ETISS_MAX_RESOURCES; i++)
@@ -923,8 +924,8 @@ loopexit:
 
     if (listener)
     {
-        vcpu_->foreachField(
-            [listener](std::shared_ptr<etiss::VirtualStruct::Field> f) { f->removeListener(listener); });
+        vcpu_->foreachField([listener](std::shared_ptr<etiss::VirtualStruct::Field> f)
+                            { f->removeListener(listener); });
 
         delete listener;
     }

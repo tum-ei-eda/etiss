@@ -38,14 +38,11 @@ class VirtualStructMemory : public SimpleSystem
 
     const etiss::VirtualStruct &mem_;
 
-	typedef std::map<uint64_t, std::pair<etiss::VirtualStruct::Field * /*field*/, size_t /*offset*/>> mapping_t;
+    typedef std::map<uint64_t, std::pair<etiss::VirtualStruct::Field * /*field*/, size_t /*offset*/>> mapping_t;
     /**
         returns the internal mapping
     */
-    inline const mapping_t &getMapping()
-    {
-        return memmap_;
-    }
+    inline const mapping_t &getMapping() { return memmap_; }
     std::set<etiss::VirtualStruct::Field *> getMappedFields();
 
     inline uint64_t startAddr() { return startaddr_; }

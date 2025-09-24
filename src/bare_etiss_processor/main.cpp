@@ -25,11 +25,13 @@ int main(int argc, const char *argv[])
     etiss::Initializer initializer(
         argc, argv); // add &iniFiles as the first argument if .ini files are loaded explicitly here
     bool quiet = etiss::cfg().get<bool>("vp.quiet", false);
-    if (!quiet) std::cout << "=== Finished setting up configurations ===" << std::endl << std::endl;
+    if (!quiet)
+        std::cout << "=== Finished setting up configurations ===" << std::endl << std::endl;
 
-
-    if (!quiet) std::cout << "=== Setting up test system ===" << std::endl;
-    if (!quiet) std::cout << "  Setting up Memory" << std::endl;
+    if (!quiet)
+        std::cout << "=== Setting up test system ===" << std::endl;
+    if (!quiet)
+        std::cout << "  Setting up Memory" << std::endl;
 
     bool is_fault_injection = !(etiss::cfg().get<std::string>("faults.xml", "")).empty();
 
@@ -71,12 +73,13 @@ int main(int argc, const char *argv[])
         }
     }
 
-
-    if (!quiet) std::cout << "  Setting up CPUCore" << std::endl;
+    if (!quiet)
+        std::cout << "  Setting up CPUCore" << std::endl;
     // create a cpu core named core0 with the or1k architecture
     std::string CPUArchName = etiss::cfg().get<std::string>("arch.cpu", "");
     etiss::uint64 sa = etiss::cfg().get<uint64_t>("vp.entry_point", dsys->get_startaddr());
-	  if (!quiet) std::cout << "  CPU start address: 0x" << std::hex << sa << std::dec << std::endl;
+    if (!quiet)
+        std::cout << "  CPU start address: 0x" << std::hex << sa << std::dec << std::endl;
 
     std::shared_ptr<etiss::CPUCore> cpu = etiss::CPUCore::create(CPUArchName, "core0");
     if (!cpu)
@@ -109,11 +112,14 @@ int main(int argc, const char *argv[])
     {
         etiss::initialize_virtualstruct(cpu);
     }
-    if (!quiet) std::cout << "=== Finished Setting up test system ===" << std::endl << std::endl;
+    if (!quiet)
+        std::cout << "=== Finished Setting up test system ===" << std::endl << std::endl;
 
-    if (!quiet) std::cout << "=== Setting up plug-ins ===" << std::endl;
+    if (!quiet)
+        std::cout << "=== Setting up plug-ins ===" << std::endl;
 
-    auto irq_handler = std::make_shared<etiss::InterruptHandler>(cpu->getInterruptVector(), cpu->getInterruptEnable(), cpu->getArch(), etiss::LEVEL_TRIGGERED, false);
+    auto irq_handler = std::make_shared<etiss::InterruptHandler>(cpu->getInterruptVector(), cpu->getInterruptEnable(),
+                                                                 cpu->getArch(), etiss::LEVEL_TRIGGERED, false);
     cpu->addPlugin(irq_handler);
 
     initializer.loadIniPlugins(cpu);
@@ -125,25 +131,30 @@ int main(int argc, const char *argv[])
         cpu->addPlugin(std::make_shared<TracePrinter>(0x88888));
     }
 
-    if (!quiet) std::cout << "=== Setting up plug-ins ===" << std::endl << std::endl;
+    if (!quiet)
+        std::cout << "=== Setting up plug-ins ===" << std::endl << std::endl;
 
     // Simulation start
-    if (!quiet) std::cout << std::endl << "=== Simulation start ===" << std::endl;
+    if (!quiet)
+        std::cout << std::endl << "=== Simulation start ===" << std::endl;
     // float startTime = (float)clock() / CLOCKS_PER_SEC; // TESTING
     //  run cpu with the SimpleMemSystem (in other cases that "system" is most likely a
     //  bus that connects the cpu to memory,periphery,etc)
     etiss_int32 exception = cpu->execute(*dsys);
     // float endTime = (float)clock() / CLOCKS_PER_SEC;
-    if (!quiet) std::cout << "=== Simulation end ===" << std::endl << std::endl;
+    if (!quiet)
+        std::cout << "=== Simulation end ===" << std::endl << std::endl;
 
     // print the exception code returned by the cpu core
-    if (!quiet) std::cout << "CPU0 exited with exception: 0x" << std::hex << exception << std::dec << ": "
-              << etiss::RETURNCODE::getErrorMessages()[exception] << std::endl;
+    if (!quiet)
+        std::cout << "CPU0 exited with exception: 0x" << std::hex << exception << std::dec << ": "
+                  << etiss::RETURNCODE::getErrorMessages()[exception] << std::endl;
 
-    switch(exception){
-        case etiss::RETURNCODE::CPUFINISHED:
-        case etiss::RETURNCODE::NOERROR:
-        case etiss::RETURNCODE::CPUTERMINATED:
+    switch (exception)
+    {
+    case etiss::RETURNCODE::CPUFINISHED:
+    case etiss::RETURNCODE::NOERROR:
+    case etiss::RETURNCODE::CPUTERMINATED:
         return 0;
         break;
     case etiss::RETURNCODE::DBUS_READ_ERROR:

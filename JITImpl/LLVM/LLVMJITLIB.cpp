@@ -7,7 +7,6 @@
 #define ETISS_LIBNAME LLVMJIT
 #include "etiss/helper/JITLibrary.h"
 
-
 #include "LLVMJIT.h"
 
 #include <iostream>
@@ -16,12 +15,18 @@
 extern "C"
 {
 
-    const char *LLVMJIT_versionInfo() { return "3.4.2for0.4"; }
+    const char *LLVMJIT_versionInfo()
+    {
+        return "3.4.2for0.4";
+    }
 
     // implement version function
     ETISS_LIBRARYIF_VERSION_FUNC_IMPL
 
-    unsigned LLVMJIT_countJIT() { return 1; }
+    unsigned LLVMJIT_countJIT()
+    {
+        return 1;
+    }
     const char *LLVMJIT_nameJIT(unsigned index)
     {
         switch (index)
@@ -43,5 +48,8 @@ extern "C"
         }
     }
 
-    void LLVMJIT_deleteJIT(etiss::JIT *o) { delete o; }
+    void LLVMJIT_deleteJIT(etiss::JIT *o)
+    {
+        delete o;
+    }
 }

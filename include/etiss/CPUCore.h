@@ -86,7 +86,7 @@ class CPUCore : public VirtualStructSupport, public etiss::ToString
      *
      * @param arch Pointer to the CPU architecture used by the CPU core simulator.
      */
-    CPUCore(std::shared_ptr<etiss::CPUArch> arch, std::string const& name);
+    CPUCore(std::shared_ptr<etiss::CPUArch> arch, std::string const &name);
     CPUCore(std::shared_ptr<etiss::CPUArch> arch);
 
     class InterruptVectorWrapper : public InterruptVector
@@ -315,6 +315,7 @@ class CPUCore : public VirtualStructSupport, public etiss::ToString
      * @brief returns the list of all plugins.
      */
     inline std::list<std::shared_ptr<Plugin>> const *getPlugins() { return &plugins; };
+
   public:
     /**
      * @brief Create a CPUCore instance.

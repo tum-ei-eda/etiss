@@ -37,8 +37,7 @@ extern "C"
 
 using namespace etiss::plugin;
 
-InstructionSpecificAddressCallback::InstructionSpecificAddressCallback()
-    : uid_{get_uid_once()}
+InstructionSpecificAddressCallback::InstructionSpecificAddressCallback() : uid_{ get_uid_once() }
 {
     pluginData_.state_ = 0;
     pluginData_.this_ = this;
@@ -55,52 +54,64 @@ void InstructionSpecificAddressCallback::initCodeBlock(etiss::CodeBlock &block) 
 
 void InstructionSpecificAddressCallback::finalizeInstrSet(etiss::instr::ModedInstructionSet &mis) const
 {
-    mis.foreach ([this](etiss::instr::VariableInstructionSet &vis) {
-        vis.foreach ([this](etiss::instr::InstructionSet &set) {
-            set.foreach ([this](etiss::instr::Instruction &instr) {
-                instr.addCallback(
-                    [this](etiss::instr::BitArray &ba, etiss::CodeSet &cs, etiss::instr::InstructionContext &ic) {
-                        if (this->callbackAddresses().find(ic.current_address_) != this->callbackAddresses().end())
-                        {
-                            std::stringstream ss;
-                            ss << "      if ( (*(uint32_t*)(" << getPointerCode()
-                               << ")) != " << etiss::toString(pluginData_.state_) << ")\n"
-                               << "        return ETISS_RETURNCODE_RELOADCURRENTBLOCK;";
-                            cs.append(CodePart::PREINITIALDEBUGRETURNING).code() = ss.str();
-
-                            ss.str("");
-                            ss.clear();
-                            ss << "      uint32_t callbackCalled" << uid_ <<" = InstructionSpecificAddressCallback_callback("
-                               << getPointerCode() << ");";
-                            // cs.append(CodePart::APPENDEDREQUIRED).code() = ss.str();
-                            cs.append(CodePart::PREINITIALDEBUGRETURNING).code() = ss.str();
-
-                            ss.str("");
-                            ss.clear();
-                            ss << "      if(callbackCalled" << uid_ <<")\n"
-                               << "        return ETISS_RETURNCODE_NOERROR;";
-                            // cs.append(CodePart::APPENDEDRETURNINGREQUIRED).code() = ss.str();
-                            cs.append(CodePart::PREINITIALDEBUGRETURNING).code() = ss.str();
-                        }
-                        return true;
-                    },
-                    0);
-                if (callbackOnInstruction(instr))
+    mis.foreach (
+        [this](etiss::instr::VariableInstructionSet &vis)
+        {
+            vis.foreach (
+                [this](etiss::instr::InstructionSet &set)
                 {
-                    instr.addCallback(
-                        [this](etiss::instr::BitArray &ba, etiss::CodeSet &cs, etiss::instr::InstructionContext &ic) {
-                            std::stringstream ss;
-                            ss << "      InstructionSpecificAddressCallback_callback(";
-                            ss << getPointerCode();
-                            ss << ");";
-                            cs.append(CodePart::PREINITIALDEBUGRETURNING).code() = ss.str();
-                            return true;
-                        },
-                        0);
-                }
-            });
+                    set.foreach (
+                        [this](etiss::instr::Instruction &instr)
+                        {
+                            instr.addCallback(
+                                [this](etiss::instr::BitArray &ba, etiss::CodeSet &cs,
+                                       etiss::instr::InstructionContext &ic)
+                                {
+                                    if (this->callbackAddresses().find(ic.current_address_) !=
+                                        this->callbackAddresses().end())
+                                    {
+                                        std::stringstream ss;
+                                        ss << "      if ( (*(uint32_t*)(" << getPointerCode()
+                                           << ")) != " << etiss::toString(pluginData_.state_) << ")\n"
+                                           << "        return ETISS_RETURNCODE_RELOADCURRENTBLOCK;";
+                                        cs.append(CodePart::PREINITIALDEBUGRETURNING).code() = ss.str();
+
+                                        ss.str("");
+                                        ss.clear();
+                                        ss << "      uint32_t callbackCalled" << uid_
+                                           << " = InstructionSpecificAddressCallback_callback(" << getPointerCode()
+                                           << ");";
+                                        // cs.append(CodePart::APPENDEDREQUIRED).code() = ss.str();
+                                        cs.append(CodePart::PREINITIALDEBUGRETURNING).code() = ss.str();
+
+                                        ss.str("");
+                                        ss.clear();
+                                        ss << "      if(callbackCalled" << uid_ << ")\n"
+                                           << "        return ETISS_RETURNCODE_NOERROR;";
+                                        // cs.append(CodePart::APPENDEDRETURNINGREQUIRED).code() = ss.str();
+                                        cs.append(CodePart::PREINITIALDEBUGRETURNING).code() = ss.str();
+                                    }
+                                    return true;
+                                },
+                                0);
+                            if (callbackOnInstruction(instr))
+                            {
+                                instr.addCallback(
+                                    [this](etiss::instr::BitArray &ba, etiss::CodeSet &cs,
+                                           etiss::instr::InstructionContext &ic)
+                                    {
+                                        std::stringstream ss;
+                                        ss << "      InstructionSpecificAddressCallback_callback(";
+                                        ss << getPointerCode();
+                                        ss << ");";
+                                        cs.append(CodePart::PREINITIALDEBUGRETURNING).code() = ss.str();
+                                        return true;
+                                    },
+                                    0);
+                            }
+                        });
+                });
         });
-    });
 }
 
 std::string InstructionSpecificAddressCallback::_getPluginName() const

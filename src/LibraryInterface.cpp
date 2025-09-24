@@ -148,9 +148,9 @@ static void *ETISS_dlopen(const std::string &path, const std::string &name)
 #if ETISS_USE_DLSYM
     std::string fullname = path + "lib" + name +
 #ifdef __APPLE__
-            ".dylib";
+                           ".dylib";
 #else
-            ".so";
+                           ".so";
 #endif
     void *ret = dlopen(fullname.c_str(), RTLD_GLOBAL | RTLD_NOW
 #if ETISS_USE_DLSYM_DEEPBIND
@@ -563,7 +563,6 @@ std::shared_ptr<LibraryInterface> LibraryInterface::openSharedLibrary(std::strin
     return nullptr;
 #endif
 }
-
 
 void LibraryInterface::addSearchPath(const std::string &path)
 {

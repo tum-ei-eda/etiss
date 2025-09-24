@@ -97,7 +97,7 @@ class ObjectPool
         // destruction
         for (auto iter = areas_.begin(); iter != areas_.end(); ++iter)
             if (*iter != stackstore)
-                delete[](storage *)(*iter);
+                delete[] (storage *)(*iter);
     }
 
     T *address(T &x) const { return &x; }
@@ -154,7 +154,7 @@ class ObjectPool
             throw std::bad_alloc();
         if (unlikely(n > 1))
         {
-            delete[](storage *) p;
+            delete[] (storage *)p;
         }
         else
         {
@@ -163,7 +163,7 @@ class ObjectPool
     }
     size_t max_size() const { return (size_t)-1; }
     template <class U, class... Args>
-    void construct(U *p, Args &&... args)
+    void construct(U *p, Args &&...args)
     {
         ::new ((void *)p) U(std::forward<Args>(args)...);
         etiss::internal::ObjectPool_setAllocatorPointer<T>((T *)p, this);

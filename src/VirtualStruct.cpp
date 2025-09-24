@@ -205,8 +205,8 @@ bool VirtualStruct::Field::_applyAction(const etiss::fault::Fault &f, const etis
         }
         write(errval);
         std::stringstream ss;
-        ss << "Injected mask fault in " << name_ << " 0x" << std::hex << val << " " << a.getMaskOp()
-           << " 0x" << mask_value << "->0x" << errval << std::dec;
+        ss << "Injected mask fault in " << name_ << " 0x" << std::hex << val << " " << a.getMaskOp() << " 0x"
+           << mask_value << "->0x" << errval << std::dec;
         etiss::log(etiss::INFO, ss.str());
         return true;
     }

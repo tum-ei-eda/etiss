@@ -60,8 +60,6 @@ class InjectorAddress : public etiss::ToString
 namespace xml
 {
 
-
-
 } // namespace xml
 
 #endif

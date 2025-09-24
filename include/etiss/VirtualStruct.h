@@ -267,8 +267,7 @@ class VirtualStruct : public std::enable_shared_from_this<VirtualStruct>, public
     };
 
   protected:
-    VirtualStruct(
-        void *structure, std::function<void(Field *)> dtor = [](Field *f) { delete f; });
+    VirtualStruct(void *structure, std::function<void(Field *)> dtor = [](Field *f) { delete f; });
 
   public:
     virtual ~VirtualStruct();

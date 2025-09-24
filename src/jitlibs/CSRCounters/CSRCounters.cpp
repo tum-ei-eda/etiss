@@ -16,7 +16,7 @@ using namespace etiss;
 extern "C"
 {
 
-    uint64 etiss_get_cycles(ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers)
+    uint64 etiss_get_cycles(ETISS_CPU *const cpu, ETISS_System *const system, void *const *const plugin_pointers)
     {
         return cpu->cpuTime_ps / cpu->cpuCycleTime_ps;
     }
@@ -28,10 +28,8 @@ extern "C"
         return (uint64)us.count();
     }
 
-
-    uint64 etiss_get_instret(ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers)
+    uint64 etiss_get_instret(ETISS_CPU *const cpu, ETISS_System *const system, void *const *const plugin_pointers)
     {
         return cpu->cpuTime_ps / cpu->cpuCycleTime_ps;
     }
-
 }

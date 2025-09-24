@@ -53,7 +53,7 @@ class Injector
 
   public: // override in inheriting classes
     Injector();
-    virtual ~Injector(){};
+    virtual ~Injector() {};
     /**
         list all fields directly reachable by this injector
         @see etiss::VirtualStruct for example implemention

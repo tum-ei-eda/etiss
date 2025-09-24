@@ -168,7 +168,7 @@ std::set<std::string> listLibraryPrefixes();
  * @attention It is recommended to use etiss::Initializer instead of calling
  * etiss::initialize / etiss::shutdown manually
  */
-void initialize(std::vector<std::string>& args);
+void initialize(std::vector<std::string> &args);
 /**
  * @brief Get the default JIT implementation.
  *
@@ -197,7 +197,9 @@ void initialize_virtualstruct(std::shared_ptr<etiss::CPUCore> cpu_core);
  * std::shared_ptr<etiss::CPUCore>) to allow direct setting of custom action for
  * \p cpu_core etiss::VirtualStruct with \p fcustom_action.
  */
-void initialize_virtualstruct(std::shared_ptr<etiss::CPUCore> cpu_core, std::function<bool(const etiss::fault::Fault&, const etiss::fault::Action&, std::string& /*errormsg*/)> const & fcustom_action);
+void initialize_virtualstruct(std::shared_ptr<etiss::CPUCore> cpu_core,
+                              std::function<bool(const etiss::fault::Fault &, const etiss::fault::Action &,
+                                                 std::string & /*errormsg*/)> const &fcustom_action);
 
 /**
  * @brief Shutdown ETISS
@@ -284,7 +286,7 @@ class Initializer
     /** @brief version of static_assertFirstParamNotArithmetic for the case
      * that no parameter is given.
      */
-    void static_assertFirstParamNotArithmetic(){};
+    void static_assertFirstParamNotArithmetic() {};
 
   public:
     /** @brief loads the plugins given with the previous loaded .ini files
@@ -327,7 +329,7 @@ class Initializer
         initialize(args);
     }
 
-    Initializer(std::list<std::string> *files, int argc, const char* argv[])
+    Initializer(std::list<std::string> *files, int argc, const char *argv[])
     {
         std::vector<std::string> args;
         for (int i = 1; i < argc; i++)

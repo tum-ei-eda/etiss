@@ -201,8 +201,8 @@ class CPUArch : public CPUArchRegListenerInterface,
     */
     virtual void deleteInterruptVector(etiss::InterruptVector *vec, ETISS_CPU *cpu);
 
-    virtual etiss::InterruptEnable* createInterruptEnable(ETISS_CPU *cpu);
-    virtual void deleteInterruptEnable(etiss::InterruptEnable* en, ETISS_CPU* cpu);
+    virtual etiss::InterruptEnable *createInterruptEnable(ETISS_CPU *cpu);
+    virtual void deleteInterruptEnable(etiss::InterruptEnable *en, ETISS_CPU *cpu);
 
     /**
             returns arch dependent gdb functions. althought not required it is strongly recommended to implement this

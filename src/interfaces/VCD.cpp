@@ -127,12 +127,14 @@ bool VCD::declare(void *variable, const std::string &name, unsigned width, uint6
     // declare signal
     {
         // split on dots and double quotes to get the submodules and enter their scopes
-        std::list<std::string> vec_bd = etiss::split(name, [](const std::string &str, size_t from, size_t &seplen) {
-            size_t f1 = str.find(".", from);
-            size_t f2 = str.find("::", from);
-            seplen = f1 < f2 ? 1 : 2;
-            return f1 < f2 ? f1 : f2;
-        });
+        std::list<std::string> vec_bd = etiss::split(name,
+                                                     [](const std::string &str, size_t from, size_t &seplen)
+                                                     {
+                                                         size_t f1 = str.find(".", from);
+                                                         size_t f2 = str.find("::", from);
+                                                         seplen = f1 < f2 ? 1 : 2;
+                                                         return f1 < f2 ? f1 : f2;
+                                                     });
         std::vector<std::string> vec;
         vec.insert(vec.end(), vec_bd.begin(), vec_bd.end());
         if (vec.size() == 0)

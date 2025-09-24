@@ -35,21 +35,29 @@ void InstructionAccurateCallback::initCodeBlock(etiss::CodeBlock &block) const
 
 void InstructionAccurateCallback::finalizeInstrSet(etiss::instr::ModedInstructionSet &mis) const
 {
-    mis.foreach ([this](etiss::instr::VariableInstructionSet &vis) {
-        vis.foreach ([this](etiss::instr::InstructionSet &is) {
-            is.foreach ([this](etiss::instr::Instruction &i) {
-                i.addCallback(
-                    [this](etiss::instr::BitArray &, etiss::CodeSet &cs, etiss::instr::InstructionContext &) {
-                        etiss::CodePart &pp = cs.prepend(etiss::CodePart::INITIALREQUIRED);
-                        pp.code() =
-                            std::string("etiss_int32 ret_iac = etiss_plugin_InstructionAccurateCallback_OnEntry(") +
-                            getPointerCode() + ");\nif(ret_iac != 0)return(ret_iac);";
-                        return true;
-                    },
-                    0);
-            });
+    mis.foreach (
+        [this](etiss::instr::VariableInstructionSet &vis)
+        {
+            vis.foreach (
+                [this](etiss::instr::InstructionSet &is)
+                {
+                    is.foreach (
+                        [this](etiss::instr::Instruction &i)
+                        {
+                            i.addCallback(
+                                [this](etiss::instr::BitArray &, etiss::CodeSet &cs, etiss::instr::InstructionContext &)
+                                {
+                                    etiss::CodePart &pp = cs.prepend(etiss::CodePart::INITIALREQUIRED);
+                                    pp.code() =
+                                        std::string(
+                                            "etiss_int32 ret_iac = etiss_plugin_InstructionAccurateCallback_OnEntry(") +
+                                        getPointerCode() + ");\nif(ret_iac != 0)return(ret_iac);";
+                                    return true;
+                                },
+                                0);
+                        });
+                });
         });
-    });
 }
 
 std::string InstructionAccurateCallback::_getPluginName() const
@@ -67,9 +75,8 @@ etiss_int32 InstructionAccurateCallback::call_on_entry()
     trigger_fired |= plugin_core_->getStruct()->instructionAccurateCallback(
         time);                                // call instruction callback of plugin-associated core
     plugin_core_->getStruct()->foreachStruct( // call instruction callback of all VirtualStructs mounted on core
-        [time, &trigger_fired](const std::string &name, VirtualStruct &vs) {
-            trigger_fired |= vs.instructionAccurateCallback(time);
-        });
+        [time, &trigger_fired](const std::string &name, VirtualStruct &vs)
+        { trigger_fired |= vs.instructionAccurateCallback(time); });
 
     return (trigger_fired ? etiss::fault::Stressor::get_event()
                           : 0); // signal that a trigger has thrown an exception back to the JIT code calling

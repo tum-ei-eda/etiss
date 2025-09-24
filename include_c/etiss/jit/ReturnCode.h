@@ -102,14 +102,14 @@ extern int32_t etiss_returncode_setTemporary(const char *msg);
     static const etiss_int32 etiss_merge2(ETISS_RETURNCODE_, NAME) = VALUE; \
     defineReturnCodeClass(__COUNTER__, NAME, VALUE, MSG)
 #else
-#define defineReturnCode(NAME, VALUE, MSG)                    \
-    namespace etiss                                           \
-    {                                                         \
-    namespace RETURNCODE                                      \
-    {                                                         \
-    static const etiss::int32 NAME = VALUE;                   \
-    }                                                         \
-    }                                                         \
+#define defineReturnCode(NAME, VALUE, MSG)  \
+    namespace etiss                         \
+    {                                       \
+    namespace RETURNCODE                    \
+    {                                       \
+    static const etiss::int32 NAME = VALUE; \
+    }                                       \
+    }                                       \
     static const etiss_int32 ETISS_RETURNCODE_##NAME = VALUE
 #endif
 #else

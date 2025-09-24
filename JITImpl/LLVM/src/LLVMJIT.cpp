@@ -91,7 +91,8 @@ class OrcJit
             sys::path::append(fullPath, libPath, "lib" + libName + ".so");
             if (sys::fs::exists(fullPath))
             {
-                MainJITDylib.addGenerator(llvm::cantFail(llvm::orc::DynamicLibrarySearchGenerator::Load(fullPath.c_str(), DL.getGlobalPrefix())));
+                MainJITDylib.addGenerator(llvm::cantFail(
+                    llvm::orc::DynamicLibrarySearchGenerator::Load(fullPath.c_str(), DL.getGlobalPrefix())));
                 return true;
             }
         }

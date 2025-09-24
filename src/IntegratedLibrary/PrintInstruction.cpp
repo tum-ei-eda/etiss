@@ -30,31 +30,40 @@ void PrintInstruction::initCodeBlock(etiss::CodeBlock &block) const
 void PrintInstruction::finalizeInstrSet(etiss::instr::ModedInstructionSet &mis) const
 {
 
-    mis.foreach ([](etiss::instr::VariableInstructionSet &vis) {
-        vis.foreach ([](etiss::instr::InstructionSet &set) {
-            set.foreach ([](etiss::instr::Instruction &instr) {
-                instr.addCallback(
-                    [&instr](etiss::instr::BitArray &ba, etiss::CodeSet &cs, etiss::instr::InstructionContext &ic) {
-                        std::stringstream ss;
+    mis.foreach (
+        [](etiss::instr::VariableInstructionSet &vis)
+        {
+            vis.foreach (
+                [](etiss::instr::InstructionSet &set)
+                {
+                    set.foreach (
+                        [](etiss::instr::Instruction &instr)
+                        {
+                            instr.addCallback(
+                                [&instr](etiss::instr::BitArray &ba, etiss::CodeSet &cs,
+                                         etiss::instr::InstructionContext &ic)
+                                {
+                                    std::stringstream ss;
 
-                        ss << "PrintInstruction_print(\"";
+                                    ss << "PrintInstruction_print(\"";
 
-                        ss << "0x" << std::hex << std::setfill('0') << std::setw(16) << ic.current_address_ << ": ";
+                                    ss << "0x" << std::hex << std::setfill('0') << std::setw(16) << ic.current_address_
+                                       << ": ";
 
-                        ss << instr.printASM(ba);
+                                    ss << instr.printASM(ba);
 
-                        ss << "\\n";
+                                    ss << "\\n";
 
-                        ss << "\",cpu->instructionPointer);\n";
+                                    ss << "\",cpu->instructionPointer);\n";
 
-                        cs.append(CodePart::PREINITIALDEBUGRETURNING).code() = ss.str();
+                                    cs.append(CodePart::PREINITIALDEBUGRETURNING).code() = ss.str();
 
-                        return true;
-                    },
-                    0);
-            });
+                                    return true;
+                                },
+                                0);
+                        });
+                });
         });
-    });
 }
 
 std::string PrintInstruction::_getPluginName() const

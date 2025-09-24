@@ -179,7 +179,8 @@ class SimpleInstructionInjector
     {
         std::map<uint64_t, T> refetchcompensation;
         return [refetchcompensation, this](bool ibus, uint64_t &time_ps, uint64_t addr, uint8_t *buf, unsigned len,
-                                           bool &continu, bool &handleNormal) mutable {
+                                           bool &continu, bool &handleNormal) mutable
+        {
             continu = true;
             handleNormal = false;
 

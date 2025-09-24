@@ -283,9 +283,9 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
 
     CodeBlock block(instructionindex);
 
-    #ifdef ETISS_USE_COREDSL_COVERAGE
+#ifdef ETISS_USE_COREDSL_COVERAGE
     block.fileglobalCode().insert("#define ETISS_USE_COREDSL_COVERAGE");
-    #endif
+#endif
 
     block.fileglobalCode().insert("#include \"etiss/jit/CPU.h\"\n"
                                   "#include \"etiss/jit/System.h\"\n"
@@ -294,8 +294,10 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
                                   "#include \"etiss/jit/ReturnCode.h\"\n"
                                   "#include \"etiss/jit/libCSRCounters.h\"\n");
 
-    for(auto &it: jitExtHeaders()){
-        if(it != "") block.fileglobalCode().insert("#include \"" + it + "\"\n");
+    for (auto &it : jitExtHeaders())
+    {
+        if (it != "")
+            block.fileglobalCode().insert("#include \"" + it + "\"\n");
     }
 
     block.functionglobalCode().insert("if (cpu->mode != " + toString(cpu_.mode) +
@@ -324,8 +326,10 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
     std::set<std::string> headers;
     headers.insert(etiss::jitFiles());
     headers.insert(arch_->getIncludePath());
-    for(auto & it: jitExtHeaderPaths()){
-       if(it != "") headers.insert(it);
+    for (auto &it : jitExtHeaderPaths())
+    {
+        if (it != "")
+            headers.insert(it);
     }
 
     std::set<std::string> libloc;
@@ -333,17 +337,21 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
     libloc.insert(etiss::cfg().get<std::string>("etiss_path", "./"));
     libloc.insert(etiss::jitFiles());
     libloc.insert(etiss::jitFiles() + "/etiss/jit");
-    for(auto & it: jitExtLibPaths()){
-       if(it != "") libloc.insert(etiss::jitFiles() + it);
+    for (auto &it : jitExtLibPaths())
+    {
+        if (it != "")
+            libloc.insert(etiss::jitFiles() + it);
     }
 
     std::set<std::string> libs;
-    //libs.insert("ETISS");
+    // libs.insert("ETISS");
     libs.insert("resources");
     libs.insert("semihost");
     libs.insert("CSRCounters");
-    for(auto & it: jitExtLibraries()){
-       if(it != "") libs.insert(it);
+    for (auto &it : jitExtLibraries())
+    {
+        if (it != "")
+            libs.insert(it);
     }
     /* DEBUG HELPER: write code files to work directory
     {
@@ -450,7 +458,8 @@ etiss::int32 Translation::translateBlock(CodeBlock &cb)
 
         buffer = etiss::instr::Buffer(mainba.intCount());
         // read instruction
-        etiss::int32 ret = (*system_.dbg_read)(system_.handle, cb.endaddress_, (etiss_uint8*)buffer.internalBuffer(), mainba.byteCount()); // read instruction
+        etiss::int32 ret = (*system_.dbg_read)(system_.handle, cb.endaddress_, (etiss_uint8 *)buffer.internalBuffer(),
+                                               mainba.byteCount()); // read instruction
         mainba.set_value(buffer.data());
         if (ret == etiss::RETURNCODE::IBUS_READ_ERROR || ret == etiss::RETURNCODE::DBUS_READ_ERROR)
         {
@@ -460,7 +469,8 @@ etiss::int32 Translation::translateBlock(CodeBlock &cb)
             auto instr = &vis_->getMain()->getInvalid();
             CodeBlock::Line &line = cb.append(cb.endaddress_); // allocate codeset for instruction
             bool ok = instr->translate(errba, line.getCodeSet(), context);
-            if (unlikely(!ok)) {
+            if (unlikely(!ok))
+            {
                 return etiss::RETURNCODE::GENERALERROR;
             }
             cb.endaddress_ += mainba.byteCount(); // update end address
@@ -492,7 +502,8 @@ etiss::int32 Translation::translateBlock(CodeBlock &cb)
                 secba = new etiss::instr::BitArray(context.instr_width_);
 
                 buffer = etiss::instr::Buffer(secba->intCount());
-                ret = (*system_.dbg_read)(system_.handle, cb.endaddress_, (etiss_uint8*)buffer.internalBuffer(), secba->byteCount()); // read instruction
+                ret = (*system_.dbg_read)(system_.handle, cb.endaddress_, (etiss_uint8 *)buffer.internalBuffer(),
+                                          secba->byteCount()); // read instruction
                 secba->set_value(buffer.data());
 
                 if (ret != etiss::RETURNCODE::NOERROR)
@@ -528,7 +539,8 @@ etiss::int32 Translation::translateBlock(CodeBlock &cb)
                 }
             }
             CodeBlock::Line &line = cb.append(cb.endaddress_); // allocate codeset for instruction
-            bool ok = instr->translate(errba != etiss::instr::BitArray(32, 0) ? errba : *secba, line.getCodeSet(), context);
+            bool ok =
+                instr->translate(errba != etiss::instr::BitArray(32, 0) ? errba : *secba, line.getCodeSet(), context);
             if (unlikely(!ok))
             {
                 delete secba;
@@ -547,7 +559,8 @@ etiss::int32 Translation::translateBlock(CodeBlock &cb)
                 instr = &instrSet->getInvalid();
             }
             CodeBlock::Line &line = cb.append(cb.endaddress_); // allocate codeset for instruction
-            bool ok = instr->translate(errba != etiss::instr::BitArray(32, 0) ? errba : mainba, line.getCodeSet(), context);
+            bool ok =
+                instr->translate(errba != etiss::instr::BitArray(32, 0) ? errba : mainba, line.getCodeSet(), context);
             if (unlikely(!ok))
             {
                 return etiss::RETURNCODE::GENERALERROR;
@@ -563,18 +576,18 @@ etiss::int32 Translation::translateBlock(CodeBlock &cb)
 
 void Translation::unloadBlocksAll()
 {
-    for (auto &entry:blockmap_)
+    for (auto &entry : blockmap_)
     {
         entry.second.erase(std::remove_if(entry.second.begin(), entry.second.end(),
-                            [](auto &bl)
-                            {
-                                bl->valid = false;
-                                BlockLink::updateRef(bl->next, 0);
-                                BlockLink::updateRef(bl->branch, 0);
-                                BlockLink::decrRef(bl); // remove reference of map
-                                return true;
-                            }),
-                            entry.second.end());
+                                          [](auto &bl)
+                                          {
+                                              bl->valid = false;
+                                              BlockLink::updateRef(bl->next, 0);
+                                              BlockLink::updateRef(bl->branch, 0);
+                                              BlockLink::decrRef(bl); // remove reference of map
+                                              return true;
+                                          }),
+                           entry.second.end());
     }
     blockmap_.clear();
 }

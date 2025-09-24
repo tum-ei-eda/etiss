@@ -16,7 +16,10 @@
 extern "C"
 {
 
-    ETISS_PLUGIN_EXPORT const char *TCCJIT_versionInfo() { return "0.9.26for0.4"; }
+    ETISS_PLUGIN_EXPORT const char *TCCJIT_versionInfo()
+    {
+        return "0.9.26for0.4";
+    }
 
     ETISS_LIBRARYIF_VERSION_FUNC_IMPL
 
@@ -48,5 +51,8 @@ extern "C"
             return 0;
         }
     }
-    ETISS_PLUGIN_EXPORT void TCCJIT_deleteJIT(etiss::JIT *arch) { delete arch; }
+    ETISS_PLUGIN_EXPORT void TCCJIT_deleteJIT(etiss::JIT *arch)
+    {
+        delete arch;
+    }
 }

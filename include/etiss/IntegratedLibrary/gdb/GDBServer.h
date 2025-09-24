@@ -43,11 +43,12 @@ class BreakpointDB
   public:
     enum BPType
     {
-      BPTYPE_BREAK_MEM = 1,
-      BPTYPE_BREAK_HW = 2,
-      BPTYPE_WATCH_WRITE = 4,
-      BPTYPE_WATCH_READ = 8
+        BPTYPE_BREAK_MEM = 1,
+        BPTYPE_BREAK_HW = 2,
+        BPTYPE_WATCH_WRITE = 4,
+        BPTYPE_WATCH_READ = 8
     };
+
   public:
     BreakpointDB();
     inline bool isEmpty() { return instrbrkpt_ == 0; }
@@ -55,7 +56,7 @@ class BreakpointDB
     {
         if (unlikely(instrbrkpt_ == 0))
             return 0;
-        unsigned a1 = (addr)&0xFFFF;
+        unsigned a1 = (addr) & 0xFFFF;
         if (unlikely(instrbrkpt_[a1] != 0))
         {
             unsigned a2 = (addr >> 16) & 0xFFFF;
@@ -101,14 +102,13 @@ class Server : public etiss::CoroutinePlugin, public etiss::TranslationPlugin, p
     void *getPluginHandle() override; // handle is pointer to this object
 
     /// SystemWrapper, @see GDBSystemWrapper.cpp
-    ETISS_System *wrap(ETISS_CPU *cpu, ETISS_System *system) override; // wrap for memory breakpoints
+    ETISS_System *wrap(ETISS_CPU *cpu, ETISS_System *system) override;   // wrap for memory breakpoints
     ETISS_System *unwrap(ETISS_CPU *cpu, ETISS_System *system) override; // undo wrapping
 
     etiss::int32 preInstructionCallback();
     void preDReadCallback(etiss::uint64 addr);
     void preDWriteCallback(etiss::uint64 addr);
     etiss::int32 postMemAccessCallback(etiss::int32 exception);
-
 
   protected:
     // Plugin

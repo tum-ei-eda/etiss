@@ -47,8 +47,8 @@ enum InterruptType
 class InterruptHandler : public etiss::CoroutinePlugin
 {
   public:
-    InterruptHandler(etiss::InterruptVector *interruptVector, etiss::InterruptEnable *interruptEnable, std::shared_ptr<etiss::CPUArch> arch,
-                     InterruptType itype = EDGE_TRIGGERED, bool sync = true);
+    InterruptHandler(etiss::InterruptVector *interruptVector, etiss::InterruptEnable *interruptEnable,
+                     std::shared_ptr<etiss::CPUArch> arch, InterruptType itype = EDGE_TRIGGERED, bool sync = true);
     virtual ~InterruptHandler();
     /**
             @brief set the state of a line at a given time. changes will not be applied until flush(2) with a time_ps

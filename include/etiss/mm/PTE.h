@@ -30,7 +30,7 @@ namespace mm
 class PTE
 {
   public:
-    PTE(){};
+    PTE() {};
 
     PTE(uint64_t pte) { Update(pte); }
 
@@ -91,9 +91,9 @@ class PTE
             return (static_cast<uint64_t>(1) << len) - 1;
     }
 
-    void SetBit(uint32_t pos) { pte_val_ |= (static_cast <uint64_t>(1) << pos); }
+    void SetBit(uint32_t pos) { pte_val_ |= (static_cast<uint64_t>(1) << pos); }
 
-    void ClearBit(uint32_t pos) { pte_val_ &= (~(static_cast < uint64_t > (1) << pos)); }
+    void ClearBit(uint32_t pos) { pte_val_ &= (~(static_cast<uint64_t>(1) << pos)); }
 
     bool CheckBit(uint32_t pos) const { return pte_val_ & (static_cast<uint64_t>(1) << pos) ? true : false; }
 

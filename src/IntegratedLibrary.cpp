@@ -32,15 +32,30 @@ extern "C"
     // implement version function
     ETISS_LIBRARYIF_VERSION_FUNC_IMPL
 
-    unsigned ETISSINCLUDED_countJIT() { return 0; }
+    unsigned ETISSINCLUDED_countJIT()
+    {
+        return 0;
+    }
 
-    unsigned ETISSINCLUDED_countCPUArch() { return 0; }
+    unsigned ETISSINCLUDED_countCPUArch()
+    {
+        return 0;
+    }
 
-    unsigned ETISSINCLUDED_countPlugin() { return 4; }
+    unsigned ETISSINCLUDED_countPlugin()
+    {
+        return 4;
+    }
 
-    const char *ETISSINCLUDED_nameJIT(unsigned index) { return 0; }
+    const char *ETISSINCLUDED_nameJIT(unsigned index)
+    {
+        return 0;
+    }
 
-    const char *ETISSINCLUDED_nameCPUArch(unsigned index) { return 0; }
+    const char *ETISSINCLUDED_nameCPUArch(unsigned index)
+    {
+        return 0;
+    }
 
     const char *ETISSINCLUDED_namePlugin(unsigned index)
     {
@@ -58,7 +73,10 @@ extern "C"
         return 0;
     }
 
-    etiss::JIT *ETISSINCLUDED_createJIT(unsigned index, std::map<std::string, std::string> options) { return 0; }
+    etiss::JIT *ETISSINCLUDED_createJIT(unsigned index, std::map<std::string, std::string> options)
+    {
+        return 0;
+    }
 
     etiss::CPUArch *ETISSINCLUDED_createCPUArch(unsigned index, std::map<std::string, std::string> options)
     {
@@ -103,11 +121,20 @@ extern "C"
         return 0;
     }
 
-    void ETISSINCLUDED_deleteJIT(etiss::JIT *o) { delete o; }
+    void ETISSINCLUDED_deleteJIT(etiss::JIT *o)
+    {
+        delete o;
+    }
 
-    void ETISSINCLUDED_deleteCPUArch(etiss::CPUArch *o) { delete o; }
+    void ETISSINCLUDED_deleteCPUArch(etiss::CPUArch *o)
+    {
+        delete o;
+    }
 
-    void ETISSINCLUDED_deletePlugin(etiss::Plugin *o) { delete o; }
+    void ETISSINCLUDED_deletePlugin(etiss::Plugin *o)
+    {
+        delete o;
+    }
 }
 
 // not part of the example implementation

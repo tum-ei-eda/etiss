@@ -135,8 +135,6 @@ class Trigger : public etiss::ToString
 namespace xml
 {
 
-
-
 } // namespace xml
 #endif
 

@@ -97,10 +97,12 @@ void CPUArch::deleteInterruptVector(etiss::InterruptVector *vec, ETISS_CPU *cpu)
   // memory leak
 }
 
-etiss::InterruptEnable* CPUArch::createInterruptEnable(ETISS_CPU *cpu) {
+etiss::InterruptEnable *CPUArch::createInterruptEnable(ETISS_CPU *cpu)
+{
     return new etiss::InterruptEnable();
 }
-void CPUArch::deleteInterruptEnable(etiss::InterruptEnable* en, ETISS_CPU* cpu) {
+void CPUArch::deleteInterruptEnable(etiss::InterruptEnable *en, ETISS_CPU *cpu)
+{
     delete en;
 }
 
@@ -123,28 +125,30 @@ static void CPUArch_finalizeInstrSet(etiss::instr::InstructionSet *set)
 {
     if (set == nullptr)
         return;
-    set->foreach ([](etiss::instr::Instruction &instr) {
-        if (((uint32_t)instr.presentBuiltinGroups() &
-             (uint32_t)etiss::instr::Instruction::BUILTINGROUP::CPUTIMEUPDATE) == 0)
-        { // update time
-            instr.addCallback(
-                [](etiss::instr::BitArray &, etiss::CodeSet &cs, etiss::instr::InstructionContext &) {
-                    CodePart &cp = cs.prepend(CodePart::INITIALREQUIRED);
-                    cp.getAffectedRegisters().add("cpuTime_ps", 64);
-                    cp.code() = "cpu->cpuTime_ps += (1 * cpu->cpuCycleTime_ps);";
-                    return true;
-                },
-                (uint32_t)etiss::instr::Instruction::BUILTINGROUP::CPUTIMEUPDATE);
-        }
-        /// TODO? ensure instruction pointer update
-    });
+    set->foreach (
+        [](etiss::instr::Instruction &instr)
+        {
+            if (((uint32_t)instr.presentBuiltinGroups() &
+                 (uint32_t)etiss::instr::Instruction::BUILTINGROUP::CPUTIMEUPDATE) == 0)
+            { // update time
+                instr.addCallback(
+                    [](etiss::instr::BitArray &, etiss::CodeSet &cs, etiss::instr::InstructionContext &)
+                    {
+                        CodePart &cp = cs.prepend(CodePart::INITIALREQUIRED);
+                        cp.getAffectedRegisters().add("cpuTime_ps", 64);
+                        cp.code() = "cpu->cpuTime_ps += (1 * cpu->cpuCycleTime_ps);";
+                        return true;
+                    },
+                    (uint32_t)etiss::instr::Instruction::BUILTINGROUP::CPUTIMEUPDATE);
+            }
+            /// TODO? ensure instruction pointer update
+        });
 }
 
 void CPUArch::finalizeInstrSet(etiss::instr::ModedInstructionSet &mis) const
 {
-    mis.foreach ([](etiss::instr::VariableInstructionSet &vis) {
-        vis.foreach ([](etiss::instr::InstructionSet &set) { CPUArch_finalizeInstrSet(&set); });
-    });
+    mis.foreach ([](etiss::instr::VariableInstructionSet &vis)
+                 { vis.foreach ([](etiss::instr::InstructionSet &set) { CPUArch_finalizeInstrSet(&set); }); });
 }
 
 void CPUArch::compensateEndianess(ETISS_CPU *cpu, etiss::instr::BitArray &ba) const
@@ -162,7 +166,7 @@ extern "C"
         CPUArch::signalChangedRegisterValue(cpu, registerName);
     }
 
-    void etiss_icache_flush(ETISS_CPU *cpu, ETISS_System * const system, void * const * const plugin_pointers)
+    void etiss_icache_flush(ETISS_CPU *cpu, ETISS_System *const system, void *const *const plugin_pointers)
     {
         cpu->exception = etiss::RETURNCODE::RELOADBLOCKS;
     }

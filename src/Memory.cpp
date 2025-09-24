@@ -11,7 +11,6 @@
 #include "etiss/Memory.h"
 #include <stdexcept>
 
-
 #ifdef _WIN32
 
 #include <Windows.h>
@@ -106,8 +105,6 @@ std::string etiss::GetModulePath(etiss::ModuleHandle hModule)
 }
 
 #endif
-
-
 
 etiss::ModuleHandle etiss::GetCurrentModule()
 {

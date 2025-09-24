@@ -28,8 +28,13 @@ namespace plugin
 */
 class InstructionSpecificAddressCallback : public etiss::TranslationPlugin
 {
-    size_t get_uid_once(void) const {static size_t __uid_cntr{0}; return ++__uid_cntr;}
+    size_t get_uid_once(void) const
+    {
+        static size_t __uid_cntr{ 0 };
+        return ++__uid_cntr;
+    }
     size_t const uid_;
+
   public:
     struct Data
     {

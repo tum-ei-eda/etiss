@@ -14,21 +14,34 @@
 extern "C"
 {
 
-    const char *GCCJIT_versionInfo() { return "0.4"; }
+    const char *GCCJIT_versionInfo()
+    {
+        return "0.4";
+    }
 
     // implement version function
     ETISS_LIBRARYIF_VERSION_FUNC_IMPL
 
-    unsigned GCCJIT_countJIT() { return 1; }
+    unsigned GCCJIT_countJIT()
+    {
+        return 1;
+    }
 
-    const char *GCCJIT_nameJIT(unsigned i) { return "GCCJIT"; }
+    const char *GCCJIT_nameJIT(unsigned i)
+    {
+        return "GCCJIT";
+    }
 
     etiss::JIT *GCCJIT_createJIT(unsigned i, std::map<std::string, std::string> options)
     {
         etiss::Configuration cfg;
         cfg.config() = options;
-        return new GCCJIT(cfg.get<bool>("jit.gcc.cleanup", true), cfg.get<std::string>("jit.gcc.opt_level", "fast"), cfg.get<bool>("jit.gcc.quiet", false));
+        return new GCCJIT(cfg.get<bool>("jit.gcc.cleanup", true), cfg.get<std::string>("jit.gcc.opt_level", "fast"),
+                          cfg.get<bool>("jit.gcc.quiet", false));
     }
 
-    void GCCJIT_deleteJIT(etiss::JIT *jit) { delete (GCCJIT *)jit; }
+    void GCCJIT_deleteJIT(etiss::JIT *jit)
+    {
+        delete (GCCJIT *)jit;
+    }
 }

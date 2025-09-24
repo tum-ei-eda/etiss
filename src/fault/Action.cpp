@@ -77,8 +77,7 @@ Action::Action(const InjectorAddress &inj, const std::string &field, mask_op_t m
                                    std::string(") called. "));
 }
 
-Action::Action(const FaultRef &fault_ref, type_t type)
-    : type_(type), fault_ref_(std::make_unique<FaultRef>(fault_ref))
+Action::Action(const FaultRef &fault_ref, type_t type) : type_(type), fault_ref_(std::make_unique<FaultRef>(fault_ref))
 {
     etiss::log(etiss::VERBOSE, std::string("etiss::fault::Action::Action(FaultRef &=") + fault_ref.toString() +
                                    std::string(") called. "));
@@ -126,8 +125,7 @@ Action &Action::operator=(const Action &cpy)
 }
 
 #if CXX0X_UP_SUPPORTED
-Action::Action(Action &&cpy)
-    : type_(cpy.getType())
+Action::Action(Action &&cpy) : type_(cpy.getType())
 {
     operator=(cpy);
 }
@@ -245,7 +243,7 @@ bool parse<Action>(pugi::xml_node node, Action &f, Diagnostics &diag)
         diag.unexpectedNode(node, "Failed to parse type of action");
         return false;
     }
-    if(! Action::type_t::_from_string_nothrow(type_s.c_str()))
+    if (!Action::type_t::_from_string_nothrow(type_s.c_str()))
     {
         diag.unexpectedNode(node, std::string("There is no Action type ") + type_s);
         return false;

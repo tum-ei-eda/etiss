@@ -91,11 +91,12 @@ void DataSheetAccurateTiming::initInstrSet(etiss::instr::ModedInstructionSet &mi
     std::set<etiss::instr::Instruction *> matched;
     if (verifyCompleteness)
     { // create a list of all instructions
-        mis.foreach ([&found](etiss::instr::VariableInstructionSet &vis) {
-            vis.foreach ([&found](etiss::instr::InstructionSet &is) {
-                is.foreach ([&found](etiss::instr::Instruction &instr) { found.insert(&instr); });
+        mis.foreach (
+            [&found](etiss::instr::VariableInstructionSet &vis)
+            {
+                vis.foreach ([&found](etiss::instr::InstructionSet &is)
+                             { is.foreach ([&found](etiss::instr::Instruction &instr) { found.insert(&instr); }); });
             });
-        });
     }
 
     for (auto iter = rules_.begin(); iter != rules_.end(); ++iter)
@@ -103,25 +104,32 @@ void DataSheetAccurateTiming::initInstrSet(etiss::instr::ModedInstructionSet &mi
         Rule *rule = *iter;
         if (rule)
         {
-            mis.foreach ([&matched, rule](etiss::instr::VariableInstructionSet &vis) {
-                uint32_t mode = vis.parent_.getMode(vis); /// TODO? pass mode parameter in foreach/ store mode with vis
-                if (rule->mode(mode))
-                { // match mode
-                    vis.foreach ([&matched, rule](etiss::instr::InstructionSet &is) {
-                        unsigned width = is.width_;
-                        if (rule->width(width))
-                        { // match width
-                            is.foreach ([&matched, rule](etiss::instr::Instruction &instr) {
-                                if (rule->instr(instr))
-                                {                           // match instruction
-                                    matched.insert(&instr); // store instruction as matched
-                                    rule->handler(instr);   // handle instruction
+            mis.foreach (
+                [&matched, rule](etiss::instr::VariableInstructionSet &vis)
+                {
+                    uint32_t mode =
+                        vis.parent_.getMode(vis); /// TODO? pass mode parameter in foreach/ store mode with vis
+                    if (rule->mode(mode))
+                    { // match mode
+                        vis.foreach (
+                            [&matched, rule](etiss::instr::InstructionSet &is)
+                            {
+                                unsigned width = is.width_;
+                                if (rule->width(width))
+                                { // match width
+                                    is.foreach (
+                                        [&matched, rule](etiss::instr::Instruction &instr)
+                                        {
+                                            if (rule->instr(instr))
+                                            {                           // match instruction
+                                                matched.insert(&instr); // store instruction as matched
+                                                rule->handler(instr);   // handle instruction
+                                            }
+                                        });
                                 }
                             });
-                        }
-                    });
-                }
-            });
+                    }
+                });
         }
     }
 

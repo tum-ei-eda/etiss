@@ -362,13 +362,15 @@ void init()
         etiss::log(etiss::VERBOSE, "Py_Initialize() called.");
     }
 
-    run([]() {
-        PyEval_AcquireLock(); // lock gil
-        if (etiss::verbosity() >= etiss::INFO)
-            PyRun_SimpleString("print('ETISS: INFO: ETISS has been build with python support.')\n");
-        // Py_InitModule3("etiss", ETISSMethods,"ETISS python bindings");
-        PyEval_ReleaseLock(); // release gil
-    });
+    run(
+        []()
+        {
+            PyEval_AcquireLock(); // lock gil
+            if (etiss::verbosity() >= etiss::INFO)
+                PyRun_SimpleString("print('ETISS: INFO: ETISS has been build with python support.')\n");
+            // Py_InitModule3("etiss", ETISSMethods,"ETISS python bindings");
+            PyEval_ReleaseLock(); // release gil
+        });
 }
 
 void shutdown()
@@ -385,24 +387,26 @@ std::string evalForString(const char *stmt, bool *ok = nullptr)
     if (ok != 0)
         *ok = false;
     PyObject *result = 0;
-    run([stmt, &result]() {
-        PyObject *main = PyImport_AddModule("__main__");
-        if (main == 0)
+    run(
+        [stmt, &result]()
         {
-            return;
-        }
-        PyObject *globalDictionary = PyModule_GetDict(main);
-        if (globalDictionary == 0)
-        {
-            return;
-        }
-        PyObject *localDictionary = PyDict_New();
-        if (localDictionary == 0)
-        {
-            return;
-        }
-        result = PyRun_String(stmt, Py_file_input, globalDictionary, localDictionary);
-    });
+            PyObject *main = PyImport_AddModule("__main__");
+            if (main == 0)
+            {
+                return;
+            }
+            PyObject *globalDictionary = PyModule_GetDict(main);
+            if (globalDictionary == 0)
+            {
+                return;
+            }
+            PyObject *localDictionary = PyDict_New();
+            if (localDictionary == 0)
+            {
+                return;
+            }
+            result = PyRun_String(stmt, Py_file_input, globalDictionary, localDictionary);
+        });
     if (result == 0)
         return "";
     bool lok = false;

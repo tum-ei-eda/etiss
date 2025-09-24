@@ -30,7 +30,8 @@ class MemSegment
     bool self_allocated_{ false };
 
   public:
-    enum access_t {
+    enum access_t
+    {
         UNSET = 0,
         READ = 1,
         WRITE = 2,
@@ -57,11 +58,13 @@ class MemSegment
     /// @param mode Access Mode (R/W/X)
     /// @param name Segment name
     /// @param mem Pre-allocated Memory (not overwritten with initString)
-    /// @param initString String for initialization with imple_mem_system.memseg_initelement_ value: hex_string with 0x... / string /random options
+    /// @param initString String for initialization with imple_mem_system.memseg_initelement_ value: hex_string with
+    /// 0x... / string /random options
     /// @param InitEleSet Should self allocated MemSegment be initialized?
     /// @param randomRoot If initString==Random use this value as generator root
     MemSegment(etiss::uint64 start_addr, etiss::uint64 size, access_t mode, const std::string name,
-               etiss::uint8 *mem = nullptr, std::string initString = "", bool InitEleSet = false, uint64_t randomRoot = 0);
+               etiss::uint8 *mem = nullptr, std::string initString = "", bool InitEleSet = false,
+               uint64_t randomRoot = 0);
 
     // Can be overwritten afterwards with load_elf
     void memInit(std::string initString, uint64_t randomRoot = 0);
@@ -107,7 +110,7 @@ class SimpleMemSystem : public System
     void load_elf();
     void load_segments(void);
     etiss::uint64 get_startaddr(void) { return (start_addr_); }
-    void add_memsegment(std::unique_ptr<MemSegment>& mseg, const void *raw_data, size_t file_size_bytes);
+    void add_memsegment(std::unique_ptr<MemSegment> &mseg, const void *raw_data, size_t file_size_bytes);
 
   protected:
     template <bool write>
@@ -116,13 +119,14 @@ class SimpleMemSystem : public System
   private:
     std::vector<std::unique_ptr<MemSegment>> msegs_{};
 
-
     etiss::uint64 start_addr_{ 0 };
 
-    struct find_fitting_mseg {
+    struct find_fitting_mseg
+    {
         find_fitting_mseg(uint64 addr, uint64 size) : addr(addr), size(size) {}
-        bool operator() (const std::unique_ptr<MemSegment> & mseg) { return mseg->payload_in_range(addr, size); }
-    private:
+        bool operator()(const std::unique_ptr<MemSegment> &mseg) { return mseg->payload_in_range(addr, size); }
+
+      private:
         uint64 addr, size;
     };
 

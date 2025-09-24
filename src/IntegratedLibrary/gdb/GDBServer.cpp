@@ -36,7 +36,7 @@ void BreakpointDB::set(etiss::uint64 addr, etiss::uint32 val)
         instrbrkpt_ = new etiss::uint32 ***[1 << 16];
         memset(instrbrkpt_, 0, sizeof(etiss::uint32 * **[1 << 16]));
     }
-    unsigned a1 = (addr)&0xFFFF;
+    unsigned a1 = (addr) & 0xFFFF;
     if (instrbrkpt_[a1] == 0)
     {
         if (val == 0)
@@ -211,29 +211,32 @@ static void Server_finalizeInstrSet(etiss::instr::InstructionSet *set, std::stri
 {
     if (set == nullptr)
         return;
-    set->foreach ([pcode](etiss::instr::Instruction &instr) {
-        instr.addCallback(
-            [pcode](etiss::instr::BitArray &, etiss::CodeSet &cs, etiss::instr::InstructionContext &) {
-                etiss::CodePart &cp = cs.prepend(etiss::CodePart::PREINITIALDEBUGRETURNING);
-                cp.code() = std::string("{\n"
-                                        "\tetiss_int32 _gdb_exception = gdb_pre_instruction(cpu,system,") +
-                            pcode +
-                            ");\n"
-                            "\tif (_gdb_exception != 0)\n\t return _gdb_exception==-16?0:_gdb_exception;\n"
-                            "}";
-                return true;
-            },
-            0);
-        /// TODO? ensure instruction pointer update
-    });
+    set->foreach (
+        [pcode](etiss::instr::Instruction &instr)
+        {
+            instr.addCallback(
+                [pcode](etiss::instr::BitArray &, etiss::CodeSet &cs, etiss::instr::InstructionContext &)
+                {
+                    etiss::CodePart &cp = cs.prepend(etiss::CodePart::PREINITIALDEBUGRETURNING);
+                    cp.code() = std::string("{\n"
+                                            "\tetiss_int32 _gdb_exception = gdb_pre_instruction(cpu,system,") +
+                                pcode +
+                                ");\n"
+                                "\tif (_gdb_exception != 0)\n\t return _gdb_exception==-16?0:_gdb_exception;\n"
+                                "}";
+                    return true;
+                },
+                0);
+            /// TODO? ensure instruction pointer update
+        });
 }
 
 void Server::finalizeInstrSet(etiss::instr::ModedInstructionSet &mis) const
 {
     std::string pcode = getPointerCode();
-    mis.foreach ([pcode](etiss::instr::VariableInstructionSet &vis) {
-        vis.foreach ([pcode](etiss::instr::InstructionSet &set) { Server_finalizeInstrSet(&set, pcode); });
-    });
+    mis.foreach (
+        [pcode](etiss::instr::VariableInstructionSet &vis)
+        { vis.foreach ([pcode](etiss::instr::InstructionSet &set) { Server_finalizeInstrSet(&set, pcode); }); });
 }
 
 void Server::finalizeCodeBlock(etiss::CodeBlock &cb) const

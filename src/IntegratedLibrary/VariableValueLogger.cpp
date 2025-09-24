@@ -31,9 +31,8 @@ VariableValueLogger::VariableValueLogger(
     : field_(field)
 {
     if (!writer)
-        writer = [](std::ostream &out, const std::string &field, uint64_t value) {
-            out << field << "," << value << "\n";
-        };
+        writer = [](std::ostream &out, const std::string &field, uint64_t value)
+        { out << field << "," << value << "\n"; };
     out_.open(file.c_str(), std::ios::binary);
     writer_ = writer;
 }
@@ -47,20 +46,29 @@ void VariableValueLogger::finalizeInstrSet(etiss::instr::ModedInstructionSet &mi
 {
     auto f = plugin_core_->getStruct()->findName(field_);
     unsigned width = f ? static_cast<unsigned>(f->width_) : 64;
-    mis.foreach ([this, width](etiss::instr::VariableInstructionSet &vis) {
-        vis.foreach ([this, width](etiss::instr::InstructionSet &is) {
-            is.foreach ([this, width](etiss::instr::Instruction &i) {
-                i.addCallback(
-                    [this, width](etiss::instr::BitArray &, etiss::CodeSet &cs, etiss::instr::InstructionContext &) {
-                        etiss::CodePart &p = cs.append(etiss::CodePart::INITIALREQUIRED);
-                        p.getRegisterDependencies().add(field_, width);
-                        p.code() = std::string("etiss_plugin_VariableValueLogger(") + getPointerCode() + ");";
-                        return true;
-                    },
-                    0);
-            });
+    mis.foreach (
+        [this, width](etiss::instr::VariableInstructionSet &vis)
+        {
+            vis.foreach (
+                [this, width](etiss::instr::InstructionSet &is)
+                {
+                    is.foreach (
+                        [this, width](etiss::instr::Instruction &i)
+                        {
+                            i.addCallback(
+                                [this, width](etiss::instr::BitArray &, etiss::CodeSet &cs,
+                                              etiss::instr::InstructionContext &)
+                                {
+                                    etiss::CodePart &p = cs.append(etiss::CodePart::INITIALREQUIRED);
+                                    p.getRegisterDependencies().add(field_, width);
+                                    p.code() =
+                                        std::string("etiss_plugin_VariableValueLogger(") + getPointerCode() + ");";
+                                    return true;
+                                },
+                                0);
+                        });
+                });
         });
-    });
 }
 
 void VariableValueLogger::writeValue()

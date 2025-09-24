@@ -21,12 +21,12 @@
 
 // TODO: move to special header provided by compiler
 //_________________________________________________________________
-//#ifdef _MSC_VER
-//#include "etiss/jit/msvc_stdint.h"
-//#else
+// #ifdef _MSC_VER
+// #include "etiss/jit/msvc_stdint.h"
+// #else
 #include <stdint.h>
-//#endif
-//#include <stdbool.h> // removed since it may not be available
+// #endif
+// #include <stdbool.h> // removed since it may not be available
 
 #ifdef __GNUC__
 #define likely(x) __builtin_expect(!!(x), 1)

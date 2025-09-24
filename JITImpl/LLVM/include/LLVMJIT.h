@@ -18,8 +18,8 @@
 #include "llvm/ExecutionEngine/MCJIT.h" // IMPORTANT link MCJIT into library. if this is not included then the performance will drop by ~50%
 #include "llvm/Support/TargetSelect.h" // target arch
 #include "llvm/Support/raw_ostream.h"  // logging
-//#include "llvm/ExecutionEngine/JIT.h" // old execution engine (performance
-// drop ~50 to MCJIT)
+// #include "llvm/ExecutionEngine/JIT.h" // old execution engine (performance
+//  drop ~50 to MCJIT)
 #include "clang/Basic/DiagnosticOptions.h"
 #include "clang/Basic/TargetInfo.h"
 #include "clang/Basic/TargetOptions.h"
@@ -79,7 +79,6 @@ class LLVMJIT : public etiss::JIT
     llvm::LLVMContext context_;
     OrcJit *orcJit_ = nullptr;
     std::unordered_set<std::string> loadedLibs_;
-
 };
 
 } // namespace etiss

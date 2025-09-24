@@ -15,8 +15,8 @@
 
 using namespace etiss;
 
-InterruptHandler::InterruptHandler(etiss::InterruptVector *interruptVector, etiss::InterruptEnable *interruptEnable, std::shared_ptr<CPUArch> arch,
-                                   InterruptType itype, bool sync)
+InterruptHandler::InterruptHandler(etiss::InterruptVector *interruptVector, etiss::InterruptEnable *interruptEnable,
+                                   std::shared_ptr<CPUArch> arch, InterruptType itype, bool sync)
     : itype_(itype), sync_(sync), vector_(interruptVector), enable_(interruptEnable), cpuarch_(arch)
 {
     empty_ = true;

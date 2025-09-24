@@ -79,7 +79,7 @@ std::list<std::string> etiss::split(
 }
 
 Verbosity etiss_verbosity = etiss::INFO; /// verbosity level variable
-bool etiss_log_to_stderr = false; /// log to stderr instead of stdout
+bool etiss_log_to_stderr = false;        /// log to stderr instead of stdout
 
 Verbosity &etiss::verbosity()
 {

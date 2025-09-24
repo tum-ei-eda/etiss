@@ -399,11 +399,12 @@ class VariableDependencyGraph
     }
     void link(const void *dst, const std::initializer_list<const void *> &sources);
 
-    void write(std::ostream &out, const std::string &graphname,
-               std::function<bool(const void * /*src*/, const void * /*dst*/, std::string & /*color*/)> filterOutCon =
-                   [](const void *, const void *, std::string &) { return false; },
-               std::function<void(const void * /*id*/, std::string & /*color*/)> nodeattr = [](const void *,
-                                                                                               std::string &) {});
+    void write(
+        std::ostream &out, const std::string &graphname,
+        std::function<bool(const void * /*src*/, const void * /*dst*/, std::string & /*color*/)> filterOutCon =
+            [](const void *, const void *, std::string &) { return false; },
+        std::function<void(const void * /*id*/, std::string & /*color*/)> nodeattr = [](const void *,
+                                                                                        std::string &) {});
 
   public:
 #ifdef TRACEABLEFIED_H_

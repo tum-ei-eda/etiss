@@ -19,7 +19,6 @@
 #include <Windows.h>
 #endif
 
-
 namespace etiss
 {
 
@@ -41,7 +40,6 @@ static const ModuleHandle NullModuleHandle = nullptr;
 
 #endif
 
-
 // An empty string requests the main module.
 etiss::ModuleHandle GetModuleByName(const std::string &name = "");
 
@@ -49,7 +47,6 @@ etiss::ModuleHandle GetModuleByName(const std::string &name = "");
 etiss::ModuleHandle GetModuleByAddress(uintptr_t adr);
 
 std::string GetModulePath(etiss::ModuleHandle hModule);
-
 
 /// Returns the module handle to the own dynamic library.
 etiss::ModuleHandle GetCurrentModule();

@@ -47,14 +47,16 @@ std::shared_ptr<VirtualStruct> VirtualStruct::allocateFromC(
     }
 
     bool handle_deleted = false;
-    std::shared_ptr<VirtualStruct> ret = allocate(handle, [handle_deleted, handle, cleanup](Field *f) mutable {
-        if (!handle_deleted)
-        {
-            handle_deleted = true;
-            cleanup(handle);
-        }
-        delete f;
-    });
+    std::shared_ptr<VirtualStruct> ret = allocate(handle,
+                                                  [handle_deleted, handle, cleanup](Field *f) mutable
+                                                  {
+                                                      if (!handle_deleted)
+                                                      {
+                                                          handle_deleted = true;
+                                                          cleanup(handle);
+                                                      }
+                                                      delete f;
+                                                  });
 
     size_t apos = 0;
     const char *const *name_array = names(handle);

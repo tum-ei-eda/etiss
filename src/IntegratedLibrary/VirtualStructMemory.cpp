@@ -20,29 +20,34 @@ VirtualStructMemory::VirtualStructMemory(
     startaddr_ = std::numeric_limits<uint64_t>::max();
     endaddr_ = 0;
 
-    ((etiss::VirtualStruct *)&str)->foreachField([&](std::shared_ptr<VirtualStruct::Field> field) {
-        references.push_back(field);
-        etiss::VirtualStruct::Field *f = (field).get();
+    ((etiss::VirtualStruct *)&str)
+        ->foreachField(
+            [&](std::shared_ptr<VirtualStruct::Field> field)
+            {
+                references.push_back(field);
+                etiss::VirtualStruct::Field *f = (field).get();
 
-        bool dontMount = false;
-        uint64_t addr = mountPoint(f, dontMount);
+                bool dontMount = false;
+                uint64_t addr = mountPoint(f, dontMount);
 
-        if (dontMount)
-            return;
+                if (dontMount)
+                    return;
 
-        if (addr < startaddr_)
-            startaddr_ = addr;
+                if (addr < startaddr_)
+                    startaddr_ = addr;
 
-        if (endaddr_ < (addr + f->width_))
-            endaddr_ = addr + f->width_;
+                if (endaddr_ < (addr + f->width_))
+                    endaddr_ = addr + f->width_;
 
-        for (size_t i = 0; i < f->width_; ++i)
-        {
-            // auto m =
-            memmap_.insert(std::make_pair(addr + i, std::make_pair(f, (littleendian ? i : (f->width_ - 1 - i)))));
-            // etiss::log(etiss::VERBOSE,"mapped: ",m.first->first,m.first->second.second,m.first->second.first->name_);
-        }
-    });
+                for (size_t i = 0; i < f->width_; ++i)
+                {
+                    // auto m =
+                    memmap_.insert(
+                        std::make_pair(addr + i, std::make_pair(f, (littleendian ? i : (f->width_ - 1 - i)))));
+                    // etiss::log(etiss::VERBOSE,"mapped:
+                    // ",m.first->first,m.first->second.second,m.first->second.first->name_);
+                }
+            });
 }
 
 VirtualStructMemory::~VirtualStructMemory()

@@ -85,7 +85,8 @@ class DataSheetAccurateTiming : public TranslationPlugin
                    " * cpu->cpuCycleTime_ps; //DataSheetAccurateTiming\n";
         }
         instr.addCallback(
-            [code](etiss::instr::BitArray &ba, etiss::CodeSet &cs, etiss::instr::InstructionContext &ic) {
+            [code](etiss::instr::BitArray &ba, etiss::CodeSet &cs, etiss::instr::InstructionContext &ic)
+            {
                 CodePart &cp = cs.prepend(CodePart::INITIALREQUIRED);
                 cp.getAffectedRegisters().add("cpuTime_ps", 64);
                 cp.code() = code;
@@ -100,7 +101,7 @@ class DataSheetAccurateTiming : public TranslationPlugin
     inline void ctor_hlpr() {}
     template <typename A, typename... T>
     /// handles the argument list passed to the template constructor
-    void ctor_hlpr(const A &arg, const T &... rules)
+    void ctor_hlpr(const A &arg, const T &...rules)
     {
         addRule(arg); // store current element
         ctor_hlpr(rules...);
@@ -109,7 +110,7 @@ class DataSheetAccurateTiming : public TranslationPlugin
   public:
     const std::string name_;
     template <typename... T>
-    DataSheetAccurateTiming(const std::string &name, const T &... rules) : name_(name)
+    DataSheetAccurateTiming(const std::string &name, const T &...rules) : name_(name)
     {
         ctor_hlpr(rules...);
     }
