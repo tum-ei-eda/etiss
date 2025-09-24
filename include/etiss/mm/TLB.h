@@ -55,7 +55,7 @@ class TLB
         else if (tlb_map_.find(vfn) != tlb_map_.end())
             return PTEOVERLAP;
 
-        tlb_map_[vfn] = std::move(PTE(pte_val));
+        tlb_map_[vfn] = PTE(pte_val);
 
         if (EntryNum == ++current_entry_num_)
             is_full_ = true;
@@ -73,7 +73,7 @@ class TLB
         else if (tlb_map_.find(vfn) != tlb_map_.end())
             return PTEOVERLAP;
 
-        tlb_map_[vfn] = std::move(PTE(pte_entry));
+        tlb_map_[vfn] = PTE(pte_entry);
 
         if (EntryNum == ++current_entry_num_)
             is_full_ = true;
