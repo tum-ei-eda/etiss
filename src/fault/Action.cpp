@@ -429,7 +429,7 @@ bool write<Action>(pugi::xml_node node, const Action &f, Diagnostics &diag)
     if (!ok)
         etiss::log(etiss::ERROR, std::string("etiss::fault::write<etiss::fault::Action>(node, Action&=") +
                                      std::string(", Diagnostics) failed. "));
-    return false;
+    return ok;
 }
 
 } // namespace xml
