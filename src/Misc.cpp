@@ -623,7 +623,6 @@ std::vector<std::string> etiss::jitExtLibPaths(){
 }
 
 // IMPORTANT: check if fpu configuration matches endianness
-#include "etiss/fpu/386-GCC.h"
 #if ETISS_USE_CONSTEXPR
 #ifdef LITTLEENDIAN
 static_assert(getEndianness() == etiss::_LITTLE_ENDIAN_,
