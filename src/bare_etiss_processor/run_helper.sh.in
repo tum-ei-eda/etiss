@@ -2,7 +2,7 @@
 set -e
 # Config
 
-ETISS_DIR=@ETISS_DIR@
+ETISS_BIN_DIR=$(dirname -- "$(readlink -f -- "$0")")
 
 # Clear tmp file
 DYN_INI=$(mktemp /tmp/etiss_dynamic_XXXXXXXXXX.ini)
@@ -35,7 +35,7 @@ TARGETSW_PATH_ELF=$1
 TARGET_ELFFILE=$(basename -- "$TARGETSW_PATH_ELF")
 TARGET_ELFDIR=$(dirname -- "$TARGETSW_PATH_ELF")
 
-VP_EXE="${ETISS_DIR}/bin/bare_etiss_processor"
+VP_EXE="${ETISS_BIN_DIR}/bare_etiss_processor"
 
 
 CMD_OPTIONS=""
@@ -112,7 +112,7 @@ echo -e "simple_mem_system.memseg_origin_01=0x00080000" >> $DYN_INI
 echo -e "simple_mem_system.memseg_length_01=0x00080000" >> $DYN_INI
 
 # Call
-ARGS="-i${ETISS_DIR}/examples/base.ini -i${DYN_INI} ${CMD_OPTIONS}"
+ARGS="-i${ETISS_BIN_DIR}/../examples/base.ini -i${DYN_INI} ${CMD_OPTIONS}"
 
 if [ "${USE_TGDB}" -eq 1 ]; then
     if [ "${DO_NOT_ATTACH}" -eq 0 ]; then
