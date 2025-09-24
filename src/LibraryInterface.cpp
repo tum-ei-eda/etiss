@@ -351,7 +351,7 @@ class ETISS_SharedLibraryInterface : public LibraryInterface
         }
         else
         {
-            return 0;
+            return "";
         }
     }
     virtual std::string namePlugin(unsigned index)
@@ -363,7 +363,7 @@ class ETISS_SharedLibraryInterface : public LibraryInterface
         }
         else
         {
-            return 0;
+            return "";
         }
     }
     virtual std::string nameCPUArch(unsigned index)
@@ -375,7 +375,7 @@ class ETISS_SharedLibraryInterface : public LibraryInterface
         }
         else
         {
-            return 0;
+            return "";
         }
     }
 
@@ -388,7 +388,7 @@ class ETISS_SharedLibraryInterface : public LibraryInterface
         }
         else
         {
-            return 0;
+            return nullptr;
         }
     }
     virtual etiss::CPUArch *createCPUArch(unsigned index, std::map<std::string, std::string> options)
@@ -400,7 +400,7 @@ class ETISS_SharedLibraryInterface : public LibraryInterface
         }
         else
         {
-            return 0;
+            return nullptr;
         }
     }
     virtual etiss::Plugin *createPlugin(unsigned index, std::map<std::string, std::string> options)
@@ -412,7 +412,7 @@ class ETISS_SharedLibraryInterface : public LibraryInterface
         }
         else
         {
-            return 0;
+            return nullptr;
         }
     }
 
