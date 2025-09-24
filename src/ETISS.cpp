@@ -745,6 +745,7 @@ void etiss_initialize(const std::vector<std::string>& args, bool forced = false)
             ("etiss.max_block_size", po::value<int>(), "Sets maximum amount of instructions in a block.")
             ("etiss.output_path_prefix", po::value<std::string>(), "Path prefix to use when writing output files.")
             ("etiss.loglevel", po::value<int>(), "Verbosity of logging output.")
+            ("etiss.log_to_stderr", po::value<bool>(), "Log to stderr instead of stdout.")
             ("jit.gcc.cleanup", po::value<bool>(), "Cleans up temporary files in GCCJIT. ")
             ("jit.gcc.opt_level", po::value<std::string>(), "GCCJIT optimization level (0/1/2/3/s/fast=default). ")
             ("jit.verify", po::value<bool>(), "Run some basic checks to verify the functionality of the JIT engine.")
@@ -758,6 +759,7 @@ void etiss_initialize(const std::vector<std::string>& args, bool forced = false)
             ("vp.sw_binary_rom", po::value<std::string>(), "Path to binary file to be loaded into ROM.")
             ("vp.elf_file", po::value<std::string>(), "Load ELF file.")
             ("vp.stats_file_path", po::value<std::string>(), "Path where the output json file gets stored after bare processor is run.")
+            ("vp.quiet", po::value<std::string>(), "Disable logging of bare_etiss_processor.")
             ("faults.xml", po::value<std::string>(), "Path to faults XML file.")
             ("simple_mem_system.print_dbus_access", po::value<bool>(), "Traces accesses to the data bus.")
             ("simple_mem_system.print_ibus_access", po::value<bool>(), "Traces accesses to the instruction bus.")
@@ -841,6 +843,12 @@ void etiss_initialize(const std::vector<std::string>& args, bool forced = false)
             etiss::log(etiss::ERROR, "Specified log level is not valid. must range between 0 (= "
                                      "silent) and 5 (= verbose)");
         }
+    }
+    // log to strerr
+    {
+        bool log_to_stderr = cfg().get<bool>("etiss.log_to_stderr", false);
+        etiss::log_to_stderr() = log_to_stderr;
+        etiss::log(etiss::VERBOSE, "Logging to stderr");
     }
 
     etiss::py::init(); // init python
