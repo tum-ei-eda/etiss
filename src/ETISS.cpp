@@ -1,31 +1,8 @@
-/**
-        @copyright
-        <pre>
-        Copyright 2018 Infineon Technologies AG
-        This file is part of ETISS tool, see <https://github.com/tum-ei-eda/etiss>.
-        The initial version of this software has been created with the funding support by the German Federal
-        Ministry of Education and Research (BMBF) in the project EffektiV under grant 01IS13022.
-        Redistribution and use in source and binary forms, with or without modification, are permitted
-        provided that the following conditions are met:
-        1. Redistributions of source code must retain the above copyright notice, this list of conditions and
-        the following disclaimer.
-        2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions
-        and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse
-        or promote products derived from this software without specific prior written permission.
-        THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
-        WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
-        PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY
-        DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-        PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
-        HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-        NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-        POSSIBILITY OF SUCH DAMAGE.
-        </pre>
-        @author Marc Greim <marc.greim@mytum.de>, Chair of Electronic Design Automation, TUM
-        @date July 29, 2014
-        @version 0.1
-*/
+// SPDX-License-Identifier: BSD-3-Clause
+//
+// This file is part of ETISS. It is licensed under the BSD 3-Clause License; you may not use this file except in
+// compliance with the License. You should have received a copy of the license along with this project. If not, see the
+// LICENSE file.
 /**
         @file ETISS.cpp
         @brief Implementation of etiss/ETISS.h except for
@@ -59,14 +36,13 @@
 
 using namespace etiss;
 
-
 std::string etiss_defaultjit_;
 
 std::list<std::shared_ptr<etiss::LibraryInterface>> etiss_libraries_;
 std::recursive_mutex etiss_libraries_mu_;
 
 boost::program_options::variables_map vm;
-std::vector<std::string> pluginOptions = {"plugin.logger.logaddr", "plugin.logger.logmask", "plugin.gdbserver.port"};
+std::vector<std::string> pluginOptions = { "plugin.logger.logaddr", "plugin.logger.logmask", "plugin.gdbserver.port" };
 
 std::set<std::string> etiss::listCPUArchs()
 {
@@ -410,7 +386,8 @@ void etiss::Initializer::loadIni(std::list<std::string> *files)
     // load file
     for (auto it_files : *files)
     {
-        // the check above is sufficient no need for this / checked for previous cases false and last true gives true not the case based on files structure
+        // the check above is sufficient no need for this / checked for previous cases false and last true gives true
+        // not the case based on files structure
         etiss_loadIni(it_files);
     }
 }
@@ -426,7 +403,8 @@ void etiss_loadIniConfigs()
     // preload loglevel
     if (!etiss::cfg().isSet("etiss.loglevel"))
     {
-        etiss::cfg().set<int>("etiss.loglevel", po_simpleIni->GetLongValue("IntConfigurations", "etiss.loglevel", etiss::WARNING));
+        etiss::cfg().set<int>("etiss.loglevel",
+                              po_simpleIni->GetLongValue("IntConfigurations", "etiss.loglevel", etiss::WARNING));
     }
     {
         int ll = cfg().get<int>("etiss.loglevel", etiss::WARNING);
@@ -476,7 +454,7 @@ void etiss_loadIniConfigs()
             {
                 message << "    cfg already set on command line. ";
                 message << "    " << iter_key.pItem << "=";
-                const ::std::type_info& type = vm[std::string(iter_key.pItem)].value().type() ;
+                const ::std::type_info &type = vm[std::string(iter_key.pItem)].value().type();
                 if (type == typeid(::std::string))
                     message << vm[std::string(iter_key.pItem)].as<std::string>() << ",";
                 else if (type == typeid(int))
@@ -504,25 +482,33 @@ void etiss_loadIniConfigs()
                     {
                         std::string itemval = iter_value.pItem;
                         boost::algorithm::to_lower(itemval); // converts itemval to lower case string
-                        bool val;
 
-                        if ((itemval == "true") | (itemval == "yes") | (itemval == "1") | (itemval == "t")) val = true;
-                        else if ((itemval == "false") | (itemval == "no") | (itemval == "0") | (itemval == "f")) val = false;
-                        else etiss::log(etiss::FATALERROR, std::string("Configuration value ") + iter_key.pItem + " could not be parsed as boolean");
-
-                        etiss::cfg().set<bool>(iter_key.pItem, val);
+                        if ((itemval == "true") || (itemval == "yes") || (itemval == "1") || (itemval == "t"))
+                        {
+                            etiss::cfg().set<bool>(iter_key.pItem, true);
+                        }
+                        else if ((itemval == "false") || (itemval == "no") || (itemval == "0") || (itemval == "f"))
+                        {
+                            etiss::cfg().set<bool>(iter_key.pItem, false);
+                        }
+                        else
+                            etiss::log(etiss::FATALERROR, std::string("Configuration value ") + iter_key.pItem +
+                                                              " could not be parsed as boolean");
                     }
                     else if (std::string(iter_section.pItem) == "IntConfigurations") // already load!
                     {
                         std::string itemval = iter_value.pItem;
                         std::size_t sz = 0;
                         long long val;
-                        try {
+                        try
+                        {
                             val = std::stoll(itemval, &sz, 0);
                         }
                         // catch invalid_argument exception.
-                        catch (std::invalid_argument const&){
-                            etiss::log(etiss::FATALERROR, std::string("Configuration value ") + iter_key.pItem + " could not be parsed as integer");
+                        catch (std::invalid_argument const &)
+                        {
+                            etiss::log(etiss::FATALERROR, std::string("Configuration value ") + iter_key.pItem +
+                                                              " could not be parsed as integer");
                         }
                         etiss::cfg().set<long long>(iter_key.pItem, val);
                         // we use double, as long could have only 32 Bit (e.g. on Windows)
@@ -546,7 +532,7 @@ void etiss_loadIniConfigs()
                 if (values.size() > 1)
                 {
                     warning = true;
-                        message << "   Multi values. Take only LAST one!";
+                    message << "   Multi values. Take only LAST one!";
                 }
             }
             // add message to etiss log.
@@ -655,8 +641,8 @@ void etiss::Initializer::loadIniPlugins(std::shared_ptr<etiss::CPUCore> cpu)
                 for (auto iter_value : values)
                 {
                     options[iter_key.pItem] = iter_value.pItem;
-                    etiss::log(etiss::INFO,
-                            "    options[" + std::string(iter_key.pItem) + "] = " + std::string(iter_value.pItem) + "\n\n");
+                    etiss::log(etiss::INFO, "    options[" + std::string(iter_key.pItem) +
+                                                "] = " + std::string(iter_value.pItem) + "\n\n");
                 }
                 // check if more than one value is set in the ini file
                 if (values.size() > 1)
@@ -682,13 +668,13 @@ void etiss::Initializer::loadIniJIT(std::shared_ptr<etiss::CPUCore> cpu)
     if (cpu->getJITName() != "")
     {
         etiss::log(etiss::WARNING,
-                    "etiss::Initializer::loadIniJIT:" + std::string(" JIT already present. Overwriting it."));
+                   "etiss::Initializer::loadIniJIT:" + std::string(" JIT already present. Overwriting it."));
     }
     etiss::log(etiss::INFO, " Adding JIT \"" + cfg().get<std::string>("jit.type", "") + '\"');
     cpu->set(getJIT(cfg().get<std::string>("jit.type", "")));
 }
 
-std::pair<std::string, std::string> inifileload(const std::string& s)
+std::pair<std::string, std::string> inifileload(const std::string &s)
 {
     if (s.find("-i") == 0)
     {
@@ -699,7 +685,7 @@ std::pair<std::string, std::string> inifileload(const std::string& s)
     return make_pair(std::string(), std::string());
 }
 
-void etiss_initialize(const std::vector<std::string>& args, bool forced = false)
+void etiss_initialize(const std::vector<std::string> &args, bool forced = false)
 {
     static std::mutex mu_;
     static bool initialized_(false);
@@ -732,6 +718,7 @@ void etiss_initialize(const std::vector<std::string>& args, bool forced = false)
         namespace po = boost::program_options;
         try
         {
+            // clang-format off
             po::options_description desc("Allowed options");
             desc.add_options()
             ("help", "Produce a help message that lists all supported options.")
@@ -770,9 +757,10 @@ void etiss_initialize(const std::vector<std::string>& args, bool forced = false)
             ("plugin.gdbserver.port", po::value<std::string>(), "Option for gdbserver")
             ("pluginToLoad,p", po::value<std::vector<std::string>>()->multitoken(), "List of plugins to be loaded.")
             ;
+            // clang-format on
 
-            po::command_line_parser parser{args};
-            po::command_line_parser iniparser{args};
+            po::command_line_parser parser{ args };
+            po::command_line_parser iniparser{ args };
             iniparser.options(desc).allow_unregistered().extra_parser(inifileload).run();
             parser.options(desc).allow_unregistered().extra_parser(etiss::Configuration::set_cmd_line_boost);
             po::parsed_options parsed_options = parser.run();
@@ -782,7 +770,8 @@ void etiss_initialize(const std::vector<std::string>& args, bool forced = false)
             {
                 std::cout << "\nPlease begin all options with --\n\n";
                 std::cout << desc << "\n";
-                etiss::log(etiss::FATALERROR, std::string("Please choose the right configurations from the list and re-run.\n"));
+                etiss::log(etiss::FATALERROR,
+                           std::string("Please choose the right configurations from the list and re-run.\n"));
             }
 
             auto unregistered = po::collect_unrecognized(parsed_options.options, po::include_positional);
@@ -791,19 +780,19 @@ void etiss_initialize(const std::vector<std::string>& args, bool forced = false)
                 if (iter_unreg.find("-i") != 0 && iter_unreg.find("-p"))
                 {
                     etiss::log(etiss::FATALERROR, std::string("Unrecognised option ") + iter_unreg +
-                                               "\n\t Please use --help to list all recognised options. \n");
+                                                      "\n\t Please use --help to list all recognised options. \n");
                 }
             }
 
-            for (po::variables_map::iterator i = vm.begin() ; i != vm.end() ; ++ i)
+            for (po::variables_map::iterator i = vm.begin(); i != vm.end(); ++i)
             {
-                const po::variable_value& v = i->second;
+                const po::variable_value &v = i->second;
                 if (!v.empty())
                 {
-                    const ::std::type_info& type = v.value().type();
+                    const ::std::type_info &type = v.value().type();
                     if (type == typeid(::std::string))
                     {
-                        const ::std::string& val = v.as<::std::string>() ;
+                        const ::std::string &val = v.as<::std::string>();
                         etiss::cfg().set<std::string>(std::string(i->first), val);
                     }
                     else if (type == typeid(int))
@@ -819,10 +808,10 @@ void etiss_initialize(const std::vector<std::string>& args, bool forced = false)
                 }
             }
         }
-        catch(std::exception& e)
+        catch (std::exception &e)
         {
-            etiss::log(etiss::FATALERROR, std::string(e.what()) +
-                                               "\n\t Please use --help to list all recognised options. \n");
+            etiss::log(etiss::FATALERROR,
+                       std::string(e.what()) + "\n\t Please use --help to list all recognised options. \n");
         }
     }
     etiss_loadIniConfigs();
@@ -876,14 +865,14 @@ void etiss_initialize(const std::vector<std::string>& args, bool forced = false)
             std::ifstream f(iter->c_str());
             if (!f)
             {
-                etiss::log(etiss::WARNING, std::string("Could not find file: ") + *iter + "\n" +
-                                               "\t The installation seems broken");
+                etiss::log(etiss::WARNING,
+                           std::string("Could not find file: ") + *iter + "\n" + "\t The installation seems broken");
             }
         }
     }
 }
 
-void etiss::initialize(std::vector<std::string>& args)
+void etiss::initialize(std::vector<std::string> &args)
 {
     etiss_initialize(args, false);
 }
@@ -920,44 +909,51 @@ void etiss::initialize_virtualstruct(std::shared_ptr<etiss::CPUCore> cpu_core)
 {
     auto mount_successful = etiss::VirtualStruct::root()->mountStruct(cpu_core->getName(), cpu_core->getStruct());
     // check if it the core is already mounted.
-    if( etiss::VirtualStruct::root()->findStruct(cpu_core->getName()) )
+    if (etiss::VirtualStruct::root()->findStruct(cpu_core->getName()))
     {
         mount_successful = true; // already mounted as a substruct to the root()
     }
 
-    if(!mount_successful)
+    if (!mount_successful)
     {
-        etiss::log(etiss::FATALERROR, std::string("Tried to mount ") + cpu_core->getName() + std::string("'s VirtualStruct, but failed: etiss::CPUCore not created!"));
+        etiss::log(etiss::FATALERROR, std::string("Tried to mount ") + cpu_core->getName() +
+                                          std::string("'s VirtualStruct, but failed: etiss::CPUCore not created!"));
     }
     else
     {
-        etiss::log(etiss::VERBOSE, std::string("Mounted ") + cpu_core->getName() + std::string("'s VirtualStruct to root VirtualStruct"));
+        etiss::log(etiss::VERBOSE, std::string("Mounted ") + cpu_core->getName() +
+                                       std::string("'s VirtualStruct to root VirtualStruct"));
 
         // load fault files
         std::string faults = cfg().get<std::string>("faults.xml", "");
         if (!faults.empty())
         {
             std::list<std::string> ffs = etiss::split(faults, ';');
-            for (const auto& ff : ffs)
+            for (const auto &ff : ffs)
             {
                 auto stressor_successful = etiss::fault::Stressor::loadXML(ff, cpu_core->getID());
                 if (!stressor_successful)
                 {
-                    etiss::log(etiss::FATALERROR, std::string("Failed to load requested faults.xml \'") + ff + std::string("\' for ") + cpu_core->getName() + std::string("."));
+                    etiss::log(etiss::FATALERROR, std::string("Failed to load requested faults.xml \'") + ff +
+                                                      std::string("\' for ") + cpu_core->getName() + std::string("."));
                 }
                 else
                 {
-                    etiss::log(etiss::VERBOSE, std::string("Faults from \'") + ff + std::string("\' loaded for ") + cpu_core->getName() + std::string("."));
+                    etiss::log(etiss::VERBOSE, std::string("Faults from \'") + ff + std::string("\' loaded for ") +
+                                                   cpu_core->getName() + std::string("."));
                 }
             }
 
-            etiss::log(etiss::VERBOSE, std::string("Add InstructionAccurateCallback Plugin to ") + cpu_core->getName() + std::string(". Required for etiss::fault::Injector."));
+            etiss::log(etiss::VERBOSE, std::string("Add InstructionAccurateCallback Plugin to ") + cpu_core->getName() +
+                                           std::string(". Required for etiss::fault::Injector."));
             cpu_core->addPlugin(std::make_shared<etiss::plugin::InstructionAccurateCallback>());
         }
     }
 }
 
-void etiss::initialize_virtualstruct(std::shared_ptr<etiss::CPUCore> cpu_core, std::function<bool(const etiss::fault::Fault&, const etiss::fault::Action&, std::string& /*errormsg*/)> const & fcustom_action)
+void etiss::initialize_virtualstruct(std::shared_ptr<etiss::CPUCore> cpu_core,
+                                     std::function<bool(const etiss::fault::Fault &, const etiss::fault::Action &,
+                                                        std::string & /*errormsg*/)> const &fcustom_action)
 {
     etiss::initialize_virtualstruct(cpu_core);
     cpu_core->getStruct()->applyCustomAction = fcustom_action;

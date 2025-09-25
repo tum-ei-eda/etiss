@@ -1,31 +1,8 @@
-/**
-        @copyright
-        <pre>
-        Copyright 2018 Infineon Technologies AG
-        This file is part of ETISS tool, see <https://github.com/tum-ei-eda/etiss>.
-        The initial version of this software has been created with the funding support by the German Federal
-        Ministry of Education and Research (BMBF) in the project EffektiV under grant 01IS13022.
-        Redistribution and use in source and binary forms, with or without modification, are permitted
-        provided that the following conditions are met:
-        1. Redistributions of source code must retain the above copyright notice, this list of conditions and
-        the following disclaimer.
-        2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions
-        and the following disclaimer in the documentation and/or other materials provided with the distribution.
-        3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse
-        or promote products derived from this software without specific prior written permission.
-        THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
-        WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
-        PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY
-        DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-        PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
-        HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-        NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-        POSSIBILITY OF SUCH DAMAGE.
-        </pre>
-        @author Marc Greim <marc.greim@mytum.de>, Chair of Electronic Design Automation, TUM
-        @date July 29, 2014
-        @version 0.1
-*/
+// SPDX-License-Identifier: BSD-3-Clause
+//
+// This file is part of ETISS. It is licensed under the BSD 3-Clause License; you may not use this file except in
+// compliance with the License. You should have received a copy of the license along with this project. If not, see the
+// LICENSE file.
 /**
         @file
         @brief implementation of etiss/CPUCore.h
@@ -136,7 +113,7 @@ int CPUCore::getNextID()
 {
     return currID;
 }
-CPUCore::CPUCore(std::shared_ptr<etiss::CPUArch> arch, std::string const& name)
+CPUCore::CPUCore(std::shared_ptr<etiss::CPUArch> arch, std::string const &name)
     : arch_(arch)
     , name_(name)
     , id_(currID++)
@@ -187,10 +164,7 @@ CPUCore::CPUCore(std::shared_ptr<etiss::CPUArch> arch, std::string const& name)
         }
     }
 }
-CPUCore::CPUCore(std::shared_ptr<etiss::CPUArch> arch)
-    : CPUCore(arch, std::string("core" + std::to_string(currID)))
-{
-}
+CPUCore::CPUCore(std::shared_ptr<etiss::CPUArch> arch) : CPUCore(arch, std::string("core" + std::to_string(currID))) {}
 
 void CPUCore::addPlugin(std::shared_ptr<etiss::Plugin> plugin)
 {
@@ -267,11 +241,11 @@ std::shared_ptr<CPUCore> CPUCore::create(std::string archname, std::string insta
     }
 
     // creat core
-    std::shared_ptr<CPUCore> ret{nullptr};
-    if(instancename != "")
-        ret.reset(new CPUCore(arch, instancename));//std::make_shared<CPUCore>(arch, instancename);
+    std::shared_ptr<CPUCore> ret{ nullptr };
+    if (instancename != "")
+        ret.reset(new CPUCore(arch, instancename)); // std::make_shared<CPUCore>(arch, instancename);
     else
-        ret.reset(new CPUCore(arch)); //std::make_shared<CPUCore>(arch);
+        ret.reset(new CPUCore(arch)); // std::make_shared<CPUCore>(arch);
 
     {
         std::lock_guard<std::mutex> lock(instances_mu_);
@@ -544,7 +518,6 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
         return RETURNCODE::JITERROR;
     }
 
-
     // verify jit
     if (etiss::cfg().get<bool>("jit.verify", true))
     {
@@ -576,10 +549,12 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
         {
             etiss::log(etiss::INFO, "Add Timer Plugin: " + timerInstance->getPluginName());
             auto local_arch = arch_;
-            plugins.push_back(std::shared_ptr<etiss::Plugin>(timerInstance, [local_arch](etiss::Plugin *p) {
-                etiss::log(etiss::INFO, "Delete Timer Plugin.");
-                local_arch->deleteTimer(p);
-            }));
+            plugins.push_back(std::shared_ptr<etiss::Plugin>(timerInstance,
+                                                             [local_arch](etiss::Plugin *p)
+                                                             {
+                                                                 etiss::log(etiss::INFO, "Delete Timer Plugin.");
+                                                                 local_arch->deleteTimer(p);
+                                                             }));
         }
     }
 
@@ -678,9 +653,8 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
             {
                 listener = new LegacyRegisterDevicePluginListener(regdevices);
 
-                vcpu_->foreachField([listener](std::shared_ptr<etiss::VirtualStruct::Field> f) {
-                    f->addListener(listener);
-                }); // add listener to all current field of struct
+                vcpu_->foreachField([listener](std::shared_ptr<etiss::VirtualStruct::Field> f)
+                                    { f->addListener(listener); }); // add listener to all current field of struct
 
                 // TODO: maybe later VirtualStruct will support a listener for added/removed fields. in that case the
                 // lisener of this function should also be added to new fields
@@ -700,7 +674,6 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
     struct timespec start, finish;
 
     clock_gettime(CLOCK_MONOTONIC, &start);
-
 
     BlockLink *blptr = 0; // pointer to the current block
 
@@ -805,9 +778,8 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
                     exception = (*(blptr->execBlock))(cpu_, system, plugins_handle_);
 
                     // exit simulator when a loop to self instruction is encountered
-                    if (exit_on_loop && !exception &&
-                            old_time + cpu_->cpuCycleTime_ps == cpu_->cpuTime_ps &&
-                            old_pc == cpu_->instructionPointer)
+                    if (exit_on_loop && !exception && old_time + cpu_->cpuCycleTime_ps == cpu_->cpuTime_ps &&
+                        old_pc == cpu_->instructionPointer)
                     {
                         exception = RETURNCODE::CPUFINISHED;
                     }
@@ -839,7 +811,6 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
 loopexit:
     clock_gettime(CLOCK_MONOTONIC, &finish);
 
-
     // execute coroutines end
     for (auto &cor_plugin : cor_array)
     {
@@ -852,37 +823,44 @@ loopexit:
     double cpu_cycle = cpu_->cpuTime_ps / (float)cpu_->cpuCycleTime_ps;
     double mips = cpu_->cpuTime_ps / (float)cpu_->cpuCycleTime_ps / simulation_time / 1.0E6;
     bool quiet = etiss::cfg().get<bool>("vp.quiet", false);
-    if (!quiet) std::cout << "CPU Time: " << (cpu_time) << "s    Simulation Time: " << (simulation_time) << "s"
-                          << std::endl;
-    if (!quiet) std::cout << "CPU Cycles (estimated): " << (cpu_cycle) << std::endl;
-    if (!quiet) std::cout << "MIPS (estimated): " << (mips) << std::endl;
+    if (!quiet)
+        std::cout << "CPU Time: " << (cpu_time) << "s    Simulation Time: " << (simulation_time) << "s" << std::endl;
+    if (!quiet)
+        std::cout << "CPU Cycles (estimated): " << (cpu_cycle) << std::endl;
+    if (!quiet)
+        std::cout << "MIPS (estimated): " << (mips) << std::endl;
 
-    // declaring path of writing the json file contaiing performance metrics and the boolean which approves of writing the json output
+    // declaring path of writing the json file contaiing performance metrics and the boolean which approves of writing
+    // the json output
     std::string valid_json_output_path = etiss::cfg().get<std::string>("vp.stats_file_path", "");
     bool output_json = etiss::cfg().isSet("vp.stats_file_path");
 
-    if(output_json==true)
+    if (output_json == true)
     {
         std::ofstream json_output(valid_json_output_path);
-        json_output << "{\"mips\": " << mips << ", \"Simulation_Time\": " << simulation_time << ", \"CPU_Time\": " << cpu_time << ", \"CPU_cycle\": " << cpu_cycle << "}" << std::endl;
+        json_output << "{\"mips\": " << mips << ", \"Simulation_Time\": " << simulation_time
+                    << ", \"CPU_Time\": " << cpu_time << ", \"CPU_cycle\": " << cpu_cycle << "}" << std::endl;
     }
 
-    #ifndef ETISS_USE_COREDSL_COVERAGE
-    if (etiss::cfg().isSet("vp.coredsl_coverage_path")) {
-        etiss::log(etiss::WARNING, "Coverage Analysis is disabled but vp.coredsl_coverage_path is set. To enable coverage analysis, build ETISS with -DETISS_USE_COREDSL_COVERAGE");
+#ifndef ETISS_USE_COREDSL_COVERAGE
+    if (etiss::cfg().isSet("vp.coredsl_coverage_path"))
+    {
+        etiss::log(etiss::WARNING, "Coverage Analysis is disabled but vp.coredsl_coverage_path is set. To enable "
+                                   "coverage analysis, build ETISS with -DETISS_USE_COREDSL_COVERAGE");
     }
-    #endif
+#endif
 
     std::string coverage_output_path = etiss::cfg().get<std::string>("vp.coredsl_coverage_path", "coverage.csv");
-    if (!coverage_map.empty()) {
+    if (!coverage_map.empty())
+    {
         std::ofstream coverage_output(coverage_output_path);
         coverage_output << arch_->getArchName() << std::endl;
         coverage_output << "ID;Count" << std::endl;
-        for (auto it : coverage_map) {
+        for (auto it : coverage_map)
+        {
             coverage_output << it.first << ";" << it.second << std::endl;
         }
     }
-
 
     etiss_uint64 max = 0;
     for (int i = 0; i < ETISS_MAX_RESOURCES; i++)
@@ -946,8 +924,8 @@ loopexit:
 
     if (listener)
     {
-        vcpu_->foreachField(
-            [listener](std::shared_ptr<etiss::VirtualStruct::Field> f) { f->removeListener(listener); });
+        vcpu_->foreachField([listener](std::shared_ptr<etiss::VirtualStruct::Field> f)
+                            { f->removeListener(listener); });
 
         delete listener;
     }

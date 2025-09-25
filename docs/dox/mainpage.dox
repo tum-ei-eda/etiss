@@ -145,4 +145,8 @@ ETISS version 0.1 doesn't provide a MMU with its example OR1K implementation.
 For further information please refer to the \ref mmu_concepts "MMU Concepts"
 page.
 
+\section Decoder
+
+See \ref decodealgo "Decode Algorithm" for more information on the decode algorithms used in ETISS.
+
  */
