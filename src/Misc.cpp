@@ -1,46 +1,9 @@
-/**
-
-        @copyright
-
-        <pre>
-
-        Copyright 2018 Infineon Technologies AG
-
-        This file is part of ETISS tool, see <https://github.com/tum-ei-eda/etiss>.
-
-        The initial version of this software has been created with the funding support by the German Federal
-        Ministry of Education and Research (BMBF) in the project EffektiV under grant 01IS13022.
-
-        Redistribution and use in source and binary forms, with or without modification, are permitted
-        provided that the following conditions are met:
-
-        1. Redistributions of source code must retain the above copyright notice, this list of conditions and
-        the following disclaimer.
-
-        2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions
-        and the following disclaimer in the documentation and/or other materials provided with the distribution.
-
-        3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse
-        or promote products derived from this software without specific prior written permission.
-
-        THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
-        WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
-        PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY
-        DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-        PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
-        HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-        NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-        POSSIBILITY OF SUCH DAMAGE.
-
-        </pre>
-
-        @author Marc Greim <marc.greim@mytum.de>, Chair of Electronic Design Automation, TUM
-
-        @date July 29, 2014
-
-        @version 0.1
-
-*/
+// Copyright (c) 2018 Infineon Technologies AG
+// SPDX-License-Identifier: BSD-3-Clause
+//
+// This file is part of ETISS. It is licensed under the BSD 3-Clause License; you may not use this file except in
+// compliance with the License. You should have received a copy of the license along with this project. If not, see the
+// LICENSE file.
 /**
  * @file
  *
@@ -116,17 +79,26 @@ std::list<std::string> etiss::split(
 }
 
 Verbosity etiss_verbosity = etiss::INFO; /// verbosity level variable
+bool etiss_log_to_stderr = false;        /// log to stderr instead of stdout
 
 Verbosity &etiss::verbosity()
 {
     return etiss_verbosity;
 }
 
+bool &etiss::log_to_stderr()
+{
+    return etiss_log_to_stderr;
+}
+
 void etiss::log(Verbosity level, std::string msg)
 {
     if (level <= etiss_verbosity)
     {
-        std::cout << "ETISS: " << etiss::toString(level) << ": " << msg << std::endl;
+        if (etiss_log_to_stderr)
+            std::cerr << "ETISS: " << etiss::toString(level) << ": " << msg << std::endl;
+        else
+            std::cout << "ETISS: " << etiss::toString(level) << ": " << msg << std::endl;
     }
     if (level == FATALERROR)
     {
@@ -385,7 +357,7 @@ bool etiss::Configuration::isSet(std::string key)
     return cfg_.find(key) != cfg_.end();
 }
 
-std::pair<std::string, std::string> etiss::Configuration::set_cmd_line_boost(const std::string& s)
+std::pair<std::string, std::string> etiss::Configuration::set_cmd_line_boost(const std::string &s)
 {
     namespace po = boost::program_options;
     etiss::Configuration sobj;
@@ -439,7 +411,6 @@ std::pair<std::string, std::string> etiss::Configuration::set_cmd_line_boost(con
     }
     return make_pair(std::string(), std::string());
 }
-
 
 std::list<std::string> etiss::Configuration::set(const std::list<std::string> &args)
 {
@@ -594,28 +565,32 @@ std::string etiss::jitFiles()
     return installDir() + "/include/jit";
 }
 
-std::vector<std::string> etiss::jitExtHeaders(){
+std::vector<std::string> etiss::jitExtHeaders()
+{
     std::vector<std::string> x;
     std::string range = cfg().get<std::string>("jit.external_headers", "");
     boost::split(x, range, boost::is_any_of(";, "));
     return (x);
 }
 
-std::vector<std::string> etiss::jitExtLibraries(){
+std::vector<std::string> etiss::jitExtLibraries()
+{
     std::vector<std::string> x;
     std::string range = cfg().get<std::string>("jit.external_libs", "");
     boost::split(x, range, boost::is_any_of(";, "));
     return (x);
 }
 
-std::vector<std::string> etiss::jitExtHeaderPaths(){
+std::vector<std::string> etiss::jitExtHeaderPaths()
+{
     std::vector<std::string> x;
     std::string range = cfg().get<std::string>("jit.external_header_paths", "");
     boost::split(x, range, boost::is_any_of(";, "));
     return (x);
 }
 
-std::vector<std::string> etiss::jitExtLibPaths(){
+std::vector<std::string> etiss::jitExtLibPaths()
+{
     std::vector<std::string> x;
     std::string range = cfg().get<std::string>("jit.external_lib_paths", "");
     boost::split(x, range, boost::is_any_of(";, "));
@@ -623,7 +598,6 @@ std::vector<std::string> etiss::jitExtLibPaths(){
 }
 
 // IMPORTANT: check if fpu configuration matches endianness
-#include "etiss/fpu/386-GCC.h"
 #if ETISS_USE_CONSTEXPR
 #ifdef LITTLEENDIAN
 static_assert(getEndianness() == etiss::_LITTLE_ENDIAN_,

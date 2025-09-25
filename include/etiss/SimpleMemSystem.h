@@ -1,46 +1,8 @@
-/**
-
-        @copyright
-
-        <pre>
-
-        Copyright 2018 Infineon Technologies AG
-
-        This file is part of ETISS tool, see <https://github.com/tum-ei-eda/etiss>.
-
-        The initial version of this software has been created with the funding support by the German Federal
-        Ministry of Education and Research (BMBF) in the project EffektiV under grant 01IS13022.
-
-        Redistribution and use in source and binary forms, with or without modification, are permitted
-        provided that the following conditions are met:
-
-        1. Redistributions of source code must retain the above copyright notice, this list of conditions and
-        the following disclaimer.
-
-        2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions
-        and the following disclaimer in the documentation and/or other materials provided with the distribution.
-
-        3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse
-        or promote products derived from this software without specific prior written permission.
-
-        THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
-        WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
-        PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY
-        DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-        PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
-        HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-        NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-        POSSIBILITY OF SUCH DAMAGE.
-
-        </pre>
-
-        @author Marc Greim <marc.greim@mytum.de>, Chair of Electronic Design Automation, TUM
-
-        @date July 28, 2014
-
-        @version 0.1
-
-*/
+// SPDX-License-Identifier: BSD-3-Clause
+//
+// This file is part of ETISS. It is licensed under the BSD 3-Clause License; you may not use this file except in
+// compliance with the License. You should have received a copy of the license along with this project. If not, see the
+// LICENSE file.
 /**
         @file
 
@@ -68,7 +30,8 @@ class MemSegment
     bool self_allocated_{ false };
 
   public:
-    enum access_t {
+    enum access_t
+    {
         UNSET = 0,
         READ = 1,
         WRITE = 2,
@@ -95,11 +58,13 @@ class MemSegment
     /// @param mode Access Mode (R/W/X)
     /// @param name Segment name
     /// @param mem Pre-allocated Memory (not overwritten with initString)
-    /// @param initString String for initialization with imple_mem_system.memseg_initelement_ value: hex_string with 0x... / string /random options
+    /// @param initString String for initialization with imple_mem_system.memseg_initelement_ value: hex_string with
+    /// 0x... / string /random options
     /// @param InitEleSet Should self allocated MemSegment be initialized?
     /// @param randomRoot If initString==Random use this value as generator root
     MemSegment(etiss::uint64 start_addr, etiss::uint64 size, access_t mode, const std::string name,
-               etiss::uint8 *mem = nullptr, std::string initString = "", bool InitEleSet = false, uint64_t randomRoot = 0);
+               etiss::uint8 *mem = nullptr, std::string initString = "", bool InitEleSet = false,
+               uint64_t randomRoot = 0);
 
     // Can be overwritten afterwards with load_elf
     void memInit(std::string initString, uint64_t randomRoot = 0);
@@ -145,7 +110,7 @@ class SimpleMemSystem : public System
     void load_elf();
     void load_segments(void);
     etiss::uint64 get_startaddr(void) { return (start_addr_); }
-    void add_memsegment(std::unique_ptr<MemSegment>& mseg, const void *raw_data, size_t file_size_bytes);
+    void add_memsegment(std::unique_ptr<MemSegment> &mseg, const void *raw_data, size_t file_size_bytes);
 
   protected:
     template <bool write>
@@ -154,13 +119,14 @@ class SimpleMemSystem : public System
   private:
     std::vector<std::unique_ptr<MemSegment>> msegs_{};
 
-
     etiss::uint64 start_addr_{ 0 };
 
-    struct find_fitting_mseg {
+    struct find_fitting_mseg
+    {
         find_fitting_mseg(uint64 addr, uint64 size) : addr(addr), size(size) {}
-        bool operator() (const std::unique_ptr<MemSegment> & mseg) { return mseg->payload_in_range(addr, size); }
-    private:
+        bool operator()(const std::unique_ptr<MemSegment> &mseg) { return mseg->payload_in_range(addr, size); }
+
+      private:
         uint64 addr, size;
     };
 

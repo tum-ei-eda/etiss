@@ -1,6 +1,7 @@
 # ETISS (Extendable Translating Instruction Set Simulator)
 
-[![Build Status](https://github.com/tum-ei-eda/etiss/workflows/CI/badge.svg)](https://github.com/tum-ei-eda/etiss/blob/master/.github/workflows/ci.yml)
+[![Build Status](https://github.com/tum-ei-eda/etiss/actions/workflows/ci.yml/badge.svg)](https://github.com/tum-ei-eda/etiss/actions/workflows/ci.yml)
+[![Documentation - GitHub Pages](https://github.com/tum-ei-eda/etiss/actions/workflows/docs.yml/badge.svg)](https://github.com/tum-ei-eda/etiss/actions/workflows/docs.yml)
 
 ETISS is a C++ ISS (Instruction Set Simulator), which is designed to simulate instructions for a target core on a host computer. It translates binary instructions into C code and appends translated code into a block, which will be compiled and executed at runtime. As aforementioned, it is Extendable, thus it supports myriad level of customization by adopting the technique of plug-ins. ETISS supports varied **Instruction Set Architectures (ISAs)** according to user needs (see architecture models in `ArchImpl/`). Meanwhile, the simulator could be enhanced with customized plug-ins to set up many applications (see application examples in `examples/`).
 

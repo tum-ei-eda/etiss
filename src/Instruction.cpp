@@ -1,46 +1,8 @@
-/**
-
-        @copyright
-
-        <pre>
-
-        Copyright 2018 Infineon Technologies AG
-
-        This file is part of ETISS tool, see <https://github.com/tum-ei-eda/etiss>.
-
-        The initial version of this software has been created with the funding support by the German Federal
-        Ministry of Education and Research (BMBF) in the project EffektiV under grant 01IS13022.
-
-        Redistribution and use in source and binary forms, with or without modification, are permitted
-        provided that the following conditions are met:
-
-        1. Redistributions of source code must retain the above copyright notice, this list of conditions and
-        the following disclaimer.
-
-        2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions
-        and the following disclaimer in the documentation and/or other materials provided with the distribution.
-
-        3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse
-        or promote products derived from this software without specific prior written permission.
-
-        THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
-        WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
-        PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY
-        DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-        PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
-        HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-        NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-        POSSIBILITY OF SUCH DAMAGE.
-
-        </pre>
-
-        @author Marc Greim <marc.greim@mytum.de>, Chair of Electronic Design Automation, TUM
-
-        @date November 17, 2014
-
-        @version 0.4
-
-*/
+// SPDX-License-Identifier: BSD-3-Clause
+//
+// This file is part of ETISS. It is licensed under the BSD 3-Clause License; you may not use this file except in
+// compliance with the License. You should have received a copy of the license along with this project. If not, see the
+// LICENSE file.
 /**
         @file
 
@@ -66,7 +28,7 @@ namespace instr
 
 typedef BitArray::size_type size_type;
 
-char* Buffer::internalBuffer()
+char *Buffer::internalBuffer()
 {
     return static_cast<char *>(static_cast<void *>(d_));
 }
@@ -131,41 +93,49 @@ void Buffer::recoverFromEndianness(unsigned alignment, endian_t endianness)
 #endif
 }
 
-unsigned BitArray::byteCount() const {
+unsigned BitArray::byteCount() const
+{
     unsigned mod = size() % (8);
     unsigned ret = (size() - mod) / (8);
-    if (mod > 0) ret++;
+    if (mod > 0)
+        ret++;
     return ret;
 }
-unsigned BitArray::intCount() const {
+unsigned BitArray::intCount() const
+{
     unsigned mod = size() % (sizeof(I) * 8);
     unsigned ret = (size() - mod) / (sizeof(I) * 8);
-    if (mod > 0) ret++;
+    if (mod > 0)
+        ret++;
     return ret;
 }
 
-std::vector<BitArray> BitArray::permutate(const BitArray& input, std::vector<size_type> indexes)
+std::vector<BitArray> BitArray::permutate(const BitArray &input, std::vector<size_type> indexes)
 {
-    std::vector<BitArray> results{input};
+    std::vector<BitArray> results{ input };
     int count = 0;
-    for(const auto& i : indexes){
-        for(int j=0; j<(1<<count); j++){
+    for (const auto &i : indexes)
+    {
+        for (int j = 0; j < (1 << count); j++)
+        {
             results.push_back(results[j]);
             results[j].flip(i);
             results.push_back(results[j]);
         }
-        results.erase(results.begin(), results.begin() + (1<<count));
+        results.erase(results.begin(), results.begin() + (1 << count));
         count++;
     }
     return results;
 }
 
-void BitArray::set_value(size_type width, unsigned long value){
+void BitArray::set_value(size_type width, unsigned long value)
+{
     BitArray b(width, value);
     *this = b;
 }
 
-void BitArray::set_value(unsigned long value){
+void BitArray::set_value(unsigned long value)
+{
     set_value(size(), value);
 }
 
@@ -174,15 +144,16 @@ BitArray BitArray::get_range(size_type end, size_type start) const
     // shift the bits and resize it accordingly
     BitArray ret = *this;
     ret >>= start;
-    ret.resize(end-start+1);
+    ret.resize(end - start + 1);
     return ret;
 }
 
-void BitArray::set_range(unsigned long val, size_type end, size_type start){
+void BitArray::set_range(unsigned long val, size_type end, size_type start)
+{
     auto len = end - start + 1;
     BitArray range(len, val);
-    for(size_type i = 0; i < len; ++i)
-        (*this)[i+start] = range[i];
+    for (size_type i = 0; i < len; ++i)
+        (*this)[i + start] = range[i];
 }
 
 std::string BitArray::to_string() const
@@ -193,9 +164,11 @@ std::string BitArray::to_string() const
 }
 
 BitArrayRange::BitArrayRange(unsigned endindex_included, unsigned startindex_included)
-    : startpos(startindex_included), endpos(endindex_included) {}
+    : startpos(startindex_included), endpos(endindex_included)
+{
+}
 
-I BitArrayRange::read(const BitArray& ba)
+I BitArrayRange::read(const BitArray &ba)
 {
     assert(ba.size() >= (endpos - startpos + 1) && "BitArrayRange outside of BitArray");
     auto range = ba.get_range(endpos, startpos);
@@ -351,7 +324,6 @@ void Instruction::setASMPrinter(std::function<std::string(BitArray &, Instructio
 InstructionSet::InstructionSet(VariableInstructionSet &parent, unsigned width, const std::string &name, unsigned c_size)
     : parent_(parent), name_(name), width_(width), chunk_size(c_size), root_(nullptr), invalid(width, -1, -1, "INVALID")
 {
-
 }
 
 InstructionSet::~InstructionSet()
@@ -365,7 +337,7 @@ InstructionSet::~InstructionSet()
         iter = instrmap_.begin();
         delete i;
     }
-    for(unsigned int i = 0; i < width_ / chunk_size; i++)
+    for (unsigned int i = 0; i < width_ / chunk_size; i++)
         delete[] root_[i];
     delete root_;
 }
@@ -414,34 +386,38 @@ bool InstructionSet::compile()
 {
     delete root_; // cleanup
 
-    root_ = new Node*[width_ / chunk_size](); // number of groups = width_ / chunk_size
+    root_ = new Node *[width_ / chunk_size](); // number of groups = width_ / chunk_size
 
     bool ok = true;
 
     std::vector<size_type> indexes;
-    for (const auto& op2instr : instrmap_){ // iterate through all instructions
-        Instruction* inst = op2instr.second; // current instruction to be assigned
+    for (const auto &op2instr : instrmap_)
+    {                                          // iterate through all instructions
+        Instruction *inst = op2instr.second;   // current instruction to be assigned
         BitArray code = op2instr.first->code_; // opcode of the current instruction
         BitArray mask = op2instr.first->mask_; // mask of the opcode
 
         // iterate through chunks and permutate chunks. then put them into nodes
-        for (size_type i = 0; i < mask.size() / chunk_size; ++i){
-            auto chunk_bits_code = code.get_range((i+1)*chunk_size-1, i*chunk_size); // ith chunk of the opcode
-            auto chunk_bits_mask = mask.get_range((i+1)*chunk_size-1, i*chunk_size); // ith chunk of the mask
+        for (size_type i = 0; i < mask.size() / chunk_size; ++i)
+        {
+            auto chunk_bits_code = code.get_range((i + 1) * chunk_size - 1, i * chunk_size); // ith chunk of the opcode
+            auto chunk_bits_mask = mask.get_range((i + 1) * chunk_size - 1, i * chunk_size); // ith chunk of the mask
 
             indexes.clear();
             for (size_type j = 0; j < chunk_bits_mask.size(); ++j)
-                if (!chunk_bits_mask[j]) indexes.push_back(j); // these indexed should be permutated since
-                                                               // they dont have associated mask bit
+                if (!chunk_bits_mask[j])
+                    indexes.push_back(j); // these indexed should be permutated since
+                                          // they dont have associated mask bit
 
-            if(!(root_[i])) // not initialized
+            if (!(root_[i]))                                       // not initialized
                 root_[i] = new Node[(int)std::pow(2, chunk_size)]; // each group has 2^(chunksize) nodes
 
             auto permutated_chunk_codes = BitArray::permutate(chunk_bits_code, indexes); // put permutated codes
 
-            for(const auto& permutated_chunk : permutated_chunk_codes){
+            for (const auto &permutated_chunk : permutated_chunk_codes)
+            {
                 auto val = permutated_chunk.to_ulong(); // index of the node based on the value of the chunk
-                root_[i][val].insert(inst); // assign the current instruction to the associated node
+                root_[i][val].insert(inst);             // assign the current instruction to the associated node
             }
         }
     }
@@ -450,33 +426,41 @@ bool InstructionSet::compile()
 
 Instruction *InstructionSet::resolve(BitArray &instr)
 {
-    std::set<Instruction*> results;
-    for (size_type i = 0; i < instr.size() / chunk_size; ++i){ // divide the incoming bitarray into chunks
-        auto chunk_bits_code = instr.get_range((i+1)*chunk_size-1, i*chunk_size); // get ith chunk
+    std::set<Instruction *> results;
+    for (size_type i = 0; i < instr.size() / chunk_size; ++i)
+    { // divide the incoming bitarray into chunks
+        auto chunk_bits_code = instr.get_range((i + 1) * chunk_size - 1, i * chunk_size); // get ith chunk
 
         auto val = chunk_bits_code.to_ulong(); // the value chunk is evaluated to,
                                                // which is also the index of the associated node
-        auto instrs_in_node = root_[i][val]; // val'th node
+        auto instrs_in_node = root_[i][val];   // val'th node
 
-        if(i==0) results = instrs_in_node;
-        else{ // intersect all the associated nodes, the result will be the decoded instruction
-            std::set<Instruction*> results_o;
-            std::set_intersection(results.begin(), results.end(), // intersect the ith node with the
-                instrs_in_node.begin(), instrs_in_node.end(),     // current results
-                std::inserter(results_o, results_o.begin()));     // put overlapped instructions to results_o
-            results = results_o; // write the overlapped instructions to results
+        if (i == 0)
+            results = instrs_in_node;
+        else
+        { // intersect all the associated nodes, the result will be the decoded instruction
+            std::set<Instruction *> results_o;
+            std::set_intersection(
+                results.begin(), results.end(),               // intersect the ith node with the
+                instrs_in_node.begin(), instrs_in_node.end(), // current results
+                std::inserter(results_o, results_o.begin())); // put overlapped instructions to results_o
+            results = results_o;                              // write the overlapped instructions to results
         }
     }
 
-    if(results.empty()) return nullptr; // there is no overlapped instruction after the decoding
-    else if(results.size() == 1) return *(results.begin()); // instruction is found succesfully
-    else{
+    if (results.empty())
+        return nullptr; // there is no overlapped instruction after the decoding
+    else if (results.size() == 1)
+        return *(results.begin()); // instruction is found succesfully
+    else
+    {
         // sometimes an instruction can be a subset of another instruction and hence the
         // algorithm can find multiple instruction. In such cases, it is returning the parent
         // instruction by simply returning the instrucion whose opcode is the longest,
         // i.e mask has the most 1-bits.
-        auto longest = std::max_element(results.begin(), results.end(),
-            [](const Instruction* lhs, const Instruction* rhs) { return lhs->opc_.mask_.count() < rhs->opc_.mask_.count();});
+        auto longest =
+            std::max_element(results.begin(), results.end(), [](const Instruction *lhs, const Instruction *rhs)
+                             { return lhs->opc_.mask_.count() < rhs->opc_.mask_.count(); });
         return *longest;
     }
 }
@@ -527,7 +511,8 @@ size_t InstructionSet::size()
 VariableInstructionSet::VariableInstructionSet(ModedInstructionSet &parent, unsigned width, const std::string &archname)
     : parent_(parent), width_(width), archname_(archname)
 {
-    length_updater_ = [this](VariableInstructionSet &, InstructionContext &con, BitArray &) {
+    length_updater_ = [this](VariableInstructionSet &, InstructionContext &con, BitArray &)
+    {
         con.is_not_default_width_ = false;
         con.instr_width_ = width_;
     };
@@ -698,42 +683,50 @@ std::string ModedInstructionSet::print(std::string prefix)
 {
     std::stringstream ss;
     ss << prefix << archname_ << ":\n";
-    foreach ([&ss, &prefix](VariableInstructionSet &vis) {
-        ss << prefix << "MODE " << vis.parent_.getMode(vis) << ": ";
-        ss << vis.print(prefix + "\t");
-    })
+    foreach (
+        [&ss, &prefix](VariableInstructionSet &vis)
+        {
+            ss << prefix << "MODE " << vis.parent_.getMode(vis) << ": ";
+            ss << vis.print(prefix + "\t");
+        })
         ;
     return ss.str();
 }
 
 void InstructionCollection::addTo(ModedInstructionSet &set, bool &ok)
 {
-    foreach ([&set, &ok](InstructionClass &klass) {
-        VariableInstructionSet &vis = set.open(klass.mode_, klass.width_, klass.name_);
-        klass.addTo(vis, ok);
-    })
+    foreach (
+        [&set, &ok](InstructionClass &klass)
+        {
+            VariableInstructionSet &vis = set.open(klass.mode_, klass.width_, klass.name_);
+            klass.addTo(vis, ok);
+        })
         ;
 }
 void InstructionClass::addTo(VariableInstructionSet &set, bool &ok)
 {
-    foreach ([&set, &ok](InstructionGroup &group) {
-        InstructionSet &is = set.open(group.width_, group.name_);
-        group.addTo(is, ok);
-    })
+    foreach (
+        [&set, &ok](InstructionGroup &group)
+        {
+            InstructionSet &is = set.open(group.width_, group.name_);
+            group.addTo(is, ok);
+        })
         ;
 }
 void InstructionGroup::addTo(InstructionSet &set, bool &ok)
 {
-    foreach ([&set, &ok](InstructionDefinition &id) {
-        Instruction *instr = set.create(id.opc_, id.name_);
-        if (instr == nullptr)
+    foreach (
+        [&set, &ok](InstructionDefinition &id)
         {
-            ok = false;
-            etiss::log(ERROR, "failed to add InstructionDefinition to Instruction set.", id, set);
-            return;
-        }
-        id.addTo(*instr, ok);
-    })
+            Instruction *instr = set.create(id.opc_, id.name_);
+            if (instr == nullptr)
+            {
+                ok = false;
+                etiss::log(ERROR, "failed to add InstructionDefinition to Instruction set.", id, set);
+                return;
+            }
+            id.addTo(*instr, ok);
+        })
         ;
 }
 void InstructionDefinition::addTo(Instruction &instr, bool &ok)
