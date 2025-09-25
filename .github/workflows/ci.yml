@@ -1,6 +1,13 @@
 name: Build ETISS and run smoke tests
 
-on: [push, pull_request, workflow_dispatch]
+on:
+  push:
+    paths-ignore:
+    - docs/
+  pull_request:
+    paths-ignore:
+    - docs/
+  workflow_dispatch: {}
 
 env:
   BUILD_TYPE: Release
