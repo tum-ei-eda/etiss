@@ -735,6 +735,7 @@ void etiss_initialize(const std::vector<std::string>& args, bool forced = false)
             po::options_description desc("Allowed options");
             desc.add_options()
             ("help", "Produce a help message that lists all supported options.")
+            ("i,ini", po::value<std::vector<std::string>>(), "INI file")
             ("arch.cpu", po::value<std::string>(), "The CPU Architecture to simulate.")
             ("arch.or1k.ignore_sr_iee", po::value<bool>(), "Ignore exception on OpenRISC.")
             ("arch.or1k.if_stall_cycles", po::value<int>(), "Add instruction stall cycles on OpenRISC.")
@@ -783,6 +784,15 @@ void etiss_initialize(const std::vector<std::string>& args, bool forced = false)
                 std::cout << "\nPlease begin all options with --\n\n";
                 std::cout << desc << "\n";
                 etiss::log(etiss::FATALERROR, std::string("Please choose the right configurations from the list and re-run.\n"));
+            }
+
+            if (vm.count("i"))
+            {
+                auto files = vm["i"].as<std::vector<std::string>>();
+                for (auto const& f : files)
+                {
+                    etiss_loadIni(f);
+                }
             }
 
             auto unregistered = po::collect_unrecognized(parsed_options.options, po::include_positional);
