@@ -18,7 +18,7 @@ extern "C"
 
     ETISS_PLUGIN_EXPORT const char *TCCJIT_versionInfo()
     {
-        return "0.9.27";
+        return "0.9.28rc";
     }
 
     ETISS_LIBRARYIF_VERSION_FUNC_IMPL
