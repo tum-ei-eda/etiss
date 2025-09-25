@@ -674,17 +674,6 @@ void etiss::Initializer::loadIniJIT(std::shared_ptr<etiss::CPUCore> cpu)
     cpu->set(getJIT(cfg().get<std::string>("jit.type", "")));
 }
 
-std::pair<std::string, std::string> inifileload(const std::string &s)
-{
-    if (s.find("-i") == 0)
-    {
-        std::string inifile;
-        inifile = s.substr(2);
-        etiss_loadIni(inifile);
-    }
-    return make_pair(std::string(), std::string());
-}
-
 void etiss_initialize(const std::vector<std::string> &args, bool forced = false)
 {
     static std::mutex mu_;
@@ -722,6 +711,7 @@ void etiss_initialize(const std::vector<std::string> &args, bool forced = false)
             po::options_description desc("Allowed options");
             desc.add_options()
             ("help", "Produce a help message that lists all supported options.")
+            ("ini,i", po::value<std::vector<std::string>>(), "INI file(s)")
             ("arch.cpu", po::value<std::string>(), "The CPU Architecture to simulate.")
             ("arch.or1k.ignore_sr_iee", po::value<bool>(), "Ignore exception on OpenRISC.")
             ("arch.or1k.if_stall_cycles", po::value<int>(), "Add instruction stall cycles on OpenRISC.")
@@ -761,7 +751,6 @@ void etiss_initialize(const std::vector<std::string> &args, bool forced = false)
 
             po::command_line_parser parser{ args };
             po::command_line_parser iniparser{ args };
-            iniparser.options(desc).allow_unregistered().extra_parser(inifileload).run();
             parser.options(desc).allow_unregistered().extra_parser(etiss::Configuration::set_cmd_line_boost);
             po::parsed_options parsed_options = parser.run();
             po::store(parsed_options, vm);
@@ -772,6 +761,15 @@ void etiss_initialize(const std::vector<std::string> &args, bool forced = false)
                 std::cout << desc << "\n";
                 etiss::log(etiss::FATALERROR,
                            std::string("Please choose the right configurations from the list and re-run.\n"));
+            }
+
+            if (vm.count("ini"))
+            {
+                auto files = vm["ini"].as<std::vector<std::string>>();
+                for (auto const& f : files)
+                {
+                    etiss_loadIni(f);
+                }
             }
 
             auto unregistered = po::collect_unrecognized(parsed_options.options, po::include_positional);
