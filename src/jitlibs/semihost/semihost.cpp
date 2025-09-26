@@ -456,29 +456,12 @@ etiss_int64 semihostingCall(ETISS_CPU *const cpu, ETISS_System *const etissSyste
     case SYS_EXIT:
     {
         etiss::log(etiss::VERBOSE, "Semihosting: SYS_EXIT -> exit simulator");
+        // TODO: check if 64-bit system and read exit code!
 
         cpu->exception = ETISS_RETURNCODE_CPUFINISHED;
         cpu->return_pending = 1;
         return 0;
     }
-    case SYS_ELAPSED:
-    {
-        return cpu->cpuTime_ps / TICKER_FREQ;
-    }
-    case SYS_TICKFREQ:
-    {
-        return TICKER_FREQ;
-    }
-    case SYS_SYSTEM:
-    case SYS_GET_CMDLINE:
-    case SYS_HEAPINFO:
-    {
-        std::stringstream ss;
-        ss << "Semihosting: operation not implemented: " << operationNumber;
-        etiss::log(etiss::WARNING, ss.str());
-        return 0;
-    }
-
     case SYS_EXIT_EXTENDED:
     {
 
@@ -503,6 +486,23 @@ etiss_int64 semihostingCall(ETISS_CPU *const cpu, ETISS_System *const etissSyste
             // The other possibilities are events that are mostly exceptions/error conditions
             cpu->exit_status = 1;
         }
+        return 0;
+    }
+    case SYS_ELAPSED:
+    {
+        return cpu->cpuTime_ps / TICKER_FREQ;
+    }
+    case SYS_TICKFREQ:
+    {
+        return TICKER_FREQ;
+    }
+    case SYS_SYSTEM:
+    case SYS_GET_CMDLINE:
+    case SYS_HEAPINFO:
+    {
+        std::stringstream ss;
+        ss << "Semihosting: operation not implemented: " << operationNumber;
+        etiss::log(etiss::WARNING, ss.str());
         return 0;
     }
     default:
