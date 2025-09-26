@@ -295,12 +295,13 @@ static bool verifyJITSizeOf(std::string structname, etiss::int32 expected_size, 
         return false;
     // generate code
     std::string error;
-    std::string code = std::string(prefix + "\n#include \"etiss/jit/CPU.h\"\n#include "
-                                            "\"etiss/jit/System.h\"\n#include \"etiss/jit/ReturnCode.h\"\n "
-                                            "#include \"etiss/jit/types.h\"\n#include "
-                                            "\"etiss/jit/fpu/softfloat.h\"\n etiss_int32 get_size(){ return "
-                                            "sizeof(") +
-                       structname + ");}";
+    std::string code = std::string(prefix + R"V0G0N(
+#include "etiss/jit/CPU.h"
+#include "etiss/jit/System.h"
+#include "etiss/jit/ReturnCode.h"
+#include "etiss/jit/types.h"
+etiss_int32 get_size() { return sizeof()V0G0N" +
+                                   structname + "); };");
 
     std::set<std::string> headers;
     headers.insert(etiss::jitFiles());
