@@ -680,8 +680,8 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
     etiss::int32 exception = RETURNCODE::NOERROR;
 
     // sync time at the beginning (e.g. SystemC processes running at time 0)
-exception = system->syncTime(system->handle, cpu_);
-if (unlikely(exception != RETURNCODE::NOERROR))
+    exception = system->syncTime(system->handle, cpu_);
+    if (unlikely(exception != RETURNCODE::NOERROR))
     {
         goto loopexit; // terminate cpu
     }
@@ -808,8 +808,8 @@ if (unlikely(exception != RETURNCODE::NOERROR))
             }
 
             // sync time after block
-exception = system->syncTime(system->handle, cpu_);
-if (unlikely(exception != RETURNCODE::NOERROR))
+            exception = system->syncTime(system->handle, cpu_);
+            if (unlikely(exception != RETURNCODE::NOERROR))
             {
                 goto loopexit; // terminate cpu
             }
