@@ -125,11 +125,11 @@ static etiss_int32 dbg_write(void *handle, etiss_uint64 addr, etiss_uint8 *buffe
     return sys->dbg_write(sys->handle, pma, buffer, length);
 }
 
-static void syncTime(void *handle, ETISS_CPU *cpu)
+static etiss_int32 syncTime(void *handle, ETISS_CPU *cpu)
 {
     DMMUWrapperSystem *msys = ((DMMUWrapperSystem *)handle);
     ETISS_System *sys = msys->orig;
-    sys->syncTime(sys->handle, cpu);
+    return sys->syncTime(sys->handle, cpu);
 }
 
 DMMUWrapper::DMMUWrapper(std::shared_ptr<MMU> mmu) : mmu_(mmu) {}
