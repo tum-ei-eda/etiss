@@ -209,10 +209,29 @@ etiss_int64 semihostingCall(ETISS_CPU *const cpu, ETISS_System *const etissSyste
             if (file == stdin)
             {
                 // when reading from stdin: mimic behaviour from read syscall
-                // and return on newline.
+                // and return on newline or EOF.
                 while (num_read < count)
                 {
                     char c = fgetc(file);
+                    if (c == EOF)
+                    {
+                        if (feof(file))
+                        {
+                            // EOF reached - stop reading, do not append a 0xFF
+                            break;
+                        }
+                        else if (ferror(file))
+                        {
+                            // stream error - set errno and return -1
+                            semihostingErrno = errno;
+                            return -1;
+                        }
+                        else
+                        {
+                            // unexpected, break to be safe
+                            break;
+                        }
+                    }
                     buffer[num_read] = c;
                     num_read++;
                     if (c == '\n')
