@@ -1,34 +1,12 @@
-####################################################################################################
-# Copyright 2023 Chair of EDA, Technical University of Munich
+# SPDX-License-Identifier: BSD-3-Clause
 #
-# Licensed under the Apache License, Version 2.0 (the License);
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#   http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an AS IS BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-####################################################################################################
+# This file is part of ETISS. It is licensed under the BSD 3-Clause License; you may not use this file except in
+# compliance with the License. You should have received a copy of the license along with this project. If not, see the
+# LICENSE file.
 
 cmake_minimum_required(VERSION 3.15 FATAL_ERROR)
-include(FetchContent)
 
-FetchContent_Declare(softfloat_srcs
-    GIT_REPOSITORY https://github.com/ucb-bar/berkeley-softfloat-3.git
-    GIT_TAG 5c06db33fc1e2130f67c045327b0ec949032df1d
-)
-if(NOT softfloat_srcs_POPULATED)
-    FetchContent_Populate(softfloat_srcs)
-    file(COPY ${softfloat_srcs_SOURCE_DIR}/source/include/softfloat.h DESTINATION ${softfloat_srcs_SOURCE_DIR})
-    file(RENAME ${softfloat_srcs_SOURCE_DIR}/softfloat.h ${softfloat_srcs_SOURCE_DIR}/softfloat_orig.h )
-    FetchContent_GetProperties(softfloat_srcs)
-endif()
-
-set(EXTERNAL_INSTALL_LOCATION ${softfloat_srcs_SOURCE_DIR})
+set(EXTERNAL_INSTALL_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/berkeley-softfloat)
 
 CMAKE_HOST_SYSTEM_INFORMATION(RESULT HOSTINFO QUERY
     OS_PLATFORM    #0

@@ -2,3 +2,21 @@
 	path = PluginImpl/verilator
 	url = git@gitlab.lrz.de:de-tum-ei-eda-esl/etiss-plugin-verilator.git
     branch = master
+[submodule "third_party/betterenums"]
+	path = third_party/betterenums
+	url = https://github.com/aantron/better-enums.git
+[submodule "third_party/tcc"]
+	path = third_party/tcc
+	url = https://github.com/TinyCC/tinycc.git
+[submodule "third_party/pugixml"]
+	path = third_party/pugixml
+	url = https://github.com/zeux/pugixml.git
+[submodule "third_party/softfloat/berkeley-softfloat"]
+	path = third_party/softfloat/berkeley-softfloat
+	url = https://github.com/ucb-bar/berkeley-softfloat-3.git
+[submodule "third_party/simpleini"]
+	path = third_party/simpleini
+	url = https://github.com/brofield/simpleini.git
+[submodule "third_party/elfio"]
+	path = third_party/elfio
+	url = https://github.com/serge1/ELFIO.git
