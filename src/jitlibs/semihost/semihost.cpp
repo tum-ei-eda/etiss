@@ -190,7 +190,33 @@ etiss_int64 semihostingCall(ETISS_CPU *const cpu, ETISS_System *const etissSyste
 
             std::vector<etiss_uint8> buffer = semihostReadSystemMemory(etissSystem, address, count);
 
-            size_t num_written = fwrite(buffer.data(), 1, count, file);
+            size_t num_written = 0;
+            if (file == stdout || file == stderr)
+            {
+                // use unbuffered io
+                size_t total_written = 0;
+                while (total_written < count)
+                {
+                    ssize_t ret = write(fd, buffer.data() + total_written, count - total_written);
+                    if (ret < 0)
+                    {
+                        semihostingErrno = errno;
+                        return -1;
+                    }
+                    total_written += (size_t)ret;
+                }
+                num_written = total_written;
+            }
+            else
+            {
+                // use line-buffered io
+                num_written = fwrite(buffer.data(), 1, count, file);
+                if (num_written < count)
+                {
+                    semihostingErrno = ferror(file) ? errno : 0;
+                    return -1;
+                }
+            }
             return count - num_written;
         }
         case SYS_READ:
