@@ -190,7 +190,33 @@ etiss_int64 semihostingCall(ETISS_CPU *const cpu, ETISS_System *const etissSyste
 
             std::vector<etiss_uint8> buffer = semihostReadSystemMemory(etissSystem, address, count);
 
-            size_t num_written = fwrite(buffer.data(), 1, count, file);
+            size_t num_written = 0;
+            if (file == stdout || file == stderr)
+            {
+                // use unbuffered io
+                size_t total_written = 0;
+                while (total_written < count)
+                {
+                    ssize_t ret = write(fd, buffer.data() + total_written, count - total_written);
+                    if (ret < 0)
+                    {
+                        semihostingErrno = errno;
+                        return -1;
+                    }
+                    total_written += (size_t)ret;
+                }
+                num_written = total_written;
+            }
+            else
+            {
+                // use line-buffered io
+                num_written = fwrite(buffer.data(), 1, count, file);
+                if (num_written < count)
+                {
+                    semihostingErrno = ferror(file) ? errno : 0;
+                    return -1;
+                }
+            }
             return count - num_written;
         }
         case SYS_READ:
@@ -209,10 +235,29 @@ etiss_int64 semihostingCall(ETISS_CPU *const cpu, ETISS_System *const etissSyste
             if (file == stdin)
             {
                 // when reading from stdin: mimic behaviour from read syscall
-                // and return on newline.
+                // and return on newline or EOF.
                 while (num_read < count)
                 {
                     char c = fgetc(file);
+                    if (c == EOF)
+                    {
+                        if (feof(file))
+                        {
+                            // EOF reached - stop reading, do not append a 0xFF
+                            break;
+                        }
+                        else if (ferror(file))
+                        {
+                            // stream error - set errno and return -1
+                            semihostingErrno = errno;
+                            return -1;
+                        }
+                        else
+                        {
+                            // unexpected, break to be safe
+                            break;
+                        }
+                    }
                     buffer[num_read] = c;
                     num_read++;
                     if (c == '\n')
@@ -411,9 +456,36 @@ etiss_int64 semihostingCall(ETISS_CPU *const cpu, ETISS_System *const etissSyste
     case SYS_EXIT:
     {
         etiss::log(etiss::VERBOSE, "Semihosting: SYS_EXIT -> exit simulator");
+        // TODO: check if 64-bit system and read exit code!
 
         cpu->exception = ETISS_RETURNCODE_CPUFINISHED;
         cpu->return_pending = 1;
+        return 0;
+    }
+    case SYS_EXIT_EXTENDED:
+    {
+
+        // See https://developer.arm.com/documentation/dui0053/d/  - ARM pub ADP (Angel Debug Protocol) codes
+        // and https://developer.arm.com/documentation/100863/latest - ARM pub Semihosting for AArch32 and AArch64
+        etiss_uint64 exception_type = FIELD(0);
+        etiss_uint64 subcode = FIELD(1);
+        std::stringstream ss;
+        ss << "Semihosting: SYS_EXIT_EXTENDED -> exit simulator exception " << std::hex << exception_type << std::dec
+           << " exit status subcode " << static_cast<uint32_t>(subcode);
+        etiss::log(etiss::VERBOSE, ss.str());
+        cpu->exception = ETISS_RETURNCODE_CPUFINISHED;
+        cpu->return_pending = 1;
+        constexpr etiss_uint64 ADP_Stopped_ApplicationExit = 0x20026; // ADP code for programmed application exit
+        if (exception_type == ADP_Stopped_ApplicationExit)
+        {
+            // subcode gives exit status
+            cpu->exit_status = static_cast<uint32_t>(subcode);
+        }
+        else
+        {
+            // The other possibilities are events that are mostly exceptions/error conditions
+            cpu->exit_status = 1;
+        }
         return 0;
     }
     case SYS_ELAPSED:
@@ -427,7 +499,6 @@ etiss_int64 semihostingCall(ETISS_CPU *const cpu, ETISS_System *const etissSyste
     case SYS_SYSTEM:
     case SYS_GET_CMDLINE:
     case SYS_HEAPINFO:
-    case SYS_EXIT_EXTENDED:
     {
         std::stringstream ss;
         ss << "Semihosting: operation not implemented: " << operationNumber;
