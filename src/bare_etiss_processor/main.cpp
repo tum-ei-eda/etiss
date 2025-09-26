@@ -153,8 +153,23 @@ int main(int argc, const char *argv[])
     switch (exception)
     {
     case etiss::RETURNCODE::CPUFINISHED:
-        return cpu->getState()->exit_status;
+    {
+        etiss_uint8 exit_status = cpu->getState()->exit_status & 0xff;  // UNIX exit codes are 0..255
+        if (etiss::cfg().get<bool>("vp.print_exit_status", true))
+        {
+            std::cout << "CPU0 exit status: " << (etiss_uint32)exit_status << std::endl;
+        }
+        if (etiss::cfg().get<bool>("vp.check_exit_status", true))
+        {
+            if (etiss::cfg().get<bool>("vp.forward_exit_status", false))
+            {
+                return exit_status;
+            }
+            return exit_status != 0 ? 4 : 0;
+        }
+        return 0;
         break;
+    }
     case etiss::RETURNCODE::NOERROR:
     case etiss::RETURNCODE::CPUTERMINATED:
         return 0;
