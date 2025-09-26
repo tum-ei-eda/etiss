@@ -296,11 +296,6 @@ static bool verifyJITSizeOf(std::string structname, etiss::int32 expected_size, 
     // generate code
     std::string error;
     std::string code = std::string(prefix + R"V0G0N(
-#include "etiss/jit/Coverage.h"
-#include "etiss/jit/libCSRCounters.h"
-#include "etiss/jit/libresources.h"
-#include "etiss/jit/libsemihost.h"
-#include "etiss/jit/libsoftfloat.h"
 #include "etiss/jit/CPU.h"
 #include "etiss/jit/System.h"
 #include "etiss/jit/ReturnCode.h"
