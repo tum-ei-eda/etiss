@@ -150,6 +150,13 @@ int main(int argc, const char *argv[])
         std::cout << "CPU0 exited with exception: 0x" << std::hex << exception << std::dec << ": "
                   << etiss::RETURNCODE::getErrorMessages()[exception] << std::endl;
 
+    // Exit codes:
+    //  0: Success
+    //  1: System error?
+    //  2: JIT error
+    //  3: Other?
+    //  4: CPU reports non-zero SW exit
+    // -1: Unhandeled ETISS exception
     switch (exception)
     {
     case etiss::RETURNCODE::CPUFINISHED:
