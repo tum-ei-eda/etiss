@@ -20,9 +20,16 @@ from elftools.elf.sections import SymbolTableSection
 Script to gather metrics on ROM,RAM,Stack and Heap usage.
 
 To produce the memory trace:
-- Compile etissvp_lib with SC_MEM_WRITE_TRACE defined (simple: uncomment at top of mem.cpp)
-- Invoke the run.sh script with the "nodmi" option
-- A file "pulpino_soc.dmem_memtrace.csv" should have been created
+- Enable tracing:
+  - Via INI file:
+  ```ini
+  [BoolConfigurations]
+    simple_mem_system.print_dbus_access=true
+    simple_mem_system.print_to_file=true
+  ```
+  - Via run_helper.sh script: `run_helper.sh ... trace`
+  - Via command line: `bare_etiss_processor ... --simple_mem_system.print_dbus_access=true --simple_mem_system.print_to_file=true`
+- A file "dBusAccess.csv" should have been created
 
 Then run this script:
 > ./get_metrics.py ../bin/TARGET_ELF_FILE [-i memsegs.ini]
