@@ -117,9 +117,13 @@ int main(int argc, const char *argv[])
     if (!quiet)
         std::cout << "=== Setting up plug-ins ===" << std::endl;
 
-    auto irq_handler = std::make_shared<etiss::InterruptHandler>(cpu->getInterruptVector(), cpu->getInterruptEnable(),
-                                                                 cpu->getArch(), etiss::LEVEL_TRIGGERED, false);
-    cpu->addPlugin(irq_handler);
+    bool enable_irq_handler = etiss::cfg().get<bool>("vp.enable_irq_handler", true);
+    if (enable_irq_handler)
+    {
+        auto irq_handler = std::make_shared<etiss::InterruptHandler>(
+            cpu->getInterruptVector(), cpu->getInterruptEnable(), cpu->getArch(), etiss::LEVEL_TRIGGERED, false);
+        cpu->addPlugin(irq_handler);
+    }
 
     initializer.loadIniPlugins(cpu);
     initializer.loadIniJIT(cpu);
