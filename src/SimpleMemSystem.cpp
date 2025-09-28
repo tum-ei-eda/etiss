@@ -420,7 +420,7 @@ void access_error(ETISS_CPU *cpu, etiss::uint64 addr, etiss::uint32 len, std::st
     std::stringstream ss;
 
     ss << error << ", PC = 0x" << std::hex << std::setw(8) << std::setfill('0') << pc << ", address 0x" << std::hex
-       << std::setw(8) << std::setfill('0') << addr << ", length " << len;
+       << std::setw(8) << std::setfill('0') << addr << ", length 0x" << len;
 
     etiss::log(verbosity, ss.str());
 }
