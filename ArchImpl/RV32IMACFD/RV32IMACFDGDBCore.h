@@ -33,14 +33,73 @@
 class RV32IMACFDGDBCore : public etiss::plugin::gdb::GDBCore {
 public:
 	std::string mapRegister(unsigned index){
-		if (index < 32){
-			std::stringstream ss;
-			ss << "X" << index;
-			return ss.str();
-		}
 		switch (index){
-		case 32:
-			return "instructionPointer";
+		case 0: return "X0";
+		case 1: return "X1";
+		case 2: return "X2";
+		case 3: return "X3";
+		case 4: return "X4";
+		case 5: return "X5";
+		case 6: return "X6";
+		case 7: return "X7";
+		case 8: return "X8";
+		case 9: return "X9";
+		case 10: return "X10";
+		case 11: return "X11";
+		case 12: return "X12";
+		case 13: return "X13";
+		case 14: return "X14";
+		case 15: return "X15";
+		case 16: return "X16";
+		case 17: return "X17";
+		case 18: return "X18";
+		case 19: return "X19";
+		case 20: return "X20";
+		case 21: return "X21";
+		case 22: return "X22";
+		case 23: return "X23";
+		case 24: return "X24";
+		case 25: return "X25";
+		case 26: return "X26";
+		case 27: return "X27";
+		case 28: return "X28";
+		case 29: return "X29";
+		case 30: return "X30";
+		case 31: return "X31";
+		case 32: return "instructionPointer";
+		case 33: return "F0";
+		case 34: return "F1";
+		case 35: return "F2";
+		case 36: return "F3";
+		case 37: return "F4";
+		case 38: return "F5";
+		case 39: return "F6";
+		case 40: return "F7";
+		case 41: return "F8";
+		case 42: return "F9";
+		case 43: return "F10";
+		case 44: return "F11";
+		case 45: return "F12";
+		case 46: return "F13";
+		case 47: return "F14";
+		case 48: return "F15";
+		case 49: return "F16";
+		case 50: return "F17";
+		case 51: return "F18";
+		case 52: return "F19";
+		case 53: return "F20";
+		case 54: return "F21";
+		case 55: return "F22";
+		case 56: return "F23";
+		case 57: return "F24";
+		case 58: return "F25";
+		case 59: return "F26";
+		case 60: return "F27";
+		case 61: return "F28";
+		case 62: return "F29";
+		case 63: return "F30";
+		case 64: return "F31";
+		case 68: return "CSR3";
 		/**************************************************************************
 		*   Further register should be added here to send data over gdbserver	  *
 		***************************************************************************/

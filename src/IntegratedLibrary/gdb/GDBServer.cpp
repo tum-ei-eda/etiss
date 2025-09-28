@@ -650,7 +650,7 @@ void Server::handlePacket(bool block)
             {
                 if (command.substr(1, 9) == "Supported")
                 {
-                    answer = "";
+                    answer = "PacketSize=8000;qXfer:features:read+;";
                 }
                 else if (command.substr(1, 8) == "Attached")
                 {
@@ -675,6 +675,24 @@ void Server::handlePacket(bool block)
                 else if (command.substr(1, 11) == "sThreadInfo")
                 {
                     answer = "l";
+                }
+                else if (command.substr(1, 4) == "Xfer")
+                {
+                    char fname_buf[256];
+                    std::string target_reqxml_fname;
+                    uint32_t target_reqxml_addr;
+                    uint32_t target_reqxml_len;
+                    sscanf(command.c_str(), "qXfer:features:read:%255[^:]:%x,%x", fname_buf, &target_reqxml_addr, &target_reqxml_len);
+                    target_reqxml_fname = fname_buf;
+                    std::string xml_contents = arch_->getGDBCore().getXMLContents(cpu_, arch_->getArchName(), target_reqxml_fname);
+                    uint32_t xml_len = xml_contents.length();
+                    if (target_reqxml_len >= (xml_len - target_reqxml_addr)) {
+                        answer = "l";
+                        answer += xml_contents.substr(target_reqxml_addr, xml_len - target_reqxml_addr);
+                    } else {
+                        answer = "m";
+                        answer += xml_contents.substr(target_reqxml_addr, target_reqxml_len);
+                    }
                 }
             }
             break;
