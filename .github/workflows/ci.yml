@@ -15,7 +15,6 @@ env:
 jobs:
   build_etiss:
     runs-on: ubuntu-22.04
-
     steps:
     - uses: actions/checkout@v4
       with:
@@ -46,13 +45,38 @@ jobs:
         name: etiss_prebuilt
         path: etiss_prebuilt
 
-  build_examples:
+  setup_toolchain:
     runs-on: ubuntu-22.04
 
     strategy:
       matrix:
-        bits: ["32", "64"]
+        gcc_version: ["13.2.0-2"]
 
+    steps:
+    - name: Download Cached GCC Binaries
+      id: cache-gcc
+      uses: actions/cache@v4
+      with:
+        path: riscv_tc/
+        key: gcc-binaries-${{ runner.os }}-${{ matrix.gcc_version }}
+       
+    - name: Install cross compiler
+      if: steps.cache-gcc.outputs.cache-hit != 'true'
+      run: |
+        wget https://github.com/xpack-dev-tools/riscv-none-elf-gcc-xpack/releases/download/v${{ matrix.gcc_version }}/xpack-riscv-none-elf-gcc-${{ matrix.gcc_version }}-linux-x64.tar.gz
+        tar xf xpack-riscv-none-elf-gcc-${{ matrix.gcc_version }}-linux-x64.tar.gz
+        mv xpack-riscv-none-elf-gcc-${{ matrix.gcc_version }} riscv_tc
+
+  build_examples:
+    runs-on: ubuntu-22.04
+    needs: [setup_toolchain]
+    
+    strategy:
+      matrix:
+        bits: ["32", "64"]
+        build_type: ["Release", "Debug"]
+        gcc_version: ["13.2.0-2"]
+        
     steps:
     - uses: actions/checkout@v4
       with:
@@ -60,29 +84,33 @@ jobs:
         path: examples_source
         submodules: true
 
-    - name: Install cross compiler
-      run: |
-        wget https://github.com/xpack-dev-tools/riscv-none-elf-gcc-xpack/releases/download/v13.2.0-2/xpack-riscv-none-elf-gcc-13.2.0-2-linux-x64.tar.gz
-        tar xf xpack-riscv-none-elf-gcc-13.2.0-2-linux-x64.tar.gz
-        mv xpack-riscv-none-elf-gcc-13.2.0-2 riscv_tc
+    - name: Download Cached GCC Binaries
+      id: cache-gcc
+      uses: actions/cache/restore@v4
+      with:
+        path: riscv_tc/
+        key: gcc-binaries-${{ runner.os }}-${{ matrix.gcc_version }}-${{ github.sha }}
+        restore-keys: |
+          gcc-binaries-${{ runner.os }}-${{ matrix.gcc_version }}-${{ github.sha }}
+          gcc-binaries-${{ runner.os }}-${{ matrix.gcc_version }}
 
     - name: Configure examples
       run: |
-        cmake -B examples_build_rv${{matrix.bits}} -S examples_source -DCMAKE_TOOLCHAIN_FILE=rv${{matrix.bits}}gc-toolchain.cmake -DRISCV_TOOLCHAIN_BASENAME=riscv-none-elf -DRISCV_TOOLCHAIN_PREFIX=$GITHUB_WORKSPACE/riscv_tc -DCMAKE_INSTALL_PREFIX=examples_prebuilt_rv${{matrix.bits}} -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+        cmake -B examples_build_rv${{matrix.bits}}_${{matrix.build_type}} -S examples_source -DCMAKE_TOOLCHAIN_FILE=rv${{matrix.bits}}gc-toolchain.cmake -DRISCV_TOOLCHAIN_BASENAME=riscv-none-elf -DRISCV_TOOLCHAIN_PREFIX=$GITHUB_WORKSPACE/riscv_tc -DCMAKE_INSTALL_PREFIX=examples_prebuilt_rv${{matrix.bits}}_${{matrix.build_type}} -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DTVM=OFF -DTFLM=OFF
 
     - name: Build examples
       run: |
-        cmake --build examples_build_rv${{matrix.bits}} -j$(nproc)
+        cmake --build examples_build_rv${{matrix.bits}}_${{matrix.build_type}} -j$(nproc)
 
     - name: Install examples
       run: |
-        cmake --build examples_build_rv${{matrix.bits}} --target install
+        cmake --build examples_build_rv${{matrix.bits}}_${{matrix.build_type}} --target install
 
     - name: Upload prebuilt examples
       uses: actions/upload-artifact@v4
       with:
-        name: examples_prebuilt_rv${{matrix.bits}}
-        path: examples_prebuilt_rv${{matrix.bits}}
+        name: examples_prebuilt_rv${{matrix.bits}}_${{matrix.build_type}}
+        path: examples_prebuilt_rv${{matrix.bits}}_${{matrix.build_type}}
 
   run_examples:
     runs-on: ubuntu-22.04
@@ -93,6 +121,7 @@ jobs:
         bits: ["32", "64"]
         jit_engine: ["TCC", "GCC", "LLVM"]
         test_program: ["example_c", "example_cpp", "test_cases"]
+        build_type: ["Release", "Debug"]
 
     steps:
     - name: Fetch precompiled artifacts
@@ -106,7 +135,47 @@ jobs:
     - name: Run test
       run: |
         chmod +x etiss_prebuilt/bin/bare_etiss_processor
-        etiss_prebuilt/bin/bare_etiss_processor -iexamples_prebuilt_rv${{matrix.bits}}/ini/${{matrix.test_program}}.ini --jit.type=${{matrix.jit_engine}}JIT
+        etiss_prebuilt/bin/bare_etiss_processor -iexamples_prebuilt_rv${{matrix.bits}}_${{matrix.build_type}}/ini/${{matrix.test_program}}.ini --jit.type=${{matrix.jit_engine}}JIT
+
+  test_gdbserver:
+    runs-on: ubuntu-22.04
+    needs: [build_etiss, build_examples, run_examples]
+
+    strategy:
+      matrix:
+        bits: ["32", "64"]
+        jit_engine: ["TCC", "GCC", "LLVM"]
+        test_program: ["example_c", "example_cpp", "test_cases"]
+        build_type: ["Debug"]
+        gcc_version: ["13.2.0-2"]
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Fetch precompiled artifacts
+      uses: actions/download-artifact@v4
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libboost-filesystem-dev libboost-program-options-dev libllvm11
+
+    - name: Download Cached GCC Binaries
+      if: success()
+      id: cache-gcc
+      uses: actions/cache/restore@v4
+      with:
+        path: riscv_tc/
+        key: gcc-binaries-${{ runner.os }}-${{ matrix.gcc_version }}-${{ github.sha }}
+        restore-keys: |
+          gcc-binaries-${{ runner.os }}-${{ matrix.gcc_version }}-${{ github.sha }}
+          gcc-binaries-${{ runner.os }}-${{ matrix.gcc_version }}
+
+    - name: Test GDBServer
+      run: |
+        chmod +x etiss_prebuilt/bin/bare_etiss_processor
+        ETISS=$(pwd)/etiss_prebuilt/bin/bare_etiss_processor RISCV_GDB=$(pwd)/riscv_tc/bin/riscv-none-elf-gdb timeout 360s ./script/test_gdbserver.sh examples_prebuilt_rv${{matrix.bits}}_${{matrix.build_type}}/ini/${{matrix.test_program}}.ini examples_prebuilt_rv${{matrix.bits}}_${{matrix.build_type}}/bin/${{matrix.test_program}} 2001 ${{matrix.jit_engine}}
+
 
   run_benchmarks:
     runs-on: ubuntu-22.04
@@ -117,6 +186,7 @@ jobs:
         bits: ["32", "64"]
         jit_engine: ["TCC", "GCC", "LLVM"]
         run_no: [1, 2, 3, 4, 5]
+        build_type: ["Release"]
 
     steps:
     - name: Fetch precompiled artifacts
@@ -130,13 +200,13 @@ jobs:
     - name: Run benchmark
       run: |
         chmod +x etiss_prebuilt/bin/bare_etiss_processor
-        etiss_prebuilt/bin/bare_etiss_processor -iexamples_prebuilt_rv${{matrix.bits}}/ini/dhry.ini --jit.type=${{matrix.jit_engine}}JIT --vp.stats_file_path=${{github.workspace}}/run_${{matrix.jit_engine}}_${{matrix.bits}}_${{matrix.run_no}}.json
+        etiss_prebuilt/bin/bare_etiss_processor -iexamples_prebuilt_rv${{matrix.bits}}_${{matrix.build_type}}/ini/dhry.ini --jit.type=${{matrix.jit_engine}}JIT --vp.stats_file_path=${{github.workspace}}/run_${{matrix.jit_engine}}_${{matrix.bits}}_${{matrix.build_type}}_${{matrix.run_no}}.json
 
     - name: Save Benchmark results
       uses: actions/upload-artifact@v4
       with:
-        name: run_${{matrix.jit_engine}}_${{matrix.bits}}_${{matrix.run_no}}
-        path: run_${{matrix.jit_engine}}_${{matrix.bits}}_${{matrix.run_no}}.json
+        name: run_${{matrix.jit_engine}}_${{matrix.bits}}_${{matrix.build_type}}_${{matrix.run_no}}
+        path: run_${{matrix.jit_engine}}_${{matrix.bits}}_${{matrix.build_type}}_${{matrix.run_no}}.json
 
   merge_benchmark_results:
     runs-on: ubuntu-22.04
