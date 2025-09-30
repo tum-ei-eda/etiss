@@ -95,11 +95,11 @@ etiss_int32 dbg_write_(void *handle, etiss_uint64 addr, etiss_uint8 *buffer, eti
     return sys->dbg_write(sys->handle, addr, buffer, length);
 }
 
-void syncTime_(void *handle, ETISS_CPU *cpu)
+etiss_int32 syncTime_(void *handle, ETISS_CPU *cpu)
 {
     MapperSystem *lsys = ((MapperSystem *)handle);
     ETISS_System *sys = lsys->orig;
-    sys->syncTime(sys->handle, cpu);
+    return sys->syncTime(sys->handle, cpu);
 }
 
 } // namespace
