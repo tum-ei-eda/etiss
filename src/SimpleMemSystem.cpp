@@ -79,6 +79,7 @@ uint32_t printMessage(std::string key, std::string message, uint32_t maxCount)
 void SimpleMemSystem::init_memory() {
     load_segments();
     load_elf();
+    load_boot();
     std::sort(msegs_.begin(), msegs_.end(), [](std::unique_ptr<MemSegment> & a, std::unique_ptr<MemSegment> & b) {return a->start_addr_ < b->start_addr_;});
 }
 
@@ -200,6 +201,118 @@ void SimpleMemSystem::load_elf()
         ss << "Set ETISS architecture to " << etiss::cfg().get<std::string>("arch.cpu", "") << " as specified in ELF-file.";
         etiss::log(etiss::INFO, ss.str());
     }
+
+    for (auto &seg : reader.segments)
+    {
+        etiss::uint64 start_addr = seg->get_physical_address();
+        etiss::uint64 size = seg->get_memory_size();
+        if (size == 0) continue;
+        size_t file_size = seg->get_file_size();
+        if (seg->get_type() != PT_LOAD) continue;
+
+        int mode = 0;
+        std::string modestr = "";
+        if (seg->get_flags() & PF_R) {
+            mode |= MemSegment::READ;
+            modestr += "R";
+        }
+        if (seg->get_flags() & PF_W) {
+            mode |= MemSegment::WRITE;
+            modestr += "W";
+        }
+        if (seg->get_flags() & PF_X) {
+            mode |= MemSegment::EXEC;
+            modestr += "X";
+        }
+
+        std::stringstream sname;
+        sname << seg->get_index() << " - " << modestr
+              << "[0x" << std::hex << std::setfill('0') << std::setw(sizeof(etiss::uint64) * 2) << start_addr << " - "
+              << "0x" << std::hex << std::setfill('0') << std::setw(sizeof(etiss::uint64) * 2) << start_addr + size - 1 << "]";
+
+        auto mseg_it = std::find_if(msegs_.begin(), msegs_.end(), find_fitting_mseg(start_addr, size));
+
+        if (mseg_it != msegs_.end()) {
+            auto & mseg = *mseg_it;
+
+            mseg->name_ = sname.str();
+            mseg->mode_ = static_cast<MemSegment::access_t>(mode);
+
+            mseg->load(seg->get_data(), start_addr - mseg->start_addr_, file_size);
+
+            std::stringstream msg;
+            msg << "Initialized the memory segment " << mseg->name_ << " from ELF-file";
+            etiss::log(etiss::INFO, msg.str());
+
+            continue;
+        }
+
+        std::stringstream msg;
+        msg << "Found no matching memory segments at 0x" << std::hex << std::setfill('0') << std::setw(8) << start_addr;
+
+        if (error_on_seg_mismatch_) {
+            msg << "! As you turned on error_on_seg_mismatch, ETISS will now terminate.";
+            etiss::log(etiss::FATALERROR, msg.str());
+        } else {
+            msg << ", creating one. WARNING: the segment will be created with the size information present in the ELF-file, the resulting segment may be too small to fit dynamic data (cache, heap)!";
+            etiss::log(etiss::WARNING, msg.str());
+        }
+
+        auto mseg = std::make_unique<MemSegment>(start_addr, size, static_cast<MemSegment::access_t>(mode), sname.str());
+        add_memsegment(mseg, seg->get_data(), file_size);
+    }
+
+    // read start or rather program boot address from ELF
+    start_addr_ = reader.get_entry();
+}
+
+void SimpleMemSystem::load_boot()
+{
+    if (!etiss::cfg().isSet("vp.boot_file")) return;
+
+    std::string elf_file = etiss::cfg().get<std::string>("vp.boot_file", "");
+
+    ELFIO::elfio reader;
+
+    if (!reader.load(elf_file))
+    {
+        etiss::log(etiss::FATALERROR, "ELF reader could not process file");
+    }
+
+    //if (etiss::cfg().isSet("arch.cpu")) {
+    //    std::stringstream ss;
+    //    ss << "Assuming CPU architecture " << etiss::cfg().get<std::string>("arch.cpu", "") << " as set in configuration file. ELF architecture field will be ignored";
+    //    etiss::log(etiss::INFO, ss.str());
+    //} else {
+    //    // set architecture automatically
+    //    if (reader.get_machine() == EM_RISCV)
+    //    {
+    //        if ((reader.get_class() == ELFCLASS64)) {
+    //            etiss::cfg().set<std::string>("arch.cpu", "RV64IMACFD"); // RISCV and OR1K work as well
+    //        } else if ((reader.get_class() == ELFCLASS32)) {
+    //            etiss::cfg().set<std::string>("arch.cpu", "RV32IMACFD");
+    //        // add conditions
+    //        } else {
+    //            etiss::log(etiss::FATALERROR, "System architecture is neither 64 nor 32 bit!");
+    //        }
+    //    }
+    //    else if (reader.get_machine() == EM_OPENRISC)
+    //    {
+    //        if ((reader.get_class() == ELFCLASS32))
+    //            etiss::cfg().set<std::string>("arch.cpu", "OR1K");
+    //        if ((reader.get_class() == ELFCLASS64))
+    //            etiss::log(etiss::FATALERROR, "OR1k 64 is not supported");
+    //    }
+    //    else
+    //    {
+    //        std::stringstream ss;
+    //        ss << "Target architecture with code 0x" << std::hex << std::setw(2) << std::setfill('0') << reader.get_machine() << " was not automatically recognized, please set the arch.cpu parameter manually!";
+    //        etiss::log(etiss::FATALERROR, ss.str());
+    //    }
+    //    std::stringstream ss;
+    //    ss << "Set ETISS architecture to " << etiss::cfg().get<std::string>("arch.cpu", "") << " as specified in ELF-file.";
+    //    etiss::log(etiss::INFO, ss.str());
+    //}
 
     for (auto &seg : reader.segments)
     {
