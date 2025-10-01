@@ -36,6 +36,10 @@ const char *SYS_OPEN_MODES_STRS[] = { "r", "rb", "r+", "r+b", "w", "wb", "w+", "
 // For many semihosting calls parameter points to a data block, so this type of call is very common
 #define FIELD(fieldNo) semihostReadStructField(etissSystem, XLEN / 8, parameter, fieldNo);
 
+constexpr unsigned char SHFB_MAGIC[4] = { 0x53, 0x48, 0x46, 0x42 };
+constexpr unsigned SH_EXT_EXIT_EXTENDED_BITNUM = 0;
+constexpr unsigned SH_EXT_STDOUT_STDERR_BITNUM = 1;
+
 // forward declaration for use in extern block:
 
 /// Executes the semihosting call based on the operation number.
@@ -339,6 +343,39 @@ etiss_int64 semihostingCall(ETISS_CPU *const cpu, ETISS_System *const etissSyste
                 file = stdout;
             else // 8 <= mode <= 11
                 file = stderr;
+        }
+        else if (path_str == ":semihosting-features")
+        {
+            // Create a fake FILE* backed by memory (or a stub)
+            std::vector<uint8_t> payload;
+            payload.insert(payload.end(), std::begin(SHFB_MAGIC), std::end(SHFB_MAGIC));
+
+            // Feature byte 0
+            uint8_t feature0 = 0;
+            // advertise SYS_EXIT_EXTENDED (feature byte 0, bit 0)
+            feature0 |= (1u << SH_EXT_EXIT_EXTENDED_BITNUM);
+
+            // optionally advertise stdout/stderr extension (bit 1) if desired:
+            // feature0 |= (1u << SH_EXT_STDOUT_STDERR_BITNUM);
+
+            payload.push_back(feature0);
+
+            // If you want to provide 3 feature bytes like your note, append zeros:
+            // payload.push_back(0);
+            // payload.push_back(0);
+
+            FILE *tmp = tmpfile();
+            if (tmp == nullptr) {
+                semihostingErrno = errno;
+                return -1;
+            }
+            if (fwrite(payload.data(), 1, payload.size(), tmp) != payload.size()) {
+                semihostingErrno = errno;
+                fclose(tmp);
+                return -1;
+            }
+            rewind(tmp);
+            file = tmp;
         }
         else
         {
