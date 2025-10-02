@@ -249,8 +249,7 @@ std::string Fault::toString() const
 
 void Fault::resolveTime(uint64_t time)
 {
-    etiss::log(etiss::VERBOSE, std::string("etiss::fault::Fault::resolveTime(time=") + std::to_string(time) +
-                                   std::string(") called. "));
+    etiss::log(etiss::VERBOSE, fmt::format("etiss::fault::Fault::resolveTime(time={:d}) called.", time));
     for (std::vector<Trigger>::iterator iter = triggers.begin(); iter != triggers.end(); ++iter)
     {
         iter->resolveTime(time);
