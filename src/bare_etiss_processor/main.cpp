@@ -150,9 +150,33 @@ int main(int argc, const char *argv[])
         std::cout << "CPU0 exited with exception: 0x" << std::hex << exception << std::dec << ": "
                   << etiss::RETURNCODE::getErrorMessages()[exception] << std::endl;
 
+    // Exit codes:
+    //  0: Success
+    //  1: System error?
+    //  2: JIT error
+    //  3: Other?
+    //  4: CPU reports non-zero SW exit
+    // -1: Unhandeled ETISS exception
     switch (exception)
     {
     case etiss::RETURNCODE::CPUFINISHED:
+    {
+        etiss_uint8 exit_status = cpu->getState()->exit_status & 0xff;  // UNIX exit codes are 0..255
+        if (etiss::cfg().get<bool>("vp.print_exit_status", true))
+        {
+            std::cout << "CPU0 exit status: " << (etiss_uint32)exit_status << std::endl;
+        }
+        if (etiss::cfg().get<bool>("vp.check_exit_status", false))
+        {
+            if (etiss::cfg().get<bool>("vp.forward_exit_status", false))
+            {
+                return exit_status;
+            }
+            return exit_status != 0 ? 4 : 0;
+        }
+        return 0;
+        break;
+    }
     case etiss::RETURNCODE::NOERROR:
     case etiss::RETURNCODE::CPUTERMINATED:
         return 0;
