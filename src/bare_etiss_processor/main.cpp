@@ -166,7 +166,7 @@ int main(int argc, const char *argv[])
         {
             std::cout << "CPU0 exit status: " << (etiss_uint32)exit_status << std::endl;
         }
-        if (etiss::cfg().get<bool>("vp.check_exit_status", true))
+        if (etiss::cfg().get<bool>("vp.check_exit_status", false))
         {
             if (etiss::cfg().get<bool>("vp.forward_exit_status", false))
             {
