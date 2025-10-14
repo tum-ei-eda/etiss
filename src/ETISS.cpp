@@ -766,7 +766,7 @@ void etiss_initialize(const std::vector<std::string> &args, bool forced = false)
             if (vm.count("ini"))
             {
                 auto files = vm["ini"].as<std::vector<std::string>>();
-                for (auto const& f : files)
+                for (auto const &f : files)
                 {
                     etiss_loadIni(f);
                 }
