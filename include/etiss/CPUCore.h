@@ -113,6 +113,7 @@ class CPUCore : public VirtualStructSupport, public etiss::ToString
      *
      * @todo Add explanation of start index.
      */
+    // inline void reset(etiss::uint64 *startindex, ETISS_System &system, int argc = 0, char *argv[] = nullptr) { arch_->resetCPU(cpu_, startindex, system, argc, argv); }
     inline void reset(etiss::uint64 *startindex) { arch_->resetCPU(cpu_, startindex); }
 
     /**
@@ -235,7 +236,8 @@ class CPUCore : public VirtualStructSupport, public etiss::ToString
      *
      * @return A return code as result of the simulation (ReturnCode.h)
      */
-    etiss::int32 execute(ETISS_System &system);
+    // etiss::int32 execute(ETISS_System &system);
+    etiss::int32 execute(ETISS_System &system, int argc = 0, char *argv[] = nullptr);
 
     /**
      * @brief Start the simulation of the CPU core for the system model.
@@ -247,12 +249,12 @@ class CPUCore : public VirtualStructSupport, public etiss::ToString
      *
      * @return A return code as result of the simulation (ReturnCode.h)
      */
-    inline etiss::int32 execute(etiss::System &system)
+    inline etiss::int32 execute(etiss::System &system, int argc = 0, char *argv[] = nullptr)
     {
         std::shared_ptr<ETISS_System> sys = etiss::wrap(&system);
         if (sys.get() == 0)
             return RETURNCODE::GENERALERROR;
-        etiss::uint32 ret = execute(*(sys.get()));
+        etiss::uint32 ret = execute(*(sys.get()), argc, argv);
         return ret;
     }
 

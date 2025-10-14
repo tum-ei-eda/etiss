@@ -151,7 +151,9 @@ class CPUArch : public CPUArchRegListenerInterface,
     /**
             reset cpu (structure)
     */
+    // virtual void resetCPU(ETISS_CPU *cpu, etiss::uint64 *startpointer, ETISS_System *system = nullptr, int argc = 0, char *argv[] = nullptr) = 0;
     virtual void resetCPU(ETISS_CPU *cpu, etiss::uint64 *startpointer) = 0;
+    virtual void setupCmdline(ETISS_CPU *cpu, ETISS_System *system = nullptr, int argc = 0, char *argv[] = nullptr) = 0;
     /**
             @brief delete cpu structure
     */

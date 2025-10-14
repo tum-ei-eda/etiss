@@ -34,7 +34,9 @@ public:
 
 
 	virtual ETISS_CPU * newCPU();
-	virtual void resetCPU(ETISS_CPU * cpu,etiss::uint64 * startpointer);
+	// virtual void resetCPU(ETISS_CPU * cpu,etiss::uint64 * startpointer, int argc = 0, char *argv[] = nullptr);
+	virtual void resetCPU(ETISS_CPU * cpu, etiss::uint64 * startpointer);
+	virtual void setupCmdline(ETISS_CPU * cpu, ETISS_System *system, int argc = 0, char *argv[] = nullptr);
 	virtual void deleteCPU(ETISS_CPU *);
 
 	/**

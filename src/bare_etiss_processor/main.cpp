@@ -4,6 +4,7 @@
 // compliance with the License. You should have received a copy of the license along with this project. If not, see the
 // LICENSE file.
 
+#include <boost/program_options.hpp>
 #include "TracePrinter.h"
 #include "etiss/SimpleMemSystem.h"
 #include "etiss/IntegratedLibrary/fault/MemoryManipulationSystem.h"
@@ -89,8 +90,26 @@ int main(int argc, const char *argv[])
 
     // disable timer plugin
     cpu->setTimer(false);
+    std::string progname = etiss::cfg().get<std::string>("vp.progname", "prog");
+    std::string cmdline = etiss::cfg().get<std::string>("vp.cmdline", "");
+    std::vector<std::string> args =
+        boost::program_options::split_unix(progname + " " + cmdline);
+
+    std::cout << "argc = " << args.size() << "\n";
+    for (size_t i = 0; i < args.size(); i++) {
+        std::cout << "argv[" << i << "] = " << args[i] << "\n";
+    }
+    int vp_argc = static_cast<int>(args.size());
+    std::vector<char*> vp_argv;
+
+    vp_argv.reserve(vp_argc + 1);
+    for (auto &s : args) {
+        vp_argv.push_back(const_cast<char*>(s.c_str()));
+    }
+    vp_argv.push_back(nullptr); // argv[argc] = NULL
 
     // reset CPU with a manual start address
+    // cpu->reset(&sa, static_cast<ETISS_System*>(&(*dsys)), vp_argc, vp_argv.data());
     cpu->reset(&sa);
 
     // bind the cpu's VirtualStruct to etiss' root VirtualStruct and initialize faults
@@ -140,7 +159,7 @@ int main(int argc, const char *argv[])
     // float startTime = (float)clock() / CLOCKS_PER_SEC; // TESTING
     //  run cpu with the SimpleMemSystem (in other cases that "system" is most likely a
     //  bus that connects the cpu to memory,periphery,etc)
-    etiss_int32 exception = cpu->execute(*dsys);
+    etiss_int32 exception = cpu->execute(*dsys, vp_argc, vp_argv.data());
     // float endTime = (float)clock() / CLOCKS_PER_SEC;
     if (!quiet)
         std::cout << "=== Simulation end ===" << std::endl << std::endl;

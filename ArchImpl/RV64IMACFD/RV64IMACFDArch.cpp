@@ -38,6 +38,7 @@
 #include "RV64IMACFDFuncs.h"
 
 #define RV64IMACFD_DEBUG_CALL 0
+#define memcpy_to_user(addr, val, len) (*(system->dwrite))(system->handle, cpu, addr, val, len);
 using namespace etiss ;
 using namespace etiss::instr ;
 
@@ -56,6 +57,19 @@ ETISS_CPU * RV64IMACFDArch::newCPU()
 	ETISS_CPU * ret = (ETISS_CPU *) new RV64IMACFD() ;
 	resetCPU (ret, 0);
 	return ret;
+}
+void RV64IMACFDArch::setupCmdline(ETISS_CPU * cpu, ETISS_System *system, int argc, char *argv[])
+{
+	RV64IMACFD * rv64imacfdcpu = (RV64IMACFD *) cpu;
+  etiss_uint32 stack_top = rv64imacfdcpu->SP;
+  std::vector<etiss_uint64> user_argv;
+  user_argv.reserve(argc);
+  for (int i = 0; i < argc; i++) {
+    size_t len = strlen((char*)(uintptr_t)argv[i])+1;
+    stack_top -= len;
+    memcpy_to_user(stack_top, (etiss_uint8*)argv[i], len);
+    user_argv[i] = stack_top;
+  }
 }
 
 void RV64IMACFDArch::resetCPU(ETISS_CPU * cpu,etiss::uint64 * startpointer)

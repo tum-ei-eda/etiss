@@ -485,9 +485,10 @@ class LegacyRegisterDevicePluginListener : public etiss::VirtualStruct::Field::L
     }
 };
 
-etiss::int32 CPUCore::execute(ETISS_System &_system)
+etiss::int32 CPUCore::execute(ETISS_System &_system, int argc, char *argv[])
 {
     ETISS_System *system = &_system; // change to pointer for reassignments
+    arch_->setupCmdline(cpu_, system, argc, argv);
 
     if (!ETISS_System_isvalid(system))
     { // check if required functions are present

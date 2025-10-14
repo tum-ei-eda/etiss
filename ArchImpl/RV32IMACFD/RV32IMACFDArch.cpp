@@ -38,8 +38,18 @@
 #include "RV32IMACFDFuncs.h"
 
 #define RV32IMACFD_DEBUG_CALL 0
+#define memcpy_to_user(addr, val, len) (*(system->dwrite))(system->handle, cpu, addr, val, len);
+#define PUSH_ARG(type, value) do { \
+type __tmp = (type)(value); \
+memcpy_to_user(stack_top, &__tmp, sizeof(type)); \
+sp ++; \
+} while (0)
+#define STACK_INIT(type) do { \
+} \
+} while (0)
 using namespace etiss ;
 using namespace etiss::instr ;
+
 
 RV32IMACFDArch::RV32IMACFDArch(unsigned int coreno):CPUArch("RV32IMACFD"), coreno_(coreno)
 {
@@ -57,8 +67,33 @@ ETISS_CPU * RV32IMACFDArch::newCPU()
 	resetCPU (ret, 0);
 	return ret;
 }
+void RV32IMACFDArch::setupCmdline(ETISS_CPU * cpu, ETISS_System *system, int argc, char *argv[])
+{
+	RV32IMACFD * rv32imacfdcpu = (RV32IMACFD *) cpu;
+  etiss_uint32 stack_top = rv32imacfdcpu->SP;
+  std::vector<etiss_uint32> user_argv;
+  user_argv.reserve(argc);
+  for (int i = 0; i < argc; i++) {
+    size_t len = strlen((char*)(uintptr_t)argv[i])+1;
+    stack_top -= len;
+    memcpy_to_user(stack_top, (etiss_uint8*)argv[i], len);
+    user_argv[i] = stack_top;
+  }
+  stack_top -= (1 + argc + 1) * sizeof(etiss_uint32);
+  stack_top &= -16;
+  memcpy_to_user(stack_top, (etiss_uint8*)&argc, sizeof(int));
+  for (unsigned i = 0; i < argc; i++)
+  {
+    memcpy_to_user(stack_top + sizeof(int) + i * sizeof(etiss_uint32), (etiss_uint8*)argv[i], sizeof(etiss_uint32));
+    stack_top += sizeof(etiss_uint32);
+  }
+  memcpy_to_user(stack_top + sizeof(int) + argc * sizeof(etiss_uint32), (etiss_uint8*)&0, sizeof(etiss_uint32));
+  stack_top += sizeof(etiss_uint32);
+  rv32imacfdcpu->SP = stack_top;
+}
 
-void RV32IMACFDArch::resetCPU(ETISS_CPU * cpu,etiss::uint64 * startpointer)
+// void RV32IMACFDArch::resetCPU(ETISS_CPU * cpu, etiss::uint64 * startpointer, ETISS_System *system, int argc, char *argv[])
+void RV32IMACFDArch::resetCPU(ETISS_CPU * cpu, etiss::uint64 * startpointer)
 {
 	memset (cpu, 0, sizeof(RV32IMACFD));
 	RV32IMACFD * rv32imacfdcpu = (RV32IMACFD *) cpu;

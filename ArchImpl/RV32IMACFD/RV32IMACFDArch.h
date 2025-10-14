@@ -8,6 +8,7 @@
 #define ETISS_RV32IMACFDArch_RV32IMACFDArch_H_
 
 #include "etiss/CPUArch.h"
+#include "etiss/System.h"
 #include "etiss/Instruction.h"
 #include "etiss/InterruptVector.h"
 #include "etiss/InterruptEnable.h"
@@ -34,7 +35,9 @@ public:
 
 
 	virtual ETISS_CPU * newCPU();
-	virtual void resetCPU(ETISS_CPU * cpu,etiss::uint64 * startpointer);
+	// virtual void resetCPU(ETISS_CPU * cpu,etiss::uint64 * startpointer, ETISS_System *system = nullptr, int argc = 0, char *argv[] = nullptr);
+	virtual void resetCPU(ETISS_CPU * cpu, etiss::uint64 * startpointer);
+	virtual void setupCmdline(ETISS_CPU * cpu, ETISS_System *system = nullptr, int argc = 0, char *argv[] = nullptr);
 	virtual void deleteCPU(ETISS_CPU *);
 
 	/**
