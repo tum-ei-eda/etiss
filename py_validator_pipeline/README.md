@@ -86,10 +86,10 @@ Example usage with verbose mode activated:
 
 ### Considerations
 
-A typical use-case could be to run the ETISS simulation with two different architectures. There are several approaches of how this can be achieved
-- A pause can be inserted into the pipeline before a new architecture is loaded into ETISS
-- The script and pipeline can be extended to run ETISS-simulations on different builds of ETISS
-- Additionally it can be investigated, if bare-metal ETISS supports specifying the architecture. In this case the two architectures could be given as arguments and passing the arguments to ETISS-simulation could be implemented to the pipeline.
+As a default, the proof-of-concept ETISS-GTS only uses one bare-metal ETISS build. Typical use-cases would be to run the ETISS simulation with two different architectures or to run the binaries on different builds of ETISS. There are several approaches of how this can be achieved, for instance one could
+- add support to provide architecture as an argument to bare-metal ETISS
+- extend the script and pipeline to run ETISS-simulations on different builds of ETISS 
 
-During the proof-of-concept work I personally extended the pipeline to use two different builds of ETISS as this was the quickest (if not the most practical) way forward. 
+ 
+During the proof-of-concept work I personally extended the pipeline to use two different builds of ETISS as this was the quickest (if not the most practical) way forward to experiment with a custom instruction set under development provided for testing by TUM.  
 
