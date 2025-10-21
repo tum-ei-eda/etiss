@@ -36,7 +36,7 @@ This bash script template provides a useful starting point for running the verif
 
 ```bash 
 #!/bin/bash
-VERBOSE_ARG="--verbose"
+VERBOSE_ARG=""
 PROGRAM_NAME="foo"
 FUNCTION_OF_INTEREST="bar"
 SOURCE_FILE="foo.c"
@@ -69,7 +69,7 @@ Explanations:
 - `etiss_executable`: name of the etiss executable binary
 
 Bash-script variables:
-- `VERBOSE_ARG`: as a convenience pipeline can be run in verbose mode by adding the argument `--verbose`. In verbose  mode more detailed output is printed to console and to log file.
+- `VERBOSE_ARG`: as a convenience pipeline can be run in verbose mode by providing the argument `--verbose` at CLI. In verbose  mode more detailed output is printed to console and to log file.
 - `PROGRAM_NAME`: to use this script, the binary name and the ini-file name (excluding extension .ini) must be identical. In the case of the script example, both binary files are named `foo` and both `.ini` files are named `foo.ini`
 - `SOURCE_FILE`: defines which source file in the compiled binary is of interest. 
 - `FUNCTION_OF_INTEREST`: defines the function to be verified. 
