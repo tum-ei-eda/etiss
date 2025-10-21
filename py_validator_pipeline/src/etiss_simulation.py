@@ -24,36 +24,33 @@ def run_etiss_simulation(etiss_path: str, bare_metal_etiss: str, ini_file: str, 
 
 
     if fault:
+        etiss_path = f"{etiss_path}/{bare_metal_etiss}"
         cmd = [
-            f"{etiss_path}/{bare_metal_etiss}",
+            etiss_path,
             f"-i{ini_file}",
-            # "-p", "InstructionTracer",
-            # InstructionTracer
             "-p", "GTS",
-            # DataWriteTracer
-            # "-p", "GTS-DataWriteTracer",
+            # An example of providing CPU arhcitecture as an argument
+            # "--arch.cpu=RV32IMACFDXCoreVXMNN",
             "--jit.gcc.cleanup", "true"
         ]
     # Golden reference
     # TODO: remove this temporary implementation
     else:
+        etiss_path = f"{etiss_path}/{bare_metal_etiss}"
         cmd = [
-            f"/home/holaphei/repos/golden-ref-etiss/etiss/build/bin/bare_etiss_processor",
+            etiss_path,
             f"-i{ini_file}",
-            # "-p", "InstructionTracer",
-            # InstructionTracer
             "-p", "GTS",
-            # DataWriteTracer
-            # "-p", "GTS-DataWriteTracer",
             "--jit.gcc.cleanup", "true"
         ]
 
 
-    logger.debug(f"Running ETISS simulation. This may take a while. Showing ETISS output: {debug_enabled}")
+    logger.debug(f"Running ETISS simulation. This may take a while. Logging ETISS output: {debug_enabled}")
+    logger.info(f"ETISS path: {etiss_path}")
     try:
         result = subprocess.run(cmd, text=True, stderr=subprocess.STDOUT, stdout=subprocess.PIPE, check=True)
         if debug_enabled:
-            print(result.stdout)
+            logger.debug(f"ETISS console output:\n{result.stdout}")
     except subprocess.CalledProcessError as e:
         print("Command failed with non-zero exit code.")
         print("Return code:", e.returncode)
