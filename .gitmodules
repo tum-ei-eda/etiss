@@ -20,3 +20,6 @@
 [submodule "third_party/elfio"]
 	path = third_party/elfio
 	url = https://github.com/serge1/ELFIO.git
+[submodule "third_party/fmt"]
+	path = third_party/fmt
+	url = https://github.com/fmtlib/fmt.git 

@@ -34,6 +34,42 @@
 
 #include "etiss/jit/types.h"
 
+#if __cplusplus >= 202002L // in case of c++20 present we can use std::format etc.
+#include <format>
+namespace etiss
+{
+namespace fmt
+{
+using std::basic_format_args;
+using std::format;
+using std::format_args;
+using std::format_to;
+using std::format_to_n;
+using std::formatted_size;
+using std::make_format_args;
+using std::vformat;
+using std::vformat_to;
+} // namespace fmt
+} // namespace etiss
+#else // in case < c++20 use fmtlib provide fmtlib
+#include <fmt/core.h>
+namespace etiss
+{
+namespace fmt
+{
+using ::fmt::basic_format_args;
+using ::fmt::format;
+using ::fmt::format_args;
+using ::fmt::format_to;
+using ::fmt::format_to_n;
+using ::fmt::formatted_size;
+using ::fmt::make_format_args;
+using ::fmt::vformat;
+using ::fmt::vformat_to;
+} // namespace fmt
+} // namespace etiss
+#endif
+
 // some msvc pathces
 #ifdef _MSC_VER
 typedef std::make_signed<size_t>::type ssize_t;

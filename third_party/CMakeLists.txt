@@ -124,3 +124,10 @@ target_include_directories(betterenums INTERFACE
 install(TARGETS betterenums
     PUBLIC_HEADER DESTINATION include/third_party/betterenums
 )
+
+####################################################################################################
+# fmtlib/fmt
+# Makes CMake target fmt available
+if(NOT CMAKE_CXX_STANDARD GREATER_EQUAL 20)
+add_subdirectory(fmt)
+endif()
