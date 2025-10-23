@@ -48,9 +48,9 @@ static etiss_int32 system_call_dbg_write(void *handle, etiss_uint64 addr, etiss_
     return ((etiss::System *)handle)->dbg_write(addr, buffer, length);
 }
 
-static void system_call_syncTime(void *handle, ETISS_CPU *cpu)
+static etiss_int32 system_call_syncTime(void *handle, ETISS_CPU *cpu)
 {
-    ((etiss::System *)handle)->syncTime(cpu);
+    return ((etiss::System *)handle)->syncTime(cpu);
 }
 
 std::shared_ptr<ETISS_System> etiss::wrap(etiss::System *sys)
@@ -134,9 +134,9 @@ etiss::int32 SimpleSystem::dbg_write(etiss::uint64 addr, etiss::uint8 *buf, etis
 
     return 0;
 }
-void SimpleSystem::syncTime(ETISS_CPU *cpu)
+etiss::int32 SimpleSystem::syncTime(ETISS_CPU *cpu)
 {
-    // NOP
+    return etiss::RETURNCODE::NOERROR;
 }
 etiss::int32 dbg_print(etiss::uint32 reg)
 {
