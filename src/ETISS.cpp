@@ -11,6 +11,8 @@
 */
 
 #include "etiss/ETISS.h"
+#include "etiss/CPUCore.h"
+
 #include "etiss/fault/Stressor.h"
 #include "etiss/IntegratedLibrary/InstructionAccurateCallback.h"
 

@@ -6,6 +6,7 @@
 
 #include "etiss/IntegratedLibrary/SelectiveSysWrapper.h"
 #include "etiss/ETISS.h"
+#include "etiss/CPUCore.h"
 
 namespace etiss
 {

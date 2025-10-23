@@ -8,6 +8,8 @@
 #include <iostream>
 
 #include "etiss/ETISS.h"
+#include "etiss/Plugin.h"
+#include "etiss/jit/ReturnCode.h"
 
 /**
  * @brief A simple logger dedicated to print PC trace. Most accurate
