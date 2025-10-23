@@ -13,6 +13,7 @@
 #include "etiss/fault/InjectorAddress.h"
 #include "etiss/fault/Stressor.h"
 #include "pugixml.hpp"
+#include "etiss/Format.h"
 #else
 #include "fault/XML.h"
 #include "fault/Fault.h"
