@@ -34,6 +34,19 @@
 
 #include "etiss/jit/types.h"
 
+namespace etiss
+{
+    class CPUCore;
+    class CPUArch;
+    class JIT;
+    class Plugin;
+    class LibraryInterface;
+    namespace fault{
+        class Fault;
+        class Action;
+    }
+}
+
 // some msvc pathces
 #ifdef _MSC_VER
 typedef std::make_signed<size_t>::type ssize_t;

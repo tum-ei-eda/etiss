@@ -8,6 +8,7 @@
 #include "etiss/SimpleMemSystem.h"
 #include "etiss/IntegratedLibrary/fault/MemoryManipulationSystem.h"
 #include "etiss/ETISS.h"
+#include "etiss/CPUCore.h"
 
 int main(int argc, const char *argv[])
 {
