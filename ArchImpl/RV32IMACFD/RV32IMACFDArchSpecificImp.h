@@ -1,5 +1,5 @@
 /**
- * Generated on Tue, 16 Sep 2025 12:56:33 +0200.
+ * Generated on Thu, 23 Oct 2025 04:59:28 +0000.
  *
  * This file contains the architecture specific header for the RV32IMACFD
  * core architecture.
@@ -54,7 +54,6 @@ protected:
 		*((RV32IMACFD*)parent_.structure_)->X[gprid_] = (etiss_uint32) val;
 	}
 };
-
 
 class pcField_RV32IMACFD : public etiss::VirtualStruct::Field{
 public:
