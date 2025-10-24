@@ -124,6 +124,8 @@ CPUCore::CPUCore(std::shared_ptr<etiss::CPUArch> arch, std::string const &name)
     , mmu_enabled_(false)
 {
     arch_->resetCPU(cpu_, 0);
+    // Default for ETISS::RETURNCODE::CPUFINSIHED - Overwritten by SYS_EXIT_EXTENDED semi-hosting handler
+    cpu_->exit_status = 0;
     timer_enabled_ = true;
     bcc_ = 1;
     exception_skip_count_ = 0;
