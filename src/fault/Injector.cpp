@@ -1,52 +1,22 @@
-/*
-
-        @copyright
-
-        <pre>
-
-        Copyright 2018 Infineon Technologies AG
-
-        This file is part of ETISS tool, see <https://github.com/tum-ei-eda/etiss>.
-
-        The initial version of this software has been created with the funding support by the German Federal
-        Ministry of Education and Research (BMBF) in the project EffektiV under grant 01IS13022.
-
-        Redistribution and use in source and binary forms, with or without modification, are permitted
-        provided that the following conditions are met:
-
-        1. Redistributions of source code must retain the above copyright notice, this list of conditions and
-        the following disclaimer.
-
-        2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions
-        and the following disclaimer in the documentation and/or other materials provided with the distribution.
-
-        3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse
-        or promote products derived from this software without specific prior written permission.
-
-        THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
-        WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
-        PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY
-        DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-        PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
-        HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-        NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-        POSSIBILITY OF SUCH DAMAGE.
-
-        </pre>
-
-        @author Chair of Electronic Design Automation, TUM
-
-        @version 0.1
-
-*/
+// SPDX-License-Identifier: BSD-3-Clause
+//
+// This file is part of ETISS. It is licensed under the BSD 3-Clause License; you may not use this file except in
+// compliance with the License. You should have received a copy of the license along with this project. If not, see the
+// LICENSE file.
 
 #ifndef NO_ETISS
 #include "etiss/fault/Injector.h"
 #include "etiss/Misc.h"
 #include "etiss/fault/Stressor.h"
+#include "etiss/fault/Trigger.h"
+#include "etiss/fault/Action.h"
+#include "etiss/fault/Fault.h"
 #else
 #include "fault/Injector.h"
 #include "fault/Stressor.h"
+#include "fault/Trigger.h"
+#include "fault/Action.h"
+#include "fault/Fault.h"
 #endif
 
 #include <iostream>
@@ -67,7 +37,7 @@ Injector::Injector()
 void Injector::freeFastFieldAccessPtr(void *)
 {
     etiss::log(etiss::VERBOSE, std::string("Called etiss::fault::Injector::freeFastFieldAccessPtr(void*)"));
-    etiss::log(etiss::INFO, std::string("etiss::fault::Injector::freeFastFieldAccessPtr(void*) not implemented"));
+    etiss::log(etiss::VERBOSE, std::string("etiss::fault::Injector::freeFastFieldAccessPtr(void*) not implemented"));
 }
 
 bool Injector::needsCallbacks()
@@ -84,7 +54,7 @@ bool Injector::cycleAccurateCallback(uint64_t time_ps)
                                    std::to_string(time_ps) + ")");
 #endif
     // copy pending triggers in a threadsafe manner to unknown triggers
-    if (has_pending_triggers)
+    if (unlikely(has_pending_triggers))
     {
 #if CXX0X_UP_SUPPORTED
         std::lock_guard<std::mutex> lock(sync);
@@ -92,34 +62,44 @@ bool Injector::cycleAccurateCallback(uint64_t time_ps)
         unknown_triggers.insert(unknown_triggers.end(), pending_triggers.begin(), pending_triggers.end());
         pending_triggers.clear();
     }
+    if (unlikely(has_remove_triggers))
+    {
+#if CXX0X_UP_SUPPORTED
+        std::lock_guard<std::mutex> lock(sync);
+#endif
+        unknown_triggers.erase(std::remove_if(unknown_triggers.begin(), unknown_triggers.end(),
+                                              [&](const auto &unknown)
+                                              {
+                                                  for (const auto &rm : remove_triggers)
+                                                  {
+                                                      if (unknown.second == rm.second)
+                                                          return true;
+                                                  }
+                                                  return false;
+                                              }),
+                               unknown_triggers.end());
+        remove_triggers.clear();
+        has_remove_triggers = false;
+    }
     // check triggers
     if (!unknown_triggers.empty())
     {
-        for (std::list<std::pair<Trigger, int32_t>>::iterator iter = unknown_triggers.begin();
-             iter != unknown_triggers.end();)
+        for (auto &it : unknown_triggers)
         {
-            if (iter->first.fired(time_ps, this))
+            if (it.first.check(time_ps, this))
             { // trigger fired
                 // signal fired trigger
                 ret = true;
-                if (Stressor::firedTrigger(iter->first, iter->second, this, time_ps))
+                if (Stressor::firedTrigger(it.first, it.second, this, time_ps))
                 {
-                    // remove fired trigger
-                    unknown_triggers.erase(iter++);
+                    // explicitly remove triggers through Stressor::removeFault via Action::Type::EJECTION
                 }
-                else
-                {
-                    ++iter;
-                }
-            }
-            else
-            {
-                ++iter;
             }
         }
     }
     return ret;
 }
+
 bool Injector::instructionAccurateCallback(uint64_t time_ps)
 {
 #if ETISS_DEBUG
@@ -220,6 +200,17 @@ void Injector::addTrigger(const Trigger &t, int32_t fault_id)
         pending_triggers.push_back(std::pair<Trigger, int32_t>(t, fault_id));
         has_pending_triggers = true;
     }
+}
+
+void Injector::removeTrigger(const Trigger &t, int32_t fault_id)
+{
+    etiss::log(etiss::VERBOSE, std::string("Called etiss::fault::Injector::removeTrigger(Trigger&=") + t.toString() +
+                                   ", fault_id=" + std::to_string(fault_id) + ")");
+#if CXX0X_UP_SUPPORTED
+    std::lock_guard<std::mutex> lock(sync);
+#endif
+    remove_triggers.push_back(std::pair<Trigger, int32_t>(t, fault_id));
+    has_remove_triggers = true;
 }
 
 bool Injector::acceleratedTrigger(const etiss::fault::Trigger &t, int32_t fault_id)

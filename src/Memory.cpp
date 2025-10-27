@@ -1,10 +1,15 @@
+// SPDX-License-Identifier: BSD-3-Clause
+//
+// This file is part of ETISS. It is licensed under the BSD 3-Clause License; you may not use this file except in
+// compliance with the License. You should have received a copy of the license along with this project. If not, see the
+// LICENSE file.
+
 /*
  * Taken from https://bitbucket.org/rafzi/hacklib
  */
 
 #include "etiss/Memory.h"
 #include <stdexcept>
-
 
 #ifdef _WIN32
 
@@ -100,8 +105,6 @@ std::string etiss::GetModulePath(etiss::ModuleHandle hModule)
 }
 
 #endif
-
-
 
 etiss::ModuleHandle etiss::GetCurrentModule()
 {

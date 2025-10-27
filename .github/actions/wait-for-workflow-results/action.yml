@@ -1,0 +1,137 @@
+name: 'Build SW Examples'
+description: 'Compile Example Target SW'
+inputs:
+  token:
+    description: 'Github Secret Token'
+    required: true
+    default: ''
+  repo:
+    description: 'Repository to check'
+    required: true
+    default: ''
+  event:
+    description: 'Event to filter'
+    required: true
+    default: 'repository_dispatch'
+  trigger:
+    description: 'Trigger to check'
+    required: true
+    default: ''
+  path:
+    description: 'Path to workflow'
+    required: true
+    default: ''
+  max_attempts:
+    description: 'Max number of tries'
+    required: true
+    default: ''
+  wait_time:
+    description: 'Number of seconds to sleep between each attempt'
+    required: true
+    default: 60
+outputs: {}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Wait for Workflow Completion
+      shell: bash
+      run: |
+        echo "const https = require('https');
+        const MAX_ATTEMPTS = ${{ inputs.max_attempts }};
+        let attempt = 0;
+        const current_time = new Date();
+        console.log('Current Time: ', current_time.toISOString());
+        const tenSecsEarlier = new Date(current_time.getTime() - 10000);
+        const thirtySecsLater = new Date(current_time.getTime() + 30000);
+        async function checkWorkflowStatus() {
+          const options = {
+            hostname: 'api.github.com',
+            path: '/repos/${{ inputs.repo }}/actions/runs',
+            method: 'GET',
+            headers: {
+              'Authorization': 'Bearer ${{ inputs.token }}',
+              'Accept': 'application/vnd.github.v3+json',
+              'User-Agent': 'Node.js Script'
+            }
+          };
+          // console.log('Options:', options);
+          return new Promise((resolve, reject) => {
+            https.get(options, (res) => {
+              let data = '';
+              res.on('data', (chunk) => {
+                data += chunk;
+              });
+              res.on('end', () => {
+                const response = JSON.parse(data);
+                if (!response.workflow_runs) {
+                  console.error('Unexpected response structure:', response);
+                  reject('Invalid API response');
+                  return;
+                }
+                // console.log('Responses:', response.workflow_runs);
+                // console.log('Response:', response.workflow_runs[0].status);
+                const workflowRuns = response.workflow_runs.filter(run =>
+                  new Date(run.created_at) > new Date(tenSecsEarlier) &&
+                  new Date(run.created_at) < new Date(thirtySecsLater) &&
+                  run.event === '${{ inputs.event }}' &&
+                  run.display_title === '${{ inputs.trigger }}' &&
+                  run.path === '${{ inputs.path }}'
+                );
+                // console.log('workflowRuns:', workflowRuns);
+                if (workflowRuns.length > 0) {
+                  const status = workflowRuns[0].status;
+                  const url = workflowRuns[0].html_url;
+                  const conclusion = workflowRuns[0].conclusion;
+                  console.log('URL of the matching workflow run: ', url);
+                  console.log('Status of the matching workflow run: ', status);
+                  // Check if the workflow run is completed
+                  if (status === 'completed') {
+                      console.log('Completed matching workflow run: ', status, conclusion);
+                      resolve({ status, conclusion });  // Resolving both status and conclusion
+                  } else {
+                      console.log('Workflow run is not completed yet');
+                      resolve({ status, conclusion: null }); // Conclusion is null if not completed
+                  }
+              } else {
+                  console.log('No workflow runs found');
+                  reject('No workflow runs found');  // Reject if no workflow runs are found
+              }
+              });
+            }).on('error', (e) => {
+              console.error(e);
+              reject(e);
+            });
+          });
+        }
+        async function waitForWorkflowCompletion() {
+          let res = {};
+          while (attempt < MAX_ATTEMPTS) {
+             try {
+                res = await checkWorkflowStatus();
+              } catch (error) {
+                console.error('Error checking workflow status:', error);
+              }
+              // ... handle status and conclusion ...
+            if (res && res.status === 'completed' && res.conclusion === 'success') {
+              console.log('Workflow completed and test passed!');
+              break
+            } else if (res && res.status === 'completed' && res.conclusion === 'failure') {
+              console.log('Workflow status is failed...');
+              process.exit(1);
+            } else if (res?.status !== '') {
+              console.log('Workflow status is ' + res?.status + '. Waiting for completion...');
+            } else {
+              console.log('Workflow status is unknown. Waiting for completion...');
+            }
+            attempt++;
+            console.log('Attempt: ' + attempt);
+            await new Promise(resolve => setTimeout(resolve, ${{ inputs.wait_time }} * 1000));
+          }
+          if (attempt === MAX_ATTEMPTS) {
+            console.log('Max attempts reached without completion. Exiting.');
+            process.exit(1);
+          }
+        }
+        waitForWorkflowCompletion();" > script.js
+        node script.js

@@ -1,44 +1,8 @@
-/*
-
-        @copyright
-
-        <pre>
-
-        Copyright 2018 Infineon Technologies AG
-
-        This file is part of ETISS tool, see <https://github.com/tum-ei-eda/etiss>.
-
-        The initial version of this software has been created with the funding support by the German Federal
-        Ministry of Education and Research (BMBF) in the project EffektiV under grant 01IS13022.
-
-        Redistribution and use in source and binary forms, with or without modification, are permitted
-        provided that the following conditions are met:
-
-        1. Redistributions of source code must retain the above copyright notice, this list of conditions and
-        the following disclaimer.
-
-        2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions
-        and the following disclaimer in the documentation and/or other materials provided with the distribution.
-
-        3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse
-        or promote products derived from this software without specific prior written permission.
-
-        THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
-        WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
-        PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY
-        DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-        PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
-        HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-        NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-        POSSIBILITY OF SUCH DAMAGE.
-
-        </pre>
-
-        @author Chair of Electronic Design Automation, TUM
-
-        @version 0.1
-
-*/
+// SPDX-License-Identifier: BSD-3-Clause
+//
+// This file is part of ETISS. It is licensed under the BSD 3-Clause License; you may not use this file except in
+// compliance with the License. You should have received a copy of the license along with this project. If not, see the
+// LICENSE file.
 
 #include "etiss/Translation.h"
 #include <mutex>
@@ -319,9 +283,9 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
 
     CodeBlock block(instructionindex);
 
-    #ifdef ETISS_USE_COREDSL_COVERAGE
+#ifdef ETISS_USE_COREDSL_COVERAGE
     block.fileglobalCode().insert("#define ETISS_USE_COREDSL_COVERAGE");
-    #endif
+#endif
 
     block.fileglobalCode().insert("#include \"etiss/jit/CPU.h\"\n"
                                   "#include \"etiss/jit/System.h\"\n"
@@ -330,8 +294,10 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
                                   "#include \"etiss/jit/ReturnCode.h\"\n"
                                   "#include \"etiss/jit/libCSRCounters.h\"\n");
 
-    for(auto &it: jitExtHeaders()){
-        if(it != "") block.fileglobalCode().insert("#include \"" + it + "\"\n");
+    for (auto &it : jitExtHeaders())
+    {
+        if (it != "")
+            block.fileglobalCode().insert("#include \"" + it + "\"\n");
     }
 
     block.functionglobalCode().insert("if (cpu->mode != " + toString(cpu_.mode) +
@@ -360,8 +326,10 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
     std::set<std::string> headers;
     headers.insert(etiss::jitFiles());
     headers.insert(arch_->getIncludePath());
-    for(auto & it: jitExtHeaderPaths()){
-       if(it != "") headers.insert(it);
+    for (auto &it : jitExtHeaderPaths())
+    {
+        if (it != "")
+            headers.insert(it);
     }
 
     std::set<std::string> libloc;
@@ -369,17 +337,21 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
     libloc.insert(etiss::cfg().get<std::string>("etiss_path", "./"));
     libloc.insert(etiss::jitFiles());
     libloc.insert(etiss::jitFiles() + "/etiss/jit");
-    for(auto & it: jitExtLibPaths()){
-       if(it != "") libloc.insert(etiss::jitFiles() + it);
+    for (auto &it : jitExtLibPaths())
+    {
+        if (it != "")
+            libloc.insert(etiss::jitFiles() + it);
     }
 
     std::set<std::string> libs;
-    //libs.insert("ETISS");
+    // libs.insert("ETISS");
     libs.insert("resources");
     libs.insert("semihost");
     libs.insert("CSRCounters");
-    for(auto & it: jitExtLibraries()){
-       if(it != "") libs.insert(it);
+    for (auto &it : jitExtLibraries())
+    {
+        if (it != "")
+            libs.insert(it);
     }
     /* DEBUG HELPER: write code files to work directory
     {
@@ -393,7 +365,7 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
     }
     */
 #ifndef ETISS_DEBUG
-#define ETISS_DEBUG 1
+#define ETISS_DEBUG 0
 #endif
     // compile library
     void *funcs =
@@ -486,7 +458,8 @@ etiss::int32 Translation::translateBlock(CodeBlock &cb)
 
         buffer = etiss::instr::Buffer(mainba.intCount());
         // read instruction
-        etiss::int32 ret = (*system_.dbg_read)(system_.handle, cb.endaddress_, (etiss_uint8*)buffer.internalBuffer(), mainba.byteCount()); // read instruction
+        etiss::int32 ret = (*system_.dbg_read)(system_.handle, cb.endaddress_, (etiss_uint8 *)buffer.internalBuffer(),
+                                               mainba.byteCount()); // read instruction
         mainba.set_value(buffer.data());
         if (ret == etiss::RETURNCODE::IBUS_READ_ERROR || ret == etiss::RETURNCODE::DBUS_READ_ERROR)
         {
@@ -496,7 +469,8 @@ etiss::int32 Translation::translateBlock(CodeBlock &cb)
             auto instr = &vis_->getMain()->getInvalid();
             CodeBlock::Line &line = cb.append(cb.endaddress_); // allocate codeset for instruction
             bool ok = instr->translate(errba, line.getCodeSet(), context);
-            if (unlikely(!ok)) {
+            if (unlikely(!ok))
+            {
                 return etiss::RETURNCODE::GENERALERROR;
             }
             cb.endaddress_ += mainba.byteCount(); // update end address
@@ -528,7 +502,8 @@ etiss::int32 Translation::translateBlock(CodeBlock &cb)
                 secba = new etiss::instr::BitArray(context.instr_width_);
 
                 buffer = etiss::instr::Buffer(secba->intCount());
-                ret = (*system_.dbg_read)(system_.handle, cb.endaddress_, (etiss_uint8*)buffer.internalBuffer(), secba->byteCount()); // read instruction
+                ret = (*system_.dbg_read)(system_.handle, cb.endaddress_, (etiss_uint8 *)buffer.internalBuffer(),
+                                          secba->byteCount()); // read instruction
                 secba->set_value(buffer.data());
 
                 if (ret != etiss::RETURNCODE::NOERROR)
@@ -564,7 +539,8 @@ etiss::int32 Translation::translateBlock(CodeBlock &cb)
                 }
             }
             CodeBlock::Line &line = cb.append(cb.endaddress_); // allocate codeset for instruction
-            bool ok = instr->translate(errba != etiss::instr::BitArray(32, 0) ? errba : *secba, line.getCodeSet(), context);
+            bool ok =
+                instr->translate(errba != etiss::instr::BitArray(32, 0) ? errba : *secba, line.getCodeSet(), context);
             if (unlikely(!ok))
             {
                 delete secba;
@@ -583,7 +559,8 @@ etiss::int32 Translation::translateBlock(CodeBlock &cb)
                 instr = &instrSet->getInvalid();
             }
             CodeBlock::Line &line = cb.append(cb.endaddress_); // allocate codeset for instruction
-            bool ok = instr->translate(errba != etiss::instr::BitArray(32, 0) ? errba : mainba, line.getCodeSet(), context);
+            bool ok =
+                instr->translate(errba != etiss::instr::BitArray(32, 0) ? errba : mainba, line.getCodeSet(), context);
             if (unlikely(!ok))
             {
                 return etiss::RETURNCODE::GENERALERROR;
@@ -599,18 +576,18 @@ etiss::int32 Translation::translateBlock(CodeBlock &cb)
 
 void Translation::unloadBlocksAll()
 {
-    for (auto &entry:blockmap_)
+    for (auto &entry : blockmap_)
     {
         entry.second.erase(std::remove_if(entry.second.begin(), entry.second.end(),
-                            [](auto &bl)
-                            {
-                                bl->valid = false;
-                                BlockLink::updateRef(bl->next, 0);
-                                BlockLink::updateRef(bl->branch, 0);
-                                BlockLink::decrRef(bl); // remove reference of map
-                                return true;
-                            }),
-                            entry.second.end());
+                                          [](auto &bl)
+                                          {
+                                              bl->valid = false;
+                                              BlockLink::updateRef(bl->next, 0);
+                                              BlockLink::updateRef(bl->branch, 0);
+                                              BlockLink::decrRef(bl); // remove reference of map
+                                              return true;
+                                          }),
+                           entry.second.end());
     }
     blockmap_.clear();
 }

@@ -1,46 +1,8 @@
-/**
-
-        @copyright
-
-        <pre>
-
-        Copyright 2018 Infineon Technologies AG
-
-        This file is part of ETISS tool, see <https://github.com/tum-ei-eda/etiss>.
-
-        The initial version of this software has been created with the funding support by the German Federal
-        Ministry of Education and Research (BMBF) in the project EffektiV under grant 01IS13022.
-
-        Redistribution and use in source and binary forms, with or without modification, are permitted
-        provided that the following conditions are met:
-
-        1. Redistributions of source code must retain the above copyright notice, this list of conditions and
-        the following disclaimer.
-
-        2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions
-        and the following disclaimer in the documentation and/or other materials provided with the distribution.
-
-        3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse
-        or promote products derived from this software without specific prior written permission.
-
-        THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
-        WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
-        PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY
-        DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-        PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
-        HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-        NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-        POSSIBILITY OF SUCH DAMAGE.
-
-        </pre>
-
-        @author Marc Greim <marc.greim@mytum.de>, Chair of Electronic Design Automation, TUM
-
-        @date July 29, 2014
-
-        @version 0.1
-
-*/
+// SPDX-License-Identifier: BSD-3-Clause
+//
+// This file is part of ETISS. It is licensed under the BSD 3-Clause License; you may not use this file except in
+// compliance with the License. You should have received a copy of the license along with this project. If not, see the
+// LICENSE file.
 /**
         @file
 
@@ -135,10 +97,12 @@ void CPUArch::deleteInterruptVector(etiss::InterruptVector *vec, ETISS_CPU *cpu)
   // memory leak
 }
 
-etiss::InterruptEnable* CPUArch::createInterruptEnable(ETISS_CPU *cpu) {
+etiss::InterruptEnable *CPUArch::createInterruptEnable(ETISS_CPU *cpu)
+{
     return new etiss::InterruptEnable();
 }
-void CPUArch::deleteInterruptEnable(etiss::InterruptEnable* en, ETISS_CPU* cpu) {
+void CPUArch::deleteInterruptEnable(etiss::InterruptEnable *en, ETISS_CPU *cpu)
+{
     delete en;
 }
 
@@ -161,28 +125,30 @@ static void CPUArch_finalizeInstrSet(etiss::instr::InstructionSet *set)
 {
     if (set == nullptr)
         return;
-    set->foreach ([](etiss::instr::Instruction &instr) {
-        if (((uint32_t)instr.presentBuiltinGroups() &
-             (uint32_t)etiss::instr::Instruction::BUILTINGROUP::CPUTIMEUPDATE) == 0)
-        { // update time
-            instr.addCallback(
-                [](etiss::instr::BitArray &, etiss::CodeSet &cs, etiss::instr::InstructionContext &) {
-                    CodePart &cp = cs.prepend(CodePart::INITIALREQUIRED);
-                    cp.getAffectedRegisters().add("cpuTime_ps", 64);
-                    cp.code() = "cpu->cpuTime_ps += (1 * cpu->cpuCycleTime_ps);";
-                    return true;
-                },
-                (uint32_t)etiss::instr::Instruction::BUILTINGROUP::CPUTIMEUPDATE);
-        }
-        /// TODO? ensure instruction pointer update
-    });
+    set->foreach (
+        [](etiss::instr::Instruction &instr)
+        {
+            if (((uint32_t)instr.presentBuiltinGroups() &
+                 (uint32_t)etiss::instr::Instruction::BUILTINGROUP::CPUTIMEUPDATE) == 0)
+            { // update time
+                instr.addCallback(
+                    [](etiss::instr::BitArray &, etiss::CodeSet &cs, etiss::instr::InstructionContext &)
+                    {
+                        CodePart &cp = cs.prepend(CodePart::INITIALREQUIRED);
+                        cp.getAffectedRegisters().add("cpuTime_ps", 64);
+                        cp.code() = "cpu->cpuTime_ps += (1 * cpu->cpuCycleTime_ps);";
+                        return true;
+                    },
+                    (uint32_t)etiss::instr::Instruction::BUILTINGROUP::CPUTIMEUPDATE);
+            }
+            /// TODO? ensure instruction pointer update
+        });
 }
 
 void CPUArch::finalizeInstrSet(etiss::instr::ModedInstructionSet &mis) const
 {
-    mis.foreach ([](etiss::instr::VariableInstructionSet &vis) {
-        vis.foreach ([](etiss::instr::InstructionSet &set) { CPUArch_finalizeInstrSet(&set); });
-    });
+    mis.foreach ([](etiss::instr::VariableInstructionSet &vis)
+                 { vis.foreach ([](etiss::instr::InstructionSet &set) { CPUArch_finalizeInstrSet(&set); }); });
 }
 
 void CPUArch::compensateEndianess(ETISS_CPU *cpu, etiss::instr::BitArray &ba) const
@@ -200,7 +166,7 @@ extern "C"
         CPUArch::signalChangedRegisterValue(cpu, registerName);
     }
 
-    void etiss_icache_flush(ETISS_CPU *cpu, ETISS_System * const system, void * const * const plugin_pointers)
+    void etiss_icache_flush(ETISS_CPU *cpu, ETISS_System *const system, void *const *const plugin_pointers)
     {
         cpu->exception = etiss::RETURNCODE::RELOADBLOCKS;
     }

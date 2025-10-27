@@ -1,46 +1,8 @@
-/**
-
-        @copyright
-
-        <pre>
-
-        Copyright 2018 Infineon Technologies AG
-
-        This file is part of ETISS tool, see <https://github.com/tum-ei-eda/etiss>.
-
-        The initial version of this software has been created with the funding support by the German Federal
-        Ministry of Education and Research (BMBF) in the project EffektiV under grant 01IS13022.
-
-        Redistribution and use in source and binary forms, with or without modification, are permitted
-        provided that the following conditions are met:
-
-        1. Redistributions of source code must retain the above copyright notice, this list of conditions and
-        the following disclaimer.
-
-        2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions
-        and the following disclaimer in the documentation and/or other materials provided with the distribution.
-
-        3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse
-        or promote products derived from this software without specific prior written permission.
-
-        THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
-        WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
-        PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY
-        DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-        PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
-        HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-        NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-        POSSIBILITY OF SUCH DAMAGE.
-
-        </pre>
-
-        @author Marc Greim <marc.greim@mytum.de>, Chair of Electronic Design Automation, TUM
-
-        @date November 17, 2014
-
-        @version 0.4
-
-*/
+// SPDX-License-Identifier: BSD-3-Clause
+//
+// This file is part of ETISS. It is licensed under the BSD 3-Clause License; you may not use this file except in
+// compliance with the License. You should have received a copy of the license along with this project. If not, see the
+// LICENSE file.
 /**
         @file
 
@@ -89,29 +51,26 @@ class InstructionDefinition;
 /**
 Buffer for reading data from memory while instructions are being fetched
 */
-class Buffer {
-public:
-    I* d_;
+class Buffer
+{
+  public:
+    I *d_;
     unsigned intcount_;
-public:
-    Buffer(): d_(nullptr), intcount_(0) {}
-    Buffer(const Buffer& o) : d_(new I[o.intcount_]), intcount_(o.intcount_){
-        *this = o;
-    }
-    Buffer(Buffer&& o) : d_(o.d_), intcount_(o.intcount_){
-        o.d_ = nullptr;
-    }
-    Buffer(unsigned intcount) : d_(new I[intcount]), intcount_(intcount) {
-        for (unsigned i = 0; i < intcount_; i++) d_[i] = 0;
-    }
-    Buffer(unsigned intcount, I val) : Buffer(intcount) {
-        *d_ = val;
-    }
-    ~Buffer() {
-        clear();
-    }
 
-    Buffer& operator=(const Buffer& o){
+  public:
+    Buffer() : d_(nullptr), intcount_(0) {}
+    Buffer(const Buffer &o) : d_(new I[o.intcount_]), intcount_(o.intcount_) { *this = o; }
+    Buffer(Buffer &&o) : d_(o.d_), intcount_(o.intcount_) { o.d_ = nullptr; }
+    Buffer(unsigned intcount) : d_(new I[intcount]), intcount_(intcount)
+    {
+        for (unsigned i = 0; i < intcount_; i++)
+            d_[i] = 0;
+    }
+    Buffer(unsigned intcount, I val) : Buffer(intcount) { *d_ = val; }
+    ~Buffer() { clear(); }
+
+    Buffer &operator=(const Buffer &o)
+    {
         if (o.intcount_ != intcount_)
             throw std::runtime_error("operator= called with incompatible bit array");
         for (unsigned i = 0; i < intcount_; i++)
@@ -119,7 +78,8 @@ public:
         return *this;
     }
 
-    Buffer& operator=(Buffer&& o){
+    Buffer &operator=(Buffer &&o)
+    {
         clear();
         intcount_ = o.intcount_;
         d_ = o.d_;
@@ -127,8 +87,10 @@ public:
         return *this;
     }
 
-    void clear(){
-        if(d_) delete[] d_;
+    void clear()
+    {
+        if (d_)
+            delete[] d_;
     }
     /**
         @brief get the internal buffer
@@ -141,7 +103,7 @@ public:
     */
     unsigned internalBufferSize();
 
-    I data(){return *d_;}
+    I data() { return *d_; }
     /**
         changes byte positions as needed to resove endiannes incompabilities after
        using the internal buffer to write
@@ -151,19 +113,20 @@ public:
 
 /**
  * Holding unique instruction sets code chunks after permutation.
-*/
-typedef std::set<Instruction*> Node;
+ */
+typedef std::set<Instruction *> Node;
 
 /**
     @brief stores a bit vector
 */
 class BitArray : public boost::dynamic_bitset<>
 {
-private:
+  private:
     typedef boost::dynamic_bitset<> super;
-public:
+
+  public:
     using super::dynamic_bitset;
-    BitArray(const super& a) : super(a){} // hack for parent's explicit constructors
+    BitArray(const super &a) : super(a) {} // hack for parent's explicit constructors
 
     /**
         @return number of bytes stored in this array (rounded up if neccessary)
@@ -192,7 +155,7 @@ public:
             permutated to 0101, 0111, 1101, 1111
         @return List of BitArray
     */
-    static std::vector<BitArray> permutate(const BitArray& input, std::vector<size_type> indexes);
+    static std::vector<BitArray> permutate(const BitArray &input, std::vector<size_type> indexes);
     /**
         @brief string representation of the BitArray
     */
@@ -206,12 +169,11 @@ public:
  */
 class BitArrayRange
 {
-public:
-    etiss_del_como(BitArrayRange)
-private:
-    BitArray::size_type startpos;
+  public:
+    etiss_del_como(BitArrayRange) private : BitArray::size_type startpos;
     BitArray::size_type endpos;
-public:
+
+  public:
     /**
         @attention startindex_included MUST be the higher valued index. Only exception is for zero length ranges where
        startindex_included+1==endindex_included
@@ -222,7 +184,7 @@ public:
         reads bits from the range to the return value starting at the lsb. higher
        bits are set to zero
     */
-    I read(const BitArray& ba);
+    I read(const BitArray &ba);
     /**
         write the bit from the passed value starting at the lsb to the range.
     */
@@ -393,10 +355,12 @@ class Instruction : public etiss::ToString
 {
   private:
     std::list<std::tuple<std::function<bool(BitArray &, etiss::CodeSet &, InstructionContext &)>, uint32_t,
-                         std::set<uint32_t>>> callbacks_;
+                         std::set<uint32_t>>>
+        callbacks_;
     uint32_t builtinGroups_;
     std::set<uint32_t> groups_;
     std::function<std::string(BitArray &, Instruction &)> printer_;
+
   public:
     etiss_del_como(Instruction)
 
@@ -443,11 +407,11 @@ class InstructionSet : public etiss::ToString
   public:
     etiss_del_como(InstructionSet)
 
-    VariableInstructionSet &parent_;
+        VariableInstructionSet &parent_;
     const std::string name_;
     const unsigned width_;
     const unsigned chunk_size;
-    InstructionSet(VariableInstructionSet &parent, unsigned width, const std::string &name, unsigned c_size=4);
+    InstructionSet(VariableInstructionSet &parent, unsigned width, const std::string &name, unsigned c_size = 4);
     ~InstructionSet();
 
     Instruction *get(const OPCode &key);
@@ -461,10 +425,10 @@ class InstructionSet : public etiss::ToString
     }
 
     bool compile();
-    bool compile(Node* node, BitArray code, Instruction* instr);
+    bool compile(Node *node, BitArray code, Instruction *instr);
 
     Instruction *resolve(BitArray &instr);
-    Instruction *resolve(Node* node, BitArray &instr);
+    Instruction *resolve(Node *node, BitArray &instr);
 
     std::string print(std::string prefix, bool printunused = false);
 
@@ -479,7 +443,7 @@ class InstructionSet : public etiss::ToString
   private:
     std::map<const OPCode *, Instruction *, etiss::instr::less> instrmap_;
 
-    Node** root_; // holds the entry of the bucket tree in decoding and compilition algorithm
+    Node **root_; // holds the entry of the bucket tree in decoding and compilition algorithm
 
     Instruction invalid;
 };
@@ -606,7 +570,7 @@ class InstructionCollection
   private:
     std::set<InstructionClass *> classes_;
     template <typename... T>
-    void add(InstructionClass &klass, T &... args)
+    void add(InstructionClass &klass, T &...args)
     {
         classes_.insert(&klass);
         add(args...);
@@ -618,7 +582,7 @@ class InstructionCollection
 
         const std::string name_; // e.g. ARMv6-M
     template <typename... T>
-    inline InstructionCollection(const std::string &name, InstructionClass &class1, T &... otherclasses) : name_(name)
+    inline InstructionCollection(const std::string &name, InstructionClass &class1, T &...otherclasses) : name_(name)
     {
         add(class1, otherclasses...);
     }
@@ -639,7 +603,7 @@ class InstructionClass
   private:
     std::set<InstructionGroup *> groups_;
     template <typename... T>
-    void add(InstructionGroup &group, T &... args)
+    void add(InstructionGroup &group, T &...args)
     {
         groups_.insert(&group);
         add(args...);
@@ -655,7 +619,7 @@ class InstructionClass
 
         template <typename... T>
         InstructionClass(unsigned mode, const std::string &name, unsigned width, InstructionGroup &group1,
-                         T &... othergroups)
+                         T &...othergroups)
         : mode_(mode), name_(name), width_(width)
     {
         add(group1, othergroups...);
@@ -730,11 +694,7 @@ class InstructionDefinition : public etiss::ToString
     {
         if (!callback)
         {
-            etiss_log(
-                FATALERROR,
-                (std::string(
-                     "Instruction defined without a function callback: ") +
-                 name));
+            etiss_log(FATALERROR, (std::string("Instruction defined without a function callback: ") + name));
             return;
         }
         group_.defs_.insert(this);

@@ -1,46 +1,8 @@
-/**
-
-        @copyright
-
-        <pre>
-
-        Copyright 2018 Infineon Technologies AG
-
-        This file is part of ETISS tool, see <https://github.com/tum-ei-eda/etiss>.
-
-        The initial version of this software has been created with the funding support by the German Federal
-        Ministry of Education and Research (BMBF) in the project EffektiV under grant 01IS13022.
-
-        Redistribution and use in source and binary forms, with or without modification, are permitted
-        provided that the following conditions are met:
-
-        1. Redistributions of source code must retain the above copyright notice, this list of conditions and
-        the following disclaimer.
-
-        2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions
-        and the following disclaimer in the documentation and/or other materials provided with the distribution.
-
-        3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse
-        or promote products derived from this software without specific prior written permission.
-
-        THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
-        WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
-        PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY
-        DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-        PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
-        HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-        NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-        POSSIBILITY OF SUCH DAMAGE.
-
-        </pre>
-
-        @author Marc Greim <marc.greim@mytum.de>, Chair of Electronic Design Automation, TUM
-
-        @date November 21, 2014
-
-        @version 0.4
-
-*/
+// SPDX-License-Identifier: BSD-3-Clause
+//
+// This file is part of ETISS. It is licensed under the BSD 3-Clause License; you may not use this file except in
+// compliance with the License. You should have received a copy of the license along with this project. If not, see the
+// LICENSE file.
 /**
         @file
 
@@ -55,6 +17,10 @@
 #include "etiss/Misc.h"
 #include "etiss/fault/Injector.h"
 
+#include "etiss/fault/Trigger.h"
+#include "etiss/fault/Action.h"
+#include "etiss/fault/Fault.h"
+
 #include <cstddef>
 
 #include <memory>
@@ -66,7 +32,7 @@ class VSSync;
 
 /**
     abstract representation of an module of a simulation which could be a embedded device of the cpu of an embedded
-device. it is recommended to model and address the full hardware hirachy. e.g. <pre> device1
+device. it is recommended to model and address the full hardware hierachy. e.g. <pre> device1
             -> cpu
                 -> cache
             -> bus
@@ -217,7 +183,7 @@ class VirtualStruct : public std::enable_shared_from_this<VirtualStruct>, public
                                  ///< "SR" OR1K CPU register: SPR[0][17]
         const std::string prettyname_; ///< alternative/human readable name of the field. e.g. representing the "SR"
                                        ///< OR1K CPU register: "SR" or "SupervisorRegister"
-        const int flags_;       ///< read write flags as specified by the static const int parameters of Field: R,W,L
+        int flags_;             ///< read write flags as specified by the static const int parameters of Field: R,W,L
         const size_t width_;    ///< width in bytes (rounded up if neccessary)
         const size_t bitwidth_; ///< width in bits
         const AccessMode accessMode_;
@@ -300,7 +266,7 @@ class VirtualStruct : public std::enable_shared_from_this<VirtualStruct>, public
         virtual void _write(uint64_t val) { ((structT *)parent_.structure_)->*field = (retT)val; }
     };
 
-  private:
+  protected:
     VirtualStruct(void *structure, std::function<void(Field *)> dtor = [](Field *f) { delete f; });
 
   public:
@@ -335,8 +301,9 @@ class VirtualStruct : public std::enable_shared_from_this<VirtualStruct>, public
             flags |= Field::W;
         if (supportsListener)
             flags |= Field::L;
-        Field *f = new Field(*this, name, prettyname, flags, sizeof(T), false, [read]() { return (uint64_t)read(); },
-                             [write](uint64_t v) { write((T)v); });
+        Field *f = new Field(
+            *this, name, prettyname, flags, sizeof(T), false, [read]() { return (uint64_t)read(); },
+            [write](uint64_t v) { write((T)v); });
         if (addField(f, noerrorprint))
             return true;
         delete f;
@@ -368,6 +335,7 @@ class VirtualStruct : public std::enable_shared_from_this<VirtualStruct>, public
     virtual bool readField(void *fastfieldaccessptr, uint64_t &val, std::string &errormsg);
     virtual bool applyAction(const etiss::fault::Fault &fault, const etiss::fault::Action &action,
                              std::string &errormsg);
+    virtual bool update_field_access_rights(const etiss::fault::Action &action, std::string &errormsg);
 
   public:
     /// set this function to handle custom commands passed by etiss::fault::Action of the type
@@ -449,6 +417,7 @@ class VirtualStructSupport
         @return may never be NULL
     */
     virtual std::shared_ptr<VirtualStruct> getStruct() = 0;
+    virtual const std::string &getName() = 0;
 };
 
 #define ETISS_VIRTUALSTRUCT_ADDFIELD(VIRTUALSTRUCT, STRUCT, FIELD, NAME, PRETTYNAME) \

@@ -1,6 +1,7 @@
 name: Doxygen - GitHub Pages
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - master
@@ -21,6 +22,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+      with:
+        submodules: true
 
     - name: Requirements
       run: |

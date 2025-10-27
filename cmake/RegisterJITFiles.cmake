@@ -1,3 +1,8 @@
+# SPDX-License-Identifier: BSD-3-Clause
+#
+# This file is part of ETISS. It is licensed under the BSD 3-Clause License; you may not use this file except in
+# compliance with the License. You should have received a copy of the license along with this project. If not, see the
+# LICENSE file.
 
 MACRO(RegisterJITFiles Files)
     FOREACH(File ${Files})
@@ -10,9 +15,11 @@ MACRO(RegisterJITFiles Files)
 
         # mimicing installation in build tree as well
         # NOTE: pluginexport hasn't been generated yet so will be copied later
-        if (NOT "${ExistingFile}" STREQUAL "${ETISS_BINARY_DIR}/include/etiss/pluginexport.h")
-          file(COPY "${ExistingFile}" DESTINATION "${ETISS_BINARY_DIR}/include/jit/${TargetPath}")
-        endif()
+        IF(ETISS_BINARY_DIR)
+          if (NOT "${ExistingFile}" STREQUAL "${ETISS_BINARY_DIR}/include/etiss/pluginexport.h")
+            file(COPY "${ExistingFile}" DESTINATION "${ETISS_BINARY_DIR}/include/jit/${TargetPath}")
+          endif()
+        ENDIF()
     ENDFOREACH()
 ENDMACRO()
 
@@ -20,5 +27,7 @@ MACRO(RegisterJITFileArch Arch)
     INSTALL(FILES "${CMAKE_CURRENT_LIST_DIR}/${Arch}.h" DESTINATION "include/jit/Arch/${Arch}")
 
     # mimicing installation in build tree as well
-    file(COPY "${CMAKE_CURRENT_LIST_DIR}/${Arch}.h" DESTINATION "${ETISS_BINARY_DIR}/include/jit/Arch/${Arch}")
+    IF(ETISS_BINARY_DIR)
+      file(COPY "${CMAKE_CURRENT_LIST_DIR}/${Arch}.h" DESTINATION "${ETISS_BINARY_DIR}/include/jit/Arch/${Arch}")
+    ENDIF()
 ENDMACRO()

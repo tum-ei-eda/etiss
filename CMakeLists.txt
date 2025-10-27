@@ -1,37 +1,9 @@
+# SPDX-License-Identifier: BSD-3-Clause
 #
-#	Copyright 2018 Infineon Technologies AG
-#
-#	This file is part of ETISS tool, see <https://github.com/tum-ei-eda/etiss>
-#
-#	The initial version of this software has been created with the funding support by the German Federal
-#	Ministry of Education and Research(BMBF) in the project EffektiV under grant 01IS13022.
-#
-#	Redistribution and use in source and binary forms, with or without modification, are permitted
-#	provided that the following conditions are met:
-#
-#	1. Redistributions of source code must retain the above copyright notice, this list of conditions and
-#	the following disclaimer.
-#
-# 	2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions
-#	and the following disclaimer in the documentation and / or other materials provided with the distribution.
-#
-# 	3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse
-# 	or promote products derived from this software without specific prior written permission.
-#
-#	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
-#	WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
-#	PARTICULAR PURPOSE ARE DISCLAIMED.IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY
-#	DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES(INCLUDING, BUT NOT LIMITED TO,
-#	PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
-#	HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT(INCLUDING
-#	NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-#	POSSIBILITY OF SUCH DAMAGE.
-#
-#
-#	Author: Marc Greim <marc.greim@mytum.de>, Chair of Electronic Design Automation, TUM
-#
-#	Version 0.1
-#
+# This file is part of ETISS. It is licensed under the BSD 3-Clause License; you may not use this file except in
+# compliance with the License. You should have received a copy of the license along with this project. If not, see the
+# LICENSE file.
+
 CMAKE_MINIMUM_REQUIRED(VERSION 3.13 FATAL_ERROR)
 
 PROJECT(ETISS)
@@ -44,8 +16,8 @@ ENDIF()
 set(ETISS_BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR} CACHE INTERNAL "ETISS build location")
 # Declare ETISS version
 set(ETISS_VERSION_MAJOR 0)
-set(ETISS_VERSION_MINOR 8)
-set(ETISS_VERSION_PATCH 0)
+set(ETISS_VERSION_MINOR 11)
+set(ETISS_VERSION_PATCH 1)
 
 # Derived version variables
 set(ETISS_VERSION_FULL ${ETISS_VERSION_MAJOR}.${ETISS_VERSION_MINOR}.${ETISS_VERSION_PATCH})
@@ -64,7 +36,10 @@ option(ETISS_USE_COREDSL_COVERAGE "Enable the CoreDSL coverage analyzer" OFF)
 
 # Global configuration
 SET(CMAKE_POSITION_INDEPENDENT_CODE ON)
-SET(CMAKE_CXX_STANDARD 14)
+IF(NOT DEFINED CMAKE_CXX_STANDARD)
+SET(CMAKE_CXX_STANDARD 14) # default if not set by configuration
+ENDIF()
+MESSAGE(STATUS "CMAKE_CXX_STANDARD set to ${CMAKE_CXX_STANDARD}")
 SET(CMAKE_CXX_STANDARD_REQUIRED ON)
 SET(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
@@ -137,6 +112,8 @@ ENDIF()
 # Define debug macro.
 IF(CMAKE_BUILD_TYPE STREQUAL "Debug")
     ADD_DEFINITIONS(-DETISS_DEBUG=1)
+ELSE()
+    ADD_DEFINITIONS(-DETISS_DEBUG=0)
 ENDIF()
 
 LINK_DIRECTORIES("${Boost_LIBRARY_DIRS}")
@@ -214,8 +191,10 @@ else()
 endif()
 
 
-ADD_SUBDIRECTORY(src)
+### Third party libraries/targets
+ADD_SUBDIRECTORY(third_party)
 
+ADD_SUBDIRECTORY(src)
 
 ########### INSTALLATION ############
 
@@ -236,42 +215,6 @@ set(ETISS_HEADER ${ETISS_HEADER} ${TMP_CONFIG_HEADER_REL}
         src/IntegratedLibrary/DataWriteTracer.cpp
 )
 
-
-include(FetchContent)
-### elfio
-FetchContent_Declare(elfio_srcs
-    GIT_REPOSITORY https://github.com/serge1/ELFIO.git
-    GIT_TAG Release_3.11
-)
-if(NOT elfio_srcs_POPULATED)
-    FetchContent_Populate(elfio_srcs)
-    FetchContent_GetProperties(elfio_srcs)
-endif()
-add_subdirectory(${elfio_srcs_SOURCE_DIR} ${elfio_srcs_BINARY_DIR} EXCLUDE_FROM_ALL)
-
-### simpleini
-FetchContent_Declare(simpleini_srcs
-	GIT_REPOSITORY https://github.com/brofield/simpleini.git
-	GIT_TAG v4.19
-)
-if(NOT simpleini_srcs_POPULATED)
-	FetchContent_Populate(simpleini_srcs)
-	FetchContent_GetProperties(simpleini_srcs)
-endif()
-add_library(simpleini OBJECT
-    "${simpleini_srcs_SOURCE_DIR}/ConvertUTF.c"
-)
-set_target_properties(simpleini PROPERTIES
-    PUBLIC_HEADER "${simpleini_srcs_SOURCE_DIR}/SimpleIni.h;${simpleini_srcs_SOURCE_DIR}/ConvertUTF.h"
-)
-target_include_directories(simpleini PUBLIC
-    $<BUILD_INTERFACE:${simpleini_srcs_SOURCE_DIR}>
-    $<INSTALL_INTERFACE:include/simpleini>
-)
-install(TARGETS simpleini
-    PUBLIC_HEADER DESTINATION include/simpleini
-)
-
 ### Doxyfile
 set(ETISS_DOX_LOCATIONS ${ETISS_DOX_LOCATIONS} ${PROJECT_BINARY_DIR}/include)
 set(ETISS_DOX_LOCATIONS ${ETISS_DOX_LOCATIONS} ${PROJECT_BINARY_DIR}/include_c)
@@ -281,6 +224,7 @@ set(ETISS_DOX_LOCATIONS ${ETISS_DOX_LOCATIONS} ${PROJECT_SOURCE_DIR}/src)
 set(ETISS_DOX_LOCATIONS ${ETISS_DOX_LOCATIONS} ${PROJECT_SOURCE_DIR}/ArchImpl)
 set(ETISS_DOX_LOCATIONS ${ETISS_DOX_LOCATIONS} ${PROJECT_SOURCE_DIR}/JITImpl)
 set(ETISS_DOX_LOCATIONS ${ETISS_DOX_LOCATIONS} ${PROJECT_SOURCE_DIR}/PluginImpl)
+set(ETISS_DOX_LOCATIONS ${ETISS_DOX_LOCATIONS} ${PROJECT_SOURCE_DIR}/docs/dox)
  #if doxygen is available generate documentation
 if(DOXYGEN_FOUND)
     string(REPLACE ";" " " P_ETISS_DOX_LOCATIONS "${ETISS_DOX_LOCATIONS}")
@@ -371,7 +315,7 @@ set_target_properties(ETISS PROPERTIES
   LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib/
 )
 IF(UNIX)
-    TARGET_LINK_LIBRARIES(ETISS PUBLIC ${Boost_LIBRARIES})
+    TARGET_LINK_LIBRARIES(ETISS PUBLIC Boost::filesystem Boost::system Boost::program_options)
 ELSE(UNIX)
     TARGET_LINK_LIBRARIES(ETISS PUBLIC Boost::boost Threads::Threads)
 ENDIF()
@@ -393,7 +337,10 @@ TARGET_INCLUDE_DIRECTORIES(ETISS PUBLIC
     "${PROJECT_BINARY_DIR}/include_c"
     ${INCGEN_INC_DIR}
 )
-TARGET_LINK_LIBRARIES(ETISS PUBLIC simpleini elfio)
+TARGET_LINK_LIBRARIES(ETISS PUBLIC simpleini elfio pugixml betterenums)
+if(NOT CMAKE_CXX_STANDARD GREATER_EQUAL 20)
+    TARGET_LINK_LIBRARIES(ETISS PUBLIC fmt)
+ENDIF()
 
 GENERATE_EXPORT_HEADER(ETISS
           BASE_NAME ETISS_PLUGIN
@@ -435,6 +382,7 @@ configure_file(
  )
 install(FILES
   "${PROJECT_SOURCE_DIR}/cmake/ETISSPlugin.cmake"
+  "${PROJECT_SOURCE_DIR}/cmake/RegisterJITFiles.cmake"
   "${PROJECT_BINARY_DIR}/ETISSConfig.cmake"
   "${PROJECT_BINARY_DIR}/ETISSConfigVersion.cmake"
   DESTINATION "${INSTALL_CMAKE_DIR}" COMPONENT dev)
