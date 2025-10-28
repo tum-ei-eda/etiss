@@ -207,13 +207,6 @@ install(FILES ${PROJECT_BINARY_DIR}/include/etiss/config.h
         DESTINATION include/etiss)
 unset(TMP_CONFIG_HEADER_REL)
 file(GLOB TMP_CONFIG_HEADER_REL RELATIVE ${ETISS_ROOT} ${PROJECT_BINARY_DIR}/include/etiss/config.h)
-set(ETISS_HEADER ${ETISS_HEADER} ${TMP_CONFIG_HEADER_REL}
-        src/IntegratedLibrary/InstructionTracer.cpp
-        include/etiss/IntegratedLibrary/InstructionTracer.h
-        include/etiss/IntegratedLibrary/TraceFileWriter.h
-        src/IntegratedLibrary/TraceFileWriter.cpp
-        src/IntegratedLibrary/DataWriteTracer.cpp
-)
 
 ### Doxyfile
 set(ETISS_DOX_LOCATIONS ${ETISS_DOX_LOCATIONS} ${PROJECT_BINARY_DIR}/include)
