@@ -14,6 +14,7 @@
 */
 
 #include <stdlib.h>
+#include <cstring>
 
 #include "etiss/System.h"
 #include "etiss/IntegratedLibrary/TraceFileWriter.h"
@@ -63,7 +64,7 @@ static etiss_int32 system_call_dwrite(void *handle, ETISS_CPU *cpu, etiss_uint64
         entry.addr = addr;
         entry.length = length > 64 ? 64 : length; // Truncate if needed
 
-        memcpy(entry.data, buffer, entry.length);
+        std::memcpy(entry.data, buffer, entry.length);
 
         writer.writeDWrite(entry);
     }
