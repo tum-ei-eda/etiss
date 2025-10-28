@@ -142,18 +142,22 @@ std::list<std::string> split(
     std::function<size_t(const std::string & /**<str*/, size_t /**<from*/, size_t & /**<seperatorsize*/)> findsplit);
 inline std::list<std::string> split(const std::string &str, char splitchar)
 {
-    return split(str, [splitchar](const std::string &str, size_t from, size_t &seperatorsize) {
-        seperatorsize = 1;
-        return str.find(splitchar, from);
-    });
+    return split(str,
+                 [splitchar](const std::string &str, size_t from, size_t &seperatorsize)
+                 {
+                     seperatorsize = 1;
+                     return str.find(splitchar, from);
+                 });
 }
 
 inline std::list<std::string> split(const std::string &str, const std::string &splitstring)
 {
-    return split(str, [splitstring](const std::string &str, size_t from, size_t &seperatorsize) {
-        seperatorsize = 1;
-        return str.find(splitstring, from);
-    });
+    return split(str,
+                 [splitstring](const std::string &str, size_t from, size_t &seperatorsize)
+                 {
+                     seperatorsize = 1;
+                     return str.find(splitstring, from);
+                 });
 }
 
 /**
@@ -161,7 +165,7 @@ inline std::list<std::string> split(const std::string &str, const std::string &s
  * std::stringstream
  */
 template <typename T, typename T2, typename... O>
-std::string toString(const T &val, const T2 &val2, const O &... others)
+std::string toString(const T &val, const T2 &val2, const O &...others)
 {
     return toString(val) + ";" + toString(val2, others...);
 }
@@ -230,7 +234,7 @@ std::string toLogString(const T &t)
  * new line and indented by two tabs.
  */
 template <typename T1, typename T2, typename... O>
-std::string toLogString(const T1 &t1, const T2 &t2, const O &... os)
+std::string toLogString(const T1 &t1, const T2 &t2, const O &...os)
 {
     return toLogString(t1) + "\n\t\t" + toLogString(t2, os...);
 }
@@ -240,7 +244,7 @@ std::string toLogString(const T1 &t1, const T2 &t2, const O &... os)
  * to the message
  */
 template <typename T, typename... O>
-void log(Verbosity level, std::string msg, const T &t, const O &... args)
+void log(Verbosity level, std::string msg, const T &t, const O &...args)
 {
     if (level <= (int)verbosity())
     {
@@ -501,7 +505,8 @@ inline
     getEndianness()
 {
     return ((0xFFFFFFFF & 1) == _LITTLE_ENDIAN_) ? _LITTLE_ENDIAN_
-                                                 : ((0xFFFFFFFF & 1) == _BIG_ENDIAN_) ? _BIG_ENDIAN_ : _UNKNOWN_ENDIAN_;
+           : ((0xFFFFFFFF & 1) == _BIG_ENDIAN_)  ? _BIG_ENDIAN_
+                                                 : _UNKNOWN_ENDIAN_;
 }
 
 } // end of namespace etiss

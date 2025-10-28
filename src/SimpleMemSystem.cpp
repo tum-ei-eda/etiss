@@ -159,9 +159,8 @@ void SimpleMemSystem::init_memory()
 {
     load_segments();
     load_elf();
-    std::sort(msegs_.begin(), msegs_.end(), [](std::unique_ptr<MemSegment> &a, std::unique_ptr<MemSegment> &b) {
-        return a->start_addr_ < b->start_addr_;
-    });
+    std::sort(msegs_.begin(), msegs_.end(), [](std::unique_ptr<MemSegment> &a, std::unique_ptr<MemSegment> &b)
+              { return a->start_addr_ < b->start_addr_; });
 }
 
 void SimpleMemSystem::load_segments()
