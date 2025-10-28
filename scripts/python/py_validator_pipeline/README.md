@@ -46,14 +46,14 @@ if [[ "$1" == "--verbose" ]]; then
     VERBOSE_ARG="--verbose"
 fi
 
-python3 /home/holaphei/repos/etiss-fork/etiss/py_validator_pipeline/main.py \
-    --bin_isuv /home/holaphei/repos/xmnn-isax-flow/etiss_riscv_examples/build/install/bin/$PROGRAM_NAME \
-    --ini_isuv /home/holaphei/repos/xmnn-isax-flow/etiss_riscv_examples/build/install/ini/$PROGRAM_NAME.ini \
-    --bin_golden_ref /home/holaphei/repos/etiss_riscv_examples/build/install/golden_ref/bin/$PROGRAM_NAME \
-    --ini_golden_ref /home/holaphei/repos/etiss_riscv_examples/build/install/golden_ref/ini/$PROGRAM_NAME.ini \
+python3 /path/to/etiss/scripts/python/py_validator_pipeline/main.py \
+    --bin_isuv /path/to/$PROGRAM_NAME \
+    --ini_isuv /path/to/$PROGRAM_NAME.ini \
+    --bin_golden_ref /path/to/$PROGRAM_NAME \
+    --ini_golden_ref /path/to/$PROGRAM_NAME.ini \
     --src $SOURCE_FILE \
     --fun $FUNCTION_OF_INTEREST \
-    --etiss_path /home/holaphei/repos/etiss-fork/etiss/build/bin \
+    --etiss_path /path/to/etiss/build/bin \
     --etiss_executable bare_etiss_processor \
     $VERBOSE_ARG
 ```
