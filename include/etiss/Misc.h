@@ -34,19 +34,6 @@
 
 #include "etiss/jit/types.h"
 
-namespace etiss
-{
-class CPUCore;
-class CPUArch;
-class JIT;
-class Plugin;
-class LibraryInterface;
-namespace fault
-{
-class Fault;
-class Action;
-} // namespace fault
-} // namespace etiss
 
 // some msvc pathces
 #ifdef _MSC_VER
