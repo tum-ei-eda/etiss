@@ -9,14 +9,12 @@
         @brief
 
         @detail
-
 */
 #ifndef ETISS_PLUGIN_VIRTUALSTRUCT_H_
 #define ETISS_PLUGIN_VIRTUALSTRUCT_H_
 #include "etiss/CVirtualStruct.h"
 #include "etiss/Misc.h"
 #include "etiss/fault/Injector.h"
-
 
 #include <cstddef>
 
@@ -264,7 +262,8 @@ class VirtualStruct : public std::enable_shared_from_this<VirtualStruct>, public
     };
 
   protected:
-    VirtualStruct(void *structure, std::function<void(Field *)> dtor = [](Field *f) { delete f; });
+    VirtualStruct(
+        void *structure, std::function<void(Field *)> dtor = [](Field *f) { delete f; });
 
   public:
     virtual ~VirtualStruct();
