@@ -13,7 +13,8 @@
 */
 
 #include "etiss/SimpleMemSystem.h"
-#include "etiss/CPUArch.h"
+#include "etiss/jit/CPU.h"
+//crm: #include "etiss/CPUArch.h"
 #include "etiss/Misc.h"
 #include <cstring>
 #include <iostream>
@@ -22,6 +23,7 @@
 
 #include "elfio/elfio.hpp"
 #include <memory>
+#include <iomanip>
 
 #define ARMv6M_DEBUG_PRINT 0
 #define MAX_MEMSEGS 99

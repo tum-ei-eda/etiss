@@ -13,6 +13,7 @@
 
 #include "etiss/mm/DMMUWrapper.h"
 #include "etiss/jit/ReturnCode.h"
+#include "etiss/mm/MMU.h"
 
 namespace etiss
 {

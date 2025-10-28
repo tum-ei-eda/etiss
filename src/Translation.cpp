@@ -5,6 +5,9 @@
 // LICENSE file.
 
 #include "etiss/Translation.h"
+#include "etiss/CPUArch.h"
+#include "etiss/Instruction.h"
+#include "etiss/JIT.h"
 #include <mutex>
 
 namespace etiss

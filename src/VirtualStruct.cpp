@@ -5,6 +5,9 @@
 // LICENSE file.
 
 #include "etiss/VirtualStruct.h"
+#include "etiss/fault/Trigger.h"
+#include "etiss/fault/Action.h"
+#include "etiss/fault/Fault.h"
 
 namespace etiss
 {

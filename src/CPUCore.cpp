@@ -9,8 +9,14 @@
         @detail
 */
 #include "etiss/CPUCore.h"
+#include "etiss/CPUArch.h"
+#include "etiss/JIT.h"
 #include "etiss/ETISS.h"
 #include "etiss/CoreDSLCoverage.h"
+#include "etiss/Translation.h"
+#include "etiss/System.h"
+#include "etiss/mm/MMU.h"
+#include "etiss/mm/DMMUWrapper.h"
 
 using namespace etiss;
 
@@ -932,4 +938,42 @@ loopexit:
     }
 
     return exception;
+}
+
+etiss::int32 CPUCore::execute(etiss::System &system)
+{
+    std::shared_ptr<ETISS_System> sys = etiss::wrap(&system);
+    if (sys.get() == 0)
+        return RETURNCODE::GENERALERROR;
+    etiss::uint32 ret = execute(*(sys.get()));
+    return ret;
+}
+
+std::string CPUCore::getJITName()
+{
+    std::shared_ptr<etiss::JIT> jit = jit_;
+    if (jit.get())
+    {
+        return jit->getName();
+    }
+    else
+    {
+        return "";
+    }
+}
+
+void CPUCore::reset(etiss::uint64 *startindex)
+{
+    arch_->resetCPU(cpu_, startindex);
+}
+
+std::shared_ptr<Plugin> CPUCore::getPlugin(std::string name)
+{
+    for (auto iter : plugins)
+    {
+        // std::cout << "found plugin: " << iter->_getPluginName();
+        if (iter->_getPluginName() == name)
+            return iter;
+    }
+    return nullptr;
 }

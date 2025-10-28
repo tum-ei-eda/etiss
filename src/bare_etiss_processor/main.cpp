@@ -7,8 +7,10 @@
 #include "TracePrinter.h"
 #include "etiss/SimpleMemSystem.h"
 #include "etiss/IntegratedLibrary/fault/MemoryManipulationSystem.h"
+#include "etiss/fault/Action.h"
 #include "etiss/ETISS.h"
 #include "etiss/CPUCore.h"
+#include "etiss/InterruptHandler.h"
 
 int main(int argc, const char *argv[])
 {

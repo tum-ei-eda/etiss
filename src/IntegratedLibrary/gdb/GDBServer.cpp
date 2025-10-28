@@ -12,7 +12,10 @@
 
 */
 #include "etiss/IntegratedLibrary/gdb/GDBServer.h"
+#include "etiss/IntegratedLibrary/gdb/GDBCore.h"
+#include "etiss/Instruction.h"
 #include "etiss/CPUCore.h"
+#include "etiss/CPUArch.h"
 #include "etiss/IntegratedLibrary/gdb/Hex.h"
 #include "etiss/IntegratedLibrary/gdb/UnixTCPGDBConnection.h"
 #include "etiss/jit/types.h"
