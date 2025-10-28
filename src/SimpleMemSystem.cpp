@@ -57,7 +57,7 @@ MemSegment::MemSegment(etiss::uint64 start_addr, etiss::uint64 size, access_t mo
         else
         {
             etiss::log(etiss::INFO,
-                       etiss::fmt::format("The memory segment is allocated uninitialized with length {:d} !", size_));
+                       etiss::fmt::format("The memory segment is allocated uninitialized with length {:#x} !", size_));
         }
         self_allocated_ = true;
     }
@@ -68,7 +68,7 @@ void MemSegment::memInit(std::string initString, uint64_t randomRoot)
     if (initString.find("0x") == 0)
     {
         etiss::log(etiss::INFO,
-                   etiss::fmt::format("The memory segment is initialized with {:d} elements with value: 0x{:s}", size_,
+                   etiss::fmt::format("The memory segment is initialized with {:#x} elements with value: 0x{:s}", size_,
                                       initString));
 
         // actual conversion from hex string to corresponding hex val
@@ -106,7 +106,7 @@ void MemSegment::memInit(std::string initString, uint64_t randomRoot)
     else if (initString.find("random") == 0 || initString.find("RANDOM") == 0)
     {
         etiss::log(etiss::INFO,
-                   etiss::fmt::format("The memory segment is initialized with {:d} random bytes and root: {:d}", size_,
+                   etiss::fmt::format("The memory segment is initialized with {:#x} random bytes and root: {:d}", size_,
                                       randomRoot));
 
         static std::default_random_engine generator{ randomRoot };
@@ -120,7 +120,7 @@ void MemSegment::memInit(std::string initString, uint64_t randomRoot)
     else
     {
         etiss::log(etiss::INFO,
-                   etiss::fmt::format("The memory segment is initialized with {:d} elements with the string: {:s}",
+                   etiss::fmt::format("The memory segment is initialized with {:#x} elements with the string: {:s}",
                                       size_, initString));
 
         const char *data = initString.c_str();
@@ -235,7 +235,7 @@ void SimpleMemSystem::load_segments()
 
                 etiss::log(etiss::INFO,
                            etiss::fmt::format(
-                               "The memory segment {:d} is initialized with {:d} bytes from input_image!", i, length)
+                               "The memory segment {:d} is initialized with {:#x} bytes from input_image!", i, length)
 
                 );
             }
@@ -404,7 +404,7 @@ void access_error(ETISS_CPU *cpu, etiss::uint64 addr, etiss::uint32 len, std::st
 {
     uint64 pc = cpu ? cpu->instructionPointer : 0;
     etiss::log(verbosity,
-               etiss::fmt::format("{:s}, PC = {:#016x}, address {:#016x}, length {:d}", error, pc, addr, len));
+               etiss::fmt::format("{:s}, PC = {:#016x}, address {:#016x}, length {:#x}", error, pc, addr, len));
 }
 
 etiss::int32 SimpleMemSystem::iread(ETISS_CPU *cpu, etiss::uint64 addr, etiss::uint32 len)
@@ -433,7 +433,7 @@ static void trace(ETISS_CPU *cpu, etiss::uint64 addr, etiss::uint32 len, bool is
         time = cpu->cpuTime_ps;
         pc = cpu->instructionPointer;
     }
-    auto text = etiss::fmt::format("{:d};{:#08x};{};{:#08x};{:d}", time, pc, (isWrite ? 'w' : 'r'), addr, len);
+    auto text = etiss::fmt::format("{:d};{:#08x};{};{:#08x};{:#x}", time, pc, (isWrite ? 'w' : 'r'), addr, len);
 
     if (toFile)
         file << text << std::endl;
