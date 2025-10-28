@@ -8,7 +8,7 @@
 #define ETISS_PLUGIN_MEMORYDEVICE_H
 
 #include "etiss/Plugin.h"
-#include "etiss/System.h"
+#include "etiss/Misc.h"
 
 namespace etiss
 {

@@ -13,6 +13,7 @@
 */
 
 #include "etiss/IntegratedLibrary/InstructionSpecificAddressCallback.h"
+#include "etiss/Instruction.h"
 
 extern "C"
 {

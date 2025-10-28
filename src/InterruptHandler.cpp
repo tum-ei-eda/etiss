@@ -12,6 +12,9 @@
 
 */
 #include "etiss/InterruptHandler.h"
+#include "etiss/InterruptEnable.h"
+#include "etiss/InterruptVector.h"
+#include "etiss/jit/ReturnCode.h"
 
 using namespace etiss;
 

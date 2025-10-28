@@ -5,6 +5,7 @@
 // LICENSE file.
 
 #include "etiss/Timing.h"
+#include "etiss/Instruction.h"
 
 namespace etiss
 {

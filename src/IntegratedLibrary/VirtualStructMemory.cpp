@@ -5,6 +5,7 @@
 // LICENSE file.
 
 #include "etiss/IntegratedLibrary/VirtualStructMemory.h"
+#include "etiss/VirtualStruct.h"
 
 namespace etiss
 {

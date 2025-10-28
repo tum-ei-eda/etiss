@@ -6,6 +6,7 @@
 
 #include "etiss/FastMemory.h"
 #include "etiss/jit/ReturnCode.h"
+#include "etiss/jit/System.h"
 #include <cstring>
 
 static etiss_int32 system_call_iread(void *handle, ETISS_CPU *cpu, etiss_uint64 addr, etiss_uint32 length)

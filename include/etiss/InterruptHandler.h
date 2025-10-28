@@ -15,10 +15,7 @@
 #ifndef ETISS_INCLUDE_INTERRUPTHANDLER_H_
 #define ETISS_INCLUDE_INTERRUPTHANDLER_H_
 
-#include "etiss/CPUArch.h"
-#include "etiss/InterruptVector.h"
-#include "etiss/InterruptHandler.h"
-#include "etiss/LibraryInterface.h"
+#include "etiss/Misc.h"
 #include "etiss/Plugin.h"
 #include "etiss/jit/types.h"
 #include <list>

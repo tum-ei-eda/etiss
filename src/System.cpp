@@ -16,6 +16,8 @@
 #include <stdlib.h>
 
 #include "etiss/System.h"
+#include "etiss/jit/System.h"
+#include "etiss/jit/CPU.h"
 
 static etiss_int32 system_call_iread(void *handle, ETISS_CPU *cpu, etiss_uint64 addr, etiss_uint32 length)
 {

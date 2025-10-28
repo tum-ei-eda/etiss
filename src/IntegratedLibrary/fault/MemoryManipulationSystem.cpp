@@ -13,6 +13,7 @@
 */
 
 #include "etiss/IntegratedLibrary/fault/MemoryManipulationSystem.h"
+#include "etiss/fault/Action.h"
 #include "etiss/Misc.h"
 #include "elfio/elfio.hpp"
 #include <memory>
