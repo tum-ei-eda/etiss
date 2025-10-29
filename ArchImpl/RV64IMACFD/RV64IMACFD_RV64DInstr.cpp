@@ -1,5 +1,6 @@
+// clang-format off
 /**
- * Generated on Tue, 16 Sep 2025 12:56:33 +0200.
+ * Generated on Tue, 28 Oct 2025 16:05:50 +0000.
  *
  * This file contains the instruction behavior models of the RV64D
  * instruction set for the RV64IMACFD core architecture.
@@ -10,7 +11,6 @@
 
 using namespace etiss;
 using namespace etiss::instr;
-
 
 // FCVT_L_D --------------------------------------------------------------------
 static InstructionDefinition fcvt_l_d_rd_rm_rs1 (
@@ -485,3 +485,4 @@ ss << "fmv_d_x" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + st
 		return ss.str();
 	}
 );
+// clang-format on

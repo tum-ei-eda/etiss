@@ -1,5 +1,6 @@
+// clang-format off
 /**
- * Generated on Tue, 16 Sep 2025 12:56:33 +0200.
+ * Generated on Tue, 28 Oct 2025 16:05:50 +0000.
  *
  * This file contains the instruction behavior models of the RV32M
  * instruction set for the RV64IMACFD core architecture.
@@ -10,7 +11,6 @@
 
 using namespace etiss;
 using namespace etiss::instr;
-
 
 // DIV -------------------------------------------------------------------------
 static InstructionDefinition div_rd_rs1_rs2 (
@@ -425,3 +425,4 @@ ss << "remu" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std::
 		return ss.str();
 	}
 );
+// clang-format on

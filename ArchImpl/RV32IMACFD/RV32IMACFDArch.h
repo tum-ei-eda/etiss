@@ -1,5 +1,5 @@
 /**
- * Generated on Tue, 16 Sep 2025 12:56:33 +0200.
+ * Generated on Tue, 28 Oct 2025 16:05:46 +0000.
  *
  * This file contains the architecture class for the RV32IMACFD core architecture.
  */
@@ -16,7 +16,7 @@
 
 #include <map>
 
-extern const char * const reg_name[];
+extern const char *const reg_name[];
 
 extern etiss::instr::InstructionGroup ISA16_RV32IMACFD;
 extern etiss::instr::InstructionClass ISA16_RV32IMACFDClass;
@@ -25,85 +25,85 @@ extern etiss::instr::InstructionClass ISA32_RV32IMACFDClass;
 
 extern etiss::instr::InstructionCollection RV32IMACFDISA;
 
-class RV32IMACFDArch : public etiss::CPUArch {
+class RV32IMACFDArch : public etiss::CPUArch
+{
 
-public:
-	RV32IMACFDArch(unsigned int);
+  public:
+    RV32IMACFDArch(unsigned int);
 
-	virtual const std::set<std::string> & getListenerSupportedRegisters();
+    virtual const std::set<std::string> &getListenerSupportedRegisters();
 
+    virtual ETISS_CPU *newCPU();
+    virtual void resetCPU(ETISS_CPU *cpu, etiss::uint64 *startpointer);
+    virtual void deleteCPU(ETISS_CPU *);
 
-	virtual ETISS_CPU * newCPU();
-	virtual void resetCPU(ETISS_CPU * cpu,etiss::uint64 * startpointer);
-	virtual void deleteCPU(ETISS_CPU *);
+    /**
+        @brief get the VirtualStruct of the core to mitigate register access
 
-	/**
-		@brief get the VirtualStruct of the core to mitigate register access
+        @see RV32IMACFDArchSpecificImp.h
+    */
+    virtual std::shared_ptr<etiss::VirtualStruct> getVirtualStruct(ETISS_CPU *cpu);
 
-		@see RV32IMACFDArchSpecificImp.h
-	*/
-	virtual std::shared_ptr<etiss::VirtualStruct> getVirtualStruct(ETISS_CPU * cpu);
+    /**
+        @return 8 (jump instruction + instruction of delay slot)
+    */
+    virtual unsigned getMaximumInstructionSizeInBytes();
 
-	/**
-		@return 8 (jump instruction + instruction of delay slot)
-	*/
-	virtual unsigned getMaximumInstructionSizeInBytes();
+    /**
+        @return 2
+    */
+    virtual unsigned getInstructionSizeInBytes();
 
-	/**
-		@return 2
-	*/
-	virtual unsigned getInstructionSizeInBytes();
+    /**
+        @brief required headers (RV32IMACFD.h)
+    */
+    virtual const std::set<std::string> &getHeaders() const;
 
-	/**
-		@brief required headers (RV32IMACFD.h)
-	*/
-	virtual const std::set<std::string> & getHeaders() const;
+    /**
+        @brief This function will be called automatically in order to handling architecure dependent exceptions such
+               as interrupt, system call, illegal instructions
 
-	/**
-		@brief This function will be called automatically in order to handling architecure dependent exceptions such
-			   as interrupt, system call, illegal instructions
+        @see RV32IMACFDArchSpecificImp.h
+    */
+    virtual etiss::int32 handleException(etiss::int32 code, ETISS_CPU *cpu);
 
-		@see RV32IMACFDArchSpecificImp.h
-	*/
-	virtual etiss::int32 handleException(etiss::int32 code, ETISS_CPU * cpu);
+    /**
+        @brief This function is called during CPUArch initialization
 
-	/**
-		@brief This function is called during CPUArch initialization
+        @see RV32IMACFDArchSpecificImp.h
+    */
+    virtual void initInstrSet(etiss::instr::ModedInstructionSet &) const;
+    virtual void initCodeBlock(etiss::CodeBlock &cb) const;
 
-		@see RV32IMACFDArchSpecificImp.h
-	*/
-	virtual void initInstrSet(etiss::instr::ModedInstructionSet & ) const;
-	virtual void initCodeBlock(etiss::CodeBlock & cb) const;
+    /**
+        @brief Target architecture may have inconsistent endianess. Data read from memory is buffered, and this function
+               is called to alter sequence of buffered data so that the inconsistent endianess is compensated.
 
-	/**
-		@brief Target architecture may have inconsistent endianess. Data read from memory is buffered, and this function
-			   is called to alter sequence of buffered data so that the inconsistent endianess is compensated.
+        @see RV32IMACFDArchSpecificImp.h
+    */
+    virtual void compensateEndianess(ETISS_CPU *cpu, etiss::instr::BitArray &ba) const;
 
-		@see RV32IMACFDArchSpecificImp.h
-	*/
-	virtual void compensateEndianess(ETISS_CPU * cpu, etiss::instr::BitArray & ba) const ;
+    /**
+        @brief If interrupt handling is expected, vector table could be provided to support interrupt triggering
 
-	/**
-		@brief If interrupt handling is expected, vector table could be provided to support interrupt triggering
+        @see RV32IMACFDArchSpecificImp.h
+    */
+    virtual etiss::InterruptVector *createInterruptVector(ETISS_CPU *cpu);
+    virtual void deleteInterruptVector(etiss::InterruptVector *vec, ETISS_CPU *cpu);
+    virtual etiss::InterruptEnable *createInterruptEnable(ETISS_CPU *cpu);
+    virtual void deleteInterruptEnable(etiss::InterruptEnable *en, ETISS_CPU *cpu);
 
-		@see RV32IMACFDArchSpecificImp.h
-	*/
-	virtual etiss::InterruptVector * createInterruptVector(ETISS_CPU * cpu);
-	virtual void deleteInterruptVector(etiss::InterruptVector * vec, ETISS_CPU * cpu);
-	virtual etiss::InterruptEnable* createInterruptEnable(ETISS_CPU *cpu);
-	virtual void deleteInterruptEnable(etiss::InterruptEnable* en, ETISS_CPU* cpu);
+    /**
+        @brief get the GDBcore for RV32IMACFD architecture
 
-	/**
-		@brief get the GDBcore for RV32IMACFD architecture
+        @see RV32IMACFDGDBCore.h for implementation of GDBcore
+    */
+    virtual etiss::plugin::gdb::GDBCore &getGDBCore();
 
-		@see RV32IMACFDGDBCore.h for implementation of GDBcore
-	*/
-	virtual etiss::plugin::gdb::GDBCore & getGDBCore();
-
-private:
-	std::set<std::string> listenerSupportedRegisters_;
-	std::set<std::string> headers_;
-	RV32IMACFDGDBCore gdbcore_;
-	unsigned int coreno_;
+  private:
+    std::set<std::string> listenerSupportedRegisters_;
+    std::set<std::string> headers_;
+    RV32IMACFDGDBCore gdbcore_;
+    unsigned int coreno_;
 };
 #endif

@@ -1,10 +1,11 @@
 /**
- * Generated on Tue, 16 Sep 2025 12:56:33 +0200.
+ * Generated on Tue, 28 Oct 2025 16:05:46 +0000.
  *
  * This file contains the function implementations for the RV32IMACFD core architecture.
  */
 
 #include "RV32IMACFDFuncs.h"
+// clang-format off
 
 etiss_uint8 RV32IMACFD_extension_enabled(ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers, etiss_int8 extension)
 {
@@ -612,3 +613,4 @@ etiss_coverage_count(3, 1162, 1160, 1161);
 } // conditional
 } // block
 }
+// clang-format on
