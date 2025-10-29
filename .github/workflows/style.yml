@@ -26,7 +26,7 @@ jobs:
       with:
         style: 'file'  # Use .clang-format config file
         tidy-checks: '' # Use .clang-tidy config file
-        # only 'update' a single comment in a pull request's thread.
-        thread-comments: ${{ github.event_name == 'pull_request' && 'update' }}
+        # only 'update' a single comment in a pull request's thread. Disable for fork prs.
+        thread-comments: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && 'update' }}
         database: 'build'
         step-summary: true
