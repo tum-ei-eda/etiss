@@ -14,27 +14,62 @@
 */
 
 #include <stdlib.h>
+#include <cstring>
 
 #include "etiss/System.h"
+#include "etiss/IntegratedLibrary/TraceFileWriter.h"
+
+// TODO: remove these when testing memwrites is done.
+#include <fstream>
+#include <sstream>
+#include <string>
+#include <iomanip> // for std::setw, std::setfill
+
 
 static etiss_int32 system_call_iread(void *handle, ETISS_CPU *cpu, etiss_uint64 addr, etiss_uint32 length)
 {
+    /*std::stringstream ss;
+    ss << "BEGIN: ETISS_System::iread address: " << addr << ", length: " << length;
+    etiss::log(etiss::WARNING, ss.str());*/
     return ((etiss::System *)handle)->iread(cpu, addr, length);
 }
 static etiss_int32 system_call_iwrite(void *handle, ETISS_CPU *cpu, etiss_uint64 addr, etiss_uint8 *buffer,
                                       etiss_uint32 length)
 {
+    /*std::stringstream ss;
+    ss << "BEGIN: ETISS_System::write address: " << addr << ", buffer: " << buffer << ", length: " << length;
+    etiss::log(etiss::WARNING, ss.str());*/
     return ((etiss::System *)handle)->iwrite(cpu, addr, buffer, length);
 }
 
 static etiss_int32 system_call_dread(void *handle, ETISS_CPU *cpu, etiss_uint64 addr, etiss_uint8 *buffer,
                                      etiss_uint32 length)
 {
+    /*std::stringstream ss;
+    ss << "BEGIN: ETISS_System::dread address: " << addr << ", buffer: " << buffer << ", length: " << length;
+    etiss::log(etiss::WARNING, ss.str());*/
     return ((etiss::System *)handle)->dread(cpu, addr, buffer, length);
 }
 static etiss_int32 system_call_dwrite(void *handle, ETISS_CPU *cpu, etiss_uint64 addr, etiss_uint8 *buffer,
                                       etiss_uint32 length)
 {
+    if (TraceFileWriter::instance().isTracing())
+    {
+        static std::ofstream trace_file("trace.bin", std::ios::binary | std::ios::app);
+        auto& writer = TraceFileWriter::instance();
+
+        DWriteEntry entry{};
+        entry.type = 2;
+        entry.pc = cpu->instructionPointer;
+        entry.addr = addr;
+        entry.length = length > 64 ? 64 : length; // Truncate if needed
+
+        std::memcpy(entry.data, buffer, entry.length);
+
+        writer.writeDWrite(entry);
+    }
+
+
     return ((etiss::System *)handle)->dwrite(cpu, addr, buffer, length);
 }
 

@@ -25,6 +25,8 @@
 #include "etiss/IntegratedLibrary/PrintInstruction.h"
 #include "etiss/IntegratedLibrary/errorInjection/Plugin.h"
 #include "etiss/IntegratedLibrary/gdb/GDBServer.h"
+#include "etiss/IntegratedLibrary/InstructionSpecificAddressCallback.h"
+#include "etiss/IntegratedLibrary/InstructionTracer.h"
 
 extern "C"
 {
@@ -42,9 +44,9 @@ extern "C"
         return 0;
     }
 
-    unsigned ETISSINCLUDED_countPlugin()
-    {
-        return 4;
+    unsigned ETISSINCLUDED_countPlugin() 
+    { 
+        return 5; 
     }
 
     const char *ETISSINCLUDED_nameJIT(unsigned index)
@@ -69,6 +71,8 @@ extern "C"
             return "PrintInstruction";
         case 3:
             return "Logger";
+        case 4:
+            return "GTS";
         }
         return 0;
     }
@@ -113,10 +117,14 @@ extern "C"
         case 2:
             return new etiss::plugin::PrintInstruction();
         case 3:
+        {
             etiss::Configuration cfg;
             cfg.config() = options;
             return new etiss::plugin::Logger(cfg.get<uint64_t>("plugin.logger.logaddr", 0x80000000),
                                              cfg.get<uint64_t>("plugin.logger.logmask", 0xF0000000));
+        }
+        case 4:
+            return new InstructionTracer();
         }
         return 0;
     }
