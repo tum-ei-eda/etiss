@@ -1,5 +1,6 @@
+// clang-format off
 /**
- * Generated on Tue, 16 Sep 2025 12:56:33 +0200.
+ * Generated on Tue, 28 Oct 2025 16:05:46 +0000.
  *
  * This file contains the instruction behavior models of the RV32DC
  * instruction set for the RV32IMACFD core architecture.
@@ -10,7 +11,6 @@
 
 using namespace etiss;
 using namespace etiss::instr;
-
 
 // CFLD ------------------------------------------------------------------------
 static InstructionDefinition cfld_rd_uimm_rs1 (
@@ -423,3 +423,4 @@ ss << "cfsdsp" << " # " << ba << (" [rs2=" + std::to_string(rs2) + " | uimm=" + 
 		return ss.str();
 	}
 );
+// clang-format on
