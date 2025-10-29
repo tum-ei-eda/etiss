@@ -5,6 +5,7 @@
 // LICENSE file.
 
 #include "etiss/IntegratedLibrary/MemoryDevice.h"
+#include "etiss/System.h"
 
 namespace etiss
 {

@@ -7,10 +7,7 @@
 #ifndef ETISS_INCLUDE_TRANSLATION_H
 #define ETISS_INCLUDE_TRANSLATION_H
 
-#include "etiss/CPUArch.h"
-#include "etiss/CodePart.h"
-#include "etiss/Instruction.h"
-#include "etiss/JIT.h"
+#include "etiss/Misc.h"
 
 #include <memory>
 #include <unordered_map>

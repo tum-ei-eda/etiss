@@ -16,7 +16,6 @@
 
 #include "etiss/Misc.h"
 #include "etiss/jit/ReturnCode.h"
-#include "etiss/jit/System.h"
 
 namespace etiss
 {

@@ -20,6 +20,8 @@
 #include "etiss/helper/CPUArchLibrary.h"
 #include "etiss/helper/JITLibrary.h"
 #include "etiss/helper/PluginLibrary.h"
+#include "etiss/CPUArch.h"
+#include "etiss/JIT.h"
 
 /**
         @brief LibraryInterface implementation for integrated JIT/CPUArch/Plugin implementations. wraps example

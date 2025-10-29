@@ -9,17 +9,12 @@
         @brief
 
         @detail
-
 */
 #ifndef ETISS_PLUGIN_VIRTUALSTRUCT_H_
 #define ETISS_PLUGIN_VIRTUALSTRUCT_H_
 #include "etiss/CVirtualStruct.h"
 #include "etiss/Misc.h"
 #include "etiss/fault/Injector.h"
-
-#include "etiss/fault/Trigger.h"
-#include "etiss/fault/Action.h"
-#include "etiss/fault/Fault.h"
 
 #include <cstddef>
 

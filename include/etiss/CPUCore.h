@@ -13,20 +13,10 @@
 #ifndef ETISS_INCLUDE_CPUCORE_H_
 #define ETISS_INCLUDE_CPUCORE_H_
 
-#include "etiss/ClassDefs.h"
 #include "etiss/Misc.h"
-#include "etiss/LibraryInterface.h"
-#include "etiss/JIT.h"
-#include "etiss/CPUArch.h"
-#include "etiss/Translation.h"
-#include "etiss/System.h"
-#include "etiss/InterruptHandler.h"
-#include "etiss/InterruptEnable.h"
-#include "etiss/Plugin.h"
+#include "etiss/InterruptVector.h"
 #include "etiss/jit/ReturnCode.h"
-#include "etiss/mm/MMU.h"
-#include "etiss/mm/DMMUWrapper.h"
-#include "etiss/mm/PageFaultVector.h"
+#include "etiss/VirtualStruct.h"
 
 #include <mutex>
 #include <memory>
@@ -113,7 +103,7 @@ class CPUCore : public VirtualStructSupport, public etiss::ToString
      *
      * @todo Add explanation of start index.
      */
-    inline void reset(etiss::uint64 *startindex) { arch_->resetCPU(cpu_, startindex); }
+    void reset(etiss::uint64 *startindex);
 
     /**
      * @brief Get the CPU state structure containing instruction pointer, frequency, etc.
@@ -247,14 +237,7 @@ class CPUCore : public VirtualStructSupport, public etiss::ToString
      *
      * @return A return code as result of the simulation (ReturnCode.h)
      */
-    inline etiss::int32 execute(etiss::System &system)
-    {
-        std::shared_ptr<ETISS_System> sys = etiss::wrap(&system);
-        if (sys.get() == 0)
-            return RETURNCODE::GENERALERROR;
-        etiss::uint32 ret = execute(*(sys.get()));
-        return ret;
-    }
+    etiss::int32 execute(etiss::System &system);
 
     /**
      * @brief Get the name of the CPUCore instance.
@@ -275,18 +258,7 @@ class CPUCore : public VirtualStructSupport, public etiss::ToString
      *
      * @return Name string of the JIT plug-in;
      */
-    inline std::string getJITName()
-    {
-        std::shared_ptr<etiss::JIT> jit = jit_;
-        if (jit.get())
-        {
-            return jit->getName();
-        }
-        else
-        {
-            return "";
-        }
-    }
+    std::string getJITName();
 
     /**
      * @brief Get a reference to the JIT plugin.
@@ -301,16 +273,7 @@ class CPUCore : public VirtualStructSupport, public etiss::ToString
     /**
      * @brief returns the plugin with the given name.
      */
-    inline std::shared_ptr<Plugin> getPlugin(std::string name)
-    {
-        for (auto iter : plugins)
-        {
-            // std::cout << "found plugin: " << iter->_getPluginName();
-            if (iter->_getPluginName() == name)
-                return iter;
-        }
-        return nullptr;
-    };
+    std::shared_ptr<Plugin> getPlugin(std::string name);
     /**
      * @brief returns the list of all plugins.
      */

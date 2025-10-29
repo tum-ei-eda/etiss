@@ -20,8 +20,7 @@
 #define ETISS_INCLUDE_HELPER_JITLIBRARY_H_
 
 #include "etiss/helper/Misc.h"
-
-#include "etiss/JIT.h"
+#include "etiss/Misc.h"
 
 extern "C"
 {

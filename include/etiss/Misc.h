@@ -9,10 +9,6 @@
         @brief general configuration and logging
 
         @detail
-
-
-
-
 */
 
 #ifndef ETISS_INCLUDE_MISC_H_

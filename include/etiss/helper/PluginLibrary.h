@@ -21,7 +21,7 @@
 
 #include "etiss/helper/Misc.h"
 
-#include "etiss/Plugin.h"
+#include "etiss/Misc.h"
 
 extern "C"
 {

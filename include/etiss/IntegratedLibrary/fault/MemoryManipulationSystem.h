@@ -12,7 +12,8 @@
 
 #ifndef ETISS_INCLUDE_INTEGRATEDLIBRARY_FAULT_MEMORYMANIPULATIONSYSTEM_H_
 #define ETISS_INCLUDE_INTEGRATEDLIBRARY_FAULT_MEMORYMANIPULATIONSYSTEM_H_
-#include "etiss/System.h"
+
+#include "etiss/Misc.h"
 #include "etiss/make_unique.h"
 #include <fstream>
 

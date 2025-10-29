@@ -12,6 +12,7 @@
 
 #ifndef ETISS_INCLUDE_SimpleMemSystem_H_
 #define ETISS_INCLUDE_SimpleMemSystem_H_
+#include "etiss/Misc.h"
 #include "etiss/System.h"
 #include "etiss/make_unique.h"
 #include <fstream>
