@@ -22,6 +22,7 @@
 
 #include "elfio/elfio.hpp"
 #include <memory>
+#include "etiss/Format.h"
 
 #define ARMv6M_DEBUG_PRINT 0
 #define MAX_MEMSEGS 99
@@ -55,9 +56,8 @@ MemSegment::MemSegment(etiss::uint64 start_addr, etiss::uint64 size, access_t mo
         }
         else
         {
-            std::stringstream memMsg;
-            memMsg << "The memory segment is allocated uninitialized with length 0x" << std::hex << size_ << " !";
-            etiss::log(etiss::INFO, memMsg.str());
+            etiss::log(etiss::INFO,
+                       etiss::fmt::format("The memory segment is allocated uninitialized with length {:#x} !", size_));
         }
         self_allocated_ = true;
     }
@@ -65,13 +65,11 @@ MemSegment::MemSegment(etiss::uint64 start_addr, etiss::uint64 size, access_t mo
 
 void MemSegment::memInit(std::string initString, uint64_t randomRoot)
 {
-    std::stringstream memMsg;
-
     if (initString.find("0x") == 0)
     {
-        memMsg << "The memory segment is initialized with 0x" << std::hex << size_
-               << " elements with hex value: " << initString;
-        etiss::log(etiss::INFO, memMsg.str());
+        etiss::log(etiss::INFO,
+                   etiss::fmt::format("The memory segment is initialized with {:#x} elements with value: 0x{:s}", size_,
+                                      initString));
 
         // actual conversion from hex string to corresponding hex val
         initString.erase(initString.begin(), initString.begin() + 2);
@@ -98,18 +96,18 @@ void MemSegment::memInit(std::string initString, uint64_t randomRoot)
             }
             catch (std::invalid_argument const &exp)
             {
+                std::stringstream memMsg;
                 memMsg << "\n Hex Value MemSegment input is erronous (typo?) at " << exp.what();
                 etiss::log(etiss::FATALERROR, memMsg.str());
                 break;
             }
         }
     }
-
     else if (initString.find("random") == 0 || initString.find("RANDOM") == 0)
     {
-        memMsg << "The memory segment is initialized with 0x" << std::hex << size_
-               << " random bytes and root: " << randomRoot;
-        etiss::log(etiss::INFO, memMsg.str());
+        etiss::log(etiss::INFO,
+                   etiss::fmt::format("The memory segment is initialized with {:#x} random bytes and root: {:d}", size_,
+                                      randomRoot));
 
         static std::default_random_engine generator{ randomRoot };
         std::uniform_int_distribution<int> random_char_{ 0, 255 };
@@ -121,9 +119,9 @@ void MemSegment::memInit(std::string initString, uint64_t randomRoot)
 
     else
     {
-        memMsg << "The memory segment is initialized with 0x" << std::hex << size_
-               << " elements with the string: " << initString;
-        etiss::log(etiss::INFO, memMsg.str());
+        etiss::log(etiss::INFO,
+                   etiss::fmt::format("The memory segment is initialized with {:#x} elements with the string: {:s}",
+                                      size_, initString));
 
         const char *data = initString.c_str();
         for (etiss::uint64 i = 0; i < size_; ++i)
@@ -169,34 +167,28 @@ void SimpleMemSystem::load_segments()
 
     for (int i = 0; i < MAX_MEMSEGS; ++i)
     {
-        ss << "simple_mem_system.memseg_origin_" << std::setw(2) << std::setfill('0') << i;
-        uint64_t origin = etiss::cfg().get<uint64_t>(ss.str(), -1);
-        std::stringstream().swap(ss);
+        uint64_t origin =
+            etiss::cfg().get<uint64_t>(etiss::fmt::format("simple_mem_system.memseg_origin_{:02d}", i), -1);
 
-        ss << "simple_mem_system.memseg_length_" << std::setw(2) << std::setfill('0') << i;
-        uint64_t length = etiss::cfg().get<uint64_t>(ss.str(), -1);
+        uint64_t length =
+            etiss::cfg().get<uint64_t>(etiss::fmt::format("simple_mem_system.memseg_length_{:02d}", i), -1);
         if (length == 0)
         {
             etiss::log(etiss::FATALERROR, "Empty memsegs are not allowed!");
         }
-        std::stringstream().swap(ss);
 
-        ss << "simple_mem_system.memseg_initelement_" << std::setw(2) << std::setfill('0') << i;
-        std::string initString = etiss::cfg().get<std::string>(ss.str(), "");
-        bool initEleSet = etiss::cfg().isSet(ss.str());
-        std::stringstream().swap(ss);
+        auto cfgstr = etiss::fmt::format("simple_mem_system.memseg_initelement_{:02d}", i);
+        std::string initString = etiss::cfg().get<std::string>(cfgstr, "");
+        bool initEleSet = etiss::cfg().isSet(cfgstr);
 
-        ss << "simple_mem_system.memseg_initelement_random_root_" << std::setw(2) << std::setfill('0') << i;
-        uint64_t randomRoot = etiss::cfg().get<uint64_t>(ss.str(), 0);
-        std::stringstream().swap(ss);
+        uint64_t randomRoot = etiss::cfg().get<uint64_t>(
+            etiss::fmt::format("simple_mem_system.memseg_initelement_random_root_{:02d}", i), 0);
 
-        ss << "simple_mem_system.memseg_image_" << std::setw(2) << std::setfill('0') << i;
-        std::string image = etiss::cfg().get<std::string>(ss.str(), "");
-        std::stringstream().swap(ss);
+        std::string image =
+            etiss::cfg().get<std::string>(etiss::fmt::format("simple_mem_system.memseg_image_{:02d}", i), "");
 
-        ss << "simple_mem_system.memseg_mode_" << std::setw(2) << std::setfill('0') << i;
-        std::string mode = etiss::cfg().get<std::string>(ss.str(), "");
-        std::stringstream().swap(ss);
+        std::string mode =
+            etiss::cfg().get<std::string>(etiss::fmt::format("simple_mem_system.memseg_mode_{:02d}", i), "");
 
         if (origin != (etiss::uint64)-1 && length != (etiss::uint64)-1)
         {
@@ -220,10 +212,8 @@ void SimpleMemSystem::load_segments()
                 modestr += "X";
             }
 
-            std::stringstream sname;
-            sname << i + 1 << " - " << modestr << "[0x" << std::hex << std::setfill('0')
-                  << std::setw(sizeof(etiss::uint64) * 2) << origin + length - 1 << " - "
-                  << "0x" << std::hex << std::setfill('0') << std::setw(sizeof(etiss::uint64) * 2) << origin << "]";
+            std::string sname =
+                etiss::fmt::format("{} - {:s}[{:#016x} - {:#016x}]", i + 1, modestr, origin + length - 1, origin);
 
             etiss::uint8 *buf = nullptr;
             size_t fsize = 0;
@@ -233,9 +223,8 @@ void SimpleMemSystem::load_segments()
                 std::ifstream ifs(image, std::ifstream::binary | std::ifstream::ate);
                 if (!ifs)
                 {
-                    std::stringstream msg;
-                    msg << "Error during read of segment image file " << image << "!";
-                    etiss::log(etiss::FATALERROR, msg.str());
+                    etiss::log(etiss::FATALERROR,
+                               etiss::fmt::format("Error during read of segment image file {:s}!", image));
                 }
                 fsize = ifs.tellg();
                 ifs.seekg(0, std::ifstream::beg);
@@ -244,14 +233,15 @@ void SimpleMemSystem::load_segments()
 
                 ifs.read((char *)buf, fsize);
 
-                std::stringstream mem_msg;
-                mem_msg << "The memory segment " << i << " is initialized with 0x" << std::hex << length
-                        << " bytes from input_image !";
-                etiss::log(etiss::INFO, mem_msg.str());
+                etiss::log(etiss::INFO,
+                           etiss::fmt::format(
+                               "The memory segment {:d} is initialized with {:#x} bytes from input_image!", i, length)
+
+                );
             }
 
-            auto mseg = std::make_unique<MemSegment>(origin, length, static_cast<MemSegment::access_t>(access),
-                                                     sname.str(), buf, initString, initEleSet, randomRoot);
+            auto mseg = std::make_unique<MemSegment>(origin, length, static_cast<MemSegment::access_t>(access), sname,
+                                                     buf, initString, initEleSet, randomRoot);
             add_memsegment(mseg, buf, fsize);
             delete[] buf;
         }
@@ -340,11 +330,8 @@ void SimpleMemSystem::load_elf()
             modestr += "X";
         }
 
-        std::stringstream sname;
-        sname << seg->get_index() << " - " << modestr << "[0x" << std::hex << std::setfill('0')
-              << std::setw(sizeof(etiss::uint64) * 2) << start_addr << " - "
-              << "0x" << std::hex << std::setfill('0') << std::setw(sizeof(etiss::uint64) * 2) << start_addr + size - 1
-              << "]";
+        std::string sname = etiss::fmt::format("{} - {:s}[{:#016x} - {:#016x}]", seg->get_index(), modestr,
+                                               start_addr + size - 1, start_addr);
 
         auto mseg_it = std::find_if(msegs_.begin(), msegs_.end(), find_fitting_mseg(start_addr, size));
 
@@ -352,7 +339,7 @@ void SimpleMemSystem::load_elf()
         {
             auto &mseg = *mseg_it;
 
-            mseg->name_ = sname.str();
+            mseg->name_ = sname;
             mseg->mode_ = static_cast<MemSegment::access_t>(mode);
 
             mseg->load(seg->get_data(), start_addr - mseg->start_addr_, file_size);
@@ -365,7 +352,7 @@ void SimpleMemSystem::load_elf()
         }
 
         std::stringstream msg;
-        msg << "Found no matching memory segments at 0x" << std::hex << std::setfill('0') << std::setw(8) << start_addr;
+        msg << etiss::fmt::format("Found no matching memory segments at {:#016x}", start_addr);
 
         if (error_on_seg_mismatch_)
         {
@@ -379,8 +366,7 @@ void SimpleMemSystem::load_elf()
             etiss::log(etiss::WARNING, msg.str());
         }
 
-        auto mseg =
-            std::make_unique<MemSegment>(start_addr, size, static_cast<MemSegment::access_t>(mode), sname.str());
+        auto mseg = std::make_unique<MemSegment>(start_addr, size, static_cast<MemSegment::access_t>(mode), sname);
         add_memsegment(mseg, seg->get_data(), file_size);
     }
 
@@ -417,12 +403,8 @@ SimpleMemSystem::SimpleMemSystem()
 void access_error(ETISS_CPU *cpu, etiss::uint64 addr, etiss::uint32 len, std::string error, etiss::Verbosity verbosity)
 {
     uint64 pc = cpu ? cpu->instructionPointer : 0;
-    std::stringstream ss;
-
-    ss << error << ", PC = 0x" << std::hex << std::setw(8) << std::setfill('0') << pc << ", address 0x" << std::hex
-       << std::setw(8) << std::setfill('0') << addr << ", length " << len;
-
-    etiss::log(verbosity, ss.str());
+    etiss::log(verbosity,
+               etiss::fmt::format("{:s}, PC = {:#016x}, address {:#016x}, length {:#x}", error, pc, addr, len));
 }
 
 etiss::int32 SimpleMemSystem::iread(ETISS_CPU *cpu, etiss::uint64 addr, etiss::uint32 len)
@@ -451,19 +433,12 @@ static void trace(ETISS_CPU *cpu, etiss::uint64 addr, etiss::uint32 len, bool is
         time = cpu->cpuTime_ps;
         pc = cpu->instructionPointer;
     }
-
-    std::stringstream text;
-    text << time << ";"                                   // time
-         << std::setw(8) << std::setfill('0') << std::hex // (formatting)
-         << pc << ";"                                     // pc
-         << (isWrite ? "w" : "r") << ";"                  // type
-         << addr << ";"                                   // addr
-         << len << std::endl;
+    auto text = etiss::fmt::format("{:d};{:#08x};{};{:#08x};{:#x}", time, pc, (isWrite ? 'w' : 'r'), addr, len);
 
     if (toFile)
-        file << text.str();
+        file << text << std::endl;
     else
-        std::cout << text.str();
+        std::cout << text << std::endl;
 }
 
 template <bool write>
