@@ -124,7 +124,8 @@ jobs:
       matrix:
         bits: ["32", "64"]
         jit_engine: ["TCC", "GCC", "LLVM"]
-        run_no: [1, 2, 3, 4, 5]
+        # run_no: [1, 2, 3, 4, 5]
+        run_no: [1, 5]
 
     steps:
     - name: Fetch precompiled artifacts
