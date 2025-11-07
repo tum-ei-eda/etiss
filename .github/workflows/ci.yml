@@ -9,6 +9,9 @@ on:
     - docs/
   workflow_dispatch: {}
 
+env:
+  DEBIAN_FRONTEND: noninteractive
+
 jobs:
   build_etiss:
     runs-on: ubuntu-22.04
