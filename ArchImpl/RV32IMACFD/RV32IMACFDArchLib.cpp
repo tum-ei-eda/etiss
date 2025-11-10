@@ -1,5 +1,5 @@
 /**
- * Generated on Mon, 10 Nov 2025 11:27:12 +0000.
+ * Generated on Mon, 10 Nov 2025 11:52:48 +0000.
  *
  * This file contains the library interface for the RV32IMACFD core architecture.
  */
