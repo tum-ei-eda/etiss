@@ -11,10 +11,11 @@ on:
 
 jobs:
   build_etiss:
-    runs-on: ubuntu-22.04
     strategy:
       matrix:
         build_type: [Release]
+        os_version: ["latest", "22.04"]
+    runs-on: ubuntu-${{ matrix.os_version }}
 
     steps:
     - uses: actions/checkout@v4
@@ -50,7 +51,7 @@ jobs:
     - name: Upload compiled ETISS
       uses: actions/upload-artifact@v4
       with:
-        name: etiss_prebuilt
+        name: etiss_prebuilt-${{ matrix.os_version }}
         path: etiss_prebuilt
 
   build_examples:
@@ -100,7 +101,6 @@ jobs:
         path: examples_prebuilt_rv${{matrix.bits}}
 
   run_examples:
-    runs-on: ubuntu-22.04
     needs: [build_etiss, build_examples]
 
     strategy:
@@ -108,10 +108,19 @@ jobs:
         bits: ["32", "64"]
         jit_engine: ["TCC", "GCC", "LLVM"]
         test_program: ["example_c", "example_cpp", "test_cases"]
+        os_version: ["latest", "22.04"]
+    runs-on: ubuntu-${{ matrix.os_version }}
 
     steps:
-    - name: Fetch precompiled artifacts
+    - name: Fetch precompiled ETISS
       uses: actions/download-artifact@v4
+      with:
+        name: etiss_prebuilt-${{ matrix.os_version }}
+  
+    - name: Fetch precompiled Examples
+      uses: actions/download-artifact@v4
+      with:
+        name: examples_prebuilt_rv${{matrix.bits}}
 
     - name: Install dependencies
       run: |
@@ -124,7 +133,6 @@ jobs:
         etiss_prebuilt/bin/bare_etiss_processor -iexamples_prebuilt_rv${{matrix.bits}}/ini/${{matrix.test_program}}.ini --jit.type=${{matrix.jit_engine}}JIT
 
   run_benchmarks:
-    runs-on: ubuntu-22.04
     needs: [build_etiss, build_examples]
 
     strategy:
@@ -133,10 +141,19 @@ jobs:
         jit_engine: ["TCC", "GCC", "LLVM"]
         # run_no: [1, 2, 3, 4, 5]
         run_no: [1, 5]
+        os_version: ["latest", "22.04"]
+    runs-on: ubuntu-${{ matrix.os_version }}
 
     steps:
-    - name: Fetch precompiled artifacts
+    - name: Fetch precompiled ETISS
       uses: actions/download-artifact@v4
+      with:
+        name: etiss_prebuilt-${{ matrix.os_version }}
+  
+    - name: Fetch precompiled Examples
+      uses: actions/download-artifact@v4
+      with:
+        name: examples_prebuilt_rv${{matrix.bits}}
 
     - name: Install dependencies
       run: |
@@ -151,8 +168,8 @@ jobs:
     - name: Save Benchmark results
       uses: actions/upload-artifact@v4
       with:
-        name: run_${{matrix.jit_engine}}_${{matrix.bits}}_${{matrix.run_no}}
-        path: run_${{matrix.jit_engine}}_${{matrix.bits}}_${{matrix.run_no}}.json
+        name: run_${{matrix.jit_engine}}_${{matrix.bits}}_${{matrix.run_no}}_ubuntu-${{ matrix.os_version }}
+        path: run_${{matrix.jit_engine}}_${{matrix.bits}}_${{matrix.run_no}}_ubuntu-${{ matrix.os_version }}.json
 
   merge_benchmark_results:
     runs-on: ubuntu-22.04
