@@ -5,6 +5,7 @@
 // LICENSE file.
 
 #include "etiss/interfaces/Delegate.h"
+#include "etiss/jit/System.h"
 
 namespace etiss
 {

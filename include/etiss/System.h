@@ -15,9 +15,8 @@
 #ifndef ETISS_INCLUDE_SYSTEM_H_
 #define ETISS_INCLUDE_SYSTEM_H_
 
-#include "etiss/jit/CPU.h"
+#include "etiss/Misc.h"
 #include "etiss/jit/ReturnCode.h"
-#include "etiss/jit/System.h"
 
 #include <memory>
 

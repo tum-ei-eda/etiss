@@ -7,6 +7,7 @@
 #ifndef ETISS_PLUGIN_MEMMAPPEDPERIPH_H
 #define ETISS_PLUGIN_MEMMAPPEDPERIPH_H
 
+#include "etiss/Misc.h"
 #include "etiss/IntegratedLibrary/SelectiveSysWrapper.h"
 
 namespace etiss

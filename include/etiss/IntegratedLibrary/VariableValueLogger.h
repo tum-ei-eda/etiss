@@ -7,6 +7,7 @@
 #ifndef ETISS_PLUGIN_VVLOGGER_H_
 #define ETISS_PLUGIN_VVLOGGER_H_
 
+#include "etiss/Misc.h"
 #include "etiss/Plugin.h"
 
 #include <fstream>

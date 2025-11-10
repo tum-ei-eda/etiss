@@ -17,10 +17,7 @@
 #ifndef ETISS_INCLUDE_GDB_GDBSERVER_H_
 #define ETISS_INCLUDE_GDB_GDBSERVER_H_
 
-#include "etiss/CPUArch.h"
-#include "etiss/IntegratedLibrary/gdb/GDBConnection.h"
-#include "etiss/jit/CPU.h"
-#include "etiss/jit/System.h"
+#include "etiss/Misc.h"
 
 #include "etiss/Plugin.h"
 

@@ -11,6 +11,8 @@
         @detail
 
 */
+
+#include "etiss/Misc.h"
 #include "etiss/Plugin.h"
 
 namespace etiss

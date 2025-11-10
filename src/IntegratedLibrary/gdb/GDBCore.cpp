@@ -13,6 +13,7 @@
 */
 
 #include "etiss/IntegratedLibrary/gdb/GDBCore.h"
+#include "etiss/jit/CPU.h"
 
 using namespace etiss::plugin::gdb;
 

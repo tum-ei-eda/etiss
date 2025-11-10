@@ -11,8 +11,12 @@
 */
 
 #include "etiss/ETISS.h"
+#include "etiss/CPUCore.h"
+#include "etiss/CPUArch.h"
+
 #include "etiss/fault/Stressor.h"
 #include "etiss/IntegratedLibrary/InstructionAccurateCallback.h"
+#include "etiss/LibraryInterface.h"
 
 #include <csignal>
 #include <cstring>
