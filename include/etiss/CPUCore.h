@@ -15,7 +15,6 @@
 
 #include "etiss/Misc.h"
 #include "etiss/InterruptVector.h"
-#include "etiss/jit/ReturnCode.h"
 #include "etiss/VirtualStruct.h"
 
 #include <mutex>

@@ -23,8 +23,6 @@
 #include "etiss/Misc.h"
 #include "etiss/IntegratedLibrary/gdb/GDBCore.h"
 #include "etiss/Plugin.h"
-#include "etiss/VirtualStruct.h"
-#include "etiss/jit/ReturnCode.h"
 
 namespace etiss
 {

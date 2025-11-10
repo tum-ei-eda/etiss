@@ -19,6 +19,7 @@
 #include "etiss/IntegratedLibrary/gdb/Hex.h"
 #include "etiss/IntegratedLibrary/gdb/UnixTCPGDBConnection.h"
 #include "etiss/jit/types.h"
+#include "etiss/jit/ReturnCode.h"
 #include <chrono>
 #include <cstring>
 #include <thread>
