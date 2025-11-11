@@ -18,5 +18,5 @@ std::unique_ptr<llvm::MemoryBuffer> get_virtual_source(llvm::StringRef code, cla
 
 void *get_function_ptr(const compat::lookup_symbol_T &func);
 
-void createDiagnostics(clang::CompilerInstance& CI);
-}
+void createDiagnostics(clang::CompilerInstance &CI);
+} // namespace compat

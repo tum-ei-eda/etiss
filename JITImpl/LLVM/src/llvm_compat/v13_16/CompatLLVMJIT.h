@@ -42,6 +42,6 @@ namespace compat
 
 // ORC v2 (LLVM 13–16)
 using lookup_symbol_T = llvm::JITEvaluatedSymbol;
-static constexpr auto tu_module_T {clang::TranslationUnitKind::TU_Module};
+static constexpr auto tu_module_T{ clang::TranslationUnitKind::TU_Module };
 
 } // namespace compat

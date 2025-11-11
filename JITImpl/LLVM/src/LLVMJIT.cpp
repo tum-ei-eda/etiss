@@ -142,7 +142,7 @@ class OrcJit
         return TSM;
     }
 
-    std::unique_ptr<llvm::orc::ExecutionSession> ES { compat::createExecutionSession() };
+    std::unique_ptr<llvm::orc::ExecutionSession> ES{ compat::createExecutionSession() };
     llvm::orc::RTDyldObjectLinkingLayer ObjectLayer;
     llvm::orc::IRCompileLayer CompileLayer;
     llvm::orc::IRTransformLayer OptimizeLayer;
@@ -170,9 +170,7 @@ LLVMJIT::LLVMJIT() : JIT("LLVMJIT")
     orcJit_ = cantFail(OrcJit::Create());
 }
 
-LLVMJIT::~LLVMJIT()
-{
-}
+LLVMJIT::~LLVMJIT() {}
 
 void *LLVMJIT::translate(std::string code, std::set<std::string> headerpaths, std::set<std::string> librarypaths,
                          std::set<std::string> libraries, std::string &error, bool debug)

@@ -41,8 +41,7 @@ std::unique_ptr<llvm::MemoryBuffer> get_virtual_source(llvm::StringRef code, cla
     return buffer;
 }
 
-
-void createDiagnostics(clang::CompilerInstance& CI)
+void createDiagnostics(clang::CompilerInstance &CI)
 {
     auto diagOpts = std::make_shared<clang::DiagnosticOptions>();
     auto diagPrinter = std::make_unique<clang::TextDiagnosticPrinter>(llvm::errs(), diagOpts.get());
