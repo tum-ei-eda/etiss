@@ -8,7 +8,6 @@
 #include "etiss/ETISS.h"
 #include "CompatLLVMJIT.h"
 
-#include "clang/Basic/DiagnosticOptions.h"        // logging
 #include "clang/CodeGen/CodeGenAction.h"          // code generation action "compile to IR" (for mcjit)
 #include "clang/Frontend/CompilerInstance.h"      // compiler
 #include "clang/Frontend/CompilerInvocation.h"    // compilation run
@@ -48,6 +47,8 @@
 
 #include <vector>
 #include <iostream>
+
+#include "llvm_compat/llvm_compat.hpp"
 
 using namespace etiss;
 
@@ -177,18 +178,14 @@ void *LLVMJIT::translate(std::string code, std::set<std::string> headerpaths, st
                          std::set<std::string> libraries, std::string &error, bool debug)
 {
     clang::CompilerInstance CI;
-
-    DiagnosticOptions *diagOpts = new DiagnosticOptions();
-    TextDiagnosticPrinter *diagPrinter = new TextDiagnosticPrinter(llvm::outs(), diagOpts);
-
-    CI.createDiagnostics(diagPrinter);
+    compat::createDiagnostics(CI);
     auto pto = std::make_shared<clang::TargetOptions>();
     pto->Triple = llvm::sys::getDefaultTargetTriple();
     TargetInfo *pti = TargetInfo::CreateTargetInfo(CI.getDiagnostics(), pto);
     CI.setTarget(pti);
     CI.createFileManager();
     CI.createSourceManager(CI.getFileManager());
-    CI.createPreprocessor(clang::TranslationUnitKind::TU_Module);
+    CI.createPreprocessor(compat::tu_module_T);
 
     // compilation task
     std::vector<std::string> args;

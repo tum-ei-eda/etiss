@@ -47,32 +47,6 @@
 
 namespace compat
 {
-
-inline std::unique_ptr<llvm::orc::ExecutionSession> createExecutionSession()
-{
-    auto ES = std::make_unique<llvm::orc::ExecutionSession>();
-    if (!ES)
-        llvm::report_fatal_error("Failed to create ES");
-    return ES;
-}
-
-inline std::unique_ptr<llvm::MemoryBuffer> get_virtual_source(llvm::StringRef code, clang::CompilerInstance &CI)
-{
-    // input file is mapped to memory area containing the code
-    auto buffer = llvm::MemoryBuffer::getMemBufferCopy(code, "/etiss_llvm_clang_memory_mapped_file.c");
-    CI.getSourceManager().overrideFileContents(
-        CI.getFileManager().getVirtualFile("/etiss_llvm_clang_memory_mapped_file.c", buffer->getBufferSize(), 0),
-#if LLVM_VERSION_MAJOR < 12
-        buffer.get(), true
-#else
-        *buffer
-#endif
-    );
-
-    return buffer;
-}
-
 using lookup_symbol_T = llvm::JITEvaluatedSymbol;
-void *get_function_ptr(const compat::lookup_symbol_T &func);
-
+using tu_module_T = clang::TranslationUnitKind::TU_Module;
 } // namespace compat
