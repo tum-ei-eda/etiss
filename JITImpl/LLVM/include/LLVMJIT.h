@@ -4,8 +4,23 @@
 // compliance with the License. You should have received a copy of the license along with this project. If not, see the
 // LICENSE file.
 
+#include <optional>
+#include <variant>
+#include <cctype>
+#include <cstdio>
+//#include <llvm/ADT/IntrusiveRefCntPtr.h>
+#include <map>
+#include <memory>
+#include <mutex>
+#include <string>
+#include <vector>
+#include <unordered_set>
+
 #include "etiss/JIT.h"
 
+
+#include "llvm/IR/LLVMContext.h"
+/*
 #include "clang/Basic/DiagnosticOptions.h"        // logging
 #include "clang/CodeGen/CodeGenAction.h"          // code generation action "compile to IR" (for mcjit)
 #include "clang/Frontend/CompilerInstance.h"      // compiler
@@ -46,19 +61,11 @@
 #include "llvm/Target/TargetMachine.h"
 #include "llvm/Transforms/IPO.h"
 #include "llvm/Transforms/Scalar.h"
-#include <cctype>
 #include <clang/CodeGen/CodeGenAction.h>
 #include <clang/Frontend/CompilerInstance.h>
 #include <clang/Frontend/CompilerInvocation.h>
 #include <clang/Frontend/TextDiagnosticPrinter.h>
-#include <cstdio>
-#include <llvm/ADT/IntrusiveRefCntPtr.h>
-#include <map>
-#include <memory>
-#include <mutex>
-#include <string>
-#include <vector>
-#include <unordered_set>
+*/
 
 class OrcJit;
 
@@ -77,7 +84,7 @@ class LLVMJIT : public etiss::JIT
 
   private:
     llvm::LLVMContext context_;
-    OrcJit *orcJit_ = nullptr;
+    std::unique_ptr<OrcJit> orcJit_;
     std::unordered_set<std::string> loadedLibs_;
 };
 

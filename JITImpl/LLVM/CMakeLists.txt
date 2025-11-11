@@ -4,30 +4,57 @@
 # compliance with the License. You should have received a copy of the license along with this project. If not, see the
 # LICENSE file.
 
+cmake_minimum_required(VERSION 3.16)
 PROJECT(LLVMJIT)
 
-IF(NOT DEFINED ENV{LLVM_DIR})
-    SET(ENV{LLVM_DIR} "/opt/clang+llvm-11.0.0-x86_64-linux-gnu-ubuntu-20.04")
-ENDIF()
+if(NOT DEFINED LLVM_DIR)
+  if(DEFINED ENV{LLVM_DIR})
+    set(LLVM_DIR "$ENV{LLVM_DIR}")
+  endif()
+endif()
 
-IF(NOT DEFINED ENV{Clang_DIR})
-    SET(ENV{Clang_DIR} $ENV{LLVM_DIR})
-ENDIF()
+if(DEFINED LLVM_DIR)
+  #set(Clang_DIR ${LLVM_DIR})
+  find_package(LLVM CONFIG)
+  if(LLVM_FOUND)
+    message(STATUS "Found LLVM ${LLVM_PACKAGE_VERSION}")
+    string(REGEX MATCH "^[0-9]+" LLVM_VERSION_MAJOR "${LLVM_PACKAGE_VERSION}")
 
-FIND_PACKAGE(LLVM 11 CONFIG QUIET)
-IF(NOT LLVM_FOUND)
-    FIND_PACKAGE(LLVM 11.1 CONFIG QUIET)
-ENDIF()
+    message(STATUS "Clang_DIR ${Clang_DIR}")
+    find_package(Clang REQUIRED CONFIG
+        NO_DEFAULT_PATH
+        NO_SYSTEM_ENVIRONMENT_PATH
+        PATHS ${Clang_DIR_SEARCH} "${LLVM_DIR}/../../../lib/cmake/clang"
+    )
 
-FIND_PACKAGE(Clang 11 CONFIG QUIET)
-IF(NOT Clang_FOUND)
-    FIND_PACKAGE(Clang 11.1 CONFIG QUIET)
-ENDIF()
+    if(Clang_FOUND)
+      add_compile_definitions(LLVM_VERSION_MAJOR=${LLVM_VERSION_MAJOR})
+      if(LLVM_VERSION_MAJOR LESS 13)
+        set(LLVM_COMPAT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/llvm_compat/v11_12)
+      elseif(LLVM_VERSION_MAJOR LESS 17)
+        set(LLVM_COMPAT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/llvm_compat/v13_16)
+      else()
+        set(LLVM_COMPAT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/llvm_compat/v17_19)
+      endif()
+      if(LLVM_VERSION_MAJOR GREATER 15 AND CMAKE_CXX_STANDARD LESS 17)
+        message(FATAL_ERROR "LLVM_VERSION_MAJOR[${LLVM_VERSION_MAJOR}] requires c++std>=17! Is ${CMAKE_CXX_STANDARD}")
+      endif()
+
+      message(STATUS "Using LLVM compatibility layer: ${LLVM_COMPAT_DIR}")
+      file(GLOB_RECURSE COMPAT_SRCS "${LLVM_COMPAT_DIR}/*.cpp")
+    else()
+      message(STATUS "Did not find Clang... Skipping LLVMJIT target.")
+    endif()
+
+  else()
+    message(STATUS "Did not find LLVM... Skipping LLVMJIT target.")
+  endif()
+endif()
 
 OPTION(ETISS_LINK_CLANG_DYLIB "Link against the clang dynamic library" ${CLANG_LINK_CLANG_DYLIB})
 OPTION(ETISS_LINK_LLVM_DYLIB "Link against the llvm dynamic library" ${LLVM_LINK_LLVM_DYLIB})
 
-IF(LLVM_FOUND)
+IF(LLVM_FOUND AND Clang_FOUND)
     MESSAGE("Using LLVM_DIR: ${LLVM_DIR}")
     MESSAGE("LLVM Version: ${LLVM_VERSION}")
     MESSAGE("Clang DYLIB Link: ${ETISS_LINK_CLANG_DYLIB}")
@@ -70,6 +97,7 @@ IF(LLVM_FOUND)
     ADD_LIBRARY(${PROJECT_NAME} SHARED
         LLVMJITLIB.cpp
         src/LLVMJIT.cpp
+        ${COMPAT_SRCS}
     )
     ETISSPlugin(${PROJECT_NAME})
 
@@ -97,5 +125,5 @@ IF(LLVM_FOUND)
         TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC ${LLVM_LIBS})
     endif()
 
-    TARGET_INCLUDE_DIRECTORIES(${PROJECT_NAME} PUBLIC include ${LLVM_INCLUDE_DIRS})
+    TARGET_INCLUDE_DIRECTORIES(${PROJECT_NAME} PUBLIC include ${LLVM_INCLUDE_DIRS} ${LLVM_COMPAT_DIR})
 ENDIF()
