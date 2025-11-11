@@ -8,9 +8,9 @@ cmake_minimum_required(VERSION 3.16)
 PROJECT(LLVMJIT)
 
 if(NOT DEFINED LLVM_DIR)
-  if(DEFINED ENV{LLVM_DIR})
-    set(LLVM_DIR "$ENV{LLVM_DIR}")
-  endif()
+    if(DEFINED ENV{LLVM_DIR})
+        set(LLVM_DIR "$ENV{LLVM_DIR}")
+    endif()
 endif()
 
 #if(DEFINED LLVM_DIR)
@@ -20,42 +20,44 @@ find_package(LLVM CONFIG # 1st try only environment and LLVM_DIR
     PATHS ${LLVM_DIR}
 )
 if(NOT LLVM_FOUND) # 2nd try with system and default paths
-  find_package(LLVM CONFIG)
+    find_package(LLVM CONFIG)
 endif()
-  if(NOT LLVM_FOUND)
-message(STATUS "Did not find LLVM... Skipping ${PROJECT_NAME} target.")
+if(NOT LLVM_FOUND)
+    message(STATUS "Did not find LLVM... Skipping ${PROJECT_NAME} target.")
 else()
     message(STATUS "Found LLVM ${LLVM_PACKAGE_VERSION} at ${LLVM_DIR}")
     string(REGEX MATCH "^[0-9]+" LLVM_VERSION_MAJOR "${LLVM_PACKAGE_VERSION}")
 
-        find_package(Clang CONFIG # 1st try to find Clang in relation to found LLVM
+    find_package(Clang CONFIG # 1st try to find Clang in relation to found LLVM
         NO_DEFAULT_PATH
         NO_SYSTEM_ENVIRONMENT_PATH
         PATHS ${Clang_DIR_SEARCH} "${LLVM_DIR}/../../../lib/cmake/clang"
     )
-if(NOT Clang_FOUND) # 2nd try with system and default paths
+    if(NOT Clang_FOUND) # 2nd try with system and default paths
         find_package(Clang CONFIG)
     endif()
     if(NOT Clang_FOUND)
-message(STATUS "Did not find matching Clang [LLVM_VERSION_MAJOR=${LLVM_VERSION_MAJOR}]... Skipping LLVMJIT target.")
+        message(STATUS "Did not find matching Clang [LLVM_VERSION_MAJOR=${LLVM_VERSION_MAJOR}]... Skipping LLVMJIT target.")
     else()
         message(STATUS "Found Clang ${Clang_PACKAGE_VERSION} at ${Clang_DIR}")
 
-      add_compile_definitions(LLVM_VERSION_MAJOR=${LLVM_VERSION_MAJOR})
-      if(LLVM_VERSION_MAJOR LESS 13)
-        set(LLVM_COMPAT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/llvm_compat/v11_12)
-      elseif(LLVM_VERSION_MAJOR LESS 17)
-        set(LLVM_COMPAT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/llvm_compat/v13_16)
-      else()
-        set(LLVM_COMPAT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/llvm_compat/v17_19)
-      endif()
-      if(LLVM_VERSION_MAJOR GREATER 15 AND CMAKE_CXX_STANDARD LESS 17)
-        message(FATAL_ERROR "LLVM_VERSION_MAJOR[${LLVM_VERSION_MAJOR}] requires c++std>=17! Is ${CMAKE_CXX_STANDARD}")
-      endif()
+        add_compile_definitions(LLVM_VERSION_MAJOR=${LLVM_VERSION_MAJOR})
+        if(LLVM_VERSION_MAJOR LESS 13)
+            set(LLVM_COMPAT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/llvm_compat/v11_12)
+        elseif(LLVM_VERSION_MAJOR LESS 17)
+            set(LLVM_COMPAT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/llvm_compat/v13_16)
+        elseif(LLVM_VERSION_MAJOR LESS 20)
+            set(LLVM_COMPAT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/llvm_compat/v17_19)
+        else()
+            set(LLVM_COMPAT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/llvm_compat/v20)
+        endif()
+        if(LLVM_VERSION_MAJOR GREATER 15 AND CMAKE_CXX_STANDARD LESS 17)
+            message(FATAL_ERROR "LLVM_VERSION_MAJOR[${LLVM_VERSION_MAJOR}] requires c++std>=17! Is ${CMAKE_CXX_STANDARD}")
+        endif()
 
-      message(STATUS "Using LLVM compatibility layer: ${LLVM_COMPAT_DIR}")
-      file(GLOB_RECURSE COMPAT_SRCS "${LLVM_COMPAT_DIR}/*.cpp")
-      endif()
+        message(STATUS "Using LLVM compatibility layer: ${LLVM_COMPAT_DIR}")
+        file(GLOB_RECURSE COMPAT_SRCS "${LLVM_COMPAT_DIR}/*.cpp")
+    endif()
 endif()
 #endif()
 
