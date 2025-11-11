@@ -13,21 +13,34 @@ if(NOT DEFINED LLVM_DIR)
   endif()
 endif()
 
-if(DEFINED LLVM_DIR)
-  #set(Clang_DIR ${LLVM_DIR})
+#if(DEFINED LLVM_DIR)
+find_package(LLVM CONFIG # 1st try only environment and LLVM_DIR
+    NO_DEFAULT_PATH
+    NO_SYSTEM_ENVIRONMENT_PATH
+    PATHS ${LLVM_DIR}
+)
+if(NOT LLVM_FOUND) # 2nd try with system and default paths
   find_package(LLVM CONFIG)
-  if(LLVM_FOUND)
-    message(STATUS "Found LLVM ${LLVM_PACKAGE_VERSION}")
+endif()
+  if(NOT LLVM_FOUND)
+message(STATUS "Did not find LLVM... Skipping ${PROJECT_NAME} target.")
+else()
+    message(STATUS "Found LLVM ${LLVM_PACKAGE_VERSION} at ${LLVM_DIR}")
     string(REGEX MATCH "^[0-9]+" LLVM_VERSION_MAJOR "${LLVM_PACKAGE_VERSION}")
 
-    message(STATUS "Clang_DIR ${Clang_DIR}")
-    find_package(Clang REQUIRED CONFIG
+        find_package(Clang CONFIG # 1st try to find Clang in relation to found LLVM
         NO_DEFAULT_PATH
         NO_SYSTEM_ENVIRONMENT_PATH
         PATHS ${Clang_DIR_SEARCH} "${LLVM_DIR}/../../../lib/cmake/clang"
     )
+if(NOT Clang_FOUND) # 2nd try with system and default paths
+        find_package(Clang CONFIG)
+    endif()
+    if(NOT Clang_FOUND)
+message(STATUS "Did not find matching Clang [LLVM_VERSION_MAJOR=${LLVM_VERSION_MAJOR}]... Skipping LLVMJIT target.")
+    else()
+        message(STATUS "Found Clang ${Clang_PACKAGE_VERSION} at ${Clang_DIR}")
 
-    if(Clang_FOUND)
       add_compile_definitions(LLVM_VERSION_MAJOR=${LLVM_VERSION_MAJOR})
       if(LLVM_VERSION_MAJOR LESS 13)
         set(LLVM_COMPAT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/llvm_compat/v11_12)
@@ -42,14 +55,9 @@ if(DEFINED LLVM_DIR)
 
       message(STATUS "Using LLVM compatibility layer: ${LLVM_COMPAT_DIR}")
       file(GLOB_RECURSE COMPAT_SRCS "${LLVM_COMPAT_DIR}/*.cpp")
-    else()
-      message(STATUS "Did not find Clang... Skipping LLVMJIT target.")
-    endif()
-
-  else()
-    message(STATUS "Did not find LLVM... Skipping LLVMJIT target.")
-  endif()
+      endif()
 endif()
+#endif()
 
 OPTION(ETISS_LINK_CLANG_DYLIB "Link against the clang dynamic library" ${CLANG_LINK_CLANG_DYLIB})
 OPTION(ETISS_LINK_LLVM_DYLIB "Link against the llvm dynamic library" ${LLVM_LINK_LLVM_DYLIB})
