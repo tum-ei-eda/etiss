@@ -312,7 +312,8 @@ etiss_int32 get_size() { return sizeof()V0G0N" +
     std::set<std::string> headers;
     headers.insert(etiss::jitFiles());
     // compile
-    void *handle = jit->translate(code, headers, std::set<std::string>(), std::set<std::string>(), error, true);
+    auto jit_debug = etiss::cfg().get<bool>("jit.debug", true);
+    void *handle = jit->translate(code, headers, std::set<std::string>(), std::set<std::string>(), error, jit_debug);
     if (handle == 0)
     {
         etiss::log(etiss::ERROR,
@@ -400,7 +401,8 @@ static bool verifyJITPragmaPack(etiss::JIT *jit)
     std::set<std::string> headers;
     headers.insert(etiss::jitFiles());
     // compile
-    void *handle = jit->translate(code, headers, std::set<std::string>(), std::set<std::string>(), error, true);
+    auto jit_debug = etiss::cfg().get<bool>("jit.debug", true);
+    void *handle = jit->translate(code, headers, std::set<std::string>(), std::set<std::string>(), error, jit_debug);
     if (handle == 0)
     {
         etiss::log(etiss::ERROR,
