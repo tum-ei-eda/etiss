@@ -13,7 +13,6 @@ if(NOT DEFINED LLVM_DIR)
     endif()
 endif()
 
-#if(DEFINED LLVM_DIR)
 find_package(LLVM CONFIG # 1st try only environment and LLVM_DIR
     NO_DEFAULT_PATH
     NO_SYSTEM_ENVIRONMENT_PATH
@@ -33,13 +32,13 @@ else()
     find_package(Clang CONFIG # 1st try to find Clang in relation to found LLVM
         NO_DEFAULT_PATH
         NO_SYSTEM_ENVIRONMENT_PATH
-        PATHS ${Clang_DIR_SEARCH} "${LLVM_DIR}/../../../lib/cmake/clang"
+        PATHS ${Clang_DIR_SEARCH} "${LLVM_DIR}/../../../lib/cmake/clang" "${LLVM_DIR}/../../clang/${LLVM_VERSION_MAJOR}"
     )
     if(NOT Clang_FOUND) # 2nd try with system and default paths
         find_package(Clang CONFIG)
     endif()
     if(NOT Clang_FOUND)
-        message(STATUS "Did not find matching Clang [LLVM_VERSION_MAJOR=${LLVM_VERSION_MAJOR}]... Skipping LLVMJIT target.")
+        message(STATUS "Did not find matching Clang... Skipping LLVMJIT target.")
     else()
         message(STATUS "Found Clang ${Clang_PACKAGE_VERSION} at ${Clang_DIR}")
 
@@ -61,7 +60,6 @@ else()
         file(GLOB_RECURSE COMPAT_SRCS "${LLVM_COMPAT_DIR}/*.cpp")
     endif()
 endif()
-#endif()
 
 OPTION(ETISS_LINK_CLANG_DYLIB "Link against the clang dynamic library" ${CLANG_LINK_CLANG_DYLIB})
 OPTION(ETISS_LINK_LLVM_DYLIB "Link against the llvm dynamic library" ${LLVM_LINK_LLVM_DYLIB})
