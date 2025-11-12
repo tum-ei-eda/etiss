@@ -49,8 +49,8 @@ void *get_function_ptr(const compat::lookup_symbol_T &func)
 
 void createDiagnostics(clang::CompilerInstance &CI)
 {
-    DiagnosticOptions *diagOpts = new DiagnosticOptions();
-    TextDiagnosticPrinter *diagPrinter = new TextDiagnosticPrinter(llvm::outs(), diagOpts);
+    auto diagOpts = new clang::DiagnosticOptions();
+    auto diagPrinter = new clang::TextDiagnosticPrinter(llvm::outs(), diagOpts);
     CI.createDiagnostics(diagPrinter);
 }
 

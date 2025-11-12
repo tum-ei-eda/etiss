@@ -41,7 +41,7 @@
 namespace compat
 {
 
-// ORC v2 (LLVM 13–16)
 using lookup_symbol_T = llvm::orc::ExecutorSymbolDef;
 static constexpr auto tu_module_T{ clang::TranslationUnitKind::TU_ClangModule };
+
 } // namespace compat

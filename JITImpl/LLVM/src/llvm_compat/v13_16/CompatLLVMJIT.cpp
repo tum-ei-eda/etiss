@@ -40,4 +40,16 @@ void *get_function_ptr(const compat::lookup_symbol_T &func)
 {
     return (void *)func.getAddress();
 }
+
+void createDiagnostics(clang::CompilerInstance &CI)
+{
+    auto diagOpts = llvm::makeIntrusiveRefCnt<clang::DiagnosticOptions>();
+    auto diagPrinter = std::make_unique<clang::TextDiagnosticPrinter>(llvm::errs(), diagOpts.get());
+
+    llvm::IntrusiveRefCntPtr<clang::DiagnosticIDs> diagID(new clang::DiagnosticIDs());
+    llvm::IntrusiveRefCntPtr<clang::DiagnosticsEngine> diags(
+        new clang::DiagnosticsEngine(diagID, diagOpts, diagPrinter.release()));
+
+    CI.setDiagnostics(diags.get());
+}
 } // namespace compat

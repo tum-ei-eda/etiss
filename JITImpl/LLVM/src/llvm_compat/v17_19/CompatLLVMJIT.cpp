@@ -17,10 +17,6 @@
 
 namespace compat
 {
-void *get_function_ptr(const compat::lookup_symbol_T &func)
-{
-    return func.getAddress().toPtr<void *>();
-}
 
 std::unique_ptr<llvm::orc::ExecutionSession> createExecutionSession()
 {
@@ -35,22 +31,26 @@ std::unique_ptr<llvm::MemoryBuffer> get_virtual_source(llvm::StringRef code, cla
     // input file is mapped to memory area containing the code
     auto buffer = llvm::MemoryBuffer::getMemBufferCopy(code, "/etiss_llvm_clang_memory_mapped_file.c");
     CI.getSourceManager().overrideFileContents(
-        CI.getFileManager().getVirtualFile("/etiss_llvm_clang_memory_mapped_file.c", buffer->getBufferSize(), 0),
+        CI.getFileManager().getVirtualFileRef("/etiss_llvm_clang_memory_mapped_file.c", buffer->getBufferSize(), 0),
         *buffer);
 
     return buffer;
 }
 
+void *get_function_ptr(const compat::lookup_symbol_T &func)
+{
+    return func.getAddress().toPtr<void *>();
+}
+
 void createDiagnostics(clang::CompilerInstance &CI)
 {
-    auto diagOpts = std::make_shared<clang::DiagnosticOptions>();
+    auto diagOpts = llvm::makeIntrusiveRefCnt<clang::DiagnosticOptions>();
     auto diagPrinter = std::make_unique<clang::TextDiagnosticPrinter>(llvm::errs(), diagOpts.get());
 
     llvm::IntrusiveRefCntPtr<clang::DiagnosticIDs> diagID(new clang::DiagnosticIDs());
     llvm::IntrusiveRefCntPtr<clang::DiagnosticsEngine> diags(
         new clang::DiagnosticsEngine(diagID, diagOpts, diagPrinter.release()));
 
-    clang::CompilerInstance CI;
     CI.setDiagnostics(diags.get());
 }
 } // namespace compat

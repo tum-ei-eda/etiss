@@ -47,6 +47,8 @@
 
 namespace compat
 {
+
 using lookup_symbol_T = llvm::JITEvaluatedSymbol;
-using tu_module_T = clang::TranslationUnitKind::TU_Module;
+static constexpr auto tu_module_T{ clang::TranslationUnitKind::TU_Module };
+
 } // namespace compat
