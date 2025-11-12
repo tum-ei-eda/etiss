@@ -24,6 +24,8 @@ if(NOT LLVM_FOUND) # 2nd try with system and default paths
 endif()
 if(NOT LLVM_FOUND)
     message(STATUS "Did not find LLVM... Skipping ${PROJECT_NAME} target.")
+elseif((LLVM_FOUND AND LLVM_VERSION_MAJOR LESS 11))
+    message(STATUS "Could find LLVM at ${LLVM_DIR}, but version ${LLVM_PACKAGE_VERSION}<11... Skipping ${PROJECT_NAME} target.")
 else()
     message(STATUS "Found LLVM ${LLVM_PACKAGE_VERSION} at ${LLVM_DIR}")
     string(REGEX MATCH "^[0-9]+" LLVM_VERSION_MAJOR "${LLVM_PACKAGE_VERSION}")
