@@ -7,6 +7,50 @@
 #pragma once
 
 #include <memory>
+
+#include "llvm/Config/llvm-config.h"
+
+// Core utilities
+#include "llvm/ADT/StringRef.h"
+#include "llvm/Support/Error.h"
+#include "llvm/Support/MemoryBuffer.h"
+#if LLVM_VERSION_MAJOR < 17
+#include "llvm/Support/Host.h"
+#else
+#include "llvm/TargetParser/Host.h"
+#endif
+#include "llvm/Support/TargetSelect.h" // target arch
+
+#include "llvm/IR/DataLayout.h"
+#include "llvm/IR/LLVMContext.h"
+#include "llvm/IR/LegacyPassManager.h"
+
+#include "llvm/ExecutionEngine/Orc/LLJIT.h"
+#include "llvm/ExecutionEngine/Orc/CompileUtils.h"
+#include "llvm/ExecutionEngine/Orc/Core.h"
+#include "llvm/ExecutionEngine/Orc/ExecutionUtils.h"
+#include "llvm/ExecutionEngine/Orc/IRCompileLayer.h"
+#include "llvm/ExecutionEngine/Orc/IRTransformLayer.h"
+#include "llvm/ExecutionEngine/Orc/JITTargetMachineBuilder.h"
+#include "llvm/ExecutionEngine/Orc/RTDyldObjectLinkingLayer.h"
+#include "llvm/ExecutionEngine/Orc/CompileOnDemandLayer.h"
+#include "llvm/ExecutionEngine/SectionMemoryManager.h"
+#if LLVM_VERSION_MAJOR < 12 // ORC v1 – old JIT
+#include "llvm/ExecutionEngine/Orc/OrcABISupport.h"
+#include "llvm/ExecutionEngine/Orc/LambdaResolver.h"
+#else // LLVM_VERSION_MAJOR >= 12 // Thread safety abstractions appeared in LLVM 12
+#include "llvm/ExecutionEngine/Orc/ThreadSafeModule.h"
+#endif
+// Transform passes
+#include "llvm/Transforms/InstCombine/InstCombine.h"
+#include "llvm/Transforms/Scalar/GVN.h"
+#include "llvm/Transforms/Scalar.h"
+
+#include "clang/CodeGen/CodeGenAction.h" // code generation action "compile to IR" (for mcjit)
+#include "clang/Basic/TargetInfo.h"
+#include "clang/Basic/FileManager.h"
+#include "clang/Frontend/CompilerInstance.h"
+
 #include "CompatLLVMJIT.h"
 
 namespace compat

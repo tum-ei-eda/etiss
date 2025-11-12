@@ -6,44 +6,8 @@
 
 #pragma once
 
-#include "llvm/Config/llvm-config.h"
-
-// Core utilities
-#include "llvm/ExecutionEngine/Orc/LLJIT.h"
-#include "llvm/ADT/StringRef.h"
-#include "llvm/Support/Error.h"
-#include "llvm/Support/MemoryBuffer.h"
-#include "llvm/IR/DataLayout.h"
-#include "llvm/IR/LLVMContext.h"
-#include "llvm/IR/LegacyPassManager.h"
-#include "clang/Basic/FileManager.h"
 #include "clang/Frontend/CompilerInstance.h"
-#include "llvm/Support/Host.h"
-
-// Execution Engine & ORC v1
-#include "llvm/ExecutionEngine/JITSymbol.h"
-#include "llvm/ExecutionEngine/Orc/CompileUtils.h"
-#include "llvm/ExecutionEngine/Orc/Core.h"
-#include "llvm/ExecutionEngine/Orc/ExecutionUtils.h"
-#include "llvm/ExecutionEngine/Orc/IRCompileLayer.h"
-#include "llvm/ExecutionEngine/Orc/IRTransformLayer.h"
-#include "llvm/ExecutionEngine/Orc/JITTargetMachineBuilder.h"
-#include "llvm/ExecutionEngine/Orc/RTDyldObjectLinkingLayer.h"
-#include "llvm/ExecutionEngine/Orc/CompileOnDemandLayer.h"
-#include "llvm/ExecutionEngine/SectionMemoryManager.h"
-
-// Thread safety abstractions appeared in LLVM 12
-#if LLVM_VERSION_MAJOR >= 12
-#include "llvm/ExecutionEngine/Orc/ThreadSafeModule.h"
-#endif
-
-// Transform passes
-#include "llvm/Transforms/InstCombine/InstCombine.h"
-#include "llvm/Transforms/Scalar/GVN.h"
-
-// ORC v1 – old JIT
-#include "llvm/ExecutionEngine/Orc/OrcABISupport.h"
-#include "llvm/ExecutionEngine/Orc/LambdaResolver.h"
+#include "llvm/ExecutionEngine/Orc/LLJIT.h"
 
 namespace compat
 {
