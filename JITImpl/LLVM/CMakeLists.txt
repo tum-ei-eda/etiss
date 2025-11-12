@@ -4,7 +4,7 @@
 # compliance with the License. You should have received a copy of the license along with this project. If not, see the
 # LICENSE file.
 
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.19)
 PROJECT(LLVMJIT)
 
 if(NOT DEFINED LLVM_DIR)
@@ -28,14 +28,15 @@ elseif((LLVM_FOUND AND LLVM_VERSION_MAJOR LESS 11))
 else()
     message(STATUS "Found LLVM ${LLVM_PACKAGE_VERSION} at ${LLVM_DIR}")
     string(REGEX MATCH "^[0-9]+" LLVM_VERSION_MAJOR "${LLVM_PACKAGE_VERSION}")
+    math(EXPR LLVM_VERSION_MAJOR_NEXT "${LLVM_VERSION_MAJOR} + 1" OUTPUT_FORMAT DECIMAL)
 
-    find_package(Clang CONFIG # 1st try to find Clang in relation to found LLVM
+    find_package(Clang ${LLVM_PACKAGE_VERSION}...<${LLVM_VERSION_MAJOR_NEXT} CONFIG # 1st try to find Clang in relation to found LLVM
         NO_DEFAULT_PATH
         NO_SYSTEM_ENVIRONMENT_PATH
-        PATHS ${Clang_DIR_SEARCH} "${LLVM_DIR}/../../../lib/cmake/clang" "${LLVM_DIR}/../../clang/${LLVM_VERSION_MAJOR}"
+        PATHS "${LLVM_DIR}" "${LLVM_DIR}/../../../lib/cmake/clang" "${LLVM_DIR}/../../clang/${LLVM_VERSION_MAJOR}"
     )
     if(NOT Clang_FOUND) # 2nd try with system and default paths
-        find_package(Clang CONFIG)
+        find_package(Clang ${LLVM_PACKAGE_VERSION}...<${LLVM_VERSION_MAJOR_NEXT} CONFIG)
     endif()
     if(NOT Clang_FOUND)
         message(STATUS "Did not find matching Clang... Skipping LLVMJIT target.")
