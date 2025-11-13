@@ -12,19 +12,18 @@
 #include "clang/Basic/DiagnosticOptions.h"        // logging
 #include "clang/Frontend/TextDiagnosticPrinter.h" //logging
 #include "clang/Basic/LangOptions.h"
-#include "llvm/ExecutionEngine/Orc/Core.h"
+
+#if LLVM_VERSION_MAJOR >= 11 && LLVM_VERSION_MAJOR <= 16
+#include "llvm/ExecutionEngine/JITSymbol.h"
+#elif LLVM_VERSION_MAJOR >= 17
+#include "llvm/ExecutionEngine/Orc/Shared/ExecutorSymbolDef.h"
+#else // LLVM_VERSION_MAJOR < 11 -> deprecated
+#warning "LLVM>=11 required."
+#endif
 
 #if LLVM_VERSION_MAJOR >= 11 && LLVM_VERSION_MAJOR <= 12
-#include "llvm/ExecutionEngine/JITSymbol.h"
 #include "llvm/ExecutionEngine/Orc/Core.h"
-#elif LLVM_VERSION_MAJOR >= 13 && LLVM_VERSION_MAJOR <= 16
-#include "llvm/ExecutionEngine/JITSymbol.h"
-#include "llvm/ExecutionEngine/Orc/ExecutorProcessControl.h"
-#elif LLVM_VERSION_MAJOR >= 17 && LLVM_VERSION_MAJOR <= 19
-#include "llvm/ExecutionEngine/Orc/Shared/ExecutorSymbolDef.h"
-#include "llvm/ExecutionEngine/Orc/ExecutorProcessControl.h"
-#elif LLVM_VERSION_MAJOR >= 20
-#include "llvm/ExecutionEngine/Orc/Shared/ExecutorSymbolDef.h"
+#elif LLVM_VERSION_MAJOR >= 13
 #include "llvm/ExecutionEngine/Orc/ExecutorProcessControl.h"
 #else // LLVM_VERSION_MAJOR < 11 -> deprecated
 #warning "LLVM>=11 required."
