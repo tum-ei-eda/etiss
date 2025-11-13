@@ -10,8 +10,10 @@ jobs:
     - name: Install build dependencies
       run: |
         sudo apt update
+        sudo apt remove -y llvm* clang* libllvm* libclang*
         sudo apt install -y libboost-filesystem-dev libboost-program-options-dev \
-          llvm-11-dev libclang-11-dev clang-11
+          llvm-15-dev libclang-15-dev clang-15
+
     - name: Check out Git repository
       uses: actions/checkout@v3
       with:
