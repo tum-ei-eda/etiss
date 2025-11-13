@@ -6,6 +6,8 @@
 
 #pragma once
 
+#if LLVM_VERSION_MAJOR >= 17 && LLVM_VERSION_MAJOR <= 19 // for linter
+
 #include "llvm/ExecutionEngine/Orc/Shared/ExecutorSymbolDef.h"
 #include "clang/Basic/LangOptions.h"
 
@@ -20,3 +22,5 @@ static constexpr auto tu_module_T{ clang::TranslationUnitKind::TU_ClangModule };
 #endif
 
 } // namespace compat
+
+#endif

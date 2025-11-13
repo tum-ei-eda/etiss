@@ -6,6 +6,8 @@
 
 #pragma once
 
+#if LLVM_VERSION_MAJOR >= 11 && LLVM_VERSION_MAJOR <= 12 // for linter
+
 #include "llvm/ExecutionEngine/JITSymbol.h"
 #include "clang/Basic/LangOptions.h"
 
@@ -16,3 +18,5 @@ using lookup_symbol_T = llvm::JITEvaluatedSymbol;
 static constexpr auto tu_module_T{ clang::TranslationUnitKind::TU_Module };
 
 } // namespace compat
+
+#endif

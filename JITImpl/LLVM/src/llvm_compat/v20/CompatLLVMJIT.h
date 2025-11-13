@@ -6,6 +6,8 @@
 
 #pragma once
 
+#if LLVM_VERSION_MAJOR >= 20 // for linter
+
 #include "llvm/ExecutionEngine/Orc/Shared/ExecutorSymbolDef.h"
 #include "clang/Basic/LangOptions.h"
 
@@ -16,3 +18,5 @@ using lookup_symbol_T = llvm::orc::ExecutorSymbolDef;
 static constexpr auto tu_module_T{ clang::TranslationUnitKind::TU_Complete };
 
 } // namespace compat
+
+#endif
