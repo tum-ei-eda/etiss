@@ -6,7 +6,7 @@
 
 #ifndef ETISS_RV32IMACFDArch_RV32IMACFD_H_
 #define ETISS_RV32IMACFDArch_RV32IMACFD_H_
-//#include <stdio.h>
+#include <stdio.h>
 #include "etiss/jit/CPU.h"
 
 #ifdef __cplusplus
