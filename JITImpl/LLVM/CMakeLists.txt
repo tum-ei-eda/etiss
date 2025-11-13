@@ -39,21 +39,21 @@ else()
         message(STATUS "[${PROJECT_NAME}] Found Clang ${Clang_PACKAGE_VERSION} at ${Clang_DIR}")
 
         add_compile_definitions(LLVM_VERSION_MAJOR=${LLVM_VERSION_MAJOR})
-        if(LLVM_VERSION_MAJOR LESS 13)
-            set(LLVM_COMPAT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/llvm_compat/v11_12)
-        elseif(LLVM_VERSION_MAJOR LESS 17)
-            set(LLVM_COMPAT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/llvm_compat/v13_16)
-        elseif(LLVM_VERSION_MAJOR LESS 20)
-            set(LLVM_COMPAT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/llvm_compat/v17_19)
-        else()
-            set(LLVM_COMPAT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/llvm_compat/v20)
-        endif()
+        #if(LLVM_VERSION_MAJOR LESS 13)
+        #    set(LLVM_COMPAT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/llvm_compat/v11_12)
+        #elseif(LLVM_VERSION_MAJOR LESS 17)
+        #    set(LLVM_COMPAT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/llvm_compat/v13_16)
+        #elseif(LLVM_VERSION_MAJOR LESS 20)
+        #    set(LLVM_COMPAT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/llvm_compat/v17_19)
+        #else()
+        #    set(LLVM_COMPAT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/llvm_compat/v20)
+        #endif()
         if(LLVM_VERSION_MAJOR GREATER 15 AND CMAKE_CXX_STANDARD LESS 17)
             message(FATAL_ERROR "LLVM_VERSION_MAJOR[${LLVM_VERSION_MAJOR}] requires c++std>=17! Is ${CMAKE_CXX_STANDARD}")
         endif()
 
-        message(STATUS "[${PROJECT_NAME}] Using LLVM compatibility layer: ${LLVM_COMPAT_DIR}")
-        file(GLOB_RECURSE COMPAT_SRCS "${LLVM_COMPAT_DIR}/*.cpp")
+        #message(STATUS "[${PROJECT_NAME}] Using LLVM compatibility layer: ${LLVM_COMPAT_DIR}")
+        #file(GLOB_RECURSE COMPAT_SRCS "${LLVM_COMPAT_DIR}/*.cpp")
     endif()
 endif()
 
@@ -105,7 +105,7 @@ IF(LLVM_FOUND AND Clang_FOUND)
     ADD_LIBRARY(${PROJECT_NAME} SHARED
         LLVMJITLIB.cpp
         src/LLVMJIT.cpp
-        ${COMPAT_SRCS}
+        src/llvm_compat/llvm_compat.cpp
     )
     ETISSPlugin(${PROJECT_NAME})
 
@@ -133,5 +133,5 @@ IF(LLVM_FOUND AND Clang_FOUND)
         TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC ${LLVM_LIBS})
     endif()
 
-    TARGET_INCLUDE_DIRECTORIES(${PROJECT_NAME} PUBLIC include ${LLVM_INCLUDE_DIRS} ${LLVM_COMPAT_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/src/llvm_compat/)
+    TARGET_INCLUDE_DIRECTORIES(${PROJECT_NAME} PUBLIC include ${LLVM_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/src/llvm_compat/)
 ENDIF()

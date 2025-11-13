@@ -51,10 +51,27 @@
 #include "clang/Basic/FileManager.h"
 #include "clang/Frontend/CompilerInstance.h"
 
-#include "CompatLLVMJIT.h"
-
 namespace compat
 {
+#if LLVM_VERSION_MAJOR >= 11 && LLVM_VERSION_MAJOR <= 12
+using lookup_symbol_T = llvm::JITEvaluatedSymbol;
+static constexpr auto tu_module_T{ clang::TranslationUnitKind::TU_Module };
+#elif LLVM_VERSION_MAJOR >= 13 && LLVM_VERSION_MAJOR <= 16
+using lookup_symbol_T = llvm::JITEvaluatedSymbol;
+static constexpr auto tu_module_T{ clang::TranslationUnitKind::TU_Module };
+#elif LLVM_VERSION_MAJOR >= 17 && LLVM_VERSION_MAJOR <= 19
+using lookup_symbol_T = llvm::orc::ExecutorSymbolDef;
+#if LLVM_VERSION_MAJOR < 19
+static constexpr auto tu_module_T{ clang::TranslationUnitKind::TU_Module };
+#else
+static constexpr auto tu_module_T{ clang::TranslationUnitKind::TU_ClangModule };
+#endif
+#elif LLVM_VERSION_MAJOR >= 20
+using lookup_symbol_T = llvm::orc::ExecutorSymbolDef;
+static constexpr auto tu_module_T{ clang::TranslationUnitKind::TU_Complete };
+#else // LLVM_VERSION_MAJOR < 11 -> deprecated
+#warning "LLVM>=11 required."
+#endif
 
 std::unique_ptr<llvm::orc::ExecutionSession> createExecutionSession();
 
