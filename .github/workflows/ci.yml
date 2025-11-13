@@ -26,7 +26,7 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y libboost-filesystem-dev libboost-program-options-dev \
-          llvm-15-dev libclang-15-dev clang-15-dev
+          llvm-15-dev libclang-15-dev clang-15
 
     - name: Setup ccache
       uses: hendrikmuhs/ccache-action@v1
