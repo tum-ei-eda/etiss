@@ -50,7 +50,7 @@ void createDiagnostics(clang::CompilerInstance &CI)
     auto diagPrinter = std::make_unique<clang::TextDiagnosticPrinter>(llvm::errs(), &*diagOpts);
 
     llvm::IntrusiveRefCntPtr<clang::DiagnosticsEngine> diags(
-            new clang::DiagnosticsEngine(diagID, diagOpts, diagPrinter.release(), false));
+        new clang::DiagnosticsEngine(diagID, diagOpts, diagPrinter.release(), false));
     CI.setDiagnostics(&*diags);
 }
 } // namespace compat

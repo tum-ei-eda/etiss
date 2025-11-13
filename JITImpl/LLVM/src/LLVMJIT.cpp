@@ -4,7 +4,6 @@
 // compliance with the License. You should have received a copy of the license along with this project. If not, see the
 // LICENSE file.
 
-
 #include <vector>
 #include <iostream>
 
