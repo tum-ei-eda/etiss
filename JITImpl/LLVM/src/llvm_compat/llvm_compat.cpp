@@ -60,29 +60,17 @@ std::unique_ptr<llvm::MemoryBuffer> get_virtual_source(llvm::StringRef code, cla
 {
     // input file is mapped to memory area containing the code
     std::unique_ptr<llvm::MemoryBuffer> buffer{ nullptr };
+    buffer = llvm::MemoryBuffer::getMemBufferCopy(code, "/etiss_llvm_clang_memory_mapped_file.c");
 
-#if LLVM_VERSION_MAJOR >= 11 && LLVM_VERSION_MAJOR <= 12
-    buffer = llvm::MemoryBuffer::getMemBufferCopy(code, "/etiss_llvm_clang_memory_mapped_file.c");
+#if LLVM_VERSION_MAJOR == 11
     CI.getSourceManager().overrideFileContents(
         CI.getFileManager().getVirtualFile("/etiss_llvm_clang_memory_mapped_file.c", buffer->getBufferSize(), 0),
-#if LLVM_VERSION_MAJOR < 12
-        buffer.get(), true
-#else
-        *buffer
-#endif
-    );
-#elif LLVM_VERSION_MAJOR >= 13 && LLVM_VERSION_MAJOR <= 16
-    buffer = llvm::MemoryBuffer::getMemBufferCopy(code, "/etiss_llvm_clang_memory_mapped_file.c");
+        buffer.get(), true);
+#elif LLVM_VERSION_MAJOR >= 12 && LLVM_VERSION_MAJOR <= 16
     CI.getSourceManager().overrideFileContents(
         CI.getFileManager().getVirtualFile("/etiss_llvm_clang_memory_mapped_file.c", buffer->getBufferSize(), 0),
         *buffer);
-#elif LLVM_VERSION_MAJOR >= 17 && LLVM_VERSION_MAJOR <= 19
-    buffer = llvm::MemoryBuffer::getMemBufferCopy(code, "/etiss_llvm_clang_memory_mapped_file.c");
-    CI.getSourceManager().overrideFileContents(
-        CI.getFileManager().getVirtualFileRef("/etiss_llvm_clang_memory_mapped_file.c", buffer->getBufferSize(), 0),
-        *buffer);
-#elif LLVM_VERSION_MAJOR >= 20
-    buffer = llvm::MemoryBuffer::getMemBufferCopy(code, "/etiss_llvm_clang_memory_mapped_file.c");
+#elif LLVM_VERSION_MAJOR >= 17 && LLVM_VERSION_MAJOR <= 20
     CI.getSourceManager().overrideFileContents(
         CI.getFileManager().getVirtualFileRef("/etiss_llvm_clang_memory_mapped_file.c", buffer->getBufferSize(), 0),
         *buffer);
@@ -97,13 +85,9 @@ void *get_function_ptr(const compat::lookup_symbol_T &func)
 {
     void *ret_addr{ nullptr };
 
-#if LLVM_VERSION_MAJOR >= 11 && LLVM_VERSION_MAJOR <= 12
+#if LLVM_VERSION_MAJOR >= 11 && LLVM_VERSION_MAJOR <= 16
     ret_addr = (void *)func.getAddress();
-#elif LLVM_VERSION_MAJOR >= 13 && LLVM_VERSION_MAJOR <= 16
-    ret_addr = (void *)func.getAddress();
-#elif LLVM_VERSION_MAJOR >= 17 && LLVM_VERSION_MAJOR <= 19
-    ret_addr = func.getAddress().toPtr<void *>();
-#elif LLVM_VERSION_MAJOR >= 20
+#elif LLVM_VERSION_MAJOR >= 17 && LLVM_VERSION_MAJOR <= 20
     ret_addr = func.getAddress().toPtr<void *>();
 #else // LLVM_VERSION_MAJOR < 11 -> deprecated
     [[deprecated]]
@@ -119,33 +103,19 @@ void createDiagnostics(clang::CompilerInstance &CI)
     auto diagPrinter = new clang::TextDiagnosticPrinter(llvm::outs(), diagOpts);
 
     CI.createDiagnostics(diagPrinter);
-#elif LLVM_VERSION_MAJOR >= 13 && LLVM_VERSION_MAJOR <= 16
+#elif LLVM_VERSION_MAJOR >= 13 && LLVM_VERSION_MAJOR <= 20
     auto diagOpts = llvm::makeIntrusiveRefCnt<clang::DiagnosticOptions>();
     auto diagPrinter = std::make_unique<clang::TextDiagnosticPrinter>(llvm::errs(), diagOpts.get());
 
     llvm::IntrusiveRefCntPtr<clang::DiagnosticIDs> diagID(new clang::DiagnosticIDs());
+#if LLVM_VERSION_MAJOR < 20
     llvm::IntrusiveRefCntPtr<clang::DiagnosticsEngine> diags(
         new clang::DiagnosticsEngine(diagID, diagOpts, diagPrinter.release()));
-
-    CI.setDiagnostics(diags.get());
-#elif LLVM_VERSION_MAJOR >= 17 && LLVM_VERSION_MAJOR <= 19
-    auto diagOpts = llvm::makeIntrusiveRefCnt<clang::DiagnosticOptions>();
-    auto diagPrinter = std::make_unique<clang::TextDiagnosticPrinter>(llvm::errs(), diagOpts.get());
-
-    llvm::IntrusiveRefCntPtr<clang::DiagnosticIDs> diagID(new clang::DiagnosticIDs());
-    llvm::IntrusiveRefCntPtr<clang::DiagnosticsEngine> diags(
-        new clang::DiagnosticsEngine(diagID, diagOpts, diagPrinter.release()));
-
-    CI.setDiagnostics(diags.get());
-#elif LLVM_VERSION_MAJOR >= 20
-    llvm::IntrusiveRefCntPtr<clang::DiagnosticOptions> diagOpts(new clang::DiagnosticOptions());
-    llvm::IntrusiveRefCntPtr<clang::DiagnosticIDs> diagID(new clang::DiagnosticIDs());
-
-    auto diagPrinter = std::make_unique<clang::TextDiagnosticPrinter>(llvm::errs(), &*diagOpts);
-
+#else
     llvm::IntrusiveRefCntPtr<clang::DiagnosticsEngine> diags(
         new clang::DiagnosticsEngine(diagID, diagOpts, diagPrinter.release(), false));
-    CI.setDiagnostics(&*diags);
+#endif
+    CI.setDiagnostics(diags.get());
 #else // LLVM_VERSION_MAJOR < 11 -> deprecated
     [[deprecated]]
 #endif
