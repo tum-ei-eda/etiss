@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include "clang/Frontend/CompilerInstance.h"
-#include "llvm/ExecutionEngine/Orc/ExecutorProcessControl.h"
+#include "llvm/ExecutionEngine/JITSymbol.h"
+#include "clang/Basic/LangOptions.h"
 
 namespace compat
 {

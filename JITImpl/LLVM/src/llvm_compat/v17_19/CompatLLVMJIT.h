@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "llvm/ExecutionEngine/Orc/CompileUtils.h"
+#include "llvm/ExecutionEngine/Orc/Shared/ExecutorSymbolDef.h"
 #include "clang/Basic/LangOptions.h"
 
 namespace compat

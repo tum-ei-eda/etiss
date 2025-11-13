@@ -12,6 +12,7 @@
 
 #include "clang/Basic/DiagnosticOptions.h"        // logging
 #include "clang/Frontend/TextDiagnosticPrinter.h" //logging
+#include "llvm/ExecutionEngine/Orc/Core.h"
 
 #include "llvm_compat.hpp"
 

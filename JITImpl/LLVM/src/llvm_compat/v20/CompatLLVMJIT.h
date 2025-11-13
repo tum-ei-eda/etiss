@@ -6,13 +6,13 @@
 
 #pragma once
 
-#include "llvm/ExecutionEngine/Orc/CompileUtils.h"
+#include "llvm/ExecutionEngine/Orc/Shared/ExecutorSymbolDef.h"
 #include "clang/Basic/LangOptions.h"
 
 namespace compat
 {
 
 using lookup_symbol_T = llvm::orc::ExecutorSymbolDef;
-static constexpr auto tu_module_T{ clang::TranslationUnitKind::TU_ClangModule };
+static constexpr auto tu_module_T{ clang::TranslationUnitKind::TU_Complete };
 
 } // namespace compat
