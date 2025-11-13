@@ -44,9 +44,9 @@ extern "C"
         return 0;
     }
 
-    unsigned ETISSINCLUDED_countPlugin() 
-    { 
-        return 5; 
+    unsigned ETISSINCLUDED_countPlugin()
+    {
+        return 5;
     }
 
     const char *ETISSINCLUDED_nameJIT(unsigned index)

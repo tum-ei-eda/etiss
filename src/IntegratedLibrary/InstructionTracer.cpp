@@ -2,8 +2,6 @@
 // Created by holaphei on 27/05/25.
 //
 
-
-
 #include "etiss/IntegratedLibrary/InstructionTracer.h"
 #include "etiss/ETISS.h"
 #include "etiss/IntegratedLibrary/TraceFileWriter.h"
@@ -23,10 +21,8 @@
 using namespace etiss::plugin;
 using namespace etiss::instr;
 
-
 // Initialize and populate the set of instructions
-std::unordered_set<std::string> instructions_to_snapshot = {"cjr", "cswsp"};
-
+std::unordered_set<std::string> instructions_to_snapshot = { "cjr", "cswsp" };
 
 etiss_uint32 low_pc = 0;
 etiss_uint32 high_pc = 0;
@@ -42,36 +38,37 @@ InstructionTracer::InstructionTracer()
      *      in future this should be replaced with a more mature implementation
      */
     std::ifstream pcs_file("pcs.tmp");
-    if (!pcs_file.is_open()) {
+    if (!pcs_file.is_open())
+    {
         etiss::log(etiss::ERROR, "Failed to read PC-range from pcs.tmp. Tracing will not be activated");
         return;
     }
 
     std::string line;
-    if (std::getline(pcs_file, line)) {
+    if (std::getline(pcs_file, line))
+    {
         std::stringstream ss(line);
         std::string token;
 
-        if (std::getline(ss, token, ';')) {
+        if (std::getline(ss, token, ';'))
+        {
             low_pc = static_cast<etiss_uint32>(std::stoul(token, nullptr, 10));
         }
 
-        if (std::getline(ss, token, ';')) {
+        if (std::getline(ss, token, ';'))
+        {
             high_pc = static_cast<etiss_uint32>(std::stoul(token, nullptr, 10));
         }
 
-        etiss::log(etiss::INFO, "Loaded PC range: low=" + std::to_string(low_pc) +
-                                 ", high=" + std::to_string(high_pc));
+        etiss::log(etiss::INFO, "Loaded PC range: low=" + std::to_string(low_pc) + ", high=" + std::to_string(high_pc));
     }
-    else {
+    else
+    {
         etiss::log(etiss::WARNING, "pcs.tmp is empty or unreadable");
     }
 
     pcs_file.close();
-
 }
-
-
 
 /*
  * This is the method that runs at runtime when your instruction executes
@@ -101,44 +98,49 @@ bool InstructionTracer::callbackOnInstruction(etiss::instr::Instruction &instr) 
  * see initCodeBlock in which the functions are included to the code block as extern functions.
  *
  */
-void InstructionTracer::finalizeInstrSet(etiss::instr::ModedInstructionSet &mis ) const
+void InstructionTracer::finalizeInstrSet(etiss::instr::ModedInstructionSet &mis) const
 {
-    mis.foreach ([](etiss::instr::VariableInstructionSet &vis) {
-        vis.foreach ([](etiss::instr::InstructionSet &set) {
-            set.foreach ([](etiss::instr::Instruction &instr) {
-                if (instructions_to_snapshot.find(instr.name_) != instructions_to_snapshot.end())
+    mis.foreach (
+        [](etiss::instr::VariableInstructionSet &vis)
+        {
+            vis.foreach (
+                [](etiss::instr::InstructionSet &set)
                 {
-                    instr.addCallback(
-                    [&instr](etiss::instr::BitArray &ba, etiss::CodeSet &cs, etiss::instr::InstructionContext &ic) {
-                        std::stringstream ss;
-                        ss << "// InstructionTracer: call function to collect state information;\n";
-                        /*
-                         * TODO: The cast is now hardcoded. Would be nice if
-                         * it could be passed from configuration or as an argument
-                         */
-                        ss << "InstructionTracer_collect_state((RV32IMACFD*) cpu, \"" << instr.name_ << "\");\n";
-                        cs.append(etiss::CodePart::PREINITIALDEBUGRETURNING).code() = ss.str();
+                    set.foreach (
+                        [](etiss::instr::Instruction &instr)
+                        {
+                            if (instructions_to_snapshot.find(instr.name_) != instructions_to_snapshot.end())
+                            {
+                                instr.addCallback(
+                                    [&instr](etiss::instr::BitArray &ba, etiss::CodeSet &cs,
+                                             etiss::instr::InstructionContext &ic)
+                                    {
+                                        std::stringstream ss;
+                                        ss << "// InstructionTracer: call function to collect state information;\n";
+                                        /*
+                                         * TODO: The cast is now hardcoded. Would be nice if
+                                         * it could be passed from configuration or as an argument
+                                         */
+                                        ss << "InstructionTracer_collect_state((RV32IMACFD*) cpu, \"" << instr.name_
+                                           << "\");\n";
+                                        cs.append(etiss::CodePart::PREINITIALDEBUGRETURNING).code() = ss.str();
 
-                        return true;
-                    },
-                    0);
-                }
-
-            });
+                                        return true;
+                                    },
+                                    0);
+                            }
+                        });
+                });
         });
-    });
 };
-
 
 /*
  * Add defined functions as extern functions to each code block
  */
-void InstructionTracer::initCodeBlock(etiss::CodeBlock &block ) const
+void InstructionTracer::initCodeBlock(etiss::CodeBlock &block) const
 {
     block.fileglobalCode().insert("extern void InstructionTracer_collect_state(RV32IMACFD*, const char*);");
 };
-
-
 
 /*
  * functions that are brought in to C code blocks as extern functions. At their current state
@@ -160,20 +162,22 @@ extern "C"
      * @param cpu Pointer to the RV32IMACFD CPU instance whose state should be collected.
      */
 
-    void InstructionTracer_collect_state(RV32IMACFD* cpu, const char *instruction)
+    void InstructionTracer_collect_state(RV32IMACFD *cpu, const char *instruction)
     {
         const etiss_uint32 pc = static_cast<etiss_uint32>(reinterpret_cast<ETISS_CPU *>(cpu)->instructionPointer);
-        auto& writer = TraceFileWriter::instance();
+        auto &writer = TraceFileWriter::instance();
 
         /*if (std::string(instruction) == "cswsp" && (low_pc <= pc && pc <= high_pc)) {
             writer.activateTrace();
         }*/
 
-        if (!writer.isTracing() && (low_pc <= pc && pc <= high_pc)) {
+        if (!writer.isTracing() && (low_pc <= pc && pc <= high_pc))
+        {
             writer.activateTrace();
         }
 
-        if (writer.isTracing()) {
+        if (writer.isTracing())
+        {
             StateSnapshotEntry entry{};
             entry.type = 1;
             entry.pc = pc;
@@ -189,11 +193,9 @@ extern "C"
             writer.writeStateSnapshot(entry);
         }
 
-        if (std::string(instruction) == "cjr" && (low_pc <= pc && pc <= high_pc)) {
+        if (std::string(instruction) == "cjr" && (low_pc <= pc && pc <= high_pc))
+        {
             writer.deactivateTrace();
         }
     }
-
-
-
 }

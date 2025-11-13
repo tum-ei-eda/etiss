@@ -9,25 +9,23 @@
 
 extern "C"
 
-namespace etiss
+    namespace etiss
 {
-namespace plugin
-{
+    namespace plugin
+    {
 
-class ISAExtensionValidator : public etiss::TranslationPlugin {
-public:
-    virtual void initInstrSet(etiss::instr::ModedInstructionSet & ) const;
-    virtual void finalizeInstrSet(etiss::instr::ModedInstructionSet & ) const;
-    virtual void initCodeBlock(etiss::CodeBlock & ) const;
-    virtual void finalizeCodeBlock(etiss::CodeBlock & ) const;
-    virtual void * getPluginHandle();
-    virtual std::string _getPluginName() const;
-};
+    class ISAExtensionValidator : public etiss::TranslationPlugin
+    {
+      public:
+        virtual void initInstrSet(etiss::instr::ModedInstructionSet &) const;
+        virtual void finalizeInstrSet(etiss::instr::ModedInstructionSet &) const;
+        virtual void initCodeBlock(etiss::CodeBlock &) const;
+        virtual void finalizeCodeBlock(etiss::CodeBlock &) const;
+        virtual void *getPluginHandle();
+        virtual std::string _getPluginName() const;
+    };
 
+    } // namespace plugin
+} // namespace etiss
 
-
-}// namespace plugin
-}// namespace etiss
-
-#endif //ISAEXTENSIONVALIDATOR_H
-
+#endif // ISAEXTENSIONVALIDATOR_H

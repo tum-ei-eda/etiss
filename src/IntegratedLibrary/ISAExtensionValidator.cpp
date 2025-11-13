@@ -2,7 +2,6 @@
 // Created by holaphei on 03/05/25.
 //
 
-
 #include "etiss/IntegratedLibrary/ISAExtensionValidator.h"
 
 #include "../../ArchImpl/RV32IMACFD/RV32IMACFD.h"
@@ -15,9 +14,9 @@ using namespace etiss::plugin;
 using namespace etiss::instr;
 
 // Initialize and populate the set of instructions
-std::unordered_set<std::string> instruction_with_callback = {"cjr"};
+std::unordered_set<std::string> instruction_with_callback = { "cjr" };
 
-void ISAExtensionValidator::initInstrSet(etiss::instr::ModedInstructionSet & ) const
+void ISAExtensionValidator::initInstrSet(etiss::instr::ModedInstructionSet &) const
 {
     std::cout << "ISAExtensionValidator::initInstrSet" << std::endl;
 };
@@ -30,60 +29,66 @@ void ISAExtensionValidator::initInstrSet(etiss::instr::ModedInstructionSet & ) c
  * see initCodeBlock in which the functions are included to the code block as extern functions.
  *
  */
-void ISAExtensionValidator::finalizeInstrSet(etiss::instr::ModedInstructionSet &mis ) const
+void ISAExtensionValidator::finalizeInstrSet(etiss::instr::ModedInstructionSet &mis) const
 {
     std::cout << "ISAExtensionValidator::finalizeInstrSet" << std::endl;
-    mis.foreach ([](etiss::instr::VariableInstructionSet &vis) {
-        vis.foreach ([](etiss::instr::InstructionSet &set) {
-            set.foreach ([](etiss::instr::Instruction &instr) {
-                if (instruction_with_callback.find(instr.name_) != instruction_with_callback.end())
+    mis.foreach (
+        [](etiss::instr::VariableInstructionSet &vis)
+        {
+            vis.foreach (
+                [](etiss::instr::InstructionSet &set)
                 {
-                    instr.addCallback(
-                    [&instr](etiss::instr::BitArray &ba, etiss::CodeSet &cs, etiss::instr::InstructionContext &ic) {
-                        std::stringstream ss;
-                        ss << "// ISAExtensionValidation: call function to collect state information;\n";
-                        /*
-                         * TODO: The cast is now hardcoded. Would be nice if
-                         * it could be passed from configuration or as an argument
-                         */
-                        ss << "ISAExtensionValidation_collect_state((RV32IMACFD*) cpu);\n";
-                        cs.append(CodePart::PREINITIALDEBUGRETURNING).code() = ss.str();
+                    set.foreach (
+                        [](etiss::instr::Instruction &instr)
+                        {
+                            if (instruction_with_callback.find(instr.name_) != instruction_with_callback.end())
+                            {
+                                instr.addCallback(
+                                    [&instr](etiss::instr::BitArray &ba, etiss::CodeSet &cs,
+                                             etiss::instr::InstructionContext &ic)
+                                    {
+                                        std::stringstream ss;
+                                        ss << "// ISAExtensionValidation: call function to collect state "
+                                              "information;\n";
+                                        /*
+                                         * TODO: The cast is now hardcoded. Would be nice if
+                                         * it could be passed from configuration or as an argument
+                                         */
+                                        ss << "ISAExtensionValidation_collect_state((RV32IMACFD*) cpu);\n";
+                                        cs.append(CodePart::PREINITIALDEBUGRETURNING).code() = ss.str();
 
-                        return true;
-                    },
-                    0);
-                }
-
-            });
+                                        return true;
+                                    },
+                                    0);
+                            }
+                        });
+                });
         });
-    });
 };
 
 /*
  * Add defined functions as extern functions to each code block
  */
-void ISAExtensionValidator::initCodeBlock(etiss::CodeBlock &block ) const
+void ISAExtensionValidator::initCodeBlock(etiss::CodeBlock &block) const
 {
     std::cout << "ISAExtensionValidator::initCodeBlock" << std::endl;
     block.fileglobalCode().insert("extern void ISAExtensionValidation_collect_state(RV32IMACFD*);");
 };
 
-void ISAExtensionValidator::finalizeCodeBlock(etiss::CodeBlock & ) const
+void ISAExtensionValidator::finalizeCodeBlock(etiss::CodeBlock &) const
 {
     std::cout << "ISAExtensionValidator::finalizeCodeBlock" << std::endl;
 };
 
 void *ISAExtensionValidator::getPluginHandle()
 {
-  return nullptr;
+    return nullptr;
 };
 
 std::string ISAExtensionValidator::_getPluginName() const
 {
     return "ISAExtensionValidator";
 };
-
-
 
 /*
  * functions that are brought in to C code blocks as extern functions. At their current state
@@ -105,7 +110,7 @@ extern "C"
      * @param cpu Pointer to the RV32IMACFD CPU instance whose state should be collected.
      */
 
-    void ISAExtensionValidation_collect_state(RV32IMACFD* cpu)
+    void ISAExtensionValidation_collect_state(RV32IMACFD *cpu)
     {
         /*
          * TODO:
@@ -144,7 +149,8 @@ extern "C"
             if (i != 31)
             {
                 printf(", ");
-            } else
+            }
+            else
             {
                 printf("\n");
             }
@@ -157,13 +163,11 @@ extern "C"
             if (i != 31)
             {
                 printf(", ");
-            } else
+            }
+            else
             {
                 printf("\n");
             }
         }
     }
 }
-
-
-

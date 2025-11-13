@@ -25,7 +25,6 @@
 #include <string>
 #include <iomanip> // for std::setw, std::setfill
 
-
 static etiss_int32 system_call_iread(void *handle, ETISS_CPU *cpu, etiss_uint64 addr, etiss_uint32 length)
 {
     /*std::stringstream ss;
@@ -56,7 +55,7 @@ static etiss_int32 system_call_dwrite(void *handle, ETISS_CPU *cpu, etiss_uint64
     if (TraceFileWriter::instance().isTracing())
     {
         static std::ofstream trace_file("trace.bin", std::ios::binary | std::ios::app);
-        auto& writer = TraceFileWriter::instance();
+        auto &writer = TraceFileWriter::instance();
 
         DWriteEntry entry{};
         entry.type = 2;
@@ -68,7 +67,6 @@ static etiss_int32 system_call_dwrite(void *handle, ETISS_CPU *cpu, etiss_uint64
 
         writer.writeDWrite(entry);
     }
-
 
     return ((etiss::System *)handle)->dwrite(cpu, addr, buffer, length);
 }
