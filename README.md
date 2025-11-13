@@ -45,7 +45,7 @@ ETISS is built using C++ and verified to work on recent x86_64 Linux host system
 
 ### Dependencies
 
-  - C++ 14 compliant compiler
+  - C++ 17 compliant compiler
   - Boost >= 1.54 development headers, specifically the sub-libraries:
     - boost-system
     - boost-filesystem
