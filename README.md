@@ -53,7 +53,9 @@ ETISS is built using C++ and verified to work on recent x86_64 Linux host system
   - CMake >= 3.13
   - Optional:
     - Graphviz + Doxygen (For documentation generation)
-    - LLVM + Clang 11 (Please download appropriate pre-built binaries from https://releases.llvm.org/download.html and put them in /opt/)
+    - LLVM + Clang minimum version 11
+      - Debian-based distros: (`apt install llvm-15-dev libclang-15-dev clang-15`)
+      - Or pre-built binaries from https://releases.llvm.org/download.html
 
 ## LINUX SYSTEM
 
@@ -79,7 +81,7 @@ Change to the created directory, e.g.,
 
 	$ cd build_dir
 
-If LLVM-JIT compiler is used, source it with the environment variable:
+If LLVM-JIT compiler is used, source it with the environment variable (not needed if in system paths):
 
 	$ export LLVM_DIR=/path/to/llvm
 
