@@ -84,9 +84,11 @@ Replace `` `pwd`/installed`` with your `<etiss_install_path>` if you do not like
 
 <details>
 <summary>Hint for ETISS Developers</summary>
+
 You can speedup the ETISS (re-)build time using CCache. Enable it in CMake during configuration via:
 
-  $ # apt install ccache
+  $ apt install ccache
+
 	$ cmake -S . -B build -D CMAKE_C_COMPILER_LAUNCHER=ccache -D CMAKE_CXX_COMPILER_LAUNCHER=ccache -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=`pwd`/build/installed
 
 </details>
