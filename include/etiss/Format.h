@@ -4,7 +4,7 @@
 // compliance with the License. You should have received a copy of the license along with this project. If not, see the
 // LICENSE file.
 
-#if __cplusplus >= 202002L // in case of c++20 present we can use std::format etc.
+#if !defined(ETISS_USE_FMT_LIB) // in case of c++>=20 and compiler support, we can potentially use std::format etc.
 #include <format>
 namespace etiss
 {
