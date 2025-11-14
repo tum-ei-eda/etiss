@@ -80,7 +80,7 @@ If LLVM-JIT compiler is used, source it with the environment variable (not neede
 Configure the build system, e.g.,
 Replace `` `pwd`/installed`` with your `<etiss_install_path>` if you do not like to install etiss into `build_dir/installed/`. Set up path to cmake if necessary. Replace `Release` with `Debug` for development purposes.
 
-	$ cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=`pwd`/build/installed
+	$ cmake -S . -B build -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=`pwd`/build/installed
 
 Compile the package:
 
