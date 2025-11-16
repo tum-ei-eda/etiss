@@ -350,6 +350,12 @@ etiss_int64 semihostingCall(ETISS_CPU *const cpu, ETISS_System *const etissSyste
         }
         else if (path_str == ":semihosting-features")
         {
+            if (mode > 1)
+            {
+                // only mode 0 (r) and 1 (rb) are allowed
+                semihostingErrno = EINVAL;
+                return -1;
+            }
             // Create a fake FILE* backed by memory (or a stub)
             std::vector<uint8_t> payload;
             payload.insert(payload.end(), std::begin(SHFB_MAGIC), std::end(SHFB_MAGIC));
