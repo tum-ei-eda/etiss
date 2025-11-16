@@ -41,7 +41,8 @@ const char *SYS_OPEN_MODES_STRS[] = { "r", "rb", "r+", "r+b", "w", "wb", "w+", "
 
 constexpr unsigned char SHFB_MAGIC[4] = { 0x53, 0x48, 0x46, 0x42 };
 constexpr unsigned SH_EXT_EXIT_EXTENDED_BITNUM = 0;
-// constexpr unsigned SH_EXT_STDOUT_STDERR_BITNUM = 1;
+constexpr unsigned SH_EXT_STDOUT_STDERR_BITNUM = 1;
+constexpr uint8_t feature0 = (1u << SH_EXT_EXIT_EXTENDED_BITNUM) | (1u << SH_EXT_STDOUT_STDERR_BITNUM);
 
 // forward declaration for use in extern block:
 
@@ -352,20 +353,8 @@ etiss_int64 semihostingCall(ETISS_CPU *const cpu, ETISS_System *const etissSyste
             // Create a fake FILE* backed by memory (or a stub)
             std::vector<uint8_t> payload;
             payload.insert(payload.end(), std::begin(SHFB_MAGIC), std::end(SHFB_MAGIC));
-
-            // Feature byte 0
-            uint8_t feature0 = 0;
-            // advertise SYS_EXIT_EXTENDED (feature byte 0, bit 0)
-            feature0 |= (1u << SH_EXT_EXIT_EXTENDED_BITNUM);
-
-            // optionally advertise stdout/stderr extension (bit 1) if desired:
-            // feature0 |= (1u << SH_EXT_STDOUT_STDERR_BITNUM);
-
             payload.push_back(feature0);
 
-            // If you want to provide 3 feature bytes like your note, append zeros:
-            // payload.push_back(0);
-            // payload.push_back(0);
 
             FILE *tmp = tmpfile();
             if (tmp == nullptr)
