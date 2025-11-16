@@ -40,7 +40,7 @@ const char *SYS_OPEN_MODES_STRS[] = { "r", "rb", "r+", "r+b", "w", "wb", "w+", "
 
 constexpr unsigned char SHFB_MAGIC[4] = { 0x53, 0x48, 0x46, 0x42 };
 constexpr unsigned SH_EXT_EXIT_EXTENDED_BITNUM = 0;
-constexpr unsigned SH_EXT_STDOUT_STDERR_BITNUM = 1;
+// constexpr unsigned SH_EXT_STDOUT_STDERR_BITNUM = 1;
 
 // forward declaration for use in extern block:
 
@@ -367,11 +367,13 @@ etiss_int64 semihostingCall(ETISS_CPU *const cpu, ETISS_System *const etissSyste
             // payload.push_back(0);
 
             FILE *tmp = tmpfile();
-            if (tmp == nullptr) {
+            if (tmp == nullptr)
+            {
                 semihostingErrno = errno;
                 return -1;
             }
-            if (fwrite(payload.data(), 1, payload.size(), tmp) != payload.size()) {
+            if (fwrite(payload.data(), 1, payload.size(), tmp) != payload.size())
+            {
                 semihostingErrno = errno;
                 fclose(tmp);
                 return -1;

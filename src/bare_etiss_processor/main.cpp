@@ -164,7 +164,7 @@ int main(int argc, const char *argv[])
     {
     case etiss::RETURNCODE::CPUFINISHED:
     {
-        etiss_uint8 exit_status = cpu->getState()->exit_status & 0xff;  // UNIX exit codes are 0..255
+        etiss_uint8 exit_status = cpu->getState()->exit_status & 0xff; // UNIX exit codes are 0..255
         if (etiss::cfg().get<bool>("vp.print_exit_status", true))
         {
             std::cout << "CPU0 exit status: " << (etiss_uint32)exit_status << std::endl;
