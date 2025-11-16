@@ -7,6 +7,7 @@
 #include <cstdio>
 #include "etiss/ETISS.h"
 #include <iomanip>
+#include <unistd.h>
 
 #include "SemihostingCalls.h"
 #include "etiss/jit/ReturnCode.h"
