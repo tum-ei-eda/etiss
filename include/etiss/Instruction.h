@@ -71,7 +71,7 @@
 #include <string>
 #include <boost/dynamic_bitset.hpp>
 
-#define ETISS_NEW_DECODER
+#define ETISS_NEW_DECODER 1
 
 namespace etiss
 {

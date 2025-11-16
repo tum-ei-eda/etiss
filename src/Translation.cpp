@@ -428,7 +428,7 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
 #define ETISS_DEBUG 0
 #endif
 #ifndef ETISS_DEBUG_FAST
-#define ETISS_DEBUG_FAST 1
+#define ETISS_DEBUG_FAST 0
 #endif
     // Try fast compilation first if available
     BlockLink* nbl = nullptr;
