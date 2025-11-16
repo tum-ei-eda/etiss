@@ -361,7 +361,6 @@ etiss_int64 semihostingCall(ETISS_CPU *const cpu, ETISS_System *const etissSyste
             payload.insert(payload.end(), std::begin(SHFB_MAGIC), std::end(SHFB_MAGIC));
             payload.push_back(feature0);
 
-
             FILE *tmp = tmpfile();
             if (tmp == nullptr)
             {
