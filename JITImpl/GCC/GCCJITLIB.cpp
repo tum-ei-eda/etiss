@@ -36,7 +36,7 @@ extern "C"
     {
         etiss::Configuration cfg;
         cfg.config() = options;
-        return new GCCJIT(cfg.get<bool>("jit.gcc.cleanup", true), cfg.get<std::string>("jit.gcc.opt_level", "fast"),
+        return new GCCJIT(cfg.get<bool>("jit.gcc.cleanup", true), cfg.get<std::string>("jit.gcc.opt_level", "3"),
                           cfg.get<bool>("jit.gcc.quiet", false));
     }
 

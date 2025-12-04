@@ -120,7 +120,7 @@ class OrcJit
     llvm::orc::JITDylib &MainJITDylib;
 };
 
-LLVMJIT::LLVMJIT() : JIT("LLVMJIT")
+LLVMJIT::LLVMJIT(const std::string &opt_level, bool quiet) : JIT("LLVMJIT"), opt_level_(opt_level), quiet_(quiet)
 {
 
     // init environment once
@@ -144,7 +144,7 @@ void *LLVMJIT::translate(std::string code, std::set<std::string> headerpaths, st
 {
     clang::CompilerInstance CI;
     compat::createDiagnostics(CI);
-    CI.getDiagnostics().setIgnoreAllWarnings(true);
+    CI.getDiagnostics().setIgnoreAllWarnings(quiet_);
     auto pto = std::make_shared<clang::TargetOptions>();
     pto->Triple = llvm::sys::getDefaultTargetTriple();
     TargetInfo *pti = TargetInfo::CreateTargetInfo(CI.getDiagnostics(), pto);
@@ -161,7 +161,7 @@ void *LLVMJIT::translate(std::string code, std::set<std::string> headerpaths, st
     }
     else
     {
-        args.push_back("-O3");
+        args.push_back("-O" + opt_level_);  // Use configurable opt level
     }
     args.push_back("-std=c99");
     args.push_back("-isystem" + etiss::jitFiles() + "/clang_stdlib");

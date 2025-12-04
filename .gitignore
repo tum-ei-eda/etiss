@@ -38,6 +38,9 @@
 # IDE files
 .vscode
 
+# Clangd cache files
+.cache/
+
 # Temporaries
 *~
 
