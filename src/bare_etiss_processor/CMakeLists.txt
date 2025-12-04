@@ -9,7 +9,12 @@ project(bare_etiss_processor)
 # Set relative rpath to mimic runtime link behavior of windows (libs loadable from current dir)
 
 SET(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
-SET(CMAKE_INSTALL_RPATH "\$ORIGIN/../lib")
+IF(APPLE)
+    # macOS uses @loader_path instead of $ORIGIN
+    SET(CMAKE_INSTALL_RPATH "@loader_path/../lib")
+ELSE()
+    SET(CMAKE_INSTALL_RPATH "\$ORIGIN/../lib")
+ENDIF()
 
 add_executable(bare_etiss_processor main.cpp)
 target_link_libraries(bare_etiss_processor ETISS)

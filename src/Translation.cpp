@@ -337,7 +337,6 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
     }
 
     std::set<std::string> libloc;
-    libloc.insert(arch_->getIncludePath());
     libloc.insert(etiss::cfg().get<std::string>("etiss_path", "./"));
     libloc.insert(etiss::jitFiles());
     libloc.insert(etiss::jitFiles() + "/etiss/jit");

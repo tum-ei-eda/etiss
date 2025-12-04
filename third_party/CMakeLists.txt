@@ -70,7 +70,7 @@ if(UNIX)
 
     ExternalProject_Add(TinyCC
         URL "${CMAKE_CURRENT_SOURCE_DIR}/tcc"
-    
+
         CONFIGURE_COMMAND bash <SOURCE_DIR>/configure
             --prefix=<TMP_DIR> # we do not care about TCC long term. Only stdlib will be installed manually
             "--extra-cflags=-fPIC ${TCC_ADDITIONAL_CFLAGS}"
@@ -86,11 +86,20 @@ if(UNIX)
     set(TinyCC_SOURCE_DIR ${SOURCE_DIR})
     set(TinyCC_BINARY_DIR ${BINARY_DIR})
 
+    # Create a clean include directory and copy libtcc.h there
+    # This prevents adding the entire source dir to include path, which avoids
+    # the VERSION file conflict on macOS case-insensitive filesystems.
+    file(MAKE_DIRECTORY ${TinyCC_BINARY_DIR}/include_clean)
+    add_custom_command(TARGET TinyCC POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy "${TinyCC_SOURCE_DIR}/libtcc.h" "${TinyCC_BINARY_DIR}/include_clean/libtcc.h"
+        COMMENT "[TCC] Copying libtcc.h to clean include directory"
+    )
+
     # Import tcc library from External Project
     add_library(tcc STATIC IMPORTED GLOBAL)
     set_property(TARGET tcc PROPERTY IMPORTED_LOCATION ${TinyCC_BINARY_DIR}/${TinyCC_LIBNAME})
     set_property(TARGET tcc PROPERTY INTERFACE_INCLUDE_DIRECTORIES
-        $<BUILD_INTERFACE:${TinyCC_SOURCE_DIR}>
+        ${TinyCC_BINARY_DIR}/include_clean
     )
 
     ###################################################################################################################

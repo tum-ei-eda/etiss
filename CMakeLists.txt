@@ -64,7 +64,13 @@ ELSE()
 
     # Set relative rpath to mimic runtime link behavior of windows (libs loadable from current dir)
     SET(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
-    SET(CMAKE_INSTALL_RPATH "\$ORIGIN")
+    IF(APPLE)
+        # macOS uses @loader_path instead of $ORIGIN
+        SET(CMAKE_INSTALL_RPATH "@loader_path")
+        SET(CMAKE_MACOSX_RPATH TRUE)
+    ELSE()
+        SET(CMAKE_INSTALL_RPATH "\$ORIGIN")
+    ENDIF()
 
 
 ENDIF()
@@ -101,7 +107,9 @@ INCLUDE(ETISSPlugin)
 
 # Find packages
 FIND_PACKAGE(Threads REQUIRED)
-FIND_PACKAGE(Boost COMPONENTS filesystem system program_options REQUIRED)
+# boost::system is header-only in recent Boost releases, so no compiled library is
+# required; drop it from the component list for macOS/Homebrew.
+FIND_PACKAGE(Boost COMPONENTS filesystem program_options REQUIRED)
 FIND_PACKAGE(Doxygen)
 IF(ETISS_USE_PYTHON)
     SET(Boost_VERBOSE ON)
@@ -309,7 +317,7 @@ set_target_properties(ETISS PROPERTIES
   LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib/
 )
 IF(UNIX)
-    TARGET_LINK_LIBRARIES(ETISS PUBLIC Boost::filesystem Boost::system Boost::program_options)
+    TARGET_LINK_LIBRARIES(ETISS PUBLIC Boost::filesystem Boost::program_options)
 ELSE(UNIX)
     TARGET_LINK_LIBRARIES(ETISS PUBLIC Boost::boost Threads::Threads)
 ENDIF()

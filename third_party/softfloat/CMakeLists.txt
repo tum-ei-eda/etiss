@@ -33,10 +33,17 @@ IF(WIN32)
         FILE(WRITE ${EXTERNAL_INSTALL_LOCATION}/build/${PLATFORM_N}/platform.h ${PLATFORMSTR})
     ENDIF()
 ELSE() #Unix/Linux assumed
-    IF(NOT ${HI_OS_PLATFORM} STREQUAL "x86_64")
-        MESSAGE(FATAL_ERROR "Linux-Host CPU platforms other than 'x86_64' not supported." )
+    # SoftFloat upstream only provides ready-made platform headers for a few Linux targets.
+    # On Apple Silicon (arm64) there is no dedicated folder, but the Linux-RISCV64 config
+    # matches the needed 64-bit little-endian settings and works with Clang.
+    IF(APPLE AND ${HIF_64BIT})
+        SET(PLATFORM_N Linux-RISCV64-GCC)
+    ELSEIF(NOT ${HI_OS_PLATFORM} STREQUAL "x86_64")
+        MESSAGE(STATUS "Host platform ${HI_OS_PLATFORM} not explicitly supported; using generic SoftFloat template.")
+        SET(PLATFORM_N template-FAST_INT64)
+    ELSE()
+        SET (PLATFORM_N Linux-${HI_OS_PLATFORM}-GCC)
     ENDIF()
-    SET (PLATFORM_N Linux-${HI_OS_PLATFORM}-GCC)
 ENDIF()
 
 SET(SPECIALIZE RISCV CACHE STRING "SoftFloat specialize for RISC-V target (default)")
