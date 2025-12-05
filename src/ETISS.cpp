@@ -674,8 +674,15 @@ void etiss::Initializer::loadIniJIT(std::shared_ptr<etiss::CPUCore> cpu)
         etiss::log(etiss::WARNING,
                    "etiss::Initializer::loadIniJIT:" + std::string(" JIT already present. Overwriting it."));
     }
-    etiss::log(etiss::INFO, " Adding JIT \"" + cfg().get<std::string>("jit.type", "") + '\"');
+    etiss::log(etiss::INFO, " Adding main JIT \"" + cfg().get<std::string>("jit.type", "") + '\"');
     cpu->set(getJIT(cfg().get<std::string>("jit.type", "")));
+
+    // Get the fast JIT if configured
+    if (etiss::cfg().isSet("jit.fast_type"))
+    {
+        etiss::log(etiss::INFO, " Adding fast JIT \"" + cfg().get<std::string>("jit.fast_type", "") + '\"');
+        cpu->setFastJIT(getJIT(cfg().get<std::string>("jit.fast_type", "")));
+    }
 }
 
 void etiss_initialize(const std::vector<std::string> &args, bool forced = false)
@@ -735,6 +742,7 @@ void etiss_initialize(const std::vector<std::string> &args, bool forced = false)
             ("jit.verify", po::value<bool>(), "Run some basic checks to verify the functionality of the JIT engine.")
             ("jit.debug", po::value<bool>(), "Causes the JIT Engines to compile in debug mode.")
             ("jit.type", po::value<std::string>(), "The JIT compiler to use.")
+            ("jit.fast_type", po::value<std::string>(), "The fast JIT compiler to use.")
             ("jit.external_headers", po::value<std::string>(), "List of semicolon-separated paths to headers for the JIT to include.")
             ("jit.external_libs", po::value<std::string>(), "List of semicolon-separated library names for the JIT to link.")
             ("jit.external_header_paths", po::value<std::string>(), "List of semicolon-separated headers paths for the JIT.")

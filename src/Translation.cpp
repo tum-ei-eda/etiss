@@ -15,12 +15,20 @@ namespace etiss
 {
 
 BlockLink::BlockLink(etiss::uint64 start, etiss::uint64 end, ExecBlockCall execBlock, std::shared_ptr<void> lib)
-    : start(start), end(end), execBlock(execBlock), jitlib(lib)
+    : start(start)
+    , end(end)
+    , next(nullptr)
+    , branch(nullptr)
+    , refcount(0)
+    , execBlock(execBlock)
+    , valid(true)
+    , jitlib(lib)
+    , fastExecBlock(execBlock)
+    , fastJitLib(lib)
+    , hasOptimized(false)
+    , optimizedExecBlock(nullptr)
+    , optimizedJitLib(nullptr)
 {
-    refcount = 0;
-    next = 0;
-    branch = 0;
-    valid = true;
 }
 
 BlockLink::~BlockLink()
@@ -83,11 +91,14 @@ static uint64_t genTranslationId()
 }
 
 Translation::Translation(std::shared_ptr<etiss::CPUArch> &arch, std::shared_ptr<etiss::JIT> &jit,
-                         std::list<std::shared_ptr<etiss::Plugin>> &plugins, ETISS_System &system, ETISS_CPU &cpu)
+                         std::shared_ptr<etiss::JIT> &fastJit, std::list<std::shared_ptr<etiss::Plugin>> &plugins,
+                         ETISS_System &system, ETISS_CPU &cpu)
     : archptr_(arch)
     , jitptr_(jit)
+    , fastJitptr_(fastJit)
     , arch_(archptr_.get())
     , jit_(jitptr_.get())
+    , fastJit_(fastJitptr_.get())
     , plugins_(plugins)
     , system_(system)
     , cpu_(cpu)
@@ -100,12 +111,14 @@ Translation::Translation(std::shared_ptr<etiss::CPUArch> &arch, std::shared_ptr<
     , miss_count_(0)
 #endif
     , id(genTranslationId())
+    , optManager_(std::make_unique<OptimizationManager>(jit))
 {
     tblockcount = 0;
 }
 
 Translation::~Translation()
 {
+    optManager_.reset();
     unloadBlocks(0, (uint64_t)((int64_t)-1));
     delete[] plugins_array_;
     delete[] plugins_handle_array_;
@@ -230,7 +243,6 @@ void **Translation::init()
 
 BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructionindex)
 {
-
     std::string error;
 
     if (prev != 0 && !prev->valid)
@@ -239,6 +251,7 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
     }
 
     // search block in cache
+    // TODO(MM) Dig deeper into why the shift by 9 bits
     std::list<BlockLink *> &list = blockmap_[instructionindex >> 9];
     for (std::list<BlockLink *>::iterator iter = list.begin(); iter != list.end();) // iter++ moved into block
     {
@@ -249,6 +262,20 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
             {
                 if (iterbl->start <= instructionindex && iterbl->end > instructionindex)
                 {
+                    // Check for optimized version if available
+                    if (iterbl->hasOptimized && iterbl->execBlock != iterbl->optimizedExecBlock)
+                    {
+                        iterbl->execBlock = iterbl->optimizedExecBlock;
+                        iterbl->jitlib = iterbl->optimizedJitLib;
+
+                        std::string msg = "Block exists with an version from " + jit_->getName();
+                        if (fastJit_ != nullptr)
+                        {
+                            msg += ". Switching from " + fastJit_->getName();
+                        }
+                        etiss::log(etiss::INFO, msg);
+                    }
+
                     if (prev != 0)
                     {
                         if (prev->end == iterbl->start)
@@ -260,6 +287,9 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
                             BlockLink::updateRef(prev->branch, iterbl);
                         }
                     }
+
+                    // etiss::log(etiss::INFO, "$$$ Cache HIT!!");
+
                     return *iter;
                 }
                 iter++;
@@ -277,7 +307,6 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
     }
 
     // generate block
-
     std::string blockfunctionname;
     {
         std::stringstream ss;
@@ -370,57 +399,82 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
 #ifndef ETISS_DEBUG
 #define ETISS_DEBUG 0
 #endif
-    // compile library
-    void *funcs =
-        jit_->translate(code, headers, libloc, libs, error, etiss::cfg().get<bool>("jit.debug", ETISS_DEBUG) != 0);
-
-    if (funcs == 0)
+    // Try fast compilation first if available
+    BlockLink *nbl = nullptr;
+    if (fastJit_ != nullptr)
     {
-        etiss::log(etiss::ERROR, error);
-        return 0;
-    }
-
-    // wrap library handle for cleanup
-    auto local_jit = jit_;
-    std::shared_ptr<void> lib(funcs, [local_jit](void *p) { local_jit->free(p); });
-
-    // check function/library handle
-    if (lib.get() != 0)
-    {
-        // std::cout<<"blockfunctionname:"<<blockfunctionname<<std::endl;
-        ExecBlockCall execBlock = (ExecBlockCall)jit_->getFunction(lib.get(), blockfunctionname.c_str(), error);
-        if (execBlock != 0)
+        void *funcs = fastJit_->translate(code, headers, libloc, libs, error, ETISS_DEBUG);
+        if (funcs != nullptr)
         {
-            BlockLink *nbl = new BlockLink(block.startindex_, block.endaddress_, execBlock, lib);
-            uint64 ii9 = instructionindex >> 9;
-            do
-            {
-                blockmap_[ii9].push_back(nbl);
-                BlockLink::incrRef(nbl); // map holds a reference
-                ii9++;
-            } while ((ii9 << 9) < block.endaddress_);
+            // Create library handle with cleanup
+            auto local_jit = fastJit_;
+            std::shared_ptr<void> fastLib(funcs, [local_jit](void *p) { local_jit->free(p); });
 
-            if (prev != 0)
+            // Get function pointer
+            ExecBlockCall fastExec =
+                (ExecBlockCall)fastJit_->getFunction(fastLib.get(), blockfunctionname.c_str(), error);
+            if (fastExec != nullptr)
             {
-                if (nbl->start == prev->end)
+                // Create block with fast version
+                nbl = new BlockLink(block.startindex_, block.endaddress_, fastExec, fastLib);
+                nbl->fastExecBlock = fastExec;
+                nbl->fastJitLib = fastLib;
+                nbl->hasOptimized = false;
+
+                // Queue optimization in background
+                if (jit_ != nullptr && optManager_ != nullptr)
                 {
-                    BlockLink::updateRef(prev->next, nbl);
-                }
-                else
-                {
-                    BlockLink::updateRef(prev->branch, nbl);
+                    optManager_->queueForOptimization(code, blockfunctionname, headers, libloc, libs, nbl, ETISS_DEBUG);
                 }
             }
-            return nbl;
+        }
+    }
+
+    // Fall back to main JIT if fast compilation failed
+    if (nbl == nullptr)
+    {
+        void *funcs = jit_->translate(code, headers, libloc, libs, error, ETISS_DEBUG);
+        if (funcs == nullptr)
+        {
+            etiss::log(etiss::ERROR, error);
+            return 0;
+        }
+
+        // wrap library handle for cleanup
+        auto local_jit = jit_;
+        std::shared_ptr<void> lib(funcs, [local_jit](void *p) { local_jit->free(p); });
+
+        ExecBlockCall execBlock = (ExecBlockCall)jit_->getFunction(lib.get(), blockfunctionname.c_str(), error);
+        if (execBlock == nullptr)
+        {
+            etiss::log(etiss::ERROR, std::string("Failed to acquire function pointer from compiled library:") + error);
+            return nullptr;
+        }
+
+        nbl = new BlockLink(block.startindex_, block.endaddress_, execBlock, lib);
+    }
+
+    // Add block to cache
+    uint64 ii9 = instructionindex >> 9;
+    do
+    {
+        blockmap_[ii9].push_back(nbl);
+        BlockLink::incrRef(nbl); // map holds a reference
+        ii9++;
+    } while ((ii9 << 9) < block.endaddress_);
+
+    if (prev != 0)
+    {
+        if (nbl->start == prev->end)
+        {
+            BlockLink::updateRef(prev->next, nbl);
         }
         else
         {
-            etiss::log(etiss::ERROR, std::string("Failed to acquire function pointer from compiled library:") + error);
-            return 0;
+            BlockLink::updateRef(prev->branch, nbl);
         }
     }
-
-    return 0;
+    return nbl;
 }
 /// \note this function only does the instruction to C code translation. compilation (C code to function pointer) is
 /// done in getBlock()
@@ -661,6 +715,125 @@ std::string Translation::disasm(uint8_t *buf, unsigned len, int &append)
         return "UNKNOWN";
 
     return instr->printASM(mainba);
+}
+
+// In Translation.cpp
+OptimizationManager::OptimizationManager(std::shared_ptr<etiss::JIT> optimizingJit)
+    : optimizingJit_(optimizingJit), shutdown_(false), activeThreads_(0)
+{
+    // Create worker threads
+    for (size_t i = 0; i < NUM_THREADS; i++)
+    {
+        workerThreads_.emplace_back(&OptimizationManager::optimizationWorker, this, i);
+        activeThreads_++;
+    }
+}
+
+OptimizationManager::~OptimizationManager()
+{
+    // Signal all threads to stop and wait
+    shutdown_ = true;
+    taskCV_.notify_all();
+
+    // Wait for all threads to finish
+    for (auto &thread : workerThreads_)
+    {
+        if (thread.joinable())
+        {
+            thread.join();
+        }
+    }
+}
+
+void OptimizationManager::optimizationWorker(size_t threadId)
+{
+    etiss::log(etiss::INFO, "Starting optimization worker thread " + std::to_string(threadId));
+
+    while (!shutdown_)
+    {
+        OptimizationTask task;
+        bool hasTask = false;
+
+        // Scope block for mutex lock
+        {
+            std::unique_lock<std::mutex> lock(taskMutex_);
+            taskCV_.wait(lock, [this] { return !taskQueue_.empty() || shutdown_; });
+
+            if (shutdown_)
+            {
+                // Release lock and exit
+                lock.unlock();
+                break;
+            }
+
+            if (!taskQueue_.empty())
+            {
+                task = std::move(taskQueue_.front());
+                taskQueue_.pop();
+                hasTask = true;
+            }
+            // Lock is automatically released here when lock goes out of scope
+        }
+
+        if (hasTask)
+        {
+            std::string error;
+            void *funcs = optimizingJit_->translate(task.code, task.headers, task.libloc, task.libs, error, task.debug);
+
+            if (funcs)
+            {
+                // Create library handle with cleanup
+                auto optimizedLib = std::shared_ptr<void>(funcs, [jit = optimizingJit_](void *p) { jit->free(p); });
+
+                // Get function pointer
+                ExecBlockCall optimizedExecBlock = (ExecBlockCall)optimizingJit_->getFunction(
+                    optimizedLib.get(), task.blockFunctionName.c_str(), error);
+
+                if (optimizedExecBlock)
+                {
+                    // Update block with optimized version
+                    updateBlockWithOptimizedVersion(task.targetBlock, optimizedExecBlock, optimizedLib);
+                }
+                else
+                {
+                    etiss::log(etiss::WARNING, "Thread " + std::to_string(threadId) +
+                                                   ": Failed to get optimized function pointer: " + error);
+                }
+            }
+            else
+            {
+                etiss::log(etiss::WARNING,
+                           "Thread " + std::to_string(threadId) + ": Failed to compile optimized version: " + error);
+            }
+        }
+    }
+
+    activeThreads_--;
+    etiss::log(etiss::INFO, "Optimization worker thread " + std::to_string(threadId) + " shutting down");
+}
+
+void OptimizationManager::queueForOptimization(const std::string &code, const std::string &blockFunctionName,
+                                               const std::set<std::string> &headers,
+                                               const std::set<std::string> &libloc, const std::set<std::string> &libs,
+                                               BlockLink *block, bool debug)
+{
+
+    std::lock_guard<std::mutex> lock(taskMutex_);
+    taskQueue_.push({ code, blockFunctionName, headers, libloc, libs, block, debug });
+    taskCV_.notify_one(); // Wake up one waiting thread
+}
+
+void OptimizationManager::updateBlockWithOptimizedVersion(BlockLink *block, ExecBlockCall optimizedExec,
+                                                          std::shared_ptr<void> optimizedLib)
+{
+    if (block != nullptr)
+    {
+        // Store optimized version in new fields
+        block->optimizedExecBlock = optimizedExec;
+        block->optimizedJitLib = optimizedLib;
+        block->hasOptimized = true;
+        etiss::log(etiss::INFO, "==> Block updated with optimized version using " + optimizingJit_->getName());
+    }
 }
 
 } // namespace etiss
