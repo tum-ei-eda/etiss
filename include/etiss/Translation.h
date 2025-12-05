@@ -108,19 +108,20 @@ private:
         bool debug;                          // Debug flag
     };
 
-    static const size_t NUM_THREADS = 3;          // Number of worker threads
-    std::shared_ptr<etiss::JIT> optimizingJit_;   // GCC/Clang JIT instance
-    std::vector<std::thread> workerThreads_;      // Pool of worker threads
-    std::mutex taskMutex_;                        // Protects task queue
-    std::condition_variable taskCV_;              // Signals new tasks
-    std::queue<OptimizationTask> taskQueue_;      // Queue of blocks to optimize
-    std::atomic<bool> shutdown_;                  // Thread shutdown flag
-    std::atomic<size_t> activeThreads_;           // Number of threads currently processing tasks
+    size_t numThreads_;                                      // Number of worker threads (configurable)
+    std::shared_ptr<etiss::JIT> optimizingJit_;              // Original JIT instance (used to get name and create per-thread instances)
+    std::vector<std::shared_ptr<etiss::JIT>> threadJits_;    // Per-thread JIT instances for parallel compilation
+    std::vector<std::thread> workerThreads_;                 // Pool of worker threads
+    std::mutex taskMutex_;                                   // Protects task queue
+    std::condition_variable taskCV_;                         // Signals new tasks
+    std::queue<OptimizationTask> taskQueue_;                 // Queue of blocks to optimize
+    std::atomic<bool> shutdown_;                             // Thread shutdown flag
+    std::atomic<size_t> activeThreads_;                      // Number of threads currently processing tasks
     
     void optimizationWorker(size_t threadId);
 
 public:
-    OptimizationManager(std::shared_ptr<etiss::JIT> optimizingJit);
+    OptimizationManager(std::shared_ptr<etiss::JIT> optimizingJit, size_t numThreads = 1);
     ~OptimizationManager();
     
     void queueForOptimization(const std::string& code,
