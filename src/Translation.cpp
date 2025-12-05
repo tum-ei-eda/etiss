@@ -12,6 +12,16 @@
 #include "etiss/jit/ReturnCode.h"
 #include <mutex>
 
+#if ETISS_TRANSLATOR_STAT
+// Forward declaration for JIT statistics update function
+extern "C" void updateJITTranslationStats(
+    uint64_t fastJit, uint64_t optJit, uint64_t next, 
+    uint64_t branch, uint64_t miss, uint64_t optimized, 
+    uint64_t switched, bool fastEnabled,
+    uint64_t totalExec, uint64_t fastExec, uint64_t optExec,
+    uint64_t fastJitCompTime_us, uint64_t optJitCompTime_us, uint64_t blockExecTime_us);
+#endif
+
 namespace etiss
 {
 
@@ -110,16 +120,51 @@ Translation::Translation(std::shared_ptr<etiss::CPUArch> &arch, std::shared_ptr<
     , next_count_(0)
     , branch_count_(0)
     , miss_count_(0)
+    , fastJitBlocks_(0)
+    , optimizingJitBlocks_(0)
+    , blocksOptimized_(0)
+    , blocksSwitched_(0)
+    , totalBlockExecutions_(0)
+    , fastJitExecutions_(0)
+    , optimizedExecutions_(0)
+    , fastJitCompilationTime_us_(0)
+    , optimizingJitCompilationTime_us_(0)
 #endif
     , id(genTranslationId())
     , optManager_(std::make_unique<OptimizationManager>(jit,
         static_cast<size_t>(etiss::cfg().get<int>("jit.optimization_threads", 1))))
 {
     tblockcount = 0;
+    
+#if ETISS_TRANSLATOR_STAT
+    // Set up callbacks for statistics tracking
+    if (optManager_)
+    {
+        optManager_->setOnBlockOptimized([this]() {
+            blocksOptimized_++;
+        });
+        optManager_->setOnCompilationTime([this](uint64_t time_us) {
+            optimizingJitCompilationTime_us_.fetch_add(time_us, std::memory_order_relaxed);
+        });
+    }
+#endif
 }
 
 Translation::~Translation()
 {
+#if ETISS_TRANSLATOR_STAT
+    // Export final JIT statistics before cleanup
+    // Note: blockExecTime_us is passed as 0 here - it's updated separately by CPUCore
+    updateJITTranslationStats(
+        fastJitBlocks_, optimizingJitBlocks_,
+        next_count_, branch_count_, miss_count_,
+        blocksOptimized_, blocksSwitched_,
+        fastJit_ != nullptr,
+        totalBlockExecutions_, fastJitExecutions_, optimizedExecutions_,
+        fastJitCompilationTime_us_, optimizingJitCompilationTime_us_.load(), 0
+    );
+#endif
+
     optManager_.reset();
     unloadBlocks(0, (uint64_t)((int64_t)-1));
     delete[] plugins_array_;
@@ -269,6 +314,9 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
                     {
                         iterbl->execBlock = iterbl->optimizedExecBlock;
                         iterbl->jitlib = iterbl->optimizedJitLib;
+#if ETISS_TRANSLATOR_STAT
+                        blocksSwitched_++;
+#endif
 
                         std::string msg = "Block exists with an version from " + jit_->getName();
                         if (fastJit_ != nullptr)
@@ -292,6 +340,10 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
 
                     // etiss::log(etiss::INFO, "$$$ Cache HIT!!");
 
+#if ETISS_TRANSLATOR_STAT
+                    // Track execution statistics
+                    trackBlockExecution(*iter);
+#endif
                     return *iter;
                 }
                 iter++;
@@ -405,7 +457,14 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
     BlockLink *nbl = nullptr;
     if (fastJit_ != nullptr)
     {
+#if ETISS_TRANSLATOR_STAT
+        auto compileStart = std::chrono::high_resolution_clock::now();
+#endif
         void *funcs = fastJit_->translate(code, headers, libloc, libs, error, ETISS_DEBUG);
+#if ETISS_TRANSLATOR_STAT
+        auto compileEnd = std::chrono::high_resolution_clock::now();
+        fastJitCompilationTime_us_ += std::chrono::duration_cast<std::chrono::microseconds>(compileEnd - compileStart).count();
+#endif
         if (funcs != nullptr)
         {
             // Create library handle with cleanup
@@ -422,6 +481,9 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
                 nbl->fastExecBlock = fastExec;
                 nbl->fastJitLib = fastLib;
                 nbl->hasOptimized = false;
+#if ETISS_TRANSLATOR_STAT
+                fastJitBlocks_++;
+#endif
 
                 // Queue optimization in background
                 if (jit_ != nullptr && optManager_ != nullptr)
@@ -432,10 +494,21 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
         }
     }
 
-    // Fall back to main JIT if fast compilation failed
+    // Fall back to main JIT if fast compilation failed or fast JIT not available
     if (nbl == nullptr)
     {
+#if ETISS_TRANSLATOR_STAT
+        auto compileStart = std::chrono::high_resolution_clock::now();
+#endif
         void *funcs = jit_->translate(code, headers, libloc, libs, error, ETISS_DEBUG);
+#if ETISS_TRANSLATOR_STAT
+        auto compileEnd = std::chrono::high_resolution_clock::now();
+        // Use atomic add since this could theoretically be called from main thread
+        // while background threads are also updating (though unlikely in practice)
+        optimizingJitCompilationTime_us_.fetch_add(
+            std::chrono::duration_cast<std::chrono::microseconds>(compileEnd - compileStart).count(),
+            std::memory_order_relaxed);
+#endif
         if (funcs == nullptr)
         {
             etiss::log(etiss::ERROR, error);
@@ -454,6 +527,9 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
         }
 
         nbl = new BlockLink(block.startindex_, block.endaddress_, execBlock, lib);
+#if ETISS_TRANSLATOR_STAT
+        optimizingJitBlocks_++;
+#endif
     }
 
     // Add block to cache
@@ -476,6 +552,11 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
             BlockLink::updateRef(prev->branch, nbl);
         }
     }
+    
+#if ETISS_TRANSLATOR_STAT
+    // Track execution statistics for newly compiled block
+    trackBlockExecution(nbl);
+#endif
     return nbl;
 }
 /// \note this function only does the instruction to C code translation. compilation (C code to function pointer) is
@@ -725,6 +806,7 @@ OptimizationManager::OptimizationManager(std::shared_ptr<etiss::JIT> optimizingJ
     , optimizingJit_(optimizingJit)
     , shutdown_(false)
     , activeThreads_(0)
+    , onBlockOptimized_(nullptr)
 {
     // Create a separate JIT instance for each worker thread to enable parallel compilation
     // This is necessary because LLVM JIT is not thread-safe for concurrent translate() calls
@@ -806,7 +888,18 @@ void OptimizationManager::optimizationWorker(size_t threadId)
             // Use per-thread JIT instance for parallel compilation
             std::shared_ptr<etiss::JIT> threadJit = (threadId < threadJits_.size()) ? threadJits_[threadId] : optimizingJit_;
 
+#if ETISS_TRANSLATOR_STAT
+            auto compileStart = std::chrono::high_resolution_clock::now();
+#endif
             void *funcs = threadJit->translate(task.code, task.headers, task.libloc, task.libs, error, task.debug);
+#if ETISS_TRANSLATOR_STAT
+            auto compileEnd = std::chrono::high_resolution_clock::now();
+            auto compileTime_us = std::chrono::duration_cast<std::chrono::microseconds>(compileEnd - compileStart).count();
+            if (onCompilationTime_)
+            {
+                onCompilationTime_(compileTime_us);
+            }
+#endif
 
             if (funcs)
             {
@@ -861,6 +954,12 @@ void OptimizationManager::updateBlockWithOptimizedVersion(BlockLink *block, Exec
         block->optimizedJitLib = optimizedLib;
         block->hasOptimized = true;
         etiss::log(etiss::INFO, "==> Block updated with optimized version using " + optimizingJit_->getName());
+        
+        // Call callback to notify that a block was optimized
+        if (onBlockOptimized_)
+        {
+            onBlockOptimized_();
+        }
     }
 }
 

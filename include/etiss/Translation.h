@@ -17,7 +17,8 @@
 #include <condition_variable> // For std::condition_variable
 #include <queue>           // For std::queue
 #include <atomic>          // For std::atomic
-#include <chrono>      
+#include <chrono>
+#include <functional>      // For std::function      
 
 namespace etiss
 {
@@ -117,6 +118,8 @@ private:
     std::queue<OptimizationTask> taskQueue_;                 // Queue of blocks to optimize
     std::atomic<bool> shutdown_;                             // Thread shutdown flag
     std::atomic<size_t> activeThreads_;                      // Number of threads currently processing tasks
+    std::function<void()> onBlockOptimized_;                 // Callback when block is optimized
+    std::function<void(uint64_t)> onCompilationTime_;        // Callback to report compilation time (microseconds)
     
     void optimizationWorker(size_t threadId);
 
@@ -135,6 +138,16 @@ public:
     void updateBlockWithOptimizedVersion(BlockLink* block,
                                        ExecBlockCall optimizedExec,
                                        std::shared_ptr<void> optimizedLib);
+    
+    // Set callback to notify when a block is optimized
+    void setOnBlockOptimized(std::function<void()> callback) {
+        onBlockOptimized_ = callback;
+    }
+    
+    // Set callback to report compilation time from background threads
+    void setOnCompilationTime(std::function<void(uint64_t)> callback) {
+        onCompilationTime_ = callback;
+    }
 };
 
 class Translation
@@ -175,7 +188,20 @@ class Translation
     etiss::uint64 next_count_;
     etiss::uint64 branch_count_;
     etiss::uint64 miss_count_;
+    // JIT Statistics
+    etiss::uint64 fastJitBlocks_;
+    etiss::uint64 optimizingJitBlocks_;
+    etiss::uint64 blocksOptimized_;
+    etiss::uint64 blocksSwitched_;
+    // Execution statistics
+    etiss::uint64 totalBlockExecutions_;
+    etiss::uint64 fastJitExecutions_;
+    etiss::uint64 optimizedExecutions_;
+    // Timing statistics (in microseconds)
+    etiss::uint64 fastJitCompilationTime_us_;
+    std::atomic<etiss::uint64> optimizingJitCompilationTime_us_;
 #endif
+
   public:
     Translation(std::shared_ptr<etiss::CPUArch> &arch, 
                std::shared_ptr<etiss::JIT> &jit,
@@ -201,6 +227,8 @@ class Translation
                 {
 #if ETISS_TRANSLATOR_STAT
                     next_count_++;
+                    // Track execution statistics
+                    trackBlockExecution(bl);
 #endif
                     return bl;
                 }
@@ -217,6 +245,8 @@ class Translation
                 { // check
 #if ETISS_TRANSLATOR_STAT
                     branch_count_++;
+                    // Track execution statistics
+                    trackBlockExecution(bl);
 #endif
                     return bl;
                 }
@@ -231,6 +261,22 @@ class Translation
 #endif
         return getBlock(prev, instructionindex);
     }
+    
+#if ETISS_TRANSLATOR_STAT
+    /// Track which JIT version is being executed
+    inline void trackBlockExecution(BlockLink *bl)
+    {
+        totalBlockExecutions_++;
+        if (bl->hasOptimized && bl->execBlock == bl->optimizedExecBlock)
+        {
+            optimizedExecutions_++;
+        }
+        else
+        {
+            fastJitExecutions_++;
+        }
+    }
+#endif
 
     BlockLink *getBlock(BlockLink *prev, const etiss::uint64 &instructionindex);
 

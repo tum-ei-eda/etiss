@@ -17,6 +17,16 @@
 #include "etiss/System.h"
 #include "etiss/mm/MMU.h"
 #include "etiss/mm/DMMUWrapper.h"
+#include <chrono>
+
+#if ETISS_TRANSLATOR_STAT
+// Forward declaration for block execution time tracking
+extern "C" void addBlockExecutionTime(uint64_t time_us);
+// Forward declaration for performance stats
+extern "C" void updatePerformanceStats(
+    double cpuTime_s, double simulationTime_s, double wallTime_s,
+    double cpuCycles, double mipsEstimated, double mipsCorrected);
+#endif
 
 using namespace etiss;
 
@@ -790,7 +800,14 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
                     // plugins_handle_ has the pointer to all translation plugins,
                     // In the generated code these plugin handles are named "plugin_pointers" and can be used to access
                     // a variable of the plugin
+#if ETISS_TRANSLATOR_STAT
+                    auto execStart = std::chrono::high_resolution_clock::now();
+#endif
                     exception = (*(blptr->execBlock))(cpu_, system, plugins_handle_);
+#if ETISS_TRANSLATOR_STAT
+                    auto execEnd = std::chrono::high_resolution_clock::now();
+                    addBlockExecutionTime(std::chrono::duration_cast<std::chrono::microseconds>(execEnd - execStart).count());
+#endif
 
                     // exit simulator when a loop to self instruction is encountered
                     if (exit_on_loop && !exception && old_time + cpu_->cpuCycleTime_ps == cpu_->cpuTime_ps &&
@@ -840,6 +857,11 @@ loopexit:
     double cpu_cycle = cpu_->cpuTime_ps / (float)cpu_->cpuCycleTime_ps;
     double mips = cpu_->cpuTime_ps / (float)cpu_->cpuCycleTime_ps / simulation_time / 1.0E6;
     double mips_ = cpu_->cpuTime_ps / (float)cpu_->cpuCycleTime_ps / wall_time / 1.0E6;
+
+#if ETISS_TRANSLATOR_STAT
+    // Export performance metrics to JIT stats
+    updatePerformanceStats(cpu_time, simulation_time, wall_time, cpu_cycle, mips, mips_);
+#endif
 
     bool quiet = etiss::cfg().get<bool>("vp.quiet", false);
     if (!quiet)
