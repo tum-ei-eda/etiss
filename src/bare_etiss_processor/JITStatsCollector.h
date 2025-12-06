@@ -19,7 +19,8 @@
 #include "etiss/jit/ReturnCode.h"
 
 // Statistics structure - matches what Translation exports
-struct JITTranslationStats {
+struct JITTranslationStats
+{
     uint64_t fastJitBlocks;
     uint64_t optimizingJitBlocks;
     uint64_t cacheNextHits;
@@ -39,7 +40,8 @@ struct JITTranslationStats {
 };
 
 // Performance metrics structure
-struct PerformanceStats {
+struct PerformanceStats
+{
     double cpuTime_s;
     double simulationTime_s;
     double wallTime_s;
@@ -53,7 +55,7 @@ struct PerformanceStats {
  *
  * Tracks:
  * - Fast JIT compilations
- * - Optimizing JIT compilations  
+ * - Optimizing JIT compilations
  * - Cache hits (next, branch, miss)
  * - Blocks optimized in background
  * - Blocks that switched from fast to optimized version
@@ -110,6 +112,8 @@ class JITStatsCollector : public etiss::CoroutinePlugin
     std::string outPath_;
 
     void printStats();
+    void exportJSON(const std::string &path);
+    std::string generateHumanReadable();
 };
 
 #endif // JIT_STATS_COLLECTOR_H

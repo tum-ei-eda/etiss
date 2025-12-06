@@ -25,6 +25,10 @@ endif()
 add_executable(bare_etiss_processor ${BARE_ETISS_SOURCES})
 target_link_libraries(bare_etiss_processor ETISS)
 
+if(ETISS_TRANSLATOR_STAT)
+    target_link_libraries(bare_etiss_processor nlohmann_json::nlohmann_json)
+endif()
+
 set(ETISS_DIR ${CMAKE_INSTALL_PREFIX} )
 configure_file(
     run_helper.sh.in
