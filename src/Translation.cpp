@@ -433,6 +433,12 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
     // Try fast compilation first if available
     BlockLink* nbl = nullptr;
     if (fastJit_ != nullptr) {
+        nbl = new BlockLink(block.startindex_, block.endaddress_, nullptr, nullptr);
+        nbl->hasOptimized = false;
+        // Queue optimization in background
+        if (jit_ != nullptr && optManager_ != nullptr) {
+            optManager_->queueForOptimization(code, blockfunctionname, headers, libloc, libs, nbl, ETISS_DEBUG);
+        }
         void* funcs = fastJit_->translate(code, headers, libloc, libs, error, ETISS_DEBUG_FAST);
         if (funcs != nullptr) {
             // Create library handle with cleanup
@@ -441,17 +447,14 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
 
             // Get function pointer
             ExecBlockCall fastExec = (ExecBlockCall)fastJit_->getFunction(fastLib.get(), blockfunctionname.c_str(), error);
-            if (fastExec != nullptr) {
+            if (fastExec != nullptr && !nbl->hasOptimized) {
                 // Create block with fast version
-                nbl = new BlockLink(block.startindex_, block.endaddress_, fastExec, fastLib);
+                // nbl = new BlockLink(block.startindex_, block.endaddress_, fastExec, fastLib);
+                nbl->execBlock = fastExec;
                 nbl->fastExecBlock = fastExec;
+                nbl->jitlib = fastLib;
                 nbl->fastJitLib = fastLib;
-                nbl->hasOptimized = false;
 
-                // Queue optimization in background
-                if (jit_ != nullptr && optManager_ != nullptr) {
-                    optManager_->queueForOptimization(code, blockfunctionname, headers, libloc, libs, nbl, ETISS_DEBUG);
-                }
             }
         }
     }
