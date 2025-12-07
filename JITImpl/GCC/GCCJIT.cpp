@@ -124,7 +124,7 @@ void *GCCJIT::translate(std::string code, std::set<std::string> headerpaths, std
         codeFile.close();
     }
     std::stringstream ss;
-    ss << "gcc -c -std=c99 -fPIC -march=native -mtune=native -pipe "; // CHANGED -Wall eliminated
+    ss << "gcc-9 -c -std=c99 -fPIC -march=native -mtune=native -pipe "; // CHANGED -Wall eliminated
     clock_gettime(CLOCK_MONOTONIC, &finish);
     total_write_time += (finish.tv_sec - start.tv_sec) + (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
     clock_gettime(CLOCK_MONOTONIC, &start);
@@ -154,7 +154,7 @@ void *GCCJIT::translate(std::string code, std::set<std::string> headerpaths, std
 
     ss.str("");
 
-    ss << "gcc -shared ";
+    ss << "gcc-9 -shared ";
     /*
     if (debug)
             ss <<"-g -dl ";
