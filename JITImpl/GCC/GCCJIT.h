@@ -55,6 +55,10 @@ class GCCJIT : public etiss::JIT
                             std::set<std::string> libraries, std::string &error, bool debug = false);
     virtual void *getFunction(void *handle, std::string name, std::string &error);
     virtual void free(void *handle);
+    double total_write_time = 0;
+    double total_compile_time = 0;
+    double total_link_time = 0;
+    double total_load_time = 0;
 
   private:
   private:

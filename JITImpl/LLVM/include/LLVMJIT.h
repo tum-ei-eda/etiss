@@ -109,6 +109,9 @@ class LLVMJIT : public etiss::JIT
                             std::set<std::string> libraries, std::string &error, bool debug = false);
     virtual void *getFunction(void *handle, std::string name, std::string &error);
     virtual void free(void *handle);
+    double total_setup_time = 0;
+    double total_compile_time = 0;
+    double total_lookup_time = 0;
 
   private:
     llvm::LLVMContext context_;

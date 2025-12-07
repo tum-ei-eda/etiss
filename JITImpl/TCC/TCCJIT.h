@@ -47,10 +47,16 @@ class TCCJIT : public etiss::JIT
 {
   public:
     TCCJIT();
+    virtual ~TCCJIT();
     virtual void *translate(std::string code, std::set<std::string> headerpaths, std::set<std::string> librarypaths,
                             std::set<std::string> libraries, std::string &error, bool debug = false);
     virtual void *getFunction(void *handle, std::string name, std::string &error);
     virtual void free(void *handle);
+    double total_setup_time = 0;
+    double total_compile_time = 0;
+    double total_link_time = 0;
+    double total_load_time = 0;
+    double total_lookup_time = 0;
 
   private:
     std::map<std::string, void *> extsymbols; ///< only use for windows. manual linking to symbols of

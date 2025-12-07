@@ -105,10 +105,20 @@ TCCJIT::TCCJIT() : JIT("tcc")
 #endif
 }
 
+TCCJIT::~TCCJIT()
+{
+    std::cout << "[TCCJIT] total_setup_time=" << total_setup_time << "\n";
+    std::cout << "[TCCJIT] total_compile_time=" << total_compile_time << "\n";
+    std::cout << "[TCCJIT] total_link_time=" << total_link_time << "\n";
+    std::cout << "[TCCJIT] total_lookup_time=" << total_lookup_time << "\n";
+}
+
 void *TCCJIT::translate(std::string code, std::set<std::string> headerpaths, std::set<std::string> librarypaths,
                         std::set<std::string> libraries, std::string &error, bool debug)
 {
 
+    struct timespec start, finish;
+    clock_gettime(CLOCK_MONOTONIC, &start);
     TCCState *s = tcc_new();
     if (!s)
     {
@@ -121,6 +131,9 @@ void *TCCJIT::translate(std::string code, std::set<std::string> headerpaths, std
 
     // init
     tcc_set_output_type(s, TCC_OUTPUT_MEMORY);
+    clock_gettime(CLOCK_MONOTONIC, &finish);
+    total_setup_time += (finish.tv_sec - start.tv_sec) + (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
+    clock_gettime(CLOCK_MONOTONIC, &start);
 
     // init headers
     for (auto iter = headerpaths.begin(); iter != headerpaths.end(); iter++)
@@ -135,6 +148,9 @@ void *TCCJIT::translate(std::string code, std::set<std::string> headerpaths, std
         error += code;
         return 0;
     }
+    clock_gettime(CLOCK_MONOTONIC, &finish);
+    total_compile_time += (finish.tv_sec - start.tv_sec) + (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
+    clock_gettime(CLOCK_MONOTONIC, &start);
 
 #if ETISS_USE_GETPROC
     for (auto sym : extsymbols)
@@ -171,14 +187,20 @@ void *TCCJIT::translate(std::string code, std::set<std::string> headerpaths, std
         error = "Failed to link";
         return 0;
     }
+    clock_gettime(CLOCK_MONOTONIC, &finish);
+    total_link_time += (finish.tv_sec - start.tv_sec) + (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
 
     /* return TCCState as handle*/
     return (void *)s;
 }
 void *TCCJIT::getFunction(void *handle, std::string name, std::string &error)
 {
-
-    return tcc_get_symbol((TCCState *)handle, name.c_str());
+    struct timespec start, finish;
+    clock_gettime(CLOCK_MONOTONIC, &start);
+    auto ret = tcc_get_symbol((TCCState *)handle, name.c_str());
+    clock_gettime(CLOCK_MONOTONIC, &finish);
+    total_lookup_time += (finish.tv_sec - start.tv_sec) + (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
+    return ret;
 }
 void TCCJIT::free(void *handle)
 {

@@ -194,12 +194,17 @@ LLVMJIT::LLVMJIT() : JIT("LLVMJIT")
 
 LLVMJIT::~LLVMJIT()
 {
+    std::cout << "[LLVMJIT] total_setup_time=" << total_setup_time << "\n";
+    std::cout << "[LLVMJIT] total_compile_time=" << total_compile_time << "\n";
+    std::cout << "[LLVMJIT] total_lookup_time=" << total_lookup_time << "\n";
     delete orcJit_;
 }
 
 void *LLVMJIT::translate(std::string code, std::set<std::string> headerpaths, std::set<std::string> librarypaths,
                          std::set<std::string> libraries, std::string &error, bool debug)
 {
+    struct timespec start, finish;
+    clock_gettime(CLOCK_MONOTONIC, &start);
     clang::CompilerInstance CI;
 
     DiagnosticOptions *diagOpts = new DiagnosticOptions();
@@ -213,6 +218,9 @@ void *LLVMJIT::translate(std::string code, std::set<std::string> headerpaths, st
     CI.createFileManager();
     CI.createSourceManager(CI.getFileManager());
     CI.createPreprocessor(clang::TranslationUnitKind::TU_Module);
+    clock_gettime(CLOCK_MONOTONIC, &finish);
+    total_setup_time += (finish.tv_sec - start.tv_sec) + (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
+    clock_gettime(CLOCK_MONOTONIC, &start);
 
     // compilation task
     std::vector<std::string> args;
@@ -279,6 +287,9 @@ void *LLVMJIT::translate(std::string code, std::set<std::string> headerpaths, st
 
     // load module with orcjit
     orcJit_->addModule(action.takeModule());
+    clock_gettime(CLOCK_MONOTONIC, &finish);
+    total_compile_time += (finish.tv_sec - start.tv_sec) + (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
+    clock_gettime(CLOCK_MONOTONIC, &start);
 
     return (void *)1;
 }
@@ -286,9 +297,13 @@ void *LLVMJIT::translate(std::string code, std::set<std::string> headerpaths, st
 void *LLVMJIT::getFunction(void *handle, std::string name, std::string &error)
 {
 
+    struct timespec start, finish;
+    clock_gettime(CLOCK_MONOTONIC, &start);
     auto func = orcJit_->lookup(name);
     if (!func)
         throw std::runtime_error("fail");
+    clock_gettime(CLOCK_MONOTONIC, &finish);
+    total_lookup_time += (finish.tv_sec - start.tv_sec) + (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
     return (void *)(*func).getAddress();
 }
 void LLVMJIT::free(void *handle) {}

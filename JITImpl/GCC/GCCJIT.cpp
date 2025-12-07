@@ -78,16 +78,27 @@ GCCJIT::GCCJIT(bool cleanup, std::string opt_level) : etiss::JIT("gcc"), cleanup
 
 GCCJIT::~GCCJIT()
 {
+    std::cout << "[GCCJIT] total_write_time=" << total_write_time << "\n";
+    std::cout << "[GCCJIT] total_compile_time=" << total_compile_time << "\n";
+    std::cout << "[GCCJIT] total_link_time=" << total_link_time << "\n";
+    std::cout << "[GCCJIT] total_load_time=" << total_load_time << "\n";
     if (cleanup_)
         if (path_.substr(0, 6) == "./tmp/") // check path before recursive delete operation
             if (system(std::string("rm -R \"" + path_ + "\"").c_str()))
                 std::cerr << "ERROR: GCCJIT failed to clean up compilation files located in " << path_ << std::endl;
 }
 
+// double total_write_time = 0;
+// double total_compile_time = 0;
+// double total_link_time = 0;
+// double total_load_time = 0;
+
 void *GCCJIT::translate(std::string code, std::set<std::string> headerpaths, std::set<std::string> librarypaths,
                         std::set<std::string> libraries, std::string &error, bool debug)
 {
 
+    struct timespec start, finish;
+    clock_gettime(CLOCK_MONOTONIC, &start);
     if (system(NULL) == 0)
     {
         error = "system command execution not available";
@@ -114,6 +125,9 @@ void *GCCJIT::translate(std::string code, std::set<std::string> headerpaths, std
     }
     std::stringstream ss;
     ss << "gcc -c -std=c99 -fPIC -march=native -mtune=native -pipe "; // CHANGED -Wall eliminated
+    clock_gettime(CLOCK_MONOTONIC, &finish);
+    total_write_time += (finish.tv_sec - start.tv_sec) + (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
+    clock_gettime(CLOCK_MONOTONIC, &start);
     if (debug)
         ss << "-g -O0 ";
     else
@@ -134,6 +148,9 @@ void *GCCJIT::translate(std::string code, std::set<std::string> headerpaths, std
     {
         std::cout << "compiler failed with code: " << eval << std::endl;
     }
+    clock_gettime(CLOCK_MONOTONIC, &finish);
+    total_compile_time += (finish.tv_sec - start.tv_sec) + (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
+    clock_gettime(CLOCK_MONOTONIC, &start);
 
     ss.str("");
 
@@ -169,6 +186,9 @@ void *GCCJIT::translate(std::string code, std::set<std::string> headerpaths, std
     {
         std::cout << "compiler failed with code: " << eval << std::endl;
     }
+    clock_gettime(CLOCK_MONOTONIC, &finish);
+    total_link_time += (finish.tv_sec - start.tv_sec) + (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
+    clock_gettime(CLOCK_MONOTONIC, &start);
 
     void *lib = dlopen((path_ + "lib" + codefilename + std::string(".so")).c_str(), RTLD_NOW | RTLD_LOCAL);
 
@@ -177,6 +197,8 @@ void *GCCJIT::translate(std::string code, std::set<std::string> headerpaths, std
         error = dlerror();
         return 0;
     }
+    clock_gettime(CLOCK_MONOTONIC, &finish);
+    total_load_time += (finish.tv_sec - start.tv_sec) + (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
 
     return lib;
 }
