@@ -226,12 +226,12 @@ void *LLVMJIT::translate(std::string code, std::set<std::string> headerpaths, st
     std::vector<std::string> args;
     if (debug)
     {
-        args.push_back("-g");
+        // args.push_back("-g");
         args.push_back("-O0");
     }
     else
     {
-        args.push_back("-O3");
+        args.push_back("-Ofast");
     }
     args.push_back("-std=c99");
     args.push_back("-isystem" + etiss::jitFiles() + "/clang_stdlib");
