@@ -706,6 +706,10 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
 
     // sync time at the beginning (e.g. SystemC processes running at time 0)
     system->syncTime(system->handle, cpu_);
+    struct timespec start2, finish2;
+    double total_getblock_time = 0;
+    double total_exec_time = 0;
+    double total_exec_opt_time = 0;
 
     // execution loop
     {
@@ -768,8 +772,11 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
 
                 // FIXME: cpu->instructionPointer contains virtual address, getBlockFast should use physical address
                 // instead to realize physical cache.
+                clock_gettime(CLOCK_MONOTONIC, &start2);
                 blptr = translation.getBlockFast(
                     blptr, cpu_->instructionPointer); // IMPORTANT: no pointer reference is kept here. if the translator
+                clock_gettime(CLOCK_MONOTONIC, &finish2);
+                total_getblock_time += (finish2.tv_sec - start2.tv_sec) + (finish2.tv_nsec - start2.tv_nsec) / 1000000000.0;
                                                       // performs a cleanup then blptr must be set to 0
                 //}
 
@@ -800,7 +807,14 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
                     // plugins_handle_ has the pointer to all translation plugins,
                     // In the generated code these plugin handles are named "plugin_pointers" and can be used to access
                     // a variable of the plugin
+                    clock_gettime(CLOCK_MONOTONIC, &start2);
                     exception = (*(blptr->execBlock))(cpu_, system, plugins_handle_);
+                    clock_gettime(CLOCK_MONOTONIC, &finish2);
+                    if (blptr->hasOptimized) {
+                        total_exec_opt_time += (finish2.tv_sec - start2.tv_sec) + (finish2.tv_nsec - start2.tv_nsec) / 1000000000.0;
+                    } else {
+                        total_exec_time += (finish2.tv_sec - start2.tv_sec) + (finish2.tv_nsec - start2.tv_nsec) / 1000000000.0;
+                    }
 
                     // exit simulator when a loop to self instruction is encountered
                     if (exit_on_loop && !exception &&
@@ -836,6 +850,9 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
 
 loopexit:
     clock_gettime(CLOCK_MONOTONIC, &finish);
+    std::cout << "total_getblock_time=" << total_getblock_time << "\n";
+    std::cout << "total_exec_opt_time=" << total_exec_opt_time << "\n";
+    std::cout << "total_exec_time=" << total_exec_time << "\n";
     float endTime = (float)clock() / CLOCKS_PER_SEC;
 
 
