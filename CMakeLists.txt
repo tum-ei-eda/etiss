@@ -34,6 +34,7 @@ option(ETISS_BUILD_DEFAULTSUB "If enabled then the ArchImpl,JITImpl,PluginImpl a
 option(ETISS_USE_PROFILEFLAGS "Enable or disable the -pg compiler and linker flags." OFF)
 option(ETISS_USE_COREDSL_COVERAGE "Enable the CoreDSL coverage analyzer" OFF)
 option(ETISS_TRANSLATOR_STAT "Enable translator statistics (cache hits/misses)" ON)
+option(ETISS_NEW_DECODER "Use hierarchical map-based instruction decoder instead of chunk-based decoder" OFF)
 
 # Global configuration
 SET(CMAKE_POSITION_INDEPENDENT_CODE ON)
@@ -95,6 +96,10 @@ ENDIF()
 
 IF(ETISS_TRANSLATOR_STAT)
     ADD_DEFINITIONS(-DETISS_TRANSLATOR_STAT)
+ENDIF()
+
+IF(ETISS_NEW_DECODER)
+    ADD_DEFINITIONS(-DETISS_NEW_DECODER)
 ENDIF()
 
 # Include modules.
@@ -401,5 +406,7 @@ message(STATUS "ETISS_VERSION_FULL: ${ETISS_VERSION_FULL}")
 message(STATUS "ETISS_USE_PYTHON: ${ETISS_USE_PYTHON}")
 message(STATUS "ETISS_USE_PROFILEFLAGS: ${ETISS_USE_PROFILEFLAGS}")
 message(STATUS "ETISS_USE_COREDSL_COVERAGE: ${ETISS_USE_COREDSL_COVERAGE}")
+message(STATUS "ETISS_TRANSLATOR_STAT: ${ETISS_TRANSLATOR_STAT}")
+message(STATUS "ETISS_NEW_DECODER: ${ETISS_NEW_DECODER}")
 message(STATUS "ETISS_USE_DLSYM: ${ETISS_USE_DLSYM}")
 message(STATUS "ETISS_BUILD_MANUAL_DOC: ${ETISS_BUILD_MANUAL_DOC}")

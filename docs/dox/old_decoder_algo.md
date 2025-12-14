@@ -19,17 +19,17 @@ where ``imm`` is the immediate value and ``d`` is the index of the destination r
 
 $$A_{opcode} = 010001 :: XXXX :: 1101 :: XX$$
 
-where ``X`` is don’t care bit. After splitting encoding of the instruction ``A`` into small chunks of 4-bits we get four groups:
+where ``X`` is don't care bit. After splitting encoding of the instruction ``A`` into small chunks of 4-bits we get four groups:
 
 $$
  A =
-\\underbrace{0100}\_{\\substack{\\text{Group 3} \\\\ \\text{value of 4}}} ::
-\\underbrace{01XX}\_{\\substack{\\text{Group 2 permutated:} \\\\ \\text{0100 value of 4} \\\\ \\text{0101 value of 5} \\\\ \\text{0110 value of 6} \\\\ \\text{0111 value of 7} }} ::
-\\underbrace{XX11}\_{\\substack{\\text{Group 1 permutated:} \\\\ \\text{0011 value of 3} \\\\ \\text{0111 value of 7} \\\\ \\text{1011 value of 11} \\\\ \\text{1111 value of 15} }} ::
-\\underbrace{01XX}\_{\\substack{\\text{Group 0 permutated:} \\\\ \\text{0100 value of 4} \\\\ \\text{0101 value of 5} \\\\ \\text{0110 value of 6} \\\\ \\text{0111 value of 7} }}
+\underbrace{0100}_{\substack{\text{Group 3} \\ \text{value of 4}}} ::
+\underbrace{01XX}_{\substack{\text{Group 2 permutated:} \\ \text{0100 value of 4} \\ \text{0101 value of 5} \\ \text{0110 value of 6} \\ \text{0111 value of 7} }} ::
+\underbrace{XX11}_{\substack{\text{Group 1 permutated:} \\ \text{0011 value of 3} \\ \text{0111 value of 7} \\ \text{1011 value of 11} \\ \text{1111 value of 15} }} ::
+\underbrace{01XX}_{\substack{\text{Group 0 permutated:} \\ \text{0100 value of 4} \\ \text{0101 value of 5} \\ \text{0110 value of 6} \\ \text{0111 value of 7} }}
 $$
 
-where don’t care bits are permutated as they can take any value, and obviously a chunk can have $2^4$ permutation at most. Now, the chunks of instruction ``A`` should be placed to associated nodes at each group according to the value that the chunk can take as follows:
+where don't care bits are permutated as they can take any value, and obviously a chunk can have $2^4$ permutation at most. Now, the chunks of instruction ``A`` should be placed to associated nodes at each group according to the value that the chunk can take as follows:
 
 <center> <img src="newalgoassign.png" alt="Instruction assigment to associated nodes" width="650"> </center>
 
@@ -39,11 +39,11 @@ After all modeled instructions are assigned to the associated nodes, the initial
 
 As an example, suppose 16-bit **0111100101100011** is fetched from the memory. The decoding algorithm will split it into four chunks as follows:
 
-$$fetched \\: bit \\: array =
-\\underbrace{0111}\_{\\substack{\\text{Group 3:} \\\\ \\text{value of 7}}} ::
-\\underbrace{1001}\_{\\substack{\\text{Group 2:} \\\\ \\text{value of 9}}} ::
-\\underbrace{0110}\_{\\substack{\\text{Group 1:} \\\\ \\text{value of 6}}} ::
-\\underbrace{0011}\_{\\substack{\\text{Group 0:} \\\\ \\text{value of 3}}}
+$$fetched \: bit \: array =
+\underbrace{0111}_{\substack{\text{Group 3:} \\ \text{value of 7}}} ::
+\underbrace{1001}_{\substack{\text{Group 2:} \\ \text{value of 9}}} ::
+\underbrace{0110}_{\substack{\text{Group 1:} \\ \text{value of 6}}} ::
+\underbrace{0011}_{\substack{\text{Group 0:} \\ \text{value of 3}}}
 $$
 
 subsequently, 3<sup>rd</sup> node in Group 0, 6<sup>th</sup> node in Group 1, 9<sup>th</sup> node in Group 2, and 7<sup>th</sup> node in Group 3 are marked as follows:

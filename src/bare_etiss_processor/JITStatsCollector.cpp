@@ -334,6 +334,7 @@ void JITStatsCollector::exportJSON(const std::string &path)
     int opt_threads = etiss::cfg().get<int>("jit.optimization_threads", 0);
     std::string gcc_opt = etiss::cfg().get<std::string>("jit.gcc.opt_level", "3");
     std::string llvm_opt = etiss::cfg().get<std::string>("jit.llvm.opt_level", "3");
+    unsigned block_size = etiss::cfg().get<unsigned>("etiss.max_block_size", 100);
 
     // Build JSON object
     json j = { { "schema_version", "1.0" },
@@ -344,7 +345,8 @@ void JITStatsCollector::exportJSON(const std::string &path)
                    { "optimization_threads", opt_threads },
                    { "gcc_opt_level", gcc_opt },
                    { "llvm_opt_level", llvm_opt },
-                   { "fast_jit_enabled", stats.fastJitEnabled } } },
+                   { "fast_jit_enabled", stats.fastJitEnabled },
+                   { "block_size", block_size } } },
                { "performance",
                  { { "cpu_time_s", perfStats.cpuTime_s },
                    { "simulation_time_s", perfStats.simulationTime_s },
