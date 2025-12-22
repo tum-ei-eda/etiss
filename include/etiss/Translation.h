@@ -200,6 +200,7 @@ class Translation
     // Timing statistics (in microseconds)
     etiss::uint64 fastJitCompilationTime_us_;
     std::atomic<etiss::uint64> optimizingJitCompilationTime_us_;
+    etiss::uint64 translationTime_us_;
 #endif
 
   public:

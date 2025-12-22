@@ -14,12 +14,13 @@
 
 #if ETISS_TRANSLATOR_STAT
 // Forward declaration for JIT statistics update function
-extern "C" void updateJITTranslationStats(
-    uint64_t fastJit, uint64_t optJit, uint64_t next, 
-    uint64_t branch, uint64_t miss, uint64_t optimized, 
-    uint64_t switched, bool fastEnabled,
-    uint64_t totalExec, uint64_t fastExec, uint64_t optExec,
-    uint64_t fastJitCompTime_us, uint64_t optJitCompTime_us, uint64_t blockExecTime_us);
+extern "C" void updateJITTranslationStats(uint64_t fastJitBlocks, uint64_t optimizingJitBlocks, uint64_t cacheNextHits,
+                                          uint64_t cacheBranchHits, uint64_t cacheMisses, uint64_t blocksOptimized,
+                                          uint64_t blocksSwitched, bool fastJitEnabled, uint64_t totalBlockExecutions,
+                                          uint64_t fastJitExecutions, uint64_t optimizedExecutions,
+                                          uint64_t fastJitCompilationTime_us, uint64_t optimizingJitCompilationTime_us,
+                                          uint64_t translationTime_us, uint64_t blockExecTime_ns);
+extern "C" void addBlockLookupTime(uint64_t time_ns);
 #endif
 
 namespace etiss
@@ -129,6 +130,7 @@ Translation::Translation(std::shared_ptr<etiss::CPUArch> &arch, std::shared_ptr<
     , optimizedExecutions_(0)
     , fastJitCompilationTime_us_(0)
     , optimizingJitCompilationTime_us_(0)
+    , translationTime_us_(0)
 #endif
     , id(genTranslationId())
     , optManager_(std::make_unique<OptimizationManager>(jit,
@@ -161,7 +163,7 @@ Translation::~Translation()
         blocksOptimized_, blocksSwitched_,
         fastJit_ != nullptr,
         totalBlockExecutions_, fastJitExecutions_, optimizedExecutions_,
-        fastJitCompilationTime_us_, optimizingJitCompilationTime_us_.load(), 0
+        fastJitCompilationTime_us_, optimizingJitCompilationTime_us_.load(), translationTime_us_, 0
     );
 #endif
 
@@ -298,6 +300,9 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
     }
 
     // search block in cache
+#if ETISS_TRANSLATOR_STAT
+    auto lookupStart = std::chrono::high_resolution_clock::now();
+#endif
     // TODO(MM) Dig deeper into why the shift by 9 bits
     std::list<BlockLink *> &list = blockmap_[instructionindex >> 9];
     for (std::list<BlockLink *>::iterator iter = list.begin(); iter != list.end();) // iter++ moved into block
@@ -343,6 +348,9 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
 #if ETISS_TRANSLATOR_STAT
                     // Track execution statistics
                     trackBlockExecution(*iter);
+                    auto lookupEnd = std::chrono::high_resolution_clock::now();
+                    uint64_t diff = std::chrono::duration_cast<std::chrono::nanoseconds>(lookupEnd - lookupStart).count();
+                    addBlockLookupTime(diff);
 #endif
                     return *iter;
                 }
@@ -359,6 +367,13 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
             }
         }
     }
+#if ETISS_TRANSLATOR_STAT
+    {
+        auto lookupEnd = std::chrono::high_resolution_clock::now();
+        uint64_t diff = std::chrono::duration_cast<std::chrono::nanoseconds>(lookupEnd - lookupStart).count();
+        addBlockLookupTime(diff);
+    }
+#endif
 
     // generate block
     std::string blockfunctionname;
@@ -392,7 +407,17 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
 
     plugins_initCodeBlock_(plugins_array_, block);
 
+#if ETISS_TRANSLATOR_STAT
+    auto transStart = std::chrono::high_resolution_clock::now();
+#endif
+
     etiss::int32 transerror = translateBlock(block);
+
+#if ETISS_TRANSLATOR_STAT
+    auto transEnd = std::chrono::high_resolution_clock::now();
+    uint64_t diff = std::chrono::duration_cast<std::chrono::microseconds>(transEnd - transStart).count();
+    translationTime_us_ += diff;
+#endif
 
     if (transerror != ETISS_RETURNCODE_NOERROR)
     {

@@ -22,7 +22,7 @@ using json = nlohmann::json;
 extern "C"
 {
     void getJITTranslationStats(uint64_t *, uint64_t *, uint64_t *, uint64_t *, uint64_t *, uint64_t *, uint64_t *,
-                                bool *, uint64_t *, uint64_t *, uint64_t *, uint64_t *, uint64_t *, uint64_t *);
+                                bool *, uint64_t *, uint64_t *, uint64_t *, uint64_t *, uint64_t *, uint64_t *, uint64_t *, uint64_t *, uint64_t *);
     void getPerformanceStats(double *, double *, double *, double *, double *, double *);
 }
 
@@ -99,7 +99,7 @@ std::string JITStatsCollector::generateHumanReadable()
                            &stats.cacheBranchHits, &stats.cacheMisses, &stats.blocksOptimized, &stats.blocksSwitched,
                            &stats.fastJitEnabled, &stats.totalBlockExecutions, &stats.fastJitExecutions,
                            &stats.optimizedExecutions, &stats.fastJitCompilationTime_us,
-                           &stats.optimizingJitCompilationTime_us, &stats.blockExecutionTime_us);
+                           &stats.optimizingJitCompilationTime_us, &stats.translationTime_us, &stats.blockExecutionTime_ns, &stats.systemTime_ns, &stats.blockLookupTime_ns);
 
     PerformanceStats perfStats;
     getPerformanceStats(&perfStats.cpuTime_s, &perfStats.simulationTime_s, &perfStats.wallTime_s, &perfStats.cpuCycles,
@@ -173,18 +173,22 @@ std::string JITStatsCollector::generateHumanReadable()
         ss << " (avg: " << formatTime((uint64_t)avgTime_us) << "/block)";
     }
     ss << "\n";
-    ss << "  Block execution time: " << formatTime(stats.blockExecutionTime_us) << "\n";
+    ss << "  Block execution time: " << formatTime(stats.blockExecutionTime_ns / 1000) << "\n";
+    ss << "  System sync time: " << formatTime(stats.systemTime_ns / 1000) << "\n";
+    ss << "  Block lookup time: " << formatTime(stats.blockLookupTime_ns / 1000) << "\n";
 
     // Compilation vs Execution breakdown
-    if (stats.blockExecutionTime_us > 0 || totalCompilationTime_us > 0)
+    double compilationPct = 0.0, translationPct = 0.0, executionPct = 0.0, systemPct = 0.0, lookupPct = 0.0;
+    uint64_t totalTime_us = totalCompilationTime_us + stats.translationTime_us + (stats.blockExecutionTime_ns / 1000) + (stats.systemTime_ns / 1000) + (stats.blockLookupTime_ns / 1000);
+    if (totalTime_us > 0)
     {
-        uint64_t totalTime_us = totalCompilationTime_us + stats.blockExecutionTime_us;
-        if (totalTime_us > 0)
-        {
-            double compPct = (100.0 * totalCompilationTime_us) / totalTime_us;
-            double execPct = (100.0 * stats.blockExecutionTime_us) / totalTime_us;
-            ss << "  Time breakdown: " << compPct << "% compilation, " << execPct << "% execution\n";
-        }
+        compilationPct = (100.0 * totalCompilationTime_us) / totalTime_us;
+        translationPct = (100.0 * stats.translationTime_us) / totalTime_us;
+        executionPct = (100.0 * (stats.blockExecutionTime_ns / 1000.0)) / totalTime_us;
+        systemPct = (100.0 * (stats.systemTime_ns / 1000.0)) / totalTime_us;
+        lookupPct = (100.0 * (stats.blockLookupTime_ns / 1000.0)) / totalTime_us;
+        ss << "  Time breakdown: " << compilationPct << "% compilation, " << translationPct << "% translation, " 
+           << executionPct << "% execution, " << systemPct << "% system, " << lookupPct << "% lookup\n";
     }
 
     // Compilation speedup from fast JIT
@@ -287,7 +291,7 @@ void JITStatsCollector::exportJSON(const std::string &path)
                            &stats.cacheBranchHits, &stats.cacheMisses, &stats.blocksOptimized, &stats.blocksSwitched,
                            &stats.fastJitEnabled, &stats.totalBlockExecutions, &stats.fastJitExecutions,
                            &stats.optimizedExecutions, &stats.fastJitCompilationTime_us,
-                           &stats.optimizingJitCompilationTime_us, &stats.blockExecutionTime_us);
+                           &stats.optimizingJitCompilationTime_us, &stats.translationTime_us, &stats.blockExecutionTime_ns, &stats.systemTime_ns, &stats.blockLookupTime_ns);
 
     PerformanceStats perfStats;
     getPerformanceStats(&perfStats.cpuTime_s, &perfStats.simulationTime_s, &perfStats.wallTime_s, &perfStats.cpuCycles,
@@ -313,16 +317,19 @@ void JITStatsCollector::exportJSON(const std::string &path)
     double optExecPct =
         (stats.totalBlockExecutions > 0) ? (100.0 * stats.optimizedExecutions) / stats.totalBlockExecutions : 0.0;
 
-    double compilationPct = 0.0, executionPct = 0.0;
-    uint64_t totalTime_us = totalCompilationTime_us + stats.blockExecutionTime_us;
+    double compilationPct = 0.0, translationPct = 0.0, executionPct = 0.0, systemPct = 0.0, lookupPct = 0.0;
+    uint64_t totalTime_us = totalCompilationTime_us + stats.translationTime_us + (stats.blockExecutionTime_ns / 1000) + (stats.systemTime_ns / 1000) + (stats.blockLookupTime_ns / 1000);
     if (totalTime_us > 0)
     {
         compilationPct = (100.0 * totalCompilationTime_us) / totalTime_us;
-        executionPct = (100.0 * stats.blockExecutionTime_us) / totalTime_us;
+        translationPct = (100.0 * stats.translationTime_us) / totalTime_us;
+        executionPct = (100.0 * (stats.blockExecutionTime_ns / 1000.0)) / totalTime_us;
+        systemPct = (100.0 * (stats.systemTime_ns / 1000.0)) / totalTime_us;
+        lookupPct = (100.0 * (stats.blockLookupTime_ns / 1000.0)) / totalTime_us;
     }
 
     double optimizationRate = (stats.fastJitBlocks > 0) ? (100.0 * stats.blocksOptimized) / stats.fastJitBlocks : 0.0;
-    double switchRate = (stats.blocksOptimized > 0) ? (100.0 * stats.blocksSwitched) / stats.blocksOptimized : 0.0;
+    double switchRate = (stats.totalBlockExecutions > 0) ? (100.0 * stats.blocksSwitched) / stats.totalBlockExecutions : 0.0;
 
     uint64_t avgExecBeforeSwitch = (stats.blocksOptimized > 0 && stats.fastJitExecutions > 0)
                                        ? stats.fastJitExecutions / stats.blocksOptimized
@@ -337,60 +344,79 @@ void JITStatsCollector::exportJSON(const std::string &path)
     unsigned block_size = etiss::cfg().get<unsigned>("etiss.max_block_size", 100);
 
     // Build JSON object
-    json j = { { "schema_version", "1.0" },
-               { "timestamp", getCurrentFormatttedTimestamp() },
-               { "metadata",
-                 { { "jit_type", jit_type },
-                   { "fast_jit_type", fast_jit },
-                   { "optimization_threads", opt_threads },
-                   { "gcc_opt_level", gcc_opt },
-                   { "llvm_opt_level", llvm_opt },
-                   { "fast_jit_enabled", stats.fastJitEnabled },
-                   { "block_size", block_size } } },
-               { "performance",
-                 { { "cpu_time_s", perfStats.cpuTime_s },
-                   { "simulation_time_s", perfStats.simulationTime_s },
-                   { "wall_time_s", perfStats.wallTime_s },
-                   { "cpu_cycles", perfStats.cpuCycles },
-                   { "mips_estimated", perfStats.mipsEstimated },
-                   { "mips_corrected", perfStats.mipsCorrected } } },
-               { "compilation",
-                 { { "unique_blocks", totalBlocks },
-                   { "fast_jit_blocks", stats.fastJitBlocks },
-                   { "optimizing_jit_blocks", stats.optimizingJitBlocks },
-                   { "total_time_us", totalCompilationTime_us },
-                   { "total_time_s", totalCompilationTime_us / 1.0e6 },
-                   { "fast_jit_time_us", stats.fastJitCompilationTime_us },
-                   { "fast_jit_time_s", stats.fastJitCompilationTime_us / 1.0e6 },
-                   { "optimizing_jit_time_us", stats.optimizingJitCompilationTime_us },
-                   { "optimizing_jit_time_s", stats.optimizingJitCompilationTime_us / 1.0e6 },
-                   { "avg_fast_jit_time_ms", avgFastTime },
-                   { "avg_optimizing_jit_time_ms", avgOptTime },
-                   { "fast_jit_speedup", speedup },
-                   { "compilation_percentage", compilationPct },
-                   { "execution_percentage", executionPct } } },
-               { "execution",
-                 { { "total_block_executions", stats.totalBlockExecutions },
-                   { "fast_jit_executions", stats.fastJitExecutions },
-                   { "optimized_executions", stats.optimizedExecutions },
-                   { "fast_jit_exec_percentage", fastExecPct },
-                   { "optimized_exec_percentage", optExecPct },
-                   { "block_execution_time_us", stats.blockExecutionTime_us },
-                   { "block_execution_time_ms", stats.blockExecutionTime_us / 1000.0 } } },
-               { "optimization",
-                 { { "blocks_optimized", stats.blocksOptimized },
-                   { "blocks_switched", stats.blocksSwitched },
-                   { "optimization_success_rate", optimizationRate },
-                   { "switch_rate", switchRate },
-                   { "avg_executions_before_switch", avgExecBeforeSwitch } } },
-               { "cache",
-                 { { "total_lookups", totalCacheLookups },
-                   { "sequential_hits", stats.cacheNextHits },
-                   { "branch_hits", stats.cacheBranchHits },
-                   { "misses", stats.cacheMisses },
-                   { "total_hits", totalCacheHits },
-                   { "hit_rate", hitRate },
-                   { "miss_rate", 100.0 - hitRate } } } };
+    std::string timestampStr = getCurrentFormatttedTimestamp();
+    json j = { { "timestamp", timestampStr },
+          { "schema_version", "1.0" },
+          { "metadata",
+            { { "jit_type", etiss::cfg().get<std::string>("jit.type", "Unknown") },
+              { "fast_jit_enabled", stats.fastJitEnabled },
+              { "fast_jit_type", etiss::cfg().get<std::string>("jit.fast_type", "None") },
+              { "block_size", etiss::cfg().get<int>("jit.block_size", 0) },
+              { "optimization_threads", etiss::cfg().get<int>("jit.gcc.threads", 0) },
+              { "gcc_opt_level", etiss::cfg().get<std::string>("jit.gcc.opt_level", "0") },
+              { "llvm_opt_level", etiss::cfg().get<std::string>("jit.llvm.opt_level", "0") } } },
+          { "compilation",
+            { { "unique_blocks", stats.fastJitBlocks + stats.optimizingJitBlocks }, // Approx
+              { "fast_jit_blocks", stats.fastJitBlocks },
+              { "optimizing_jit_blocks", stats.optimizingJitBlocks },
+              { "total_time_us", totalCompilationTime_us },
+              { "total_time_s", totalCompilationTime_us / 1000000.0 },
+              { "fast_jit_time_us", stats.fastJitCompilationTime_us },
+              { "fast_jit_time_s", stats.fastJitCompilationTime_us / 1000000.0 },
+              { "optimizing_jit_time_us", stats.optimizingJitCompilationTime_us },
+              { "optimizing_jit_time_s", stats.optimizingJitCompilationTime_us / 1000000.0 },
+              { "avg_fast_jit_time_ms", (stats.fastJitBlocks > 0)
+                                            ? (double)stats.fastJitCompilationTime_us / stats.fastJitBlocks / 1000.0
+                                            : 0.0 },
+              { "avg_optimizing_jit_time_ms", (stats.optimizingJitBlocks > 0)
+                                                  ? (double)stats.optimizingJitCompilationTime_us /
+                                                        stats.optimizingJitBlocks / 1000.0
+                                                  : 0.0 },
+              { "fast_jit_speedup", speedup },
+              { "compilation_percentage", compilationPct },
+              { "translation_percentage", translationPct },
+              { "execution_percentage", executionPct },
+              { "system_percentage", systemPct },
+              { "lookup_percentage", lookupPct },
+              { "translation_time_us", stats.translationTime_us },
+              { "translation_time_s", stats.translationTime_us / 1000000.0 } } },
+          { "execution",
+            { { "total_block_executions", stats.totalBlockExecutions },
+              { "fast_jit_executions", stats.fastJitExecutions },
+              { "optimized_executions", stats.optimizedExecutions },
+              { "fast_jit_exec_percentage", fastExecPct },
+              { "optimized_exec_percentage", optExecPct },
+              { "block_execution_time_us", stats.blockExecutionTime_ns / 1000.0 },
+              { "block_execution_time_ns", stats.blockExecutionTime_ns },
+              { "block_execution_time_ms", stats.blockExecutionTime_ns / 1000000.0 },
+              { "system_time_us", stats.systemTime_ns / 1000.0 },
+              { "system_time_ns", stats.systemTime_ns },
+              { "system_time_ms", stats.systemTime_ns / 1000000.0 },
+              { "block_lookup_time_us", stats.blockLookupTime_ns / 1000.0 },
+              { "block_lookup_time_ns", stats.blockLookupTime_ns },
+              { "block_lookup_time_ms", stats.blockLookupTime_ns / 1000000.0 } } },
+          { "optimization",
+            { { "blocks_optimized", stats.blocksOptimized },
+              { "blocks_switched", stats.blocksSwitched },
+              { "optimization_success_rate", optimizationRate },
+              { "switch_rate", switchRate },
+              { "avg_executions_before_switch",
+                (stats.blocksSwitched > 0) ? stats.fastJitExecutions / stats.blocksSwitched : 0 } } },
+          { "cache",
+            { { "total_hits", stats.cacheNextHits + stats.cacheBranchHits },
+              { "sequential_hits", stats.cacheNextHits },
+              { "branch_hits", stats.cacheBranchHits },
+              { "misses", stats.cacheMisses },
+              { "total_lookups", totalCacheLookups },
+              { "hit_rate", hitRate },
+              { "miss_rate", 100.0 - hitRate } } },
+          { "performance",
+            { { "wall_time_s", perfStats.wallTime_s },
+              { "cpu_time_s", perfStats.cpuTime_s },
+              { "simulation_time_s", perfStats.simulationTime_s },
+              { "cpu_cycles", perfStats.cpuCycles },
+              { "mips_estimated", perfStats.mipsEstimated },
+              { "mips_corrected", perfStats.mipsCorrected } } } };
 
     // Write to file with pretty printing
     std::ofstream file(path);

@@ -36,7 +36,10 @@ struct JITTranslationStats
     // Timing statistics (in microseconds)
     uint64_t fastJitCompilationTime_us;
     uint64_t optimizingJitCompilationTime_us;
-    uint64_t blockExecutionTime_us;
+    uint64_t translationTime_us;
+    uint64_t blockExecutionTime_ns;
+    uint64_t systemTime_ns;
+    uint64_t blockLookupTime_ns;
 };
 
 // Performance metrics structure

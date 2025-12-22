@@ -21,7 +21,9 @@
 
 #if ETISS_TRANSLATOR_STAT
 // Forward declaration for block execution time tracking
-extern "C" void addBlockExecutionTime(uint64_t time_us);
+extern "C" void addBlockExecutionTime(uint64_t time_ns);
+extern "C" void addSystemTime(uint64_t time_ns);
+extern "C" void addSystemTime(uint64_t time_ns);
 // Forward declaration for performance stats
 extern "C" void updatePerformanceStats(
     double cpuTime_s, double simulationTime_s, double wallTime_s,
@@ -806,7 +808,7 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
                     exception = (*(blptr->execBlock))(cpu_, system, plugins_handle_);
 #if ETISS_TRANSLATOR_STAT
                     auto execEnd = std::chrono::high_resolution_clock::now();
-                    addBlockExecutionTime(std::chrono::duration_cast<std::chrono::microseconds>(execEnd - execStart).count());
+                    addBlockExecutionTime(std::chrono::duration_cast<std::chrono::nanoseconds>(execEnd - execStart).count());
 #endif
 
                     // exit simulator when a loop to self instruction is encountered
@@ -836,7 +838,15 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
             }
 
             // sync time after block
+            // sync time after block
+#if ETISS_TRANSLATOR_STAT
+            auto sysStart = std::chrono::high_resolution_clock::now();
             system->syncTime(system->handle, cpu_);
+            auto sysEnd = std::chrono::high_resolution_clock::now();
+            addSystemTime(std::chrono::duration_cast<std::chrono::nanoseconds>(sysEnd - sysStart).count());
+#else
+            system->syncTime(system->handle, cpu_);
+#endif
         }
     }
 
