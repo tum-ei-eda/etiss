@@ -802,11 +802,11 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
                     // plugins_handle_ has the pointer to all translation plugins,
                     // In the generated code these plugin handles are named "plugin_pointers" and can be used to access
                     // a variable of the plugin
-#if ETISS_TRANSLATOR_STAT
+#if ETISS_TRANSLATOR_STAT && ETISS_TRANSLATOR_STAT_WITH_EXECUTION_STAT
                     auto execStart = std::chrono::high_resolution_clock::now();
 #endif
                     exception = (*(blptr->execBlock))(cpu_, system, plugins_handle_);
-#if ETISS_TRANSLATOR_STAT
+#if ETISS_TRANSLATOR_STAT && ETISS_TRANSLATOR_STAT_WITH_EXECUTION_STAT
                     auto execEnd = std::chrono::high_resolution_clock::now();
                     addBlockExecutionTime(std::chrono::duration_cast<std::chrono::nanoseconds>(execEnd - execStart).count());
 #endif
@@ -839,7 +839,7 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
 
             // sync time after block
             // sync time after block
-#if ETISS_TRANSLATOR_STAT
+#if ETISS_TRANSLATOR_STAT && ETISS_TRANSLATOR_STAT_WITH_EXECUTION_STAT
             auto sysStart = std::chrono::high_resolution_clock::now();
             system->syncTime(system->handle, cpu_);
             auto sysEnd = std::chrono::high_resolution_clock::now();
