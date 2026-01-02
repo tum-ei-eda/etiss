@@ -161,7 +161,7 @@ class BitArray : public boost::dynamic_bitset<>
 class BitArrayRange
 {
   public:
-    etiss_del_como(BitArrayRange) private : BitArray::size_type startpos;
+  etiss_del_como(BitArrayRange) private : BitArray::size_type startpos;
     BitArray::size_type endpos;
 
   public:
@@ -204,7 +204,7 @@ class BitArrayRange
 
     to simplify that procedure a simple language is provided to generate those
     values from a representation that is much more similar to the opcode
-   definition in text form.
+    definition in text form.
 
     see uint32_t parse_i32(const char * s) or for a more general implementation see template <typename T> T
    parse_i(const char * s)
@@ -401,8 +401,12 @@ class InstructionSet : public etiss::ToString
         VariableInstructionSet &parent_;
     const std::string name_;
     const unsigned width_;
+#if ETISS_NEW_DECODER
+    InstructionSet(VariableInstructionSet &parent, unsigned width, const std::string &name);
+#else
     const unsigned chunk_size;
     InstructionSet(VariableInstructionSet &parent, unsigned width, const std::string &name, unsigned c_size = 4);
+#endif
     ~InstructionSet();
 
     Instruction *get(const OPCode &key);
@@ -429,12 +433,25 @@ class InstructionSet : public etiss::ToString
 
     size_t size();
 
+#if ETISS_NEW_DECODER
+    const std::map<const OPCode *, Instruction *, etiss::instr::less> &getInstructions() const { return instrmap_; }
+#endif
+
     inline std::string toString() const { return name_; }
 
   private:
     std::map<const OPCode *, Instruction *, etiss::instr::less> instrmap_;
 
+#if !ETISS_NEW_DECODER
     Node **root_; // holds the entry of the bucket tree in decoding and compilition algorithm
+#else
+    // Key 1: Instruction width (e.g., 16, 32)
+    // Key 2: Instruction mask
+    // Key 3: instruciton bit pattern
+    // Value: instruction object.
+    std::map<unsigned, std::map<BitArray, std::map<BitArray, Instruction *>>> lut;
+    bool compiled_; // TODO:(MM) remove this flag
+#endif
 
     Instruction invalid;
 };

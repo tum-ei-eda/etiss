@@ -105,6 +105,9 @@ void *GCCJIT::translate(std::string code, std::set<std::string> headerpaths, std
     ss.str("");
 
     ss << "gcc -shared ";
+#ifdef __APPLE__
+    ss << "-undefined dynamic_lookup ";
+#endif
     /*
     if (debug)
             ss <<"-g -dl ";

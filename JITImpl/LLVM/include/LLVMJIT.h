@@ -19,7 +19,7 @@ namespace etiss
 class LLVMJIT : public etiss::JIT
 {
   public:
-    LLVMJIT();
+    LLVMJIT(const std::string &opt_level = "3", bool quiet = false);
     virtual ~LLVMJIT();
     virtual void *translate(std::string code, std::set<std::string> headerpaths, std::set<std::string> librarypaths,
                             std::set<std::string> libraries, std::string &error, bool debug = false);
@@ -29,6 +29,8 @@ class LLVMJIT : public etiss::JIT
   private:
     std::unique_ptr<OrcJit> orcJit_;
     std::unordered_set<std::string> loadedLibs_;
+    std::string opt_level_;
+    bool quiet_;
 };
 
 } // namespace etiss

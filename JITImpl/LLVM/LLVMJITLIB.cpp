@@ -10,6 +10,7 @@
 #include "LLVMJIT.h"
 
 #include <iostream>
+#include "etiss/Misc.h"
 
 // implement etiss library interface
 extern "C"
@@ -42,7 +43,14 @@ extern "C"
         switch (index)
         {
         case 0:
-            return new etiss::LLVMJIT();
+        {
+            etiss::Configuration cfg;
+            cfg.config() = options;
+            return new etiss::LLVMJIT(
+                cfg.get<std::string>("jit.llvm.opt_level", "3"),
+                cfg.get<bool>("jit.llvm.quiet", true)
+            );
+        }
         default:
             return 0;
         }

@@ -17,6 +17,18 @@
 #include "etiss/System.h"
 #include "etiss/mm/MMU.h"
 #include "etiss/mm/DMMUWrapper.h"
+#include <chrono>
+
+#if ETISS_TRANSLATOR_STAT
+// Forward declaration for block execution time tracking
+extern "C" void addBlockExecutionTime(uint64_t time_ns);
+extern "C" void addSystemTime(uint64_t time_ns);
+extern "C" void addSystemTime(uint64_t time_ns);
+// Forward declaration for performance stats
+extern "C" void updatePerformanceStats(
+    double cpuTime_s, double simulationTime_s, double wallTime_s,
+    double cpuCycles, double mipsEstimated, double mipsCorrected);
+#endif
 
 using namespace etiss;
 
@@ -545,6 +557,11 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
         etiss::log(etiss::INFO, std::string("JIT compiler ") + jiti->getName() +
                                     " has passed the verification tests (tested by CPUCore " + name_ + ")");
     }
+
+    std::shared_ptr<JIT> fastJiti = fastJit_; // copy fast JIT
+
+    // TODO(MM): add fast JIT verification
+
     // add default timer plugin from arch
     if (timer_enabled_)
     {
@@ -631,7 +648,7 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
     }
 
     // create translation object
-    Translation translation(arch_, jiti, plugins, *system, *cpu_);
+    Translation translation(arch_, jiti, fastJiti, plugins, *system, *cpu_);
 
     // Translation init returns a list of pluigins, at position 0 this is the arch plugin followed by all translation
     // plugins
@@ -683,6 +700,7 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
     struct timespec start, finish;
 
     clock_gettime(CLOCK_MONOTONIC, &start);
+    float startTime = (float)clock() / CLOCKS_PER_SEC; // TESTING
 
     BlockLink *blptr = 0; // pointer to the current block
 
@@ -784,7 +802,14 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
                     // plugins_handle_ has the pointer to all translation plugins,
                     // In the generated code these plugin handles are named "plugin_pointers" and can be used to access
                     // a variable of the plugin
+#if ETISS_TRANSLATOR_STAT && ETISS_TRANSLATOR_STAT_WITH_EXECUTION_STAT
+                    auto execStart = std::chrono::high_resolution_clock::now();
+#endif
                     exception = (*(blptr->execBlock))(cpu_, system, plugins_handle_);
+#if ETISS_TRANSLATOR_STAT && ETISS_TRANSLATOR_STAT_WITH_EXECUTION_STAT
+                    auto execEnd = std::chrono::high_resolution_clock::now();
+                    addBlockExecutionTime(std::chrono::duration_cast<std::chrono::nanoseconds>(execEnd - execStart).count());
+#endif
 
                     // exit simulator when a loop to self instruction is encountered
                     if (exit_on_loop && !exception && old_time + cpu_->cpuCycleTime_ps == cpu_->cpuTime_ps &&
@@ -813,12 +838,21 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
             }
 
             // sync time after block
+            // sync time after block
+#if ETISS_TRANSLATOR_STAT && ETISS_TRANSLATOR_STAT_WITH_EXECUTION_STAT
+            auto sysStart = std::chrono::high_resolution_clock::now();
             system->syncTime(system->handle, cpu_);
+            auto sysEnd = std::chrono::high_resolution_clock::now();
+            addSystemTime(std::chrono::duration_cast<std::chrono::nanoseconds>(sysEnd - sysStart).count());
+#else
+            system->syncTime(system->handle, cpu_);
+#endif
         }
     }
 
 loopexit:
     clock_gettime(CLOCK_MONOTONIC, &finish);
+    float endTime = (float)clock() / CLOCKS_PER_SEC;
 
     // execute coroutines end
     for (auto &cor_plugin : cor_array)
@@ -828,16 +862,25 @@ loopexit:
 
     // Defining the statistics of measurement and printing them
     double cpu_time = cpu_->cpuTime_ps / 1.0E12;
-    double simulation_time = (finish.tv_sec - start.tv_sec) + (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
+    double simulation_time = endTime - startTime;
+    double wall_time = (finish.tv_sec - start.tv_sec) + (finish.tv_nsec - start.tv_nsec) / 1000000000.0;
     double cpu_cycle = cpu_->cpuTime_ps / (float)cpu_->cpuCycleTime_ps;
     double mips = cpu_->cpuTime_ps / (float)cpu_->cpuCycleTime_ps / simulation_time / 1.0E6;
+    double mips_ = cpu_->cpuTime_ps / (float)cpu_->cpuCycleTime_ps / wall_time / 1.0E6;
+
+#if ETISS_TRANSLATOR_STAT
+    // Export performance metrics to JIT stats
+    updatePerformanceStats(cpu_time, simulation_time, wall_time, cpu_cycle, mips, mips_);
+#endif
+
     bool quiet = etiss::cfg().get<bool>("vp.quiet", false);
     if (!quiet)
-        std::cout << "CPU Time: " << (cpu_time) << "s    Simulation Time: " << (simulation_time) << "s" << std::endl;
-    if (!quiet)
+    {
+        std::cout << "CPU Time: " << (cpu_time) << "s    Simulation Time: " << (simulation_time) << "s"
+                  << "    Wallclock Time: " << (wall_time) << "s" << std::endl;
         std::cout << "CPU Cycles (estimated): " << (cpu_cycle) << std::endl;
-    if (!quiet)
-        std::cout << "MIPS (estimated): " << (mips) << std::endl;
+        std::cout << "MIPS (estimated): " << (mips) << "    MIPS (corrected): " << (mips_) << std::endl;
+    }
 
     // declaring path of writing the json file contaiing performance metrics and the boolean which approves of writing
     // the json output

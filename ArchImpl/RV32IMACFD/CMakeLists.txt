@@ -5,7 +5,12 @@
 PROJECT(RV32IMACFD)
 
 SET(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
-SET(CMAKE_INSTALL_RPATH "\$ORIGIN/../../include/jit/etiss/jit")
+IF(APPLE)
+    # macOS uses @loader_path instead of $ORIGIN
+    SET(CMAKE_INSTALL_RPATH "@loader_path/../../include/jit/etiss/jit")
+ELSE()
+    SET(CMAKE_INSTALL_RPATH "\$ORIGIN/../../include/jit/etiss/jit")
+ENDIF()
 
 ADD_LIBRARY(${PROJECT_NAME} SHARED
 	RV32IMACFDArch.cpp

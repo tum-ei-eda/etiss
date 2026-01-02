@@ -21,8 +21,6 @@ extern "C"
 
 void leave(etiss_int32 priv_lvl);
 
-void wait(etiss_int32 flag);
-
 etiss_uint8 RV64IMACFD_extension_enabled(ETISS_CPU * const cpu, ETISS_System * const system, void * const * const plugin_pointers, etiss_int8 extension);
 
 etiss_uint32 fadd_s(etiss_uint32, etiss_uint32, etiss_uint8);

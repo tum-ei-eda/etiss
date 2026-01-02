@@ -33,6 +33,9 @@ option(ETISS_BUILD_MANUAL_DOC "If enabled then the documentation will not be bui
 option(ETISS_BUILD_DEFAULTSUB "If enabled then the ArchImpl,JITImpl,PluginImpl and projects folder will be added as subfolders. Please have a look at the CMakeLists.txt files of those folders for further information" ON)
 option(ETISS_USE_PROFILEFLAGS "Enable or disable the -pg compiler and linker flags." OFF)
 option(ETISS_USE_COREDSL_COVERAGE "Enable the CoreDSL coverage analyzer" OFF)
+option(ETISS_TRANSLATOR_STAT "Enable translator statistics (cache hits/misses)" ON)
+option(ETISS_TRANSLATOR_STAT_WITH_EXECUTION_STAT "Enable translator statistics (cache hits/misses)" OFF)
+option(ETISS_NEW_DECODER "Use hierarchical map-based instruction decoder instead of chunk-based decoder" OFF)
 
 # Global configuration
 SET(CMAKE_POSITION_INDEPENDENT_CODE ON)
@@ -64,7 +67,13 @@ ELSE()
 
     # Set relative rpath to mimic runtime link behavior of windows (libs loadable from current dir)
     SET(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
-    SET(CMAKE_INSTALL_RPATH "\$ORIGIN")
+    IF(APPLE)
+        # macOS uses @loader_path instead of $ORIGIN
+        SET(CMAKE_INSTALL_RPATH "@loader_path")
+        SET(CMAKE_MACOSX_RPATH TRUE)
+    ELSE()
+        SET(CMAKE_INSTALL_RPATH "\$ORIGIN")
+    ENDIF()
 
 
 ENDIF()
@@ -86,6 +95,18 @@ IF(ETISS_USE_COREDSL_COVERAGE)
     ADD_DEFINITIONS(-DETISS_USE_COREDSL_COVERAGE)
 ENDIF()
 
+IF(ETISS_TRANSLATOR_STAT)
+    ADD_DEFINITIONS(-DETISS_TRANSLATOR_STAT)
+ENDIF()
+
+IF(ETISS_TRANSLATOR_STAT_WITH_EXECUTION_STAT)
+    ADD_DEFINITIONS(-DETISS_TRANSLATOR_STAT_WITH_EXECUTION_STAT)
+ENDIF()
+
+IF(ETISS_NEW_DECODER)
+    ADD_DEFINITIONS(-DETISS_NEW_DECODER)
+ENDIF()
+
 # Include modules.
 SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}
     "${ETISS_ROOT}/cmake"
@@ -101,7 +122,9 @@ INCLUDE(ETISSPlugin)
 
 # Find packages
 FIND_PACKAGE(Threads REQUIRED)
-FIND_PACKAGE(Boost COMPONENTS filesystem system program_options REQUIRED)
+# boost::system is header-only in recent Boost releases, so no compiled library is
+# required; drop it from the component list for macOS/Homebrew.
+FIND_PACKAGE(Boost COMPONENTS filesystem program_options REQUIRED)
 FIND_PACKAGE(Doxygen)
 IF(ETISS_USE_PYTHON)
     SET(Boost_VERBOSE ON)
@@ -309,7 +332,7 @@ set_target_properties(ETISS PROPERTIES
   LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib/
 )
 IF(UNIX)
-    TARGET_LINK_LIBRARIES(ETISS PUBLIC Boost::filesystem Boost::system Boost::program_options)
+    TARGET_LINK_LIBRARIES(ETISS PUBLIC Boost::filesystem Boost::program_options)
 ELSE(UNIX)
     TARGET_LINK_LIBRARIES(ETISS PUBLIC Boost::boost Threads::Threads)
 ENDIF()
@@ -388,5 +411,8 @@ message(STATUS "ETISS_VERSION_FULL: ${ETISS_VERSION_FULL}")
 message(STATUS "ETISS_USE_PYTHON: ${ETISS_USE_PYTHON}")
 message(STATUS "ETISS_USE_PROFILEFLAGS: ${ETISS_USE_PROFILEFLAGS}")
 message(STATUS "ETISS_USE_COREDSL_COVERAGE: ${ETISS_USE_COREDSL_COVERAGE}")
+message(STATUS "ETISS_TRANSLATOR_STAT: ${ETISS_TRANSLATOR_STAT}")
+message(STATUS "ETISS_TRANSLATOR_STAT_WITH_EXECUTION_STAT: ${ETISS_TRANSLATOR_STAT_WITH_EXECUTION_STAT}")
+message(STATUS "ETISS_NEW_DECODER: ${ETISS_NEW_DECODER}")
 message(STATUS "ETISS_USE_DLSYM: ${ETISS_USE_DLSYM}")
 message(STATUS "ETISS_BUILD_MANUAL_DOC: ${ETISS_BUILD_MANUAL_DOC}")

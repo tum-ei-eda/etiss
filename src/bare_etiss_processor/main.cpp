@@ -5,6 +5,9 @@
 // LICENSE file.
 
 #include "TracePrinter.h"
+#if ETISS_TRANSLATOR_STAT
+#include "JITStatsCollector.h"
+#endif
 #include "etiss/SimpleMemSystem.h"
 #include "etiss/IntegratedLibrary/fault/MemoryManipulationSystem.h"
 #include "etiss/fault/Action.h"
@@ -133,6 +136,18 @@ int main(int argc, const char *argv[])
         etiss::cfg().set<int>("etiss.max_block_size", 1);
         cpu->addPlugin(std::make_shared<TracePrinter>(0x88888));
     }
+
+#if ETISS_TRANSLATOR_STAT
+    // JIT Statistics Collector plugin
+    if (etiss::cfg().get<bool>("jit.stats", true))
+    {
+        bool printStats = etiss::cfg().get<bool>("jit.stats.print", true);
+        std::string statsPath = etiss::cfg().get<std::string>("jit.stats.path", "./JITStats.log");
+        cpu->addPlugin(std::make_shared<JITStatsCollector>(printStats, statsPath));
+        if (!quiet)
+            std::cout << "  JIT Statistics Collector enabled (output: " << statsPath << ")" << std::endl;
+    }
+#endif
 
     if (!quiet)
         std::cout << "=== Setting up plug-ins ===" << std::endl << std::endl;

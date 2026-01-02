@@ -70,7 +70,7 @@ if(UNIX)
 
     ExternalProject_Add(TinyCC
         URL "${CMAKE_CURRENT_SOURCE_DIR}/tcc"
-    
+
         CONFIGURE_COMMAND bash <SOURCE_DIR>/configure
             --prefix=<TMP_DIR> # we do not care about TCC long term. Only stdlib will be installed manually
             "--extra-cflags=-fPIC ${TCC_ADDITIONAL_CFLAGS}"
@@ -86,11 +86,20 @@ if(UNIX)
     set(TinyCC_SOURCE_DIR ${SOURCE_DIR})
     set(TinyCC_BINARY_DIR ${BINARY_DIR})
 
+    # Create a clean include directory and copy libtcc.h there
+    # This prevents adding the entire source dir to include path, which avoids
+    # the VERSION file conflict on macOS case-insensitive filesystems.
+    file(MAKE_DIRECTORY ${TinyCC_BINARY_DIR}/include_clean)
+    add_custom_command(TARGET TinyCC POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy "${TinyCC_SOURCE_DIR}/libtcc.h" "${TinyCC_BINARY_DIR}/include_clean/libtcc.h"
+        COMMENT "[TCC] Copying libtcc.h to clean include directory"
+    )
+
     # Import tcc library from External Project
     add_library(tcc STATIC IMPORTED GLOBAL)
     set_property(TARGET tcc PROPERTY IMPORTED_LOCATION ${TinyCC_BINARY_DIR}/${TinyCC_LIBNAME})
     set_property(TARGET tcc PROPERTY INTERFACE_INCLUDE_DIRECTORIES
-        $<BUILD_INTERFACE:${TinyCC_SOURCE_DIR}>
+        ${TinyCC_BINARY_DIR}/include_clean
     )
 
     ###################################################################################################################
@@ -146,4 +155,19 @@ endif()
 if(ETISS_USE_FMT_LIB)
     add_subdirectory(fmt EXCLUDE_FROM_ALL)
     set(ETISS_USE_FMT_LIB On PARENT_SCOPE)
+endif()
+
+####################################################################################################
+# nlohmann/json (used for JIT statistics JSON export)
+# Makes CMake target nlohmann_json::nlohmann_json available
+if(ETISS_TRANSLATOR_STAT)
+    message(STATUS "ETISS_TRANSLATOR_STAT enabled - fetching nlohmann/json")
+    include(FetchContent)
+    FetchContent_Declare(
+        nlohmann_json
+        URL https://github.com/nlohmann/json/releases/download/v3.11.3/json.tar.xz
+        URL_HASH SHA256=d6c65aca6b1ed68e7a182f4757257b107ae403032760ed6ef121c9d55e81757d
+        DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+    )
+    FetchContent_MakeAvailable(nlohmann_json)
 endif()

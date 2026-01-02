@@ -109,7 +109,8 @@ void MemSegment::memInit(std::string initString, uint64_t randomRoot)
                    etiss::fmt::format("The memory segment is initialized with {:#x} random bytes and root: {:d}", size_,
                                       randomRoot));
 
-        static std::default_random_engine generator{ randomRoot };
+        static std::default_random_engine generator{
+            static_cast<std::default_random_engine::result_type>(randomRoot) };
         std::uniform_int_distribution<int> random_char_{ 0, 255 };
         for (etiss::uint64 i = 0; i < size_; ++i)
         {

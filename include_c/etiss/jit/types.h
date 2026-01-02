@@ -60,7 +60,7 @@ extern "C"
     typedef etiss_int64 etiss_intMax;
     typedef etiss_uint64 etiss_uintMax;
 
-#ifdef __GNUC__
+#if defined(__GNUC__) && !defined(__TINYC__)
     typedef __int128_t etiss_int128;
     typedef __uint128_t etiss_uint128;
 #endif
@@ -88,7 +88,7 @@ typedef etiss_uint64 uint64;
 typedef etiss_intMax intMax;
 typedef etiss_uintMax uintMax;
 
-#ifdef __GNUC__
+#if defined(__GNUC__) && !defined(__TINYC__)
 typedef __int128_t etiss_int128;
 typedef __uint128_t etiss_uint128;
 #endif

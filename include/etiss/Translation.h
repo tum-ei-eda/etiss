@@ -12,6 +12,14 @@
 #include <memory>
 #include <unordered_map>
 
+#include <thread>           // For std::thread
+#include <mutex>           // For std::mutex
+#include <condition_variable> // For std::condition_variable
+#include <queue>           // For std::queue
+#include <atomic>          // For std::atomic
+#include <chrono>
+#include <functional>      // For std::function      
+
 namespace etiss
 {
 
@@ -28,9 +36,19 @@ class BlockLink
     BlockLink *next;                    ///< next block; ONLY MODIFY WITH updateRef
     BlockLink *branch;                  ///< last branch block; ONLY MODIFY WITH updateRef
     unsigned refcount;                  ///< number of references to this instance; DO NOT MODIFY
-    const ExecBlockCall execBlock;      ///< function pointer
+    ExecBlockCall execBlock;            ///< current function pointer
     bool valid;                         ///< true if the associated function implements current code
-    const std::shared_ptr<void> jitlib; ///< library of the associated function
+    std::shared_ptr<void> jitlib;       ///< library of the current function
+
+    // Fast compilation version
+    ExecBlockCall fastExecBlock;        ///< Fast version (e.g. TCC)
+    std::shared_ptr<void> fastJitLib;   ///< Library of fast version
+    bool hasOptimized;  // Whether optimized version is available
+
+    // New fields for optimized version
+    ExecBlockCall optimizedExecBlock;   ///< Optimized version
+    std::shared_ptr<void> optimizedJitLib; ///< Optimized library
+
     BlockLink(etiss::uint64 start, etiss::uint64 end, ExecBlockCall execBlock, std::shared_ptr<void> lib);
     ~BlockLink();
     /**
@@ -79,19 +97,76 @@ class BlockLink
     }
 };
 
+class OptimizationManager {
+private:
+    struct OptimizationTask {
+        std::string code;                    // Generated C code
+        std::string blockFunctionName;       // Function name in the compiled code
+        std::set<std::string> headers;       // Required header paths
+        std::set<std::string> libloc;        // Library paths
+        std::set<std::string> libs;          // Required libraries
+        BlockLink* targetBlock;              // Block to optimize
+        bool debug;                          // Debug flag
+    };
+
+    size_t numThreads_;                                      // Number of worker threads (configurable)
+    std::shared_ptr<etiss::JIT> optimizingJit_;              // Original JIT instance (used to get name and create per-thread instances)
+    std::vector<std::shared_ptr<etiss::JIT>> threadJits_;    // Per-thread JIT instances for parallel compilation
+    std::vector<std::thread> workerThreads_;                 // Pool of worker threads
+    std::mutex taskMutex_;                                   // Protects task queue
+    std::condition_variable taskCV_;                         // Signals new tasks
+    std::queue<OptimizationTask> taskQueue_;                 // Queue of blocks to optimize
+    std::atomic<bool> shutdown_;                             // Thread shutdown flag
+    std::atomic<size_t> activeThreads_;                      // Number of threads currently processing tasks
+    std::function<void()> onBlockOptimized_;                 // Callback when block is optimized
+    std::function<void(uint64_t)> onCompilationTime_;        // Callback to report compilation time (microseconds)
+    
+    void optimizationWorker(size_t threadId);
+
+public:
+    OptimizationManager(std::shared_ptr<etiss::JIT> optimizingJit, size_t numThreads = 1);
+    ~OptimizationManager();
+    
+    void queueForOptimization(const std::string& code,
+                             const std::string& blockFunctionName,
+                             const std::set<std::string>& headers,
+                             const std::set<std::string>& libloc,
+                             const std::set<std::string>& libs,
+                             BlockLink* block,
+                             bool debug);
+
+    void updateBlockWithOptimizedVersion(BlockLink* block,
+                                       ExecBlockCall optimizedExec,
+                                       std::shared_ptr<void> optimizedLib);
+    
+    // Set callback to notify when a block is optimized
+    void setOnBlockOptimized(std::function<void()> callback) {
+        onBlockOptimized_ = callback;
+    }
+    
+    // Set callback to report compilation time from background threads
+    void setOnCompilationTime(std::function<void(uint64_t)> callback) {
+        onCompilationTime_ = callback;
+    }
+};
+
 class Translation
 {
   private:
     std::shared_ptr<etiss::CPUArch> &archptr_;
-    std::shared_ptr<etiss::JIT> &jitptr_;
+    std::shared_ptr<etiss::JIT> &jitptr_;      ///< Main JIT (optimizing)
+    std::shared_ptr<etiss::JIT> &fastJitptr_;  ///< Fast JIT (e.g. TCC)
     etiss::CPUArch *const arch_;
-    etiss::JIT *const jit_;
+    etiss::JIT *const jit_;                    ///< Main JIT instance
+    etiss::JIT *const fastJit_;                ///< Fast JIT instance
     std::list<std::shared_ptr<etiss::Plugin>> &plugins_;
     ETISS_System &system_;
     ETISS_CPU &cpu_;
     etiss::TranslationPlugin **plugins_array_;
     void **plugins_handle_array_;
     size_t plugins_array_size_;
+
+    std::unique_ptr<OptimizationManager> optManager_;
 
     /**
                Function pointer,
@@ -113,10 +188,28 @@ class Translation
     etiss::uint64 next_count_;
     etiss::uint64 branch_count_;
     etiss::uint64 miss_count_;
+    // JIT Statistics
+    etiss::uint64 fastJitBlocks_;
+    etiss::uint64 optimizingJitBlocks_;
+    etiss::uint64 blocksOptimized_;
+    etiss::uint64 blocksSwitched_;
+    // Execution statistics
+    etiss::uint64 totalBlockExecutions_;
+    etiss::uint64 fastJitExecutions_;
+    etiss::uint64 optimizedExecutions_;
+    // Timing statistics (in microseconds)
+    etiss::uint64 fastJitCompilationTime_us_;
+    std::atomic<etiss::uint64> optimizingJitCompilationTime_us_;
+    etiss::uint64 translationTime_us_;
 #endif
+
   public:
-    Translation(std::shared_ptr<etiss::CPUArch> &arch, std::shared_ptr<etiss::JIT> &jit,
-                std::list<std::shared_ptr<etiss::Plugin>> &plugins, ETISS_System &system, ETISS_CPU &cpu);
+    Translation(std::shared_ptr<etiss::CPUArch> &arch, 
+               std::shared_ptr<etiss::JIT> &jit,
+               std::shared_ptr<etiss::JIT> &fastJit,
+               std::list<std::shared_ptr<etiss::Plugin>> &plugins, 
+               ETISS_System &system, 
+               ETISS_CPU &cpu);
     ~Translation();
     void **init();
     /**
@@ -135,6 +228,8 @@ class Translation
                 {
 #if ETISS_TRANSLATOR_STAT
                     next_count_++;
+                    // Track execution statistics
+                    trackBlockExecution(bl);
 #endif
                     return bl;
                 }
@@ -151,6 +246,8 @@ class Translation
                 { // check
 #if ETISS_TRANSLATOR_STAT
                     branch_count_++;
+                    // Track execution statistics
+                    trackBlockExecution(bl);
 #endif
                     return bl;
                 }
@@ -165,6 +262,22 @@ class Translation
 #endif
         return getBlock(prev, instructionindex);
     }
+    
+#if ETISS_TRANSLATOR_STAT
+    /// Track which JIT version is being executed
+    inline void trackBlockExecution(BlockLink *bl)
+    {
+        totalBlockExecutions_++;
+        if (bl->hasOptimized && bl->execBlock == bl->optimizedExecBlock)
+        {
+            optimizedExecutions_++;
+        }
+        else
+        {
+            fastJitExecutions_++;
+        }
+    }
+#endif
 
     BlockLink *getBlock(BlockLink *prev, const etiss::uint64 &instructionindex);
 

@@ -67,7 +67,13 @@ class OrcJit
         for (const auto &libPath : libPaths)
         {
             SmallString<128> fullPath;
-            sys::path::append(fullPath, libPath, "lib" + libName + ".so");
+            sys::path::append(fullPath, libPath, "lib" + libName + 
+#ifdef __APPLE__
+            ".dylib"
+#else
+            ".so"
+#endif
+            );
             if (sys::fs::exists(fullPath))
             {
                 MainJITDylib.addGenerator(llvm::cantFail(
@@ -114,7 +120,7 @@ class OrcJit
     llvm::orc::JITDylib &MainJITDylib;
 };
 
-LLVMJIT::LLVMJIT() : JIT("LLVMJIT")
+LLVMJIT::LLVMJIT(const std::string &opt_level, bool quiet) : JIT("LLVMJIT"), opt_level_(opt_level), quiet_(quiet)
 {
 
     // init environment once
@@ -138,6 +144,7 @@ void *LLVMJIT::translate(std::string code, std::set<std::string> headerpaths, st
 {
     clang::CompilerInstance CI;
     compat::createDiagnostics(CI);
+    CI.getDiagnostics().setIgnoreAllWarnings(quiet_);
     auto pto = std::make_shared<clang::TargetOptions>();
     pto->Triple = llvm::sys::getDefaultTargetTriple();
     TargetInfo *pti = TargetInfo::CreateTargetInfo(CI.getDiagnostics(), pto);
@@ -154,17 +161,23 @@ void *LLVMJIT::translate(std::string code, std::set<std::string> headerpaths, st
     }
     else
     {
-        args.push_back("-O3");
+        args.push_back("-O" + opt_level_);  // Use configurable opt level
     }
     args.push_back("-std=c99");
     args.push_back("-isystem" + etiss::jitFiles() + "/clang_stdlib");
+#ifdef __APPLE__
+    // macOS: system headers are in the SDK, not /usr/include
+    args.push_back("-isystem/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include");
+#else
+    // Linux: system headers are in /usr/include
     args.push_back("-isystem/usr/include");
+    args.push_back("-isystem/usr/include/x86_64-linux-gnu");
+#endif
     for (const auto &headerPath : headerpaths)
     {
         args.push_back("-isystem" + headerPath);
     }
     args.push_back("/etiss_llvm_clang_memory_mapped_file.c");
-    args.push_back("-isystem/usr/include/x86_64-linux-gnu");
 
     for (const auto &lib : libraries)
     {
