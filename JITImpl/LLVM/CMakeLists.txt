@@ -26,22 +26,30 @@ else()
     message(STATUS "[${PROJECT_NAME}] Found LLVM ${LLVM_PACKAGE_VERSION} at ${LLVM_DIR}")
     string(REGEX MATCH "^[0-9]+" LLVM_VERSION_MAJOR "${LLVM_PACKAGE_VERSION}")
     math(EXPR LLVM_VERSION_MAJOR_NEXT "${LLVM_VERSION_MAJOR} + 1" OUTPUT_FORMAT DECIMAL)
- 
-    if(NOT Clang_FOUND) # 1st try only in relation to found LLVM
-        find_package(Clang CONFIG NO_DEFAULT_PATH PATHS "${LLVM_DIR}/../clang" "${LLVM_DIR}")
-    endif()
-    if(NOT Clang_FOUND) # 2nd try with system and default paths
-        find_package(Clang CONFIG)
-    endif()
     if(NOT Clang_FOUND)
-        message(STATUS "[${PROJECT_NAME}] Did not find matching Clang... Skipping target.")
-    else()
-        message(STATUS "[${PROJECT_NAME}] Found Clang ${Clang_PACKAGE_VERSION} at ${Clang_DIR}")
-
-        add_compile_definitions(LLVM_VERSION_MAJOR=${LLVM_VERSION_MAJOR})
-        if(LLVM_VERSION_MAJOR GREATER 15 AND CMAKE_CXX_STANDARD LESS 17)
-            message(FATAL_ERROR "LLVM_VERSION_MAJOR[${LLVM_VERSION_MAJOR}] requires c++std>=17! Is ${CMAKE_CXX_STANDARD}")
+      if(EXISTS "${LLVM_INSTALL_PREFIX}/lib/libclangBasic.a" OR EXISTS "${LLVM_INSTALL_PREFIX}/lib/libclangBasic.so")
+        find_package(Clang CONFIG PATHS "${LLVM_INSTALL_PREFIX}" NO_DEFAULT_PATH)
+        if(NOT Clang_FOUND) # 1st try only in relation to found LLVM
+            find_package(Clang CONFIG NO_DEFAULT_PATH PATHS "${LLVM_DIR}/../clang" "${LLVM_DIR}")
         endif()
+        if(NOT Clang_FOUND) # 2nd try with system and default paths
+            find_package(Clang CONFIG)
+        endif()
+        if(NOT Clang_FOUND)
+            message(STATUS "[${PROJECT_NAME}] Did not find matching Clang... Skipping target.")
+        else()
+            message(STATUS "[${PROJECT_NAME}] Found Clang ${Clang_PACKAGE_VERSION} at ${Clang_DIR}")
+
+            add_compile_definitions(LLVM_VERSION_MAJOR=${LLVM_VERSION_MAJOR})
+            if(LLVM_VERSION_MAJOR GREATER 15 AND CMAKE_CXX_STANDARD LESS 17)
+                message(FATAL_ERROR "LLVM_VERSION_MAJOR[${LLVM_VERSION_MAJOR}] requires c++std>=17! Is ${CMAKE_CXX_STANDARD}")
+            endif()
+        endif()
+      else()
+        message(STATUS
+          "[${PROJECT_NAME}] LLVM found but built without Clang support. Skipping target."
+        )
+      endif()
     endif()
 endif()
 
