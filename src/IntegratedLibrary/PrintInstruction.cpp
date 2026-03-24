@@ -17,6 +17,8 @@ extern "C"
     int pi_6cac = 0;
 }
 
+#include <fstream>
+
 #include "etiss/IntegratedLibrary/PrintInstruction.h"
 #include "etiss/CPUArch.h"
 #include "etiss/Instruction.h"
