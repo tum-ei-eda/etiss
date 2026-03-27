@@ -1,5 +1,6 @@
+// clang-format off
 /**
- * Generated on Tue, 16 Sep 2025 12:56:33 +0200.
+ * Generated on Mon, 10 Nov 2025 11:27:24 +0000.
  *
  * This file contains the instruction behavior models of the RV32A
  * instruction set for the RV64IMACFD core architecture.
@@ -10,7 +11,6 @@
 
 using namespace etiss;
 using namespace etiss::instr;
-
 
 // AMOSWAPW --------------------------------------------------------------------
 static InstructionDefinition amoswapw_rd_rs1_rs2_rl_aq (
@@ -26,6 +26,7 @@ static InstructionDefinition amoswapw_rd_rs1_rs2_rl_aq (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
+// NOLINTBEGIN(clang-diagnostic-unused-but-set-variable)
 etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
@@ -42,6 +43,7 @@ etiss_uint8 aq = 0;
 static BitArrayRange R_aq_0(26, 26);
 aq += R_aq_0.read(ba) << 0;
 
+// NOLINTEND(clang-diagnostic-unused-but-set-variable)
 // -----------------------------------------------------------------------------
 
 	{
@@ -154,6 +156,7 @@ static InstructionDefinition amoaddw_rd_rs1_rs2_rl_aq (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
+// NOLINTBEGIN(clang-diagnostic-unused-but-set-variable)
 etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
@@ -170,6 +173,7 @@ etiss_uint8 aq = 0;
 static BitArrayRange R_aq_0(26, 26);
 aq += R_aq_0.read(ba) << 0;
 
+// NOLINTEND(clang-diagnostic-unused-but-set-variable)
 // -----------------------------------------------------------------------------
 
 	{
@@ -286,6 +290,7 @@ static InstructionDefinition amoxorw_rd_rs1_rs2_rl_aq (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
+// NOLINTBEGIN(clang-diagnostic-unused-but-set-variable)
 etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
@@ -302,6 +307,7 @@ etiss_uint8 aq = 0;
 static BitArrayRange R_aq_0(26, 26);
 aq += R_aq_0.read(ba) << 0;
 
+// NOLINTEND(clang-diagnostic-unused-but-set-variable)
 // -----------------------------------------------------------------------------
 
 	{
@@ -418,6 +424,7 @@ static InstructionDefinition amoandw_rd_rs1_rs2_rl_aq (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
+// NOLINTBEGIN(clang-diagnostic-unused-but-set-variable)
 etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
@@ -434,6 +441,7 @@ etiss_uint8 aq = 0;
 static BitArrayRange R_aq_0(26, 26);
 aq += R_aq_0.read(ba) << 0;
 
+// NOLINTEND(clang-diagnostic-unused-but-set-variable)
 // -----------------------------------------------------------------------------
 
 	{
@@ -550,6 +558,7 @@ static InstructionDefinition amoorw_rd_rs1_rs2_rl_aq (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
+// NOLINTBEGIN(clang-diagnostic-unused-but-set-variable)
 etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
@@ -566,6 +575,7 @@ etiss_uint8 aq = 0;
 static BitArrayRange R_aq_0(26, 26);
 aq += R_aq_0.read(ba) << 0;
 
+// NOLINTEND(clang-diagnostic-unused-but-set-variable)
 // -----------------------------------------------------------------------------
 
 	{
@@ -682,6 +692,7 @@ static InstructionDefinition amominw_rd_rs1_rs2_rl_aq (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
+// NOLINTBEGIN(clang-diagnostic-unused-but-set-variable)
 etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
@@ -698,6 +709,7 @@ etiss_uint8 aq = 0;
 static BitArrayRange R_aq_0(26, 26);
 aq += R_aq_0.read(ba) << 0;
 
+// NOLINTEND(clang-diagnostic-unused-but-set-variable)
 // -----------------------------------------------------------------------------
 
 	{
@@ -814,6 +826,7 @@ static InstructionDefinition amomaxw_rd_rs1_rs2_rl_aq (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
+// NOLINTBEGIN(clang-diagnostic-unused-but-set-variable)
 etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
@@ -830,6 +843,7 @@ etiss_uint8 aq = 0;
 static BitArrayRange R_aq_0(26, 26);
 aq += R_aq_0.read(ba) << 0;
 
+// NOLINTEND(clang-diagnostic-unused-but-set-variable)
 // -----------------------------------------------------------------------------
 
 	{
@@ -946,6 +960,7 @@ static InstructionDefinition amominuw_rd_rs1_rs2_rl_aq (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
+// NOLINTBEGIN(clang-diagnostic-unused-but-set-variable)
 etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
@@ -962,6 +977,7 @@ etiss_uint8 aq = 0;
 static BitArrayRange R_aq_0(26, 26);
 aq += R_aq_0.read(ba) << 0;
 
+// NOLINTEND(clang-diagnostic-unused-but-set-variable)
 // -----------------------------------------------------------------------------
 
 	{
@@ -1078,6 +1094,7 @@ static InstructionDefinition amomaxuw_rd_rs1_rs2_rl_aq (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
+// NOLINTBEGIN(clang-diagnostic-unused-but-set-variable)
 etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
@@ -1094,6 +1111,7 @@ etiss_uint8 aq = 0;
 static BitArrayRange R_aq_0(26, 26);
 aq += R_aq_0.read(ba) << 0;
 
+// NOLINTEND(clang-diagnostic-unused-but-set-variable)
 // -----------------------------------------------------------------------------
 
 	{
@@ -1195,3 +1213,4 @@ ss << "amomaxuw" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + s
 		return ss.str();
 	}
 );
+// clang-format on

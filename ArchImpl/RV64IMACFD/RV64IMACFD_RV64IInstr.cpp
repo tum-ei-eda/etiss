@@ -1,5 +1,6 @@
+// clang-format off
 /**
- * Generated on Tue, 16 Sep 2025 12:56:33 +0200.
+ * Generated on Mon, 10 Nov 2025 11:27:24 +0000.
  *
  * This file contains the instruction behavior models of the RV64I
  * instruction set for the RV64IMACFD core architecture.
@@ -10,7 +11,6 @@
 
 using namespace etiss;
 using namespace etiss::instr;
-
 
 // LWU -------------------------------------------------------------------------
 static InstructionDefinition lwu_rd_rs1_imm (
@@ -26,6 +26,7 @@ static InstructionDefinition lwu_rd_rs1_imm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
+// NOLINTBEGIN(clang-diagnostic-unused-but-set-variable)
 etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
@@ -36,6 +37,7 @@ etiss_uint16 imm = 0;
 static BitArrayRange R_imm_0(31, 20);
 imm += R_imm_0.read(ba) << 0;
 
+// NOLINTEND(clang-diagnostic-unused-but-set-variable)
 // -----------------------------------------------------------------------------
 
 	{
@@ -132,6 +134,7 @@ static InstructionDefinition ld_rd_rs1_imm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
+// NOLINTBEGIN(clang-diagnostic-unused-but-set-variable)
 etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
@@ -142,6 +145,7 @@ etiss_uint16 imm = 0;
 static BitArrayRange R_imm_0(31, 20);
 imm += R_imm_0.read(ba) << 0;
 
+// NOLINTEND(clang-diagnostic-unused-but-set-variable)
 // -----------------------------------------------------------------------------
 
 	{
@@ -238,6 +242,7 @@ static InstructionDefinition sd_imm_rs1_rs2 (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
+// NOLINTBEGIN(clang-diagnostic-unused-but-set-variable)
 etiss_uint16 imm = 0;
 static BitArrayRange R_imm_0(11, 7);
 imm += R_imm_0.read(ba) << 0;
@@ -250,6 +255,7 @@ rs2 += R_rs2_0.read(ba) << 0;
 static BitArrayRange R_imm_5(31, 25);
 imm += R_imm_5.read(ba) << 5;
 
+// NOLINTEND(clang-diagnostic-unused-but-set-variable)
 // -----------------------------------------------------------------------------
 
 	{
@@ -342,6 +348,7 @@ static InstructionDefinition slli_rd_rs1_shamt (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
+// NOLINTBEGIN(clang-diagnostic-unused-but-set-variable)
 etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
@@ -352,6 +359,7 @@ etiss_uint8 shamt = 0;
 static BitArrayRange R_shamt_0(25, 20);
 shamt += R_shamt_0.read(ba) << 0;
 
+// NOLINTEND(clang-diagnostic-unused-but-set-variable)
 // -----------------------------------------------------------------------------
 
 	{
@@ -420,6 +428,7 @@ static InstructionDefinition srli_rd_rs1_shamt (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
+// NOLINTBEGIN(clang-diagnostic-unused-but-set-variable)
 etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
@@ -430,6 +439,7 @@ etiss_uint8 shamt = 0;
 static BitArrayRange R_shamt_0(25, 20);
 shamt += R_shamt_0.read(ba) << 0;
 
+// NOLINTEND(clang-diagnostic-unused-but-set-variable)
 // -----------------------------------------------------------------------------
 
 	{
@@ -498,6 +508,7 @@ static InstructionDefinition srai_rd_rs1_shamt (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
+// NOLINTBEGIN(clang-diagnostic-unused-but-set-variable)
 etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
@@ -508,6 +519,7 @@ etiss_uint8 shamt = 0;
 static BitArrayRange R_shamt_0(25, 20);
 shamt += R_shamt_0.read(ba) << 0;
 
+// NOLINTEND(clang-diagnostic-unused-but-set-variable)
 // -----------------------------------------------------------------------------
 
 	{
@@ -576,6 +588,7 @@ static InstructionDefinition addiw_rd_rs1_imm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
+// NOLINTBEGIN(clang-diagnostic-unused-but-set-variable)
 etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
@@ -586,6 +599,7 @@ etiss_uint16 imm = 0;
 static BitArrayRange R_imm_0(31, 20);
 imm += R_imm_0.read(ba) << 0;
 
+// NOLINTEND(clang-diagnostic-unused-but-set-variable)
 // -----------------------------------------------------------------------------
 
 	{
@@ -666,6 +680,7 @@ static InstructionDefinition slliw_rd_rs1_shamt (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
+// NOLINTBEGIN(clang-diagnostic-unused-but-set-variable)
 etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
@@ -676,6 +691,7 @@ etiss_uint8 shamt = 0;
 static BitArrayRange R_shamt_0(24, 20);
 shamt += R_shamt_0.read(ba) << 0;
 
+// NOLINTEND(clang-diagnostic-unused-but-set-variable)
 // -----------------------------------------------------------------------------
 
 	{
@@ -756,6 +772,7 @@ static InstructionDefinition srliw_rd_rs1_shamt (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
+// NOLINTBEGIN(clang-diagnostic-unused-but-set-variable)
 etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
@@ -766,6 +783,7 @@ etiss_uint8 shamt = 0;
 static BitArrayRange R_shamt_0(24, 20);
 shamt += R_shamt_0.read(ba) << 0;
 
+// NOLINTEND(clang-diagnostic-unused-but-set-variable)
 // -----------------------------------------------------------------------------
 
 	{
@@ -846,6 +864,7 @@ static InstructionDefinition sraiw_rd_rs1_shamt (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
+// NOLINTBEGIN(clang-diagnostic-unused-but-set-variable)
 etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
@@ -856,6 +875,7 @@ etiss_uint8 shamt = 0;
 static BitArrayRange R_shamt_0(24, 20);
 shamt += R_shamt_0.read(ba) << 0;
 
+// NOLINTEND(clang-diagnostic-unused-but-set-variable)
 // -----------------------------------------------------------------------------
 
 	{
@@ -936,6 +956,7 @@ static InstructionDefinition addw_rd_rs1_rs2 (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
+// NOLINTBEGIN(clang-diagnostic-unused-but-set-variable)
 etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
@@ -946,6 +967,7 @@ etiss_uint8 rs2 = 0;
 static BitArrayRange R_rs2_0(24, 20);
 rs2 += R_rs2_0.read(ba) << 0;
 
+// NOLINTEND(clang-diagnostic-unused-but-set-variable)
 // -----------------------------------------------------------------------------
 
 	{
@@ -1026,6 +1048,7 @@ static InstructionDefinition subw_rd_rs1_rs2 (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
+// NOLINTBEGIN(clang-diagnostic-unused-but-set-variable)
 etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
@@ -1036,6 +1059,7 @@ etiss_uint8 rs2 = 0;
 static BitArrayRange R_rs2_0(24, 20);
 rs2 += R_rs2_0.read(ba) << 0;
 
+// NOLINTEND(clang-diagnostic-unused-but-set-variable)
 // -----------------------------------------------------------------------------
 
 	{
@@ -1116,6 +1140,7 @@ static InstructionDefinition sllw_rd_rs1_rs2 (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
+// NOLINTBEGIN(clang-diagnostic-unused-but-set-variable)
 etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
@@ -1126,6 +1151,7 @@ etiss_uint8 rs2 = 0;
 static BitArrayRange R_rs2_0(24, 20);
 rs2 += R_rs2_0.read(ba) << 0;
 
+// NOLINTEND(clang-diagnostic-unused-but-set-variable)
 // -----------------------------------------------------------------------------
 
 	{
@@ -1208,6 +1234,7 @@ static InstructionDefinition srlw_rd_rs1_rs2 (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
+// NOLINTBEGIN(clang-diagnostic-unused-but-set-variable)
 etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
@@ -1218,6 +1245,7 @@ etiss_uint8 rs2 = 0;
 static BitArrayRange R_rs2_0(24, 20);
 rs2 += R_rs2_0.read(ba) << 0;
 
+// NOLINTEND(clang-diagnostic-unused-but-set-variable)
 // -----------------------------------------------------------------------------
 
 	{
@@ -1300,6 +1328,7 @@ static InstructionDefinition sraw_rd_rs1_rs2 (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
+// NOLINTBEGIN(clang-diagnostic-unused-but-set-variable)
 etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
@@ -1310,6 +1339,7 @@ etiss_uint8 rs2 = 0;
 static BitArrayRange R_rs2_0(24, 20);
 rs2 += R_rs2_0.read(ba) << 0;
 
+// NOLINTEND(clang-diagnostic-unused-but-set-variable)
 // -----------------------------------------------------------------------------
 
 	{
@@ -1377,3 +1407,4 @@ ss << "sraw" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std::
 		return ss.str();
 	}
 );
+// clang-format on

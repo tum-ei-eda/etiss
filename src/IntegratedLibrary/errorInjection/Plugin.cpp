@@ -14,6 +14,7 @@
 #include "etiss/IntegratedLibrary/errorInjection/Plugin.h"
 #include "etiss/CPUArch.h"
 #include "etiss/CPUCore.h"
+#include "etiss/jit/ReturnCode.h"
 #include <fstream>
 
 using namespace etiss::plugin::errorInjection;

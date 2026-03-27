@@ -21,7 +21,7 @@
 
 #include "etiss/helper/Misc.h"
 
-#include "etiss/CPUArch.h"
+#include "etiss/Misc.h"
 
 extern "C"
 {

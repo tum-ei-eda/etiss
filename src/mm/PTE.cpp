@@ -42,7 +42,6 @@ void PTE::Update(uint64_t new_pte)
     }
 
     ppn_val_ = new_pte >> bit_field.second;
-    ;
     pte_val_ = new_pte;
 }
 

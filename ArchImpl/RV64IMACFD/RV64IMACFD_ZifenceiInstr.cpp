@@ -1,5 +1,6 @@
+// clang-format off
 /**
- * Generated on Tue, 16 Sep 2025 12:56:33 +0200.
+ * Generated on Mon, 10 Nov 2025 11:27:24 +0000.
  *
  * This file contains the instruction behavior models of the Zifencei
  * instruction set for the RV64IMACFD core architecture.
@@ -10,7 +11,6 @@
 
 using namespace etiss;
 using namespace etiss::instr;
-
 
 // FENCE_I ---------------------------------------------------------------------
 static InstructionDefinition fence_i_rd_rs1_imm (
@@ -26,6 +26,7 @@ static InstructionDefinition fence_i_rd_rs1_imm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
+// NOLINTBEGIN(clang-diagnostic-unused-but-set-variable)
 etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
@@ -36,6 +37,7 @@ etiss_uint16 imm = 0;
 static BitArrayRange R_imm_0(31, 20);
 imm += R_imm_0.read(ba) << 0;
 
+// NOLINTEND(clang-diagnostic-unused-but-set-variable)
 // -----------------------------------------------------------------------------
 
 	{
@@ -95,3 +97,4 @@ ss << "fence_i" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + st
 		return ss.str();
 	}
 );
+// clang-format on

@@ -17,7 +17,7 @@
 #ifndef ETISS_INCLUDE_GDB_GDBCORE_H_
 #define ETISS_INCLUDE_GDB_GDBCORE_H_
 
-#include "etiss/jit/CPU.h"
+#include "etiss/Misc.h"
 #include <string>
 
 namespace etiss

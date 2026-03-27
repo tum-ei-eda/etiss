@@ -12,6 +12,8 @@
 */
 
 #include "etiss/mm/DMMUWrapper.h"
+#include "etiss/jit/ReturnCode.h"
+#include "etiss/mm/MMU.h"
 
 namespace etiss
 {
@@ -125,11 +127,20 @@ static etiss_int32 dbg_write(void *handle, etiss_uint64 addr, etiss_uint8 *buffe
     return sys->dbg_write(sys->handle, pma, buffer, length);
 }
 
-static void syncTime(void *handle, ETISS_CPU *cpu)
+#ifdef ETISS_ENABLE_SYNCTIME_EXCEPTIONS
+static etiss_int32
+#else
+static void
+#endif
+syncTime(void *handle, ETISS_CPU *cpu)
 {
     DMMUWrapperSystem *msys = ((DMMUWrapperSystem *)handle);
     ETISS_System *sys = msys->orig;
+#ifdef ETISS_ENABLE_SYNCTIME_EXCEPTIONS
+    return sys->syncTime(sys->handle, cpu);
+#else
     sys->syncTime(sys->handle, cpu);
+#endif
 }
 
 DMMUWrapper::DMMUWrapper(std::shared_ptr<MMU> mmu) : mmu_(mmu) {}

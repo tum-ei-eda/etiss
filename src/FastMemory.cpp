@@ -6,6 +6,7 @@
 
 #include "etiss/FastMemory.h"
 #include "etiss/jit/ReturnCode.h"
+#include "etiss/jit/System.h"
 #include <cstring>
 
 static etiss_int32 system_call_iread(void *handle, ETISS_CPU *cpu, etiss_uint64 addr, etiss_uint32 length)
@@ -43,7 +44,17 @@ static etiss_int32 system_call_dbg_write(void *handle, etiss_uint64 addr, etiss_
     return 0;
 }
 
-static void system_call_syncTime(void *handle, ETISS_CPU *cpu) {}
+#ifdef ETISS_ENABLE_SYNCTIME_EXCEPTIONS
+static etiss_int32
+#else
+static void
+#endif
+system_call_syncTime(void *handle, ETISS_CPU *cpu)
+{
+#ifdef ETISS_ENABLE_SYNCTIME_EXCEPTIONS
+    return static_cast<etiss_int32>(etiss::RETURNCODE::NOERROR);
+#endif
+}
 
 std::shared_ptr<ETISS_System> etiss::createFastMemory(size_t size)
 {

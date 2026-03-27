@@ -26,6 +26,10 @@
 #include "etiss/IntegratedLibrary/errorInjection/Plugin.h"
 #include "etiss/IntegratedLibrary/gdb/GDBServer.h"
 
+#include "etiss/CPUArch.h"
+#include "etiss/JIT.h"
+#include "etiss/Plugin.h"
+
 extern "C"
 {
 

@@ -16,6 +16,10 @@
 #include <iostream>
 
 #include "etiss/CPUCore.h"
+#include "etiss/IntegratedLibrary/gdb/GDBCore.h"
+#include "etiss/Instruction.h"
+#include "etiss/InterruptEnable.h"
+#include "etiss/jit/ReturnCode.h"
 
 using namespace etiss;
 

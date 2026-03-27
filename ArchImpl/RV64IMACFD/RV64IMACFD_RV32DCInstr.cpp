@@ -1,5 +1,6 @@
+// clang-format off
 /**
- * Generated on Tue, 16 Sep 2025 12:56:33 +0200.
+ * Generated on Mon, 10 Nov 2025 11:27:24 +0000.
  *
  * This file contains the instruction behavior models of the RV32DC
  * instruction set for the RV64IMACFD core architecture.
@@ -10,7 +11,6 @@
 
 using namespace etiss;
 using namespace etiss::instr;
-
 
 // CFLD ------------------------------------------------------------------------
 static InstructionDefinition cfld_rd_uimm_rs1 (
@@ -26,6 +26,7 @@ static InstructionDefinition cfld_rd_uimm_rs1 (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
+// NOLINTBEGIN(clang-diagnostic-unused-but-set-variable)
 etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(4, 2);
 rd += R_rd_0.read(ba) << 0;
@@ -38,6 +39,7 @@ rs1 += R_rs1_0.read(ba) << 0;
 static BitArrayRange R_uimm_3(12, 10);
 uimm += R_uimm_3.read(ba) << 3;
 
+// NOLINTEND(clang-diagnostic-unused-but-set-variable)
 // -----------------------------------------------------------------------------
 
 	{
@@ -132,6 +134,7 @@ static InstructionDefinition cfsd_rs2_uimm_rs1 (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
+// NOLINTBEGIN(clang-diagnostic-unused-but-set-variable)
 etiss_uint8 rs2 = 0;
 static BitArrayRange R_rs2_0(4, 2);
 rs2 += R_rs2_0.read(ba) << 0;
@@ -144,6 +147,7 @@ rs1 += R_rs1_0.read(ba) << 0;
 static BitArrayRange R_uimm_3(12, 10);
 uimm += R_uimm_3.read(ba) << 3;
 
+// NOLINTEND(clang-diagnostic-unused-but-set-variable)
 // -----------------------------------------------------------------------------
 
 	{
@@ -236,6 +240,7 @@ static InstructionDefinition cfldsp_uimm_rd (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
+// NOLINTBEGIN(clang-diagnostic-unused-but-set-variable)
 etiss_uint16 uimm = 0;
 static BitArrayRange R_uimm_6(4, 2);
 uimm += R_uimm_6.read(ba) << 6;
@@ -247,6 +252,7 @@ rd += R_rd_0.read(ba) << 0;
 static BitArrayRange R_uimm_5(12, 12);
 uimm += R_uimm_5.read(ba) << 5;
 
+// NOLINTEND(clang-diagnostic-unused-but-set-variable)
 // -----------------------------------------------------------------------------
 
 	{
@@ -340,6 +346,7 @@ static InstructionDefinition cfsdsp_rs2_uimm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
+// NOLINTBEGIN(clang-diagnostic-unused-but-set-variable)
 etiss_uint8 rs2 = 0;
 static BitArrayRange R_rs2_0(6, 2);
 rs2 += R_rs2_0.read(ba) << 0;
@@ -349,6 +356,7 @@ uimm += R_uimm_6.read(ba) << 6;
 static BitArrayRange R_uimm_3(12, 10);
 uimm += R_uimm_3.read(ba) << 3;
 
+// NOLINTEND(clang-diagnostic-unused-but-set-variable)
 // -----------------------------------------------------------------------------
 
 	{
@@ -423,3 +431,4 @@ ss << "cfsdsp" << " # " << ba << (" [rs2=" + std::to_string(rs2) + " | uimm=" + 
 		return ss.str();
 	}
 );
+// clang-format on

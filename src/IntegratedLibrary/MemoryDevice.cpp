@@ -5,6 +5,7 @@
 // LICENSE file.
 
 #include "etiss/IntegratedLibrary/MemoryDevice.h"
+#include "etiss/System.h"
 
 namespace etiss
 {
@@ -95,11 +96,20 @@ etiss_int32 dbg_write_(void *handle, etiss_uint64 addr, etiss_uint8 *buffer, eti
     return sys->dbg_write(sys->handle, addr, buffer, length);
 }
 
-void syncTime_(void *handle, ETISS_CPU *cpu)
+#ifdef ETISS_ENABLE_SYNCTIME_EXCEPTIONS
+etiss_int32
+#else
+void
+#endif
+syncTime_(void *handle, ETISS_CPU *cpu)
 {
     MapperSystem *lsys = ((MapperSystem *)handle);
     ETISS_System *sys = lsys->orig;
+#ifdef ETISS_ENABLE_SYNCTIME_EXCEPTIONS
+    return sys->syncTime(sys->handle, cpu);
+#else
     sys->syncTime(sys->handle, cpu);
+#endif
 }
 
 } // namespace

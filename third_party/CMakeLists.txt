@@ -124,3 +124,26 @@ target_include_directories(betterenums INTERFACE
 install(TARGETS betterenums
     PUBLIC_HEADER DESTINATION include/third_party/betterenums
 )
+
+####################################################################################################
+# fmtlib/fmt
+# Makes CMake target fmt available
+if(CMAKE_CXX_STANDARD LESS 20)
+    set(ETISS_USE_FMT_LIB On)
+else() #(CMAKE_CXX_STANDARD GREATER_EQUAL 20)
+    if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+        if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 13)
+            message(STATUS "c++>=20, but GCC < 13 — no <format> support, using fmtlib fallback.")
+            set(ETISS_USE_FMT_LIB On)
+        endif()
+    elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+        if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 16)
+            message(WARNING "c++>20, but Clang < 16 — no <format> support, using fmtlib fallback.")
+            set(ETISS_USE_FMT_LIB On)
+        endif()
+    endif()
+endif()
+if(ETISS_USE_FMT_LIB)
+    add_subdirectory(fmt EXCLUDE_FROM_ALL)
+    set(ETISS_USE_FMT_LIB On PARENT_SCOPE)
+endif()

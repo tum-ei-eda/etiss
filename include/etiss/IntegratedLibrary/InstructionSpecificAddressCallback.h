@@ -14,7 +14,7 @@
 #ifndef ETISS_PLUGIN_InstructionSpecificAddressCallback_H_
 #define ETISS_PLUGIN_InstructionSpecificAddressCallback_H_
 
-#include "etiss/Instruction.h"
+#include "etiss/Misc.h"
 #include "etiss/Plugin.h"
 
 namespace etiss

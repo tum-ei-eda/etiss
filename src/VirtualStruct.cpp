@@ -5,6 +5,9 @@
 // LICENSE file.
 
 #include "etiss/VirtualStruct.h"
+#include "etiss/fault/Trigger.h"
+#include "etiss/fault/Action.h"
+#include "etiss/fault/Fault.h"
 
 namespace etiss
 {
@@ -479,7 +482,9 @@ bool VirtualStruct::applyAction(const etiss::fault::Fault &fault, const etiss::f
         return applyCustomAction(fault, action, errormsg);
     }
     case +etiss::fault::Action::type_t::MASK:
+#if __cplusplus >= 201703L // in case of c++17 present we can use explicit fallthrough etc.
         [[fallthrough]];
+#endif
     case +etiss::fault::Action::type_t::BITFLIP: // handle bitflip
     {
         Field *f;
@@ -539,7 +544,9 @@ bool VirtualStruct::update_field_access_rights(const etiss::fault::Action &actio
         switch (action.getType())
         {
         case +etiss::fault::Action::type_t::MASK:
+#if __cplusplus >= 201703L // in case of c++17 present we can use explicit fallthrough etc.
             [[fallthrough]];
+#endif
         case +etiss::fault::Action::type_t::BITFLIP:
             f->flags_ |= Field::F;
             break;

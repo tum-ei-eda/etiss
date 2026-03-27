@@ -6,8 +6,10 @@
 
 #include <cstdio>
 #include "etiss/ETISS.h"
+#include <iomanip>
 
 #include "SemihostingCalls.h"
+#include "etiss/jit/ReturnCode.h"
 
 extern "C"
 {

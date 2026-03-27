@@ -4,33 +4,12 @@
 // compliance with the License. You should have received a copy of the license along with this project. If not, see the
 // LICENSE file.
 
-#include "LLVMJIT.h"
-#include "etiss/ETISS.h"
-
-#include "llvm/ADT/StringRef.h"
-#include "llvm/ExecutionEngine/JITSymbol.h"
-#include "llvm/ExecutionEngine/Orc/CompileUtils.h"
-#include "llvm/ExecutionEngine/Orc/Core.h"
-#include "llvm/ExecutionEngine/Orc/ExecutionUtils.h"
-#include "llvm/ExecutionEngine/Orc/IRCompileLayer.h"
-#include "llvm/ExecutionEngine/Orc/IRTransformLayer.h"
-#include "llvm/ExecutionEngine/Orc/JITTargetMachineBuilder.h"
-#include "llvm/ExecutionEngine/Orc/RTDyldObjectLinkingLayer.h"
-#include "llvm/ExecutionEngine/SectionMemoryManager.h"
-#include "llvm/ExecutionEngine/Orc/CompileOnDemandLayer.h"
-#include "llvm/ExecutionEngine/Orc/CompileUtils.h"
-#include "llvm/ExecutionEngine/Orc/ThreadSafeModule.h"
-#include "llvm/IR/DataLayout.h"
-#include "llvm/IR/LLVMContext.h"
-#include "llvm/IR/LegacyPassManager.h"
-#include "llvm/Transforms/InstCombine/InstCombine.h"
-#include "llvm/Transforms/Scalar.h"
-#include "llvm/Transforms/Scalar/GVN.h"
-#include "clang/Basic/FileManager.h"
-#include "llvm/ExecutionEngine/ExecutionEngine.h"
-
 #include <vector>
 #include <iostream>
+
+#include "LLVMJIT.h"
+#include "etiss/ETISS.h"
+#include "llvm_compat/llvm_compat.hpp"
 
 using namespace etiss;
 
@@ -45,13 +24,13 @@ class OrcJit
 {
   public:
     OrcJit(llvm::orc::JITTargetMachineBuilder JTMB, llvm::DataLayout DL)
-        : ObjectLayer(ES, []() { return std::make_unique<llvm::SectionMemoryManager>(); })
-        , CompileLayer(ES, ObjectLayer, std::make_unique<llvm::orc::ConcurrentIRCompiler>(std::move(JTMB)))
-        , OptimizeLayer(ES, CompileLayer, optimizeModule)
+        : ObjectLayer(*ES, []() { return std::make_unique<llvm::SectionMemoryManager>(); })
+        , CompileLayer(*ES, ObjectLayer, std::make_unique<llvm::orc::ConcurrentIRCompiler>(std::move(JTMB)))
+        , OptimizeLayer(*ES, CompileLayer, optimizeModule)
         , DL(std::move(DL))
-        , Mangle(ES, this->DL)
+        , Mangle(*ES, this->DL)
         , Ctx(std::make_unique<llvm::LLVMContext>())
-        , MainJITDylib(ES.createBareJITDylib("<main>"))
+        , MainJITDylib(ES->createBareJITDylib("<main>"))
     {
         MainJITDylib.addGenerator(
             llvm::cantFail(llvm::orc::DynamicLibrarySearchGenerator::GetForCurrentProcess(DL.getGlobalPrefix())));
@@ -78,9 +57,9 @@ class OrcJit
         llvm::cantFail(OptimizeLayer.add(MainJITDylib, llvm::orc::ThreadSafeModule(std::move(M), Ctx)));
     }
 
-    llvm::Expected<llvm::JITEvaluatedSymbol> lookup(llvm::StringRef Name)
+    llvm::Expected<compat::lookup_symbol_T> lookup(llvm::StringRef Name)
     {
-        return ES.lookup({ &MainJITDylib }, Mangle(Name.str()));
+        return ES->lookup({ &MainJITDylib }, Mangle(Name.str()));
     }
 
     bool loadLib(const std::string &libName, const std::set<std::string> &libPaths)
@@ -124,8 +103,7 @@ class OrcJit
         return TSM;
     }
 
-  private:
-    llvm::orc::ExecutionSession ES;
+    std::unique_ptr<llvm::orc::ExecutionSession> ES{ compat::createExecutionSession() };
     llvm::orc::RTDyldObjectLinkingLayer ObjectLayer;
     llvm::orc::IRCompileLayer CompileLayer;
     llvm::orc::IRTransformLayer OptimizeLayer;
@@ -150,40 +128,28 @@ LLVMJIT::LLVMJIT() : JIT("LLVMJIT")
         etiss_jit_llvm_init_done_ = true;
     }
     etiss_jit_llvm_init_mu_.unlock();
-
-    auto orcJit = OrcJit::Create();
-    if (!orcJit)
-        throw std::runtime_error("fail");
-    orcJit_ = (*orcJit).release();
+    orcJit_ = cantFail(OrcJit::Create());
 }
 
-LLVMJIT::~LLVMJIT()
-{
-    delete orcJit_;
-}
+LLVMJIT::~LLVMJIT() {}
 
 void *LLVMJIT::translate(std::string code, std::set<std::string> headerpaths, std::set<std::string> librarypaths,
                          std::set<std::string> libraries, std::string &error, bool debug)
 {
     clang::CompilerInstance CI;
-
-    DiagnosticOptions *diagOpts = new DiagnosticOptions();
-    TextDiagnosticPrinter *diagPrinter = new TextDiagnosticPrinter(llvm::outs(), diagOpts);
-
-    CI.createDiagnostics(diagPrinter);
+    compat::createDiagnostics(CI);
     auto pto = std::make_shared<clang::TargetOptions>();
     pto->Triple = llvm::sys::getDefaultTargetTriple();
     TargetInfo *pti = TargetInfo::CreateTargetInfo(CI.getDiagnostics(), pto);
     CI.setTarget(pti);
     CI.createFileManager();
     CI.createSourceManager(CI.getFileManager());
-    CI.createPreprocessor(clang::TranslationUnitKind::TU_Module);
+    CI.createPreprocessor(compat::tu_module_T);
 
     // compilation task
     std::vector<std::string> args;
     if (debug)
     {
-        args.push_back("-g");
         args.push_back("-O0");
     }
     else
@@ -226,11 +192,7 @@ void *LLVMJIT::translate(std::string code, std::set<std::string> headerpaths, st
     }
 
     // input file is mapped to memory area containing the code
-    auto buffer = MemoryBuffer::getMemBufferCopy(code, "/etiss_llvm_clang_memory_mapped_file.c");
-    CI.getSourceManager().overrideFileContents(
-        CI.getFileManager().getVirtualFile("/etiss_llvm_clang_memory_mapped_file.c", buffer->getBufferSize(), 0),
-        buffer.get(), true);
-
+    auto buffer = compat::get_virtual_source(code, CI);
     // compiler should only output llvm module
 
     EmitLLVMOnlyAction action(&orcJit_->getContext());
@@ -248,12 +210,9 @@ void *LLVMJIT::translate(std::string code, std::set<std::string> headerpaths, st
     return (void *)1;
 }
 
+void LLVMJIT::free(void *handle) {}
+
 void *LLVMJIT::getFunction(void *handle, std::string name, std::string &error)
 {
-
-    auto func = orcJit_->lookup(name);
-    if (!func)
-        throw std::runtime_error("fail");
-    return (void *)(*func).getAddress();
+    return compat::get_function_ptr(cantFail(orcJit_->lookup(name)));
 }
-void LLVMJIT::free(void *handle) {}

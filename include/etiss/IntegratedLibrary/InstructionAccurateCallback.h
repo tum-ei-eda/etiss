@@ -7,6 +7,7 @@
 #ifndef ETISS_PLUGIN_InstructionAccurateCallback_H_
 #define ETISS_PLUGIN_InstructionAccurateCallback_H_
 
+#include "etiss/Misc.h"
 #include "etiss/Plugin.h"
 
 #include <fstream>

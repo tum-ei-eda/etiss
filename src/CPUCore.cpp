@@ -9,8 +9,14 @@
         @detail
 */
 #include "etiss/CPUCore.h"
+#include "etiss/CPUArch.h"
+#include "etiss/JIT.h"
 #include "etiss/ETISS.h"
 #include "etiss/CoreDSLCoverage.h"
+#include "etiss/Translation.h"
+#include "etiss/System.h"
+#include "etiss/mm/MMU.h"
+#include "etiss/mm/DMMUWrapper.h"
 
 using namespace etiss;
 
@@ -306,7 +312,8 @@ etiss_int32 get_size() { return sizeof()V0G0N" +
     std::set<std::string> headers;
     headers.insert(etiss::jitFiles());
     // compile
-    void *handle = jit->translate(code, headers, std::set<std::string>(), std::set<std::string>(), error, true);
+    auto jit_debug = etiss::cfg().get<bool>("jit.debug", true);
+    void *handle = jit->translate(code, headers, std::set<std::string>(), std::set<std::string>(), error, jit_debug);
     if (handle == 0)
     {
         etiss::log(etiss::ERROR,
@@ -394,7 +401,8 @@ static bool verifyJITPragmaPack(etiss::JIT *jit)
     std::set<std::string> headers;
     headers.insert(etiss::jitFiles());
     // compile
-    void *handle = jit->translate(code, headers, std::set<std::string>(), std::set<std::string>(), error, true);
+    auto jit_debug = etiss::cfg().get<bool>("jit.debug", true);
+    void *handle = jit->translate(code, headers, std::set<std::string>(), std::set<std::string>(), error, jit_debug);
     if (handle == 0)
     {
         etiss::log(etiss::ERROR,
@@ -681,7 +689,15 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
     etiss::int32 exception = RETURNCODE::NOERROR;
 
     // sync time at the beginning (e.g. SystemC processes running at time 0)
+#ifdef ETISS_ENABLE_SYNCTIME_EXCEPTIONS
+    exception = system->syncTime(system->handle, cpu_);
+    if (unlikely(exception != RETURNCODE::NOERROR))
+    {
+        goto loopexit; // terminate cpu
+    }
+#else
     system->syncTime(system->handle, cpu_);
+#endif
 
     // execution loop
     {
@@ -805,7 +821,15 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
             }
 
             // sync time after block
+#ifdef ETISS_ENABLE_SYNCTIME_EXCEPTIONS
+            exception = system->syncTime(system->handle, cpu_);
+            if (unlikely(exception != RETURNCODE::NOERROR))
+            {
+                goto loopexit; // terminate cpu
+            }
+#else
             system->syncTime(system->handle, cpu_);
+#endif
         }
     }
 
@@ -932,4 +956,42 @@ loopexit:
     }
 
     return exception;
+}
+
+etiss::int32 CPUCore::execute(etiss::System &system)
+{
+    std::shared_ptr<ETISS_System> sys = etiss::wrap(&system);
+    if (sys.get() == 0)
+        return RETURNCODE::GENERALERROR;
+    etiss::uint32 ret = execute(*(sys.get()));
+    return ret;
+}
+
+std::string CPUCore::getJITName()
+{
+    std::shared_ptr<etiss::JIT> jit = jit_;
+    if (jit.get())
+    {
+        return jit->getName();
+    }
+    else
+    {
+        return "";
+    }
+}
+
+void CPUCore::reset(etiss::uint64 *startindex)
+{
+    arch_->resetCPU(cpu_, startindex);
+}
+
+std::shared_ptr<Plugin> CPUCore::getPlugin(std::string name)
+{
+    for (auto iter : plugins)
+    {
+        // std::cout << "found plugin: " << iter->_getPluginName();
+        if (iter->_getPluginName() == name)
+            return iter;
+    }
+    return nullptr;
 }

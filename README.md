@@ -53,7 +53,9 @@ ETISS is built using C++ and verified to work on recent x86_64 Linux host system
   - CMake >= 3.13
   - Optional:
     - Graphviz + Doxygen (For documentation generation)
-    - LLVM + Clang 11 (Please download appropriate pre-built binaries from https://releases.llvm.org/download.html and put them in /opt/)
+    - LLVM + Clang minimum version 11
+      - Debian-based distros: (`apt install llvm-15-dev libclang-15-dev clang-15`)
+      - Or pre-built binaries from https://releases.llvm.org/download.html
 
 ## LINUX SYSTEM
 
@@ -71,38 +73,39 @@ Change into the ETISS root directory:
 
 	$ cd etiss
 
-Create a build directoriy in the root directory of ETISS:
-
-	$ mkdir build_dir
-
-Change to the created directory, e.g.,
-
-	$ cd build_dir
-
-If LLVM-JIT compiler is used, source it with the environment variable:
+If LLVM-JIT compiler is used, source it with the environment variable (not needed if in system paths):
 
 	$ export LLVM_DIR=/path/to/llvm
 
 Configure the build system, e.g.,
 Replace `` `pwd`/installed`` with your `<etiss_install_path>` if you do not like to install etiss into `build_dir/installed/`. Set up path to cmake if necessary. Replace `Release` with `Debug` for development purposes.
 
-	$ cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=`pwd`/installed ..
+	$ cmake -S . -B build -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=`pwd`/build/installed
+
+<details>
+<summary>Hint for ETISS Developers</summary>
+
+You can speedup the ETISS (re-)build time using CCache (`apt install ccache`). Enable it in CMake during configuration via:
+
+	$ cmake -S . -B build -D CMAKE_C_COMPILER_LAUNCHER=ccache -D CMAKE_CXX_COMPILER_LAUNCHER=ccache -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=`pwd`/build/installed
+
+</details>
 
 Compile the package:
 
-	$ make
+	$ cmake --build build
 
 Build the documentation (optional):
 
-	$ make doc
+	$ cmake --build build --target doc
 
 Install the package:
 
-	$ make install
+	$ cmake --build build --target install
 
 To save time, compiling can be sped up by using multiple CPU cores:
 
-	$ make -j$(nproc)
+	$  cmake --build build --parallel $(nproc)
 
 ## WINDOWS SYSTEM
 
