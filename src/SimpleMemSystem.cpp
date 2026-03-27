@@ -496,9 +496,16 @@ etiss::int32 SimpleMemSystem::dbg_write(etiss::uint64 addr, etiss::uint8 *buf, e
 }
 
 extern void global_sync_time(uint64 time_ps);
-etiss::int32 SimpleMemSystem::syncTime(ETISS_CPU *cpu)
+#ifdef ETISS_ENABLE_SYNCTIME_EXCEPTIONS
+etiss::int32
+#else
+void
+#endif
+SimpleMemSystem::syncTime(ETISS_CPU *cpu)
 {
     // std::cout << "CPU time: " << cpu -> cpuTime_ps << "ps" << std::endl;
     // global_sync_time(cpu->cpuTime_ps);
+#ifdef ETISS_ENABLE_SYNCTIME_EXCEPTIONS
     return etiss::RETURNCODE::NOERROR;
+#endif
 }

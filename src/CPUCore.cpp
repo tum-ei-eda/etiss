@@ -689,11 +689,15 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
     etiss::int32 exception = RETURNCODE::NOERROR;
 
     // sync time at the beginning (e.g. SystemC processes running at time 0)
+#ifdef ETISS_ENABLE_SYNCTIME_EXCEPTIONS
     exception = system->syncTime(system->handle, cpu_);
     if (unlikely(exception != RETURNCODE::NOERROR))
     {
         goto loopexit; // terminate cpu
     }
+#else
+    system->syncTime(system->handle, cpu_);
+#endif
 
     // execution loop
     {
@@ -817,11 +821,15 @@ etiss::int32 CPUCore::execute(ETISS_System &_system)
             }
 
             // sync time after block
+#ifdef ETISS_ENABLE_SYNCTIME_EXCEPTIONS
             exception = system->syncTime(system->handle, cpu_);
             if (unlikely(exception != RETURNCODE::NOERROR))
             {
                 goto loopexit; // terminate cpu
             }
+#else
+            system->syncTime(system->handle, cpu_);
+#endif
         }
     }
 
