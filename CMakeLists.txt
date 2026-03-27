@@ -34,6 +34,7 @@ option(ETISS_BUILD_DEFAULTSUB "If enabled then the ArchImpl,JITImpl,PluginImpl a
 option(ETISS_USE_PROFILEFLAGS "Enable or disable the -pg compiler and linker flags." OFF)
 option(ETISS_USE_COREDSL_COVERAGE "Enable the CoreDSL coverage analyzer" OFF)
 option(ETISS_ENABLE_SYNCTIME_EXCEPTIONS "Enable the system wrapper to signal exceptions to the ETISS simulation loop from synctime routine called by external simulation kernels (e.g., SystemC terminating ETISS)." OFF)
+option(ETISS_PORTABLE_INSTALL "Portable installation with relative paths" OFF)
 
 # Global configuration
 SET(CMAKE_POSITION_INDEPENDENT_CODE ON)
