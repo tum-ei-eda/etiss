@@ -76,7 +76,7 @@ extern "C"
 #ifdef ETISS_ENABLE_SYNCTIME_EXCEPTIONS
         etiss_int32 (*syncTime)(void *handle, ETISS_CPU *cpu);
 #else
-        void (*syncTime)(void *handle, ETISS_CPU *cpu);
+    void (*syncTime)(void *handle, ETISS_CPU *cpu);
 #endif
         void *handle; /**< @brief custom handle that will be passed to the functions of this structure */
     };
