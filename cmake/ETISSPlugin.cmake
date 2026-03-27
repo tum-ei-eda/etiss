@@ -16,7 +16,7 @@ MACRO(ETISSPlugin ProjName)
         LIBRARY DESTINATION lib/plugins
         ARCHIVE DESTINATION lib/plugins
     )
-    IF(PORTABLE_INSTALL)
+    IF(ETISS_PORTABLE_INSTALL)
         INSTALL(CODE
             "FILE(APPEND
                 \"${CMAKE_INSTALL_PREFIX}/lib/plugins/list.txt\"
