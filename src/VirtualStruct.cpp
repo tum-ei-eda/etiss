@@ -184,7 +184,8 @@ bool VirtualStruct::Field::_applyAction(const etiss::fault::Fault &f, const etis
     if (a.getType() == +etiss::fault::Action::type_t::MASK)
     {
         uint64_t mask_value = a.getMaskValue();
-        uint64_t val = read(), errval;
+        uint64_t val = read();
+        uint64_t errval = val;
         switch (a.getMaskOp())
         {
         case etiss::fault::Action::mask_op_t::AND:
