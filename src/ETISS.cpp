@@ -503,7 +503,7 @@ void etiss_loadIniConfigs()
                     {
                         std::string itemval = iter_value.pItem;
                         std::size_t sz = 0;
-                        long long val;
+                        long long val = 0;
                         try
                         {
                             val = std::stoll(itemval, &sz, 0);
