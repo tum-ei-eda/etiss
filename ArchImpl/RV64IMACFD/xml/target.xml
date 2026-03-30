@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<!DOCTYPE target SYSTEM "gdb-target.dtd">
+<target>
+	<architecture>riscv:rv64</architecture>
+	<document xmlns:xi="http://www.w3.org/2001/XInclude">
+		<xi:include href="riscv-64bit-cpu.xml"/>
+		<xi:include href="riscv-64bit-fpu.xml"/>
+	</document>
+</target>
