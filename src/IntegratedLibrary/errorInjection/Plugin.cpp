@@ -68,32 +68,32 @@ etiss::int32 BlockAccurateHandler::execute()
             {
             case 8:
             {
-                etiss::uint8 val = (etiss::uint8)f->read();
+                etiss::uint8 val = (etiss::uint8)f->read(0);
                 val = (etiss::uint8)(((val ^ iter->xor_) & iter->and_) | iter->or_);
-                f->write(val);
+                f->write(val, 0);
                 break;
             }
             case 16:
             {
-                etiss::uint16 val = (etiss::uint16)f->read();
+                etiss::uint16 val = (etiss::uint16)f->read(0);
                 val = (etiss::uint16)(((val ^ iter->xor_) & iter->and_) | iter->or_);
-                f->write(val);
+                f->write(val, 0);
                 break;
             }
             case 32:
             {
-                etiss::uint32 val = (etiss::uint32)f->read();
+                etiss::uint32 val = (etiss::uint32)f->read(0);
                 std::cout << iter->reg << ": old:" << val;
                 val = (etiss::uint32)(((val ^ iter->xor_) & iter->and_) | iter->or_);
                 std::cout << "new: " << val << std::endl;
-                f->write(val);
+                f->write(val, 0);
                 break;
             }
             case 64:
             {
-                etiss::uint64 val = (etiss::uint64)f->read();
+                etiss::uint64 val = (etiss::uint64)f->read(0);
                 val = (etiss::uint64)(((val ^ iter->xor_) & iter->and_) | iter->or_);
-                f->write(val);
+                f->write(val, 0);
                 break;
             }
             default:

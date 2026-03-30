@@ -79,7 +79,7 @@ void VariableValueLogger::writeValue()
     }
     else
     {
-        writer_(out_, field_, plugin_core_->getStruct()->findName(field_)->read());
+        writer_(out_, field_, plugin_core_->getStruct()->findName(field_)->read(0));
     }
     out_.flush();
 }
