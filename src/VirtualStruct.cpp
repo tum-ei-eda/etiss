@@ -43,7 +43,7 @@ VirtualStruct::Field::Field(VirtualStruct &parent, const std::string &name, cons
 
 VirtualStruct::Field::~Field() {}
 
-uint64_t VirtualStruct::Field::read() const
+uint64_t VirtualStruct::Field::read(size_t offset) const
 {
 
     if (!(flags_ & R))
@@ -70,7 +70,7 @@ uint64_t VirtualStruct::Field::read() const
             break;
         }
     case VIRTUAL:
-        ret = _read();
+        ret = _read(offset);
         break;
     default:
         throw std::runtime_error("invalid enum value");
@@ -79,7 +79,7 @@ uint64_t VirtualStruct::Field::read() const
 
     return ret;
 }
-void VirtualStruct::Field::write(uint64_t val)
+void VirtualStruct::Field::write(uint64_t val, size_t offset)
 {
 
     if (!(flags_ & W))
@@ -109,7 +109,7 @@ void VirtualStruct::Field::write(uint64_t val)
             break;
         }
     case VIRTUAL:
-        _write(val);
+        _write(val, offset);
         break;
     }
 
@@ -122,7 +122,7 @@ void VirtualStruct::Field::signalWrite()
     {
         if (l.first)
         {
-            l.first->write(*this, read());
+            l.first->write(*this, read(0));
         }
     }
 }
@@ -153,11 +153,11 @@ bool VirtualStruct::Field::applyAction(const etiss::fault::Fault &f, const etiss
     return _applyAction(f, a, errormsg);
 }
 
-uint64_t VirtualStruct::Field::_read() const
+uint64_t VirtualStruct::Field::_read(size_t) const
 {
     throw std::runtime_error("VirtualStruct::Field::_read called but not implemented");
 }
-void VirtualStruct::Field::_write(uint64_t)
+void VirtualStruct::Field::_write(uint64_t, size_t)
 {
     throw std::runtime_error("VirtualStruct::Field::_write called but not implemented");
 }
@@ -169,10 +169,10 @@ bool VirtualStruct::Field::_applyBitflip(unsigned position, uint64_t fault_id)
         return lapplyBitflip(position, fault_id);
     if ((flags_ & RW) != RW)
         return false;
-    uint64_t val = read();
+    uint64_t val = read(0);
     uint64_t errval = ((uint64_t)1) << position;
     errval = val ^ errval;
-    write(errval);
+    write(errval, 0);
     std::stringstream ss;
     ss << "Injected bitflip in " << name_ << " 0x" << std::hex << val << "->0x" << errval << std::dec;
     etiss::log(etiss::INFO, ss.str());
@@ -463,7 +463,7 @@ bool VirtualStruct::readField(void *fastfieldaccessptr, uint64_t &val, std::stri
         errormsg = "No read access";
         return false;
     }
-    val = f->read();
+    val = f->read(0);
     return true;
 }
 bool VirtualStruct::applyAction(const etiss::fault::Fault &fault, const etiss::fault::Action &action,
