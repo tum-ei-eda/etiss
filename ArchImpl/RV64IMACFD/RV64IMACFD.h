@@ -1,5 +1,5 @@
 /**
- * Generated on Tue, 16 Sep 2025 12:56:33 +0200.
+ * Generated on Mon, 30 Mar 2026 12:46:50 +0200.
  *
  * This file contains the registers for the RV64IMACFD core architecture.
  */
@@ -10,96 +10,100 @@
 #include "etiss/jit/CPU.h"
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 #pragma pack(push, 1)
-struct RV64IMACFD {
-	ETISS_CPU cpu; // original cpu struct must be defined as the first field of the new structure. this allows to cast X * to ETISS_CPU * and vice vers
-	etiss_uint64 ZERO;
-	etiss_uint64 RA;
-	etiss_uint64 SP;
-	etiss_uint64 GP;
-	etiss_uint64 TP;
-	etiss_uint64 T0;
-	etiss_uint64 T1;
-	etiss_uint64 T2;
-	etiss_uint64 S0;
-	etiss_uint64 S1;
-	etiss_uint64 A0;
-	etiss_uint64 A1;
-	etiss_uint64 A2;
-	etiss_uint64 A3;
-	etiss_uint64 A4;
-	etiss_uint64 A5;
-	etiss_uint64 A6;
-	etiss_uint64 A7;
-	etiss_uint64 S2;
-	etiss_uint64 S3;
-	etiss_uint64 S4;
-	etiss_uint64 S5;
-	etiss_uint64 S6;
-	etiss_uint64 S7;
-	etiss_uint64 S8;
-	etiss_uint64 S9;
-	etiss_uint64 S10;
-	etiss_uint64 S11;
-	etiss_uint64 T3;
-	etiss_uint64 T4;
-	etiss_uint64 T5;
-	etiss_uint64 T6;
-	etiss_uint64 *X[32];
-	etiss_uint64 ins_X[32];
-	etiss_uint64 FENCE[8];
-	etiss_uint8 RES[8];
-	etiss_uint8 PRIV;
-	etiss_uint64 DPC;
-	etiss_uint64 FCSR;
-	etiss_uint64 FFLAGS;
-	etiss_uint64 FRM;
-	etiss_uint64 MSTATUS;
-	etiss_uint64 MIE;
-	etiss_uint64 MIP;
-	etiss_uint64 *CSR[4096];
-	etiss_uint64 ins_CSR[4096];
-	etiss_uint64 FT0;
-	etiss_uint64 FT1;
-	etiss_uint64 FT2;
-	etiss_uint64 FT3;
-	etiss_uint64 FT4;
-	etiss_uint64 FT5;
-	etiss_uint64 FT6;
-	etiss_uint64 FT7;
-	etiss_uint64 FS0;
-	etiss_uint64 FS1;
-	etiss_uint64 FA0;
-	etiss_uint64 FA1;
-	etiss_uint64 FA2;
-	etiss_uint64 FA3;
-	etiss_uint64 FA4;
-	etiss_uint64 FA5;
-	etiss_uint64 FA6;
-	etiss_uint64 FA7;
-	etiss_uint64 FS2;
-	etiss_uint64 FS3;
-	etiss_uint64 FS4;
-	etiss_uint64 FS5;
-	etiss_uint64 FS6;
-	etiss_uint64 FS7;
-	etiss_uint64 FS8;
-	etiss_uint64 FS9;
-	etiss_uint64 FS10;
-	etiss_uint64 FS11;
-	etiss_uint64 FT8;
-	etiss_uint64 FT9;
-	etiss_uint64 FT10;
-	etiss_uint64 FT11;
-	etiss_uint64 *F[32];
-	etiss_uint64 ins_F[32];
-	etiss_uint64 RES_ADDR;
-};
+    struct RV64IMACFD
+    {
+        ETISS_CPU cpu; // original cpu struct must be defined as the first field of the new structure.
+                       // This allows to cast X * to ETISS_CPU * and vice versa
+        etiss_uint64 ZERO;
+        etiss_uint64 RA;
+        etiss_uint64 SP;
+        etiss_uint64 GP;
+        etiss_uint64 TP;
+        etiss_uint64 T0;
+        etiss_uint64 T1;
+        etiss_uint64 T2;
+        etiss_uint64 S0;
+        etiss_uint64 S1;
+        etiss_uint64 A0;
+        etiss_uint64 A1;
+        etiss_uint64 A2;
+        etiss_uint64 A3;
+        etiss_uint64 A4;
+        etiss_uint64 A5;
+        etiss_uint64 A6;
+        etiss_uint64 A7;
+        etiss_uint64 S2;
+        etiss_uint64 S3;
+        etiss_uint64 S4;
+        etiss_uint64 S5;
+        etiss_uint64 S6;
+        etiss_uint64 S7;
+        etiss_uint64 S8;
+        etiss_uint64 S9;
+        etiss_uint64 S10;
+        etiss_uint64 S11;
+        etiss_uint64 T3;
+        etiss_uint64 T4;
+        etiss_uint64 T5;
+        etiss_uint64 T6;
+        etiss_uint64 *X[32];
+        etiss_uint64 ins_X[32];
+        etiss_uint64 FENCE[8];
+        etiss_uint8 RES[8];
+        etiss_uint8 PRIV;
+        etiss_uint64 DPC;
+        etiss_uint64 FCSR;
+        etiss_uint64 FFLAGS;
+        etiss_uint64 FRM;
+        etiss_uint64 MSTATUS;
+        etiss_uint64 MIE;
+        etiss_uint64 MIP;
+        etiss_uint64 *CSR[4096];
+        etiss_uint64 ins_CSR[4096];
+        etiss_uint64 FT0;
+        etiss_uint64 FT1;
+        etiss_uint64 FT2;
+        etiss_uint64 FT3;
+        etiss_uint64 FT4;
+        etiss_uint64 FT5;
+        etiss_uint64 FT6;
+        etiss_uint64 FT7;
+        etiss_uint64 FS0;
+        etiss_uint64 FS1;
+        etiss_uint64 FA0;
+        etiss_uint64 FA1;
+        etiss_uint64 FA2;
+        etiss_uint64 FA3;
+        etiss_uint64 FA4;
+        etiss_uint64 FA5;
+        etiss_uint64 FA6;
+        etiss_uint64 FA7;
+        etiss_uint64 FS2;
+        etiss_uint64 FS3;
+        etiss_uint64 FS4;
+        etiss_uint64 FS5;
+        etiss_uint64 FS6;
+        etiss_uint64 FS7;
+        etiss_uint64 FS8;
+        etiss_uint64 FS9;
+        etiss_uint64 FS10;
+        etiss_uint64 FS11;
+        etiss_uint64 FT8;
+        etiss_uint64 FT9;
+        etiss_uint64 FT10;
+        etiss_uint64 FT11;
+        etiss_uint64 *F[32];
+        etiss_uint64 ins_F[32];
+        etiss_uint64 RES_ADDR;
+    };
 
 #pragma pack(pop) // undo changes
-typedef struct RV64IMACFD RV64IMACFD; // convenient use of X instead of struct X in generated C code
+    // convenient use of X instead of struct X in generated C code
+    typedef struct RV64IMACFD RV64IMACFD;
 #ifdef __cplusplus
 } // extern "C"
 #endif
