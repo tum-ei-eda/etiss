@@ -17,6 +17,7 @@
 #include "etiss/fault/Injector.h"
 
 #include <cstddef>
+#include <cassert>
 
 #include <memory>
 
@@ -184,11 +185,11 @@ class VirtualStruct : public std::enable_shared_from_this<VirtualStruct>, public
         const AccessMode accessMode_;
 
       public: // read write
-        uint64_t read()
+        uint64_t read(size_t offset = 0)
             const; ///< function to read bits/a value from the Field. may only be called if the R flag is set. in case
                    ///< of less than 64 bit values the msb should be extended according to the default c++ conversion
                    ///< behavior. e.g. int32_t read_value = X; return (uint64_t)read_value;
-        void write(uint64_t); ///< function to write bits/a value to the Field. may only be called if the W flag is set.
+        void write(uint64_t, size_t offset = 0); ///< function to write bits/a value to the Field. may only be called if the W flag is set.
                               ///< additional bits are silently discarded if the targt field has less than 64 bits. e.g.
                               ///< int64_t write_target = (int32_t) write_uint64_t;
         bool applyBitflip(unsigned position, uint64_t fault_id); ///< function to write a bitflip to a field
@@ -199,10 +200,10 @@ class VirtualStruct : public std::enable_shared_from_this<VirtualStruct>, public
                             ///< the listener flag is set.
       protected:            // read write implementation
         /// override this function to implement reads in case of AccessMode::VIRTUAL / AccessMode::PREFER_LAMBDA
-        virtual uint64_t _read() const;
+        virtual uint64_t _read(size_t offset = 0) const;
         /// override this function to implement writes in case of
         /// AccessMode::VIRTUAL / AccessMode::PREFER_LAMBDA
-        virtual void _write(uint64_t);
+        virtual void _write(uint64_t, size_t offset = 0);
         /// override this function to implement bitflip applying to a field
         virtual bool _applyBitflip(unsigned position, uint64_t fault_id);
         /// override this function to implement advanced action handling
@@ -257,8 +258,18 @@ class VirtualStruct : public std::enable_shared_from_this<VirtualStruct>, public
             : Field(parent, name, prettyname, 0, sizeof(retT))
         {
         }
-        virtual uint64_t _read() const { return (uint64_t)((const structT *)parent_.structure_)->*field; }
-        virtual void _write(uint64_t val) { ((structT *)parent_.structure_)->*field = (retT)val; }
+        virtual uint64_t _read(size_t offset = 0) const
+        {
+            // Virtualstruct only provides uint64_t interface. Use offset >1 to fetch upper bits.
+            assert((offset == 0 || (offset < (bitwidth_ / sizeof(uint64_t)))) && "Virtualstruct field offset out of range");
+            return (uint64_t)((const structT *)parent_.structure_)->*field;
+        }
+        virtual void _write(uint64_t val, size_t offset = 0)
+        {
+            // Virtualstruct only provides uint64_t interface. Use offset >1 to fetch upper bits.
+            assert((offset == 0 || (offset < (bitwidth_ / sizeof(uint64_t)))) && "Virtualstruct field offset out of range");
+            ((structT *)parent_.structure_)->*field = (retT)val;
+        }
     };
 
   protected:

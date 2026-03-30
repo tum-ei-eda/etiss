@@ -66,7 +66,7 @@ bool VirtualStructMemory::read(bool debug, ETISS_CPU *cpu, etiss::uint64 addr, e
         {
             etiss::VirtualStruct::Field *f = find->second.first;
             size_t off = find->second.second << 3;
-            uint64_t fval = f->read();
+            uint64_t fval = f->read(0);
             fval = fval >> off;
             buf[i] = (uint8_t)(fval & 0xFF);
         }
@@ -88,20 +88,20 @@ bool VirtualStructMemory::write(bool debug, ETISS_CPU *cpu, etiss::uint64 addr, 
         {
             etiss::VirtualStruct::Field *f = find->second.first;
             size_t off = find->second.second << 3;
-            uint64_t fval = f->read();
+            uint64_t fval = f->read(0);
             uint64_t mask = 0xFF;
             mask = mask << off;
             fval = fval & ~mask;
             // uint64_t fvaltest = (((uint64_t)(uint8_t)buf[i]) << off); // DNM DEBUG
             fval = fval | (((uint64_t)(uint8_t)buf[i]) << off);
-            f->write(fval);
+            f->write(fval, 0);
             {
                 std::stringstream ss;
-                ss << "write to field " << f->name_ << "{" << f->prettyname_ << "}: 0x" << std::hex << f->read()
+                ss << "write to field " << f->name_ << "{" << f->prettyname_ << "}: 0x" << std::hex << f->read(0)
                    << " (offset: 0x" << std::hex << find->second.second << ")" << std::endl;
                 // DEBUG DNM
                 // std::cout << "VirtualStructMemory::write: " << " write to field " << f->name_ << "{" <<
-                // f->prettyname_ << "}: 0x" << std::hex << f->read() << " val=0x"<< fvaltest << "(offset: 0x" <<
+                // f->prettyname_ << "}: 0x" << std::hex << f->read(0) << " val=0x"<< fvaltest << "(offset: 0x" <<
                 // std::hex << find->second.second << ")" << std::endl; etiss::log(etiss::VERBOSE,ss.str());
             }
         }
