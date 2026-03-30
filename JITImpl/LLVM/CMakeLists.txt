@@ -1,67 +1,60 @@
+# SPDX-License-Identifier: BSD-3-Clause
 #
-#	Copyright 2018 Infineon Technologies AG
-#
-#	This file is part of ETISS tool, see <https://github.com/tum-ei-eda/etiss>
-#
-#	The initial version of this software has been created with the funding support by the German Federal
-#	Ministry of Education and Research(BMBF) in the project EffektiV under grant 01IS13022.
-#
-#	Redistribution and use in source and binary forms, with or without modification, are permitted
-#	provided that the following conditions are met:
-#
-#	1. Redistributions of source code must retain the above copyright notice, this list of conditions and
-#	the following disclaimer.
-#
-# 	2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions
-#	and the following disclaimer in the documentation and / or other materials provided with the distribution.
-#
-# 	3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse
-# 	or promote products derived from this software without specific prior written permission.
-#
-#	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
-#	WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
-#	PARTICULAR PURPOSE ARE DISCLAIMED.IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY
-#	DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES(INCLUDING, BUT NOT LIMITED TO,
-#	PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
-#	HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT(INCLUDING
-#	NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-#	POSSIBILITY OF SUCH DAMAGE.
-#
-#
-#	Author: Chair of Electronic Design Automation, TUM
-#
-#	Version 0.1
-#
+# This file is part of ETISS. It is licensed under the BSD 3-Clause License; you may not use this file except in
+# compliance with the License. You should have received a copy of the license along with this project. If not, see the
+# LICENSE file.
 
-
+cmake_minimum_required(VERSION 3.16)
 PROJECT(LLVMJIT)
 
-IF(NOT DEFINED ENV{LLVM_DIR})
-    SET(ENV{LLVM_DIR} "/opt/clang+llvm-11.0.0-x86_64-linux-gnu-ubuntu-20.04")
-ENDIF()
+if(NOT DEFINED LLVM_DIR)
+    if(DEFINED ENV{LLVM_DIR})
+        set(LLVM_DIR "$ENV{LLVM_DIR}")
+    endif()
+endif()
 
-IF(NOT DEFINED ENV{Clang_DIR})
-    SET(ENV{Clang_DIR} $ENV{LLVM_DIR})
-ENDIF()
+# 1st try only environment and LLVM_DIR
+find_package(LLVM CONFIG NO_DEFAULT_PATH PATHS ${LLVM_DIR})
+if(NOT LLVM_FOUND) # 2nd try with system and default paths
+    find_package(LLVM CONFIG)
+endif()
+if(NOT LLVM_FOUND)
+    message(STATUS "[${PROJECT_NAME}] Did not find LLVM... Skipping ${PROJECT_NAME} target.")
+elseif((LLVM_FOUND AND LLVM_VERSION_MAJOR LESS 11))
+    message(STATUS "[${PROJECT_NAME}] Could find LLVM at ${LLVM_DIR}, but version ${LLVM_PACKAGE_VERSION}<11... Skipping target.")
+else()
+    message(STATUS "[${PROJECT_NAME}] Found LLVM ${LLVM_PACKAGE_VERSION} at ${LLVM_DIR}")
+    string(REGEX MATCH "^[0-9]+" LLVM_VERSION_MAJOR "${LLVM_PACKAGE_VERSION}")
+    math(EXPR LLVM_VERSION_MAJOR_NEXT "${LLVM_VERSION_MAJOR} + 1" OUTPUT_FORMAT DECIMAL)
+ 
+    if(NOT Clang_FOUND) # 1st try only in relation to found LLVM
+        find_package(Clang CONFIG NO_DEFAULT_PATH PATHS "${LLVM_DIR}/../clang" "${LLVM_DIR}")
+    endif()
+    if(NOT Clang_FOUND) # 2nd try with system and default paths
+        find_package(Clang CONFIG)
+    endif()
+    if(NOT Clang_FOUND)
+        message(STATUS "[${PROJECT_NAME}] Did not find matching Clang... Skipping target.")
+    else()
+        message(STATUS "[${PROJECT_NAME}] Found Clang ${Clang_PACKAGE_VERSION} at ${Clang_DIR}")
 
-FIND_PACKAGE(LLVM 11 CONFIG QUIET)
-IF(NOT LLVM_FOUND)
-    FIND_PACKAGE(LLVM 11.1 CONFIG QUIET)
-ENDIF()
-
-FIND_PACKAGE(Clang 11 CONFIG QUIET)
-IF(NOT Clang_FOUND)
-    FIND_PACKAGE(Clang 11.1 CONFIG QUIET)
-ENDIF()
+        add_compile_definitions(LLVM_VERSION_MAJOR=${LLVM_VERSION_MAJOR})
+        if(LLVM_VERSION_MAJOR GREATER 15 AND CMAKE_CXX_STANDARD LESS 17)
+            message(FATAL_ERROR "LLVM_VERSION_MAJOR[${LLVM_VERSION_MAJOR}] requires c++std>=17! Is ${CMAKE_CXX_STANDARD}")
+        endif()
+    endif()
+endif()
 
 OPTION(ETISS_LINK_CLANG_DYLIB "Link against the clang dynamic library" ${CLANG_LINK_CLANG_DYLIB})
 OPTION(ETISS_LINK_LLVM_DYLIB "Link against the llvm dynamic library" ${LLVM_LINK_LLVM_DYLIB})
 
-IF(LLVM_FOUND)
-    MESSAGE("Using LLVM_DIR: ${LLVM_DIR}")
-    MESSAGE("LLVM Version: ${LLVM_VERSION}")
-    MESSAGE("Clang DYLIB Link: ${ETISS_LINK_CLANG_DYLIB}")
-    MESSAGE("LLVM DYLIB Link: ${ETISS_LINK_LLVM_DYLIB}")
+IF(LLVM_FOUND AND Clang_FOUND)
+    MESSAGE(STATUS "[${PROJECT_NAME}] Using LLVM_DIR: ${LLVM_DIR}")
+    MESSAGE(STATUS "[${PROJECT_NAME}] LLVM Version: ${LLVM_VERSION}")
+    MESSAGE(STATUS "[${PROJECT_NAME}] LLVM DYLIB Link: ${ETISS_LINK_LLVM_DYLIB}")
+    MESSAGE(STATUS "[${PROJECT_NAME}] Using Clang_DIR: ${Clang_DIR}")
+    MESSAGE(STATUS "[${PROJECT_NAME}] Using Clang_VERSION: ${Clang_VERSION}")
+    MESSAGE(STATUS "[${PROJECT_NAME}] Clang DYLIB Link: ${ETISS_LINK_CLANG_DYLIB}")
 
     LINK_DIRECTORIES(${LLVM_LIBRARY_DIRS})
     ADD_DEFINITIONS(${LLVM_DEFINITIONS})
@@ -100,6 +93,7 @@ IF(LLVM_FOUND)
     ADD_LIBRARY(${PROJECT_NAME} SHARED
         LLVMJITLIB.cpp
         src/LLVMJIT.cpp
+        src/llvm_compat/llvm_compat.cpp
     )
     ETISSPlugin(${PROJECT_NAME})
 
@@ -127,5 +121,5 @@ IF(LLVM_FOUND)
         TARGET_LINK_LIBRARIES(${PROJECT_NAME} PUBLIC ${LLVM_LIBS})
     endif()
 
-    TARGET_INCLUDE_DIRECTORIES(${PROJECT_NAME} PUBLIC include ${LLVM_INCLUDE_DIRS})
+    TARGET_INCLUDE_DIRECTORIES(${PROJECT_NAME} PUBLIC include ${LLVM_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/src/llvm_compat/)
 ENDIF()

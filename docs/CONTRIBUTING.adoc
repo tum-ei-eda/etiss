@@ -1,0 +1,32 @@
+= Contribution Guide
+:toc:
+
+== Branching & Release Policy
+
+We keep our repository simple and trunk-based.
+This keeps the history linear, the main branch always deployable, and releases easy to reproduce from tags.
+
+=== Main Branch
+* The `master` branch always reflects the latest development state.
+* All work happens on short-lived branches (`feature/...`, `fix/...`) and is merged back into `master` via pull requests.
+* Direct pushes to `master` are not allowed.
+
+=== Feature Branches
+* Create a new branch off `master` for each contribution.
+* Use a descriptive name, e.g. `feature/add-new-decoder` or `fix/memory-leak`.
+* Keep branches short-lived and rebase regularly to reduce merge conflicts.
+
+=== Releases
+* We publish releases directly from `master`.
+* Releases are marked with *annotated tags* using https://semver.org/[semantic versioning], e.g. `v0.11.0`.
+* Example:
++
+[source,bash]
+----
+git tag -a v0.11.0 -m "Release v0.11.0"
+git push origin v0.11.0
+----
+
+=== Hotfixes
+* Urgent fixes are applied directly on `master` and a new patch tag is created (e.g. `v0.11.1`).
+

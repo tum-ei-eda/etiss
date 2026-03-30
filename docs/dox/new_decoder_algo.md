@@ -1,4 +1,4 @@
-Decoding Algorithm
+Decoding Algorithm {#decodealgo}
 ==================
 
 The most basic concept of the decoding algorithm can be summarized as follows:

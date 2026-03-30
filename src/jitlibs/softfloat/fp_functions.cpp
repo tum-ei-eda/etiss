@@ -32,7 +32,7 @@
 //       eyck@minres.com - initial API and implementation
 ////////////////////////////////////////////////////////////////////////////////
 extern "C" {
-#include "softfloat_orig.h"
+#include "softfloat.h"
 #include "internals.h"
 #include "specialize.h"
 #include "libsoftfloat.h"

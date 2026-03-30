@@ -35,6 +35,8 @@ on:
 
 jobs:
   trigger_repo:
+    # Only run for PR from the same repository (forks do not have permission to trigger external CI)
+    if: github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4

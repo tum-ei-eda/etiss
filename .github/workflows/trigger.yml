@@ -22,6 +22,8 @@ name: Trigger Seal5 ETISS Test Flow
 on:
   push:
     branches: [ "master" ]
+    paths-ignore:
+    - docs/
 
 jobs:
   trigger_repo:

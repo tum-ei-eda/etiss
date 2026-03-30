@@ -1,46 +1,8 @@
-/**
-
-        @copyright
-
-        <pre>
-
-        Copyright 2018 Infineon Technologies AG
-
-        This file is part of ETISS tool, see <https://github.com/tum-ei-eda/etiss>.
-
-        The initial version of this software has been created with the funding support by the German Federal
-        Ministry of Education and Research (BMBF) in the project EffektiV under grant 01IS13022.
-
-        Redistribution and use in source and binary forms, with or without modification, are permitted
-        provided that the following conditions are met:
-
-        1. Redistributions of source code must retain the above copyright notice, this list of conditions and
-        the following disclaimer.
-
-        2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions
-        and the following disclaimer in the documentation and/or other materials provided with the distribution.
-
-        3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse
-        or promote products derived from this software without specific prior written permission.
-
-        THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
-        WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
-        PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY
-        DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-        PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
-        HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-        NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-        POSSIBILITY OF SUCH DAMAGE.
-
-        </pre>
-
-        @author Marc Greim <marc.greim@mytum.de>, Chair of Electronic Design Automation, TUM
-
-        @date November 5, 2014
-
-        @version 0.1
-
-*/
+// SPDX-License-Identifier: BSD-3-Clause
+//
+// This file is part of ETISS. It is licensed under the BSD 3-Clause License; you may not use this file except in
+// compliance with the License. You should have received a copy of the license along with this project. If not, see the
+// LICENSE file.
 /**
         @file
 
@@ -54,6 +16,8 @@
 #include <stdlib.h>
 
 #include "etiss/System.h"
+#include "etiss/jit/System.h"
+#include "etiss/jit/CPU.h"
 
 static etiss_int32 system_call_iread(void *handle, ETISS_CPU *cpu, etiss_uint64 addr, etiss_uint32 length)
 {
@@ -86,9 +50,18 @@ static etiss_int32 system_call_dbg_write(void *handle, etiss_uint64 addr, etiss_
     return ((etiss::System *)handle)->dbg_write(addr, buffer, length);
 }
 
-static void system_call_syncTime(void *handle, ETISS_CPU *cpu)
+#ifdef ETISS_ENABLE_SYNCTIME_EXCEPTIONS
+static etiss_int32
+#else
+static void
+#endif
+system_call_syncTime(void *handle, ETISS_CPU *cpu)
 {
+#ifdef ETISS_ENABLE_SYNCTIME_EXCEPTIONS
+    return ((etiss::System *)handle)->syncTime(cpu);
+#else
     ((etiss::System *)handle)->syncTime(cpu);
+#endif
 }
 
 std::shared_ptr<ETISS_System> etiss::wrap(etiss::System *sys)
@@ -172,9 +145,16 @@ etiss::int32 SimpleSystem::dbg_write(etiss::uint64 addr, etiss::uint8 *buf, etis
 
     return 0;
 }
-void SimpleSystem::syncTime(ETISS_CPU *cpu)
+#ifdef ETISS_ENABLE_SYNCTIME_EXCEPTIONS
+etiss::int32
+#else
+void
+#endif
+SimpleSystem::syncTime(ETISS_CPU *cpu)
 {
-    // NOP
+#ifdef ETISS_ENABLE_SYNCTIME_EXCEPTIONS
+    return etiss::RETURNCODE::NOERROR;
+#endif
 }
 etiss::int32 dbg_print(etiss::uint32 reg)
 {

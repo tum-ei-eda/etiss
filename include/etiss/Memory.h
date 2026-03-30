@@ -1,3 +1,9 @@
+// SPDX-License-Identifier: BSD-3-Clause
+//
+// This file is part of ETISS. It is licensed under the BSD 3-Clause License; you may not use this file except in
+// compliance with the License. You should have received a copy of the license along with this project. If not, see the
+// LICENSE file.
+
 /*
  * Taken from https://bitbucket.org/rafzi/hacklib
  */
@@ -8,11 +14,11 @@
 #include <vector>
 #include <string>
 #include <memory>
+#include <cstdint>
 
 #ifdef _WIN32
 #include <Windows.h>
 #endif
-
 
 namespace etiss
 {
@@ -35,7 +41,6 @@ static const ModuleHandle NullModuleHandle = nullptr;
 
 #endif
 
-
 // An empty string requests the main module.
 etiss::ModuleHandle GetModuleByName(const std::string &name = "");
 
@@ -43,7 +48,6 @@ etiss::ModuleHandle GetModuleByName(const std::string &name = "");
 etiss::ModuleHandle GetModuleByAddress(uintptr_t adr);
 
 std::string GetModulePath(etiss::ModuleHandle hModule);
-
 
 /// Returns the module handle to the own dynamic library.
 etiss::ModuleHandle GetCurrentModule();

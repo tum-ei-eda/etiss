@@ -1,46 +1,8 @@
-/**
-
-        @copyright
-
-        <pre>
-
-        Copyright 2018 Infineon Technologies AG
-
-        This file is part of ETISS tool, see <https://github.com/tum-ei-eda/etiss>.
-
-        The initial version of this software has been created with the funding support by the German Federal
-        Ministry of Education and Research (BMBF) in the project EffektiV under grant 01IS13022.
-
-        Redistribution and use in source and binary forms, with or without modification, are permitted
-        provided that the following conditions are met:
-
-        1. Redistributions of source code must retain the above copyright notice, this list of conditions and
-        the following disclaimer.
-
-        2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions
-        and the following disclaimer in the documentation and/or other materials provided with the distribution.
-
-        3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse
-        or promote products derived from this software without specific prior written permission.
-
-        THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED
-        WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
-        PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY
-        DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-        PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
-        HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-        NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-        POSSIBILITY OF SUCH DAMAGE.
-
-        </pre>
-
-        @author Marc Greim <marc.greim@mytum.de>, Chair of Electronic Design Automation, TUM
-
-        @date July 23, 2014
-
-        @version 0.1
-
-*/
+// SPDX-License-Identifier: BSD-3-Clause
+//
+// This file is part of ETISS. It is licensed under the BSD 3-Clause License; you may not use this file except in
+// compliance with the License. You should have received a copy of the license along with this project. If not, see the
+// LICENSE file.
 /**
         @file
 
@@ -51,20 +13,9 @@
 #ifndef ETISS_INCLUDE_CPUCORE_H_
 #define ETISS_INCLUDE_CPUCORE_H_
 
-#include "etiss/ClassDefs.h"
 #include "etiss/Misc.h"
-#include "etiss/LibraryInterface.h"
-#include "etiss/JIT.h"
-#include "etiss/CPUArch.h"
-#include "etiss/Translation.h"
-#include "etiss/System.h"
-#include "etiss/InterruptHandler.h"
-#include "etiss/InterruptEnable.h"
-#include "etiss/Plugin.h"
-#include "etiss/jit/ReturnCode.h"
-#include "etiss/mm/MMU.h"
-#include "etiss/mm/DMMUWrapper.h"
-#include "etiss/mm/PageFaultVector.h"
+#include "etiss/InterruptVector.h"
+#include "etiss/VirtualStruct.h"
 
 #include <mutex>
 #include <memory>
@@ -114,7 +65,7 @@ class CPUCore : public VirtualStructSupport, public etiss::ToString
     friend class CPUArchRegListenerInterface;
     friend class InterruptVectorWrapper;
 
-  private:
+  protected:
     /**
      * @brief Private constructor of CPUCore.
      *
@@ -124,6 +75,7 @@ class CPUCore : public VirtualStructSupport, public etiss::ToString
      *
      * @param arch Pointer to the CPU architecture used by the CPU core simulator.
      */
+    CPUCore(std::shared_ptr<etiss::CPUArch> arch, std::string const &name);
     CPUCore(std::shared_ptr<etiss::CPUArch> arch);
 
     class InterruptVectorWrapper : public InterruptVector
@@ -150,7 +102,7 @@ class CPUCore : public VirtualStructSupport, public etiss::ToString
      *
      * @todo Add explanation of start index.
      */
-    inline void reset(etiss::uint64 *startindex) { arch_->resetCPU(cpu_, startindex); }
+    void reset(etiss::uint64 *startindex);
 
     /**
      * @brief Get the CPU state structure containing instruction pointer, frequency, etc.
@@ -284,14 +236,7 @@ class CPUCore : public VirtualStructSupport, public etiss::ToString
      *
      * @return A return code as result of the simulation (ReturnCode.h)
      */
-    inline etiss::int32 execute(etiss::System &system)
-    {
-        std::shared_ptr<ETISS_System> sys = etiss::wrap(&system);
-        if (sys.get() == 0)
-            return RETURNCODE::GENERALERROR;
-        etiss::uint32 ret = execute(*(sys.get()));
-        return ret;
-    }
+    etiss::int32 execute(etiss::System &system);
 
     /**
      * @brief Get the name of the CPUCore instance.
@@ -312,18 +257,7 @@ class CPUCore : public VirtualStructSupport, public etiss::ToString
      *
      * @return Name string of the JIT plug-in;
      */
-    inline std::string getJITName()
-    {
-        std::shared_ptr<etiss::JIT> jit = jit_;
-        if (jit.get())
-        {
-            return jit->getName();
-        }
-        else
-        {
-            return "";
-        }
-    }
+    std::string getJITName();
 
     /**
      * @brief Get a reference to the JIT plugin.
@@ -338,20 +272,12 @@ class CPUCore : public VirtualStructSupport, public etiss::ToString
     /**
      * @brief returns the plugin with the given name.
      */
-    inline std::shared_ptr<Plugin> getPlugin(std::string name)
-    {
-        for (auto iter : plugins)
-        {
-            // std::cout << "found plugin: " << iter->_getPluginName();
-            if (iter->_getPluginName() == name)
-                return iter;
-        }
-        return nullptr;
-    };
+    std::shared_ptr<Plugin> getPlugin(std::string name);
     /**
      * @brief returns the list of all plugins.
      */
     inline std::list<std::shared_ptr<Plugin>> const *getPlugins() { return &plugins; };
+
   public:
     /**
      * @brief Create a CPUCore instance.
