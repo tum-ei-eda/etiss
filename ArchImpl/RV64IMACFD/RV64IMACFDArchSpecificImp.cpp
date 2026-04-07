@@ -330,12 +330,23 @@ std::shared_ptr<etiss::VirtualStruct> RV64IMACFDArch::getVirtualStruct(ETISS_CPU
 {
     auto ret = etiss::VirtualStruct::allocate(cpu, [](etiss::VirtualStruct::Field *f) { delete f; });
 
-    for (uint32_t i = 0; i < 32; ++i)
+    for (uint32_t i = 0; i < 32; i += 1)
     {
         ret->addField(new RegField_RV64IMACFD(*ret, i));
     }
-
+    for (uint32_t i = 0; i < 32; i += 1)
+    {
+        ret->addField(new FloatRegField_RV64IMACFD(*ret, i));
+    }
+    for (uint32_t i = 1; i < 4; i += 1)
+    {
+        ret->addField(new CSRField_RV64IMACFD(*ret, i));
+    }
+    ret->addField(new CSRField_RV64IMACFD(*ret, 768));
+    ret->addField(new CSRField_RV64IMACFD(*ret, 772));
+    ret->addField(new CSRField_RV64IMACFD(*ret, 836));
     ret->addField(new pcField_RV64IMACFD(*ret));
+
     return ret;
 }
 

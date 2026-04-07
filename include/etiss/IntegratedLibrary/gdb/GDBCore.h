@@ -64,6 +64,7 @@ class GDBCore
        slot instruction
     */
     virtual etiss::uint64 getInstructionPointer(ETISS_CPU *cpu);
+    virtual std::string getXMLContents(ETISS_CPU *cpu, std::string archName, std::string fname);
 
   public:
     static const unsigned INVALIDMAPPING = (unsigned)-1;
