@@ -1,5 +1,5 @@
 /**
- * Generated on Fri, 17 Apr 2026 10:45:00 +0200.
+ * Generated on Fri, 17 Apr 2026 10:56:08 +0200.
  *
  * This file contains the function implementations for the RV64IMACFD core architecture.
  */
@@ -616,12 +616,12 @@ etiss_int64 RV64IMACFD_mulh(etiss_int64 x, etiss_int64 y)
 {
 etiss_coverage_count(1, 237);
 { // block
-etiss_coverage_count(1, 7392);
+etiss_coverage_count(1, 7414);
 etiss_int128 res = (etiss_int128)(x) * (etiss_int128)(y);
-etiss_coverage_count(6, 7384, 7383, 7379, 7377, 7382, 7380);
-etiss_coverage_count(1, 7391);
+etiss_coverage_count(6, 7406, 7405, 7401, 7399, 7404, 7402);
+etiss_coverage_count(1, 7413);
 return (etiss_int64)((res >> 64ULL));
-etiss_coverage_count(4, 7390, 7387, 7385, 7388);
+etiss_coverage_count(4, 7412, 7409, 7407, 7410);
 } // block
 }
 
@@ -629,12 +629,12 @@ etiss_int64 RV64IMACFD_mulhsu(etiss_int64 x, etiss_uint64 y)
 {
 etiss_coverage_count(1, 238);
 { // block
-etiss_coverage_count(1, 7409);
+etiss_coverage_count(1, 7431);
 etiss_int128 res = (etiss_int128)(x) * (etiss_uint128)(y);
-etiss_coverage_count(6, 7401, 7400, 7396, 7394, 7399, 7397);
-etiss_coverage_count(1, 7408);
+etiss_coverage_count(6, 7423, 7422, 7418, 7416, 7421, 7419);
+etiss_coverage_count(1, 7430);
 return (etiss_int64)((res >> 64ULL));
-etiss_coverage_count(4, 7407, 7404, 7402, 7405);
+etiss_coverage_count(4, 7429, 7426, 7424, 7427);
 } // block
 }
 
@@ -642,12 +642,12 @@ etiss_uint64 RV64IMACFD_mulhu(etiss_uint64 x, etiss_uint64 y)
 {
 etiss_coverage_count(1, 239);
 { // block
-etiss_coverage_count(1, 7426);
+etiss_coverage_count(1, 7448);
 etiss_uint128 res = (etiss_uint128)(x) * (etiss_uint128)(y);
-etiss_coverage_count(6, 7418, 7417, 7413, 7411, 7416, 7414);
-etiss_coverage_count(1, 7425);
+etiss_coverage_count(6, 7440, 7439, 7435, 7433, 7438, 7436);
+etiss_coverage_count(1, 7447);
 return (etiss_uint64)((res >> 64ULL));
-etiss_coverage_count(4, 7424, 7421, 7419, 7422);
+etiss_coverage_count(4, 7446, 7443, 7441, 7444);
 } // block
 }
 // clang-format on
