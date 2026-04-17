@@ -1,6 +1,6 @@
 // clang-format off
 /**
- * Generated on Fri, 17 Apr 2026 09:57:47 +0200.
+ * Generated on Fri, 17 Apr 2026 10:45:00 +0200.
  *
  * This file contains the instruction behavior models of the tum_csr
  * instruction set for the RV64IMACFD core architecture.
@@ -55,31 +55,31 @@ cp.code() += "etiss_coverage_count(7, 1188, 1181, 1187, 1184, 1182, 1183, 1185);
 cp.code() += "} // block\n";
 } // block
 { // block
-cp.code() += "etiss_coverage_count(1, 6303);\n";
+cp.code() += "etiss_coverage_count(1, 6372);\n";
 cp.code() += "{ // block\n";
 cp.code() += "etiss_uint64 xrs1 = *((RV64IMACFD*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL];\n";
-cp.code() += "etiss_coverage_count(4, 6276, 6275, 6274, 6272);\n";
-cp.code() += "etiss_coverage_count(1, 6277);\n";
+cp.code() += "etiss_coverage_count(4, 6345, 6344, 6343, 6341);\n";
+cp.code() += "etiss_coverage_count(1, 6346);\n";
 if ((rd % 32ULL) != 0LL) { // conditional
-cp.code() += "etiss_coverage_count(5, 6283, 6280, 6278, 6281, 6282);\n";
+cp.code() += "etiss_coverage_count(5, 6352, 6349, 6347, 6350, 6351);\n";
 { // block
-cp.code() += "etiss_coverage_count(1, 6298);\n";
+cp.code() += "etiss_coverage_count(1, 6367);\n";
 cp.code() += "{ // block\n";
 cp.code() += "etiss_uint64 xrd = RV64IMACFD_csr_read(cpu, system, plugin_pointers, " + std::to_string(csr) + "ULL);\n";
-cp.code() += "etiss_coverage_count(3, 6287, 6286, 6285);\n";
+cp.code() += "etiss_coverage_count(3, 6356, 6355, 6354);\n";
 cp.code() += "RV64IMACFD_csr_write(cpu, system, plugin_pointers, " + std::to_string(csr) + "ULL, xrs1);\n";
-cp.code() += "etiss_coverage_count(3, 6290, 6288, 6289);\n";
+cp.code() += "etiss_coverage_count(3, 6359, 6357, 6358);\n";
 cp.code() += "*((RV64IMACFD*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = xrd;\n";
-cp.code() += "etiss_coverage_count(5, 6297, 6295, 6294, 6292, 6296);\n";
+cp.code() += "etiss_coverage_count(5, 6366, 6364, 6363, 6361, 6365);\n";
 cp.code() += "} // block\n";
 } // block
 } // conditional
 else { // conditional
 { // block
-cp.code() += "etiss_coverage_count(1, 6302);\n";
+cp.code() += "etiss_coverage_count(1, 6371);\n";
 cp.code() += "{ // block\n";
 cp.code() += "RV64IMACFD_csr_write(cpu, system, plugin_pointers, " + std::to_string(csr) + "ULL, xrs1);\n";
-cp.code() += "etiss_coverage_count(3, 6301, 6299, 6300);\n";
+cp.code() += "etiss_coverage_count(3, 6370, 6368, 6369);\n";
 cp.code() += "} // block\n";
 } // block
 } // conditional
@@ -160,23 +160,23 @@ cp.code() += "etiss_coverage_count(7, 1188, 1181, 1187, 1184, 1182, 1183, 1185);
 cp.code() += "} // block\n";
 } // block
 { // block
-cp.code() += "etiss_coverage_count(1, 6338);\n";
+cp.code() += "etiss_coverage_count(1, 6407);\n";
 cp.code() += "{ // block\n";
 cp.code() += "etiss_uint64 xrd = RV64IMACFD_csr_read(cpu, system, plugin_pointers, " + std::to_string(csr) + "ULL);\n";
-cp.code() += "etiss_coverage_count(3, 6307, 6306, 6305);\n";
+cp.code() += "etiss_coverage_count(3, 6376, 6375, 6374);\n";
 cp.code() += "etiss_uint64 xrs1 = *((RV64IMACFD*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL];\n";
-cp.code() += "etiss_coverage_count(4, 6314, 6313, 6312, 6310);\n";
-cp.code() += "etiss_coverage_count(1, 6315);\n";
+cp.code() += "etiss_coverage_count(4, 6383, 6382, 6381, 6379);\n";
+cp.code() += "etiss_coverage_count(1, 6384);\n";
 if (rs1 != 0LL) { // conditional
-cp.code() += "etiss_coverage_count(3, 6318, 6316, 6317);\n";
+cp.code() += "etiss_coverage_count(3, 6387, 6385, 6386);\n";
 cp.code() += "RV64IMACFD_csr_write(cpu, system, plugin_pointers, " + std::to_string(csr) + "ULL, xrd | xrs1);\n";
-cp.code() += "etiss_coverage_count(5, 6323, 6319, 6322, 6320, 6321);\n";
+cp.code() += "etiss_coverage_count(5, 6392, 6388, 6391, 6389, 6390);\n";
 } // conditional
-cp.code() += "etiss_coverage_count(1, 6324);\n";
+cp.code() += "etiss_coverage_count(1, 6393);\n";
 if ((rd % 32ULL) != 0LL) { // conditional
-cp.code() += "etiss_coverage_count(5, 6330, 6327, 6325, 6328, 6329);\n";
+cp.code() += "etiss_coverage_count(5, 6399, 6396, 6394, 6397, 6398);\n";
 cp.code() += "*((RV64IMACFD*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = xrd;\n";
-cp.code() += "etiss_coverage_count(5, 6337, 6335, 6334, 6332, 6336);\n";
+cp.code() += "etiss_coverage_count(5, 6406, 6404, 6403, 6401, 6405);\n";
 } // conditional
 cp.code() += "} // block\n";
 } // block
@@ -254,6 +254,27 @@ cp.code() += "cpu->nextPc = " + std::to_string((etiss_uint64)((ic.current_addres
 cp.code() += "etiss_coverage_count(7, 1188, 1181, 1187, 1184, 1182, 1183, 1185);\n";
 cp.code() += "} // block\n";
 } // block
+{ // block
+cp.code() += "etiss_coverage_count(1, 6443);\n";
+cp.code() += "{ // block\n";
+cp.code() += "etiss_uint64 xrd = RV64IMACFD_csr_read(cpu, system, plugin_pointers, " + std::to_string(csr) + "ULL);\n";
+cp.code() += "etiss_coverage_count(3, 6411, 6410, 6409);\n";
+cp.code() += "etiss_uint64 xrs1 = *((RV64IMACFD*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL];\n";
+cp.code() += "etiss_coverage_count(4, 6418, 6417, 6416, 6414);\n";
+cp.code() += "etiss_coverage_count(1, 6419);\n";
+if (rs1 != 0LL) { // conditional
+cp.code() += "etiss_coverage_count(3, 6422, 6420, 6421);\n";
+cp.code() += "RV64IMACFD_csr_write(cpu, system, plugin_pointers, " + std::to_string(csr) + "ULL, xrd & ~(xrs1));\n";
+cp.code() += "etiss_coverage_count(6, 6428, 6423, 6427, 6424, 6426, 6425);\n";
+} // conditional
+cp.code() += "etiss_coverage_count(1, 6429);\n";
+if ((rd % 32ULL) != 0LL) { // conditional
+cp.code() += "etiss_coverage_count(5, 6435, 6432, 6430, 6433, 6434);\n";
+cp.code() += "*((RV64IMACFD*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = xrd;\n";
+cp.code() += "etiss_coverage_count(5, 6442, 6440, 6439, 6437, 6441);\n";
+} // conditional
+cp.code() += "} // block\n";
+} // block
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
 cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
@@ -329,17 +350,17 @@ cp.code() += "etiss_coverage_count(7, 1188, 1181, 1187, 1184, 1182, 1183, 1185);
 cp.code() += "} // block\n";
 } // block
 { // block
-cp.code() += "etiss_coverage_count(1, 6398);\n";
+cp.code() += "etiss_coverage_count(1, 6467);\n";
 cp.code() += "{ // block\n";
 cp.code() += "etiss_uint64 xrd = RV64IMACFD_csr_read(cpu, system, plugin_pointers, " + std::to_string(csr) + "ULL);\n";
-cp.code() += "etiss_coverage_count(3, 6378, 6377, 6376);\n";
+cp.code() += "etiss_coverage_count(3, 6447, 6446, 6445);\n";
 cp.code() += "RV64IMACFD_csr_write(cpu, system, plugin_pointers, " + std::to_string(csr) + "ULL, " + std::to_string((etiss_uint64)(zimm)) + "ULL);\n";
-cp.code() += "etiss_coverage_count(4, 6383, 6379, 6382, 6380);\n";
-cp.code() += "etiss_coverage_count(1, 6384);\n";
+cp.code() += "etiss_coverage_count(4, 6452, 6448, 6451, 6449);\n";
+cp.code() += "etiss_coverage_count(1, 6453);\n";
 if ((rd % 32ULL) != 0LL) { // conditional
-cp.code() += "etiss_coverage_count(5, 6390, 6387, 6385, 6388, 6389);\n";
+cp.code() += "etiss_coverage_count(5, 6459, 6456, 6454, 6457, 6458);\n";
 cp.code() += "*((RV64IMACFD*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = xrd;\n";
-cp.code() += "etiss_coverage_count(5, 6397, 6395, 6394, 6392, 6396);\n";
+cp.code() += "etiss_coverage_count(5, 6466, 6464, 6463, 6461, 6465);\n";
 } // conditional
 cp.code() += "} // block\n";
 } // block
@@ -418,21 +439,21 @@ cp.code() += "etiss_coverage_count(7, 1188, 1181, 1187, 1184, 1182, 1183, 1185);
 cp.code() += "} // block\n";
 } // block
 { // block
-cp.code() += "etiss_coverage_count(1, 6428);\n";
+cp.code() += "etiss_coverage_count(1, 6497);\n";
 cp.code() += "{ // block\n";
 cp.code() += "etiss_uint64 xrd = RV64IMACFD_csr_read(cpu, system, plugin_pointers, " + std::to_string(csr) + "ULL);\n";
-cp.code() += "etiss_coverage_count(3, 6402, 6401, 6400);\n";
-cp.code() += "etiss_coverage_count(1, 6403);\n";
+cp.code() += "etiss_coverage_count(3, 6471, 6470, 6469);\n";
+cp.code() += "etiss_coverage_count(1, 6472);\n";
 if (zimm != 0LL) { // conditional
-cp.code() += "etiss_coverage_count(3, 6406, 6404, 6405);\n";
+cp.code() += "etiss_coverage_count(3, 6475, 6473, 6474);\n";
 cp.code() += "RV64IMACFD_csr_write(cpu, system, plugin_pointers, " + std::to_string(csr) + "ULL, xrd | " + std::to_string((etiss_uint64)(zimm)) + "ULL);\n";
-cp.code() += "etiss_coverage_count(6, 6413, 6407, 6412, 6408, 6411, 6409);\n";
+cp.code() += "etiss_coverage_count(6, 6482, 6476, 6481, 6477, 6480, 6478);\n";
 } // conditional
-cp.code() += "etiss_coverage_count(1, 6414);\n";
+cp.code() += "etiss_coverage_count(1, 6483);\n";
 if ((rd % 32ULL) != 0LL) { // conditional
-cp.code() += "etiss_coverage_count(5, 6420, 6417, 6415, 6418, 6419);\n";
+cp.code() += "etiss_coverage_count(5, 6489, 6486, 6484, 6487, 6488);\n";
 cp.code() += "*((RV64IMACFD*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = xrd;\n";
-cp.code() += "etiss_coverage_count(5, 6427, 6425, 6424, 6422, 6426);\n";
+cp.code() += "etiss_coverage_count(5, 6496, 6494, 6493, 6491, 6495);\n";
 } // conditional
 cp.code() += "} // block\n";
 } // block
@@ -508,6 +529,25 @@ cp.code() += "etiss_coverage_count(1, 1189);\n";
 cp.code() += "{ // block\n";
 cp.code() += "cpu->nextPc = " + std::to_string((etiss_uint64)((ic.current_address_ + 4))) + "ULL;\n";
 cp.code() += "etiss_coverage_count(7, 1188, 1181, 1187, 1184, 1182, 1183, 1185);\n";
+cp.code() += "} // block\n";
+} // block
+{ // block
+cp.code() += "etiss_coverage_count(1, 6529);\n";
+cp.code() += "{ // block\n";
+cp.code() += "etiss_uint64 xrd = RV64IMACFD_csr_read(cpu, system, plugin_pointers, " + std::to_string(csr) + "ULL);\n";
+cp.code() += "etiss_coverage_count(3, 6501, 6500, 6499);\n";
+cp.code() += "etiss_coverage_count(1, 6502);\n";
+if (zimm != 0LL) { // conditional
+cp.code() += "etiss_coverage_count(3, 6505, 6503, 6504);\n";
+cp.code() += "RV64IMACFD_csr_write(cpu, system, plugin_pointers, " + std::to_string(csr) + "ULL, xrd & " + std::to_string(~(((etiss_uint64)(zimm)))) + "ULL);\n";
+cp.code() += "etiss_coverage_count(8, 6514, 6506, 6513, 6507, 6512, 6510, 6508, 6511);\n";
+} // conditional
+cp.code() += "etiss_coverage_count(1, 6515);\n";
+if ((rd % 32ULL) != 0LL) { // conditional
+cp.code() += "etiss_coverage_count(5, 6521, 6518, 6516, 6519, 6520);\n";
+cp.code() += "*((RV64IMACFD*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = xrd;\n";
+cp.code() += "etiss_coverage_count(5, 6528, 6526, 6525, 6523, 6527);\n";
+} // conditional
 cp.code() += "} // block\n";
 } // block
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
