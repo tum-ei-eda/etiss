@@ -274,6 +274,7 @@ cp.code() += "return cpu->exception;\n";
                     ic.is_not_default_width_ = false;
             };
 
+
         BitArrayRange op(6, 0);
         etiss_uint32 opRd = op.read(ba);
 
@@ -377,7 +378,7 @@ void RV32IMACFDArch::compensateEndianess(ETISS_CPU *cpu, etiss::instr::BitArray 
 
 std::shared_ptr<etiss::VirtualStruct> RV32IMACFDArch::getVirtualStruct(ETISS_CPU *cpu)
 {
-    auto ret = etiss::VirtualStruct::allocate(cpu, [](etiss::VirtualStruct::Field*f) { delete f; });
+    auto ret = etiss::VirtualStruct::allocate(cpu, [](etiss::VirtualStruct::Field *f) { delete f; });
 
     for (uint32_t i = 0; i < 32; i += 1)
     {
