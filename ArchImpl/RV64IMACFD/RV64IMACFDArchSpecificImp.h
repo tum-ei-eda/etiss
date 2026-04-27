@@ -61,16 +61,18 @@ class RegField_RV64IMACFD : public etiss::VirtualStruct::Field
     virtual ~RegField_RV64IMACFD() {}
 
   protected:
-    virtual uint64_t _read() const
+    virtual uint64_t _read(size_t offset) const
     {
         // clang-format off
+        assert((offset == 0 || (offset < (bitwidth_ / sizeof(uint64_t)))) && "Virtualstruct field offset out of range");
         return (uint64_t) *((RV64IMACFD*)parent_.structure_)->X[gprid_];
         // clang-format on
     }
 
-    virtual void _write(uint64_t val)
+    virtual void _write(uint64_t val, size_t offset)
     {
         // clang-format off
+        assert((offset == 0 || (offset < (bitwidth_ / sizeof(uint64_t)))) && "Virtualstruct field offset out of range");
         etiss::log(etiss::VERBOSE, "write to ETISS cpu state", name_, val);
         *((RV64IMACFD*)parent_.structure_)->X[gprid_] = (etiss_uint64) val;
         // clang-format on
@@ -96,16 +98,18 @@ class pcField_RV64IMACFD : public etiss::VirtualStruct::Field
     virtual ~pcField_RV64IMACFD() {}
 
   protected:
-    virtual uint64_t _read() const
+    virtual uint64_t _read(size_t offset) const
     {
         // clang-format off
+        assert((offset == 0 || (offset < (bitwidth_ / sizeof(uint64_t)))) && "Virtualstruct field offset out of range");
         return (uint64_t) ((ETISS_CPU *)parent_.structure_)->instructionPointer;
         // clang-format on
     }
 
-    virtual void _write(uint64_t val)
+    virtual void _write(uint64_t val, size_t offset)
     {
         // clang-format off
+        assert((offset == 0 || (offset < (bitwidth_ / sizeof(uint64_t)))) && "Virtualstruct field offset out of range");
         etiss::log(etiss::VERBOSE, "write to ETISS cpu state", name_, val);
         ((ETISS_CPU *)parent_.structure_)->instructionPointer = (etiss_uint64) val;
         // clang-format on
