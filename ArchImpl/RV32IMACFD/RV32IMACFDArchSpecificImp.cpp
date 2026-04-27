@@ -326,14 +326,38 @@ void RV32IMACFDArch::compensateEndianess(ETISS_CPU *cpu, etiss::instr::BitArray 
 
 std::shared_ptr<etiss::VirtualStruct> RV32IMACFDArch::getVirtualStruct(ETISS_CPU *cpu)
 {
-    auto ret = etiss::VirtualStruct::allocate(cpu, [](etiss::VirtualStruct::Field *f) { delete f; });
+    auto ret = etiss::VirtualStruct::allocate(cpu, [](etiss::VirtualStruct::Field*f) { delete f; });
 
-    for (uint32_t i = 0; i < 32; ++i)
-    {
+    for (uint32_t i = 0; i < 32; i += 1){
         ret->addField(new RegField_RV32IMACFD(*ret, i));
     }
-
+    for (uint32_t i = 0; i < 32; i += 1){
+        ret->addField(new FloatRegField_RV32IMACFD(*ret, i));
+    }
+    for (uint32_t i = 1; i < 4; i += 1){
+        ret->addField(new CSRField_RV32IMACFD(*ret, i));
+    }
+    for (uint32_t i = 768; i < 775; i += 1){
+        ret->addField(new CSRField_RV32IMACFD(*ret, i));
+    }
+    for (uint32_t i = 832; i < 837; i += 1){
+        ret->addField(new CSRField_RV32IMACFD(*ret, i));
+    }
+    ret->addField(new CSRField_RV32IMACFD(*ret, 2816));
+    ret->addField(new CSRField_RV32IMACFD(*ret, 2818));
+    ret->addField(new CSRField_RV32IMACFD(*ret, 2944));
+    ret->addField(new CSRField_RV32IMACFD(*ret, 2946));
+    for (uint32_t i = 3072; i < 3075; i += 1){
+        ret->addField(new CSRField_RV32IMACFD(*ret, i));
+    }
+    for (uint32_t i = 3200; i < 3203; i += 1){
+        ret->addField(new CSRField_RV32IMACFD(*ret, i));
+    }
+    for (uint32_t i = 3857; i < 3861; i += 1){
+        ret->addField(new CSRField_RV32IMACFD(*ret, i));
+    }
     ret->addField(new pcField_RV32IMACFD(*ret));
+
     return ret;
 }
 
