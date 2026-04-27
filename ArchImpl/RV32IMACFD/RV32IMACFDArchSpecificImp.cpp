@@ -377,7 +377,7 @@ void RV32IMACFDArch::compensateEndianess(ETISS_CPU *cpu, etiss::instr::BitArray 
 
 std::shared_ptr<etiss::VirtualStruct> RV32IMACFDArch::getVirtualStruct(ETISS_CPU *cpu)
 {
-    auto ret = etiss::VirtualStruct::allocate(cpu, [](etiss::VirtualStruct::Field *f) { delete f; });
+    auto ret = etiss::VirtualStruct::allocate(cpu, [](etiss::VirtualStruct::Field*f) { delete f; });
 
     for (uint32_t i = 0; i < 32; i += 1)
     {
