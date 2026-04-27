@@ -122,7 +122,7 @@ void VirtualStruct::Field::signalWrite()
     {
         if (l.first)
         {
-            l.first->write(*this, read(0));
+            l.first->write(*this, read());
         }
     }
 }
@@ -169,10 +169,10 @@ bool VirtualStruct::Field::_applyBitflip(unsigned position, uint64_t fault_id)
         return lapplyBitflip(position, fault_id);
     if ((flags_ & RW) != RW)
         return false;
-    uint64_t val = read(0);
+    uint64_t val = read();
     uint64_t errval = ((uint64_t)1) << position;
     errval = val ^ errval;
-    write(errval, 0);
+    write(errval);
     std::stringstream ss;
     ss << "Injected bitflip in " << name_ << " 0x" << std::hex << val << "->0x" << errval << std::dec;
     etiss::log(etiss::INFO, ss.str());
@@ -463,7 +463,7 @@ bool VirtualStruct::readField(void *fastfieldaccessptr, uint64_t &val, std::stri
         errormsg = "No read access";
         return false;
     }
-    val = f->read(0);
+    val = f->read();
     return true;
 }
 bool VirtualStruct::applyAction(const etiss::fault::Fault &fault, const etiss::fault::Action &action,

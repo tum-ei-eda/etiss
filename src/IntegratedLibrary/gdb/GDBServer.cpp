@@ -290,16 +290,16 @@ void Server::handlePacket(bool block)
                     switch (f->width_)
                     {
                     case 1:
-                        hex::fromInt(answer, (uint8_t)f->read(0), arch_->getGDBCore().isLittleEndian());
+                        hex::fromInt(answer, (uint8_t)f->read(), arch_->getGDBCore().isLittleEndian());
                         break;
                     case 2:
-                        hex::fromInt(answer, (uint16_t)f->read(0), arch_->getGDBCore().isLittleEndian());
+                        hex::fromInt(answer, (uint16_t)f->read(), arch_->getGDBCore().isLittleEndian());
                         break;
                     case 4:
-                        hex::fromInt(answer, (uint32_t)f->read(0), arch_->getGDBCore().isLittleEndian());
+                        hex::fromInt(answer, (uint32_t)f->read(), arch_->getGDBCore().isLittleEndian());
                         break;
                     case 8:
-                        hex::fromInt(answer, (uint64_t)f->read(0), arch_->getGDBCore().isLittleEndian());
+                        hex::fromInt(answer, (uint64_t)f->read(), arch_->getGDBCore().isLittleEndian());
                         break;
                     default:
                         answer = "EFF";
@@ -341,16 +341,16 @@ void Server::handlePacket(bool block)
                         switch (f->width_)
                         {
                         case 1:
-                            f->write(hex::toInt<uint8_t>(command, arch_->getGDBCore().isLittleEndian(), off), 0);
+                            f->write(hex::toInt<uint8_t>(command, arch_->getGDBCore().isLittleEndian(), off));
                             break;
                         case 2:
-                            f->write(hex::toInt<uint16_t>(command, arch_->getGDBCore().isLittleEndian(), off), 0);
+                            f->write(hex::toInt<uint16_t>(command, arch_->getGDBCore().isLittleEndian(), off));
                             break;
                         case 4:
-                            f->write(hex::toInt<uint32_t>(command, arch_->getGDBCore().isLittleEndian(), off), 0);
+                            f->write(hex::toInt<uint32_t>(command, arch_->getGDBCore().isLittleEndian(), off));
                             break;
                         case 8:
-                            f->write(hex::toInt<uint64_t>(command, arch_->getGDBCore().isLittleEndian(), off), 0);
+                            f->write(hex::toInt<uint64_t>(command, arch_->getGDBCore().isLittleEndian(), off));
                             break;
                         default:
                             answer = "EFF";
@@ -394,16 +394,16 @@ void Server::handlePacket(bool block)
                 switch (f->width_)
                 {
                 case 1:
-                    f->write(hex::toInt<uint8_t>(valToWrite, arch_->getGDBCore().isLittleEndian(), off), 0);
+                    f->write(hex::toInt<uint8_t>(valToWrite, arch_->getGDBCore().isLittleEndian(), off));
                     break;
                 case 2:
-                    f->write(hex::toInt<uint16_t>(valToWrite, arch_->getGDBCore().isLittleEndian(), off), 0);
+                    f->write(hex::toInt<uint16_t>(valToWrite, arch_->getGDBCore().isLittleEndian(), off));
                     break;
                 case 4:
-                    f->write(hex::toInt<uint32_t>(valToWrite, arch_->getGDBCore().isLittleEndian(), off), 0);
+                    f->write(hex::toInt<uint32_t>(valToWrite, arch_->getGDBCore().isLittleEndian(), off));
                     break;
                 case 8:
-                    f->write(hex::toInt<uint64_t>(valToWrite, arch_->getGDBCore().isLittleEndian(), off), 0);
+                    f->write(hex::toInt<uint64_t>(valToWrite, arch_->getGDBCore().isLittleEndian(), off));
                     break;
                 default:
                     answer = "EFF";
