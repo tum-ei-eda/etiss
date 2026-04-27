@@ -16,6 +16,7 @@
 #include "etiss/VirtualStruct.h"
 #include "etiss/jit/CPU.h"
 #include "RV64IMACFD.h"
+#include "RV64IMACFDFuncs.h"
 
 /**
     @brief VirtualStruct for RV64IMACFD architecture to faciliate register acess
@@ -78,6 +79,114 @@ class RegField_RV64IMACFD : public etiss::VirtualStruct::Field
         // clang-format on
     }
 };
+
+class FloatRegField_RV64IMACFD : public etiss::VirtualStruct::Field
+{
+  private:
+    const unsigned gprid_;
+
+  public:
+    FloatRegField_RV64IMACFD(etiss::VirtualStruct &parent, unsigned gprid)
+        // clang-format off
+            : Field(parent,
+              std::string("F")+etiss::toString(gprid),
+              std::string("F")+etiss::toString(gprid),
+              R|W,
+              8
+            ),
+            gprid_(gprid)
+    // clang-format on
+    {
+    }
+
+    FloatRegField_RV64IMACFD(etiss::VirtualStruct &parent, std::string name, unsigned gprid)
+        // clang-format off
+        : Field(parent,
+              name,
+              name,
+              R|W,
+              8
+            ),
+            gprid_(gprid)
+    // clang-format on
+    {
+    }
+
+    virtual ~FloatRegField_RV64IMACFD() {}
+
+  protected:
+    virtual uint64_t _read(size_t offset) const
+    {
+        // clang-format off
+        assert((offset == 0 || (offset < (bitwidth_ / sizeof(uint64_t)))) && "Virtualstruct field offset out of range");
+        return (uint64_t) *((RV64IMACFD*)parent_.structure_)->F[gprid_];
+        // clang-format on
+    }
+
+    virtual void _write(uint64_t val, size_t offset)
+    {
+        // clang-format off
+        assert((offset == 0 || (offset < (bitwidth_ / sizeof(uint64_t)))) && "Virtualstruct field offset out of range");
+        etiss::log(etiss::VERBOSE, "write to ETISS cpu state", name_, val);
+        *((RV64IMACFD*)parent_.structure_)->F[gprid_] = (etiss_uint64) val;
+        // clang-format on
+    }
+};
+
+
+class CSRField_RV64IMACFD : public etiss::VirtualStruct::Field
+{
+  private:
+    const unsigned gprid_;
+
+  public:
+    CSRField_RV64IMACFD(etiss::VirtualStruct &parent, unsigned gprid)
+        // clang-format off
+        : Field(parent,
+            std::string("CSR")+etiss::toString(gprid),
+            std::string("CSR")+etiss::toString(gprid),
+            R|W,
+            8
+        ),
+        gprid_(gprid)
+    // clang-format on
+    {
+    }
+
+    CSRField_RV64IMACFD(etiss::VirtualStruct &parent, std::string name, unsigned gprid)
+        // clang-format off
+      : Field(parent,
+        name,
+        name,
+        R|W,
+        8
+      ),
+      gprid_(gprid)
+    // clang-format on
+    {
+    }
+
+    virtual ~CSRField_RV64IMACFD() {}
+
+  protected:
+    virtual uint64_t _read(size_t offset) const
+    {
+        // clang-format off
+        assert((offset == 0 || (offset < (bitwidth_ / sizeof(uint64_t)))) && "Virtualstruct field offset out of range");
+        return (uint64_t) RV64IMACFD_csr_read((ETISS_CPU*)parent_.structure_, nullptr, nullptr, (etiss_uint64) gprid_);
+        // clang-format on
+    }
+
+    virtual void _write(uint64_t val, size_t offset)
+    {
+        // clang-format off
+        assert((offset == 0 || (offset < (bitwidth_ / sizeof(uint64_t)))) && "Virtualstruct field offset out of range");
+        etiss::log(etiss::VERBOSE, "write to ETISS cpu state", name_, val);
+        RV64IMACFD_csr_write((ETISS_CPU*)parent_.structure_, nullptr, nullptr, gprid_, (etiss_uint64) val);
+        // clang-format on
+    }
+};
+
 
 class pcField_RV64IMACFD : public etiss::VirtualStruct::Field
 {
