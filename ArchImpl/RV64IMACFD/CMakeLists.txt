@@ -1,4 +1,4 @@
-# Generated on Mon, 10 Nov 2025 11:27:24 +0000.
+# Generated on Mon, 27 Apr 2026 10:48:13 +0000.
 #
 # This file contains the CMake build info for the RV64IMACFD core architecture.
 

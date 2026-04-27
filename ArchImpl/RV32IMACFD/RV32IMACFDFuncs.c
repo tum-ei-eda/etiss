@@ -1,5 +1,5 @@
 /**
- * Generated on Mon, 10 Nov 2025 11:27:12 +0000.
+ * Generated on Mon, 27 Apr 2026 10:48:14 +0000.
  *
  * This file contains the function implementations for the RV32IMACFD core architecture.
  */
@@ -253,7 +253,7 @@ etiss_uint8 RV32IMACFD_ctz(etiss_uint64 val)
 {
 etiss_coverage_count(1, 161);
 { // block
-etiss_coverage_count(1, 703);
+etiss_coverage_count(1, 700);
 etiss_coverage_count(1, 609);
 if (!(val)) { // conditional
 etiss_coverage_count(2, 611, 610);
@@ -322,16 +322,14 @@ etiss_coverage_count(1, 687);
 if ((val << 63ULL) == 0LL) { // conditional
 etiss_coverage_count(6, 693, 690, 688, 689, 691, 692);
 { // block
-etiss_coverage_count(1, 700);
+etiss_coverage_count(1, 697);
 res = res + 1ULL;
 etiss_coverage_count(3, 696, 694, 695);
-val = val >> 1ULL;
-etiss_coverage_count(3, 699, 697, 698);
 } // block
 } // conditional
-etiss_coverage_count(1, 702);
+etiss_coverage_count(1, 699);
 return res;
-etiss_coverage_count(1, 701);
+etiss_coverage_count(1, 698);
 } // block
 }
 
@@ -341,85 +339,85 @@ cpu->return_pending = 1;
 cpu->exception = 0;
 etiss_coverage_count(1, 162);
 { // block
-etiss_coverage_count(1, 916);
+etiss_coverage_count(1, 929);
 etiss_uint32 epc = cpu->instructionPointer;
-etiss_coverage_count(2, 706, 705);
+etiss_coverage_count(2, 703, 702);
 etiss_uint32 deleg = 0LL;
-etiss_coverage_count(1, 708);
+etiss_coverage_count(1, 705);
 etiss_uint32 vector = 0LL;
-etiss_coverage_count(1, 709);
+etiss_coverage_count(1, 706);
 etiss_uint32 bit = mcause;
-etiss_coverage_count(2, 711, 710);
+etiss_coverage_count(2, 708, 707);
 etiss_int32 irq2 = (mcause & 2147483648ULL) != 0LL;
-etiss_coverage_count(6, 727, 726, 723, 713, 724, 725);
-etiss_coverage_count(1, 728);
+etiss_coverage_count(6, 724, 723, 720, 710, 721, 722);
+etiss_coverage_count(1, 725);
 if (irq2) { // conditional
-etiss_coverage_count(1, 729);
+etiss_coverage_count(1, 726);
 { // block
-etiss_coverage_count(1, 754);
+etiss_coverage_count(1, 751);
 deleg = ((((RV32IMACFD*)cpu)->PRIV <= 1LL)) ? (*((RV32IMACFD*)cpu)->CSR[771LL]) : (0LL);
-etiss_coverage_count(8, 740, 730, 739, 733, 731, 734, 737, 738);
+etiss_coverage_count(8, 737, 727, 736, 730, 728, 731, 734, 735);
 bit = bit & 2147483647ULL;
-etiss_coverage_count(2, 753, 741);
+etiss_coverage_count(2, 750, 738);
 } // block
 } // conditional
 else { // conditional
 { // block
-etiss_coverage_count(1, 766);
+etiss_coverage_count(1, 763);
 deleg = ((((RV32IMACFD*)cpu)->PRIV <= 1LL)) ? (*((RV32IMACFD*)cpu)->CSR[770LL]) : (0LL);
-etiss_coverage_count(8, 765, 755, 764, 758, 756, 759, 762, 763);
+etiss_coverage_count(8, 762, 752, 761, 755, 753, 756, 759, 760);
 } // block
 } // conditional
-etiss_coverage_count(1, 767);
+etiss_coverage_count(1, 764);
 if (((RV32IMACFD*)cpu)->PRIV <= 1LL && (deleg >> bit) & 1ULL) { // conditional
-etiss_coverage_count(9, 777, 770, 768, 776, 773, 771, 772, 774, 775);
+etiss_coverage_count(9, 774, 767, 765, 773, 770, 768, 769, 771, 772);
 { // block
-etiss_coverage_count(1, 846);
+etiss_coverage_count(1, 851);
 vector = ((*((RV32IMACFD*)cpu)->CSR[261LL] & 1ULL) && irq2) ? (bit * 4ULL) : (0LL);
-etiss_coverage_count(13, 792, 778, 791, 786, 783, 781, 782, 784, 785, 789, 787, 788, 790);
+etiss_coverage_count(13, 789, 775, 788, 783, 780, 778, 779, 781, 782, 786, 784, 785, 787);
 cpu->nextPc = (*((RV32IMACFD*)cpu)->CSR[261LL] & -2LL) + vector;
-etiss_coverage_count(7, 805, 793, 804, 801, 796, 802, 803);
+etiss_coverage_count(7, 802, 790, 801, 798, 793, 799, 800);
 *((RV32IMACFD*)cpu)->CSR[321LL] = epc;
-etiss_coverage_count(3, 810, 808, 809);
+etiss_coverage_count(3, 807, 805, 806);
 *((RV32IMACFD*)cpu)->CSR[322LL] = mcause;
-etiss_coverage_count(3, 815, 813, 814);
+etiss_coverage_count(3, 812, 810, 811);
 etiss_uint32 s = RV32IMACFD_csr_read(cpu, system, plugin_pointers, 256LL);
-etiss_coverage_count(2, 819, 818);
-s = RV32IMACFD_set_field(s, 32LL, RV32IMACFD_get_field(s, 2LL));
-etiss_coverage_count(6, 827, 820, 826, 821, 825, 823);
-s = RV32IMACFD_set_field(s, 256LL, ((RV32IMACFD*)cpu)->PRIV);
-etiss_coverage_count(5, 833, 828, 832, 829, 831);
-s = RV32IMACFD_set_field(s, 2LL, 0LL);
-etiss_coverage_count(5, 839, 834, 838, 835, 837);
+etiss_coverage_count(2, 816, 815);
+s = (etiss_uint32)(RV32IMACFD_set_field(s, 32LL, RV32IMACFD_get_field(s, 2LL)));
+etiss_coverage_count(7, 826, 817, 825, 823, 818, 822, 820);
+s = (etiss_uint32)(RV32IMACFD_set_field(s, 256LL, ((RV32IMACFD*)cpu)->PRIV));
+etiss_coverage_count(6, 834, 827, 833, 831, 828, 830);
+s = (etiss_uint32)(RV32IMACFD_set_field(s, 2LL, 0LL));
+etiss_coverage_count(6, 842, 835, 841, 839, 836, 838);
 RV32IMACFD_csr_write(cpu, system, plugin_pointers, 256LL, s);
-etiss_coverage_count(2, 842, 841);
-((RV32IMACFD*)cpu)->PRIV = (1LL) & 0x7ULL;
-etiss_coverage_count(2, 845, 843);
+etiss_coverage_count(2, 845, 844);
+((RV32IMACFD*)cpu)->PRIV = (1ULL) & 0x7ULL;
+etiss_coverage_count(2, 850, 846);
 } // block
 } // conditional
 else { // conditional
 { // block
-etiss_coverage_count(1, 915);
+etiss_coverage_count(1, 928);
 vector = ((*((RV32IMACFD*)cpu)->CSR[773LL] & 1ULL) && irq2) ? (bit * 4ULL) : (0LL);
-etiss_coverage_count(13, 861, 847, 860, 855, 852, 850, 851, 853, 854, 858, 856, 857, 859);
+etiss_coverage_count(13, 866, 852, 865, 860, 857, 855, 856, 858, 859, 863, 861, 862, 864);
 cpu->nextPc = (*((RV32IMACFD*)cpu)->CSR[773LL] & -2LL) + vector;
-etiss_coverage_count(7, 874, 862, 873, 870, 865, 871, 872);
+etiss_coverage_count(7, 879, 867, 878, 875, 870, 876, 877);
 *((RV32IMACFD*)cpu)->CSR[833LL] = epc;
-etiss_coverage_count(3, 879, 877, 878);
-*((RV32IMACFD*)cpu)->CSR[834LL] = mcause;
 etiss_coverage_count(3, 884, 882, 883);
+*((RV32IMACFD*)cpu)->CSR[834LL] = mcause;
+etiss_coverage_count(3, 889, 887, 888);
 etiss_uint32 s = RV32IMACFD_csr_read(cpu, system, plugin_pointers, 768LL);
-etiss_coverage_count(2, 888, 887);
-s = RV32IMACFD_set_field(s, 128LL, RV32IMACFD_get_field(s, 8LL));
-etiss_coverage_count(6, 896, 889, 895, 890, 894, 892);
-s = RV32IMACFD_set_field(s, 6144LL, ((RV32IMACFD*)cpu)->PRIV);
-etiss_coverage_count(5, 902, 897, 901, 898, 900);
-s = RV32IMACFD_set_field(s, 8LL, 0LL);
-etiss_coverage_count(5, 908, 903, 907, 904, 906);
+etiss_coverage_count(2, 893, 892);
+s = (etiss_uint32)(RV32IMACFD_set_field(s, 128LL, RV32IMACFD_get_field(s, 8LL)));
+etiss_coverage_count(7, 903, 894, 902, 900, 895, 899, 897);
+s = (etiss_uint32)(RV32IMACFD_set_field(s, 6144LL, ((RV32IMACFD*)cpu)->PRIV));
+etiss_coverage_count(6, 911, 904, 910, 908, 905, 907);
+s = (etiss_uint32)(RV32IMACFD_set_field(s, 8LL, 0LL));
+etiss_coverage_count(6, 919, 912, 918, 916, 913, 915);
 RV32IMACFD_csr_write(cpu, system, plugin_pointers, 768LL, s);
-etiss_coverage_count(2, 911, 910);
-((RV32IMACFD*)cpu)->PRIV = (3LL) & 0x7ULL;
-etiss_coverage_count(2, 914, 912);
+etiss_coverage_count(2, 922, 921);
+((RV32IMACFD*)cpu)->PRIV = (3ULL) & 0x7ULL;
+etiss_coverage_count(2, 927, 923);
 } // block
 } // conditional
 } // block
@@ -429,60 +427,60 @@ void RV32IMACFD_translate_exc_code(ETISS_CPU * const cpu, ETISS_System * const s
 {
 etiss_coverage_count(1, 163);
 { // block
-etiss_coverage_count(1, 973);
+etiss_coverage_count(1, 986);
 etiss_uint32 code = 0LL;
-etiss_coverage_count(2, 920, 919);
-etiss_coverage_count(1, 921);
+etiss_coverage_count(2, 933, 932);
+etiss_coverage_count(1, 934);
 if (cause == -2147483648LL) { // conditional
-etiss_coverage_count(2, 924, 922);
-etiss_coverage_count(1, 943);
+etiss_coverage_count(2, 937, 935);
+etiss_coverage_count(1, 956);
 return;
 } // conditional
  else if (cause == -5LL) { // conditional
-etiss_coverage_count(2, 927, 925);
+etiss_coverage_count(2, 940, 938);
 code = 5LL;
-etiss_coverage_count(2, 946, 944);
+etiss_coverage_count(2, 959, 957);
 } // conditional
  else if (cause == -14LL) { // conditional
-etiss_coverage_count(2, 930, 928);
+etiss_coverage_count(2, 943, 941);
 code = 13LL;
-etiss_coverage_count(2, 949, 947);
+etiss_coverage_count(2, 962, 960);
 } // conditional
  else if (cause == -6LL) { // conditional
-etiss_coverage_count(2, 933, 931);
+etiss_coverage_count(2, 946, 944);
 code = 7LL;
-etiss_coverage_count(2, 952, 950);
+etiss_coverage_count(2, 965, 963);
 } // conditional
  else if (cause == -15LL) { // conditional
-etiss_coverage_count(2, 936, 934);
+etiss_coverage_count(2, 949, 947);
 code = 15LL;
-etiss_coverage_count(2, 955, 953);
+etiss_coverage_count(2, 968, 966);
 } // conditional
  else if (cause == -7LL) { // conditional
-etiss_coverage_count(2, 939, 937);
+etiss_coverage_count(2, 952, 950);
 code = 1LL;
-etiss_coverage_count(2, 958, 956);
+etiss_coverage_count(2, 971, 969);
 } // conditional
  else if (cause == -9LL) { // conditional
-etiss_coverage_count(2, 942, 940);
+etiss_coverage_count(2, 955, 953);
 { // block
-etiss_coverage_count(1, 966);
+etiss_coverage_count(1, 979);
 code = RV32IMACFD_calc_irq_mcause(cpu, system, plugin_pointers);
-etiss_coverage_count(3, 961, 959, 960);
-etiss_coverage_count(1, 962);
+etiss_coverage_count(3, 974, 972, 973);
+etiss_coverage_count(1, 975);
 if (!(code)) { // conditional
-etiss_coverage_count(2, 964, 963);
-etiss_coverage_count(1, 965);
+etiss_coverage_count(2, 977, 976);
+etiss_coverage_count(1, 978);
 return;
 } // conditional
 } // block
 } // conditional
 else { // conditional
 code = 2LL;
-etiss_coverage_count(2, 969, 967);
+etiss_coverage_count(2, 982, 980);
 } // conditional
 RV32IMACFD_raise(cpu, system, plugin_pointers, 0LL, code);
-etiss_coverage_count(3, 972, 970, 971);
+etiss_coverage_count(3, 985, 983, 984);
 } // block
 }
 
@@ -490,111 +488,111 @@ etiss_uint32 RV32IMACFD_calc_irq_mcause(ETISS_CPU * const cpu, ETISS_System * co
 {
 etiss_coverage_count(1, 164);
 { // block
-etiss_coverage_count(1, 1154);
+etiss_coverage_count(1, 1171);
 etiss_uint32 pending_interrupts = *((RV32IMACFD*)cpu)->CSR[772LL] & *((RV32IMACFD*)cpu)->CSR[836LL];
-etiss_coverage_count(4, 982, 981, 977, 980);
-etiss_coverage_count(1, 983);
+etiss_coverage_count(4, 995, 994, 990, 993);
+etiss_coverage_count(1, 996);
 if (!(pending_interrupts)) { // conditional
-etiss_coverage_count(2, 985, 984);
-etiss_coverage_count(1, 987);
+etiss_coverage_count(2, 998, 997);
+etiss_coverage_count(1, 1000);
 return 0LL;
-etiss_coverage_count(1, 986);
+etiss_coverage_count(1, 999);
 } // conditional
-etiss_uint32 mie = RV32IMACFD_get_field(*((RV32IMACFD*)cpu)->CSR[768LL], 8LL);
-etiss_coverage_count(3, 994, 993, 991);
+etiss_uint32 mie = (etiss_uint32)(RV32IMACFD_get_field(*((RV32IMACFD*)cpu)->CSR[768LL], 8LL));
+etiss_coverage_count(4, 1009, 1008, 1006, 1004);
 etiss_uint32 m_enabled = ((RV32IMACFD*)cpu)->PRIV < 3LL || (((RV32IMACFD*)cpu)->PRIV == 3LL && mie);
-etiss_coverage_count(9, 1006, 1005, 998, 996, 1003, 1001, 999, 1002, 1004);
+etiss_coverage_count(9, 1021, 1020, 1013, 1011, 1018, 1016, 1014, 1017, 1019);
 etiss_uint32 enabled_interrupts = pending_interrupts & ~(*((RV32IMACFD*)cpu)->CSR[771LL]) & -(m_enabled);
-etiss_coverage_count(8, 1017, 1016, 1013, 1008, 1012, 1011, 1015, 1014);
-etiss_coverage_count(1, 1018);
+etiss_coverage_count(8, 1032, 1031, 1028, 1023, 1027, 1026, 1030, 1029);
+etiss_coverage_count(1, 1033);
 if (enabled_interrupts == 0LL) { // conditional
-etiss_coverage_count(3, 1021, 1019, 1020);
+etiss_coverage_count(3, 1036, 1034, 1035);
 { // block
-etiss_coverage_count(1, 1053);
+etiss_coverage_count(1, 1070);
 etiss_uint32 deleg = *((RV32IMACFD*)cpu)->CSR[771LL];
-etiss_coverage_count(2, 1026, 1025);
-etiss_uint32 sie = RV32IMACFD_get_field(RV32IMACFD_csr_read(cpu, system, plugin_pointers, 256LL), 2LL);
-etiss_coverage_count(3, 1032, 1031, 1029);
+etiss_coverage_count(2, 1041, 1040);
+etiss_uint32 sie = (etiss_uint32)(RV32IMACFD_get_field(RV32IMACFD_csr_read(cpu, system, plugin_pointers, 256LL), 2LL));
+etiss_coverage_count(4, 1049, 1048, 1046, 1044);
 etiss_uint32 s_enabled = ((RV32IMACFD*)cpu)->PRIV < 1LL || (((RV32IMACFD*)cpu)->PRIV == 1LL && sie);
-etiss_coverage_count(9, 1044, 1043, 1036, 1034, 1041, 1039, 1037, 1040, 1042);
+etiss_coverage_count(9, 1061, 1060, 1053, 1051, 1058, 1056, 1054, 1057, 1059);
 enabled_interrupts = pending_interrupts & deleg & -(s_enabled);
-etiss_coverage_count(8, 1052, 1045, 1051, 1048, 1046, 1047, 1050, 1049);
+etiss_coverage_count(8, 1069, 1062, 1068, 1065, 1063, 1064, 1067, 1066);
 } // block
 } // conditional
-etiss_coverage_count(1, 1054);
+etiss_coverage_count(1, 1071);
 if (enabled_interrupts) { // conditional
-etiss_coverage_count(1, 1055);
+etiss_coverage_count(1, 1072);
 { // block
-etiss_coverage_count(1, 1151);
-etiss_coverage_count(1, 1056);
+etiss_coverage_count(1, 1168);
+etiss_coverage_count(1, 1073);
 if (enabled_interrupts >> 12ULL) { // conditional
-etiss_coverage_count(2, 1062, 1057);
+etiss_coverage_count(2, 1079, 1074);
 enabled_interrupts = enabled_interrupts >> 12ULL << 12ULL;
-etiss_coverage_count(5, 1105, 1093, 1104, 1099, 1094);
+etiss_coverage_count(5, 1122, 1110, 1121, 1116, 1111);
 } // conditional
  else if (enabled_interrupts & 2048LL) { // conditional
-etiss_coverage_count(2, 1065, 1063);
+etiss_coverage_count(2, 1082, 1080);
 enabled_interrupts = 2048LL;
-etiss_coverage_count(2, 1108, 1106);
+etiss_coverage_count(2, 1125, 1123);
 } // conditional
  else if (enabled_interrupts & 8LL) { // conditional
-etiss_coverage_count(2, 1068, 1066);
+etiss_coverage_count(2, 1085, 1083);
 enabled_interrupts = 8LL;
-etiss_coverage_count(2, 1111, 1109);
+etiss_coverage_count(2, 1128, 1126);
 } // conditional
  else if (enabled_interrupts & 128LL) { // conditional
-etiss_coverage_count(2, 1071, 1069);
+etiss_coverage_count(2, 1088, 1086);
 enabled_interrupts = 128LL;
-etiss_coverage_count(2, 1114, 1112);
+etiss_coverage_count(2, 1131, 1129);
 } // conditional
  else if (enabled_interrupts & 512LL) { // conditional
-etiss_coverage_count(2, 1074, 1072);
+etiss_coverage_count(2, 1091, 1089);
 enabled_interrupts = 512LL;
-etiss_coverage_count(2, 1117, 1115);
+etiss_coverage_count(2, 1134, 1132);
 } // conditional
  else if (enabled_interrupts & 2LL) { // conditional
-etiss_coverage_count(2, 1077, 1075);
+etiss_coverage_count(2, 1094, 1092);
 enabled_interrupts = 2LL;
-etiss_coverage_count(2, 1120, 1118);
+etiss_coverage_count(2, 1137, 1135);
 } // conditional
  else if (enabled_interrupts & 32LL) { // conditional
-etiss_coverage_count(2, 1080, 1078);
+etiss_coverage_count(2, 1097, 1095);
 enabled_interrupts = 32LL;
-etiss_coverage_count(2, 1123, 1121);
+etiss_coverage_count(2, 1140, 1138);
 } // conditional
  else if (enabled_interrupts & 8192LL) { // conditional
-etiss_coverage_count(2, 1083, 1081);
+etiss_coverage_count(2, 1100, 1098);
 enabled_interrupts = 8192LL;
-etiss_coverage_count(2, 1126, 1124);
+etiss_coverage_count(2, 1143, 1141);
 } // conditional
  else if (enabled_interrupts & 1024LL) { // conditional
-etiss_coverage_count(2, 1086, 1084);
+etiss_coverage_count(2, 1103, 1101);
 enabled_interrupts = 1024LL;
-etiss_coverage_count(2, 1129, 1127);
+etiss_coverage_count(2, 1146, 1144);
 } // conditional
  else if (enabled_interrupts & 4LL) { // conditional
-etiss_coverage_count(2, 1089, 1087);
+etiss_coverage_count(2, 1106, 1104);
 enabled_interrupts = 4LL;
-etiss_coverage_count(2, 1132, 1130);
+etiss_coverage_count(2, 1149, 1147);
 } // conditional
  else if (enabled_interrupts & 64LL) { // conditional
-etiss_coverage_count(2, 1092, 1090);
+etiss_coverage_count(2, 1109, 1107);
 enabled_interrupts = 64LL;
-etiss_coverage_count(2, 1135, 1133);
+etiss_coverage_count(2, 1152, 1150);
 } // conditional
 else { // conditional
-etiss_coverage_count(1, 1137);
+etiss_coverage_count(1, 1154);
 return 0LL;
-etiss_coverage_count(1, 1136);
+etiss_coverage_count(1, 1153);
 } // conditional
-etiss_coverage_count(1, 1150);
+etiss_coverage_count(1, 1167);
 return 2147483648ULL | RV32IMACFD_ctz(enabled_interrupts);
-etiss_coverage_count(3, 1149, 1148, 1147);
+etiss_coverage_count(3, 1166, 1165, 1164);
 } // block
 } // conditional
-etiss_coverage_count(1, 1153);
+etiss_coverage_count(1, 1170);
 return 0LL;
-etiss_coverage_count(1, 1152);
+etiss_coverage_count(1, 1169);
 } // block
 }
 
@@ -602,14 +600,14 @@ void RV32IMACFD_check_irq(ETISS_CPU * const cpu, ETISS_System * const system, vo
 {
 etiss_coverage_count(1, 165);
 { // block
-etiss_coverage_count(1, 1163);
+etiss_coverage_count(1, 1180);
 etiss_uint32 irq_mcause = RV32IMACFD_calc_irq_mcause(cpu, system, plugin_pointers);
-etiss_coverage_count(2, 1157, 1156);
-etiss_coverage_count(1, 1158);
+etiss_coverage_count(2, 1174, 1173);
+etiss_coverage_count(1, 1175);
 if (irq_mcause) { // conditional
-etiss_coverage_count(1, 1159);
+etiss_coverage_count(1, 1176);
 RV32IMACFD_raise(cpu, system, plugin_pointers, 1ULL, irq_mcause);
-etiss_coverage_count(3, 1162, 1160, 1161);
+etiss_coverage_count(3, 1179, 1177, 1178);
 } // conditional
 } // block
 }
