@@ -82,6 +82,11 @@ void RV64IMACFDArch::resetCPU(ETISS_CPU *cpu, etiss::uint64 *startpointer)
         rv64imacfdcpu->ins_CSR[i] = 0;
         rv64imacfdcpu->CSR[i] = &rv64imacfdcpu->ins_CSR[i];
     }
+    for (int i = 0; i < 32; ++i)
+    {
+        rv64imacfdcpu->ins_F[i] = 0;
+        rv64imacfdcpu->F[i] = &rv64imacfdcpu->ins_F[i];
+    }
 
     rv64imacfdcpu->ZERO = 0;
     rv64imacfdcpu->RA = 0;
@@ -126,13 +131,66 @@ void RV64IMACFDArch::resetCPU(ETISS_CPU *cpu, etiss::uint64 *startpointer)
     rv64imacfdcpu->PRIV = 0;
     rv64imacfdcpu->DPC = 0;
     rv64imacfdcpu->FCSR = 0;
+    rv64imacfdcpu->FFLAGS = 0;
+    rv64imacfdcpu->FRM = 0;
     rv64imacfdcpu->MSTATUS = 0;
     rv64imacfdcpu->MIE = 0;
     rv64imacfdcpu->MIP = 0;
-    for (int i = 0; i < 32; ++i)
-    {
-        rv64imacfdcpu->F[i] = 0;
-    }
+    rv64imacfdcpu->CYCLE = 0;
+    rv64imacfdcpu->CYCLEH = 0;
+    rv64imacfdcpu->MCYCLE = 0;
+    rv64imacfdcpu->MCYCLEH = 0;
+    rv64imacfdcpu->TIME = 0;
+    rv64imacfdcpu->TIMEH = 0;
+    rv64imacfdcpu->INSTRET = 0;
+    rv64imacfdcpu->INSTRETH = 0;
+    rv64imacfdcpu->MINSTRET = 0;
+    rv64imacfdcpu->MINSTRETH = 0;
+    rv64imacfdcpu->MVENDORID = 0;
+    rv64imacfdcpu->MARCHID = 0;
+    rv64imacfdcpu->MIMPID = 0;
+    rv64imacfdcpu->MHARTID = 0;
+    rv64imacfdcpu->MISA = 0;
+    rv64imacfdcpu->MEDELEG = 0;
+    rv64imacfdcpu->MIDELEG = 0;
+    rv64imacfdcpu->MTVEC = 0;
+    rv64imacfdcpu->MCOUNTEREN = 0;
+    rv64imacfdcpu->MSCRATCH = 0;
+    rv64imacfdcpu->MEPC = 0;
+    rv64imacfdcpu->MCAUSE = 0;
+    rv64imacfdcpu->MTVAL = 0;
+    rv64imacfdcpu->FT0 = 0;
+    rv64imacfdcpu->FT1 = 0;
+    rv64imacfdcpu->FT2 = 0;
+    rv64imacfdcpu->FT3 = 0;
+    rv64imacfdcpu->FT4 = 0;
+    rv64imacfdcpu->FT5 = 0;
+    rv64imacfdcpu->FT6 = 0;
+    rv64imacfdcpu->FT7 = 0;
+    rv64imacfdcpu->FS0 = 0;
+    rv64imacfdcpu->FS1 = 0;
+    rv64imacfdcpu->FA0 = 0;
+    rv64imacfdcpu->FA1 = 0;
+    rv64imacfdcpu->FA2 = 0;
+    rv64imacfdcpu->FA3 = 0;
+    rv64imacfdcpu->FA4 = 0;
+    rv64imacfdcpu->FA5 = 0;
+    rv64imacfdcpu->FA6 = 0;
+    rv64imacfdcpu->FA7 = 0;
+    rv64imacfdcpu->FS2 = 0;
+    rv64imacfdcpu->FS3 = 0;
+    rv64imacfdcpu->FS4 = 0;
+    rv64imacfdcpu->FS5 = 0;
+    rv64imacfdcpu->FS6 = 0;
+    rv64imacfdcpu->FS7 = 0;
+    rv64imacfdcpu->FS8 = 0;
+    rv64imacfdcpu->FS9 = 0;
+    rv64imacfdcpu->FS10 = 0;
+    rv64imacfdcpu->FS11 = 0;
+    rv64imacfdcpu->FT8 = 0;
+    rv64imacfdcpu->FT9 = 0;
+    rv64imacfdcpu->FT10 = 0;
+    rv64imacfdcpu->FT11 = 0;
     rv64imacfdcpu->RES_ADDR = 0;
 
     rv64imacfdcpu->X[0] = &rv64imacfdcpu->ZERO;
@@ -168,9 +226,66 @@ void RV64IMACFDArch::resetCPU(ETISS_CPU *cpu, etiss::uint64 *startpointer)
     rv64imacfdcpu->X[30] = &rv64imacfdcpu->T5;
     rv64imacfdcpu->X[31] = &rv64imacfdcpu->T6;
     rv64imacfdcpu->CSR[3] = &rv64imacfdcpu->FCSR;
+    rv64imacfdcpu->CSR[1] = &rv64imacfdcpu->FFLAGS;
+    rv64imacfdcpu->CSR[2] = &rv64imacfdcpu->FRM;
     rv64imacfdcpu->CSR[768] = &rv64imacfdcpu->MSTATUS;
     rv64imacfdcpu->CSR[772] = &rv64imacfdcpu->MIE;
     rv64imacfdcpu->CSR[836] = &rv64imacfdcpu->MIP;
+    rv64imacfdcpu->CSR[3072] = &rv64imacfdcpu->CYCLE;
+    rv64imacfdcpu->CSR[3200] = &rv64imacfdcpu->CYCLEH;
+    rv64imacfdcpu->CSR[2816] = &rv64imacfdcpu->MCYCLE;
+    rv64imacfdcpu->CSR[2944] = &rv64imacfdcpu->MCYCLEH;
+    rv64imacfdcpu->CSR[3073] = &rv64imacfdcpu->TIME;
+    rv64imacfdcpu->CSR[3201] = &rv64imacfdcpu->TIMEH;
+    rv64imacfdcpu->CSR[3074] = &rv64imacfdcpu->INSTRET;
+    rv64imacfdcpu->CSR[3202] = &rv64imacfdcpu->INSTRETH;
+    rv64imacfdcpu->CSR[2818] = &rv64imacfdcpu->MINSTRET;
+    rv64imacfdcpu->CSR[2946] = &rv64imacfdcpu->MINSTRETH;
+    rv64imacfdcpu->CSR[3857] = &rv64imacfdcpu->MVENDORID;
+    rv64imacfdcpu->CSR[3858] = &rv64imacfdcpu->MARCHID;
+    rv64imacfdcpu->CSR[3859] = &rv64imacfdcpu->MIMPID;
+    rv64imacfdcpu->CSR[3860] = &rv64imacfdcpu->MHARTID;
+    rv64imacfdcpu->CSR[769] = &rv64imacfdcpu->MISA;
+    rv64imacfdcpu->CSR[770] = &rv64imacfdcpu->MEDELEG;
+    rv64imacfdcpu->CSR[771] = &rv64imacfdcpu->MIDELEG;
+    rv64imacfdcpu->CSR[773] = &rv64imacfdcpu->MTVEC;
+    rv64imacfdcpu->CSR[774] = &rv64imacfdcpu->MCOUNTEREN;
+    rv64imacfdcpu->CSR[832] = &rv64imacfdcpu->MSCRATCH;
+    rv64imacfdcpu->CSR[833] = &rv64imacfdcpu->MEPC;
+    rv64imacfdcpu->CSR[834] = &rv64imacfdcpu->MCAUSE;
+    rv64imacfdcpu->CSR[835] = &rv64imacfdcpu->MTVAL;
+    rv64imacfdcpu->F[0] = &rv64imacfdcpu->FT0;
+    rv64imacfdcpu->F[1] = &rv64imacfdcpu->FT1;
+    rv64imacfdcpu->F[2] = &rv64imacfdcpu->FT2;
+    rv64imacfdcpu->F[3] = &rv64imacfdcpu->FT3;
+    rv64imacfdcpu->F[4] = &rv64imacfdcpu->FT4;
+    rv64imacfdcpu->F[5] = &rv64imacfdcpu->FT5;
+    rv64imacfdcpu->F[6] = &rv64imacfdcpu->FT6;
+    rv64imacfdcpu->F[7] = &rv64imacfdcpu->FT7;
+    rv64imacfdcpu->F[8] = &rv64imacfdcpu->FS0;
+    rv64imacfdcpu->F[9] = &rv64imacfdcpu->FS1;
+    rv64imacfdcpu->F[10] = &rv64imacfdcpu->FA0;
+    rv64imacfdcpu->F[11] = &rv64imacfdcpu->FA1;
+    rv64imacfdcpu->F[12] = &rv64imacfdcpu->FA2;
+    rv64imacfdcpu->F[13] = &rv64imacfdcpu->FA3;
+    rv64imacfdcpu->F[14] = &rv64imacfdcpu->FA4;
+    rv64imacfdcpu->F[15] = &rv64imacfdcpu->FA5;
+    rv64imacfdcpu->F[16] = &rv64imacfdcpu->FA6;
+    rv64imacfdcpu->F[17] = &rv64imacfdcpu->FA7;
+    rv64imacfdcpu->F[18] = &rv64imacfdcpu->FS2;
+    rv64imacfdcpu->F[19] = &rv64imacfdcpu->FS3;
+    rv64imacfdcpu->F[20] = &rv64imacfdcpu->FS4;
+    rv64imacfdcpu->F[21] = &rv64imacfdcpu->FS5;
+    rv64imacfdcpu->F[22] = &rv64imacfdcpu->FS6;
+    rv64imacfdcpu->F[23] = &rv64imacfdcpu->FS7;
+    rv64imacfdcpu->F[24] = &rv64imacfdcpu->FS8;
+    rv64imacfdcpu->F[25] = &rv64imacfdcpu->FS9;
+    rv64imacfdcpu->F[26] = &rv64imacfdcpu->FS10;
+    rv64imacfdcpu->F[27] = &rv64imacfdcpu->FS11;
+    rv64imacfdcpu->F[28] = &rv64imacfdcpu->FT8;
+    rv64imacfdcpu->F[29] = &rv64imacfdcpu->FT9;
+    rv64imacfdcpu->F[30] = &rv64imacfdcpu->FT10;
+    rv64imacfdcpu->F[31] = &rv64imacfdcpu->FT11;
 
     rv64imacfdcpu->PRIV = 3ULL;
     rv64imacfdcpu->DPC = 0LL;
@@ -263,6 +378,38 @@ const char * const reg_name[] =
     "X29",
     "X30",
     "X31",
+    "F0",
+    "F1",
+    "F2",
+    "F3",
+    "F4",
+    "F5",
+    "F6",
+    "F7",
+    "F8",
+    "F9",
+    "F10",
+    "F11",
+    "F12",
+    "F13",
+    "F14",
+    "F15",
+    "F16",
+    "F17",
+    "F18",
+    "F19",
+    "F20",
+    "F21",
+    "F22",
+    "F23",
+    "F24",
+    "F25",
+    "F26",
+    "F27",
+    "F28",
+    "F29",
+    "F30",
+    "F31",
 };
 // clang-format on
 
