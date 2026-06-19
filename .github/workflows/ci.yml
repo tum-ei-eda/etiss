@@ -137,8 +137,8 @@ jobs:
 
     - name: Run test
       run: |
-        chmod +x etiss_prebuilt/bin/bare_etiss_processor
-        etiss_prebuilt/bin/bare_etiss_processor -iexamples_prebuilt_rv${{matrix.bits}}/ini/${{matrix.test_program}}.ini --jit.type=${{matrix.jit_engine}}JIT
+        chmod +x etiss_prebuilt-${{ matrix.os.name }}-${{ matrix.os.version }}/bin/bare_etiss_processor
+        etiss_prebuilt-${{ matrix.os.name }}-${{ matrix.os.version }}/bin/bare_etiss_processor -iexamples_prebuilt_rv${{matrix.bits}}/ini/${{matrix.test_program}}.ini --jit.type=${{matrix.jit_engine}}JIT
 
   run_benchmarks:
     needs: [build_etiss, build_examples]
@@ -172,8 +172,8 @@ jobs:
 
     - name: Run benchmark
       run: |
-        chmod +x etiss_prebuilt/bin/bare_etiss_processor
-        etiss_prebuilt/bin/bare_etiss_processor -iexamples_prebuilt_rv${{matrix.bits}}/ini/dhry.ini --jit.type=${{matrix.jit_engine}}JIT --vp.stats_file_path=${{github.workspace}}/run_${{matrix.jit_engine}}_${{matrix.bits}}_${{matrix.run_no}}.json
+        chmod +x etiss_prebuilt-${{ matrix.os.name }}-${{ matrix.os.version }}/bin/bare_etiss_processor
+        etiss_prebuilt-${{ matrix.os.name }}-${{ matrix.os.version }}/bin/bare_etiss_processor -iexamples_prebuilt_rv${{matrix.bits}}/ini/dhry.ini --jit.type=${{matrix.jit_engine}}JIT --vp.stats_file_path=${{github.workspace}}/run_${{matrix.jit_engine}}_${{matrix.bits}}_${{matrix.run_no}}.json
 
     - name: Save Benchmark results
       uses: actions/upload-artifact@v4
