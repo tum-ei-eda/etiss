@@ -1,12 +1,11 @@
 /**
- * Generated on Fri, 19 Jun 2026 08:11:15 +0000.
+ * Generated on Fri, 19 Jun 2026 11:48:00 +0000.
  *
  * This file contains the registers for the RV32IMACFD core architecture.
  */
 
 #ifndef ETISS_RV32IMACFDArch_RV32IMACFD_H_
 #define ETISS_RV32IMACFDArch_RV32IMACFD_H_
-#include <stdio.h>
 #include "etiss/jit/CPU.h"
 
 #ifdef __cplusplus
