@@ -1,5 +1,5 @@
 /**
- * Generated on Mon, 15 Jun 2026 06:54:08 +0000.
+ * Generated on Fri, 19 Jun 2026 08:11:15 +0000.
  *
  * This file contains the architecture class for the RV32IMACFD core architecture.
  */
@@ -66,6 +66,20 @@ class RV32IMACFDArch : public etiss::CPUArch
         @see RV32IMACFDArchSpecificImp.h
     */
     virtual etiss::int32 handleException(etiss::int32 code, ETISS_CPU *cpu);
+
+    /**
+        @brief This function will return the base installation directory of the ArchLib
+
+        @see RV32IMACFDArchSpecificImp.h
+    */
+    virtual std::string installDir() const;
+
+    /**
+        @brief This function will return the include prefix relative to the base installation directory of the ArchLib
+
+        @see RV32IMACFDArchSpecificImp.h
+    */
+    virtual std::string jitFiles() const;
 
     /**
         @brief This function is called during CPUArch initialization

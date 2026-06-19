@@ -43,7 +43,7 @@ VirtualStruct::Field::Field(VirtualStruct &parent, const std::string &name, cons
 
 VirtualStruct::Field::~Field() {}
 
-uint64_t VirtualStruct::Field::read() const
+uint64_t VirtualStruct::Field::read(size_t offset) const
 {
 
     if (!(flags_ & R))
@@ -70,7 +70,7 @@ uint64_t VirtualStruct::Field::read() const
             break;
         }
     case VIRTUAL:
-        ret = _read();
+        ret = _read(offset);
         break;
     default:
         throw std::runtime_error("invalid enum value");
@@ -79,7 +79,7 @@ uint64_t VirtualStruct::Field::read() const
 
     return ret;
 }
-void VirtualStruct::Field::write(uint64_t val)
+void VirtualStruct::Field::write(uint64_t val, size_t offset)
 {
 
     if (!(flags_ & W))
@@ -109,7 +109,7 @@ void VirtualStruct::Field::write(uint64_t val)
             break;
         }
     case VIRTUAL:
-        _write(val);
+        _write(val, offset);
         break;
     }
 
@@ -153,11 +153,11 @@ bool VirtualStruct::Field::applyAction(const etiss::fault::Fault &f, const etiss
     return _applyAction(f, a, errormsg);
 }
 
-uint64_t VirtualStruct::Field::_read() const
+uint64_t VirtualStruct::Field::_read(size_t) const
 {
     throw std::runtime_error("VirtualStruct::Field::_read called but not implemented");
 }
-void VirtualStruct::Field::_write(uint64_t)
+void VirtualStruct::Field::_write(uint64_t, size_t)
 {
     throw std::runtime_error("VirtualStruct::Field::_write called but not implemented");
 }

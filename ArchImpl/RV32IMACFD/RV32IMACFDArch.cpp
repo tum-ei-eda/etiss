@@ -1,5 +1,5 @@
 /**
- * Generated on Mon, 15 Jun 2026 06:54:08 +0000.
+ * Generated on Fri, 19 Jun 2026 08:11:15 +0000.
  *
  * This file contains the architecture class for the RV32IMACFD core architecture.
  */
@@ -378,6 +378,38 @@ const char * const reg_name[] =
     "X29",
     "X30",
     "X31",
+    "F0",
+    "F1",
+    "F2",
+    "F3",
+    "F4",
+    "F5",
+    "F6",
+    "F7",
+    "F8",
+    "F9",
+    "F10",
+    "F11",
+    "F12",
+    "F13",
+    "F14",
+    "F15",
+    "F16",
+    "F17",
+    "F18",
+    "F19",
+    "F20",
+    "F21",
+    "F22",
+    "F23",
+    "F24",
+    "F25",
+    "F26",
+    "F27",
+    "F28",
+    "F29",
+    "F30",
+    "F31",
 };
 // clang-format on
 

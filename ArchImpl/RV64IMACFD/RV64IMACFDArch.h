@@ -1,5 +1,5 @@
 /**
- * Generated on Mon, 15 Jun 2026 06:54:17 +0000.
+ * Generated on Fri, 19 Jun 2026 08:11:16 +0000.
  *
  * This file contains the architecture class for the RV64IMACFD core architecture.
  */
@@ -66,6 +66,20 @@ class RV64IMACFDArch : public etiss::CPUArch
         @see RV64IMACFDArchSpecificImp.h
     */
     virtual etiss::int32 handleException(etiss::int32 code, ETISS_CPU *cpu);
+
+    /**
+        @brief This function will return the base installation directory of the ArchLib
+
+        @see RV64IMACFDArchSpecificImp.h
+    */
+    virtual std::string installDir() const;
+
+    /**
+        @brief This function will return the include prefix relative to the base installation directory of the ArchLib
+
+        @see RV64IMACFDArchSpecificImp.h
+    */
+    virtual std::string jitFiles() const;
 
     /**
         @brief This function is called during CPUArch initialization
