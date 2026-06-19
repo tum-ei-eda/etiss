@@ -73,14 +73,6 @@ Change into the ETISS root directory:
 
 	$ cd etiss
 
-Create a build directoriy in the root directory of ETISS:
-
-	$ mkdir build_dir
-
-Change to the created directory, e.g.,
-
-	$ cd build_dir
-
 If LLVM-JIT compiler is used, source it with the environment variable (not needed if in system paths):
 
 	$ export LLVM_DIR=/path/to/llvm
@@ -88,23 +80,32 @@ If LLVM-JIT compiler is used, source it with the environment variable (not neede
 Configure the build system, e.g.,
 Replace `` `pwd`/installed`` with your `<etiss_install_path>` if you do not like to install etiss into `build_dir/installed/`. Set up path to cmake if necessary. Replace `Release` with `Debug` for development purposes.
 
-	$ cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=`pwd`/installed ..
+	$ cmake -S . -B build -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=`pwd`/build/installed
+
+<details>
+<summary>Hint for ETISS Developers</summary>
+
+You can speedup the ETISS (re-)build time using CCache (`apt install ccache`). Enable it in CMake during configuration via:
+
+	$ cmake -S . -B build -D CMAKE_C_COMPILER_LAUNCHER=ccache -D CMAKE_CXX_COMPILER_LAUNCHER=ccache -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=`pwd`/build/installed
+
+</details>
 
 Compile the package:
 
-	$ make
+	$ cmake --build build
 
 Build the documentation (optional):
 
-	$ make doc
+	$ cmake --build build --target doc
 
 Install the package:
 
-	$ make install
+	$ cmake --build build --target install
 
 To save time, compiling can be sped up by using multiple CPU cores:
 
-	$ make -j$(nproc)
+	$  cmake --build build --parallel $(nproc)
 
 ## WINDOWS SYSTEM
 

@@ -2,12 +2,17 @@
 set -e
 # Config
 
-ETISS_DIR=@ETISS_DIR@
+ETISS_BIN_DIR=$(dirname -- "$(readlink -f -- "$0")")
 
 # Clear tmp file
 DYN_INI=$(mktemp /tmp/etiss_dynamic_XXXXXXXXXX.ini)
 echo "" > $DYN_INI
 
+cleanup () {
+    echo "Cleaning up temp files..."
+    rm $DYN_INI
+}
+trap cleanup EXIT
 
 # Args
 if [ "$#" -lt 1 ]; then
@@ -30,7 +35,7 @@ TARGETSW_PATH_ELF=$1
 TARGET_ELFFILE=$(basename -- "$TARGETSW_PATH_ELF")
 TARGET_ELFDIR=$(dirname -- "$TARGETSW_PATH_ELF")
 
-VP_EXE="${ETISS_DIR}/bin/bare_etiss_processor"
+VP_EXE="${ETISS_BIN_DIR}/bare_etiss_processor"
 
 
 CMD_OPTIONS=""
@@ -43,6 +48,7 @@ LOG_PC="false"
 LOG_LEVEL=4
 DO_TRACE=0
 NOLOOP=0
+NOLOGGER=0
 JIT="TCCJIT"
 shift
 while [ "$#" -gt 0 ];
@@ -52,7 +58,7 @@ do
         USE_GDB=1
     elif [ "$arg" = "tgdb" ]; then
         USE_TGDB=1
-        echo -e "[Plugin gdbserver]\n plugin.gdbserver.port=2222" >> $DYN_INI
+        echo -e "[Plugin gdbserver]\nplugin.gdbserver.port=2222" >> $DYN_INI
     elif [ "$arg" = "noattach" ]; then
         DO_NOT_ATTACH=1
     elif [ "$arg" = "nodmi" ]; then
@@ -71,6 +77,8 @@ do
         JIT="LLVMJIT"
     elif [ "$arg" = "noloop" ]; then
         NOLOOP=1
+    elif [ "$arg" = "nologger" ]; then
+        NOLOGGER=1
     elif [ "$arg" = "vp" ]; then
         VP_EXE="$2"
         shift
@@ -79,6 +87,10 @@ do
     fi
     shift
 done
+
+if [ "${NOLOGGER}" -eq 0 ]; then
+    echo -e "[Plugin Logger]\nplugin.logger.logaddr=0x80000000\nplugin.logger.logmask=0xF0000000" >> $DYN_INI
+fi
 
 echo -e "[StringConfigurations]\n" >> $DYN_INI
 echo -e "vp.elf_file=$TARGETSW_PATH_ELF" >> $DYN_INI
@@ -107,7 +119,7 @@ echo -e "simple_mem_system.memseg_origin_01=0x00080000" >> $DYN_INI
 echo -e "simple_mem_system.memseg_length_01=0x00080000" >> $DYN_INI
 
 # Call
-ARGS="-i${ETISS_DIR}/examples/base.ini -i${DYN_INI} ${CMD_OPTIONS}"
+ARGS="-i${ETISS_BIN_DIR}/../examples/base.ini -i${DYN_INI} ${CMD_OPTIONS}"
 
 if [ "${USE_TGDB}" -eq 1 ]; then
     if [ "${DO_NOT_ATTACH}" -eq 0 ]; then
@@ -119,5 +131,3 @@ if [ "${USE_GDB}" -eq 1 ]; then
 else
     ${VP_EXE} ${ARGS}
 fi
-
-rm $DYN_INI

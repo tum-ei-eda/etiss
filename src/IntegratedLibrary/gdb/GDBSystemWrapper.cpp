@@ -69,10 +69,19 @@ static etiss_int32 gdb_system_call_dbg_write(void *handle, etiss_uint64 addr, et
     return gdbsys->sys_->dbg_write(gdbsys->sys_->handle, addr, buffer, length);
 }
 
-static void gdb_system_call_syncTime(void *handle, ETISS_CPU *cpu)
+#ifdef ETISS_ENABLE_SYNCTIME_EXCEPTIONS
+static etiss_int32
+#else
+static void
+#endif
+gdb_system_call_syncTime(void *handle, ETISS_CPU *cpu)
 {
     ETISS_GDBSystem *gdbsys = (ETISS_GDBSystem *)handle;
+#ifdef ETISS_ENABLE_SYNCTIME_EXCEPTIONS
+    return gdbsys->sys_->syncTime(gdbsys->sys_->handle, cpu);
+#else
     gdbsys->sys_->syncTime(gdbsys->sys_->handle, cpu);
+#endif
 }
 
 ETISS_System *Server::wrap(ETISS_CPU *cpu, ETISS_System *sys)

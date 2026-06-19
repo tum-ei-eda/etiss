@@ -503,7 +503,7 @@ void etiss_loadIniConfigs()
                     {
                         std::string itemval = iter_value.pItem;
                         std::size_t sz = 0;
-                        long long val;
+                        long long val = 0;
                         try
                         {
                             val = std::stoll(itemval, &sz, 0);
@@ -716,6 +716,7 @@ void etiss_initialize(const std::vector<std::string> &args, bool forced = false)
             desc.add_options()
             ("help", "Produce a help message that lists all supported options.")
             ("ini,i", po::value<std::vector<std::string>>(), "INI file(s)")
+            ("etiss_wd", po::value<std::string>(), "ETISS working directory to resolve libs.")
             ("arch.cpu", po::value<std::string>(), "The CPU Architecture to simulate.")
             ("arch.or1k.ignore_sr_iee", po::value<bool>(), "Ignore exception on OpenRISC.")
             ("arch.or1k.if_stall_cycles", po::value<int>(), "Add instruction stall cycles on OpenRISC.")
@@ -740,7 +741,8 @@ void etiss_initialize(const std::vector<std::string> &args, bool forced = false)
             ("vp.sw_binary_rom", po::value<std::string>(), "Path to binary file to be loaded into ROM.")
             ("vp.elf_file", po::value<std::string>(), "Load ELF file.")
             ("vp.stats_file_path", po::value<std::string>(), "Path where the output json file gets stored after bare processor is run.")
-            ("vp.quiet", po::value<std::string>(), "Disable logging of bare_etiss_processor.")
+            ("vp.quiet", po::value<bool>(), "Disable logging of bare_etiss_processor.")
+            ("vp.enable_irq_handler", po::value<bool>(), "Enable interrupt handler plugin.")
             ("faults.xml", po::value<std::string>(), "Path to faults XML file.")
             ("simple_mem_system.print_dbus_access", po::value<bool>(), "Traces accesses to the data bus.")
             ("simple_mem_system.print_ibus_access", po::value<bool>(), "Traces accesses to the instruction bus.")
