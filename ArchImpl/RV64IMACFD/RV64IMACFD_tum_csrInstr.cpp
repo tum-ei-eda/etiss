@@ -1,6 +1,6 @@
 // clang-format off
 /**
- * Generated on Mon, 15 Jun 2026 06:54:17 +0000.
+ * Generated on Fri, 19 Jun 2026 08:11:16 +0000.
  *
  * This file contains the instruction behavior models of the tum_csr
  * instruction set for the RV64IMACFD core architecture.
