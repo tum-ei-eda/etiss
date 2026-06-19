@@ -1,8 +1,9 @@
-# Generated on Fri, 19 Jun 2026 08:11:15 +0000.
+# Generated on Fri, 19 Jun 2026 11:48:00 +0000.
 #
 # This file contains the CMake build info for the RV32IMACFD core architecture.
 
 PROJECT(RV32IMACFD)
+FIND_PACKAGE(ETISS)
 
 SET(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
 SET(CMAKE_INSTALL_RPATH "\$ORIGIN/../../include/jit/etiss/jit")
@@ -28,25 +29,27 @@ ADD_LIBRARY(${PROJECT_NAME} SHARED
 	RV32IMACFD_tum_semihostingInstr.cpp
 )
 
-add_custom_command(
-	TARGET ${PROJECT_NAME} POST_BUILD
-	COMMAND ${CMAKE_COMMAND} -E copy
-		"${CMAKE_CURRENT_LIST_DIR}/${PROJECT_NAME}Funcs.h"
-		"${ETISS_BINARY_DIR}/include/jit/Arch/${PROJECT_NAME}"
-)
+IF(ETISS_BINARY_DIR)
+	ADD_CUSTOM_COMMAND(
+		TARGET ${PROJECT_NAME} POST_BUILD
+		COMMAND ${CMAKE_COMMAND} -E copy
+			"${CMAKE_CURRENT_LIST_DIR}/${PROJECT_NAME}Funcs.h"
+			"${ETISS_BINARY_DIR}/include/jit/Arch/${PROJECT_NAME}"
+	)
+ENDIF()
 INSTALL(FILES "${CMAKE_CURRENT_LIST_DIR}/${PROJECT_NAME}Funcs.h" DESTINATION "include/jit/Arch/${PROJECT_NAME}")
 
 # handle gdbserver xml files
-if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/xml")
-	add_custom_target(copy_${PROJECT_NAME}_xml ALL
+IF(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/xml")
+	ADD_CUSTOM_TARGET(copy_${PROJECT_NAME}_xml ALL
 		COMMAND ${CMAKE_COMMAND} -E make_directory
 			"${CMAKE_CURRENT_LIST_DIR}/xml"
 		COMMAND ${CMAKE_COMMAND} -E copy_directory
 			"${CMAKE_CURRENT_LIST_DIR}/xml"
 			"${ETISS_BINARY_DIR}/xml/${PROJECT_NAME}"
 	)
-	add_dependencies(${PROJECT_NAME} copy_${PROJECT_NAME}_xml)
-	install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/xml/ DESTINATION xml/${PROJECT_NAME})
-endif()
+	ADD_DEPENDENCIES(${PROJECT_NAME} copy_${PROJECT_NAME}_xml)
+	INSTALL(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/xml/ DESTINATION xml/${PROJECT_NAME})
+ENDIF()
 
 ETISSPluginArch(${PROJECT_NAME})
