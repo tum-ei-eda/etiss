@@ -19,8 +19,8 @@ jobs:
       matrix:
         build_type: [Release]
         os:
-          - {name: "ubuntu", version: "22.04", llvm_version: "20"}
-          - {name: "ubuntu", version: "24.04", llvm_version: "15"}
+          - {name: "ubuntu", version: "22.04", llvm_version: "15"}
+          - {name: "ubuntu", version: "24.04", llvm_version: "20"}
     runs-on: ${{ matrix.os.name }}-${{ matrix.os.version }}
 
     steps:
@@ -115,8 +115,8 @@ jobs:
         jit_engine: ["TCC", "GCC", "LLVM"]
         test_program: ["example_c", "example_cpp", "test_cases"]
         os:
-          - {name: "ubuntu", version: "22.04", llvm_version: "20"}
-          - {name: "ubuntu", version: "24.04", llvm_version: "15"}
+          - {name: "ubuntu", version: "22.04", llvm_version: "15"}
+          - {name: "ubuntu", version: "24.04", llvm_version: "20"}
     runs-on: ${{ matrix.os.name }}-${{ matrix.os.version }}
 
     steps:
@@ -150,8 +150,8 @@ jobs:
         # run_no: [1, 2, 3, 4, 5]
         run_no: [1, 5]
         os:
-          - {name: "ubuntu", version: "22.04", llvm_version: "20"}
-          - {name: "ubuntu", version: "24.04", llvm_version: "15"}
+          - {name: "ubuntu", version: "22.04", llvm_version: "15"}
+          - {name: "ubuntu", version: "24.04", llvm_version: "20"}
     runs-on: ${{ matrix.os.name }}-${{ matrix.os.version }}
 
     steps:
