@@ -20,6 +20,7 @@
 name: Trigger ETISS Test Flow and wait for completion
 
 on:
+  workflow_dispatch: {}
   pull_request:
     branches: [ "master" ]
     paths:
@@ -36,17 +37,25 @@ on:
 jobs:
   trigger_repo:
     # Only run for PR from the same repository (forks do not have permission to trigger external CI)
-    if: github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - name: Trigger Seal5 ETISS Test Flow
+    - name: Trigger Seal5 ETISS Test Flow (PR)
+      if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository }}
       uses: peter-evans/repository-dispatch@v3
       with:
          token: ${{ secrets.SEAL5_ACCESS_TOKEN }}
          repository: tum-ei-eda/seal5_etiss_test_env
          event-type: etiss-event
          client-payload: '{"triggered_run_id": "${{ github.run_id }}", "ref": "${{ github.event.pull_request.head.sha }}", "from": "etiss", "is_pr": "true"}'
+    - name: Trigger Seal5 ETISS Test Flow (Manual)
+      if: if: ${{ github.event_name == 'workflow_dispatch' }}
+      uses: peter-evans/repository-dispatch@v3
+      with:
+         token: ${{ secrets.SEAL5_ACCESS_TOKEN }}
+         repository: tum-ei-eda/seal5_etiss_test_env
+         event-type: etiss-event
+         client-payload: '{"triggered_run_id": "${{ github.run_id }}", "ref": "${{ github.sha }}", "from": "etiss", "is_pr": "true"}'
 
     - name: Wait for Results
       uses: ./.github/actions/wait-for-workflow-results
