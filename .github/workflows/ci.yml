@@ -19,8 +19,8 @@ jobs:
       matrix:
         build_type: [Release]
         os:
-          - {name: "ubuntu", version: "22.04", pkg_llvm: "llvm-20-dev", pkg_libclang: "libclang-20-dev", pkg_libclang: "clang-20"}
-          - {name: "ubuntu", version: "24.04", pkg_llvm: "llvm-11-dev", pkg_libclang: "libclang-11-dev", pkg_libclang: "clang-11"}
+          - {name: "ubuntu", version: "22.04", llvm_version: "20"}
+          - {name: "ubuntu", version: "24.04", llvm_version: "15"}
     runs-on: ${{ matrix.os.name }}-${{ matrix.os.version }}
 
     steps:
@@ -31,10 +31,9 @@ jobs:
 
     - name: Install build dependencies
       run: |
-        sudo apt update
-        sudo apt remove -y llvm* clang* libllvm* libclang*
-        sudo apt install -y libboost-filesystem-dev libboost-program-options-dev \
-          llvm-15-dev libclang-15-dev clang-15
+        sudo apt-get update
+        sudo apt-get install -y libboost-filesystem-dev libboost-program-options-dev \
+          llvm-${{ matrix.os.llvm_version }}-dev libclang-${{ matrix.os.llvm_version }}-dev clang-${{ matrix.os.llvm_version }}
 
     - name: Setup ccache
       uses: hendrikmuhs/ccache-action@v1
@@ -116,8 +115,8 @@ jobs:
         jit_engine: ["TCC", "GCC", "LLVM"]
         test_program: ["example_c", "example_cpp", "test_cases"]
         os:
-          - {name: "ubuntu", version: "22.04", pkg_llvm: "llvm-20-dev", pkg_libclang: "libclang-20-dev", pkg_libclang: "clang-20"}
-          - {name: "ubuntu", version: "24.04", pkg_llvm: "llvm-11-dev", pkg_libclang: "libclang-11-dev", pkg_libclang: "clang-11"}
+          - {name: "ubuntu", version: "22.04", llvm_version: "20"}
+          - {name: "ubuntu", version: "24.04", llvm_version: "15"}
     runs-on: ${{ matrix.os.name }}-${{ matrix.os.version }}
 
     steps:
@@ -134,7 +133,7 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y libboost-filesystem-dev libboost-program-options-dev
+        sudo apt-get install -y libboost-filesystem-dev libboost-program-options-dev libllvm${{ matrix.os.llvm_version }}
 
     - name: Run test
       run: |
@@ -151,8 +150,8 @@ jobs:
         # run_no: [1, 2, 3, 4, 5]
         run_no: [1, 5]
         os:
-          - {name: "ubuntu", version: "22.04", pkg_llvm: "llvm-20-dev", pkg_libclang: "libclang-20-dev", pkg_libclang: "clang-20"}
-          - {name: "ubuntu", version: "24.04", pkg_llvm: "llvm-11-dev", pkg_libclang: "libclang-11-dev", pkg_libclang: "clang-11"}
+          - {name: "ubuntu", version: "22.04", llvm_version: "20"}
+          - {name: "ubuntu", version: "24.04", llvm_version: "15"}
     runs-on: ${{ matrix.os.name }}-${{ matrix.os.version }}
 
     steps:
@@ -169,7 +168,7 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y libboost-filesystem-dev libboost-program-options-dev
+        sudo apt-get install -y libboost-filesystem-dev libboost-program-options-dev libllvm${{ matrix.os.llvm_version }}
 
     - name: Run benchmark
       run: |
