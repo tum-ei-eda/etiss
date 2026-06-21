@@ -274,6 +274,7 @@ cp.code() += "return cpu->exception;\n";
                     ic.is_not_default_width_ = false;
             };
 
+
         BitArrayRange op(6, 0);
         etiss_uint32 opRd = op.read(ba);
 
