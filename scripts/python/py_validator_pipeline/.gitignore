@@ -1,0 +1,21 @@
+# Virtual env
+**/venv
+
+
+# Caches
+**/__pycache__/
+
+
+# JetBrains Pycharm
+**/.idea
+
+
+# Logs
+**/*.log
+
+
+# Temporary files
+**/tmp
+
+# Scripts to run program with test material
+scripts/
