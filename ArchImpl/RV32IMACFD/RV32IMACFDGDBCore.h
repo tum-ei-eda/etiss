@@ -1,5 +1,5 @@
 /**
- * Generated on Fri, 19 Jun 2026 11:48:00 +0000.
+ * Generated on Sun, 21 Jun 2026 16:57:08 +0000.
  *
  * This file contains the GDBCore adapter for the RV32IMACFD core architecture.
  *
@@ -35,24 +35,6 @@ class RV32IMACFDGDBCore : public etiss::plugin::gdb::GDBCore
   public:
     std::string mapRegister(unsigned index)
     {
-        if (index < 32)
-        {
-            std::stringstream ss;
-            ss << "X" << index;
-            return ss.str();
-        }
-        if ((32 < index) && (index < 65))
-        {
-            std::stringstream ss;
-            ss << "F" << (index - 33);
-            return ss.str();
-        }
-        if ((64 < index) && (index < 69))
-        {  // FCSR
-            std::stringstream ss;
-            ss << "CSR" << (index - 65);
-            return ss.str();
-        }
         switch (index)
         {
         case 0:

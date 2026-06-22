@@ -1,5 +1,5 @@
 /**
- * Generated on Fri, 19 Jun 2026 11:48:00 +0000.
+ * Generated on Sun, 21 Jun 2026 16:57:08 +0000.
  *
  * This file contains the architecture specific implementation for the RV32IMACFD
  * core architecture.
@@ -273,7 +273,6 @@ cp.code() += "return cpu->exception;\n";
                     // This might happen when code is followed by data.
                     ic.is_not_default_width_ = false;
             };
-
 
         BitArrayRange op(6, 0);
         etiss_uint32 opRd = op.read(ba);
