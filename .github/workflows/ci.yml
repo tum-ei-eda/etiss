@@ -32,6 +32,7 @@ jobs:
     - name: Install build dependencies
       run: |
         sudo apt-get update
+        sudo apt remove -y llvm* clang* libllvm* libclang*
         sudo apt-get install -y libboost-filesystem-dev libboost-program-options-dev \
           llvm-${{ matrix.os.llvm_version }}-dev libclang-${{ matrix.os.llvm_version }}-dev clang-${{ matrix.os.llvm_version }}
 
@@ -53,6 +54,12 @@ jobs:
     - name: CMake install
       run: |
         cmake --build etiss_build --target install
+
+    - name: Verify installed JIT plugins
+      run: |
+        test -f etiss_prebuilt/lib/plugins/libTCCJIT.so
+        test -f etiss_prebuilt/lib/plugins/libGCCJIT.so
+        test -f etiss_prebuilt/lib/plugins/libLLVMJIT.so
 
     - name: Upload compiled ETISS
       uses: actions/upload-artifact@v4
@@ -135,7 +142,7 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y libboost-filesystem-dev libboost-program-options-dev libllvm${{ matrix.os.llvm_version }}
+        sudo apt-get install -y libboost-filesystem-dev libboost-program-options-dev libllvm${{ matrix.os.llvm_version }} libclang-cpp${{ matrix.os.llvm_version }}
 
     - name: Run test
       run: |
@@ -172,7 +179,7 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y libboost-filesystem-dev libboost-program-options-dev libllvm${{ matrix.os.llvm_version }}
+        sudo apt-get install -y libboost-filesystem-dev libboost-program-options-dev libllvm${{ matrix.os.llvm_version }} libclang-cpp${{ matrix.os.llvm_version }}
 
     - name: Run benchmark
       run: |
