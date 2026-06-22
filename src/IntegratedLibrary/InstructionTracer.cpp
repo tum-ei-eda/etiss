@@ -2,6 +2,7 @@
 // Created by holaphei on 27/05/25.
 //
 
+#include "etiss/Instruction.h"
 #include "etiss/IntegratedLibrary/InstructionTracer.h"
 #include "etiss/ETISS.h"
 #include "etiss/IntegratedLibrary/TraceFileWriter.h"

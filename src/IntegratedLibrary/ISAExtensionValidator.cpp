@@ -2,6 +2,7 @@
 // Created by holaphei on 03/05/25.
 //
 
+#include "etiss/Instruction.h"
 #include "etiss/IntegratedLibrary/ISAExtensionValidator.h"
 
 #include "../../ArchImpl/RV32IMACFD/RV32IMACFD.h"
