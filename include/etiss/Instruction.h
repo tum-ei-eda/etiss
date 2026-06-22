@@ -23,8 +23,6 @@
 
 #include "etiss/Misc.h"
 
-#include "etiss/CodePart.h"
-
 #include <climits>
 #include <cstring>
 #include <iomanip>
@@ -40,13 +38,6 @@ namespace instr
 {
 
 typedef uint32_t I;
-
-class Instruction;
-class VariableInstructionSet;
-class ModedInstructionSet;
-class InstructionClass;
-class InstructionGroup;
-class InstructionDefinition;
 
 /**
 Buffer for reading data from memory while instructions are being fetched

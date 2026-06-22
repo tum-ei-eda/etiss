@@ -4,16 +4,20 @@
 == Branching & Release Policy
 
 We keep our repository simple and trunk-based.
-This keeps the history linear, the main branch always deployable, and releases easy to reproduce from tags.
+This keeps the history linear, keeps the main branch always deployable, and makes releases easy to reproduce from tags.
+
+=== Develop Branch
+* The `develop` branch always reflects the latest development state.
+* All work happens on short-lived branches (`feature/...`, `fix/...`) and is merged back into `develop` via pull requests.
 
 === Main Branch
-* The `master` branch always reflects the latest development state.
-* All work happens on short-lived branches (`feature/...`, `fix/...`) and is merged back into `master` via pull requests.
+* The `master` branch always reflects the latest released state.
+* The `develop` branch is merged back into `master` via pull requests in preparation for a new release.
 * Direct pushes to `master` are not allowed.
 
 === Feature Branches
-* Create a new branch off `master` for each contribution.
-* Use a descriptive name, e.g. `feature/add-new-decoder` or `fix/memory-leak`.
+* Create a new branch off `develop` for each contribution.
+* Use a descriptive name, e.g., `feature/add-new-decoder` or `fix/memory-leak`.
 * Keep branches short-lived and rebase regularly to reduce merge conflicts.
 
 === Releases
@@ -28,5 +32,4 @@ git push origin v0.11.0
 ----
 
 === Hotfixes
-* Urgent fixes are applied directly on `master` and a new patch tag is created (e.g. `v0.11.1`).
-
+* Urgent fixes are applied directly on `master,` and a new patch tag is created (e.g., `v0.11.1`).

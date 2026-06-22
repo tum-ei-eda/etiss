@@ -28,6 +28,10 @@
 #include "etiss/IntegratedLibrary/InstructionSpecificAddressCallback.h"
 #include "etiss/IntegratedLibrary/InstructionTracer.h"
 
+#include "etiss/CPUArch.h"
+#include "etiss/JIT.h"
+#include "etiss/Plugin.h"
+
 extern "C"
 {
 

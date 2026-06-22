@@ -6,7 +6,6 @@
 
 #include "etiss/jit/ReturnCode.h"
 #include "etiss/Plugin.h"
-#include "etiss/VirtualStruct.h"
 
 namespace etiss
 {

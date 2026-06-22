@@ -11,6 +11,7 @@ add_library(${PROJECT_NAME} SHARED
     TCCJIT.h
     TCCJITLib.cpp
 )
+add_dependencies(${PROJECT_NAME} TinyCC)
 
 ### configure tcc architecture
 unset(TCCJIT_ARCH)

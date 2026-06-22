@@ -5,6 +5,9 @@
 // LICENSE file.
 
 #include "etiss/VirtualStruct.h"
+#include "etiss/fault/Trigger.h"
+#include "etiss/fault/Action.h"
+#include "etiss/fault/Fault.h"
 
 namespace etiss
 {
@@ -40,7 +43,7 @@ VirtualStruct::Field::Field(VirtualStruct &parent, const std::string &name, cons
 
 VirtualStruct::Field::~Field() {}
 
-uint64_t VirtualStruct::Field::read() const
+uint64_t VirtualStruct::Field::read(size_t offset) const
 {
 
     if (!(flags_ & R))
@@ -67,7 +70,7 @@ uint64_t VirtualStruct::Field::read() const
             break;
         }
     case VIRTUAL:
-        ret = _read();
+        ret = _read(offset);
         break;
     default:
         throw std::runtime_error("invalid enum value");
@@ -76,7 +79,7 @@ uint64_t VirtualStruct::Field::read() const
 
     return ret;
 }
-void VirtualStruct::Field::write(uint64_t val)
+void VirtualStruct::Field::write(uint64_t val, size_t offset)
 {
 
     if (!(flags_ & W))
@@ -106,7 +109,7 @@ void VirtualStruct::Field::write(uint64_t val)
             break;
         }
     case VIRTUAL:
-        _write(val);
+        _write(val, offset);
         break;
     }
 
@@ -150,11 +153,11 @@ bool VirtualStruct::Field::applyAction(const etiss::fault::Fault &f, const etiss
     return _applyAction(f, a, errormsg);
 }
 
-uint64_t VirtualStruct::Field::_read() const
+uint64_t VirtualStruct::Field::_read(size_t) const
 {
     throw std::runtime_error("VirtualStruct::Field::_read called but not implemented");
 }
-void VirtualStruct::Field::_write(uint64_t)
+void VirtualStruct::Field::_write(uint64_t, size_t)
 {
     throw std::runtime_error("VirtualStruct::Field::_write called but not implemented");
 }
@@ -181,7 +184,8 @@ bool VirtualStruct::Field::_applyAction(const etiss::fault::Fault &f, const etis
     if (a.getType() == +etiss::fault::Action::type_t::MASK)
     {
         uint64_t mask_value = a.getMaskValue();
-        uint64_t val = read(), errval;
+        uint64_t val = read();
+        uint64_t errval = val;
         switch (a.getMaskOp())
         {
         case etiss::fault::Action::mask_op_t::AND:
@@ -479,7 +483,9 @@ bool VirtualStruct::applyAction(const etiss::fault::Fault &fault, const etiss::f
         return applyCustomAction(fault, action, errormsg);
     }
     case +etiss::fault::Action::type_t::MASK:
+#if __cplusplus >= 201703L // in case of c++17 present we can use explicit fallthrough etc.
         [[fallthrough]];
+#endif
     case +etiss::fault::Action::type_t::BITFLIP: // handle bitflip
     {
         Field *f;
@@ -539,7 +545,9 @@ bool VirtualStruct::update_field_access_rights(const etiss::fault::Action &actio
         switch (action.getType())
         {
         case +etiss::fault::Action::type_t::MASK:
+#if __cplusplus >= 201703L // in case of c++17 present we can use explicit fallthrough etc.
             [[fallthrough]];
+#endif
         case +etiss::fault::Action::type_t::BITFLIP:
             f->flags_ |= Field::F;
             break;

@@ -17,7 +17,7 @@ set(ETISS_BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR} CACHE INTERNAL "ETISS build loc
 # Declare ETISS version
 set(ETISS_VERSION_MAJOR 0)
 set(ETISS_VERSION_MINOR 11)
-set(ETISS_VERSION_PATCH 1)
+set(ETISS_VERSION_PATCH 2)
 
 # Derived version variables
 set(ETISS_VERSION_FULL ${ETISS_VERSION_MAJOR}.${ETISS_VERSION_MINOR}.${ETISS_VERSION_PATCH})
@@ -33,11 +33,13 @@ option(ETISS_BUILD_MANUAL_DOC "If enabled then the documentation will not be bui
 option(ETISS_BUILD_DEFAULTSUB "If enabled then the ArchImpl,JITImpl,PluginImpl and projects folder will be added as subfolders. Please have a look at the CMakeLists.txt files of those folders for further information" ON)
 option(ETISS_USE_PROFILEFLAGS "Enable or disable the -pg compiler and linker flags." OFF)
 option(ETISS_USE_COREDSL_COVERAGE "Enable the CoreDSL coverage analyzer" OFF)
+option(ETISS_ENABLE_SYNCTIME_EXCEPTIONS "Enable the system wrapper to signal exceptions to the ETISS simulation loop from synctime routine called by external simulation kernels (e.g., SystemC terminating ETISS)." OFF)
+option(ETISS_PORTABLE_INSTALL "Portable installation with relative paths" OFF)
 
 # Global configuration
 SET(CMAKE_POSITION_INDEPENDENT_CODE ON)
 IF(NOT DEFINED CMAKE_CXX_STANDARD)
-SET(CMAKE_CXX_STANDARD 14) # default if not set by configuration
+SET(CMAKE_CXX_STANDARD 17) # default if not set by configuration
 ENDIF()
 MESSAGE(STATUS "CMAKE_CXX_STANDARD set to ${CMAKE_CXX_STANDARD}")
 SET(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -84,6 +86,10 @@ ENDIF()
 
 IF(ETISS_USE_COREDSL_COVERAGE)
     ADD_DEFINITIONS(-DETISS_USE_COREDSL_COVERAGE)
+ENDIF()
+
+IF(ETISS_ENABLE_SYNCTIME_EXCEPTIONS)
+    ADD_DEFINITIONS(-DETISS_ENABLE_SYNCTIME_EXCEPTIONS)
 ENDIF()
 
 # Include modules.
@@ -331,8 +337,9 @@ TARGET_INCLUDE_DIRECTORIES(ETISS PUBLIC
     ${INCGEN_INC_DIR}
 )
 TARGET_LINK_LIBRARIES(ETISS PUBLIC simpleini elfio pugixml betterenums)
-if(NOT CMAKE_CXX_STANDARD GREATER_EQUAL 20)
-    TARGET_LINK_LIBRARIES(ETISS PUBLIC fmt)
+if(ETISS_USE_FMT_LIB)
+    target_compile_definitions(ETISS PRIVATE "ETISS_USE_FMT_LIB")
+    TARGET_LINK_LIBRARIES(ETISS PRIVATE fmt)
 ENDIF()
 
 GENERATE_EXPORT_HEADER(ETISS
@@ -386,5 +393,6 @@ message(STATUS "ETISS_VERSION_FULL: ${ETISS_VERSION_FULL}")
 message(STATUS "ETISS_USE_PYTHON: ${ETISS_USE_PYTHON}")
 message(STATUS "ETISS_USE_PROFILEFLAGS: ${ETISS_USE_PROFILEFLAGS}")
 message(STATUS "ETISS_USE_COREDSL_COVERAGE: ${ETISS_USE_COREDSL_COVERAGE}")
+message(STATUS "ETISS_ENABLE_SYNCTIME_EXCEPTIONS: ${ETISS_ENABLE_SYNCTIME_EXCEPTIONS}")
 message(STATUS "ETISS_USE_DLSYM: ${ETISS_USE_DLSYM}")
 message(STATUS "ETISS_BUILD_MANUAL_DOC: ${ETISS_BUILD_MANUAL_DOC}")

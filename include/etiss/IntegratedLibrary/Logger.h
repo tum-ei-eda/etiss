@@ -7,7 +7,7 @@
 #ifndef ETISS_PLUGIN_LOGGER_H_
 #define ETISS_PLUGIN_LOGGER_H_
 
-#include "etiss/Plugin.h"
+#include "etiss/Misc.h"
 #include "etiss/IntegratedLibrary/SelectiveSysWrapper.h"
 
 namespace etiss

@@ -6,7 +6,6 @@
 
 #include <vector>
 
-#include "etiss/jit/CPU.h"
 #include "etiss/Misc.h"
 
 namespace etiss

@@ -15,9 +15,8 @@
 #ifndef ETISS_INCLUDE_SYSTEM_H_
 #define ETISS_INCLUDE_SYSTEM_H_
 
-#include "etiss/jit/CPU.h"
+#include "etiss/Misc.h"
 #include "etiss/jit/ReturnCode.h"
-#include "etiss/jit/System.h"
 
 #include <memory>
 
@@ -173,7 +172,11 @@ class System
      * @param cpu Pointer to the CPU structure, for which the synchronization
      * should be performed.
      */
+#ifdef ETISS_ENABLE_SYNCTIME_EXCEPTIONS
+    virtual etiss::int32 syncTime(ETISS_CPU *cpu) = 0;
+#else
     virtual void syncTime(ETISS_CPU *cpu) = 0;
+#endif
 };
 
 /**
@@ -189,8 +192,11 @@ class SimpleSystem : public System
     virtual etiss::int32 dwrite(ETISS_CPU *cpu, etiss::uint64 addr, etiss::uint8 *buf, etiss::uint32 len);
     virtual etiss::int32 dbg_read(etiss::uint64 addr, etiss::uint8 *buf, etiss::uint32 len);
     virtual etiss::int32 dbg_write(etiss::uint64 addr, etiss::uint8 *buf, etiss::uint32 len);
+#ifdef ETISS_ENABLE_SYNCTIME_EXCEPTIONS
+    virtual etiss::int32 syncTime(ETISS_CPU *cpu);
+#else
     virtual void syncTime(ETISS_CPU *cpu);
-
+#endif
     virtual bool read(bool debug, ETISS_CPU *cpu, etiss::uint64 addr, etiss::uint8 *buf, etiss::uint32 len) = 0;
     virtual bool write(bool debug, ETISS_CPU *cpu, etiss::uint64 addr, etiss::uint8 *buf, etiss::uint32 len) = 0;
 };

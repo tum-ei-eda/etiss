@@ -23,6 +23,7 @@ extern "C"
 
 #include "etiss/IntegratedLibrary/PrintInstruction.h"
 #include "etiss/CPUArch.h"
+#include "etiss/Instruction.h"
 
 using namespace etiss::plugin;
 

@@ -18,9 +18,11 @@
 #include "etiss/Misc.h"
 #include "etiss/fault/Defs.h"
 #include "etiss/fault/Misc.h"
+#include "etiss/fault/Trigger.h"
 #else
 #include "fault/Defs.h"
 #include "fault/Misc.h"
+#include "fault/Trigger.h"
 #endif
 
 #if CXX0X_UP_SUPPORTED

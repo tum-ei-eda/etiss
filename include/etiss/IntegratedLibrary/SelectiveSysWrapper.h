@@ -7,6 +7,7 @@
 #ifndef ETISS_PLUGIN_SELECTIVESYSWRAPPER_H
 #define ETISS_PLUGIN_SELECTIVESYSWRAPPER_H
 
+#include "etiss/Misc.h"
 #include "etiss/Plugin.h"
 
 namespace etiss

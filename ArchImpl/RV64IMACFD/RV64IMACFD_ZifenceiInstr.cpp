@@ -1,5 +1,6 @@
+// clang-format off
 /**
- * Generated on Tue, 16 Sep 2025 12:56:33 +0200.
+ * Generated on Fri, 19 Jun 2026 11:47:54 +0000.
  *
  * This file contains the instruction behavior models of the Zifencei
  * instruction set for the RV64IMACFD core architecture.
@@ -11,13 +12,12 @@
 using namespace etiss;
 using namespace etiss::instr;
 
-
 // FENCE_I ---------------------------------------------------------------------
 static InstructionDefinition fence_i_rd_rs1_imm (
 	ISA32_RV64IMACFD,
 	"fence_i",
-	(uint32_t) 0x00100f,
-	(uint32_t) 0x00707f,
+	(uint64_t) 0x00100f,
+	(uint64_t) 0x00707f,
 	[] (BitArray & ba,etiss::CodeSet & cs,InstructionContext & ic)
 	{
 
@@ -26,6 +26,7 @@ static InstructionDefinition fence_i_rd_rs1_imm (
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
+// NOLINTBEGIN(clang-diagnostic-unused-but-set-variable)
 etiss_uint8 rd = 0;
 static BitArrayRange R_rd_0(11, 7);
 rd += R_rd_0.read(ba) << 0;
@@ -36,6 +37,7 @@ etiss_uint16 imm = 0;
 static BitArrayRange R_imm_0(31, 20);
 imm += R_imm_0.read(ba) << 0;
 
+// NOLINTEND(clang-diagnostic-unused-but-set-variable)
 // -----------------------------------------------------------------------------
 
 	{
@@ -47,14 +49,14 @@ imm += R_imm_0.read(ba) << 0;
 cp.code() += "cpu->exception = ETISS_RETURNCODE_RELOADBLOCKS;\n";
 cp.code() += "etiss_coverage_count(1, 148);\n";
 { // block
-cp.code() += "etiss_coverage_count(1, 1169);\n";
+cp.code() += "etiss_coverage_count(1, 1189);\n";
 cp.code() += "{ // block\n";
-cp.code() += "cpu->nextPc = " + std::to_string(ic.current_address_ + 4) + "ULL;\n";
-cp.code() += "etiss_coverage_count(5, 1168, 1164, 1167, 1165, 1166);\n";
+cp.code() += "cpu->nextPc = " + std::to_string((etiss_uint64)((ic.current_address_ + 4))) + "ULL;\n";
+cp.code() += "etiss_coverage_count(7, 1188, 1181, 1187, 1184, 1182, 1183, 1185);\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "((RV64IMACFD*)cpu)->FENCE[1ULL] = " + std::to_string(imm) + "ULL;\n";
-cp.code() += "etiss_coverage_count(3, 6360, 6358, 6359);\n";
+cp.code() += "etiss_coverage_count(3, 6356, 6354, 6355);\n";
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
 cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------
@@ -95,3 +97,4 @@ ss << "fence_i" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + st
 		return ss.str();
 	}
 );
+// clang-format on

@@ -11,8 +11,12 @@
 */
 
 #include "etiss/ETISS.h"
+#include "etiss/CPUCore.h"
+#include "etiss/CPUArch.h"
+
 #include "etiss/fault/Stressor.h"
 #include "etiss/IntegratedLibrary/InstructionAccurateCallback.h"
+#include "etiss/LibraryInterface.h"
 
 #include <csignal>
 #include <cstring>
@@ -499,7 +503,7 @@ void etiss_loadIniConfigs()
                     {
                         std::string itemval = iter_value.pItem;
                         std::size_t sz = 0;
-                        long long val;
+                        long long val = 0;
                         try
                         {
                             val = std::stoll(itemval, &sz, 0);
@@ -674,17 +678,6 @@ void etiss::Initializer::loadIniJIT(std::shared_ptr<etiss::CPUCore> cpu)
     cpu->set(getJIT(cfg().get<std::string>("jit.type", "")));
 }
 
-std::pair<std::string, std::string> inifileload(const std::string &s)
-{
-    if (s.find("-i") == 0)
-    {
-        std::string inifile;
-        inifile = s.substr(2);
-        etiss_loadIni(inifile);
-    }
-    return make_pair(std::string(), std::string());
-}
-
 void etiss_initialize(const std::vector<std::string> &args, bool forced = false)
 {
     static std::mutex mu_;
@@ -722,6 +715,8 @@ void etiss_initialize(const std::vector<std::string> &args, bool forced = false)
             po::options_description desc("Allowed options");
             desc.add_options()
             ("help", "Produce a help message that lists all supported options.")
+            ("ini,i", po::value<std::vector<std::string>>(), "INI file(s)")
+            ("etiss_wd", po::value<std::string>(), "ETISS working directory to resolve libs.")
             ("arch.cpu", po::value<std::string>(), "The CPU Architecture to simulate.")
             ("arch.or1k.ignore_sr_iee", po::value<bool>(), "Ignore exception on OpenRISC.")
             ("arch.or1k.if_stall_cycles", po::value<int>(), "Add instruction stall cycles on OpenRISC.")
@@ -746,7 +741,8 @@ void etiss_initialize(const std::vector<std::string> &args, bool forced = false)
             ("vp.sw_binary_rom", po::value<std::string>(), "Path to binary file to be loaded into ROM.")
             ("vp.elf_file", po::value<std::string>(), "Load ELF file.")
             ("vp.stats_file_path", po::value<std::string>(), "Path where the output json file gets stored after bare processor is run.")
-            ("vp.quiet", po::value<std::string>(), "Disable logging of bare_etiss_processor.")
+            ("vp.quiet", po::value<bool>(), "Disable logging of bare_etiss_processor.")
+            ("vp.enable_irq_handler", po::value<bool>(), "Enable interrupt handler plugin.")
             ("faults.xml", po::value<std::string>(), "Path to faults XML file.")
             ("simple_mem_system.print_dbus_access", po::value<bool>(), "Traces accesses to the data bus.")
             ("simple_mem_system.print_ibus_access", po::value<bool>(), "Traces accesses to the instruction bus.")
@@ -761,7 +757,6 @@ void etiss_initialize(const std::vector<std::string> &args, bool forced = false)
 
             po::command_line_parser parser{ args };
             po::command_line_parser iniparser{ args };
-            iniparser.options(desc).allow_unregistered().extra_parser(inifileload).run();
             parser.options(desc).allow_unregistered().extra_parser(etiss::Configuration::set_cmd_line_boost);
             po::parsed_options parsed_options = parser.run();
             po::store(parsed_options, vm);
@@ -772,6 +767,15 @@ void etiss_initialize(const std::vector<std::string> &args, bool forced = false)
                 std::cout << desc << "\n";
                 etiss::log(etiss::FATALERROR,
                            std::string("Please choose the right configurations from the list and re-run.\n"));
+            }
+
+            if (vm.count("ini"))
+            {
+                auto files = vm["ini"].as<std::vector<std::string>>();
+                for (auto const &f : files)
+                {
+                    etiss_loadIni(f);
+                }
             }
 
             auto unregistered = po::collect_unrecognized(parsed_options.options, po::include_positional);

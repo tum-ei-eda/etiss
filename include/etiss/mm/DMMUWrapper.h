@@ -14,9 +14,8 @@
 #ifndef ETISS_INCLUDE_MM_DMMUWrapper_WRAPPER_H_
 #define ETISS_INCLUDE_MM_DMMUWrapper_WRAPPER_H_
 
-#include "etiss/ETISS.h"
+#include "etiss/Misc.h"
 #include "etiss/Plugin.h"
-#include "etiss/mm/MMU.h"
 
 #include <sstream>
 

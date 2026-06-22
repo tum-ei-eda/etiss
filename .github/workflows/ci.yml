@@ -9,12 +9,19 @@ on:
     - docs/
   workflow_dispatch: {}
 
-env:
-  BUILD_TYPE: Release
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}-${{ github.event_name }}
+  cancel-in-progress: true
 
 jobs:
   build_etiss:
-    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        build_type: [Release]
+        os:
+          - {name: "ubuntu", version: "22.04", llvm_version: "15"}
+          - {name: "ubuntu", version: "24.04", llvm_version: "20"}
+    runs-on: ${{ matrix.os.name }}-${{ matrix.os.version }}
 
     steps:
     - uses: actions/checkout@v4
@@ -24,13 +31,21 @@ jobs:
 
     - name: Install build dependencies
       run: |
-        sudo apt-get update
-        sudo apt-get install -y libboost-filesystem-dev libboost-program-options-dev \
-          llvm-11-dev libclang-11-dev clang-11
+        sudo apt update
+        sudo apt remove -y llvm* clang* libllvm* libclang*
+        sudo apt install -y libboost-filesystem-dev libboost-program-options-dev \
+          llvm-${{ matrix.os.llvm_version }}-dev libclang-${{ matrix.os.llvm_version }}-dev clang-${{ matrix.os.llvm_version }}
+
+    - name: Setup ccache
+      uses: hendrikmuhs/ccache-action@v1
+      with:
+        max-size: 2G
+        key: ccache-${{ matrix.build_type }}
+        variant: sccache
 
     - name: CMake config
       run: |
-        cmake -B etiss_build -S etiss_source -DCMAKE_INSTALL_PREFIX=etiss_prebuilt -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+        cmake -B etiss_build -S etiss_source -DCMAKE_INSTALL_PREFIX=etiss_prebuilt -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} -DCMAKE_C_COMPILER_LAUNCHER=sccache -DCMAKE_CXX_COMPILER_LAUNCHER=sccache
 
     - name: CMake build
       run: |
@@ -40,10 +55,16 @@ jobs:
       run: |
         cmake --build etiss_build --target install
 
+    - name: Verify installed JIT plugins
+      run: |
+        test -f etiss_prebuilt/lib/plugins/libTCCJIT.so
+        test -f etiss_prebuilt/lib/plugins/libGCCJIT.so
+        test -f etiss_prebuilt/lib/plugins/libLLVMJIT.so
+
     - name: Upload compiled ETISS
       uses: actions/upload-artifact@v4
       with:
-        name: etiss_prebuilt
+        name: etiss_prebuilt-${{ matrix.os.name }}-${{ matrix.os.version }}
         path: etiss_prebuilt
 
   build_examples:
@@ -52,6 +73,7 @@ jobs:
     strategy:
       matrix:
         bits: ["32", "64"]
+        build_type: [Release]
 
     steps:
     - uses: actions/checkout@v4
@@ -59,6 +81,13 @@ jobs:
         repository: tum-ei-eda/etiss_riscv_examples
         path: examples_source
         submodules: true
+
+    - name: Setup ccache
+      uses: hendrikmuhs/ccache-action@v1
+      with:
+        max-size: 2G
+        key: ccache-examples-${{ matrix.build_type }}-rv${{ matrix.bits }}
+        variant: sccache
 
     - name: Install cross compiler
       run: |
@@ -68,7 +97,7 @@ jobs:
 
     - name: Configure examples
       run: |
-        cmake -B examples_build_rv${{matrix.bits}} -S examples_source -DCMAKE_TOOLCHAIN_FILE=rv${{matrix.bits}}gc-toolchain.cmake -DRISCV_TOOLCHAIN_BASENAME=riscv-none-elf -DRISCV_TOOLCHAIN_PREFIX=$GITHUB_WORKSPACE/riscv_tc -DCMAKE_INSTALL_PREFIX=examples_prebuilt_rv${{matrix.bits}} -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+        cmake -B examples_build_rv${{matrix.bits}} -S examples_source -DCMAKE_TOOLCHAIN_FILE=rv${{matrix.bits}}gc-toolchain.cmake -DRISCV_TOOLCHAIN_BASENAME=riscv-none-elf -DRISCV_TOOLCHAIN_PREFIX=$GITHUB_WORKSPACE/riscv_tc -DCMAKE_INSTALL_PREFIX=examples_prebuilt_rv${{matrix.bits}} -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCMAKE_C_COMPILER_LAUNCHER=sccache -DCMAKE_CXX_COMPILER_LAUNCHER=sccache
 
     - name: Build examples
       run: |
@@ -85,7 +114,6 @@ jobs:
         path: examples_prebuilt_rv${{matrix.bits}}
 
   run_examples:
-    runs-on: ubuntu-22.04
     needs: [build_etiss, build_examples]
 
     strategy:
@@ -93,15 +121,28 @@ jobs:
         bits: ["32", "64"]
         jit_engine: ["TCC", "GCC", "LLVM"]
         test_program: ["example_c", "example_cpp", "test_cases"]
+        os:
+          - {name: "ubuntu", version: "22.04", llvm_version: "15"}
+          - {name: "ubuntu", version: "24.04", llvm_version: "20"}
+    runs-on: ${{ matrix.os.name }}-${{ matrix.os.version }}
 
     steps:
-    - name: Fetch precompiled artifacts
+    - name: Fetch precompiled ETISS
       uses: actions/download-artifact@v4
+      with:
+        name: etiss_prebuilt-${{ matrix.os.name }}-${{ matrix.os.version }}
+        path: etiss_prebuilt
+  
+    - name: Fetch precompiled Examples
+      uses: actions/download-artifact@v4
+      with:
+        name: examples_prebuilt_rv${{matrix.bits}}
+        path: examples_prebuilt_rv${{matrix.bits}}
 
     - name: Install dependencies
       run: |
-        sudo apt-get update
-        sudo apt-get install -y libboost-filesystem-dev libboost-program-options-dev libllvm11
+        sudo apt update
+        sudo apt install -y libboost-filesystem-dev libboost-program-options-dev libllvm${{ matrix.os.llvm_version }} libclang-cpp${{ matrix.os.llvm_version }}
 
     - name: Run test
       run: |
@@ -109,34 +150,47 @@ jobs:
         etiss_prebuilt/bin/bare_etiss_processor -iexamples_prebuilt_rv${{matrix.bits}}/ini/${{matrix.test_program}}.ini --jit.type=${{matrix.jit_engine}}JIT
 
   run_benchmarks:
-    runs-on: ubuntu-22.04
     needs: [build_etiss, build_examples]
 
     strategy:
       matrix:
         bits: ["32", "64"]
         jit_engine: ["TCC", "GCC", "LLVM"]
-        run_no: [1, 2, 3, 4, 5]
+        # run_no: [1, 2, 3, 4, 5]
+        run_no: [1, 5]
+        os:
+          - {name: "ubuntu", version: "22.04", llvm_version: "15"}
+          - {name: "ubuntu", version: "24.04", llvm_version: "20"}
+    runs-on: ${{ matrix.os.name }}-${{ matrix.os.version }}
 
     steps:
-    - name: Fetch precompiled artifacts
+    - name: Fetch precompiled ETISS
       uses: actions/download-artifact@v4
+      with:
+        name: etiss_prebuilt-${{ matrix.os.name }}-${{ matrix.os.version }}
+        path: etiss_prebuilt
+  
+    - name: Fetch precompiled Examples
+      uses: actions/download-artifact@v4
+      with:
+        name: examples_prebuilt_rv${{matrix.bits}}
+        path: examples_prebuilt_rv${{matrix.bits}}
 
     - name: Install dependencies
       run: |
-        sudo apt-get update
-        sudo apt-get install -y libboost-filesystem-dev libboost-program-options-dev libllvm11
+        sudo apt update
+        sudo apt install -y libboost-filesystem-dev libboost-program-options-dev libllvm${{ matrix.os.llvm_version }} libclang-cpp${{ matrix.os.llvm_version }}
 
     - name: Run benchmark
       run: |
         chmod +x etiss_prebuilt/bin/bare_etiss_processor
-        etiss_prebuilt/bin/bare_etiss_processor -iexamples_prebuilt_rv${{matrix.bits}}/ini/dhry.ini --jit.type=${{matrix.jit_engine}}JIT --vp.stats_file_path=${{github.workspace}}/run_${{matrix.jit_engine}}_${{matrix.bits}}_${{matrix.run_no}}.json
+        etiss_prebuilt/bin/bare_etiss_processor -iexamples_prebuilt_rv${{matrix.bits}}/ini/dhry.ini --jit.type=${{matrix.jit_engine}}JIT --vp.stats_file_path=${{github.workspace}}/run_${{matrix.jit_engine}}_${{matrix.bits}}_${{matrix.run_no}}_${{ matrix.os.name }}-${{ matrix.os.version }}.json
 
     - name: Save Benchmark results
       uses: actions/upload-artifact@v4
       with:
-        name: run_${{matrix.jit_engine}}_${{matrix.bits}}_${{matrix.run_no}}
-        path: run_${{matrix.jit_engine}}_${{matrix.bits}}_${{matrix.run_no}}.json
+        name: run_${{matrix.jit_engine}}_${{matrix.bits}}_${{matrix.run_no}}_${{ matrix.os.name }}-${{ matrix.os.version }}
+        path: run_${{matrix.jit_engine}}_${{matrix.bits}}_${{matrix.run_no}}_${{ matrix.os.name }}-${{ matrix.os.version }}.json
 
   merge_benchmark_results:
     runs-on: ubuntu-22.04

@@ -1,5 +1,5 @@
 /**
- * Generated on Fri, 03 Nov 2023 13:22:23 +0100.
+ * Generated on Fri, 19 Jun 2026 11:47:54 +0000.
  *
  * This file contains the architecture specific implementation for the RV64IMACFD
  * core architecture.
@@ -13,92 +13,149 @@
 #include "RV64IMACFDArch.h"
 #include "RV64IMACFDArchSpecificImp.h"
 #include "RV64IMACFDFuncs.h"
+#include "etiss/Memory.h"
 
 /**
-	@brief This function will be called automatically in order to handling exceptions such as interrupt, system call, illegal instructions
+    @brief This function will be called automatically in order to handling exceptions such as interrupt, system call,
+    illegal instructions
 
-	@details Exception handling mechanism is implementation dependent for each cpu variant. Please add it to the following block if exception
-				handling is demanded.
-				Pesudo example:
-				switch(cause){
-						case etiss::RETURNCODE::INTERRUPT:
-							.
-							.
-							.
-						break;
+    @details Exception handling mechanism is implementation dependent for each cpu variant. Please add it to the
+    following block if exception handling is demanded. Pseudo example:
+    ```
+    switch(cause){
+            case etiss::RETURNCODE::INTERRUPT:
+                .
+                .
+                .
+            break;
+    ```
 
 */
-etiss::int32 RV64IMACFDArch::handleException(etiss::int32 cause, ETISS_CPU * cpu)
+etiss::int32 RV64IMACFDArch::handleException(etiss::int32 cause, ETISS_CPU *cpu)
 {
-	RV64IMACFD_translate_exc_code(cpu, nullptr, nullptr, cause);
-	cpu->instructionPointer = cpu->nextPc;
-	return 0;
+    RV64IMACFD_translate_exc_code(cpu, nullptr, nullptr, cause);
+    cpu->instructionPointer = cpu->nextPc;
+    return 0;
 }
 
 /**
-	@brief This function is called during CPUArch initialization
+    @brief See etiss/src/Misc.cpp
+*/
+static etiss::ModuleHandle GetCurrentModule()
+{
+    static etiss::ModuleHandle hModule = 0;
 
-	@details Function pointer length_updater_ has to be replaced if multiple length instruction execution is supported. This
-				function enables dynamic instruction length update in order to guarantee correct binary translation
-				Pesudo example:
-				vis->length_updater_ = [](VariableInstructionSet & ,InstructionContext & ic, BitArray & ba)
-				{
-					switch(ba.byteCount()){
-						case 4:
-							if ( INSTRUCTION_LENTH_NOT_EQUAL(4)){
-								updateInstrLength(ic, ba);
-								ic.is_not_default_width_ = true;
-									.
-									.
-									.
-							}
-							break;
-					}
-				};
+    if (!hModule)
+    {
+        hModule = etiss::GetModuleByAddress((uintptr_t)GetCurrentModule);
+    }
+
+    return hModule;
+}
+
+/**
+    @brief See etiss/src/Misc.cpp
+*/
+static std::string GetCurrentModulePath()
+{
+    static std::string modulePath;
+
+    if (modulePath == "")
+    {
+        modulePath = etiss::GetModulePath(GetCurrentModule());
+    }
+
+    return modulePath;
+}
+
+/**
+    @brief Resolves the ETISS install dir for both in-tree  as well as out-of-tree builds
+*/
+std::string RV64IMACFDArch::installDir() const
+{
+    auto archLib = GetCurrentModulePath();
+    auto libPathLoc = archLib.find_last_of("/\\");
+    auto libPath = archLib.substr(0, libPathLoc);
+    auto pluginsPathLoc = libPath.find_last_of("/\\");
+    auto pluginsPath = libPath.substr(0, pluginsPathLoc);
+    auto archPathLoc = pluginsPath.find_last_of("/\\");
+    return libPath.substr(0, archPathLoc);
+}
+
+/**
+    @brief This function is called during InstrSet initialization returns path to jit includes
+*/
+std::string RV64IMACFDArch::jitFiles() const
+{
+    return installDir() + "/include/jit";
+}
+
+/**
+    @brief This function is called during CPUArch initialization
+
+    @details Function pointer length_updater_ has to be replaced if multiple length instruction execution is supported.
+    This function enables dynamic instruction length update in order to guarantee correct binary translation.
+    Pseudo example:
+    ```
+    vis->length_updater_ = [](VariableInstructionSet & ,InstructionContext &ic, BitArray &ba)
+    {
+        switch(ba.byteCount()){
+            case 4:
+                if ( INSTRUCTION_LENTH_NOT_EQUAL(4)){
+                    updateInstrLength(ic, ba);
+                    ic.is_not_default_width_ = true;
+                        .
+                        .
+                        .
+                }
+                break;
+        }
+    };
+    ```
 
 */
-void RV64IMACFDArch::initInstrSet(etiss::instr::ModedInstructionSet & mis) const
+void RV64IMACFDArch::initInstrSet(etiss::instr::ModedInstructionSet &mis) const
 {
-
     {
-     /* Set default JIT Extensions. Read Parameters set from ETISS configuration and append with architecturally needed */
-     std::string cfgPar = "";
-     cfgPar = etiss::cfg().get<std::string>("jit.external_headers", ";");
-     etiss::cfg().set<std::string>("jit.external_headers", cfgPar + "etiss/jit/libsoftfloat.h");
+        std::string requiredJitFilesPath = jitFiles();
+        /* Set default JIT Extensions. Read Parameters set from ETISS configuration and append with architecturally needed */
+        std::string cfgPar = "";
+        cfgPar = etiss::cfg().get<std::string>("jit.external_headers", ";");
+        etiss::cfg().set<std::string>("jit.external_headers", cfgPar + "etiss/jit/libsoftfloat.h");
 
-     cfgPar = etiss::cfg().get<std::string>("jit.external_libs", ";");
-     etiss::cfg().set<std::string>("jit.external_libs", cfgPar + "softfloat");
+        cfgPar = etiss::cfg().get<std::string>("jit.external_libs", ";");
+        etiss::cfg().set<std::string>("jit.external_libs", cfgPar + "softfloat");
 
-     cfgPar = etiss::cfg().get<std::string>("jit.external_header_paths", ";");
-     etiss::cfg().set<std::string>("jit.external_header_paths", cfgPar + "/etiss/jit");
+        cfgPar = etiss::cfg().get<std::string>("jit.external_header_paths", ";");
+        etiss::cfg().set<std::string>("jit.external_header_paths", cfgPar + "etiss/jit" + requiredJitFilesPath);
 
-     cfgPar = etiss::cfg().get<std::string>("jit.external_lib_paths", ";");
-     etiss::cfg().set<std::string>("jit.external_lib_paths", cfgPar + "/etiss/jit");
-
+        cfgPar = etiss::cfg().get<std::string>("jit.external_lib_paths", ";");
+        etiss::cfg().set<std::string>("jit.external_lib_paths", cfgPar + "etiss/jit");
     }
 
     if (false) {
-        // Pre-compilation of instruction set to view instruction tree. Could be disabled.
+        // Pre-compilation of instruction set to view instruction tree. Enable by setting 'true' above.
+
         etiss::instr::ModedInstructionSet iset("RV64IMACFDISA");
-		bool ok = true;
-		RV64IMACFDISA.addTo(iset,ok);
+        bool ok = true;
+        RV64IMACFDISA.addTo(iset, ok);
 
-		iset.compile();
+        iset.compile();
 
-		std::cout << iset.print() << std::endl;
-	}
+        std::cout << iset.print() << std::endl;
+    }
 
-	bool ok = true;
-	RV64IMACFDISA.addTo(mis,ok);
-	if (!ok)
-		etiss::log(etiss::FATALERROR,"Failed to add instructions for RV64IMACFDISA");
+    bool ok = true;
+    RV64IMACFDISA.addTo(mis, ok);
+    if (!ok)
+        etiss::log(etiss::FATALERROR, "Failed to add instructions for RV64IMACFDISA");
 
-	etiss::instr::VariableInstructionSet *vis = mis.get(1);
+    etiss::instr::VariableInstructionSet *vis = mis.get(1);
 
-	using namespace etiss;
-	using namespace etiss::instr;
+    using namespace etiss;
+    using namespace etiss::instr;
 
-	vis->get(32)->getInvalid().addCallback(
+    vis->get(32)->getInvalid().addCallback(
 	[] (BitArray & ba,etiss::CodeSet & cs,InstructionContext & ic)
 	{
 
@@ -107,10 +164,12 @@ void RV64IMACFDArch::initInstrSet(etiss::instr::ModedInstructionSet & mis) const
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
+// NOLINTBEGIN(clang-diagnostic-unused-but-set-variable)
 etiss_uint32 error_code = 0;
 static BitArrayRange R_error_code_0(31, 0);
 error_code += R_error_code_0.read(ba) << 0;
 
+// NOLINTEND(clang-diagnostic-unused-but-set-variable)
 // -----------------------------------------------------------------------------
 
 	{
@@ -142,10 +201,10 @@ cp.code() += "return cpu->exception;\n";
 
 		return true;
 	},
-	0
-	);
+    0
+    );
 
-	vis->get(16)->getInvalid().addCallback(
+    vis->get(16)->getInvalid().addCallback(
 	[] (BitArray & ba,etiss::CodeSet & cs,InstructionContext & ic)
 	{
 
@@ -154,10 +213,12 @@ cp.code() += "return cpu->exception;\n";
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
+// NOLINTBEGIN(clang-diagnostic-unused-but-set-variable)
 etiss_uint32 error_code = 0;
 static BitArrayRange R_error_code_0(31, 0);
 error_code += R_error_code_0.read(ba) << 0;
 
+// NOLINTEND(clang-diagnostic-unused-but-set-variable)
 // -----------------------------------------------------------------------------
 
 	{
@@ -189,8 +250,9 @@ cp.code() += "return cpu->exception;\n";
 
 		return true;
 	},
-	0
-	);
+    0
+    );
+
 
     vis->length_updater_ = [](VariableInstructionSet &, InstructionContext &ic, BitArray &ba) {
         std::function<void(InstructionContext & ic, etiss_uint32 opRd)> updateRV64IMACFDInstrLength =
@@ -284,82 +346,112 @@ cp.code() += "return cpu->exception;\n";
 }
 
 /**
-	@brief This function is called whenever a data is read from memory
+    @brief This function is called whenever a data is read from memory
 
-	@details Target architecture may have inconsistent endianess. Data read from memory is buffered, and this function
-				is called to alter sequence of buffered data so that the inconsistent endianess is compensated.
-				Example for ARMv6M:
-				void * ptr = ba.internalBuffer();
-				if (ba.byteCount() == 2)
-				{
-					*((uint32_t*)ptr) = ((uint16_t)(*((uint8_t*)ptr))) | ((uint16_t)(*(((uint8_t*)ptr)+1)) << 8);
-				}
-				else if (ba.byteCount() == 4)
-				{
-					*((uint32_t*)ptr) = ((((uint32_t)(*((uint8_t*)ptr))) | ((uint32_t)(*(((uint8_t*)ptr)+1)) << 8)) << 16) | ((uint32_t)(*(((uint8_t*)ptr)+2)) ) | ((uint32_t)(*(((uint8_t*)ptr)+3)) << 8);
-				}
-				else
-				{
-					etiss::log(etiss::FATALERROR,"Endianess cannot be handled",ba.byteCount());
-				}
+    @details Target architecture may have inconsistent endianess. Data read from memory is buffered, and this function
+                is called to alter sequence of buffered data so that the inconsistent endianess is compensated.
+                Example for ARMv6M:
+                void *ptr = ba.internalBuffer();
+                if (ba.byteCount() == 2)
+                {
+                    *((uint32_t*)ptr) = ((uint16_t)(*((uint8_t*)ptr))) | ((uint16_t)(*(((uint8_t*)ptr)+1)) << 8);
+                }
+                else if (ba.byteCount() == 4)
+                {
+                    *((uint32_t*)ptr) = ((((uint32_t)(*((uint8_t*)ptr))) | ((uint32_t)(*(((uint8_t*)ptr)+1)) << 8)) << 16) | ((uint32_t)(*(((uint8_t*)ptr)+2)) ) | ((uint32_t)(*(((uint8_t*)ptr)+3)) << 8);
+                }
+                else
+                {
+                    etiss::log(etiss::FATALERROR,"Endianess cannot be handled",ba.byteCount());
+                }
 
-	@attention Default endianess: little-endian
+    @attention Default endianess: little-endian
 
 */
-void RV64IMACFDArch::compensateEndianess(ETISS_CPU * cpu, etiss::instr::BitArray & ba) const
+void RV64IMACFDArch::compensateEndianess(ETISS_CPU *cpu, etiss::instr::BitArray &ba) const
 {
-	/**************************************************************************
-	*		                Endianess compensation	                    	  *
-	***************************************************************************/
+    /**************************************************************************
+     *                       Endianess compensation                           *
+     **************************************************************************/
 }
 
-std::shared_ptr<etiss::VirtualStruct> RV64IMACFDArch::getVirtualStruct(ETISS_CPU * cpu)
+std::shared_ptr<etiss::VirtualStruct> RV64IMACFDArch::getVirtualStruct(ETISS_CPU *cpu)
 {
-	auto ret = etiss::VirtualStruct::allocate(
-		cpu,
-		[] (etiss::VirtualStruct::Field*f) {
-			delete f;
-		}
-	);
+    auto ret = etiss::VirtualStruct::allocate(cpu, [](etiss::VirtualStruct::Field *f) { delete f; });
 
-	for (uint32_t i = 0; i < 32; ++i){
-		ret->addField(new RegField_RV64IMACFD(*ret,i));
-	}
+    for (uint32_t i = 0; i < 32; i += 1)
+    {
+        ret->addField(new RegField_RV64IMACFD(*ret, i));
+    }
+    for (uint32_t i = 0; i < 32; i += 1)
+    {
+        ret->addField(new FloatRegField_RV64IMACFD(*ret, i));
+    }
+    for (uint32_t i = 1; i < 4; i += 1)
+    {
+        ret->addField(new CSRField_RV64IMACFD(*ret, i));
+    }
+    for (uint32_t i = 768; i < 775; i += 1)
+    {
+        ret->addField(new CSRField_RV64IMACFD(*ret, i));
+    }
+    for (uint32_t i = 832; i < 837; i += 1)
+    {
+        ret->addField(new CSRField_RV64IMACFD(*ret, i));
+    }
+    ret->addField(new CSRField_RV64IMACFD(*ret, 2816));
+    ret->addField(new CSRField_RV64IMACFD(*ret, 2818));
+    ret->addField(new CSRField_RV64IMACFD(*ret, 2944));
+    ret->addField(new CSRField_RV64IMACFD(*ret, 2946));
+    for (uint32_t i = 3072; i < 3075; i += 1)
+    {
+        ret->addField(new CSRField_RV64IMACFD(*ret, i));
+    }
+    for (uint32_t i = 3200; i < 3203; i += 1)
+    {
+        ret->addField(new CSRField_RV64IMACFD(*ret, i));
+    }
+    for (uint32_t i = 3857; i < 3861; i += 1)
+    {
+        ret->addField(new CSRField_RV64IMACFD(*ret, i));
+    }
+    ret->addField(new pcField_RV64IMACFD(*ret));
 
-	ret->addField(new pcField_RV64IMACFD(*ret));
-	return ret;
+    return ret;
 }
 
 /**
-	@brief If interrupt handling is expected, vector table could be provided to support interrupt triggering
+    @brief If interrupt handling is expected, vector table could be provided to support interrupt triggering
 
-	@details Interrupt vector table is used to inform the core whenever an edge/level triggered interrupt
-				incoming. The content of interrupt vector could be a special register or standalone interrupt
-				lines.
+    @details Interrupt vector table is used to inform the core whenever an edge/level triggered interrupt
+                incoming. The content of interrupt vector could be a special register or standalone interrupt
+                lines.
 */
-etiss::InterruptVector * RV64IMACFDArch::createInterruptVector(ETISS_CPU * cpu)
+etiss::InterruptVector *RV64IMACFDArch::createInterruptVector(ETISS_CPU *cpu)
 {
-	if (cpu == 0)
-		return 0;
+    if (cpu == 0)
+        return 0;
 
-	std::vector<etiss::uint64 *> vec;
-	std::vector<etiss::uint64 *> mask;
+    std::vector<etiss::uint64 *> vec;
+    std::vector<etiss::uint64 *> mask;
 
-	vec.push_back(&((RV64IMACFD*)cpu)->MIP);
-	mask.push_back(&((RV64IMACFD*)cpu)->MIE);
+    vec.push_back(&((RV64IMACFD *)cpu)->MIP);
+    mask.push_back(&((RV64IMACFD *)cpu)->MIE);
 
-	return new etiss::MappedInterruptVector<etiss::uint64>(vec, mask);
+    return new etiss::MappedInterruptVector<etiss::uint64>(vec, mask);
 }
 
-void RV64IMACFDArch::deleteInterruptVector(etiss::InterruptVector * vec, ETISS_CPU * cpu)
+void RV64IMACFDArch::deleteInterruptVector(etiss::InterruptVector *vec, ETISS_CPU *cpu)
 {
-	delete vec;
+    delete vec;
 }
 
-etiss::InterruptEnable* RV64IMACFDArch::createInterruptEnable(ETISS_CPU* cpu) {
- 	return new etiss::MappedInterruptEnable<etiss::uint64>(&((RV64IMACFD*)cpu)->MSTATUS, 15);
+etiss::InterruptEnable *RV64IMACFDArch::createInterruptEnable(ETISS_CPU *cpu)
+{
+    return new etiss::MappedInterruptEnable<etiss::uint64>(&((RV64IMACFD *)cpu)->MSTATUS, 15);
 }
 
-void RV64IMACFDArch::deleteInterruptEnable(etiss::InterruptEnable* en, ETISS_CPU* cpu) {
-	delete en;
+void RV64IMACFDArch::deleteInterruptEnable(etiss::InterruptEnable *en, ETISS_CPU *cpu)
+{
+    delete en;
 }

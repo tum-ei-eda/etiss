@@ -17,7 +17,7 @@
 #ifndef ETISS_INCLUDE_GDB_GDBCORE_H_
 #define ETISS_INCLUDE_GDB_GDBCORE_H_
 
-#include "etiss/jit/CPU.h"
+#include "etiss/Misc.h"
 #include <string>
 
 namespace etiss
@@ -64,6 +64,7 @@ class GDBCore
        slot instruction
     */
     virtual etiss::uint64 getInstructionPointer(ETISS_CPU *cpu);
+    virtual std::string getXMLContents(ETISS_CPU *cpu, std::string archName, std::string fname);
 
   public:
     static const unsigned INVALIDMAPPING = (unsigned)-1;

@@ -11,6 +11,8 @@
 #include <memory>
 #include <string>
 
+#include <cstdint>
+
 namespace etiss
 {
 namespace mm

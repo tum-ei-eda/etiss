@@ -12,6 +12,7 @@
 
 #ifndef ETISS_INCLUDE_SimpleMemSystem_H_
 #define ETISS_INCLUDE_SimpleMemSystem_H_
+#include "etiss/Misc.h"
 #include "etiss/System.h"
 #include "etiss/make_unique.h"
 #include <fstream>
@@ -104,7 +105,11 @@ class SimpleMemSystem : public System
     etiss::int32 dbg_write(etiss::uint64 addr, etiss::uint8 *buf, etiss::uint32 len);
 
     // sync time
+#ifdef ETISS_ENABLE_SYNCTIME_EXCEPTIONS
+    etiss::int32 syncTime(ETISS_CPU *cpu);
+#else
     void syncTime(ETISS_CPU *cpu);
+#endif
 
     void init_memory();
     void load_elf();

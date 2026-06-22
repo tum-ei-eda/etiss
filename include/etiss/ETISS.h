@@ -22,11 +22,7 @@
 #include <mutex>
 #include <string>
 #include <type_traits>
-
-#include "etiss/CPUCore.h"
 #include "etiss/Misc.h"
-
-#include "etiss/LibraryInterface.h"
 
 namespace etiss
 {

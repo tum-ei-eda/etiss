@@ -7,7 +7,10 @@
 #include "TracePrinter.h"
 #include "etiss/SimpleMemSystem.h"
 #include "etiss/IntegratedLibrary/fault/MemoryManipulationSystem.h"
+#include "etiss/fault/Action.h"
 #include "etiss/ETISS.h"
+#include "etiss/CPUCore.h"
+#include "etiss/InterruptHandler.h"
 
 int main(int argc, const char *argv[])
 {
@@ -20,7 +23,6 @@ int main(int argc, const char *argv[])
     // All arguments with this format will be evaluated by the Initializer.
     std::cout << "=== Setting up configurations ===" << std::endl;
     // std::list<std::string> iniFiles;
-    // iniFiles.push_back("../ETISS.ini"); // will be loaded within the run.sh
     // iniFiles.push_back("additional.ini");
     etiss::Initializer initializer(
         argc, argv); // add &iniFiles as the first argument if .ini files are loaded explicitly here
@@ -118,9 +120,13 @@ int main(int argc, const char *argv[])
     if (!quiet)
         std::cout << "=== Setting up plug-ins ===" << std::endl;
 
-    auto irq_handler = std::make_shared<etiss::InterruptHandler>(cpu->getInterruptVector(), cpu->getInterruptEnable(),
-                                                                 cpu->getArch(), etiss::LEVEL_TRIGGERED, false);
-    cpu->addPlugin(irq_handler);
+    bool enable_irq_handler = etiss::cfg().get<bool>("vp.enable_irq_handler", true);
+    if (enable_irq_handler)
+    {
+        auto irq_handler = std::make_shared<etiss::InterruptHandler>(
+            cpu->getInterruptVector(), cpu->getInterruptEnable(), cpu->getArch(), etiss::LEVEL_TRIGGERED, false);
+        cpu->addPlugin(irq_handler);
+    }
 
     initializer.loadIniPlugins(cpu);
     initializer.loadIniJIT(cpu);

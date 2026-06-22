@@ -7,6 +7,7 @@
 #ifndef ETISS_PLUGIN_VIRTUALSTRUCTMEMORY_H
 #define ETISS_PLUGIN_VIRTUALSTRUCTMEMORY_H
 
+#include "etiss/Misc.h"
 #include "etiss/System.h"
 #include "etiss/VirtualStruct.h"
 
