@@ -189,7 +189,7 @@ extern "C"
                 entry.x[i] = *cpu->X[i];
 
             for (int i = 0; i < 32; ++i)
-                entry.f[i] = cpu->F[i];
+                entry.f[i] = *cpu->F[i];
 
             writer.writeStateSnapshot(entry);
         }

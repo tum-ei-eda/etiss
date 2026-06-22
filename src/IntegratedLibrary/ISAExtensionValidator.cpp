@@ -138,7 +138,7 @@ extern "C"
 
         etiss_uint64 f[32];
         for (int i = 0; i < 32; ++i)
-            f[i] = cpu->F[i];
+            f[i] = *cpu->F[i];
 
         // PC
         printf("X[%s]: %d\n", "PC", pc);
