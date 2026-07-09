@@ -147,3 +147,8 @@ if(ETISS_USE_FMT_LIB)
     add_subdirectory(fmt EXCLUDE_FROM_ALL)
     set(ETISS_USE_FMT_LIB On PARENT_SCOPE)
 endif()
+
+####################################################################################################
+# Softvector library, implements RVV
+# Makes CMake target softvector
+add_subdirectory(softvector)
