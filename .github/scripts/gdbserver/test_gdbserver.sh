@@ -5,14 +5,22 @@ set -euo pipefail
 export SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 export RISCV_GDB=${RISCV_GDB:-riscv-none-elf-gdb}
+echo "RISCV_GDB=$RISCV_GDB"
 export ETISS=${ETISS:-bare_etiss_processor}
+echo "ETISS=$ETISS"
 
 export INI=${1:-./examples_prebuilt_rv32/ini/hello_world.ini}
+echo "INI=$INI"
 export ELF=${2:-./examples_prebuilt_rv32/bin/hello_world}
+echo "ELF=$ELF"
 export PORT=${3:-2001}
+echo "PORT=$PORT"
 export JIT=${4:-TCC}
+echo "JIT=$JIT"
 TIMEOUT_SEC=${5:-180}
+echo "TIMEOUT_SEC=$TIMEOUT_SEC"
 
+# echo $ETISS -i$INI --jit.type=${JIT}JIT -pgdbserver --plugin.gdbserver.port=$PORT
 $ETISS -i$INI --jit.type=${JIT}JIT -pgdbserver --plugin.gdbserver.port=$PORT 2>&1 > etiss_output.log &
 ETISS_PID=$!
 echo ETISS_PID=$ETISS_PID
