@@ -17,7 +17,7 @@ jobs:
         build_type: [Release]
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
       with:
         path: etiss_source
         submodules: true
@@ -49,7 +49,7 @@ jobs:
         cmake --build etiss_build --target install
 
     - name: Upload compiled ETISS
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: etiss_prebuilt
         path: etiss_prebuilt
@@ -63,7 +63,7 @@ jobs:
         build_type: [Release]
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
       with:
         repository: tum-ei-eda/etiss_riscv_examples
         path: examples_source
@@ -95,7 +95,7 @@ jobs:
         cmake --build examples_build_rv${{matrix.bits}} --target install
 
     - name: Upload prebuilt examples
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: examples_prebuilt_rv${{matrix.bits}}
         path: examples_prebuilt_rv${{matrix.bits}}
@@ -112,7 +112,7 @@ jobs:
 
     steps:
     - name: Fetch precompiled artifacts
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
 
     - name: Install dependencies
       run: |
@@ -137,7 +137,7 @@ jobs:
 
     steps:
     - name: Fetch precompiled artifacts
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
 
     - name: Install dependencies
       run: |
@@ -150,7 +150,7 @@ jobs:
         etiss_prebuilt/bin/bare_etiss_processor -iexamples_prebuilt_rv${{matrix.bits}}/ini/dhry.ini --jit.type=${{matrix.jit_engine}}JIT --vp.stats_file_path=${{github.workspace}}/run_${{matrix.jit_engine}}_${{matrix.bits}}_${{matrix.run_no}}.json
 
     - name: Save Benchmark results
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: run_${{matrix.jit_engine}}_${{matrix.bits}}_${{matrix.run_no}}
         path: run_${{matrix.jit_engine}}_${{matrix.bits}}_${{matrix.run_no}}.json
@@ -161,7 +161,7 @@ jobs:
 
     steps:
     - name: Merge artifacts
-      uses: actions/upload-artifact/merge@v4
+      uses: actions/upload-artifact/merge@v7
       with:
         name: dhry_results
         pattern: run_*
