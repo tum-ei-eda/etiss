@@ -1,6 +1,6 @@
 // clang-format off
 /**
- * Generated on Fri, 19 Jun 2026 11:47:54 +0000.
+ * Generated on Fri, 31 Jul 2026 13:51:42 +0000.
  *
  * This file contains the instruction behavior models of the tum_rva
  * instruction set for the RV64IMACFD core architecture.
@@ -203,7 +203,7 @@ cp.code() += "etiss_coverage_count(1, 7304);\n";
 cp.code() += "*((RV64IMACFD*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = (etiss_uint64)((etiss_uint8)((((RV64IMACFD*)cpu)->RES_ADDR != offs)));\n";
 cp.code() += "etiss_coverage_count(10, 7318, 7309, 7308, 7306, 7317, 7315, 7312, 7310, 7311, 7313);\n";
 } // conditional
-cp.code() += "((RV64IMACFD*)cpu)->RES_ADDR = -1ULL;\n";
+cp.code() += "((RV64IMACFD*)cpu)->RES_ADDR = -1LL;\n";
 cp.code() += "etiss_coverage_count(2, 7326, 7319);\n";
 cp.code() += "} // block\n";
 } // block

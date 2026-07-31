@@ -1,5 +1,5 @@
 /**
- * Generated on Fri, 19 Jun 2026 11:47:54 +0000.
+ * Generated on Fri, 31 Jul 2026 13:51:42 +0000.
  *
  * This file contains the function implementations for the RV64IMACFD core architecture.
  */
@@ -53,7 +53,7 @@ if (RV64IMACFD_extension_enabled(cpu, system, plugin_pointers, 83ULL)) { // cond
 etiss_coverage_count(2, 283, 282);
 { // block
 etiss_coverage_count(1, 347);
-mask = mask | 5767458ULL;
+mask = mask | 5767458LL;
 etiss_coverage_count(2, 299, 284);
 etiss_coverage_count(1, 300);
 if (RV64IMACFD_extension_enabled(cpu, system, plugin_pointers, 86ULL)) { // conditional
@@ -92,7 +92,7 @@ etiss_uint64 RV64IMACFD_mstatus_mask(ETISS_CPU * const cpu, ETISS_System * const
 etiss_coverage_count(1, 150);
 { // block
 etiss_coverage_count(1, 365);
-etiss_uint64 mask = 6280ULL;
+etiss_uint64 mask = 6280LL;
 etiss_coverage_count(1, 360);
 etiss_coverage_count(1, 364);
 return mask | RV64IMACFD_sstatus_mask(cpu, system, plugin_pointers);
@@ -165,7 +165,7 @@ etiss_coverage_count(1, 431);
 if (csr == 768LL || csr == 256LL) { // conditional
 etiss_coverage_count(5, 438, 434, 432, 437, 435);
 etiss_coverage_count(1, 458);
-return *((RV64IMACFD*)cpu)->CSR[768LL] | 8589934592ULL | 34359738368ULL;
+return *((RV64IMACFD*)cpu)->CSR[768LL] | 8589934592LL | 34359738368LL;
 etiss_coverage_count(3, 457, 449, 441);
 } // conditional
 etiss_coverage_count(1, 459);
@@ -342,11 +342,11 @@ etiss_coverage_count(1, 162);
 etiss_coverage_count(1, 929);
 etiss_uint64 epc = cpu->instructionPointer;
 etiss_coverage_count(2, 703, 702);
-etiss_uint64 deleg = 0LL;
+etiss_int64 deleg = 0LL;
 etiss_coverage_count(1, 705);
-etiss_uint64 vector = 0LL;
+etiss_int64 vector = 0LL;
 etiss_coverage_count(1, 706);
-etiss_uint64 bit = mcause;
+etiss_int64 bit = mcause;
 etiss_coverage_count(2, 708, 707);
 etiss_int32 irq2 = (mcause & 9223372036854775808ULL) != 0LL;
 etiss_coverage_count(6, 724, 723, 720, 710, 721, 722);
@@ -525,9 +525,9 @@ etiss_coverage_count(1, 1072);
 { // block
 etiss_coverage_count(1, 1168);
 etiss_coverage_count(1, 1073);
-if (enabled_interrupts >> 12ULL) { // conditional
+if (enabled_interrupts >> 12LL) { // conditional
 etiss_coverage_count(2, 1079, 1074);
-enabled_interrupts = enabled_interrupts >> 12ULL << 12ULL;
+enabled_interrupts = enabled_interrupts >> 12LL << 12LL;
 etiss_coverage_count(5, 1122, 1110, 1121, 1116, 1111);
 } // conditional
  else if (enabled_interrupts & 2048LL) { // conditional
@@ -617,7 +617,7 @@ etiss_int64 RV64IMACFD_mulh(etiss_int64 x, etiss_int64 y)
 etiss_coverage_count(1, 237);
 { // block
 etiss_coverage_count(1, 7435);
-etiss_int128 res = (etiss_int128)(x) * (etiss_int128)(y);
+etiss_int128 res = ((etiss_int128)(((etiss_int128)x) << (0)) >> (0)) * ((etiss_int128)(((etiss_int128)y) << (0)) >> (0));
 etiss_coverage_count(6, 7427, 7426, 7422, 7420, 7425, 7423);
 etiss_coverage_count(1, 7434);
 return (etiss_int64)((res >> 64ULL));
@@ -630,7 +630,7 @@ etiss_int64 RV64IMACFD_mulhsu(etiss_int64 x, etiss_uint64 y)
 etiss_coverage_count(1, 238);
 { // block
 etiss_coverage_count(1, 7452);
-etiss_int128 res = (etiss_int128)(x) * (etiss_uint128)(y);
+etiss_int128 res = ((etiss_int128)(((etiss_int128)x) << (0)) >> (0)) * (etiss_uint128)(y);
 etiss_coverage_count(6, 7444, 7443, 7439, 7437, 7442, 7440);
 etiss_coverage_count(1, 7451);
 return (etiss_int64)((res >> 64ULL));
