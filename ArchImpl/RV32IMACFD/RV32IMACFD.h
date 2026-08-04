@@ -1,5 +1,5 @@
 /**
- * Generated on Fri, 19 Jun 2026 11:48:00 +0000.
+ * Generated on Tue, 04 Aug 2026 09:55:50 +0200.
  *
  * This file contains the registers for the RV32IMACFD core architecture.
  */
@@ -51,41 +51,8 @@ extern "C"
         etiss_uint32 T6;
         etiss_uint32 *X[32];
         etiss_uint32 ins_X[32];
-        etiss_uint32 FENCE[8];
-        etiss_uint8 RES[8];
         etiss_uint8 PRIV;
         etiss_uint32 DPC;
-        etiss_uint32 FCSR;
-        etiss_uint32 FFLAGS;
-        etiss_uint32 FRM;
-        etiss_uint32 MSTATUS;
-        etiss_uint32 MIE;
-        etiss_uint32 MIP;
-        etiss_uint32 CYCLE;
-        etiss_uint32 CYCLEH;
-        etiss_uint32 MCYCLE;
-        etiss_uint32 MCYCLEH;
-        etiss_uint32 TIME;
-        etiss_uint32 TIMEH;
-        etiss_uint32 INSTRET;
-        etiss_uint32 INSTRETH;
-        etiss_uint32 MINSTRET;
-        etiss_uint32 MINSTRETH;
-        etiss_uint32 MVENDORID;
-        etiss_uint32 MARCHID;
-        etiss_uint32 MIMPID;
-        etiss_uint32 MHARTID;
-        etiss_uint32 MISA;
-        etiss_uint32 MEDELEG;
-        etiss_uint32 MIDELEG;
-        etiss_uint32 MTVEC;
-        etiss_uint32 MCOUNTEREN;
-        etiss_uint32 MSCRATCH;
-        etiss_uint32 MEPC;
-        etiss_uint32 MCAUSE;
-        etiss_uint32 MTVAL;
-        etiss_uint32 *CSR[4096];
-        etiss_uint32 ins_CSR[4096];
         etiss_uint64 FT0;
         etiss_uint64 FT1;
         etiss_uint64 FT2;
@@ -121,6 +88,39 @@ extern "C"
         etiss_uint64 *F[32];
         etiss_uint64 ins_F[32];
         etiss_uint32 RES_ADDR;
+        etiss_uint32 FENCE[8];
+        etiss_int8 RES[8];
+        etiss_uint32 FCSR;
+        etiss_uint32 FFLAGS;
+        etiss_uint32 FRM;
+        etiss_uint32 MSTATUS;
+        etiss_uint32 MIE;
+        etiss_uint32 MIP;
+        etiss_uint32 CYCLE;
+        etiss_uint32 CYCLEH;
+        etiss_uint32 MCYCLE;
+        etiss_uint32 MCYCLEH;
+        etiss_uint32 TIME;
+        etiss_uint32 TIMEH;
+        etiss_uint32 INSTRET;
+        etiss_uint32 INSTRETH;
+        etiss_uint32 MINSTRET;
+        etiss_uint32 MINSTRETH;
+        etiss_uint32 MVENDORID;
+        etiss_uint32 MARCHID;
+        etiss_uint32 MIMPID;
+        etiss_uint32 MHARTID;
+        etiss_uint32 MISA;
+        etiss_uint32 MEDELEG;
+        etiss_uint32 MIDELEG;
+        etiss_uint32 MTVEC;
+        etiss_uint32 MCOUNTEREN;
+        etiss_uint32 MSCRATCH;
+        etiss_uint32 MEPC;
+        etiss_uint32 MCAUSE;
+        etiss_uint32 MTVAL;
+        etiss_uint32 *CSR[4096];
+        etiss_uint32 ins_CSR[4096];
     };
 
 #pragma pack(pop) // undo changes

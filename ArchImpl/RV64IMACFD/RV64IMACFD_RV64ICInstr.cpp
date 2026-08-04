@@ -1,6 +1,6 @@
 // clang-format off
 /**
- * Generated on Fri, 19 Jun 2026 11:47:54 +0000.
+ * Generated on Tue, 04 Aug 2026 09:55:50 +0200.
  *
  * This file contains the instruction behavior models of the RV64IC
  * instruction set for the RV64IMACFD core architecture.
@@ -297,7 +297,7 @@ if (rs1 == 0LL) { // conditional
 cp.code() += "etiss_coverage_count(3, 7978, 7976, 7977);\n";
 { // procedure
 cp.code() += "{ // procedure\n";
-cp.code() += "RV64IMACFD_raise(cpu, system, plugin_pointers, 0LL, 2LL);\n";
+cp.code() += "RV64IMACFD_raise(cpu, system, plugin_pointers, 0LL, 2ULL);\n";
 cp.code() += "etiss_coverage_count(2, 7981, 7979);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 cp.code() += "} // procedure\n";

@@ -1,6 +1,6 @@
 // clang-format off
 /**
- * Generated on Fri, 19 Jun 2026 11:47:54 +0000.
+ * Generated on Tue, 04 Aug 2026 09:55:50 +0200.
  *
  * This file contains the instruction behavior models of the tum_semihosting
  * instruction set for the RV64IMACFD core architecture.
@@ -115,7 +115,7 @@ cp.code() += "etiss_coverage_count(1, 7412);\n";
 cp.code() += "{ // block\n";
 { // procedure
 cp.code() += "{ // procedure\n";
-cp.code() += "RV64IMACFD_raise(cpu, system, plugin_pointers, 0LL, 3LL);\n";
+cp.code() += "RV64IMACFD_raise(cpu, system, plugin_pointers, 0LL, 3ULL);\n";
 cp.code() += "etiss_coverage_count(2, 7411, 7409);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 cp.code() += "} // procedure\n";
@@ -132,7 +132,7 @@ cp.code() += "etiss_coverage_count(1, 7417);\n";
 cp.code() += "{ // block\n";
 { // procedure
 cp.code() += "{ // procedure\n";
-cp.code() += "RV64IMACFD_raise(cpu, system, plugin_pointers, 0LL, 3LL);\n";
+cp.code() += "RV64IMACFD_raise(cpu, system, plugin_pointers, 0LL, 3ULL);\n";
 cp.code() += "etiss_coverage_count(2, 7416, 7414);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 cp.code() += "} // procedure\n";

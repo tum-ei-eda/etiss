@@ -1,6 +1,6 @@
 // clang-format off
 /**
- * Generated on Fri, 19 Jun 2026 11:48:00 +0000.
+ * Generated on Tue, 04 Aug 2026 09:55:50 +0200.
  *
  * This file contains the instruction behavior models of the RV32IC
  * instruction set for the RV32IMACFD core architecture.
@@ -66,7 +66,7 @@ cp.code() += "etiss_coverage_count(9, 2252, 2246, 2245, 2243, 2244, 2251, 2249, 
 else { // conditional
 { // procedure
 cp.code() += "{ // procedure\n";
-cp.code() += "RV32IMACFD_raise(cpu, system, plugin_pointers, 0LL, 2LL);\n";
+cp.code() += "RV32IMACFD_raise(cpu, system, plugin_pointers, 0LL, 2ULL);\n";
 cp.code() += "etiss_coverage_count(2, 2255, 2253);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 cp.code() += "} // procedure\n";
@@ -725,7 +725,7 @@ if (imm == 0LL) { // conditional
 cp.code() += "etiss_coverage_count(3, 2362, 2360, 2361);\n";
 { // procedure
 cp.code() += "{ // procedure\n";
-cp.code() += "RV32IMACFD_raise(cpu, system, plugin_pointers, 0LL, 2LL);\n";
+cp.code() += "RV32IMACFD_raise(cpu, system, plugin_pointers, 0LL, 2ULL);\n";
 cp.code() += "etiss_coverage_count(2, 2365, 2363);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 cp.code() += "} // procedure\n";
@@ -832,7 +832,7 @@ cp.code() += "etiss_coverage_count(8, 2395, 2387, 2386, 2394, 2390, 2389, 2393, 
 else { // conditional
 { // procedure
 cp.code() += "{ // procedure\n";
-cp.code() += "RV32IMACFD_raise(cpu, system, plugin_pointers, 0LL, 2LL);\n";
+cp.code() += "RV32IMACFD_raise(cpu, system, plugin_pointers, 0LL, 2ULL);\n";
 cp.code() += "etiss_coverage_count(2, 2398, 2396);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 cp.code() += "} // procedure\n";
@@ -919,7 +919,7 @@ cp.code() += "} // block\n";
 } // block
 { // procedure
 cp.code() += "{ // procedure\n";
-cp.code() += "RV32IMACFD_raise(cpu, system, plugin_pointers, 0LL, 2LL);\n";
+cp.code() += "RV32IMACFD_raise(cpu, system, plugin_pointers, 0LL, 2ULL);\n";
 cp.code() += "etiss_coverage_count(2, 2401, 2399);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 cp.code() += "} // procedure\n";
@@ -2417,7 +2417,7 @@ cp.code() += "} // block\n";
 } // block
 { // procedure
 cp.code() += "{ // procedure\n";
-cp.code() += "RV32IMACFD_raise(cpu, system, plugin_pointers, 0LL, 3LL);\n";
+cp.code() += "RV32IMACFD_raise(cpu, system, plugin_pointers, 0LL, 3ULL);\n";
 cp.code() += "etiss_coverage_count(2, 2724, 2722);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 cp.code() += "} // procedure\n";
@@ -2589,7 +2589,7 @@ cp.code() += "} // block\n";
 } // block
 { // procedure
 cp.code() += "{ // procedure\n";
-cp.code() += "RV32IMACFD_raise(cpu, system, plugin_pointers, 0LL, 2LL);\n";
+cp.code() += "RV32IMACFD_raise(cpu, system, plugin_pointers, 0LL, 2ULL);\n";
 cp.code() += "etiss_coverage_count(2, 2749, 2747);\n";
 cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
 cp.code() += "} // procedure\n";

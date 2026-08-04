@@ -1,6 +1,6 @@
 // clang-format off
 /**
- * Generated on Fri, 19 Jun 2026 11:48:00 +0000.
+ * Generated on Tue, 04 Aug 2026 09:55:50 +0200.
  *
  * This file contains the instruction behavior models of the RV32I
  * instruction set for the RV32IMACFD core architecture.
@@ -3636,7 +3636,7 @@ cp.code() += "cpu->nextPc = " + std::to_string((etiss_uint32)((ic.current_addres
 cp.code() += "etiss_coverage_count(7, 1188, 1181, 1187, 1184, 1182, 1183, 1185);\n";
 cp.code() += "} // block\n";
 } // block
-cp.code() += "((RV32IMACFD*)cpu)->FENCE[0ULL] = " + std::to_string(pred << 4ULL | succ) + "ULL;\n";
+cp.code() += "((RV32IMACFD*)cpu)->FENCE[0LL] = " + std::to_string(pred << 4ULL | succ) + "ULL;\n";
 cp.code() += "etiss_coverage_count(7, 2229, 2223, 2228, 2226, 2224, 2225, 2227);\n";
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
 cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
