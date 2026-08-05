@@ -151,6 +151,7 @@ defineReturnCode(CPUFINISHED, 1 << 31,
 defineReturnCode(CPUTERMINATED, 0x80000001,
                  "Terminates cpu execution. this is the proper way to force an "
                  "exit from etiss::CPUCore::execute (e.g. by a debugger).");
+defineReturnCode(CPUEXITEXTENDED, 0x80000002, "Application code requested exit with application-defined exit code");                 
 defineReturnCode(JITERROR, -32, "Error in JIT.");
 defineReturnCode(JITCOMPILATIONERROR, -33, "Error in JIT compilation.");
 defineReturnCode(ARCHERROR, -34, "Error in architecture.");

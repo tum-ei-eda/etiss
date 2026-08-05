@@ -11,6 +11,7 @@
 #include "etiss/ETISS.h"
 #include "etiss/CPUCore.h"
 #include "etiss/InterruptHandler.h"
+#include "etiss/jit/ReturnCode.h"
 
 int main(int argc, const char *argv[])
 {
@@ -191,6 +192,9 @@ int main(int argc, const char *argv[])
     case etiss::RETURNCODE::EMULATIONNOTSUPPORTED:
     case etiss::RETURNCODE::INVALIDSYSTEM:
         return 3;
+        break;
+    case etiss::RETURNCODE::CPUEXITEXTENDED:
+        return cpu->getState()->exit_extended_return_code;
         break;
     default:
         return -1;

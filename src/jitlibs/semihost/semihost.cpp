@@ -9,6 +9,7 @@
 #include <iomanip>
 
 #include "SemihostingCalls.h"
+#include "etiss/Misc.h"
 #include "etiss/jit/ReturnCode.h"
 
 extern "C"
@@ -432,8 +433,18 @@ etiss_int64 semihostingCall(ETISS_CPU *const cpu, ETISS_System *const etissSyste
     case SYS_EXIT_EXTENDED:
     {
         std::stringstream ss;
-        ss << "Semihosting: operation not implemented: " << operationNumber;
-        etiss::log(etiss::WARNING, ss.str());
+        constexpr auto ADP_Stopped_ApplicationExit = 0x20026;
+        etiss_uint32 exception_type = FIELD(0);
+        etiss_uint32 return_code = FIELD(1);
+        ss << "Semihosting: SYS_EXIT_EXTENDED " << exception_type << ", " << return_code;
+        etiss::log(etiss::VERBOSE, ss.str());
+        if (exception_type != ADP_Stopped_ApplicationExit){
+            etiss::log(etiss::WARNING, "Currently, only ADP_Stopped_ApplicationExit is supported as field 0 to allow for exit of the simulator with a specified return code");
+        } else {
+            cpu->exception = ETISS_RETURNCODE_CPUEXITEXTENDED;
+            cpu->return_pending = 1;
+            cpu->exit_extended_return_code = return_code;
+        }
         return 0;
     }
     default:
