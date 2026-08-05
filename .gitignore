@@ -43,3 +43,6 @@
 
 ArchImpl/ARMv6M
 examples/SW/arm
+
+# clangd
+.cache
