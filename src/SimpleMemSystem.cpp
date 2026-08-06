@@ -391,6 +391,7 @@ SimpleMemSystem::SimpleMemSystem()
     , print_dbgbus_access_(etiss::cfg().get<bool>("simple_mem_system.print_dbgbus_access", false))
     , print_to_file_(etiss::cfg().get<bool>("simple_mem_system.print_to_file", false))
     , error_on_seg_mismatch_(etiss::cfg().get<bool>("simple_mem_system.error_on_seg_mismatch", false))
+    , error_on_invalid_access_(etiss::cfg().get<bool>("simple_mem_system.error_on_invalid_access", false))
     , message_max_cnt_(etiss::cfg().get<int>("simple_mem_system.message_max_cnt", 100))
 {
     if (print_dbus_access_)
@@ -413,13 +414,15 @@ etiss::int32 SimpleMemSystem::iread(ETISS_CPU *cpu, etiss::uint64 addr, etiss::u
     if (it != msegs_.end())
         return RETURNCODE::NOERROR;
 
-    access_error(cpu, addr, len, "ibus read error", etiss::ERROR);
+    etiss::Verbosity verbosity = error_on_invalid_access_ ? etiss::FATALERROR : etiss::ERROR;
+    access_error(cpu, addr, len, "ibus read error", verbosity);
     return RETURNCODE::IBUS_READ_ERROR;
 }
 
 etiss::int32 SimpleMemSystem::iwrite(ETISS_CPU *cpu, etiss::uint64 addr, etiss::uint8 *buf, etiss::uint32 len)
 {
-    access_error(cpu, addr, len, "ibus write blocked", etiss::ERROR);
+    etiss::Verbosity verbosity = error_on_invalid_access_ ? etiss::FATALERROR : etiss::ERROR;
+    access_error(cpu, addr, len, "ibus write blocked", verbosity);
     return RETURNCODE::IBUS_WRITE_ERROR;
 }
 
@@ -446,6 +449,7 @@ etiss::int32 SimpleMemSystem::dbus_access(ETISS_CPU *cpu, etiss::uint64 addr, et
 {
     auto mseg_it = std::find_if(msegs_.begin(), msegs_.end(), find_fitting_mseg(addr, len));
 
+    etiss::Verbosity verbosity = error_on_invalid_access_ ? etiss::FATALERROR : etiss::ERROR;
     if (mseg_it != msegs_.end())
     {
         auto &mseg = *mseg_it;
@@ -454,7 +458,7 @@ etiss::int32 SimpleMemSystem::dbus_access(ETISS_CPU *cpu, etiss::uint64 addr, et
         if (!(mseg->mode_ & access))
         {
             access_error(cpu, addr, len, std::string("dbus ") + (write ? "write" : "read") + " forbidden",
-                         etiss::WARNING);
+                         verbosity);
         }
 
         size_t offset = addr - mseg->start_addr_;
@@ -470,7 +474,7 @@ etiss::int32 SimpleMemSystem::dbus_access(ETISS_CPU *cpu, etiss::uint64 addr, et
         return RETURNCODE::NOERROR;
     }
 
-    access_error(cpu, addr, len, std::string("dbus ") + (write ? "write" : "read") + " error", etiss::ERROR);
+    access_error(cpu, addr, len, std::string("dbus ") + (write ? "write" : "read") + " error", verbosity);
 
     return write ? RETURNCODE::DBUS_WRITE_ERROR : RETURNCODE::DBUS_READ_ERROR;
 }
