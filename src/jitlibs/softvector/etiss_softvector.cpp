@@ -35,9 +35,9 @@ extern "C"
 {
 
     uint8_t etiss_vload_encoded_unitstride(ETISS_CPU *const pCpu, ETISS_System *const pSystem,
-                                           void *const *const plugin_pointers, uint8_t *pV, uint16_t pVTYPE,
-                                           uint8_t pVm, uint16_t pEEW, uint8_t pVd, uint16_t pVSTART, uint16_t pVLEN,
-                                           uint16_t pVL, uint64_t pMSTART)
+                                           void *const *const plugin_pointers, void *const pV, uint16_t pVTYPE,
+                                           uint8_t pVm, uint16_t pEEW, uint8_t pVd, uint16_t pVSTART, uint32_t pVLEN,
+                                           uint32_t pVL, uint64_t pMSTART)
     {
         VTYPE::VTYPE _vt(pVTYPE);
         uint64_t _z_emul = pEEW * _vt._z_lmul;
@@ -46,7 +46,7 @@ extern "C"
         if ((_n_emul > _z_emul * 8) || (_z_emul > _n_emul * 8))
             return 1;
 
-        uint8_t *VectorRegField = pV;
+        uint8_t *VectorRegField = (uint8_t*)pV;
         std::function<void(size_t, uint8_t *, size_t)> f_readMem =
             [pSystem, pCpu](size_t addr, uint8_t *buff, size_t len)
         { (*(pSystem->dread))(pSystem->handle, pCpu, addr, buff, len); };
@@ -66,10 +66,10 @@ extern "C"
     }
 
     uint8_t etiss_vload_mask(ETISS_CPU *const pCpu, ETISS_System *const pSystem, void *const *const plugin_pointers,
-                             uint8_t *pV, uint8_t pVm, uint8_t pVd, uint16_t pVSTART, uint16_t pVLEN, uint16_t pVL,
+                             void *const pV, uint8_t pVm, uint8_t pVd, uint16_t pVSTART, uint32_t pVLEN, uint32_t pVL,
                              uint64_t pMSTART)
     {
-        uint8_t *VectorRegField = pV;
+        uint8_t *VectorRegField = (uint8_t*)pV;
 
         std::function<void(size_t, uint8_t *, size_t)> f_readMem =
             [pSystem, pCpu](size_t addr, uint8_t *buff, size_t len)
@@ -96,8 +96,8 @@ extern "C"
     }
 
     uint8_t etiss_vload_encoded_stride(ETISS_CPU *const pCpu, ETISS_System *const pSystem,
-                                       void *const *const plugin_pointers, uint8_t *pV, uint16_t pVTYPE, uint8_t pVm,
-                                       uint16_t pEEW, uint8_t pVd, uint16_t pVSTART, uint16_t pVLEN, uint16_t pVL,
+                                       void *const *const plugin_pointers, void *const pV, uint16_t pVTYPE, uint8_t pVm,
+                                       uint16_t pEEW, uint8_t pVd, uint16_t pVSTART, uint32_t pVLEN, uint32_t pVL,
                                        uint64_t pMSTART, int16_t pSTRIDE)
     {
         VTYPE::VTYPE _vt(pVTYPE);
@@ -109,7 +109,7 @@ extern "C"
             return 1;
         }
 
-        uint8_t *VectorRegField = pV;
+        uint8_t *VectorRegField = (uint8_t*)pV;
         std::function<void(size_t, uint8_t *, size_t)> f_readMem =
             [pSystem, pCpu](size_t addr, uint8_t *buff, size_t len)
         { (*(pSystem->dread))(pSystem->handle, pCpu, addr, buff, len); };
@@ -132,8 +132,8 @@ extern "C"
     }
 
     uint8_t etiss_vload_encoded_index(ETISS_CPU *const pCpu, ETISS_System *const pSystem,
-                                      void *const *const plugin_pointers, uint8_t *pV, uint16_t pVTYPE, uint8_t pVm,
-                                      uint16_t pEEW, uint8_t pVd, uint16_t pVSTART, uint16_t pVLEN, uint16_t pVL,
+                                      void *const *const plugin_pointers, void *const pV, uint16_t pVTYPE, uint8_t pVm,
+                                      uint16_t pEEW, uint8_t pVd, uint16_t pVSTART, uint32_t pVLEN, uint32_t pVL,
                                       uint64_t pMSTART, uint8_t pVs2)
     {
         VTYPE::VTYPE _vt(pVTYPE);
@@ -145,7 +145,7 @@ extern "C"
             return 1;
         }
 
-        uint8_t *VectorRegField = pV;
+        uint8_t *VectorRegField = (uint8_t*)pV;
         std::function<void(size_t, uint8_t *, size_t)> f_readMem =
             [pSystem, pCpu](size_t addr, uint8_t *buff, size_t len)
         { (*(pSystem->dread))(pSystem->handle, pCpu, addr, buff, len); };
@@ -174,9 +174,9 @@ extern "C"
     }
 
     uint8_t etiss_vload_segment_unitstride(ETISS_CPU *const pCpu, ETISS_System *const pSystem,
-                                           void *const *const plugin_pointers, uint8_t *pV, uint16_t pVTYPE,
+                                           void *const *const plugin_pointers, void *const pV, uint16_t pVTYPE,
                                            uint8_t pVm, uint16_t pEEW, uint8_t pNF, uint8_t pVd, uint16_t pVSTART,
-                                           uint16_t pVLEN, uint16_t pVL, uint64_t pMSTART)
+                                           uint32_t pVLEN, uint32_t pVL, uint64_t pMSTART)
     {
         VTYPE::VTYPE _vt(pVTYPE);
         uint64_t _z_emul = pEEW * _vt._z_lmul;
@@ -189,7 +189,7 @@ extern "C"
         if (pVSTART >= pVL)
             return (0);
 
-        uint8_t *VectorRegField = pV;
+        uint8_t *VectorRegField = (uint8_t*)pV;
         std::function<void(size_t, uint8_t *, size_t)> f_readMem =
             [pSystem, pCpu](size_t addr, uint8_t *buff, size_t len)
         { (*(pSystem->dread))(pSystem->handle, pCpu, addr, buff, len); };
@@ -230,9 +230,9 @@ extern "C"
     }
 
     uint8_t etiss_vload_segment_stride(ETISS_CPU *const pCpu, ETISS_System *const pSystem,
-                                       void *const *const plugin_pointers, uint8_t *pV, uint16_t pVTYPE, uint8_t pVm,
-                                       uint16_t pEEW, uint8_t pNF, uint8_t pVd, uint16_t pVSTART, uint16_t pVLEN,
-                                       uint16_t pVL, uint64_t pMSTART, int16_t pSTRIDE)
+                                       void *const *const plugin_pointers, void *const pV, uint16_t pVTYPE, uint8_t pVm,
+                                       uint16_t pEEW, uint8_t pNF, uint8_t pVd, uint16_t pVSTART, uint32_t pVLEN,
+                                       uint32_t pVL, uint64_t pMSTART, int16_t pSTRIDE)
     {
         VTYPE::VTYPE _vt(pVTYPE);
         uint64_t _z_emul = pEEW * _vt._z_lmul;
@@ -245,7 +245,7 @@ extern "C"
         if (pVSTART >= pVL)
             return (0);
 
-        uint8_t *VectorRegField = pV;
+        uint8_t *VectorRegField = (uint8_t*)pV;
         std::function<void(size_t, uint8_t *, size_t)> f_readMem =
             [pSystem, pCpu](size_t addr, uint8_t *buff, size_t len)
         { (*(pSystem->dread))(pSystem->handle, pCpu, addr, buff, len); };
@@ -286,9 +286,9 @@ extern "C"
     }
 
     uint8_t etiss_vload_segment_index(ETISS_CPU *const pCpu, ETISS_System *const pSystem,
-                                      void *const *const plugin_pointers, uint8_t *pV, uint16_t pVTYPE, uint8_t pVm,
-                                      uint16_t pEEW, uint8_t pNF, uint8_t pVd, uint16_t pVSTART, uint16_t pVLEN,
-                                      uint16_t pVL, uint64_t pMSTART, uint8_t pVs2)
+                                      void *const *const plugin_pointers, void *const pV, uint16_t pVTYPE, uint8_t pVm,
+                                      uint16_t pEEW, uint8_t pNF, uint8_t pVd, uint16_t pVSTART, uint32_t pVLEN,
+                                      uint32_t pVL, uint64_t pMSTART, uint8_t pVs2)
     {
         VTYPE::VTYPE _vt(pVTYPE);
         uint64_t _z_emul = pEEW * _vt._z_lmul;
@@ -299,7 +299,7 @@ extern "C"
             return 1;
         }
 
-        uint8_t *VectorRegField = pV;
+        uint8_t *VectorRegField = (uint8_t*)pV;
         std::function<void(size_t, uint8_t *, size_t)> f_readMem =
             [pSystem, pCpu](size_t addr, uint8_t *buff, size_t len)
         { (*(pSystem->dread))(pSystem->handle, pCpu, addr, buff, len); };
@@ -345,8 +345,8 @@ extern "C"
     }
 
     uint8_t etiss_vload_registers(ETISS_CPU *const pCpu, ETISS_System *const pSystem,
-                                  void *const *const plugin_pointers, uint8_t *pV, uint16_t pVTYPE, uint8_t pVm,
-                                  uint16_t pEEW, uint8_t pNF, uint8_t pVd, uint16_t pVSTART, uint16_t pVLEN,
+                                  void *const *const plugin_pointers, void *const pV, uint16_t pVTYPE, uint8_t pVm,
+                                  uint16_t pEEW, uint8_t pNF, uint8_t pVd, uint16_t pVSTART, uint32_t pVLEN,
                                   uint64_t pMSTART)
     {
         VTYPE::VTYPE _vt(pVTYPE);
@@ -363,7 +363,7 @@ extern "C"
             return 0;
         }
 
-        uint8_t *VectorRegField = pV;
+        uint8_t *VectorRegField = (uint8_t*)pV;
         std::function<void(size_t, uint8_t *, size_t)> f_readMem =
             [pSystem, pCpu](size_t addr, uint8_t *buff, size_t len)
         { (*(pSystem->dread))(pSystem->handle, pCpu, addr, buff, len); };
@@ -385,9 +385,9 @@ extern "C"
     }
 
     uint8_t etiss_vstore_encoded_unitstride(ETISS_CPU *const pCpu, ETISS_System *const pSystem,
-                                            void *const *const plugin_pointers, uint8_t *pV, uint16_t pVTYPE,
-                                            uint8_t pVm, uint16_t pEEW, uint8_t pVs3, uint16_t pVSTART, uint16_t pVLEN,
-                                            uint16_t pVL, uint64_t pMSTART)
+                                            void *const *const plugin_pointers, void *const pV, uint16_t pVTYPE,
+                                            uint8_t pVm, uint16_t pEEW, uint8_t pVs3, uint16_t pVSTART, uint32_t pVLEN,
+                                            uint32_t pVL, uint64_t pMSTART)
     {
         VTYPE::VTYPE _vt(pVTYPE);
         uint64_t _z_emul = pEEW * _vt._z_lmul;
@@ -397,7 +397,7 @@ extern "C"
         if ((_n_emul > _z_emul * 8) || (_z_emul > _n_emul * 8))
             return 1;
 
-        uint8_t *VectorRegField = pV;
+        uint8_t *VectorRegField = (uint8_t*)pV;
         std::function<void(size_t, uint8_t *, size_t)> f_writeMem =
             [pSystem, pCpu](size_t addr, uint8_t *buff, size_t len)
         { (*(pSystem->dwrite))(pSystem->handle, pCpu, addr, buff, len); };
@@ -420,10 +420,10 @@ extern "C"
     }
 
     uint8_t etiss_vstore_mask(ETISS_CPU *const pCpu, ETISS_System *const pSystem, void *const *const plugin_pointers,
-                              uint8_t *pV, uint8_t pVm, uint8_t pVs3, uint16_t pVSTART, uint16_t pVLEN, uint16_t pVL,
+                              void *const pV, uint8_t pVm, uint8_t pVs3, uint16_t pVSTART, uint32_t pVLEN, uint32_t pVL,
                               uint64_t pMSTART)
     {
-        uint8_t *VectorRegField = pV;
+        uint8_t *VectorRegField = (uint8_t*)pV;
         std::function<void(size_t, uint8_t *, size_t)> f_writeMem =
             [pSystem, pCpu](size_t addr, uint8_t *buff, size_t len)
         { (*(pSystem->dwrite))(pSystem->handle, pCpu, addr, buff, len); };
@@ -451,8 +451,8 @@ extern "C"
     }
 
     uint8_t etiss_vstore_encoded_stride(ETISS_CPU *const pCpu, ETISS_System *const pSystem,
-                                        void *const *const plugin_pointers, uint8_t *pV, uint16_t pVTYPE, uint8_t pVm,
-                                        uint16_t pEEW, uint8_t pVs3, uint16_t pVSTART, uint16_t pVLEN, uint16_t pVL,
+                                        void *const *const plugin_pointers, void *const pV, uint16_t pVTYPE, uint8_t pVm,
+                                        uint16_t pEEW, uint8_t pVs3, uint16_t pVSTART, uint32_t pVLEN, uint32_t pVL,
                                         uint64_t pMSTART, int16_t pStride)
     {
         VTYPE::VTYPE _vt(pVTYPE);
@@ -463,7 +463,7 @@ extern "C"
         if ((_n_emul > _z_emul * 8) || (_z_emul > _n_emul * 8))
             return 1;
 
-        uint8_t *VectorRegField = pV;
+        uint8_t *VectorRegField = (uint8_t*)pV;
         std::function<void(size_t, uint8_t *, size_t)> f_writeMem =
             [pSystem, pCpu](size_t addr, uint8_t *buff, size_t len)
         { (*(pSystem->dwrite))(pSystem->handle, pCpu, addr, buff, len); };
@@ -486,8 +486,8 @@ extern "C"
     }
 
     uint8_t etiss_vstore_encoded_index(ETISS_CPU *const pCpu, ETISS_System *const pSystem,
-                                       void *const *const plugin_pointers, uint8_t *pV, uint16_t pVTYPE, uint8_t pVm,
-                                       uint16_t pEEW, uint8_t pVs3, uint16_t pVSTART, uint16_t pVLEN, uint16_t pVL,
+                                       void *const *const plugin_pointers, void *const pV, uint16_t pVTYPE, uint8_t pVm,
+                                       uint16_t pEEW, uint8_t pVs3, uint16_t pVSTART, uint32_t pVLEN, uint32_t pVL,
                                        uint64_t pMSTART, uint8_t pVs2)
     {
         VTYPE::VTYPE _vt(pVTYPE);
@@ -499,7 +499,7 @@ extern "C"
             return 1;
         }
 
-        uint8_t *VectorRegField = pV;
+        uint8_t *VectorRegField = (uint8_t*)pV;
         std::function<void(size_t, uint8_t *, size_t)> f_writeMem =
             [pSystem, pCpu](size_t addr, uint8_t *buff, size_t len)
         { (*(pSystem->dwrite))(pSystem->handle, pCpu, addr, buff, len); };
@@ -529,9 +529,9 @@ extern "C"
     }
 
     uint8_t etiss_vstore_segment_unitstride(ETISS_CPU *const pCpu, ETISS_System *const pSystem,
-                                            void *const *const plugin_pointers, uint8_t *pV, uint16_t pVTYPE,
+                                            void *const *const plugin_pointers, void *const pV, uint16_t pVTYPE,
                                             uint8_t pVm, uint16_t pEEW, uint8_t pNF, uint8_t pVs3, uint16_t pVSTART,
-                                            uint16_t pVLEN, uint16_t pVL, uint64_t pMSTART)
+                                            uint32_t pVLEN, uint32_t pVL, uint64_t pMSTART)
     {
         VTYPE::VTYPE _vt(pVTYPE);
         uint64_t _z_emul = pEEW * _vt._z_lmul;
@@ -545,7 +545,7 @@ extern "C"
         if (pVSTART >= pVL)
             return (0);
 
-        uint8_t *VectorRegField = pV;
+        uint8_t *VectorRegField = (uint8_t*)pV;
         std::function<void(size_t, uint8_t *, size_t)> f_writeMem =
             [pSystem, pCpu](size_t addr, uint8_t *buff, size_t len)
         { (*(pSystem->dwrite))(pSystem->handle, pCpu, addr, buff, len); };
@@ -588,9 +588,9 @@ extern "C"
     }
 
     uint8_t etiss_vstore_segment_stride(ETISS_CPU *const pCpu, ETISS_System *const pSystem,
-                                        void *const *const plugin_pointers, uint8_t *pV, uint16_t pVTYPE, uint8_t pVm,
-                                        uint16_t pEEW, uint8_t pNF, uint8_t pVs3, uint16_t pVSTART, uint16_t pVLEN,
-                                        uint16_t pVL, uint64_t pMSTART, int16_t pStride)
+                                        void *const *const plugin_pointers, void *const pV, uint16_t pVTYPE, uint8_t pVm,
+                                        uint16_t pEEW, uint8_t pNF, uint8_t pVs3, uint16_t pVSTART, uint32_t pVLEN,
+                                        uint32_t pVL, uint64_t pMSTART, int16_t pStride)
     {
         VTYPE::VTYPE _vt(pVTYPE);
         uint64_t _z_emul = pEEW * _vt._z_lmul;
@@ -603,7 +603,7 @@ extern "C"
         if (pVSTART >= pVL)
             return (0);
 
-        uint8_t *VectorRegField = pV;
+        uint8_t *VectorRegField = (uint8_t*)pV;
         std::function<void(size_t, uint8_t *, size_t)> f_writeMem =
             [pSystem, pCpu](size_t addr, uint8_t *buff, size_t len)
         { (*(pSystem->dwrite))(pSystem->handle, pCpu, addr, buff, len); };
@@ -685,9 +685,9 @@ extern "C"
     }
 
     uint8_t etiss_vstore_segment_index(ETISS_CPU *const pCpu, ETISS_System *const pSystem,
-                                       void *const *const plugin_pointers, uint8_t *pV, uint16_t pVTYPE, uint8_t pVm,
-                                       uint16_t pEEW, uint8_t pNF, uint8_t pVs3, uint16_t pVSTART, uint16_t pVLEN,
-                                       uint16_t pVL, uint64_t pMSTART, uint8_t pVs2)
+                                       void *const *const plugin_pointers, void *const pV, uint16_t pVTYPE, uint8_t pVm,
+                                       uint16_t pEEW, uint8_t pNF, uint8_t pVs3, uint16_t pVSTART, uint32_t pVLEN,
+                                       uint32_t pVL, uint64_t pMSTART, uint8_t pVs2)
     {
         VTYPE::VTYPE _vt(pVTYPE);
         uint64_t _z_emul = pEEW * _vt._z_lmul;
@@ -698,7 +698,7 @@ extern "C"
             return 1;
         }
 
-        uint8_t *VectorRegField = pV;
+        uint8_t *VectorRegField = (uint8_t*)pV;
         std::function<void(size_t, uint8_t *, size_t)> f_writeMem =
             [pSystem, pCpu](size_t addr, uint8_t *buff, size_t len)
         { (*(pSystem->dwrite))(pSystem->handle, pCpu, addr, buff, len); };
@@ -727,8 +727,8 @@ extern "C"
     }
 
     uint8_t etiss_vstore_registers(ETISS_CPU *const pCpu, ETISS_System *const pSystem,
-                                   void *const *const plugin_pointers, uint8_t *pV, uint16_t pVTYPE, uint8_t pVm,
-                                   uint8_t pNF, uint8_t pVs3, uint16_t pVSTART, uint16_t pVLEN, uint64_t pMSTART)
+                                   void *const *const plugin_pointers, void *const pV, uint16_t pVTYPE, uint8_t pVm,
+                                   uint8_t pNF, uint8_t pVs3, uint16_t pVSTART, uint32_t pVLEN, uint64_t pMSTART)
     {
         VTYPE::VTYPE _vt(pVTYPE);
         uint64_t _z_emul = pNF;
@@ -744,7 +744,7 @@ extern "C"
             return 0;
         }
 
-        uint8_t *VectorRegField = pV;
+        uint8_t *VectorRegField = (uint8_t*)pV;
         std::function<void(size_t, uint8_t *, size_t)> f_writeMem =
             [pSystem, pCpu](size_t addr, uint8_t *buff, size_t len)
         { (*(pSystem->dwrite))(pSystem->handle, pCpu, addr, buff, len); };

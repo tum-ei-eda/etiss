@@ -40,12 +40,12 @@ extern "C"
         ETISS_CPU *const pCpu,       //!<[inout] Pointer to ETISS_CPU structure. Supports Vector register field
         ETISS_System *const pSystem, //!<[inout] Pointer to ETISS_System structure. Supports databus/memory acesses
         void *const *const plugin_pointers, //!>[inout] Pointers to ETISS plugins. Unused
-        uint8_t *pV,                        //!<[inout] Vector register field as local memory
-        uint16_t pVTYPE, uint8_t pVm, uint16_t pEEW, uint8_t pVd, uint16_t pVSTART, uint16_t pVLEN, uint16_t pVL,
+        void *const pV,                        //!<[inout] Vector register field as local memory
+        uint16_t pVTYPE, uint8_t pVm, uint16_t pEEW, uint8_t pVd, uint16_t pVSTART, uint32_t pVLEN, uint32_t pVL,
         uint64_t pMSTART);
 
     uint8_t etiss_vload_mask(ETISS_CPU *const pCpu, ETISS_System *const pSystem, void *const *const plugin_pointers,
-                             uint8_t *pV, uint8_t pVm, uint8_t pVd, uint16_t pVSTART, uint16_t pVLEN, uint16_t pVL,
+                             void *const pV, uint8_t pVm, uint8_t pVd, uint16_t pVSTART, uint32_t pVLEN, uint32_t pVL,
                              uint64_t pMSTART);
 
     //////////////////////////////////////////////////////////////////////////////////////
@@ -55,16 +55,16 @@ extern "C"
         ETISS_CPU *const pCpu,       //!<[inout] Pointer to ETISS_CPU structure. Supports Vector register field
         ETISS_System *const pSystem, //!<[inout] Pointer to ETISS_System structure. Supports databus/memory acesses
         void *const *const plugin_pointers, //!>[inout] Pointers to ETISS plugins. Unused
-        uint8_t *pV,                        //!<[inout] Vector register field as local memory
-        uint16_t pVTYPE, uint8_t pVm, uint16_t pEEW, uint8_t pVd, uint16_t pVSTART, uint16_t pVLEN, uint16_t pVL,
+        void *const pV,                        //!<[inout] Vector register field as local memory
+        uint16_t pVTYPE, uint8_t pVm, uint16_t pEEW, uint8_t pVd, uint16_t pVSTART, uint32_t pVLEN, uint32_t pVL,
         uint64_t pMSTART, int16_t pSTRIDE);
 
     //////////////////////////////////////////////////////////////////////////////////////
     /// \brief Load encoded (indexed) from memory to target vector (-group)
     /// \return 0 if no exception triggered, else 1
     uint8_t etiss_vload_encoded_index(ETISS_CPU *const pCpu, ETISS_System *const pSystem,
-                                      void *const *const plugin_pointers, uint8_t *pV, uint16_t pVTYPE, uint8_t pVm,
-                                      uint16_t pEEW, uint8_t pVd, uint16_t pVSTART, uint16_t pVLEN, uint16_t pVL,
+                                      void *const *const plugin_pointers, void *const pV, uint16_t pVTYPE, uint8_t pVm,
+                                      uint16_t pEEW, uint8_t pVd, uint16_t pVSTART, uint32_t pVLEN, uint32_t pVL,
                                       uint64_t pMSTART, uint8_t pVs2);
 
     //////////////////////////////////////////////////////////////////////////////////////
@@ -74,9 +74,9 @@ extern "C"
         ETISS_CPU *const pCpu,       //!<[inout] Pointer to ETISS_CPU structure. Supports Vector register field
         ETISS_System *const pSystem, //!<[inout] Pointer to ETISS_System structure. Supports databus/memory acesses
         void *const *const plugin_pointers, //!>[inout] Pointers to ETISS plugins. Unused
-        uint8_t *pV,                        //!<[inout] Vector register field as local memory
-        uint16_t pVTYPE, uint8_t pVm, uint16_t pEEW, uint8_t pNF, uint8_t pVd, uint16_t pVSTART, uint16_t pVLEN,
-        uint16_t pVL, uint64_t pMSTART);
+        void *const pV,                        //!<[inout] Vector register field as local memory
+        uint16_t pVTYPE, uint8_t pVm, uint16_t pEEW, uint8_t pNF, uint8_t pVd, uint16_t pVSTART, uint32_t pVLEN,
+        uint32_t pVL, uint64_t pMSTART);
 
     //////////////////////////////////////////////////////////////////////////////////////
     /// \brief Load encoded (strided) from memory to target vector (-group)
@@ -85,17 +85,17 @@ extern "C"
         ETISS_CPU *const pCpu,       //!<[inout] Pointer to ETISS_CPU structure. Supports Vector register field
         ETISS_System *const pSystem, //!<[inout] Pointer to ETISS_System structure. Supports databus/memory acesses
         void *const *const plugin_pointers, //!>[inout] Pointers to ETISS plugins. Unused
-        uint8_t *pV,                        //!<[inout] Vector register field as local memory
-        uint16_t pVTYPE, uint8_t pVm, uint16_t pEEW, uint8_t pNF, uint8_t pVd, uint16_t pVSTART, uint16_t pVLEN,
-        uint16_t pVL, uint64_t pMSTART, int16_t pSTRIDE);
+        void *const pV,                        //!<[inout] Vector register field as local memory
+        uint16_t pVTYPE, uint8_t pVm, uint16_t pEEW, uint8_t pNF, uint8_t pVd, uint16_t pVSTART, uint32_t pVLEN,
+        uint32_t pVL, uint64_t pMSTART, int16_t pSTRIDE);
 
     //////////////////////////////////////////////////////////////////////////////////////
     /// \brief Load segmented (indexed) from memory to target vector (-group)
     /// \return 0 if no exception triggered, else 1
     uint8_t etiss_vload_segment_index(ETISS_CPU *const pCpu, ETISS_System *const pSystem,
-                                      void *const *const plugin_pointers, uint8_t *pV, uint16_t pVTYPE, uint8_t pVm,
-                                      uint16_t pEEW, uint8_t pNF, uint8_t pVd, uint16_t pVSTART, uint16_t pVLEN,
-                                      uint16_t pVL, uint64_t pMSTART, uint8_t pVs2);
+                                      void *const *const plugin_pointers, void *const pV, uint16_t pVTYPE, uint8_t pVm,
+                                      uint16_t pEEW, uint8_t pNF, uint8_t pVd, uint16_t pVSTART, uint32_t pVLEN,
+                                      uint32_t pVL, uint64_t pMSTART, uint8_t pVs2);
 
     //////////////////////////////////////////////////////////////////////////////////////
     /// \brief Load whole registers
@@ -104,8 +104,8 @@ extern "C"
         ETISS_CPU *const pCpu,       //!<[inout] Pointer to ETISS_CPU structure. Supports Vector register field
         ETISS_System *const pSystem, //!<[inout] Pointer to ETISS_System structure. Supports databus/memory acesses
         void *const *const plugin_pointers, //!>[inout] Pointers to ETISS plugins. Unused
-        uint8_t *pV,                        //!<[inout] Vector register field as local memory
-        uint16_t pVTYPE, uint8_t pVm, uint16_t pEEW, uint8_t pNF, uint8_t pVd, uint16_t pVSTART, uint16_t pVLEN,
+        void *const pV,                        //!<[inout] Vector register field as local memory
+        uint16_t pVTYPE, uint8_t pVm, uint16_t pEEW, uint8_t pNF, uint8_t pVd, uint16_t pVSTART, uint32_t pVLEN,
         uint64_t pMSTART);
 
     //////////////////////////////////////////////////////////////////////////////////////
@@ -115,12 +115,12 @@ extern "C"
         ETISS_CPU *const pCpu,       //!<[inout] Pointer to ETISS_CPU structure. Supports Vector register field
         ETISS_System *const pSystem, //!<[inout] Pointer to ETISS_System structure. Supports databus/memory acesses
         void *const *const plugin_pointers, //!>[inout] Pointers to ETISS plugins. Unused
-        uint8_t *pV,                        //!<[inout] Vector register field as local memory
-        uint16_t pVTYPE, uint8_t pVm, uint16_t pEEW, uint8_t pVs3, uint16_t pVSTART, uint16_t pVLEN, uint16_t pVL,
+        void *const pV,                        //!<[inout] Vector register field as local memory
+        uint16_t pVTYPE, uint8_t pVm, uint16_t pEEW, uint8_t pVs3, uint16_t pVSTART, uint32_t pVLEN, uint32_t pVL,
         uint64_t pMSTART);
 
     uint8_t etiss_vstore_mask(ETISS_CPU *const pCpu, ETISS_System *const pSystem, void *const *const plugin_pointers,
-                              uint8_t *pV, uint8_t pVm, uint8_t pVs3, uint16_t pVSTART, uint16_t pVLEN, uint16_t pVL,
+                              void *const pV, uint8_t pVm, uint8_t pVs3, uint16_t pVSTART, uint32_t pVLEN, uint32_t pVL,
                               uint64_t pMSTART);
 
     //////////////////////////////////////////////////////////////////////////////////////
@@ -130,16 +130,16 @@ extern "C"
         ETISS_CPU *const pCpu,       //!<[inout] Pointer to ETISS_CPU structure. Supports Vector register field
         ETISS_System *const pSystem, //!<[inout] Pointer to ETISS_System structure. Supports databus/memory acesses
         void *const *const plugin_pointers, //!>[inout] Pointers to ETISS plugins. Unused
-        uint8_t *pV,                        //!<[inout] Vector register field as local memory
-        uint16_t pVTYPE, uint8_t pVm, uint16_t pEEW, uint8_t pVs3, uint16_t pVSTART, uint16_t pVLEN, uint16_t pVL,
+        void *const pV,                        //!<[inout] Vector register field as local memory
+        uint16_t pVTYPE, uint8_t pVm, uint16_t pEEW, uint8_t pVs3, uint16_t pVSTART, uint32_t pVLEN, uint32_t pVL,
         uint64_t pMSTART, int16_t pStride);
 
     //////////////////////////////////////////////////////////////////////////////////////
     /// \brief Load encoded (indexed) from memory to target vector (-group)
     /// \return 0 if no exception triggered, else 1
     uint8_t etiss_vstore_encoded_index(ETISS_CPU *const pCpu, ETISS_System *const pSystem,
-                                       void *const *const plugin_pointers, uint8_t *pV, uint16_t pVTYPE, uint8_t pVm,
-                                       uint16_t pEEW, uint8_t pVs3, uint16_t pVSTART, uint16_t pVLEN, uint16_t pVL,
+                                       void *const *const plugin_pointers, void *const pV, uint16_t pVTYPE, uint8_t pVm,
+                                       uint16_t pEEW, uint8_t pVs3, uint16_t pVSTART, uint32_t pVLEN, uint32_t pVL,
                                        uint64_t pMSTART, uint8_t pVs2);
 
     //////////////////////////////////////////////////////////////////////////////////////
@@ -149,9 +149,9 @@ extern "C"
         ETISS_CPU *const pCpu,       //!<[inout] Pointer to ETISS_CPU structure. Supports Vector register field
         ETISS_System *const pSystem, //!<[inout] Pointer to ETISS_System structure. Supports databus/memory acesses
         void *const *const plugin_pointers, //!>[inout] Pointers to ETISS plugins. Unused
-        uint8_t *pV,                        //!<[inout] Vector register field as local memory
-        uint16_t pVTYPE, uint8_t pVm, uint16_t pEEW, uint8_t pNF, uint8_t pVs3, uint16_t pVSTART, uint16_t pVLEN,
-        uint16_t pVL, uint64_t pMSTART);
+        void *const pV,                        //!<[inout] Vector register field as local memory
+        uint16_t pVTYPE, uint8_t pVm, uint16_t pEEW, uint8_t pNF, uint8_t pVs3, uint16_t pVSTART, uint32_t pVLEN,
+        uint32_t pVL, uint64_t pMSTART);
 
     //////////////////////////////////////////////////////////////////////////////////////
     /// \brief Store segmented (strided) source vector (-group) to memory
@@ -160,17 +160,17 @@ extern "C"
         ETISS_CPU *const pCpu,       //!<[inout] Pointer to ETISS_CPU structure. Supports Vector register field
         ETISS_System *const pSystem, //!<[inout] Pointer to ETISS_System structure. Supports databus/memory acesses
         void *const *const plugin_pointers, //!>[inout] Pointers to ETISS plugins. Unused
-        uint8_t *pV,                        //!<[inout] Vector register field as local memory
-        uint16_t pVTYPE, uint8_t pVm, uint16_t pEEW, uint8_t pNF, uint8_t pVs3, uint16_t pVSTART, uint16_t pVLEN,
-        uint16_t pVL, uint64_t pMSTART, int16_t pStride);
+        void *const pV,                        //!<[inout] Vector register field as local memory
+        uint16_t pVTYPE, uint8_t pVm, uint16_t pEEW, uint8_t pNF, uint8_t pVs3, uint16_t pVSTART, uint32_t pVLEN,
+        uint32_t pVL, uint64_t pMSTART, int16_t pStride);
 
     //////////////////////////////////////////////////////////////////////////////////////
     /// \brief Store segmented (indexed) source vector (-group) to memory
     /// \return 0 if no exception triggered, else 1
     uint8_t etiss_vstore_segment_index(ETISS_CPU *const pCpu, ETISS_System *const pSystem,
-                                       void *const *const plugin_pointers, uint8_t *pV, uint16_t pVTYPE, uint8_t pVm,
-                                       uint16_t pEEW, uint8_t pNF, uint8_t pVs3, uint16_t pVSTART, uint16_t pVLEN,
-                                       uint16_t pVL, uint64_t pMSTART, uint8_t pVs2);
+                                       void *const *const plugin_pointers, void *const pV, uint16_t pVTYPE, uint8_t pVm,
+                                       uint16_t pEEW, uint8_t pNF, uint8_t pVs3, uint16_t pVSTART, uint32_t pVLEN,
+                                       uint32_t pVL, uint64_t pMSTART, uint8_t pVs2);
 
     //////////////////////////////////////////////////////////////////////////////////////
     /// \brief Store whole registers to memory
@@ -179,8 +179,8 @@ extern "C"
         ETISS_CPU *const pCpu,       //!<[inout] Pointer to ETISS_CPU structure. Supports Vector register field
         ETISS_System *const pSystem, //!<[inout] Pointer to ETISS_System structure. Supports databus/memory acesses
         void *const *const plugin_pointers, //!>[inout] Pointers to ETISS plugins. Unused
-        uint8_t *pV,                        //!<[inout] Vector register field as local memory
-        uint16_t pVTYPE, uint8_t pVm, uint8_t pNF, uint8_t pVs3, uint16_t pVSTART, uint16_t pVLEN, uint64_t pMSTART);
+        void *const pV,                        //!<[inout] Vector register field as local memory
+        uint16_t pVTYPE, uint8_t pVm, uint8_t pNF, uint8_t pVs3, uint16_t pVSTART, uint32_t pVLEN, uint64_t pMSTART);
 
 #ifdef __cplusplus
 } // extern "C"
