@@ -12,7 +12,7 @@ ADD_LIBRARY(${PROJECT_NAME} SHARED
     etiss_softvector.cpp
 )
 
-TARGET_LINK_LIBRARIES(${PROJECT_NAME} 
+TARGET_LINK_LIBRARIES(${PROJECT_NAME}
     softvector
     ETISS
 )
@@ -21,11 +21,19 @@ add_custom_command(
     TARGET ${PROJECT_NAME} POST_BUILD VERBATIM
     COMMAND ${CMAKE_COMMAND} -E make_directory ${ETISS_BINARY_DIR}/include/jit/etiss/jit/
     COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:${PROJECT_NAME}>" ${ETISS_BINARY_DIR}/include/jit/etiss/jit/
+    COMMAND ${CMAKE_COMMAND} -E copy "$<TARGET_FILE:softvector>" ${CMAKE_BINARY_DIR}/include/jit/etiss/jit/
+    COMMAND ${CMAKE_COMMAND} -E copy ${softvector_SOURCE_DIR}/include/target/riscv/softvector.h ${CMAKE_BINARY_DIR}/include/jit/etiss/jit/
 )
 
 INSTALL(FILES
     libsoftvector.h
     DESTINATION include/jit/etiss/jit
 )
+
+INSTALL(
+    FILES ${softvector_SOURCE_DIR}/include/target/riscv/softvector.h
+    DESTINATION include/jit/etiss/jit
+)
+
 InstallJitLib(${PROJECT_NAME})
 InstallJitLib(softvector)
