@@ -1,6 +1,6 @@
 // clang-format off
 /**
- * Generated on Thu, 06 Aug 2026 12:56:16 +0200.
+ * Generated on Thu, 06 Aug 2026 13:26:11 +0200.
  *
  * This file contains the instruction behavior models of the Zifencei
  * instruction set for the RV32IMACFDV_zvl128b core architecture.
@@ -47,16 +47,16 @@ imm += R_imm_0.read(ba) << 0;
 
 // -----------------------------------------------------------------------------
 cp.code() += "cpu->exception = ETISS_RETURNCODE_RELOADBLOCKS;\n";
-cp.code() += "etiss_coverage_count(1, 531);\n";
+cp.code() += "etiss_coverage_count(1, 148);\n";
 { // block
-cp.code() += "etiss_coverage_count(1, 1512);\n";
+cp.code() += "etiss_coverage_count(1, 1602);\n";
 cp.code() += "{ // block\n";
 cp.code() += "cpu->nextPc = " + std::to_string((etiss_uint32)((ic.current_address_ + 4))) + "ULL;\n";
-cp.code() += "etiss_coverage_count(7, 1511, 1504, 1510, 1507, 1505, 1506, 1508);\n";
+cp.code() += "etiss_coverage_count(7, 1601, 1594, 1600, 1597, 1595, 1596, 1598);\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "((RV32IMACFDV_zvl128b*)cpu)->FENCE[1ULL] = " + std::to_string(imm) + "ULL;\n";
-cp.code() += "etiss_coverage_count(3, 30323, 30321, 30322);\n";
+cp.code() += "etiss_coverage_count(3, 6769, 6767, 6768);\n";
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
 cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
 // -----------------------------------------------------------------------------

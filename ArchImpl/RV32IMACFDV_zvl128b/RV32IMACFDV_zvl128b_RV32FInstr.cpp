@@ -1,6 +1,6 @@
 // clang-format off
 /**
- * Generated on Thu, 06 Aug 2026 12:56:16 +0200.
+ * Generated on Thu, 06 Aug 2026 13:26:11 +0200.
  *
  * This file contains the instruction behavior models of the RV32F
  * instruction set for the RV32IMACFDV_zvl128b core architecture.
@@ -46,19 +46,19 @@ imm += R_imm_0.read(ba) << 0;
 		cp.code() = std::string("//FLW\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "etiss_coverage_count(1, 400);\n";
+cp.code() += "etiss_coverage_count(1, 88);\n";
 { // block
-cp.code() += "etiss_coverage_count(1, 1512);\n";
+cp.code() += "etiss_coverage_count(1, 1602);\n";
 cp.code() += "{ // block\n";
 cp.code() += "cpu->nextPc = " + std::to_string((etiss_uint32)((ic.current_address_ + 4))) + "ULL;\n";
-cp.code() += "etiss_coverage_count(7, 1511, 1504, 1510, 1507, 1505, 1506, 1508);\n";
+cp.code() += "etiss_coverage_count(7, 1601, 1594, 1600, 1597, 1595, 1596, 1598);\n";
 cp.code() += "} // block\n";
 } // block
 { // block
-cp.code() += "etiss_coverage_count(1, 20902);\n";
+cp.code() += "etiss_coverage_count(1, 3826);\n";
 cp.code() += "{ // block\n";
 cp.code() += "etiss_uint32 offs = *((RV32IMACFDV_zvl128b*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] + " + std::to_string(((etiss_int16)(((etiss_int16)imm) << (4)) >> (4))) + "LL;\n";
-cp.code() += "etiss_coverage_count(7, 20866, 20865, 20861, 20860, 20858, 20864, 20862);\n";
+cp.code() += "etiss_coverage_count(7, 3790, 3789, 3785, 3784, 3782, 3788, 3786);\n";
 cp.code() += "etiss_uint32 mem_val_0;\n";
 cp.code() += "cpu->exception |= (*(system->dread))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_0, 4);\n";
 cp.code() += "if (cpu->exception) { // conditional\n";
@@ -70,9 +70,9 @@ cp.code() += "} // procedure\n";
 } // procedure
 cp.code() += "} // conditional\n";
 cp.code() += "etiss_uint32 res = (etiss_uint32)(mem_val_0);\n";
-cp.code() += "etiss_coverage_count(6, 20876, 20875, 20873, 20871, 20869, 20870);\n";
+cp.code() += "etiss_coverage_count(6, 3800, 3799, 3797, 3795, 3793, 3794);\n";
 cp.code() += "*((RV32IMACFDV_zvl128b*)cpu)->F[" + std::to_string(rd) + "ULL] = res;\n";
-cp.code() += "etiss_coverage_count(4, 20885, 20883, 20882, 20884);\n";
+cp.code() += "etiss_coverage_count(4, 3809, 3807, 3806, 3808);\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
@@ -152,22 +152,22 @@ imm += R_imm_5.read(ba) << 5;
 		cp.code() = std::string("//FSW\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "etiss_coverage_count(1, 401);\n";
+cp.code() += "etiss_coverage_count(1, 89);\n";
 { // block
-cp.code() += "etiss_coverage_count(1, 1512);\n";
+cp.code() += "etiss_coverage_count(1, 1602);\n";
 cp.code() += "{ // block\n";
 cp.code() += "cpu->nextPc = " + std::to_string((etiss_uint32)((ic.current_address_ + 4))) + "ULL;\n";
-cp.code() += "etiss_coverage_count(7, 1511, 1504, 1510, 1507, 1505, 1506, 1508);\n";
+cp.code() += "etiss_coverage_count(7, 1601, 1594, 1600, 1597, 1595, 1596, 1598);\n";
 cp.code() += "} // block\n";
 } // block
 { // block
-cp.code() += "etiss_coverage_count(1, 20926);\n";
+cp.code() += "etiss_coverage_count(1, 3850);\n";
 cp.code() += "{ // block\n";
 cp.code() += "etiss_uint32 offs = *((RV32IMACFDV_zvl128b*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL] + " + std::to_string(((etiss_int16)(((etiss_int16)imm) << (4)) >> (4))) + "LL;\n";
-cp.code() += "etiss_coverage_count(7, 20913, 20912, 20908, 20907, 20905, 20911, 20909);\n";
+cp.code() += "etiss_coverage_count(7, 3837, 3836, 3832, 3831, 3829, 3835, 3833);\n";
 cp.code() += "etiss_uint32 mem_val_0;\n";
 cp.code() += "mem_val_0 = (etiss_uint32)(*((RV32IMACFDV_zvl128b*)cpu)->F[" + std::to_string(rs2) + "ULL]);\n";
-cp.code() += "etiss_coverage_count(8, 20925, 20919, 20917, 20915, 20916, 20924, 20922, 20921);\n";
+cp.code() += "etiss_coverage_count(8, 3849, 3843, 3841, 3839, 3840, 3848, 3846, 3845);\n";
 cp.code() += "cpu->exception |= (*(system->dwrite))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_0, 4);\n";
 cp.code() += "if (cpu->exception) { // conditional\n";
 { // procedure
@@ -262,23 +262,23 @@ rs3 += R_rs3_0.read(ba) << 0;
 		cp.code() = std::string("//FMADD_S\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "etiss_coverage_count(1, 402);\n";
+cp.code() += "etiss_coverage_count(1, 90);\n";
 { // block
-cp.code() += "etiss_coverage_count(1, 1512);\n";
+cp.code() += "etiss_coverage_count(1, 1602);\n";
 cp.code() += "{ // block\n";
 cp.code() += "cpu->nextPc = " + std::to_string((etiss_uint32)((ic.current_address_ + 4))) + "ULL;\n";
-cp.code() += "etiss_coverage_count(7, 1511, 1504, 1510, 1507, 1505, 1506, 1508);\n";
+cp.code() += "etiss_coverage_count(7, 1601, 1594, 1600, 1597, 1595, 1596, 1598);\n";
 cp.code() += "} // block\n";
 } // block
 { // block
-cp.code() += "etiss_coverage_count(1, 20997);\n";
+cp.code() += "etiss_coverage_count(1, 3921);\n";
 cp.code() += "{ // block\n";
 cp.code() += "*((RV32IMACFDV_zvl128b*)cpu)->F[" + std::to_string(rd) + "ULL] = fmadd_s(*((RV32IMACFDV_zvl128b*)cpu)->F[" + std::to_string(rs1) + "ULL], *((RV32IMACFDV_zvl128b*)cpu)->F[" + std::to_string(rs2) + "ULL], *((RV32IMACFDV_zvl128b*)cpu)->F[" + std::to_string(rs3) + "ULL], 0LL, RV32IMACFDV_zvl128b_get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
-cp.code() += "etiss_coverage_count(13, 20947, 20933, 20932, 20946, 20936, 20935, 20939, 20938, 20942, 20941, 20943, 20945, 20944);\n";
+cp.code() += "etiss_coverage_count(13, 3871, 3857, 3856, 3870, 3860, 3859, 3863, 3862, 3866, 3865, 3867, 3869, 3868);\n";
 cp.code() += "etiss_uint32 flags = fget_flags();\n";
-cp.code() += "etiss_coverage_count(2, 20984, 20983);\n";
+cp.code() += "etiss_coverage_count(2, 3908, 3907);\n";
 cp.code() += "((RV32IMACFDV_zvl128b*)cpu)->FCSR = (((RV32IMACFDV_zvl128b*)cpu)->FCSR & -32LL) | (flags & 31ULL);\n";
-cp.code() += "etiss_coverage_count(9, 20996, 20985, 20995, 20989, 20986, 20990, 20993, 20991, 20994);\n";
+cp.code() += "etiss_coverage_count(9, 3920, 3909, 3919, 3913, 3910, 3914, 3917, 3915, 3918);\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
@@ -359,23 +359,23 @@ rs3 += R_rs3_0.read(ba) << 0;
 		cp.code() = std::string("//FMSUB_S\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "etiss_coverage_count(1, 403);\n";
+cp.code() += "etiss_coverage_count(1, 91);\n";
 { // block
-cp.code() += "etiss_coverage_count(1, 1512);\n";
+cp.code() += "etiss_coverage_count(1, 1602);\n";
 cp.code() += "{ // block\n";
 cp.code() += "cpu->nextPc = " + std::to_string((etiss_uint32)((ic.current_address_ + 4))) + "ULL;\n";
-cp.code() += "etiss_coverage_count(7, 1511, 1504, 1510, 1507, 1505, 1506, 1508);\n";
+cp.code() += "etiss_coverage_count(7, 1601, 1594, 1600, 1597, 1595, 1596, 1598);\n";
 cp.code() += "} // block\n";
 } // block
 { // block
-cp.code() += "etiss_coverage_count(1, 21068);\n";
+cp.code() += "etiss_coverage_count(1, 3992);\n";
 cp.code() += "{ // block\n";
 cp.code() += "*((RV32IMACFDV_zvl128b*)cpu)->F[" + std::to_string(rd) + "ULL] = fmadd_s(*((RV32IMACFDV_zvl128b*)cpu)->F[" + std::to_string(rs1) + "ULL], *((RV32IMACFDV_zvl128b*)cpu)->F[" + std::to_string(rs2) + "ULL], *((RV32IMACFDV_zvl128b*)cpu)->F[" + std::to_string(rs3) + "ULL], 1ULL, RV32IMACFDV_zvl128b_get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
-cp.code() += "etiss_coverage_count(13, 21018, 21004, 21003, 21017, 21007, 21006, 21010, 21009, 21013, 21012, 21014, 21016, 21015);\n";
+cp.code() += "etiss_coverage_count(13, 3942, 3928, 3927, 3941, 3931, 3930, 3934, 3933, 3937, 3936, 3938, 3940, 3939);\n";
 cp.code() += "etiss_uint32 flags = fget_flags();\n";
-cp.code() += "etiss_coverage_count(2, 21055, 21054);\n";
+cp.code() += "etiss_coverage_count(2, 3979, 3978);\n";
 cp.code() += "((RV32IMACFDV_zvl128b*)cpu)->FCSR = (((RV32IMACFDV_zvl128b*)cpu)->FCSR & -32LL) | (flags & 31ULL);\n";
-cp.code() += "etiss_coverage_count(9, 21067, 21056, 21066, 21060, 21057, 21061, 21064, 21062, 21065);\n";
+cp.code() += "etiss_coverage_count(9, 3991, 3980, 3990, 3984, 3981, 3985, 3988, 3986, 3989);\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
@@ -456,23 +456,23 @@ rs3 += R_rs3_0.read(ba) << 0;
 		cp.code() = std::string("//FNMADD_S\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "etiss_coverage_count(1, 404);\n";
+cp.code() += "etiss_coverage_count(1, 92);\n";
 { // block
-cp.code() += "etiss_coverage_count(1, 1512);\n";
+cp.code() += "etiss_coverage_count(1, 1602);\n";
 cp.code() += "{ // block\n";
 cp.code() += "cpu->nextPc = " + std::to_string((etiss_uint32)((ic.current_address_ + 4))) + "ULL;\n";
-cp.code() += "etiss_coverage_count(7, 1511, 1504, 1510, 1507, 1505, 1506, 1508);\n";
+cp.code() += "etiss_coverage_count(7, 1601, 1594, 1600, 1597, 1595, 1596, 1598);\n";
 cp.code() += "} // block\n";
 } // block
 { // block
-cp.code() += "etiss_coverage_count(1, 21148);\n";
+cp.code() += "etiss_coverage_count(1, 4072);\n";
 cp.code() += "{ // block\n";
 cp.code() += "*((RV32IMACFDV_zvl128b*)cpu)->F[" + std::to_string(rd) + "ULL] = fmadd_s(*((RV32IMACFDV_zvl128b*)cpu)->F[" + std::to_string(rs1) + "ULL], *((RV32IMACFDV_zvl128b*)cpu)->F[" + std::to_string(rs2) + "ULL], *((RV32IMACFDV_zvl128b*)cpu)->F[" + std::to_string(rs3) + "ULL], 2ULL, RV32IMACFDV_zvl128b_get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
-cp.code() += "etiss_coverage_count(13, 21089, 21075, 21074, 21088, 21078, 21077, 21081, 21080, 21084, 21083, 21085, 21087, 21086);\n";
+cp.code() += "etiss_coverage_count(13, 4013, 3999, 3998, 4012, 4002, 4001, 4005, 4004, 4008, 4007, 4009, 4011, 4010);\n";
 cp.code() += "etiss_uint32 flags = fget_flags();\n";
-cp.code() += "etiss_coverage_count(2, 21135, 21134);\n";
+cp.code() += "etiss_coverage_count(2, 4059, 4058);\n";
 cp.code() += "((RV32IMACFDV_zvl128b*)cpu)->FCSR = (((RV32IMACFDV_zvl128b*)cpu)->FCSR & -32LL) | (flags & 31ULL);\n";
-cp.code() += "etiss_coverage_count(9, 21147, 21136, 21146, 21140, 21137, 21141, 21144, 21142, 21145);\n";
+cp.code() += "etiss_coverage_count(9, 4071, 4060, 4070, 4064, 4061, 4065, 4068, 4066, 4069);\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
@@ -553,23 +553,23 @@ rs3 += R_rs3_0.read(ba) << 0;
 		cp.code() = std::string("//FNMSUB_S\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "etiss_coverage_count(1, 405);\n";
+cp.code() += "etiss_coverage_count(1, 93);\n";
 { // block
-cp.code() += "etiss_coverage_count(1, 1512);\n";
+cp.code() += "etiss_coverage_count(1, 1602);\n";
 cp.code() += "{ // block\n";
 cp.code() += "cpu->nextPc = " + std::to_string((etiss_uint32)((ic.current_address_ + 4))) + "ULL;\n";
-cp.code() += "etiss_coverage_count(7, 1511, 1504, 1510, 1507, 1505, 1506, 1508);\n";
+cp.code() += "etiss_coverage_count(7, 1601, 1594, 1600, 1597, 1595, 1596, 1598);\n";
 cp.code() += "} // block\n";
 } // block
 { // block
-cp.code() += "etiss_coverage_count(1, 21228);\n";
+cp.code() += "etiss_coverage_count(1, 4152);\n";
 cp.code() += "{ // block\n";
 cp.code() += "*((RV32IMACFDV_zvl128b*)cpu)->F[" + std::to_string(rd) + "ULL] = fmadd_s(*((RV32IMACFDV_zvl128b*)cpu)->F[" + std::to_string(rs1) + "ULL], *((RV32IMACFDV_zvl128b*)cpu)->F[" + std::to_string(rs2) + "ULL], *((RV32IMACFDV_zvl128b*)cpu)->F[" + std::to_string(rs3) + "ULL], 3ULL, RV32IMACFDV_zvl128b_get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
-cp.code() += "etiss_coverage_count(13, 21169, 21155, 21154, 21168, 21158, 21157, 21161, 21160, 21164, 21163, 21165, 21167, 21166);\n";
+cp.code() += "etiss_coverage_count(13, 4093, 4079, 4078, 4092, 4082, 4081, 4085, 4084, 4088, 4087, 4089, 4091, 4090);\n";
 cp.code() += "etiss_uint32 flags = fget_flags();\n";
-cp.code() += "etiss_coverage_count(2, 21215, 21214);\n";
+cp.code() += "etiss_coverage_count(2, 4139, 4138);\n";
 cp.code() += "((RV32IMACFDV_zvl128b*)cpu)->FCSR = (((RV32IMACFDV_zvl128b*)cpu)->FCSR & -32LL) | (flags & 31ULL);\n";
-cp.code() += "etiss_coverage_count(9, 21227, 21216, 21226, 21220, 21217, 21221, 21224, 21222, 21225);\n";
+cp.code() += "etiss_coverage_count(9, 4151, 4140, 4150, 4144, 4141, 4145, 4148, 4146, 4149);\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
@@ -647,23 +647,23 @@ rs2 += R_rs2_0.read(ba) << 0;
 		cp.code() = std::string("//FADD_S\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "etiss_coverage_count(1, 406);\n";
+cp.code() += "etiss_coverage_count(1, 94);\n";
 { // block
-cp.code() += "etiss_coverage_count(1, 1512);\n";
+cp.code() += "etiss_coverage_count(1, 1602);\n";
 cp.code() += "{ // block\n";
 cp.code() += "cpu->nextPc = " + std::to_string((etiss_uint32)((ic.current_address_ + 4))) + "ULL;\n";
-cp.code() += "etiss_coverage_count(7, 1511, 1504, 1510, 1507, 1505, 1506, 1508);\n";
+cp.code() += "etiss_coverage_count(7, 1601, 1594, 1600, 1597, 1595, 1596, 1598);\n";
 cp.code() += "} // block\n";
 } // block
 { // block
-cp.code() += "etiss_coverage_count(1, 21296);\n";
+cp.code() += "etiss_coverage_count(1, 4220);\n";
 cp.code() += "{ // block\n";
 cp.code() += "*((RV32IMACFDV_zvl128b*)cpu)->F[" + std::to_string(rd) + "ULL] = fadd_s(*((RV32IMACFDV_zvl128b*)cpu)->F[" + std::to_string(rs1) + "ULL], *((RV32IMACFDV_zvl128b*)cpu)->F[" + std::to_string(rs2) + "ULL], RV32IMACFDV_zvl128b_get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
-cp.code() += "etiss_coverage_count(10, 21245, 21235, 21234, 21244, 21238, 21237, 21241, 21240, 21243, 21242);\n";
+cp.code() += "etiss_coverage_count(10, 4169, 4159, 4158, 4168, 4162, 4161, 4165, 4164, 4167, 4166);\n";
 cp.code() += "etiss_uint32 flags = fget_flags();\n";
-cp.code() += "etiss_coverage_count(2, 21283, 21282);\n";
+cp.code() += "etiss_coverage_count(2, 4207, 4206);\n";
 cp.code() += "((RV32IMACFDV_zvl128b*)cpu)->FCSR = (((RV32IMACFDV_zvl128b*)cpu)->FCSR & -32LL) | (flags & 31ULL);\n";
-cp.code() += "etiss_coverage_count(9, 21295, 21284, 21294, 21288, 21285, 21289, 21292, 21290, 21293);\n";
+cp.code() += "etiss_coverage_count(9, 4219, 4208, 4218, 4212, 4209, 4213, 4216, 4214, 4217);\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
@@ -738,23 +738,23 @@ rs2 += R_rs2_0.read(ba) << 0;
 		cp.code() = std::string("//FSUB_S\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "etiss_coverage_count(1, 407);\n";
+cp.code() += "etiss_coverage_count(1, 95);\n";
 { // block
-cp.code() += "etiss_coverage_count(1, 1512);\n";
+cp.code() += "etiss_coverage_count(1, 1602);\n";
 cp.code() += "{ // block\n";
 cp.code() += "cpu->nextPc = " + std::to_string((etiss_uint32)((ic.current_address_ + 4))) + "ULL;\n";
-cp.code() += "etiss_coverage_count(7, 1511, 1504, 1510, 1507, 1505, 1506, 1508);\n";
+cp.code() += "etiss_coverage_count(7, 1601, 1594, 1600, 1597, 1595, 1596, 1598);\n";
 cp.code() += "} // block\n";
 } // block
 { // block
-cp.code() += "etiss_coverage_count(1, 21364);\n";
+cp.code() += "etiss_coverage_count(1, 4288);\n";
 cp.code() += "{ // block\n";
 cp.code() += "*((RV32IMACFDV_zvl128b*)cpu)->F[" + std::to_string(rd) + "ULL] = fsub_s(*((RV32IMACFDV_zvl128b*)cpu)->F[" + std::to_string(rs1) + "ULL], *((RV32IMACFDV_zvl128b*)cpu)->F[" + std::to_string(rs2) + "ULL], RV32IMACFDV_zvl128b_get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
-cp.code() += "etiss_coverage_count(10, 21313, 21303, 21302, 21312, 21306, 21305, 21309, 21308, 21311, 21310);\n";
+cp.code() += "etiss_coverage_count(10, 4237, 4227, 4226, 4236, 4230, 4229, 4233, 4232, 4235, 4234);\n";
 cp.code() += "etiss_uint32 flags = fget_flags();\n";
-cp.code() += "etiss_coverage_count(2, 21351, 21350);\n";
+cp.code() += "etiss_coverage_count(2, 4275, 4274);\n";
 cp.code() += "((RV32IMACFDV_zvl128b*)cpu)->FCSR = (((RV32IMACFDV_zvl128b*)cpu)->FCSR & -32LL) | (flags & 31ULL);\n";
-cp.code() += "etiss_coverage_count(9, 21363, 21352, 21362, 21356, 21353, 21357, 21360, 21358, 21361);\n";
+cp.code() += "etiss_coverage_count(9, 4287, 4276, 4286, 4280, 4277, 4281, 4284, 4282, 4285);\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
@@ -829,23 +829,23 @@ rs2 += R_rs2_0.read(ba) << 0;
 		cp.code() = std::string("//FMUL_S\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "etiss_coverage_count(1, 408);\n";
+cp.code() += "etiss_coverage_count(1, 96);\n";
 { // block
-cp.code() += "etiss_coverage_count(1, 1512);\n";
+cp.code() += "etiss_coverage_count(1, 1602);\n";
 cp.code() += "{ // block\n";
 cp.code() += "cpu->nextPc = " + std::to_string((etiss_uint32)((ic.current_address_ + 4))) + "ULL;\n";
-cp.code() += "etiss_coverage_count(7, 1511, 1504, 1510, 1507, 1505, 1506, 1508);\n";
+cp.code() += "etiss_coverage_count(7, 1601, 1594, 1600, 1597, 1595, 1596, 1598);\n";
 cp.code() += "} // block\n";
 } // block
 { // block
-cp.code() += "etiss_coverage_count(1, 21432);\n";
+cp.code() += "etiss_coverage_count(1, 4356);\n";
 cp.code() += "{ // block\n";
 cp.code() += "*((RV32IMACFDV_zvl128b*)cpu)->F[" + std::to_string(rd) + "ULL] = fmul_s(*((RV32IMACFDV_zvl128b*)cpu)->F[" + std::to_string(rs1) + "ULL], *((RV32IMACFDV_zvl128b*)cpu)->F[" + std::to_string(rs2) + "ULL], RV32IMACFDV_zvl128b_get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
-cp.code() += "etiss_coverage_count(10, 21381, 21371, 21370, 21380, 21374, 21373, 21377, 21376, 21379, 21378);\n";
+cp.code() += "etiss_coverage_count(10, 4305, 4295, 4294, 4304, 4298, 4297, 4301, 4300, 4303, 4302);\n";
 cp.code() += "etiss_uint32 flags = fget_flags();\n";
-cp.code() += "etiss_coverage_count(2, 21419, 21418);\n";
+cp.code() += "etiss_coverage_count(2, 4343, 4342);\n";
 cp.code() += "((RV32IMACFDV_zvl128b*)cpu)->FCSR = (((RV32IMACFDV_zvl128b*)cpu)->FCSR & -32LL) | (flags & 31ULL);\n";
-cp.code() += "etiss_coverage_count(9, 21431, 21420, 21430, 21424, 21421, 21425, 21428, 21426, 21429);\n";
+cp.code() += "etiss_coverage_count(9, 4355, 4344, 4354, 4348, 4345, 4349, 4352, 4350, 4353);\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
@@ -920,23 +920,23 @@ rs2 += R_rs2_0.read(ba) << 0;
 		cp.code() = std::string("//FDIV_S\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "etiss_coverage_count(1, 409);\n";
+cp.code() += "etiss_coverage_count(1, 97);\n";
 { // block
-cp.code() += "etiss_coverage_count(1, 1512);\n";
+cp.code() += "etiss_coverage_count(1, 1602);\n";
 cp.code() += "{ // block\n";
 cp.code() += "cpu->nextPc = " + std::to_string((etiss_uint32)((ic.current_address_ + 4))) + "ULL;\n";
-cp.code() += "etiss_coverage_count(7, 1511, 1504, 1510, 1507, 1505, 1506, 1508);\n";
+cp.code() += "etiss_coverage_count(7, 1601, 1594, 1600, 1597, 1595, 1596, 1598);\n";
 cp.code() += "} // block\n";
 } // block
 { // block
-cp.code() += "etiss_coverage_count(1, 21500);\n";
+cp.code() += "etiss_coverage_count(1, 4424);\n";
 cp.code() += "{ // block\n";
 cp.code() += "*((RV32IMACFDV_zvl128b*)cpu)->F[" + std::to_string(rd) + "ULL] = fdiv_s(*((RV32IMACFDV_zvl128b*)cpu)->F[" + std::to_string(rs1) + "ULL], *((RV32IMACFDV_zvl128b*)cpu)->F[" + std::to_string(rs2) + "ULL], RV32IMACFDV_zvl128b_get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
-cp.code() += "etiss_coverage_count(10, 21449, 21439, 21438, 21448, 21442, 21441, 21445, 21444, 21447, 21446);\n";
+cp.code() += "etiss_coverage_count(10, 4373, 4363, 4362, 4372, 4366, 4365, 4369, 4368, 4371, 4370);\n";
 cp.code() += "etiss_uint32 flags = fget_flags();\n";
-cp.code() += "etiss_coverage_count(2, 21487, 21486);\n";
+cp.code() += "etiss_coverage_count(2, 4411, 4410);\n";
 cp.code() += "((RV32IMACFDV_zvl128b*)cpu)->FCSR = (((RV32IMACFDV_zvl128b*)cpu)->FCSR & -32LL) | (flags & 31ULL);\n";
-cp.code() += "etiss_coverage_count(9, 21499, 21488, 21498, 21492, 21489, 21493, 21496, 21494, 21497);\n";
+cp.code() += "etiss_coverage_count(9, 4423, 4412, 4422, 4416, 4413, 4417, 4420, 4418, 4421);\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
@@ -1008,23 +1008,23 @@ rs1 += R_rs1_0.read(ba) << 0;
 		cp.code() = std::string("//FSQRT_S\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "etiss_coverage_count(1, 410);\n";
+cp.code() += "etiss_coverage_count(1, 98);\n";
 { // block
-cp.code() += "etiss_coverage_count(1, 1512);\n";
+cp.code() += "etiss_coverage_count(1, 1602);\n";
 cp.code() += "{ // block\n";
 cp.code() += "cpu->nextPc = " + std::to_string((etiss_uint32)((ic.current_address_ + 4))) + "ULL;\n";
-cp.code() += "etiss_coverage_count(7, 1511, 1504, 1510, 1507, 1505, 1506, 1508);\n";
+cp.code() += "etiss_coverage_count(7, 1601, 1594, 1600, 1597, 1595, 1596, 1598);\n";
 cp.code() += "} // block\n";
 } // block
 { // block
-cp.code() += "etiss_coverage_count(1, 21558);\n";
+cp.code() += "etiss_coverage_count(1, 4482);\n";
 cp.code() += "{ // block\n";
 cp.code() += "*((RV32IMACFDV_zvl128b*)cpu)->F[" + std::to_string(rd) + "ULL] = fsqrt_s(*((RV32IMACFDV_zvl128b*)cpu)->F[" + std::to_string(rs1) + "ULL], RV32IMACFDV_zvl128b_get_rm(cpu, system, plugin_pointers, " + std::to_string(rm) + "ULL));\n";
-cp.code() += "etiss_coverage_count(8, 21514, 21507, 21506, 21513, 21510, 21509, 21512, 21511);\n";
+cp.code() += "etiss_coverage_count(8, 4438, 4431, 4430, 4437, 4434, 4433, 4436, 4435);\n";
 cp.code() += "etiss_uint32 flags = fget_flags();\n";
-cp.code() += "etiss_coverage_count(2, 21545, 21544);\n";
+cp.code() += "etiss_coverage_count(2, 4469, 4468);\n";
 cp.code() += "((RV32IMACFDV_zvl128b*)cpu)->FCSR = (((RV32IMACFDV_zvl128b*)cpu)->FCSR & -32LL) | (flags & 31ULL);\n";
-cp.code() += "etiss_coverage_count(9, 21557, 21546, 21556, 21550, 21547, 21551, 21554, 21552, 21555);\n";
+cp.code() += "etiss_coverage_count(9, 4481, 4470, 4480, 4474, 4471, 4475, 4478, 4476, 4479);\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
@@ -1093,19 +1093,19 @@ rs2 += R_rs2_0.read(ba) << 0;
 		cp.code() = std::string("//FSGNJ_S\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "etiss_coverage_count(1, 411);\n";
+cp.code() += "etiss_coverage_count(1, 99);\n";
 { // block
-cp.code() += "etiss_coverage_count(1, 1512);\n";
+cp.code() += "etiss_coverage_count(1, 1602);\n";
 cp.code() += "{ // block\n";
 cp.code() += "cpu->nextPc = " + std::to_string((etiss_uint32)((ic.current_address_ + 4))) + "ULL;\n";
-cp.code() += "etiss_coverage_count(7, 1511, 1504, 1510, 1507, 1505, 1506, 1508);\n";
+cp.code() += "etiss_coverage_count(7, 1601, 1594, 1600, 1597, 1595, 1596, 1598);\n";
 cp.code() += "} // block\n";
 } // block
 { // block
-cp.code() += "etiss_coverage_count(1, 21617);\n";
+cp.code() += "etiss_coverage_count(1, 4541);\n";
 cp.code() += "{ // block\n";
 cp.code() += "*((RV32IMACFDV_zvl128b*)cpu)->F[" + std::to_string(rd) + "ULL] = ((((((*((RV32IMACFDV_zvl128b*)cpu)->F[" + std::to_string(rs2) + "ULL]) >> (31ULL)) & 0x1ULL)) << 31) | (((*((RV32IMACFDV_zvl128b*)cpu)->F[" + std::to_string(rs1) + "ULL]) & 0x7fffffffULL)));\n";
-cp.code() += "etiss_coverage_count(14, 21579, 21565, 21564, 21578, 21571, 21568, 21567, 21569, 21570, 21577, 21574, 21573, 21575, 21576);\n";
+cp.code() += "etiss_coverage_count(14, 4503, 4489, 4488, 4502, 4495, 4492, 4491, 4493, 4494, 4501, 4498, 4497, 4499, 4500);\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
@@ -1174,19 +1174,19 @@ rs2 += R_rs2_0.read(ba) << 0;
 		cp.code() = std::string("//FSGNJN_S\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "etiss_coverage_count(1, 412);\n";
+cp.code() += "etiss_coverage_count(1, 100);\n";
 { // block
-cp.code() += "etiss_coverage_count(1, 1512);\n";
+cp.code() += "etiss_coverage_count(1, 1602);\n";
 cp.code() += "{ // block\n";
 cp.code() += "cpu->nextPc = " + std::to_string((etiss_uint32)((ic.current_address_ + 4))) + "ULL;\n";
-cp.code() += "etiss_coverage_count(7, 1511, 1504, 1510, 1507, 1505, 1506, 1508);\n";
+cp.code() += "etiss_coverage_count(7, 1601, 1594, 1600, 1597, 1595, 1596, 1598);\n";
 cp.code() += "} // block\n";
 } // block
 { // block
-cp.code() += "etiss_coverage_count(1, 21678);\n";
+cp.code() += "etiss_coverage_count(1, 4602);\n";
 cp.code() += "{ // block\n";
 cp.code() += "*((RV32IMACFDV_zvl128b*)cpu)->F[" + std::to_string(rd) + "ULL] = (((~((((*((RV32IMACFDV_zvl128b*)cpu)->F[" + std::to_string(rs2) + "ULL]) >> (31ULL)) & 0x1ULL))) << 31) | (((*((RV32IMACFDV_zvl128b*)cpu)->F[" + std::to_string(rs1) + "ULL]) & 0x7fffffffULL)));\n";
-cp.code() += "etiss_coverage_count(15, 21639, 21624, 21623, 21638, 21631, 21630, 21627, 21626, 21628, 21629, 21637, 21634, 21633, 21635, 21636);\n";
+cp.code() += "etiss_coverage_count(15, 4563, 4548, 4547, 4562, 4555, 4554, 4551, 4550, 4552, 4553, 4561, 4558, 4557, 4559, 4560);\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
@@ -1255,19 +1255,19 @@ rs2 += R_rs2_0.read(ba) << 0;
 		cp.code() = std::string("//FSGNJX_S\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "etiss_coverage_count(1, 413);\n";
+cp.code() += "etiss_coverage_count(1, 101);\n";
 { // block
-cp.code() += "etiss_coverage_count(1, 1512);\n";
+cp.code() += "etiss_coverage_count(1, 1602);\n";
 cp.code() += "{ // block\n";
 cp.code() += "cpu->nextPc = " + std::to_string((etiss_uint32)((ic.current_address_ + 4))) + "ULL;\n";
-cp.code() += "etiss_coverage_count(7, 1511, 1504, 1510, 1507, 1505, 1506, 1508);\n";
+cp.code() += "etiss_coverage_count(7, 1601, 1594, 1600, 1597, 1595, 1596, 1598);\n";
 cp.code() += "} // block\n";
 } // block
 { // block
-cp.code() += "etiss_coverage_count(1, 21733);\n";
+cp.code() += "etiss_coverage_count(1, 4657);\n";
 cp.code() += "{ // block\n";
 cp.code() += "*((RV32IMACFDV_zvl128b*)cpu)->F[" + std::to_string(rd) + "ULL] = *((RV32IMACFDV_zvl128b*)cpu)->F[" + std::to_string(rs1) + "ULL] ^ (*((RV32IMACFDV_zvl128b*)cpu)->F[" + std::to_string(rs2) + "ULL] & 2147483648ULL);\n";
-cp.code() += "etiss_coverage_count(11, 21696, 21685, 21684, 21695, 21688, 21687, 21693, 21691, 21690, 21692, 21694);\n";
+cp.code() += "etiss_coverage_count(11, 4620, 4609, 4608, 4619, 4612, 4611, 4617, 4615, 4614, 4616, 4618);\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
@@ -1336,23 +1336,23 @@ rs2 += R_rs2_0.read(ba) << 0;
 		cp.code() = std::string("//FMIN_S\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "etiss_coverage_count(1, 414);\n";
+cp.code() += "etiss_coverage_count(1, 102);\n";
 { // block
-cp.code() += "etiss_coverage_count(1, 1512);\n";
+cp.code() += "etiss_coverage_count(1, 1602);\n";
 cp.code() += "{ // block\n";
 cp.code() += "cpu->nextPc = " + std::to_string((etiss_uint32)((ic.current_address_ + 4))) + "ULL;\n";
-cp.code() += "etiss_coverage_count(7, 1511, 1504, 1510, 1507, 1505, 1506, 1508);\n";
+cp.code() += "etiss_coverage_count(7, 1601, 1594, 1600, 1597, 1595, 1596, 1598);\n";
 cp.code() += "} // block\n";
 } // block
 { // block
-cp.code() += "etiss_coverage_count(1, 21799);\n";
+cp.code() += "etiss_coverage_count(1, 4723);\n";
 cp.code() += "{ // block\n";
 cp.code() += "*((RV32IMACFDV_zvl128b*)cpu)->F[" + std::to_string(rd) + "ULL] = fsel_s(*((RV32IMACFDV_zvl128b*)cpu)->F[" + std::to_string(rs1) + "ULL], *((RV32IMACFDV_zvl128b*)cpu)->F[" + std::to_string(rs2) + "ULL], 0LL);\n";
-cp.code() += "etiss_coverage_count(9, 21749, 21740, 21739, 21748, 21743, 21742, 21746, 21745, 21747);\n";
+cp.code() += "etiss_coverage_count(9, 4673, 4664, 4663, 4672, 4667, 4666, 4670, 4669, 4671);\n";
 cp.code() += "etiss_uint32 flags = fget_flags();\n";
-cp.code() += "etiss_coverage_count(2, 21786, 21785);\n";
+cp.code() += "etiss_coverage_count(2, 4710, 4709);\n";
 cp.code() += "((RV32IMACFDV_zvl128b*)cpu)->FCSR = (((RV32IMACFDV_zvl128b*)cpu)->FCSR & -32LL) | (flags & 31ULL);\n";
-cp.code() += "etiss_coverage_count(9, 21798, 21787, 21797, 21791, 21788, 21792, 21795, 21793, 21796);\n";
+cp.code() += "etiss_coverage_count(9, 4722, 4711, 4721, 4715, 4712, 4716, 4719, 4717, 4720);\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
@@ -1421,23 +1421,23 @@ rs2 += R_rs2_0.read(ba) << 0;
 		cp.code() = std::string("//FMAX_S\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "etiss_coverage_count(1, 415);\n";
+cp.code() += "etiss_coverage_count(1, 103);\n";
 { // block
-cp.code() += "etiss_coverage_count(1, 1512);\n";
+cp.code() += "etiss_coverage_count(1, 1602);\n";
 cp.code() += "{ // block\n";
 cp.code() += "cpu->nextPc = " + std::to_string((etiss_uint32)((ic.current_address_ + 4))) + "ULL;\n";
-cp.code() += "etiss_coverage_count(7, 1511, 1504, 1510, 1507, 1505, 1506, 1508);\n";
+cp.code() += "etiss_coverage_count(7, 1601, 1594, 1600, 1597, 1595, 1596, 1598);\n";
 cp.code() += "} // block\n";
 } // block
 { // block
-cp.code() += "etiss_coverage_count(1, 21865);\n";
+cp.code() += "etiss_coverage_count(1, 4789);\n";
 cp.code() += "{ // block\n";
 cp.code() += "*((RV32IMACFDV_zvl128b*)cpu)->F[" + std::to_string(rd) + "ULL] = fsel_s(*((RV32IMACFDV_zvl128b*)cpu)->F[" + std::to_string(rs1) + "ULL], *((RV32IMACFDV_zvl128b*)cpu)->F[" + std::to_string(rs2) + "ULL], 1ULL);\n";
-cp.code() += "etiss_coverage_count(9, 21815, 21806, 21805, 21814, 21809, 21808, 21812, 21811, 21813);\n";
+cp.code() += "etiss_coverage_count(9, 4739, 4730, 4729, 4738, 4733, 4732, 4736, 4735, 4737);\n";
 cp.code() += "etiss_uint32 flags = fget_flags();\n";
-cp.code() += "etiss_coverage_count(2, 21852, 21851);\n";
+cp.code() += "etiss_coverage_count(2, 4776, 4775);\n";
 cp.code() += "((RV32IMACFDV_zvl128b*)cpu)->FCSR = (((RV32IMACFDV_zvl128b*)cpu)->FCSR & -32LL) | (flags & 31ULL);\n";
-cp.code() += "etiss_coverage_count(9, 21864, 21853, 21863, 21857, 21854, 21858, 21861, 21859, 21862);\n";
+cp.code() += "etiss_coverage_count(9, 4788, 4777, 4787, 4781, 4778, 4782, 4785, 4783, 4786);\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
@@ -1506,31 +1506,31 @@ rs1 += R_rs1_0.read(ba) << 0;
 		cp.code() = std::string("//FCVT_W_S\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "etiss_coverage_count(1, 416);\n";
+cp.code() += "etiss_coverage_count(1, 104);\n";
 { // block
-cp.code() += "etiss_coverage_count(1, 1512);\n";
+cp.code() += "etiss_coverage_count(1, 1602);\n";
 cp.code() += "{ // block\n";
 cp.code() += "cpu->nextPc = " + std::to_string((etiss_uint32)((ic.current_address_ + 4))) + "ULL;\n";
-cp.code() += "etiss_coverage_count(7, 1511, 1504, 1510, 1507, 1505, 1506, 1508);\n";
+cp.code() += "etiss_coverage_count(7, 1601, 1594, 1600, 1597, 1595, 1596, 1598);\n";
 cp.code() += "} // block\n";
 } // block
 { // block
-cp.code() += "etiss_coverage_count(1, 21923);\n";
+cp.code() += "etiss_coverage_count(1, 4847);\n";
 cp.code() += "{ // block\n";
 cp.code() += "etiss_int32 res = 0LL;\n";
-cp.code() += "etiss_coverage_count(2, 21868, 21867);\n";
+cp.code() += "etiss_coverage_count(2, 4792, 4791);\n";
 cp.code() += "res = fcvt_s(*((RV32IMACFDV_zvl128b*)cpu)->F[" + std::to_string(rs1) + "ULL], 0LL, " + std::to_string(rm) + "ULL);\n";
-cp.code() += "etiss_coverage_count(7, 21880, 21873, 21879, 21876, 21875, 21877, 21878);\n";
-cp.code() += "etiss_coverage_count(1, 21894);\n";
+cp.code() += "etiss_coverage_count(7, 4804, 4797, 4803, 4800, 4799, 4801, 4802);\n";
+cp.code() += "etiss_coverage_count(1, 4818);\n";
 if ((rd % 32ULL) != 0LL) { // conditional
-cp.code() += "etiss_coverage_count(5, 21900, 21897, 21895, 21898, 21899);\n";
+cp.code() += "etiss_coverage_count(5, 4824, 4821, 4819, 4822, 4823);\n";
 cp.code() += "*((RV32IMACFDV_zvl128b*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = res;\n";
-cp.code() += "etiss_coverage_count(5, 21907, 21905, 21904, 21902, 21906);\n";
+cp.code() += "etiss_coverage_count(5, 4831, 4829, 4828, 4826, 4830);\n";
 } // conditional
 cp.code() += "etiss_uint32 flags = fget_flags();\n";
-cp.code() += "etiss_coverage_count(2, 21910, 21909);\n";
+cp.code() += "etiss_coverage_count(2, 4834, 4833);\n";
 cp.code() += "((RV32IMACFDV_zvl128b*)cpu)->FCSR = (((RV32IMACFDV_zvl128b*)cpu)->FCSR & -32LL) | (flags & 31ULL);\n";
-cp.code() += "etiss_coverage_count(9, 21922, 21911, 21921, 21915, 21912, 21916, 21919, 21917, 21920);\n";
+cp.code() += "etiss_coverage_count(9, 4846, 4835, 4845, 4839, 4836, 4840, 4843, 4841, 4844);\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
@@ -1599,31 +1599,31 @@ rs1 += R_rs1_0.read(ba) << 0;
 		cp.code() = std::string("//FCVT_WU_S\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "etiss_coverage_count(1, 417);\n";
+cp.code() += "etiss_coverage_count(1, 105);\n";
 { // block
-cp.code() += "etiss_coverage_count(1, 1512);\n";
+cp.code() += "etiss_coverage_count(1, 1602);\n";
 cp.code() += "{ // block\n";
 cp.code() += "cpu->nextPc = " + std::to_string((etiss_uint32)((ic.current_address_ + 4))) + "ULL;\n";
-cp.code() += "etiss_coverage_count(7, 1511, 1504, 1510, 1507, 1505, 1506, 1508);\n";
+cp.code() += "etiss_coverage_count(7, 1601, 1594, 1600, 1597, 1595, 1596, 1598);\n";
 cp.code() += "} // block\n";
 } // block
 { // block
-cp.code() += "etiss_coverage_count(1, 21984);\n";
+cp.code() += "etiss_coverage_count(1, 4908);\n";
 cp.code() += "{ // block\n";
 cp.code() += "etiss_uint32 res = 0LL;\n";
-cp.code() += "etiss_coverage_count(2, 21926, 21925);\n";
+cp.code() += "etiss_coverage_count(2, 4850, 4849);\n";
 cp.code() += "res = fcvt_s(*((RV32IMACFDV_zvl128b*)cpu)->F[" + std::to_string(rs1) + "ULL], 1ULL, " + std::to_string(rm) + "ULL);\n";
-cp.code() += "etiss_coverage_count(7, 21938, 21931, 21937, 21934, 21933, 21935, 21936);\n";
-cp.code() += "etiss_coverage_count(1, 21952);\n";
+cp.code() += "etiss_coverage_count(7, 4862, 4855, 4861, 4858, 4857, 4859, 4860);\n";
+cp.code() += "etiss_coverage_count(1, 4876);\n";
 if ((rd % 32ULL) != 0LL) { // conditional
-cp.code() += "etiss_coverage_count(5, 21958, 21955, 21953, 21956, 21957);\n";
+cp.code() += "etiss_coverage_count(5, 4882, 4879, 4877, 4880, 4881);\n";
 cp.code() += "*((RV32IMACFDV_zvl128b*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = (etiss_uint32)((etiss_int32)(res));\n";
-cp.code() += "etiss_coverage_count(7, 21968, 21963, 21962, 21960, 21967, 21965, 21964);\n";
+cp.code() += "etiss_coverage_count(7, 4892, 4887, 4886, 4884, 4891, 4889, 4888);\n";
 } // conditional
 cp.code() += "etiss_uint32 flags = fget_flags();\n";
-cp.code() += "etiss_coverage_count(2, 21971, 21970);\n";
+cp.code() += "etiss_coverage_count(2, 4895, 4894);\n";
 cp.code() += "((RV32IMACFDV_zvl128b*)cpu)->FCSR = (((RV32IMACFDV_zvl128b*)cpu)->FCSR & -32LL) | (flags & 31ULL);\n";
-cp.code() += "etiss_coverage_count(9, 21983, 21972, 21982, 21976, 21973, 21977, 21980, 21978, 21981);\n";
+cp.code() += "etiss_coverage_count(9, 4907, 4896, 4906, 4900, 4897, 4901, 4904, 4902, 4905);\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
@@ -1692,31 +1692,31 @@ rs2 += R_rs2_0.read(ba) << 0;
 		cp.code() = std::string("//FEQ_S\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "etiss_coverage_count(1, 418);\n";
+cp.code() += "etiss_coverage_count(1, 106);\n";
 { // block
-cp.code() += "etiss_coverage_count(1, 1512);\n";
+cp.code() += "etiss_coverage_count(1, 1602);\n";
 cp.code() += "{ // block\n";
 cp.code() += "cpu->nextPc = " + std::to_string((etiss_uint32)((ic.current_address_ + 4))) + "ULL;\n";
-cp.code() += "etiss_coverage_count(7, 1511, 1504, 1510, 1507, 1505, 1506, 1508);\n";
+cp.code() += "etiss_coverage_count(7, 1601, 1594, 1600, 1597, 1595, 1596, 1598);\n";
 cp.code() += "} // block\n";
 } // block
 { // block
-cp.code() += "etiss_coverage_count(1, 22050);\n";
+cp.code() += "etiss_coverage_count(1, 4974);\n";
 cp.code() += "{ // block\n";
 cp.code() += "etiss_uint32 res = 0LL;\n";
-cp.code() += "etiss_coverage_count(2, 21987, 21986);\n";
+cp.code() += "etiss_coverage_count(2, 4911, 4910);\n";
 cp.code() += "res = fcmp_s(*((RV32IMACFDV_zvl128b*)cpu)->F[" + std::to_string(rs1) + "ULL], *((RV32IMACFDV_zvl128b*)cpu)->F[" + std::to_string(rs2) + "ULL], 0LL);\n";
-cp.code() += "etiss_coverage_count(8, 22001, 21992, 22000, 21995, 21994, 21998, 21997, 21999);\n";
-cp.code() += "etiss_coverage_count(1, 22021);\n";
+cp.code() += "etiss_coverage_count(8, 4925, 4916, 4924, 4919, 4918, 4922, 4921, 4923);\n";
+cp.code() += "etiss_coverage_count(1, 4945);\n";
 if ((rd % 32ULL) != 0LL) { // conditional
-cp.code() += "etiss_coverage_count(5, 22027, 22024, 22022, 22025, 22026);\n";
+cp.code() += "etiss_coverage_count(5, 4951, 4948, 4946, 4949, 4950);\n";
 cp.code() += "*((RV32IMACFDV_zvl128b*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = res;\n";
-cp.code() += "etiss_coverage_count(5, 22034, 22032, 22031, 22029, 22033);\n";
+cp.code() += "etiss_coverage_count(5, 4958, 4956, 4955, 4953, 4957);\n";
 } // conditional
 cp.code() += "etiss_uint32 flags = fget_flags();\n";
-cp.code() += "etiss_coverage_count(2, 22037, 22036);\n";
+cp.code() += "etiss_coverage_count(2, 4961, 4960);\n";
 cp.code() += "((RV32IMACFDV_zvl128b*)cpu)->FCSR = (((RV32IMACFDV_zvl128b*)cpu)->FCSR & -32LL) | (flags & 31ULL);\n";
-cp.code() += "etiss_coverage_count(9, 22049, 22038, 22048, 22042, 22039, 22043, 22046, 22044, 22047);\n";
+cp.code() += "etiss_coverage_count(9, 4973, 4962, 4972, 4966, 4963, 4967, 4970, 4968, 4971);\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
@@ -1785,31 +1785,31 @@ rs2 += R_rs2_0.read(ba) << 0;
 		cp.code() = std::string("//FLT_S\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "etiss_coverage_count(1, 419);\n";
+cp.code() += "etiss_coverage_count(1, 107);\n";
 { // block
-cp.code() += "etiss_coverage_count(1, 1512);\n";
+cp.code() += "etiss_coverage_count(1, 1602);\n";
 cp.code() += "{ // block\n";
 cp.code() += "cpu->nextPc = " + std::to_string((etiss_uint32)((ic.current_address_ + 4))) + "ULL;\n";
-cp.code() += "etiss_coverage_count(7, 1511, 1504, 1510, 1507, 1505, 1506, 1508);\n";
+cp.code() += "etiss_coverage_count(7, 1601, 1594, 1600, 1597, 1595, 1596, 1598);\n";
 cp.code() += "} // block\n";
 } // block
 { // block
-cp.code() += "etiss_coverage_count(1, 22116);\n";
+cp.code() += "etiss_coverage_count(1, 5040);\n";
 cp.code() += "{ // block\n";
 cp.code() += "etiss_uint32 res = 0LL;\n";
-cp.code() += "etiss_coverage_count(2, 22053, 22052);\n";
+cp.code() += "etiss_coverage_count(2, 4977, 4976);\n";
 cp.code() += "res = fcmp_s(*((RV32IMACFDV_zvl128b*)cpu)->F[" + std::to_string(rs1) + "ULL], *((RV32IMACFDV_zvl128b*)cpu)->F[" + std::to_string(rs2) + "ULL], 2ULL);\n";
-cp.code() += "etiss_coverage_count(8, 22067, 22058, 22066, 22061, 22060, 22064, 22063, 22065);\n";
-cp.code() += "etiss_coverage_count(1, 22087);\n";
+cp.code() += "etiss_coverage_count(8, 4991, 4982, 4990, 4985, 4984, 4988, 4987, 4989);\n";
+cp.code() += "etiss_coverage_count(1, 5011);\n";
 if ((rd % 32ULL) != 0LL) { // conditional
-cp.code() += "etiss_coverage_count(5, 22093, 22090, 22088, 22091, 22092);\n";
+cp.code() += "etiss_coverage_count(5, 5017, 5014, 5012, 5015, 5016);\n";
 cp.code() += "*((RV32IMACFDV_zvl128b*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = res;\n";
-cp.code() += "etiss_coverage_count(5, 22100, 22098, 22097, 22095, 22099);\n";
+cp.code() += "etiss_coverage_count(5, 5024, 5022, 5021, 5019, 5023);\n";
 } // conditional
 cp.code() += "etiss_uint32 flags = fget_flags();\n";
-cp.code() += "etiss_coverage_count(2, 22103, 22102);\n";
+cp.code() += "etiss_coverage_count(2, 5027, 5026);\n";
 cp.code() += "((RV32IMACFDV_zvl128b*)cpu)->FCSR = (((RV32IMACFDV_zvl128b*)cpu)->FCSR & -32LL) | (flags & 31ULL);\n";
-cp.code() += "etiss_coverage_count(9, 22115, 22104, 22114, 22108, 22105, 22109, 22112, 22110, 22113);\n";
+cp.code() += "etiss_coverage_count(9, 5039, 5028, 5038, 5032, 5029, 5033, 5036, 5034, 5037);\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
@@ -1878,31 +1878,31 @@ rs2 += R_rs2_0.read(ba) << 0;
 		cp.code() = std::string("//FLE_S\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "etiss_coverage_count(1, 420);\n";
+cp.code() += "etiss_coverage_count(1, 108);\n";
 { // block
-cp.code() += "etiss_coverage_count(1, 1512);\n";
+cp.code() += "etiss_coverage_count(1, 1602);\n";
 cp.code() += "{ // block\n";
 cp.code() += "cpu->nextPc = " + std::to_string((etiss_uint32)((ic.current_address_ + 4))) + "ULL;\n";
-cp.code() += "etiss_coverage_count(7, 1511, 1504, 1510, 1507, 1505, 1506, 1508);\n";
+cp.code() += "etiss_coverage_count(7, 1601, 1594, 1600, 1597, 1595, 1596, 1598);\n";
 cp.code() += "} // block\n";
 } // block
 { // block
-cp.code() += "etiss_coverage_count(1, 22182);\n";
+cp.code() += "etiss_coverage_count(1, 5106);\n";
 cp.code() += "{ // block\n";
 cp.code() += "etiss_uint32 res = 0LL;\n";
-cp.code() += "etiss_coverage_count(2, 22119, 22118);\n";
+cp.code() += "etiss_coverage_count(2, 5043, 5042);\n";
 cp.code() += "res = fcmp_s(*((RV32IMACFDV_zvl128b*)cpu)->F[" + std::to_string(rs1) + "ULL], *((RV32IMACFDV_zvl128b*)cpu)->F[" + std::to_string(rs2) + "ULL], 1ULL);\n";
-cp.code() += "etiss_coverage_count(8, 22133, 22124, 22132, 22127, 22126, 22130, 22129, 22131);\n";
-cp.code() += "etiss_coverage_count(1, 22153);\n";
+cp.code() += "etiss_coverage_count(8, 5057, 5048, 5056, 5051, 5050, 5054, 5053, 5055);\n";
+cp.code() += "etiss_coverage_count(1, 5077);\n";
 if ((rd % 32ULL) != 0LL) { // conditional
-cp.code() += "etiss_coverage_count(5, 22159, 22156, 22154, 22157, 22158);\n";
+cp.code() += "etiss_coverage_count(5, 5083, 5080, 5078, 5081, 5082);\n";
 cp.code() += "*((RV32IMACFDV_zvl128b*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = res;\n";
-cp.code() += "etiss_coverage_count(5, 22166, 22164, 22163, 22161, 22165);\n";
+cp.code() += "etiss_coverage_count(5, 5090, 5088, 5087, 5085, 5089);\n";
 } // conditional
 cp.code() += "etiss_uint32 flags = fget_flags();\n";
-cp.code() += "etiss_coverage_count(2, 22169, 22168);\n";
+cp.code() += "etiss_coverage_count(2, 5093, 5092);\n";
 cp.code() += "((RV32IMACFDV_zvl128b*)cpu)->FCSR = (((RV32IMACFDV_zvl128b*)cpu)->FCSR & -32LL) | (flags & 31ULL);\n";
-cp.code() += "etiss_coverage_count(9, 22181, 22170, 22180, 22174, 22171, 22175, 22178, 22176, 22179);\n";
+cp.code() += "etiss_coverage_count(9, 5105, 5094, 5104, 5098, 5095, 5099, 5102, 5100, 5103);\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
@@ -1968,26 +1968,26 @@ rs1 += R_rs1_0.read(ba) << 0;
 		cp.code() = std::string("//FCLASS_S\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "etiss_coverage_count(1, 421);\n";
+cp.code() += "etiss_coverage_count(1, 109);\n";
 { // block
-cp.code() += "etiss_coverage_count(1, 1512);\n";
+cp.code() += "etiss_coverage_count(1, 1602);\n";
 cp.code() += "{ // block\n";
 cp.code() += "cpu->nextPc = " + std::to_string((etiss_uint32)((ic.current_address_ + 4))) + "ULL;\n";
-cp.code() += "etiss_coverage_count(7, 1511, 1504, 1510, 1507, 1505, 1506, 1508);\n";
+cp.code() += "etiss_coverage_count(7, 1601, 1594, 1600, 1597, 1595, 1596, 1598);\n";
 cp.code() += "} // block\n";
 } // block
 { // block
-cp.code() += "etiss_coverage_count(1, 22217);\n";
+cp.code() += "etiss_coverage_count(1, 5141);\n";
 cp.code() += "{ // block\n";
 cp.code() += "etiss_uint32 res = 0LL;\n";
-cp.code() += "etiss_coverage_count(2, 22185, 22184);\n";
+cp.code() += "etiss_coverage_count(2, 5109, 5108);\n";
 cp.code() += "res = fclass_s(*((RV32IMACFDV_zvl128b*)cpu)->F[" + std::to_string(rs1) + "ULL]);\n";
-cp.code() += "etiss_coverage_count(5, 22195, 22190, 22194, 22193, 22192);\n";
-cp.code() += "etiss_coverage_count(1, 22203);\n";
+cp.code() += "etiss_coverage_count(5, 5119, 5114, 5118, 5117, 5116);\n";
+cp.code() += "etiss_coverage_count(1, 5127);\n";
 if ((rd % 32ULL) != 0LL) { // conditional
-cp.code() += "etiss_coverage_count(5, 22209, 22206, 22204, 22207, 22208);\n";
+cp.code() += "etiss_coverage_count(5, 5133, 5130, 5128, 5131, 5132);\n";
 cp.code() += "*((RV32IMACFDV_zvl128b*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = res;\n";
-cp.code() += "etiss_coverage_count(5, 22216, 22214, 22213, 22211, 22215);\n";
+cp.code() += "etiss_coverage_count(5, 5140, 5138, 5137, 5135, 5139);\n";
 } // conditional
 cp.code() += "} // block\n";
 } // block
@@ -2054,19 +2054,19 @@ rs1 += R_rs1_0.read(ba) << 0;
 		cp.code() = std::string("//FCVT_S_W\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "etiss_coverage_count(1, 422);\n";
+cp.code() += "etiss_coverage_count(1, 110);\n";
 { // block
-cp.code() += "etiss_coverage_count(1, 1512);\n";
+cp.code() += "etiss_coverage_count(1, 1602);\n";
 cp.code() += "{ // block\n";
 cp.code() += "cpu->nextPc = " + std::to_string((etiss_uint32)((ic.current_address_ + 4))) + "ULL;\n";
-cp.code() += "etiss_coverage_count(7, 1511, 1504, 1510, 1507, 1505, 1506, 1508);\n";
+cp.code() += "etiss_coverage_count(7, 1601, 1594, 1600, 1597, 1595, 1596, 1598);\n";
 cp.code() += "} // block\n";
 } // block
 { // block
-cp.code() += "etiss_coverage_count(1, 22262);\n";
+cp.code() += "etiss_coverage_count(1, 5186);\n";
 cp.code() += "{ // block\n";
 cp.code() += "*((RV32IMACFDV_zvl128b*)cpu)->F[" + std::to_string(rd) + "ULL] = fcvt_s((etiss_uint32)(*((RV32IMACFDV_zvl128b*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL]), 2ULL, " + std::to_string(rm) + "ULL);\n";
-cp.code() += "etiss_coverage_count(10, 22234, 22224, 22223, 22233, 22230, 22229, 22228, 22226, 22231, 22232);\n";
+cp.code() += "etiss_coverage_count(10, 5158, 5148, 5147, 5157, 5154, 5153, 5152, 5150, 5155, 5156);\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
@@ -2135,19 +2135,19 @@ rs1 += R_rs1_0.read(ba) << 0;
 		cp.code() = std::string("//FCVT_S_WU\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "etiss_coverage_count(1, 423);\n";
+cp.code() += "etiss_coverage_count(1, 111);\n";
 { // block
-cp.code() += "etiss_coverage_count(1, 1512);\n";
+cp.code() += "etiss_coverage_count(1, 1602);\n";
 cp.code() += "{ // block\n";
 cp.code() += "cpu->nextPc = " + std::to_string((etiss_uint32)((ic.current_address_ + 4))) + "ULL;\n";
-cp.code() += "etiss_coverage_count(7, 1511, 1504, 1510, 1507, 1505, 1506, 1508);\n";
+cp.code() += "etiss_coverage_count(7, 1601, 1594, 1600, 1597, 1595, 1596, 1598);\n";
 cp.code() += "} // block\n";
 } // block
 { // block
-cp.code() += "etiss_coverage_count(1, 22307);\n";
+cp.code() += "etiss_coverage_count(1, 5231);\n";
 cp.code() += "{ // block\n";
 cp.code() += "*((RV32IMACFDV_zvl128b*)cpu)->F[" + std::to_string(rd) + "ULL] = fcvt_s((etiss_uint32)(*((RV32IMACFDV_zvl128b*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL]), 3ULL, " + std::to_string(rm) + "ULL);\n";
-cp.code() += "etiss_coverage_count(10, 22279, 22269, 22268, 22278, 22275, 22274, 22273, 22271, 22276, 22277);\n";
+cp.code() += "etiss_coverage_count(10, 5203, 5193, 5192, 5202, 5199, 5198, 5197, 5195, 5200, 5201);\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
@@ -2213,22 +2213,22 @@ rs1 += R_rs1_0.read(ba) << 0;
 		cp.code() = std::string("//FMV_X_W\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "etiss_coverage_count(1, 424);\n";
+cp.code() += "etiss_coverage_count(1, 112);\n";
 { // block
-cp.code() += "etiss_coverage_count(1, 1512);\n";
+cp.code() += "etiss_coverage_count(1, 1602);\n";
 cp.code() += "{ // block\n";
 cp.code() += "cpu->nextPc = " + std::to_string((etiss_uint32)((ic.current_address_ + 4))) + "ULL;\n";
-cp.code() += "etiss_coverage_count(7, 1511, 1504, 1510, 1507, 1505, 1506, 1508);\n";
+cp.code() += "etiss_coverage_count(7, 1601, 1594, 1600, 1597, 1595, 1596, 1598);\n";
 cp.code() += "} // block\n";
 } // block
 { // block
-cp.code() += "etiss_coverage_count(1, 22328);\n";
+cp.code() += "etiss_coverage_count(1, 5252);\n";
 cp.code() += "{ // block\n";
-cp.code() += "etiss_coverage_count(1, 22308);\n";
+cp.code() += "etiss_coverage_count(1, 5232);\n";
 if ((rd % 32ULL) != 0LL) { // conditional
-cp.code() += "etiss_coverage_count(5, 22314, 22311, 22309, 22312, 22313);\n";
+cp.code() += "etiss_coverage_count(5, 5238, 5235, 5233, 5236, 5237);\n";
 cp.code() += "*((RV32IMACFDV_zvl128b*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = (etiss_uint32)((etiss_int32)(*((RV32IMACFDV_zvl128b*)cpu)->F[" + std::to_string(rs1) + "ULL]));\n";
-cp.code() += "etiss_coverage_count(8, 22327, 22319, 22318, 22316, 22326, 22324, 22322, 22321);\n";
+cp.code() += "etiss_coverage_count(8, 5251, 5243, 5242, 5240, 5250, 5248, 5246, 5245);\n";
 } // conditional
 cp.code() += "} // block\n";
 } // block
@@ -2292,19 +2292,19 @@ rs1 += R_rs1_0.read(ba) << 0;
 		cp.code() = std::string("//FMV_W_X\n");
 
 // -----------------------------------------------------------------------------
-cp.code() += "etiss_coverage_count(1, 425);\n";
+cp.code() += "etiss_coverage_count(1, 113);\n";
 { // block
-cp.code() += "etiss_coverage_count(1, 1512);\n";
+cp.code() += "etiss_coverage_count(1, 1602);\n";
 cp.code() += "{ // block\n";
 cp.code() += "cpu->nextPc = " + std::to_string((etiss_uint32)((ic.current_address_ + 4))) + "ULL;\n";
-cp.code() += "etiss_coverage_count(7, 1511, 1504, 1510, 1507, 1505, 1506, 1508);\n";
+cp.code() += "etiss_coverage_count(7, 1601, 1594, 1600, 1597, 1595, 1596, 1598);\n";
 cp.code() += "} // block\n";
 } // block
 { // block
-cp.code() += "etiss_coverage_count(1, 22362);\n";
+cp.code() += "etiss_coverage_count(1, 5286);\n";
 cp.code() += "{ // block\n";
 cp.code() += "*((RV32IMACFDV_zvl128b*)cpu)->F[" + std::to_string(rd) + "ULL] = *((RV32IMACFDV_zvl128b*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL];\n";
-cp.code() += "etiss_coverage_count(6, 22341, 22335, 22334, 22340, 22339, 22337);\n";
+cp.code() += "etiss_coverage_count(6, 5265, 5259, 5258, 5264, 5263, 5261);\n";
 cp.code() += "} // block\n";
 } // block
 cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
