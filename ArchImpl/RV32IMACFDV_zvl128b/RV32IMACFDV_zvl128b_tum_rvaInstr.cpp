@@ -1,0 +1,256 @@
+// clang-format off
+/**
+ * Generated on Thu, 06 Aug 2026 12:56:16 +0200.
+ *
+ * This file contains the instruction behavior models of the tum_rva
+ * instruction set for the RV32IMACFDV_zvl128b core architecture.
+ */
+
+#include "RV32IMACFDV_zvl128bArch.h"
+#include "RV32IMACFDV_zvl128bFuncs.h"
+
+using namespace etiss;
+using namespace etiss::instr;
+
+// LRW -------------------------------------------------------------------------
+static InstructionDefinition lrw_rd_rs1_rl_aq (
+	ISA32_RV32IMACFDV_zvl128b,
+	"lrw",
+	(uint64_t) 0x1000202f,
+	(uint64_t) 0xf9f0707f,
+	[] (BitArray & ba,etiss::CodeSet & cs,InstructionContext & ic)
+	{
+
+// -----------------------------------------------------------------------------
+
+// -----------------------------------------------------------------------------
+
+// -----------------------------------------------------------------------------
+// NOLINTBEGIN(clang-diagnostic-unused-but-set-variable)
+etiss_uint8 rd = 0;
+static BitArrayRange R_rd_0(11, 7);
+rd += R_rd_0.read(ba) << 0;
+etiss_uint8 rs1 = 0;
+static BitArrayRange R_rs1_0(19, 15);
+rs1 += R_rs1_0.read(ba) << 0;
+etiss_uint8 rl = 0;
+static BitArrayRange R_rl_0(25, 25);
+rl += R_rl_0.read(ba) << 0;
+etiss_uint8 aq = 0;
+static BitArrayRange R_aq_0(26, 26);
+aq += R_aq_0.read(ba) << 0;
+
+// NOLINTEND(clang-diagnostic-unused-but-set-variable)
+// -----------------------------------------------------------------------------
+
+	{
+		CodePart & cp = cs.append(CodePart::INITIALREQUIRED);
+
+		cp.code() = std::string("//LRW\n");
+
+// -----------------------------------------------------------------------------
+cp.code() += "etiss_coverage_count(1, 564);\n";
+{ // block
+cp.code() += "etiss_coverage_count(1, 1512);\n";
+cp.code() += "{ // block\n";
+cp.code() += "cpu->nextPc = " + std::to_string((etiss_uint32)((ic.current_address_ + 4))) + "ULL;\n";
+cp.code() += "etiss_coverage_count(7, 1511, 1504, 1510, 1507, 1505, 1506, 1508);\n";
+cp.code() += "} // block\n";
+} // block
+{ // block
+cp.code() += "etiss_coverage_count(1, 31244);\n";
+cp.code() += "{ // block\n";
+cp.code() += "etiss_uint32 offs = *((RV32IMACFDV_zvl128b*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL];\n";
+cp.code() += "etiss_coverage_count(4, 31219, 31218, 31217, 31215);\n";
+cp.code() += "etiss_uint32 mem_val_0;\n";
+cp.code() += "cpu->exception |= (*(system->dread))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_0, 4);\n";
+cp.code() += "if (cpu->exception) { // conditional\n";
+{ // procedure
+cp.code() += "{ // procedure\n";
+cp.code() += "RV32IMACFDV_zvl128b_translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
+cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
+cp.code() += "} // procedure\n";
+} // procedure
+cp.code() += "} // conditional\n";
+cp.code() += "etiss_int32 res = (etiss_int32)(mem_val_0);\n";
+cp.code() += "etiss_coverage_count(6, 31229, 31228, 31226, 31224, 31222, 31223);\n";
+cp.code() += "((RV32IMACFDV_zvl128b*)cpu)->RES_ADDR = offs;\n";
+cp.code() += "etiss_coverage_count(3, 31232, 31230, 31231);\n";
+cp.code() += "etiss_coverage_count(1, 31233);\n";
+if (rd) { // conditional
+cp.code() += "etiss_coverage_count(1, 31234);\n";
+cp.code() += "*((RV32IMACFDV_zvl128b*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = (etiss_int32)(res);\n";
+cp.code() += "etiss_coverage_count(6, 31243, 31239, 31238, 31236, 31242, 31240);\n";
+} // conditional
+cp.code() += "} // block\n";
+} // block
+cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
+cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
+// -----------------------------------------------------------------------------
+		cp.getAffectedRegisters().add("instructionPointer", 32);
+	}
+	{
+		CodePart & cp = cs.append(CodePart::APPENDEDRETURNINGREQUIRED);
+
+		cp.code() = std::string("//LRW\n");
+
+// -----------------------------------------------------------------------------
+cp.code() += "if (cpu->return_pending || cpu->exception) return cpu->exception;\n";
+// -----------------------------------------------------------------------------
+	}
+
+		return true;
+	},
+	0,
+	[] (BitArray & ba, Instruction & instr)
+	{
+// -----------------------------------------------------------------------------
+etiss_uint8 rd = 0;
+static BitArrayRange R_rd_0(11, 7);
+rd += R_rd_0.read(ba) << 0;
+etiss_uint8 rs1 = 0;
+static BitArrayRange R_rs1_0(19, 15);
+rs1 += R_rs1_0.read(ba) << 0;
+etiss_uint8 rl = 0;
+static BitArrayRange R_rl_0(25, 25);
+rl += R_rl_0.read(ba) << 0;
+etiss_uint8 aq = 0;
+static BitArrayRange R_aq_0(26, 26);
+aq += R_aq_0.read(ba) << 0;
+
+// -----------------------------------------------------------------------------
+
+		std::stringstream ss;
+// -----------------------------------------------------------------------------
+ss << "lrw" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std::to_string(rs1) + " | rl=" + std::to_string(rl) + " | aq=" + std::to_string(aq) + "]");
+// -----------------------------------------------------------------------------
+		return ss.str();
+	}
+);
+
+// SCW -------------------------------------------------------------------------
+static InstructionDefinition scw_rd_rs1_rs2_rl_aq (
+	ISA32_RV32IMACFDV_zvl128b,
+	"scw",
+	(uint64_t) 0x1800202f,
+	(uint64_t) 0xf800707f,
+	[] (BitArray & ba,etiss::CodeSet & cs,InstructionContext & ic)
+	{
+
+// -----------------------------------------------------------------------------
+
+// -----------------------------------------------------------------------------
+
+// -----------------------------------------------------------------------------
+// NOLINTBEGIN(clang-diagnostic-unused-but-set-variable)
+etiss_uint8 rd = 0;
+static BitArrayRange R_rd_0(11, 7);
+rd += R_rd_0.read(ba) << 0;
+etiss_uint8 rs1 = 0;
+static BitArrayRange R_rs1_0(19, 15);
+rs1 += R_rs1_0.read(ba) << 0;
+etiss_uint8 rs2 = 0;
+static BitArrayRange R_rs2_0(24, 20);
+rs2 += R_rs2_0.read(ba) << 0;
+etiss_uint8 rl = 0;
+static BitArrayRange R_rl_0(25, 25);
+rl += R_rl_0.read(ba) << 0;
+etiss_uint8 aq = 0;
+static BitArrayRange R_aq_0(26, 26);
+aq += R_aq_0.read(ba) << 0;
+
+// NOLINTEND(clang-diagnostic-unused-but-set-variable)
+// -----------------------------------------------------------------------------
+
+	{
+		CodePart & cp = cs.append(CodePart::INITIALREQUIRED);
+
+		cp.code() = std::string("//SCW\n");
+
+// -----------------------------------------------------------------------------
+cp.code() += "etiss_coverage_count(1, 565);\n";
+{ // block
+cp.code() += "etiss_coverage_count(1, 1512);\n";
+cp.code() += "{ // block\n";
+cp.code() += "cpu->nextPc = " + std::to_string((etiss_uint32)((ic.current_address_ + 4))) + "ULL;\n";
+cp.code() += "etiss_coverage_count(7, 1511, 1504, 1510, 1507, 1505, 1506, 1508);\n";
+cp.code() += "} // block\n";
+} // block
+{ // block
+cp.code() += "etiss_coverage_count(1, 31294);\n";
+cp.code() += "{ // block\n";
+cp.code() += "etiss_uint32 offs = *((RV32IMACFDV_zvl128b*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL];\n";
+cp.code() += "etiss_coverage_count(4, 31251, 31250, 31249, 31247);\n";
+cp.code() += "etiss_coverage_count(1, 31252);\n";
+cp.code() += "if (((RV32IMACFDV_zvl128b*)cpu)->RES_ADDR == offs) { // conditional\n";
+cp.code() += "etiss_coverage_count(3, 31255, 31253, 31254);\n";
+cp.code() += "etiss_uint32 mem_val_0;\n";
+cp.code() += "mem_val_0 = (etiss_int32)(*((RV32IMACFDV_zvl128b*)cpu)->X[" + std::to_string(rs2 % 32ULL) + "ULL]);\n";
+cp.code() += "etiss_coverage_count(9, 31269, 31261, 31259, 31257, 31258, 31268, 31266, 31265, 31263);\n";
+cp.code() += "cpu->exception |= (*(system->dwrite))(system->handle, cpu, offs, (etiss_uint8*)&mem_val_0, 4);\n";
+cp.code() += "if (cpu->exception) { // conditional\n";
+{ // procedure
+cp.code() += "{ // procedure\n";
+cp.code() += "RV32IMACFDV_zvl128b_translate_exc_code(cpu, system, plugin_pointers, cpu->exception);\n";
+cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
+cp.code() += "} // procedure\n";
+} // procedure
+cp.code() += "} // conditional\n";
+cp.code() += "} // conditional\n";
+cp.code() += "etiss_coverage_count(1, 31270);\n";
+if (rd) { // conditional
+cp.code() += "etiss_coverage_count(1, 31271);\n";
+cp.code() += "*((RV32IMACFDV_zvl128b*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = (etiss_uint32)((etiss_uint8)((((RV32IMACFDV_zvl128b*)cpu)->RES_ADDR != offs)));\n";
+cp.code() += "etiss_coverage_count(10, 31285, 31276, 31275, 31273, 31284, 31282, 31279, 31277, 31278, 31280);\n";
+} // conditional
+cp.code() += "((RV32IMACFDV_zvl128b*)cpu)->RES_ADDR = -1LL;\n";
+cp.code() += "etiss_coverage_count(2, 31293, 31286);\n";
+cp.code() += "} // block\n";
+} // block
+cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
+cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
+// -----------------------------------------------------------------------------
+		cp.getAffectedRegisters().add("instructionPointer", 32);
+	}
+	{
+		CodePart & cp = cs.append(CodePart::APPENDEDRETURNINGREQUIRED);
+
+		cp.code() = std::string("//SCW\n");
+
+// -----------------------------------------------------------------------------
+cp.code() += "if (cpu->return_pending || cpu->exception) return cpu->exception;\n";
+// -----------------------------------------------------------------------------
+	}
+
+		return true;
+	},
+	0,
+	[] (BitArray & ba, Instruction & instr)
+	{
+// -----------------------------------------------------------------------------
+etiss_uint8 rd = 0;
+static BitArrayRange R_rd_0(11, 7);
+rd += R_rd_0.read(ba) << 0;
+etiss_uint8 rs1 = 0;
+static BitArrayRange R_rs1_0(19, 15);
+rs1 += R_rs1_0.read(ba) << 0;
+etiss_uint8 rs2 = 0;
+static BitArrayRange R_rs2_0(24, 20);
+rs2 += R_rs2_0.read(ba) << 0;
+etiss_uint8 rl = 0;
+static BitArrayRange R_rl_0(25, 25);
+rl += R_rl_0.read(ba) << 0;
+etiss_uint8 aq = 0;
+static BitArrayRange R_aq_0(26, 26);
+aq += R_aq_0.read(ba) << 0;
+
+// -----------------------------------------------------------------------------
+
+		std::stringstream ss;
+// -----------------------------------------------------------------------------
+ss << "scw" << " # " << ba << (" [rd=" + std::to_string(rd) + " | rs1=" + std::to_string(rs1) + " | rs2=" + std::to_string(rs2) + " | rl=" + std::to_string(rl) + " | aq=" + std::to_string(aq) + "]");
+// -----------------------------------------------------------------------------
+		return ss.str();
+	}
+);
+// clang-format on
