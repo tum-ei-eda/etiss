@@ -1,4 +1,4 @@
-# Generated on Wed, 05 Aug 2026 14:25:16 +0200.
+# Generated on Wed, 05 Aug 2026 14:56:03 +0200.
 #
 # This file contains the CMake build info for the RV32IMXCoreV core architecture.
 

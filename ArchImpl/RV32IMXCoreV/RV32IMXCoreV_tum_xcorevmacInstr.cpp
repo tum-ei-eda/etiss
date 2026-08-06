@@ -1,6 +1,6 @@
 // clang-format off
 /**
- * Generated on Wed, 05 Aug 2026 14:25:16 +0200.
+ * Generated on Wed, 05 Aug 2026 14:56:03 +0200.
  *
  * This file contains the instruction behavior models of the tum_xcorevmac
  * instruction set for the RV32IMXCoreV core architecture.
@@ -55,16 +55,16 @@ cp.code() += "etiss_coverage_count(7, 1468, 1461, 1467, 1464, 1462, 1463, 1465);
 cp.code() += "} // block\n";
 } // block
 { // block
-cp.code() += "etiss_coverage_count(1, 27169);\n";
+cp.code() += "etiss_coverage_count(1, 27171);\n";
 cp.code() += "{ // block\n";
-cp.code() += "etiss_coverage_count(1, 27136);\n";
+cp.code() += "etiss_coverage_count(1, 27138);\n";
 if ((rd % 32ULL) != 0LL) { // conditional
-cp.code() += "etiss_coverage_count(5, 27142, 27139, 27137, 27140, 27141);\n";
+cp.code() += "etiss_coverage_count(5, 27144, 27141, 27139, 27142, 27143);\n";
 { // block
-cp.code() += "etiss_coverage_count(1, 27168);\n";
+cp.code() += "etiss_coverage_count(1, 27170);\n";
 cp.code() += "{ // block\n";
 cp.code() += "*((RV32IMXCoreV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = RV32IMXCoreV_cv_mac((etiss_int32)(*((RV32IMXCoreV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL]), (etiss_int32)(*((RV32IMXCoreV*)cpu)->X[" + std::to_string(rs2 % 32ULL) + "ULL]), (etiss_int32)(*((RV32IMXCoreV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL]));\n";
-cp.code() += "etiss_coverage_count(17, 27167, 27147, 27146, 27144, 27166, 27153, 27152, 27151, 27149, 27159, 27158, 27157, 27155, 27165, 27164, 27163, 27161);\n";
+cp.code() += "etiss_coverage_count(17, 27169, 27149, 27148, 27146, 27168, 27155, 27154, 27153, 27151, 27161, 27160, 27159, 27157, 27167, 27166, 27165, 27163);\n";
 cp.code() += "} // block\n";
 } // block
 } // conditional
@@ -145,16 +145,16 @@ cp.code() += "etiss_coverage_count(7, 1468, 1461, 1467, 1464, 1462, 1463, 1465);
 cp.code() += "} // block\n";
 } // block
 { // block
-cp.code() += "etiss_coverage_count(1, 27203);\n";
+cp.code() += "etiss_coverage_count(1, 27205);\n";
 cp.code() += "{ // block\n";
-cp.code() += "etiss_coverage_count(1, 27170);\n";
+cp.code() += "etiss_coverage_count(1, 27172);\n";
 if ((rd % 32ULL) != 0LL) { // conditional
-cp.code() += "etiss_coverage_count(5, 27176, 27173, 27171, 27174, 27175);\n";
+cp.code() += "etiss_coverage_count(5, 27178, 27175, 27173, 27176, 27177);\n";
 { // block
-cp.code() += "etiss_coverage_count(1, 27202);\n";
+cp.code() += "etiss_coverage_count(1, 27204);\n";
 cp.code() += "{ // block\n";
 cp.code() += "*((RV32IMXCoreV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL] = RV32IMXCoreV_cv_msu((etiss_int32)(*((RV32IMXCoreV*)cpu)->X[" + std::to_string(rs1 % 32ULL) + "ULL]), (etiss_int32)(*((RV32IMXCoreV*)cpu)->X[" + std::to_string(rs2 % 32ULL) + "ULL]), (etiss_int32)(*((RV32IMXCoreV*)cpu)->X[" + std::to_string(rd % 32ULL) + "ULL]));\n";
-cp.code() += "etiss_coverage_count(17, 27201, 27181, 27180, 27178, 27200, 27187, 27186, 27185, 27183, 27193, 27192, 27191, 27189, 27199, 27198, 27197, 27195);\n";
+cp.code() += "etiss_coverage_count(17, 27203, 27183, 27182, 27180, 27202, 27189, 27188, 27187, 27185, 27195, 27194, 27193, 27191, 27201, 27200, 27199, 27197);\n";
 cp.code() += "} // block\n";
 } // block
 } // conditional
