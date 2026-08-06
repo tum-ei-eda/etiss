@@ -30,13 +30,18 @@
 using namespace etiss;
 using namespace ELFIO;
 
-std::unordered_map<std::string, uint32_t> map_messageCounter;
-uint32_t printMessage(std::string key, std::string message, uint32_t maxCount)
+std::unordered_map<std::string, uint64_t> message_counters;
+
+bool should_log_message(const std::string &key, int max_count)
 {
-    uint32_t count = map_messageCounter[key]++;
-    if (count < maxCount) // print only the first X messages of this type
-        std::cout << message << "  (" << (count + 1) << "x)" << std::endl;
-    return count;
+    // A negative value means unlimited logging.
+    if (max_count < 0)
+        return true;
+
+    uint64_t &count = message_counters[key];
+    const bool should_log = count < static_cast<uint64_t>(max_count);
+    ++count;
+    return should_log;
 }
 
 MemSegment::MemSegment(etiss::uint64 start_addr, etiss::uint64 size, access_t mode, const std::string name,
@@ -401,9 +406,14 @@ SimpleMemSystem::SimpleMemSystem()
     }
 }
 
-void access_error(ETISS_CPU *cpu, etiss::uint64 addr, etiss::uint32 len, std::string error, etiss::Verbosity verbosity)
+void access_error(ETISS_CPU *cpu, etiss::uint64 addr, etiss::uint32 len, std::string error, etiss::Verbosity verbosity,
+                  int message_max_cnt)
 {
+    if (!should_log_message(error, message_max_cnt))
+        return;
+
     uint64 pc = cpu ? cpu->instructionPointer : 0;
+
     etiss::log(verbosity,
                etiss::fmt::format("{:s}, PC = {:#016x}, address {:#016x}, length {:#x}", error, pc, addr, len));
 }
@@ -415,14 +425,14 @@ etiss::int32 SimpleMemSystem::iread(ETISS_CPU *cpu, etiss::uint64 addr, etiss::u
         return RETURNCODE::NOERROR;
 
     etiss::Verbosity verbosity = error_on_invalid_access_ ? etiss::FATALERROR : etiss::ERROR;
-    access_error(cpu, addr, len, "ibus read error", verbosity);
+    access_error(cpu, addr, len, "ibus read error", verbosity, message_max_cnt_);
     return RETURNCODE::IBUS_READ_ERROR;
 }
 
 etiss::int32 SimpleMemSystem::iwrite(ETISS_CPU *cpu, etiss::uint64 addr, etiss::uint8 *buf, etiss::uint32 len)
 {
     etiss::Verbosity verbosity = error_on_invalid_access_ ? etiss::FATALERROR : etiss::ERROR;
-    access_error(cpu, addr, len, "ibus write blocked", verbosity);
+    access_error(cpu, addr, len, "ibus write blocked", verbosity, message_max_cnt_);
     return RETURNCODE::IBUS_WRITE_ERROR;
 }
 
@@ -457,8 +467,8 @@ etiss::int32 SimpleMemSystem::dbus_access(ETISS_CPU *cpu, etiss::uint64 addr, et
 
         if (!(mseg->mode_ & access))
         {
-            access_error(cpu, addr, len, std::string("dbus ") + (write ? "write" : "read") + " forbidden",
-                         verbosity);
+            access_error(cpu, addr, len, std::string("dbus ") + (write ? "write" : "read") + " forbidden", verbosity,
+                         message_max_cnt_);
         }
 
         size_t offset = addr - mseg->start_addr_;
@@ -474,7 +484,8 @@ etiss::int32 SimpleMemSystem::dbus_access(ETISS_CPU *cpu, etiss::uint64 addr, et
         return RETURNCODE::NOERROR;
     }
 
-    access_error(cpu, addr, len, std::string("dbus ") + (write ? "write" : "read") + " error", verbosity);
+    access_error(cpu, addr, len, std::string("dbus ") + (write ? "write" : "read") + " error", verbosity,
+                 message_max_cnt_);
 
     return write ? RETURNCODE::DBUS_WRITE_ERROR : RETURNCODE::DBUS_READ_ERROR;
 }
