@@ -39,7 +39,7 @@ jobs:
     # Only run for PR from the same repository (forks do not have permission to trigger external CI)
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
     - name: Trigger Seal5 ETISS Test Flow (PR)
       if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository }}
       uses: peter-evans/repository-dispatch@v3

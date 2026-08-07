@@ -24,7 +24,7 @@ jobs:
     runs-on: ${{ matrix.os.name }}-${{ matrix.os.version }}
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
       with:
         path: etiss_source
         submodules: true
@@ -62,7 +62,7 @@ jobs:
         test -f etiss_prebuilt/lib/plugins/libLLVMJIT.so
 
     - name: Upload compiled ETISS
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: etiss_prebuilt-${{ matrix.os.name }}-${{ matrix.os.version }}
         path: etiss_prebuilt
@@ -76,7 +76,7 @@ jobs:
         build_type: [Release]
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
       with:
         repository: tum-ei-eda/etiss_riscv_examples
         path: examples_source
@@ -108,7 +108,7 @@ jobs:
         cmake --build examples_build_rv${{matrix.bits}} --target install
 
     - name: Upload prebuilt examples
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: examples_prebuilt_rv${{matrix.bits}}
         path: examples_prebuilt_rv${{matrix.bits}}
@@ -128,13 +128,13 @@ jobs:
 
     steps:
     - name: Fetch precompiled ETISS
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
         name: etiss_prebuilt-${{ matrix.os.name }}-${{ matrix.os.version }}
         path: etiss_prebuilt
-  
+
     - name: Fetch precompiled Examples
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
         name: examples_prebuilt_rv${{matrix.bits}}
         path: examples_prebuilt_rv${{matrix.bits}}
@@ -165,13 +165,13 @@ jobs:
 
     steps:
     - name: Fetch precompiled ETISS
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
         name: etiss_prebuilt-${{ matrix.os.name }}-${{ matrix.os.version }}
         path: etiss_prebuilt
-  
+
     - name: Fetch precompiled Examples
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
         name: examples_prebuilt_rv${{matrix.bits}}
         path: examples_prebuilt_rv${{matrix.bits}}
@@ -187,7 +187,7 @@ jobs:
         etiss_prebuilt/bin/bare_etiss_processor -iexamples_prebuilt_rv${{matrix.bits}}/ini/dhry.ini --jit.type=${{matrix.jit_engine}}JIT --vp.stats_file_path=${{github.workspace}}/run_${{matrix.jit_engine}}_${{matrix.bits}}_${{matrix.run_no}}_${{ matrix.os.name }}-${{ matrix.os.version }}.json
 
     - name: Save Benchmark results
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: run_${{matrix.jit_engine}}_${{matrix.bits}}_${{matrix.run_no}}_${{ matrix.os.name }}-${{ matrix.os.version }}
         path: run_${{matrix.jit_engine}}_${{matrix.bits}}_${{matrix.run_no}}_${{ matrix.os.name }}-${{ matrix.os.version }}.json
@@ -198,7 +198,7 @@ jobs:
 
     steps:
     - name: Merge artifacts
-      uses: actions/upload-artifact/merge@v4
+      uses: actions/upload-artifact/merge@v7
       with:
         name: dhry_results
         pattern: run_*
