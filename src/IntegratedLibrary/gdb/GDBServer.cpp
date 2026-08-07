@@ -133,7 +133,8 @@ Server::Server(etiss::plugin::gdb::PacketProtocol &pp) : con_(pp)
     system_ = nullptr;
     execute_skip_count = 25;
     execute_skip_index = 0;
-    minimal_pc_alignment = 2;
+    // PC LSBs aligment. E.g. 1 for 16 bits instuction, 2 for 32 bits, 3 for 64 bits
+    minimal_pc_alignment = 1;
 }
 
 etiss::int32 Server::preInstructionCallback()
