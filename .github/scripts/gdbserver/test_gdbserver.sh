@@ -55,30 +55,31 @@ cleanup() {
 }
 trap cleanup EXIT
 
-# Wait until gdbserver socket is ready
 ready=0
-for _ in {1..30}; do
-    if nc -z 127.0.0.1 "$PORT"; then
+
+for _ in {1..100}; do
+    if ss -ltnH "sport = :$PORT" | grep -q .; then
         ready=1
         break
     fi
 
     if ! kill -0 "$ETISS_PID" 2>/dev/null; then
-        echo "ETISS exited before opening the GDB port"
-        cat etiss_output.log
+        echo "ETISS exited before opening GDB port"
         wait "$ETISS_PID" || true
         exit 1
     fi
 
-    sleep 1
+    sleep 0.1
 done
 
 if (( ! ready )); then
-    echo "GDB server did not open port $PORT"
-    cat etiss_output.log
+    echo "GDB server did not start listening on port $PORT"
+    echo "Current listening sockets:"
+    ss -ltn
     exit 1
 fi
 
+echo "GDB server is listening on port $PORT"
 # sleep 3
 
 # echo "Ready"
