@@ -45,6 +45,7 @@ UnixTCPGDBConnection::UnixTCPGDBConnection(unsigned port)
         valid_ = false;
         std::cout << "ERROR: failed to create TCP socket (ipv4)" << std::endl;
         std::cout << "\t" << strerror(errno) << std::endl;
+        abort();  // TODO: expose ignore option, propagate to main sim loop
     }
     // configure socket
     int flag = 1;
@@ -64,6 +65,7 @@ UnixTCPGDBConnection::UnixTCPGDBConnection(unsigned port)
             valid_ = false;
             std::cout << "ERROR: failed to bind TCP socket (ipv4) to port " << port << std::endl;
             std::cout << "\t" << strerror(errno) << std::endl;
+            abort();  // TODO: expose ignore option, propagate to main sim loop
         }
     }
     // make passive
