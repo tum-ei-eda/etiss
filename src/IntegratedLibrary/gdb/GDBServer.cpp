@@ -135,6 +135,7 @@ Server::Server(etiss::plugin::gdb::PacketProtocol &pp) : con_(pp)
     execute_skip_index = 0;
     // PC LSBs aligment. E.g. 1 for 16 bits instuction, 2 for 32 bits, 3 for 64 bits
     minimal_pc_alignment = 1;
+    ready_logged_ = false;
 }
 
 etiss::int32 Server::preInstructionCallback()
@@ -169,6 +170,12 @@ etiss::int32 Server::preInstructionCallback()
             // std::cout << "GDB: answer: " << "T"<<hex::fromByte(5) << std::endl;
             con_.snd("T" + hex::fromByte(5), false);
             gdb_status_paused_ = true;
+        }
+
+        if (!ready_logged_)
+        {
+            std::cout << "GDBSERVER_READY" << std::endl;
+            ready_logged_ = true;
         }
 
         while (unlikely(status_paused_))
@@ -747,7 +754,7 @@ void Server::handlePacket(bool block)
             {
                 if (command.substr(1, 9) == "Supported")
                 {
-                    answer = "PacketSize=8000;qXfer:features:read+;";
+                    answer = "PacketSize=8000;qXfer:features:read+;QStartNoAckMode+;";
                 }
                 else if (command.substr(1, 8) == "Attached")
                 {

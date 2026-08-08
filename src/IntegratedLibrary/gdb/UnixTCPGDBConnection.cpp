@@ -33,10 +33,20 @@
 
 using namespace etiss::plugin::gdb;
 
+#include <chrono>
+
+
 namespace {
 
 void logBytes(const char *prefix, const unsigned char *data, size_t len)
 {
+    static auto start = std::chrono::steady_clock::now();
+
+    auto us = std::chrono::duration_cast<std::chrono::microseconds>(
+        std::chrono::steady_clock::now() - start
+    ).count();
+
+    std::cerr << "[" << us << " us] ";
     std::cerr << prefix << " (" << len << " bytes): ";
 
     for (size_t i = 0; i < len; ++i)

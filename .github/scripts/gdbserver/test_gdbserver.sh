@@ -80,6 +80,30 @@ if (( ! ready )); then
 fi
 
 echo "GDB server is listening on port $PORT"
+
+ready=0
+
+for _ in {1..600}; do
+    if grep -q '^GDBSERVER_READY$' etiss_output.log; then
+        ready=1
+        break
+    fi
+
+    if ! kill -0 "$ETISS_PID" 2>/dev/null; then
+        echo "ETISS exited before GDB server became ready"
+        exit 1
+    fi
+
+    sleep 0.1
+done
+
+if (( ! ready )); then
+    echo "GDB server did not become ready"
+    cat etiss_output.log
+    exit 1
+fi
+
+echo "GDB server is ready"
 # sleep 3
 
 # echo "Ready"

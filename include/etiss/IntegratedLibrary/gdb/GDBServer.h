@@ -130,6 +130,7 @@ class Server : public etiss::CoroutinePlugin, public etiss::TranslationPlugin, p
     unsigned execute_skip_count;
     unsigned execute_skip_index;
     unsigned minimal_pc_alignment;
+    bool ready_logged_;
 
   private:
     std::shared_ptr<Connection> cinst_;
