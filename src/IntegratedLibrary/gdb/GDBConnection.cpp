@@ -51,35 +51,83 @@ size_t PacketProtocol_findUE(std::string &buffer, char c)
     }
     return cur;
 }
+// int PacketProtocol_findResponse(std::string &buffer)
+// {
+//     size_t pos = 0;
+//     while (buffer.length() > pos)
+//     {
+//         if (buffer[pos] == '+' || buffer[pos] == '-')
+//         {
+//             int ret = (int)buffer[pos];
+//             buffer[pos] = ' ';
+//             return ret;
+//         }
+//         else if (buffer[pos] == '%' || buffer[pos] == '$')
+//         {
+//             std::string substr = buffer.substr(pos);
+//             size_t cpos = PacketProtocol_findUE(substr, '#');
+//             if (cpos == std::string::npos)
+//                 return 0;
+//             pos = pos + cpos + 3;
+//         }
+//         else if (buffer[pos] != ' ')
+//         { // previously removed ack
+//             pos++;
+//         }
+//         else
+//         {
+//             std::cout << "ERROR: gdb transmission corrupted; aborting" << stream_code_info << std::endl;
+//             return '+';
+//         }
+//     }
+//     return 0;
+// }
 int PacketProtocol_findResponse(std::string &buffer)
 {
     size_t pos = 0;
-    while (buffer.length() > pos)
+
+    while (pos < buffer.length())
     {
         if (buffer[pos] == '+' || buffer[pos] == '-')
         {
-            int ret = (int)buffer[pos];
-            buffer[pos] = ' ';
+            const int ret = static_cast<int>(buffer[pos]);
+
+            // ACK/NACK is consumed exactly once.
+            buffer.erase(pos, 1);
+
             return ret;
         }
         else if (buffer[pos] == '%' || buffer[pos] == '$')
         {
             std::string substr = buffer.substr(pos);
+
             size_t cpos = PacketProtocol_findUE(substr, '#');
+
             if (cpos == std::string::npos)
                 return 0;
-            pos = pos + cpos + 3;
-        }
-        else if (buffer[pos] != ' ')
-        { // previously removed ack
-            pos++;
+
+            // Need '#xx' checksum too.
+            if (substr.length() < cpos + 3)
+                return 0;
+
+            // Skip over the complete packet while searching for ACK/NACK.
+            pos += cpos + 3;
         }
         else
         {
-            std::cout << "ERROR: gdb transmission corrupted; aborting" << stream_code_info << std::endl;
-            return '+';
+            std::cout
+                << "ERROR: unexpected byte while waiting for GDB ACK: 0x"
+                << std::hex
+                << static_cast<unsigned>(
+                       static_cast<unsigned char>(buffer[pos]))
+                << std::dec
+                << stream_code_info
+                << std::endl;
+
+            return -1;
         }
     }
+
     return 0;
 }
 size_t PacketProtocol_getPacketStart(std::string &buffer)
