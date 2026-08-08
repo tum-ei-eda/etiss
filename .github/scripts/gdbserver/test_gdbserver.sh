@@ -84,7 +84,7 @@ echo "GDB server is listening on port $PORT"
 ready=0
 
 for _ in {1..600}; do
-    if grep -q '^GDBSERVER_READY$' etiss_output.log; then
+    if grep -q '^ETISS GDBServer is ready$' etiss_output.log; then
         ready=1
         break
     fi
