@@ -36,40 +36,40 @@ using namespace etiss::plugin::gdb;
 #include <chrono>
 
 
-namespace {
-
-void logBytes(const char *prefix, const unsigned char *data, size_t len)
-{
-    static auto start = std::chrono::steady_clock::now();
-
-    auto us = std::chrono::duration_cast<std::chrono::microseconds>(
-        std::chrono::steady_clock::now() - start
-    ).count();
-
-    std::cerr << "[" << us << " us] ";
-    std::cerr << prefix << " (" << len << " bytes): ";
-
-    for (size_t i = 0; i < len; ++i)
-    {
-        const unsigned char c = data[i];
-
-        if (c >= 0x20 && c <= 0x7e)
-        {
-            std::cerr << static_cast<char>(c);
-        }
-        else
-        {
-            std::cerr << "\\x"
-                      << std::hex << std::setw(2) << std::setfill('0')
-                      << static_cast<unsigned>(c)
-                      << std::dec << std::setfill(' ');
-        }
-    }
-
-    std::cerr << std::endl;
-}
-
-} // namespace
+// namespace {
+//
+// void logBytes(const char *prefix, const unsigned char *data, size_t len)
+// {
+//     static auto start = std::chrono::steady_clock::now();
+//
+//     auto us = std::chrono::duration_cast<std::chrono::microseconds>(
+//         std::chrono::steady_clock::now() - start
+//     ).count();
+//
+//     std::cerr << "[" << us << " us] ";
+//     std::cerr << prefix << " (" << len << " bytes): ";
+//
+//     for (size_t i = 0; i < len; ++i)
+//     {
+//         const unsigned char c = data[i];
+//
+//         if (c >= 0x20 && c <= 0x7e)
+//         {
+//             std::cerr << static_cast<char>(c);
+//         }
+//         else
+//         {
+//             std::cerr << "\\x"
+//                       << std::hex << std::setw(2) << std::setfill('0')
+//                       << static_cast<unsigned>(c)
+//                       << std::dec << std::setfill(' ');
+//         }
+//     }
+//
+//     std::cerr << std::endl;
+// }
+//
+// } // namespace
 
 UnixTCPGDBConnection::UnixTCPGDBConnection(unsigned port)
 {
@@ -180,10 +180,9 @@ bool UnixTCPGDBConnection::_available(bool block)
 
         if (len > 0)
         {
-            // Log exactly what recv() returned, before modifying the buffer.
-            logBytes("GDB RAW RX",
-                     reinterpret_cast<const unsigned char *>(buffer_ + buffer_pos_),
-                     static_cast<size_t>(len));
+            // logBytes("GDB RAW RX",
+            //          reinterpret_cast<const unsigned char *>(buffer_ + buffer_pos_),
+            //          static_cast<size_t>(len));
 
             for (unsigned i = buffer_pos_;
                  i < static_cast<unsigned>(buffer_pos_ + len);
@@ -253,12 +252,12 @@ std::string UnixTCPGDBConnection::rcv()
         buffer_pos_ = 0;
     }
 
-    if (!ret.empty())
-    {
-        logBytes("GDB RCV RETURN",
-                 reinterpret_cast<const unsigned char *>(ret.data()),
-                 ret.size());
-    }
+    // if (!ret.empty())
+    // {
+    //     logBytes("GDB RCV RETURN",
+    //              reinterpret_cast<const unsigned char *>(ret.data()),
+    //              ret.size());
+    // }
 
     return ret;
 }
@@ -267,9 +266,9 @@ bool UnixTCPGDBConnection::snd(std::string answer)
 {
     if (active_valid_)
     {
-        logBytes("GDB RAW TX",
-                 reinterpret_cast<const unsigned char *>(answer.data()),
-                 answer.size());
+        // logBytes("GDB RAW TX",
+        //          reinterpret_cast<const unsigned char *>(answer.data()),
+        //          answer.size());
 
         unsigned pos = 0;
 
