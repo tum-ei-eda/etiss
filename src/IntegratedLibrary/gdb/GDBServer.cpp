@@ -174,7 +174,7 @@ etiss::int32 Server::preInstructionCallback()
 
         if (!ready_logged_)
         {
-            std::cout << "GDBSERVER_READY" << std::endl;
+            std::cout << "ETISS GDBServer is ready" << std::endl;
             ready_logged_ = true;
         }
 
