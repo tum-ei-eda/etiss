@@ -83,6 +83,13 @@ jobs:
         tar xf xpack-riscv-none-elf-gcc-13.2.0-2-linux-x64.tar.gz
         mv xpack-riscv-none-elf-gcc-13.2.0-2 riscv_tc
 
+    - name: Install latest LLVM
+      run: |
+        # RISC-V Examples need LLVM 18+
+        sudo apt-get update
+        sudo apt remove -y llvm* clang* libllvm* libclang*
+        sudo bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
+
     - name: Set CMake preset
       id: cmake_preset
       shell: bash
@@ -156,6 +163,8 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y libboost-filesystem-dev libboost-program-options-dev
+        # Install latest LLVM (RISC-V Examples need LLVM 18+)
+        sudo bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
 
     - name: Run benchmark
       run: |
