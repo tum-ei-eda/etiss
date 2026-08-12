@@ -136,6 +136,7 @@ jobs:
         etiss_prebuilt/bin/bare_etiss_processor -iexamples_prebuilt_${{ matrix.toolchain }}_rv${{ matrix.bits }}/ini/${{ matrix.test_program }}.ini --jit.type=${{ matrix.jit_engine }}JIT
 
   run_benchmarks:
+    if: ${{ github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-22.04
     needs: [build_etiss, build_examples]
 
@@ -168,6 +169,7 @@ jobs:
         path: run_${{ matrix.jit_engine }}_${{ matrix.bits }}_${{ matrix.run_no }}.json
 
   merge_benchmark_results:
+    if: ${{ github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-22.04
     needs: run_benchmarks
 
