@@ -30,7 +30,7 @@ jobs:
           llvm-15-dev libclang-15-dev clang-15
 
     - name: Setup ccache
-      uses: hendrikmuhs/ccache-action@v1
+      uses: hendrikmuhs/ccache-action@v1.2
       with:
         max-size: 2G
         key: ccache-${{ matrix.build_type }}
@@ -72,7 +72,7 @@ jobs:
         submodules: true
 
     - name: Setup ccache
-      uses: hendrikmuhs/ccache-action@v1
+      uses: hendrikmuhs/ccache-action@v1.2
       with:
         max-size: 2G
         key: ccache-examples-${{ matrix.build_type }}-rv${{ matrix.bits }}
@@ -103,7 +103,7 @@ jobs:
 
     - name: Configure examples
       run: |
-        cmake -B examples_build_${{ matrix.toolchain }}_rv${{ matrix.bits }} -S examples_source --preset ${{ steps.cmake_preset.outputs.name }} -DRISCV_TOOLCHAIN_BASENAME=riscv-none-elf -DRISCV_TOOLCHAIN_PREFIX=$GITHUB_WORKSPACE/riscv_tc -DCMAKE_INSTALL_PREFIX=examples_prebuilt_rv${{ matrix.bits }} -DCMAKE_C_COMPILER_LAUNCHER=sccache -DCMAKE_CXX_COMPILER_LAUNCHER=sccache
+        cmake -B examples_build_${{ matrix.toolchain }}_rv${{ matrix.bits }} -S examples_source --preset ${{ steps.cmake_preset.outputs.name }} -DRISCV_TOOLCHAIN_BASENAME=riscv-none-elf -DRISCV_TOOLCHAIN_PREFIX=$GITHUB_WORKSPACE/riscv_tc -DCMAKE_INSTALL_PREFIX=examples_prebuilt_${{ matrix.toolchain }}_rv${{ matrix.bits }} -DCMAKE_C_COMPILER_LAUNCHER=sccache -DCMAKE_CXX_COMPILER_LAUNCHER=sccache
 
     - name: Build examples
       run: |
