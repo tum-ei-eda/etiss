@@ -1,5 +1,5 @@
 /**
- * Generated on Fri, 19 Jun 2026 11:47:54 +0000.
+ * Generated on Tue, 11 Aug 2026 12:31:35 +0000.
  *
  * This file contains the architecture specific header for the RV64IMACFD
  * core architecture.

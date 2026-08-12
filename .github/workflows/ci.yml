@@ -37,7 +37,7 @@ jobs:
           llvm-${{ matrix.os.llvm_version }}-dev libclang-${{ matrix.os.llvm_version }}-dev clang-${{ matrix.os.llvm_version }}
 
     - name: Setup ccache
-      uses: hendrikmuhs/ccache-action@v1
+      uses: hendrikmuhs/ccache-action@v1.2
       with:
         max-size: 2G
         key: ccache-${{ matrix.build_type }}
@@ -73,6 +73,8 @@ jobs:
     strategy:
       matrix:
         bits: ["32", "64"]
+        # toolchain: [gcc, llvm]
+        toolchain: [gcc]
         build_type: [Release]
 
     steps:
@@ -83,7 +85,7 @@ jobs:
         submodules: true
 
     - name: Setup ccache
-      uses: hendrikmuhs/ccache-action@v1
+      uses: hendrikmuhs/ccache-action@v1.2
       with:
         max-size: 2G
         key: ccache-examples-${{ matrix.build_type }}-rv${{ matrix.bits }}
@@ -91,27 +93,44 @@ jobs:
 
     - name: Install cross compiler
       run: |
-        wget https://github.com/xpack-dev-tools/riscv-none-elf-gcc-xpack/releases/download/v13.2.0-2/xpack-riscv-none-elf-gcc-13.2.0-2-linux-x64.tar.gz
-        tar xf xpack-riscv-none-elf-gcc-13.2.0-2-linux-x64.tar.gz
-        mv xpack-riscv-none-elf-gcc-13.2.0-2 riscv_tc
+        wget https://github.com/xpack-dev-tools/riscv-none-elf-gcc-xpack/releases/download/v15.2.0-1/xpack-riscv-none-elf-gcc-15.2.0-1-linux-x64.tar.gz
+        tar xf xpack-riscv-none-elf-gcc-15.2.0-1-linux-x64.tar.gz
+        mv xpack-riscv-none-elf-gcc-15.2.0-1 riscv_tc
+
+    - name: Install latest LLVM
+      if: ${{ matrix.toolchain == 'llvm' }}
+      run: |
+        # RISC-V Examples need LLVM 18+
+        sudo apt-get update
+        sudo apt remove -y llvm* clang* libllvm* libclang*
+        sudo bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
+
+    - name: Set CMake preset
+      id: cmake_preset
+      shell: bash
+      run: |
+        build_type_lower="${{ matrix.build_type }}"
+        build_type_lower="${build_type_lower,,}"
+        preset="rv${{ matrix.bits }}-${{ matrix.toolchain }}-${build_type_lower}"
+        echo "name=${preset}" >> "$GITHUB_OUTPUT"
 
     - name: Configure examples
       run: |
-        cmake -B examples_build_rv${{matrix.bits}} -S examples_source -DCMAKE_TOOLCHAIN_FILE=rv${{matrix.bits}}gc-toolchain.cmake -DRISCV_TOOLCHAIN_BASENAME=riscv-none-elf -DRISCV_TOOLCHAIN_PREFIX=$GITHUB_WORKSPACE/riscv_tc -DCMAKE_INSTALL_PREFIX=examples_prebuilt_rv${{matrix.bits}} -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCMAKE_C_COMPILER_LAUNCHER=sccache -DCMAKE_CXX_COMPILER_LAUNCHER=sccache
+        cmake -B examples_build_${{ matrix.toolchain }}_rv${{ matrix.bits }} -S examples_source --preset ${{ steps.cmake_preset.outputs.name }} -DRISCV_TOOLCHAIN_BASENAME=riscv-none-elf -DRISCV_TOOLCHAIN_PREFIX=$GITHUB_WORKSPACE/riscv_tc -DCMAKE_INSTALL_PREFIX=examples_prebuilt_${{ matrix.toolchain }}_rv${{ matrix.bits }} -DCMAKE_C_COMPILER_LAUNCHER=sccache -DCMAKE_CXX_COMPILER_LAUNCHER=sccache
 
     - name: Build examples
       run: |
-        cmake --build examples_build_rv${{matrix.bits}} -j$(nproc)
+        cmake --build examples_build_${{ matrix.toolchain }}_rv${{ matrix.bits }} -j$(nproc)
 
     - name: Install examples
       run: |
-        cmake --build examples_build_rv${{matrix.bits}} --target install
+        cmake --build examples_build_${{ matrix.toolchain }}_rv${{ matrix.bits }} --target install
 
     - name: Upload prebuilt examples
       uses: actions/upload-artifact@v7
       with:
-        name: examples_prebuilt_rv${{matrix.bits}}
-        path: examples_prebuilt_rv${{matrix.bits}}
+        name: examples_prebuilt_${{ matrix.toolchain }}_rv${{ matrix.bits }}
+        path: examples_prebuilt_${{ matrix.toolchain }}_rv${{ matrix.bits }}
 
   run_examples:
     needs: [build_etiss, build_examples]
@@ -119,6 +138,8 @@ jobs:
     strategy:
       matrix:
         bits: ["32", "64"]
+        # toolchain: [gcc, llvm]
+        toolchain: [gcc]
         jit_engine: ["TCC", "GCC", "LLVM"]
         test_program: ["example_c", "example_cpp", "test_cases"]
         os:
@@ -147,14 +168,17 @@ jobs:
     - name: Run test
       run: |
         chmod +x etiss_prebuilt/bin/bare_etiss_processor
-        etiss_prebuilt/bin/bare_etiss_processor -iexamples_prebuilt_rv${{matrix.bits}}/ini/${{matrix.test_program}}.ini --jit.type=${{matrix.jit_engine}}JIT
+        etiss_prebuilt/bin/bare_etiss_processor -iexamples_prebuilt_${{ matrix.toolchain }}_rv${{ matrix.bits }}/ini/${{ matrix.test_program }}.ini --jit.type=${{ matrix.jit_engine }}JIT
 
   run_benchmarks:
+    if: ${{ github.event_name == 'workflow_dispatch' }}
+    runs-on: ubuntu-22.04
     needs: [build_etiss, build_examples]
 
     strategy:
       matrix:
         bits: ["32", "64"]
+        toolchain: [gcc]
         jit_engine: ["TCC", "GCC", "LLVM"]
         # run_no: [1, 2, 3, 4, 5]
         run_no: [1, 5]
@@ -184,15 +208,16 @@ jobs:
     - name: Run benchmark
       run: |
         chmod +x etiss_prebuilt/bin/bare_etiss_processor
-        etiss_prebuilt/bin/bare_etiss_processor -iexamples_prebuilt_rv${{matrix.bits}}/ini/dhry.ini --jit.type=${{matrix.jit_engine}}JIT --vp.stats_file_path=${{github.workspace}}/run_${{matrix.jit_engine}}_${{matrix.bits}}_${{matrix.run_no}}_${{ matrix.os.name }}-${{ matrix.os.version }}.json
+        etiss_prebuilt/bin/bare_etiss_processor -iexamples_prebuilt_${{ matrix.toolchain }}_rv${{ matrix.bits }}/ini/dhry.ini --jit.type=${{ matrix.jit_engine }}JIT --vp.stats_file_path=${{ github.workspace }}/run_${{ matrix.jit_engine }}_${{ matrix.toolchain }}_${{ matrix.bits }}_${{ matrix.run_no }}_${{ matrix.os.name }}-${{ matrix.os.version }}.json
 
     - name: Save Benchmark results
       uses: actions/upload-artifact@v7
       with:
-        name: run_${{matrix.jit_engine}}_${{matrix.bits}}_${{matrix.run_no}}_${{ matrix.os.name }}-${{ matrix.os.version }}
-        path: run_${{matrix.jit_engine}}_${{matrix.bits}}_${{matrix.run_no}}_${{ matrix.os.name }}-${{ matrix.os.version }}.json
+        name: run_${{ matrix.jit_engine }}_${{ matrix.toolchain }_${{ matrix.bits }}_${{ matrix.run_no }}_${{ matrix.os.name }}-${{ matrix.os.version }}
+        path: run_${{ matrix.jit_engine }}_${{ matrix.toolchain }_${{ matrix.bits }}_${{ matrix.run_no }}_${{ matrix.os.name }}-${{ matrix.os.version }}.json
 
   merge_benchmark_results:
+    if: ${{ github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-22.04
     needs: run_benchmarks
 
