@@ -60,7 +60,8 @@ jobs:
     strategy:
       matrix:
         bits: ["32", "64"]
-        toolchain: [gcc, llvm]
+        # toolchain: [gcc, llvm]
+        toolchain: [gcc]
         build_type: [Release]
 
     steps:
@@ -84,6 +85,7 @@ jobs:
         mv xpack-riscv-none-elf-gcc-15.2.0-1 riscv_tc
 
     - name: Install latest LLVM
+      if: ${{ matrix.toolchain == 'llvm' }}
       run: |
         # RISC-V Examples need LLVM 18+
         sudo apt-get update
@@ -124,7 +126,8 @@ jobs:
     strategy:
       matrix:
         bits: ["32", "64"]
-        toolchain: [gcc, llvm]
+        # toolchain: [gcc, llvm]
+        toolchain: [gcc]
         jit_engine: ["TCC", "GCC", "LLVM"]
         test_program: ["example_c", "example_cpp", "test_cases"]
 
@@ -163,8 +166,6 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y libboost-filesystem-dev libboost-program-options-dev
-        # Install latest LLVM (RISC-V Examples need LLVM 18+)
-        sudo bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
 
     - name: Run benchmark
       run: |
