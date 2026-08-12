@@ -79,9 +79,9 @@ jobs:
 
     - name: Install cross compiler
       run: |
-        wget https://github.com/xpack-dev-tools/riscv-none-elf-gcc-xpack/releases/download/v13.2.0-2/xpack-riscv-none-elf-gcc-13.2.0-2-linux-x64.tar.gz
-        tar xf xpack-riscv-none-elf-gcc-13.2.0-2-linux-x64.tar.gz
-        mv xpack-riscv-none-elf-gcc-13.2.0-2 riscv_tc
+        wget https://github.com/xpack-dev-tools/riscv-none-elf-gcc-xpack/releases/download/v15.2.0-1/xpack-riscv-none-elf-gcc-15.2.0-1-linux-x64.tar.gz
+        tar xf xpack-riscv-none-elf-gcc-15.2.0-1-linux-x64.tar.gz
+        mv xpack-riscv-none-elf-gcc-15.2.0-1 riscv_tc
 
     - name: Install latest LLVM
       run: |
