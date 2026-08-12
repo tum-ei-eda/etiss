@@ -373,7 +373,7 @@ void etiss_loadIni(std::string fileName)
 
     SI_Error rc = po_simpleIni->LoadFile(fileName.c_str());
     if (rc < 0)
-        std::cout << "Initializer::loadIni(): Failed to load Ini: " << fileName << std::endl;
+        etiss::log(etiss::FATALERROR, "Initializer::loadIni(): Failed to load Ini: " + fileName);
     else
         std::cout << "Initializer::loadIni(): Ini sucessfully loaded " << fileName << std::endl;
 }
