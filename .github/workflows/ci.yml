@@ -172,7 +172,6 @@ jobs:
 
   run_benchmarks:
     if: ${{ github.event_name == 'workflow_dispatch' }}
-    runs-on: ubuntu-22.04
     needs: [build_etiss, build_examples]
 
     strategy:
@@ -213,8 +212,8 @@ jobs:
     - name: Save Benchmark results
       uses: actions/upload-artifact@v7
       with:
-        name: run_${{ matrix.jit_engine }}_${{ matrix.toolchain }_${{ matrix.bits }}_${{ matrix.run_no }}_${{ matrix.os.name }}-${{ matrix.os.version }}
-        path: run_${{ matrix.jit_engine }}_${{ matrix.toolchain }_${{ matrix.bits }}_${{ matrix.run_no }}_${{ matrix.os.name }}-${{ matrix.os.version }}.json
+        name: run_${{ matrix.jit_engine }}_${{ matrix.toolchain }}_${{ matrix.bits }}_${{ matrix.run_no }}_${{ matrix.os.name }}-${{ matrix.os.version }}
+        path: run_${{ matrix.jit_engine }}_${{ matrix.toolchain }}_${{ matrix.bits }}_${{ matrix.run_no }}_${{ matrix.os.name }}-${{ matrix.os.version }}.json
 
   merge_benchmark_results:
     if: ${{ github.event_name == 'workflow_dispatch' }}
