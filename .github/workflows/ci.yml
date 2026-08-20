@@ -72,10 +72,13 @@ jobs:
 
     strategy:
       matrix:
-        gcc_version: ["13.2.0-2"]
+        config:
+          - {toolchain: gcc, gcc_version: "13.2.0-2", llvm_version: null}
+          - {toolchain: llvm, gcc_version: "13.2.0-2", llvm_version: "18"}
 
     steps:
     - name: Download Cached GCC Binaries
+      if: ${{ matrix.config.toolchain == 'gcc' }}
       id: cache-gcc
       uses: actions/cache@v4
       with:
