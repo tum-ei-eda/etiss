@@ -39,7 +39,7 @@ option(ETISS_PORTABLE_INSTALL "Portable installation with relative paths" OFF)
 # Global configuration
 SET(CMAKE_POSITION_INDEPENDENT_CODE ON)
 IF(NOT DEFINED CMAKE_CXX_STANDARD)
-SET(CMAKE_CXX_STANDARD 14) # default if not set by configuration
+SET(CMAKE_CXX_STANDARD 17) # default if not set by configuration
 ENDIF()
 MESSAGE(STATUS "CMAKE_CXX_STANDARD set to ${CMAKE_CXX_STANDARD}")
 SET(CMAKE_CXX_STANDARD_REQUIRED ON)
