@@ -157,8 +157,9 @@ jobs:
     - name: Fetch precompiled Examples
       uses: actions/download-artifact@v8
       with:
-        name: examples_prebuilt_rv${{matrix.bits}}
-        path: examples_prebuilt_rv${{matrix.bits}}
+        name: examples_prebuilt_${{ matrix.toolchain }}_rv${{ matrix.bits }}
+        path: examples_prebuilt_${{ matrix.toolchain }}_rv${{ matrix.bits }}
+
 
     - name: Install dependencies
       run: |
@@ -196,8 +197,10 @@ jobs:
     - name: Fetch precompiled Examples
       uses: actions/download-artifact@v8
       with:
-        name: examples_prebuilt_rv${{matrix.bits}}
-        path: examples_prebuilt_rv${{matrix.bits}}
+        name: examples_prebuilt_${{ matrix.toolchain }}_rv${{ matrix.bits }}
+
+        path: examples_prebuilt_${{ matrix.toolchain }}_rv${{ matrix.bits }}
+
 
     - name: Install dependencies
       run: |
