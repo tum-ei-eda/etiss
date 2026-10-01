@@ -107,7 +107,7 @@ INCLUDE(ETISSPlugin)
 
 # Find packages
 FIND_PACKAGE(Threads REQUIRED)
-FIND_PACKAGE(Boost COMPONENTS filesystem system program_options REQUIRED)
+FIND_PACKAGE(Boost 1.69.0 REQUIRED COMPONENTS filesystem program_options)
 FIND_PACKAGE(Doxygen)
 IF(ETISS_USE_PYTHON)
     SET(Boost_VERBOSE ON)
@@ -315,7 +315,7 @@ set_target_properties(ETISS PROPERTIES
   LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib/
 )
 IF(UNIX)
-    TARGET_LINK_LIBRARIES(ETISS PUBLIC Boost::filesystem Boost::system Boost::program_options)
+    TARGET_LINK_LIBRARIES(ETISS PUBLIC Boost::filesystem Boost::program_options)
 ELSE(UNIX)
     TARGET_LINK_LIBRARIES(ETISS PUBLIC Boost::boost Threads::Threads)
 ENDIF()
