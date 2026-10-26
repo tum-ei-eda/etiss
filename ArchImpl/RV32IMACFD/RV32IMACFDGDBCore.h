@@ -1,5 +1,5 @@
 /**
- * Generated on Tue, 11 Aug 2026 12:31:38 +0000.
+ * Generated on Mon, 26 Oct 2026 08:39:45 +0000.
  *
  * This file contains the GDBCore adapter for the RV32IMACFD core architecture.
  *
@@ -11,6 +11,7 @@
 #define ETISS_RV32IMACFDArch_RV32IMACFDGDBCORE_H_
 
 #include "etiss/IntegratedLibrary/gdb/GDBCore.h"
+#include "etiss/jit/CPU.h"
 #include <sstream>
 
 /**
@@ -228,7 +229,7 @@ class RV32IMACFDGDBCore : public etiss::plugin::gdb::GDBCore
              **************************************************************************/
         }
         return "";
-  }
+    }
 
     unsigned mapRegister(std::string name) { return INVALIDMAPPING; }
 

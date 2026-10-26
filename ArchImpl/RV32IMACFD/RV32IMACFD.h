@@ -1,5 +1,5 @@
 /**
- * Generated on Tue, 11 Aug 2026 12:31:38 +0000.
+ * Generated on Mon, 26 Oct 2026 08:39:45 +0000.
  *
  * This file contains the registers for the RV32IMACFD core architecture.
  */
