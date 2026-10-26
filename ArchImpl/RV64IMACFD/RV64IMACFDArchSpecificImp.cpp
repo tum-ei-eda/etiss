@@ -1,5 +1,5 @@
 /**
- * Generated on Tue, 11 Aug 2026 12:31:35 +0000.
+ * Generated on Mon, 26 Oct 2026 08:39:20 +0000.
  *
  * This file contains the architecture specific implementation for the RV64IMACFD
  * core architecture.
@@ -118,7 +118,8 @@ void RV64IMACFDArch::initInstrSet(etiss::instr::ModedInstructionSet &mis) const
 {
     {
         std::string requiredJitFilesPath = jitFiles();
-        /* Set default JIT Extensions. Read Parameters set from ETISS configuration and append with architecturally needed */
+        /* Set default JIT Extensions. Read Parameters set from ETISS configuration and append with architecturally
+         * needed */
         std::string cfgPar = "";
         cfgPar = etiss::cfg().get<std::string>("jit.external_headers", ";");
         etiss::cfg().set<std::string>("jit.external_headers", cfgPar + "etiss/jit/libsoftfloat.h");
@@ -133,7 +134,8 @@ void RV64IMACFDArch::initInstrSet(etiss::instr::ModedInstructionSet &mis) const
         etiss::cfg().set<std::string>("jit.external_lib_paths", cfgPar + "etiss/jit");
     }
 
-    if (false) {
+    if (false)
+    {
         // Pre-compilation of instruction set to view instruction tree. Enable by setting 'true' above.
 
         etiss::instr::ModedInstructionSet iset("RV64IMACFDISA");
@@ -156,123 +158,122 @@ void RV64IMACFDArch::initInstrSet(etiss::instr::ModedInstructionSet &mis) const
     using namespace etiss::instr;
 
     vis->get(32)->getInvalid().addCallback(
-	[] (BitArray & ba,etiss::CodeSet & cs,InstructionContext & ic)
-	{
+        [](BitArray &ba, etiss::CodeSet &cs, InstructionContext &ic)
+        {
+            // -----------------------------------------------------------------------------
 
-// -----------------------------------------------------------------------------
+            // -----------------------------------------------------------------------------
 
-// -----------------------------------------------------------------------------
+            // -----------------------------------------------------------------------------
+            // NOLINTBEGIN(clang-diagnostic-unused-but-set-variable)
+            etiss_uint32 error_code = 0;
+            static BitArrayRange R_error_code_0(31, 0);
+            error_code += R_error_code_0.read(ba) << 0;
 
-// -----------------------------------------------------------------------------
-// NOLINTBEGIN(clang-diagnostic-unused-but-set-variable)
-etiss_uint32 error_code = 0;
-static BitArrayRange R_error_code_0(31, 0);
-error_code += R_error_code_0.read(ba) << 0;
+            // NOLINTEND(clang-diagnostic-unused-but-set-variable)
+            // -----------------------------------------------------------------------------
 
-// NOLINTEND(clang-diagnostic-unused-but-set-variable)
-// -----------------------------------------------------------------------------
+            {
+                CodePart &cp = cs.append(CodePart::INITIALREQUIRED);
 
-	{
-		CodePart & cp = cs.append(CodePart::INITIALREQUIRED);
+                cp.code() = std::string("//trap_entry 32\n");
 
-		cp.code() = std::string("//trap_entry 32\n");
+                // -----------------------------------------------------------------------------
+                { // procedure
+                    cp.code() += "{ // procedure\n";
+                    cp.code() += "RV64IMACFD_translate_exc_code(cpu, system, plugin_pointers, " +
+                                 std::to_string(error_code) + "ULL);\n";
+                    cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
+                    cp.code() += "} // procedure\n";
+                } // procedure
+                cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
+                cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
+                // -----------------------------------------------------------------------------
+                cp.getAffectedRegisters().add("instructionPointer", 32);
+            }
+            {
+                CodePart &cp = cs.append(CodePart::APPENDEDRETURNINGREQUIRED);
 
-// -----------------------------------------------------------------------------
-{ // procedure
-cp.code() += "{ // procedure\n";
-cp.code() += "RV64IMACFD_translate_exc_code(cpu, system, plugin_pointers, " + std::to_string(error_code) + "ULL);\n";
-cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
-cp.code() += "} // procedure\n";
-} // procedure
-cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
-cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
-// -----------------------------------------------------------------------------
-		cp.getAffectedRegisters().add("instructionPointer", 32);
-	}
-	{
-		CodePart & cp = cs.append(CodePart::APPENDEDRETURNINGREQUIRED);
+                cp.code() = std::string("//trap_entry 32\n");
 
-		cp.code() = std::string("//trap_entry 32\n");
+                // -----------------------------------------------------------------------------
+                cp.code() += "return cpu->exception;\n";
+                // -----------------------------------------------------------------------------
+            }
 
-// -----------------------------------------------------------------------------
-cp.code() += "return cpu->exception;\n";
-// -----------------------------------------------------------------------------
-	}
-
-		return true;
-	},
-    0
-    );
+            return true;
+        },
+        0);
 
     vis->get(16)->getInvalid().addCallback(
-	[] (BitArray & ba,etiss::CodeSet & cs,InstructionContext & ic)
-	{
+        [](BitArray &ba, etiss::CodeSet &cs, InstructionContext &ic)
+        {
+            // -----------------------------------------------------------------------------
 
-// -----------------------------------------------------------------------------
+            // -----------------------------------------------------------------------------
 
-// -----------------------------------------------------------------------------
+            // -----------------------------------------------------------------------------
+            // NOLINTBEGIN(clang-diagnostic-unused-but-set-variable)
+            etiss_uint32 error_code = 0;
+            static BitArrayRange R_error_code_0(31, 0);
+            error_code += R_error_code_0.read(ba) << 0;
 
-// -----------------------------------------------------------------------------
-// NOLINTBEGIN(clang-diagnostic-unused-but-set-variable)
-etiss_uint32 error_code = 0;
-static BitArrayRange R_error_code_0(31, 0);
-error_code += R_error_code_0.read(ba) << 0;
+            // NOLINTEND(clang-diagnostic-unused-but-set-variable)
+            // -----------------------------------------------------------------------------
 
-// NOLINTEND(clang-diagnostic-unused-but-set-variable)
-// -----------------------------------------------------------------------------
+            {
+                CodePart &cp = cs.append(CodePart::INITIALREQUIRED);
 
-	{
-		CodePart & cp = cs.append(CodePart::INITIALREQUIRED);
+                cp.code() = std::string("//trap_entry 16\n");
 
-		cp.code() = std::string("//trap_entry 16\n");
+                // -----------------------------------------------------------------------------
+                { // procedure
+                    cp.code() += "{ // procedure\n";
+                    cp.code() += "RV64IMACFD_translate_exc_code(cpu, system, plugin_pointers, " +
+                                 std::to_string(error_code) + "ULL);\n";
+                    cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
+                    cp.code() += "} // procedure\n";
+                } // procedure
+                cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
+                cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
+                // -----------------------------------------------------------------------------
+                cp.getAffectedRegisters().add("instructionPointer", 32);
+            }
+            {
+                CodePart &cp = cs.append(CodePart::APPENDEDRETURNINGREQUIRED);
 
-// -----------------------------------------------------------------------------
-{ // procedure
-cp.code() += "{ // procedure\n";
-cp.code() += "RV64IMACFD_translate_exc_code(cpu, system, plugin_pointers, " + std::to_string(error_code) + "ULL);\n";
-cp.code() += "goto instr_exit_" + std::to_string(ic.current_address_) + ";\n";
-cp.code() += "} // procedure\n";
-} // procedure
-cp.code() += "instr_exit_" + std::to_string(ic.current_address_) + ":\n";
-cp.code() += "cpu->instructionPointer = cpu->nextPc;\n";
-// -----------------------------------------------------------------------------
-		cp.getAffectedRegisters().add("instructionPointer", 32);
-	}
-	{
-		CodePart & cp = cs.append(CodePart::APPENDEDRETURNINGREQUIRED);
+                cp.code() = std::string("//trap_entry 16\n");
 
-		cp.code() = std::string("//trap_entry 16\n");
+                // -----------------------------------------------------------------------------
+                cp.code() += "return cpu->exception;\n";
+                // -----------------------------------------------------------------------------
+            }
 
-// -----------------------------------------------------------------------------
-cp.code() += "return cpu->exception;\n";
-// -----------------------------------------------------------------------------
-	}
+            return true;
+        },
+        0);
 
-		return true;
-	},
-    0
-    );
-
-
-    vis->length_updater_ = [](VariableInstructionSet &, InstructionContext &ic, BitArray &ba) {
+    vis->length_updater_ = [](VariableInstructionSet &, InstructionContext &ic, BitArray &ba)
+    {
         std::function<void(InstructionContext & ic, etiss_uint32 opRd)> updateRV64IMACFDInstrLength =
-            [](InstructionContext &ic, etiss_uint32 opRd) {
-                ic.instr_width_fully_evaluated_ = true;
-                ic.is_not_default_width_ = true;
-                if (opRd == 0x3f)
-                    ic.instr_width_ = 64;
-                else if ((opRd & 0x3f) == 0x1f)
-                    ic.instr_width_ = 48;
-                else if (((opRd & 0x1f) >= 0x3) && ((opRd & 0x1f) < 0x1f))
-                    ic.instr_width_ = 32;
-                else if(opRd == 0x7f) /* P-Extension instructions */
-                    ic.instr_width_ = 32;
-                else if ((opRd & 0x3) != 0x3)
-                    ic.instr_width_ = 16;
-                else
-                    // This might happen when code is followed by data.
-                    ic.is_not_default_width_ = false;
-            };
+            [](InstructionContext &ic, etiss_uint32 opRd)
+        {
+            ic.instr_width_fully_evaluated_ = true;
+            ic.is_not_default_width_ = true;
+            if (opRd == 0x3f)
+                ic.instr_width_ = 64;
+            else if ((opRd & 0x3f) == 0x1f)
+                ic.instr_width_ = 48;
+            else if (((opRd & 0x1f) >= 0x3) && ((opRd & 0x1f) < 0x1f))
+                ic.instr_width_ = 32;
+            else if (opRd == 0x7f) /* P-Extension instructions */
+                ic.instr_width_ = 32;
+            else if ((opRd & 0x3) != 0x3)
+                ic.instr_width_ = 16;
+            else
+                // This might happen when code is followed by data.
+                ic.is_not_default_width_ = false;
+        };
 
         BitArrayRange op(6, 0);
         etiss_uint32 opRd = op.read(ba);
@@ -305,7 +306,7 @@ cp.code() += "return cpu->exception;\n";
                 ic.is_not_default_width_ = false;
                 break;
             }
-            else if(opRd == 0x7f) /* P-Extension instructions */
+            else if (opRd == 0x7f) /* P-Extension instructions */
             {
                 updateRV64IMACFDInstrLength(ic, opRd);
                 break;
@@ -342,7 +343,6 @@ cp.code() += "return cpu->exception;\n";
             ic.is_not_default_width_ = false;
         }
     };
-
 }
 
 /**
@@ -358,7 +358,8 @@ cp.code() += "return cpu->exception;\n";
                 }
                 else if (ba.byteCount() == 4)
                 {
-                    *((uint32_t*)ptr) = ((((uint32_t)(*((uint8_t*)ptr))) | ((uint32_t)(*(((uint8_t*)ptr)+1)) << 8)) << 16) | ((uint32_t)(*(((uint8_t*)ptr)+2)) ) | ((uint32_t)(*(((uint8_t*)ptr)+3)) << 8);
+                    *((uint32_t*)ptr) = ((((uint32_t)(*((uint8_t*)ptr))) | ((uint32_t)(*(((uint8_t*)ptr)+1)) << 8)) <<
+   16) | ((uint32_t)(*(((uint8_t*)ptr)+2)) ) | ((uint32_t)(*(((uint8_t*)ptr)+3)) << 8);
                 }
                 else
                 {

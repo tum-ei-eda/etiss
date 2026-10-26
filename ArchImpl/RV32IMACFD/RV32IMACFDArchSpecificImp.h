@@ -1,5 +1,5 @@
 /**
- * Generated on Tue, 11 Aug 2026 12:31:38 +0000.
+ * Generated on Mon, 26 Oct 2026 08:39:45 +0000.
  *
  * This file contains the architecture specific header for the RV32IMACFD
  * core architecture.
@@ -133,7 +133,6 @@ class FloatRegField_RV32IMACFD : public etiss::VirtualStruct::Field
     }
 };
 
-
 class CSRField_RV32IMACFD : public etiss::VirtualStruct::Field
 {
   private:
@@ -186,7 +185,6 @@ class CSRField_RV32IMACFD : public etiss::VirtualStruct::Field
         // clang-format on
     }
 };
-
 
 class pcField_RV32IMACFD : public etiss::VirtualStruct::Field
 {
