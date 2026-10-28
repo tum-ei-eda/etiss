@@ -1,5 +1,5 @@
 /**
- * Generated on Mon, 26 Oct 2026 08:39:20 +0000.
+ * Generated on Wed, 28 Oct 2026 07:20:58 +0000.
  *
  * This file contains the registers for the RV64IMACFD core architecture.
  */
@@ -87,7 +87,7 @@ extern "C"
         etiss_uint64 FT11;
         etiss_uint64 *F[32];
         etiss_uint64 ins_F[32];
-        etiss_uint64 RES_ADDR;
+        etiss_int64 RES_ADDR;
         etiss_uint64 FENCE[8];
         etiss_int8 RES[8];
         etiss_uint64 FCSR;
