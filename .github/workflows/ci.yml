@@ -37,7 +37,7 @@ jobs:
           llvm-${{ matrix.os.llvm_version }}-dev libclang-${{ matrix.os.llvm_version }}-dev clang-${{ matrix.os.llvm_version }}
 
     - name: Setup ccache
-      uses: hendrikmuhs/ccache-action@v1.2
+      uses: hendrikmuhs/ccache-action@v1.2.23
       with:
         max-size: 2G
         key: ccache-${{ matrix.build_type }}
@@ -85,7 +85,7 @@ jobs:
         submodules: true
 
     - name: Setup ccache
-      uses: hendrikmuhs/ccache-action@v1.2
+      uses: hendrikmuhs/ccache-action@v1.2.23
       with:
         max-size: 2G
         key: ccache-examples-${{ matrix.build_type }}-rv${{ matrix.bits }}
