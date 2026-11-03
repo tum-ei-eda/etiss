@@ -39,7 +39,7 @@ option(ETISS_PORTABLE_INSTALL "Portable installation with relative paths" OFF)
 # Global configuration
 SET(CMAKE_POSITION_INDEPENDENT_CODE ON)
 IF(NOT DEFINED CMAKE_CXX_STANDARD)
-SET(CMAKE_CXX_STANDARD 14) # default if not set by configuration
+SET(CMAKE_CXX_STANDARD 17) # default if not set by configuration
 ENDIF()
 MESSAGE(STATUS "CMAKE_CXX_STANDARD set to ${CMAKE_CXX_STANDARD}")
 SET(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -107,7 +107,7 @@ INCLUDE(ETISSPlugin)
 
 # Find packages
 FIND_PACKAGE(Threads REQUIRED)
-FIND_PACKAGE(Boost COMPONENTS filesystem system program_options REQUIRED)
+FIND_PACKAGE(Boost 1.69.0 REQUIRED COMPONENTS filesystem program_options)
 FIND_PACKAGE(Doxygen)
 IF(ETISS_USE_PYTHON)
     SET(Boost_VERBOSE ON)
@@ -315,7 +315,7 @@ set_target_properties(ETISS PROPERTIES
   LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib/
 )
 IF(UNIX)
-    TARGET_LINK_LIBRARIES(ETISS PUBLIC Boost::filesystem Boost::system Boost::program_options)
+    TARGET_LINK_LIBRARIES(ETISS PUBLIC Boost::filesystem Boost::program_options)
 ELSE(UNIX)
     TARGET_LINK_LIBRARIES(ETISS PUBLIC Boost::boost Threads::Threads)
 ENDIF()

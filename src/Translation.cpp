@@ -288,7 +288,7 @@ BlockLink *Translation::getBlock(BlockLink *prev, const etiss::uint64 &instructi
     CodeBlock block(instructionindex);
 
 #ifdef ETISS_USE_COREDSL_COVERAGE
-    block.fileglobalCode().insert("#define ETISS_USE_COREDSL_COVERAGE");
+    block.fileglobalCode().insert("#define ETISS_USE_COREDSL_COVERAGE\n");
 #endif
 
     block.fileglobalCode().insert("#include \"etiss/jit/CPU.h\"\n"
