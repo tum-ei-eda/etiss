@@ -37,7 +37,7 @@ namespace etiss
 namespace instr
 {
 
-typedef uint32_t I;
+typedef uint64_t I;
 
 /**
 Buffer for reading data from memory while instructions are being fetched
