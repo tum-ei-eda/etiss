@@ -1,0 +1,10 @@
+{
+  "architecture": "RV64IMACFD",
+  "cdsl": "7cf6858c78a6ca9568ae22c184d93752a44ef55e",
+  "etiss": "44a8dd3035324d2fe3cd65c6b878cb84404df25b",
+  "fill_mode": "auto",
+  "gdb_xml_descr": "RV32IMACFD:../etiss/ArchImpl/RV32IMACFD/xml/target.xml,RV64IMACFD:../etiss/ArchImpl/RV64IMACFD/xml/target.xml",
+  "m2isar": "0a58a9f88b336b704d3ec9712190d9c6c403a46c",
+  "rv_base": "749b7cbdde9596a119b3f580039c58e40d5614d5",
+  "top_sha256": "5755442c705d24e79fa8161ff6fa8b1effc2ed7854e278f8f4f54402c94514ef"
+}
